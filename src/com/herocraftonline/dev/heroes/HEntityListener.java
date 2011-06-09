@@ -62,37 +62,42 @@ public class HEntityListener extends EntityListener {
             HeroClass playerClass = hero.getHeroClass();
             // Get the sources of experience for the player's class
             Set<ExperienceType> expSources = playerClass.getExperienceSources();
-            // If the player gains experience from killing
-            if (expSources.contains(ExperienceType.KILLING)) {
-                if (defender instanceof LivingEntity) {
-                    int addedExp = 0;
-                    // If the dying entity is a Player
-                    if (defender instanceof Player) {
-                        prop.playerDeaths.put((Player) defender, defender.getLocation());
-                        addedExp = prop.playerKillingExp;
-                    } else {
-                        // Get the dying entity's CreatureType
-                        CreatureType type = null;
-                        try {
-                            Class<?>[] interfaces = defender.getClass().getInterfaces();
-                            for (Class<?> c : interfaces) {
-                                if (LivingEntity.class.isAssignableFrom(c)) {
-                                    type = CreatureType.fromName(c.getSimpleName());
-                                    break;
-                                }
-                            }
-                        } catch (IllegalArgumentException e) {}
-                        if (type != null) {
-                            // If EXP hasn't been assigned for this Entity then we stop here.
-                            if (!prop.creatureKillingExp.containsKey(type)) {
-                                return;
-                            }
-                            addedExp = prop.creatureKillingExp.get(type);
+
+            int addedExp = 0;
+            ExperienceType experienceType = null;
+
+            // If the Player killed another Player we check to see if they can earn EXP from PVP.
+            if (defender instanceof Player && expSources.contains(ExperienceType.PVP)) {
+                prop.playerDeaths.put((Player) defender, defender.getLocation());
+                addedExp = prop.playerKillingExp;
+                experienceType = ExperienceType.PVP;
+            }
+
+            // If the Player killed a Monster/Animal then we check to see if they can earn EXP from KILLING.
+            if (defender instanceof LivingEntity && !(defender instanceof Player) && expSources.contains(ExperienceType.KILLING)) {
+                // Get the dying entity's CreatureType
+                CreatureType type = null;
+                try {
+                    Class<?>[] interfaces = defender.getClass().getInterfaces();
+                    for (Class<?> c : interfaces) {
+                        if (LivingEntity.class.isAssignableFrom(c)) {
+                            type = CreatureType.fromName(c.getSimpleName());
+                            break;
                         }
                     }
-
-                    hero.gainExp(addedExp, ExperienceType.KILLING);
+                } catch (IllegalArgumentException e) {
                 }
+                if (type != null) {
+                    // If EXP hasn't been assigned for this Entity then we stop here.
+                    if (!prop.creatureKillingExp.containsKey(type)) {
+                        return;
+                    }
+                    addedExp = prop.creatureKillingExp.get(type);
+                    experienceType = ExperienceType.KILLING;
+                }
+            }
+            if (experienceType != null && addedExp > 0) {
+                hero.gainExp(addedExp, experienceType);
             }
         }
     }
