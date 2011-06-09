@@ -8,6 +8,7 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.command.BaseCommand;
 import com.herocraftonline.dev.heroes.party.HeroParty;
 import com.herocraftonline.dev.heroes.persistence.Hero;
+import com.herocraftonline.dev.heroes.util.Messaging;
 
 public class PartyChatCommand extends BaseCommand {
 
@@ -33,6 +34,8 @@ public class PartyChatCommand extends BaseCommand {
                 for (Player player : hero.getParty().getMembers()) {
                     player.sendMessage(ChatColor.GOLD + p.getName() + " > " + args.toString());
                 }
+            } else {
+                Messaging.send(sender, "You are not in a Party.");
             }
         }
     }
