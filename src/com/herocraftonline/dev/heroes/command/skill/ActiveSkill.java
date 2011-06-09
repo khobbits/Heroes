@@ -21,6 +21,7 @@ public abstract class ActiveSkill extends Skill {
     public final String SETTING_USETEXT = "use-text";
 
     protected String useText;
+    protected boolean awardExpOnCast = true;
 
     public ActiveSkill(Heroes plugin) {
         super(plugin);
@@ -81,12 +82,22 @@ public abstract class ActiveSkill extends Skill {
                     cooldowns.put(name, time);
                 }
 
-                hero.gainExp(getSetting(heroClass, SETTING_EXP, 0), ExperienceType.SKILL);
+                if (this.awardExpOnCast) {
+                    this.awardExp(hero);
+                }
+
                 hero.setMana(hero.getMana() - manaCost);
                 if (hero.isVerbose() && manaCost > 0) {
                     Messaging.send(hero.getPlayer(), Messaging.createManaBar(hero.getMana()));
                 }
             }
+        }
+    }
+
+    private void awardExp(Hero hero) {
+        HeroClass heroClass = hero.getHeroClass();
+        if (heroClass.getExperienceSources().contains(ExperienceType.SKILL)) {
+            hero.gainExp(this.getSetting(heroClass, this.SETTING_EXP, 0), ExperienceType.SKILL);
         }
     }
 
