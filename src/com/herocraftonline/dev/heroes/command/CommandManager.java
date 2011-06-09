@@ -14,6 +14,9 @@ import java.util.List;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import com.herocraftonline.dev.heroes.Heroes;
 
 public class CommandManager {
 
@@ -53,7 +56,12 @@ public class CommandManager {
                     sender.sendMessage("§e" + note);
                 }
             } else {
-                match.execute(sender, trimmedArgs);
+                // If there is no Permission Node we allow the Command, otherwise we check against the Permissions.
+                if ((match.permissionNode.length() == 0) || (hasPermission(sender, match.permissionNode))) {
+                    match.execute(sender, trimmedArgs);
+                } else {
+                    sender.sendMessage("You do not have permission to use this command.");
+                }
             }
         }
         return true;
@@ -73,5 +81,22 @@ public class CommandManager {
 
     public BaseCommand getCommand(String name) {
         return commands.get(name.toLowerCase());
+    }
+
+    public boolean hasPermission(CommandSender sender, String node) {
+        if (!(sender instanceof Player)) {
+            return true;
+        }
+        Player player = (Player) sender;
+        if (player.isOp()) {
+            // If Player is Op we always let them use it.
+            return true;
+        } else if (Heroes.Permissions != null && Heroes.Permissions.has(player, node)) {
+            // If Permissions is enabled we check against them.
+            return true;
+        } else {
+            // If the Player doesn't have Permissions and isn't an Op then
+            return false;
+        }
     }
 }
