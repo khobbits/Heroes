@@ -26,6 +26,10 @@ public class HeroParty {
         return members.keySet();
     }
 
+    public int getMemberCount() {
+        return members.size();
+    }
+
     public Player getLeader() {
         return leader;
     }
