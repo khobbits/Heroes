@@ -13,7 +13,7 @@ public abstract class BaseCommand {
     protected String name;
     protected String description;
     protected String usage;
-    protected String permissionNode;
+    protected String permissionNode = "";
     protected int minArgs;
     protected int maxArgs;
     protected List<String> identifiers;
