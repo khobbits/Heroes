@@ -45,29 +45,38 @@ public class OutsourcedSkill extends Skill {
         if (settings != null) {
             if (meetsLevelRequirement(hero, getSetting(heroClass, SETTING_LEVEL, 1))) {
                 for (String permission : permissions) {
-                    if (!Heroes.Permissions.has(player, permission)) {
+                    if (!hasPermission(world, playerName, permission)) {
                         addPermission(world, playerName, permission);
                     }
                 }
             } else {
                 for (String permission : permissions) {
-                    if (Heroes.Permissions.has(player, permission)) {
+                    if (hasPermission(world, playerName, permission)) {
                         removePermission(world, playerName, permission);
                     }
                 }
             }
         } else {
             for (String permission : permissions) {
-                if (Heroes.Permissions.has(player, permission)) {
+                if (hasPermission(world, playerName, permission)) {
                     removePermission(world, playerName, permission);
                 }
             }
         }
     }
 
+    private boolean hasPermission(String world, String player, String permission) {
+        try {
+            return Heroes.Permissions.safeGetUser(world, player).hasPermission(permission);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     private void removePermission(String world, String player, String permission) {
         try {
-            Heroes.Permissions.removeUserPermission(world, player, permission);
+            Heroes.Permissions.safeGetUser(world, player).removePermission(permission);
             Heroes.Permissions.safeGetUser(world, player).removeTransientPermission(permission);
         } catch (Exception e) {
             e.printStackTrace();
@@ -76,6 +85,7 @@ public class OutsourcedSkill extends Skill {
 
     private void addPermission(String world, String player, String permission) {
         try {
+            // Heroes.Permissions.safeGetUser(world, player).addPermission(permission); -- Incase we need it.
             Heroes.Permissions.safeGetUser(world, player).addTransientPermission(permission);
         } catch (Exception e) {
             e.printStackTrace();
