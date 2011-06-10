@@ -21,6 +21,7 @@ public class SkillCharge extends TargettedSkill{
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         hero.getPlayer().teleport(target);
+        notifyNearbyPlayers(hero.getPlayer().getLocation(), useText, hero.getPlayer().getName(), name);
         return true;
     }
 
