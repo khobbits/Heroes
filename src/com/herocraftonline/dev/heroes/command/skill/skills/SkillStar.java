@@ -13,7 +13,7 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.command.skill.PassiveSkill;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 
-public class SkillStar extends PassiveSkill{
+public class SkillStar extends PassiveSkill {
 
     public SkillStar(Heroes plugin) {
         super(plugin);
@@ -21,7 +21,7 @@ public class SkillStar extends PassiveSkill{
         description = "Throw snowballs for damage";
         minArgs = 0;
         maxArgs = 0;
-        
+
         registerEvent(Type.ENTITY_DAMAGE, new SkillPlayerListener(), Priority.High);
     }
 
@@ -40,7 +40,7 @@ public class SkillStar extends PassiveSkill{
             }
             if (event instanceof EntityDamageByProjectileEvent) {
                 EntityDamageByProjectileEvent subEvent = (EntityDamageByProjectileEvent) event;
-                if(subEvent.getEntity() instanceof Player){
+                if (subEvent.getEntity() instanceof Player) {
                     Player player = (Player) subEvent.getEntity();
                     Hero hero = plugin.getHeroManager().getHero(player);
                     if (hero.getEffects().hasEffect(name)) {
@@ -51,6 +51,5 @@ public class SkillStar extends PassiveSkill{
             }
         }
     }
-
 
 }

@@ -85,7 +85,6 @@ public class Heroes extends JavaPlugin {
     public static PermissionHandler Permissions;
     public Method Method = null;
 
-
     // Variable for BukkitContrib.
     public static boolean useBukkitContrib = false;
 

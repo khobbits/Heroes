@@ -22,7 +22,7 @@ import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.command.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 
-public class SkillFirearrow extends ActiveSkill{
+public class SkillFirearrow extends ActiveSkill {
 
     public SkillFirearrow(Heroes plugin) {
         super(plugin);
@@ -32,7 +32,7 @@ public class SkillFirearrow extends ActiveSkill{
         minArgs = 0;
         maxArgs = 0;
         identifiers.add("skill firearrow");
-        
+
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Monitor);
     }
 
@@ -43,7 +43,7 @@ public class SkillFirearrow extends ActiveSkill{
         node.setProperty("fire-ticks", 100);
         return node;
     }
-    
+
     @Override
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
@@ -64,7 +64,7 @@ public class SkillFirearrow extends ActiveSkill{
         notifyNearbyPlayers(location, useText, hero.getPlayer().getName(), name);
         return true;
     }
-    
+
     public class SkillEntityListener extends EntityListener {
 
         @Override
@@ -103,5 +103,3 @@ public class SkillFirearrow extends ActiveSkill{
     }
 
 }
-
-

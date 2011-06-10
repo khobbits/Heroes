@@ -38,7 +38,7 @@ public class AdminClassCommand extends BaseCommand {
         }
         // Check the Player is not the same HeroClass as we are trying to assign.
         Hero hero = plugin.getHeroManager().getHero(player);
-        if (hero.getHeroClass().equals(heroClass)){
+        if (hero.getHeroClass().equals(heroClass)) {
             Messaging.send(sender, "$1 is already a $2.", player.getName(), heroClass.getName());
             return;
         }

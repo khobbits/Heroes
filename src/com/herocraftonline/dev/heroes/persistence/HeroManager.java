@@ -69,7 +69,7 @@ public class HeroManager {
             loadExperience(playerHero, playerConfig);
             loadRecoveryItems(playerHero, playerConfig);
             loadBinds(playerHero, playerConfig);
-            playerHero.mana = playerConfig.getInt("mana",0);
+            playerHero.mana = playerConfig.getInt("mana", 0);
 
             playerHero.setVerbose(playerConfig.getBoolean("verbose", true));
             playerHero.suppressedSkills = new HashSet<String>(playerConfig.getStringList("suppressed", null));

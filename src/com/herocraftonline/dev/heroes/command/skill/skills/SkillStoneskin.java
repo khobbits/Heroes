@@ -13,7 +13,7 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.command.skill.PassiveSkill;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 
-public class SkillStoneskin extends PassiveSkill{
+public class SkillStoneskin extends PassiveSkill {
 
     public SkillStoneskin(Heroes plugin) {
         super(plugin);
@@ -24,13 +24,14 @@ public class SkillStoneskin extends PassiveSkill{
 
         registerEvent(Type.ENTITY_DAMAGE, new SkillPlayerListener(), Priority.High);
     }
+
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
         node.setProperty("damage-multipler", 0.80);
         return node;
     }
-    
+
     public class SkillPlayerListener extends EntityListener {
 
         public void onEntityDamage(EntityDamageEvent event) {

@@ -13,7 +13,7 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.command.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 
-public class SkillPulse extends ActiveSkill{
+public class SkillPulse extends ActiveSkill {
 
     public SkillPulse(Heroes plugin) {
         super(plugin);
@@ -35,16 +35,16 @@ public class SkillPulse extends ActiveSkill{
     @Override
     public boolean use(Hero hero, String[] args) {
         List<Entity> entities = hero.getPlayer().getNearbyEntities(5, 5, 5);
-        for(Entity n : entities){
+        for (Entity n : entities) {
 
-                Player pN = (Player) n;
-                int healamount = getSetting(hero.getHeroClass(), "damage", 1);
-                EntityDamageEvent damageEvent = new EntityDamageEvent(hero.getPlayer(), DamageCause.ENTITY_ATTACK, healamount);
-                Bukkit.getServer().getPluginManager().callEvent(damageEvent);
-                if (damageEvent.isCancelled()) {
-                    return false;
-                }
-                pN.damage(healamount);
+            Player pN = (Player) n;
+            int healamount = getSetting(hero.getHeroClass(), "damage", 1);
+            EntityDamageEvent damageEvent = new EntityDamageEvent(hero.getPlayer(), DamageCause.ENTITY_ATTACK, healamount);
+            Bukkit.getServer().getPluginManager().callEvent(damageEvent);
+            if (damageEvent.isCancelled()) {
+                return false;
+            }
+            pN.damage(healamount);
         }
         notifyNearbyPlayers(hero.getPlayer().getLocation(), useText, hero.getPlayer().getName(), name);
         return true;

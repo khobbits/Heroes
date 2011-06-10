@@ -11,7 +11,7 @@ import com.herocraftonline.dev.heroes.command.skill.TargettedSkill;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.util.Messaging;
 
-public class SkillSmite extends TargettedSkill{
+public class SkillSmite extends TargettedSkill {
 
     public SkillSmite(Heroes plugin) {
         super(plugin);
@@ -21,7 +21,7 @@ public class SkillSmite extends TargettedSkill{
         minArgs = 0;
         maxArgs = 0;
         identifiers.add("skill smite");
-        }
+    }
 
     @Override
     public ConfigurationNode getDefaultConfig() {
@@ -29,7 +29,7 @@ public class SkillSmite extends TargettedSkill{
         node.setProperty("damage", 10);
         return node;
     }
-    
+
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();

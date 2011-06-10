@@ -2,14 +2,13 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="var" path="LIBRARY/Permissions.jar"/>
-	<classpathentry kind="var" path="LIBRARY/iConomy.jar"/>
-	<classpathentry kind="var" path="LIBRARY/craftbukkit-0.0.1-SNAPSHOT.jar"/>
 	<classpathentry kind="var" path="LIBRARY/BOSEconomy.jar"/>
+	<classpathentry kind="var" path="LIBRARY/BukkitContrib.jar"/>
+	<classpathentry kind="var" path="LIBRARY/craftbukkit-0.0.1-SNAPSHOT.jar"/>
 	<classpathentry kind="var" path="LIBRARY/Essentials.jar"/>
 	<classpathentry kind="var" path="LIBRARY/iCo4.jar"/>
 	<classpathentry kind="var" path="LIBRARY/iCo5.jar"/>
-	<classpathentry kind="var" path="LIBRARY/BukkitContrib.jar"/>
-	<classpathentry kind="var" path="LIBRARY/bukkit-0.0.1-SNAPSHOT.jar"/>
+	<classpathentry kind="var" path="LIBRARY/iConomy.jar"/>
+	<classpathentry kind="var" path="LIBRARY/Permissions.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

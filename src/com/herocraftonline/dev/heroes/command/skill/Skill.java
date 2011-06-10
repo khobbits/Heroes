@@ -17,16 +17,17 @@ import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.util.Messaging;
 
 public abstract class Skill extends BaseCommand {
-    
+
     public final String SETTING_LEVEL = "level";
-    
+
     private ConfigurationNode config;
 
     public Skill(Heroes plugin) {
         super(plugin);
     }
 
-    public void init() {}
+    public void init() {
+    }
 
     protected void notifyNearbyPlayers(Location source, String message, String... args) {
         Player[] players = plugin.getServer().getOnlinePlayers();
@@ -55,7 +56,7 @@ public abstract class Skill extends BaseCommand {
     public ConfigurationNode getDefaultConfig() {
         return Configuration.getEmptyNode();
     }
-    
+
     public double getSetting(HeroClass heroClass, String setting, double def) {
         List<String> keys = heroClass == null ? null : heroClass.getSkillSettings(name).getKeys(null);
         if (keys != null && keys.contains(setting)) {
@@ -64,7 +65,7 @@ public abstract class Skill extends BaseCommand {
             return config.getDouble(setting, def);
         }
     }
-    
+
     public int getSetting(HeroClass heroClass, String setting, int def) {
         List<String> keys = heroClass == null ? null : heroClass.getSkillSettings(name).getKeys(null);
         if (keys != null && keys.contains(setting)) {
@@ -73,7 +74,7 @@ public abstract class Skill extends BaseCommand {
             return config.getInt(setting, def);
         }
     }
-    
+
     public String getSetting(HeroClass heroClass, String setting, String def) {
         List<String> keys = heroClass == null ? null : heroClass.getSkillSettings(name).getKeys(null);
         if (keys != null && keys.contains(setting)) {

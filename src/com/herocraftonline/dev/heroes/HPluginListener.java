@@ -8,6 +8,7 @@ import org.bukkit.event.server.ServerListener;
 import org.bukkit.plugin.Plugin;
 
 import com.nijikokun.register.payment.Methods;
+
 /**
  * Checks for plugins whenever one is enabled
  */
@@ -24,7 +25,6 @@ public class HPluginListener extends ServerListener {
     public void onPluginEnable(PluginEnableEvent event) {
         Plugin plugin = event.getPlugin();
 
-
         // Check if the name is Permissions.
         if (plugin.getDescription().getName().equals("Permissions")) {
             // Check if we haven't already setup Permissions.
@@ -35,13 +35,13 @@ public class HPluginListener extends ServerListener {
         }
 
         // Check if the name is BukkitContrib.
-        if (plugin.getDescription().getName().equals("BukkitContrib")){
+        if (plugin.getDescription().getName().equals("BukkitContrib")) {
             this.plugin.setupBukkitContrib();
         }
 
         // Check to see if we need a payment method
         if (!this.Methods.hasMethod()) {
-            if(this.Methods.setMethod(event.getPlugin())) {
+            if (this.Methods.setMethod(event.getPlugin())) {
                 // You might want to make this a public variable inside your MAIN class public Method Method = null;
                 // then reference it through this.plugin.Method so that way you can use it in the rest of your plugin ;)
                 this.plugin.Method = this.Methods.getMethod();
@@ -53,7 +53,7 @@ public class HPluginListener extends ServerListener {
     public void onPluginDisable(PluginDisableEvent event) {
         Plugin plugin = event.getPlugin();
         // Check if the name is BukkitContrib.
-        if (plugin.getDescription().getName().equals("BukkitContrib")){
+        if (plugin.getDescription().getName().equals("BukkitContrib")) {
             // If BukkitContrib just Disabled then we tell Heroes to stop using BukkitContrib
             Heroes.useBukkitContrib = false;
             // Then we swap all the Players NSH to our Custom NSH.
@@ -66,7 +66,7 @@ public class HPluginListener extends ServerListener {
         if (this.Methods != null && this.Methods.hasMethod()) {
             Boolean check = this.Methods.checkDisabled(event.getPlugin());
 
-            if(check) {
+            if (check) {
                 this.plugin.Method = null;
             }
         }

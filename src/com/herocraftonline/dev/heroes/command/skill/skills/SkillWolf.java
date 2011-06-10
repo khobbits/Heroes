@@ -9,7 +9,7 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.command.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 
-public class SkillWolf extends ActiveSkill{
+public class SkillWolf extends ActiveSkill {
 
     public SkillWolf(Heroes plugin) {
         super(plugin);

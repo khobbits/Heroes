@@ -63,7 +63,7 @@ public class LevelInformationCommand extends BaseCommand {
             expBar += "|";
         }
         expBar += ChatColor.RED + "]";
-        return expBar + " - " + ChatColor.DARK_GREEN + progress*2 + "%";
+        return expBar + " - " + ChatColor.DARK_GREEN + progress * 2 + "%";
     }
 
 }

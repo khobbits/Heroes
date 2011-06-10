@@ -24,7 +24,7 @@ public class HeroEffects {
         this.manager = manager;
         this.hero = hero;
     }
-    
+
     public String[] getEffects() {
         effectLock.readLock().lock();
         String[] effectList = effects.keySet().toArray(new String[0]);

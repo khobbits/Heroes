@@ -22,8 +22,9 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.command.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 
-public class SkillIcebolt extends ActiveSkill{
+public class SkillIcebolt extends ActiveSkill {
     private HashSet<Snowball> snowballs = new HashSet<Snowball>();
+
     public SkillIcebolt(Heroes plugin) {
         super(plugin);
         name = "Icebolt";
@@ -32,8 +33,7 @@ public class SkillIcebolt extends ActiveSkill{
         minArgs = 0;
         maxArgs = 0;
         identifiers.add("skill icebolt");
-        }
-
+    }
 
     @Override
     public boolean use(Hero hero, String[] args) {
@@ -67,7 +67,7 @@ public class SkillIcebolt extends ActiveSkill{
                 EntityDamageByProjectileEvent subEvent = (EntityDamageByProjectileEvent) event;
                 Entity projectile = subEvent.getProjectile();
                 if (projectile instanceof Snowball) {
-                    if(snowballs.contains((Snowball) projectile)){
+                    if (snowballs.contains((Snowball) projectile)) {
                         snowballs.remove((Snowball) projectile);
                         // Damage Event //
                         EntityDamageEvent damageEvent = new EntityDamageEvent(event.getEntity(), DamageCause.ENTITY_ATTACK, 0);
@@ -90,4 +90,3 @@ public class SkillIcebolt extends ActiveSkill{
     }
 
 }
-

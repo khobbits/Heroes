@@ -8,7 +8,7 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.command.skill.TargettedSkill;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 
-public class SkillLeech extends TargettedSkill{
+public class SkillLeech extends TargettedSkill {
 
     public SkillLeech(Heroes plugin) {
         super(plugin);
@@ -29,26 +29,25 @@ public class SkillLeech extends TargettedSkill{
 
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
-        if(!(target instanceof Player)) {
+        if (!(target instanceof Player)) {
             return false;
         }
         Hero tHero = plugin.getHeroManager().getHero((Player) target);
-        if(tHero == null) {
+        if (tHero == null) {
             return false;
         }
         int transferamount = getSetting(hero.getHeroClass(), "transfer-amount", 20);
-        if(tHero.getMana() > transferamount){
-            if((hero.getMana() + transferamount) > 100){
+        if (tHero.getMana() > transferamount) {
+            if ((hero.getMana() + transferamount) > 100) {
                 transferamount = (100 - hero.getMana());
             }
             hero.setMana(hero.getMana() + transferamount);
             tHero.setMana(tHero.getMana() - transferamount);
             notifyNearbyPlayers(hero.getPlayer().getLocation(), useText, hero.getPlayer().getName(), name);
             return true;
-        }else{
+        } else {
             return false;
         }
     }
 
 }
-

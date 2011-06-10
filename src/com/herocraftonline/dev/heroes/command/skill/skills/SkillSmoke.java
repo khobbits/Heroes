@@ -62,12 +62,12 @@ public class SkillSmoke extends ActiveEffectSkill {
 
     public class SkillPlayerListener extends PlayerListener {
         @Override
-        public void onPlayerInteract(PlayerInteractEvent event){
-            if(event.getAction() != Action.PHYSICAL){
+        public void onPlayerInteract(PlayerInteractEvent event) {
+            if (event.getAction() != Action.PHYSICAL) {
                 Player player = event.getPlayer();
                 Hero hero = plugin.getHeroManager().getHero(player);
-                if(hero.getEffects().hasEffect(getName())){
-                    hero.getEffects().expireEffect(name); 
+                if (hero.getEffects().hasEffect(getName())) {
+                    hero.getEffects().expireEffect(name);
                 }
             }
         }

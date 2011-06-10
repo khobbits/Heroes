@@ -6,7 +6,7 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.command.skill.TargettedSkill;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 
-public class SkillCharge extends TargettedSkill{
+public class SkillCharge extends TargettedSkill {
 
     public SkillCharge(Heroes plugin) {
         super(plugin);

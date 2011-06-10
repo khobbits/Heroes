@@ -9,7 +9,7 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.command.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 
-public class SkillTaunt extends ActiveSkill{
+public class SkillTaunt extends ActiveSkill {
 
     public SkillTaunt(Heroes plugin) {
         super(plugin);
@@ -24,8 +24,8 @@ public class SkillTaunt extends ActiveSkill{
     @Override
     public boolean use(Hero hero, String[] args) {
         List<Entity> entities = hero.getPlayer().getNearbyEntities(5, 5, 5);
-        for(Entity n : entities){
-            if(n instanceof Monster){
+        for (Entity n : entities) {
+            if (n instanceof Monster) {
                 ((Monster) n).setTarget(hero.getPlayer());
             }
         }

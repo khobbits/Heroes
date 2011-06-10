@@ -30,7 +30,8 @@ public abstract class PassiveSkill extends Skill {
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args) {}
+    public void execute(CommandSender sender, String[] args) {
+    }
 
     protected void apply(Hero hero) {
         hero.getEffects().putEffect(name, Double.POSITIVE_INFINITY);

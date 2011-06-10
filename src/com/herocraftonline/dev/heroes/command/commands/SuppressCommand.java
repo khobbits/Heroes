@@ -27,20 +27,20 @@ public class SuppressCommand extends BaseCommand {
         if (sender instanceof Player) {
             Player player = (Player) sender;
             Hero hero = plugin.getHeroManager().getHero(player);
-            
+
             if (args.length == 0) {
                 String[] suppressions = hero.getSuppressedSkills();
                 if (suppressions.length == 0) {
                     Messaging.send(player, "No skills suppressed.");
                     return;
                 }
-                
+
                 String list = "Suppressing ";
                 for (String skill : suppressions) {
                     list += skill + ", ";
                 }
                 list = list.substring(0, list.length() - 2);
-                
+
                 Messaging.send(player, list);
             } else {
                 BaseCommand cmd = plugin.getCommandManager().getCommand(args[0]);

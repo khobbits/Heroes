@@ -221,7 +221,7 @@ public class ClassManager {
             String parentName = config.getString("classes." + className + ".parent");
             if (parentName != null && (!parentName.isEmpty() || parentName.equals("null"))) {
                 HeroClass parent = getClass(parentName);
-                if(parent!=null){
+                if (parent != null) {
                     parent.getSpecializations().add(unlinkedClass);
                     unlinkedClass.setParent(parent);
                 } else {
@@ -230,7 +230,7 @@ public class ClassManager {
             }
         }
 
-        if(defaultClass==null) {
+        if (defaultClass == null) {
             plugin.log(Level.SEVERE, "You are missing a Default Class, this will cause ALOT of issues!");
         }
         // Save the Configuration setup to file, we do this so that any defaults values loaded are saved to file.

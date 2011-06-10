@@ -21,7 +21,7 @@ import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.util.Messaging;
 
 public abstract class TargettedSkill extends ActiveSkill {
-    
+
     public final String SETTING_MAXDISTANCE = "max-distance";
 
     public TargettedSkill(Heroes plugin) {
@@ -83,9 +83,9 @@ public abstract class TargettedSkill extends ActiveSkill {
      * Returns the first LivingEntity in the line of sight of a Player.
      * 
      * @param player
-     *            the player being checked
+     *        the player being checked
      * @param maxDistance
-     *            the maximum distance to search for a target
+     *        the maximum distance to search for a target
      * @return the player's target or null if no target is found
      */
     public static LivingEntity getPlayerTarget(Player player, int maxDistance) {
@@ -132,7 +132,7 @@ public abstract class TargettedSkill extends ActiveSkill {
         }
         return true;
     }
-    
+
     public static String getEntityName(LivingEntity entity) {
         return entity instanceof Player ? ((Player) entity).getName() : entity.getClass().getSimpleName().substring(5);
     }

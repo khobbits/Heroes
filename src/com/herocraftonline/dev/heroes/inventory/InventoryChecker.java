@@ -16,7 +16,7 @@ public class InventoryChecker {
 
     private Heroes plugin;
 
-    public InventoryChecker(Heroes plugin){
+    public InventoryChecker(Heroes plugin) {
         this.plugin = plugin;
     }
 
@@ -26,7 +26,7 @@ public class InventoryChecker {
      */
     public void checkInventory(String name) {
         Player player = Bukkit.getServer().getPlayer(name);
-        if(player != null){
+        if (player != null) {
             checkInventory(player);
         }
     }
@@ -116,10 +116,10 @@ public class InventoryChecker {
     /**
      * Synchronize the Clients Inventory with the Server. This is dealt during a scheduler so it happens after ANY changes are made.
      * Synchronizing during changes often results in the client losing Sync.
-     *
+     * 
      * @param player
      */
-    public void syncInventory(final Player player){
+    public void syncInventory(final Player player) {
         plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
             @SuppressWarnings("deprecation")
             @Override

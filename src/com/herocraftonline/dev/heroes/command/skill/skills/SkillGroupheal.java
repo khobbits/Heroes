@@ -10,7 +10,7 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.command.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 
-public class SkillGroupheal extends ActiveSkill{
+public class SkillGroupheal extends ActiveSkill {
 
     public SkillGroupheal(Heroes plugin) {
         super(plugin);
@@ -28,12 +28,12 @@ public class SkillGroupheal extends ActiveSkill{
         node.setProperty("heal-amount", 2);
         return node;
     }
-    
+
     @Override
     public boolean use(Hero hero, String[] args) {
         List<Entity> entities = hero.getPlayer().getNearbyEntities(5, 5, 5);
-        for(Entity n : entities){
-            if(n instanceof Player){
+        for (Entity n : entities) {
+            if (n instanceof Player) {
                 Player pN = (Player) n;
                 int healamount = getSetting(hero.getHeroClass(), "heal-amount", 2);
                 pN.setHealth(pN.getHealth() + healamount);

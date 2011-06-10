@@ -11,7 +11,7 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.command.skill.TargettedSkill;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 
-public class SkillDrainsoul extends TargettedSkill{
+public class SkillDrainsoul extends TargettedSkill {
 
     public SkillDrainsoul(Heroes plugin) {
         super(plugin);
@@ -33,9 +33,9 @@ public class SkillDrainsoul extends TargettedSkill{
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
 
-        if(target instanceof Player){
+        if (target instanceof Player) {
             Player targetPlayer = (Player) target;
-            if(targetPlayer.getName().equalsIgnoreCase(player.getName())){
+            if (targetPlayer.getName().equalsIgnoreCase(player.getName())) {
                 return false;
             }
         }
@@ -49,7 +49,7 @@ public class SkillDrainsoul extends TargettedSkill{
 
         int absorbamount = getSetting(hero.getHeroClass(), "absorb-amount", 4);
 
-        if((hero.getPlayer().getHealth() + absorbamount) > 100){
+        if ((hero.getPlayer().getHealth() + absorbamount) > 100) {
             absorbamount = (100 - hero.getPlayer().getHealth());
         }
 

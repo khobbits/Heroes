@@ -23,7 +23,8 @@ public class SkillTrack extends ActiveSkill {
     }
 
     @Override
-    public void init() {}
+    public void init() {
+    }
 
     @Override
     public ConfigurationNode getDefaultConfig() {
