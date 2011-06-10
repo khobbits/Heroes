@@ -88,14 +88,19 @@ public class CommandManager {
             return true;
         }
         Player player = (Player) sender;
-        if (player.isOp()) {
-            // If Player is Op we always let them use it.
-            return true;
-        } else if (Heroes.Permissions != null && Heroes.Permissions.has(player, node)) {
-            // If Permissions is enabled we check against them.
-            return true;
-        } else {
-            // If the Player doesn't have Permissions and isn't an Op then
+        try {
+            if (player.isOp()) {
+                // If Player is Op we always let them use it.
+                return true;
+            } else if (Heroes.Permissions != null && Heroes.Permissions.safeGetUser(player.getWorld().getName(), player.getName()).hasPermission(node)) {
+                // If Permissions is enabled we check against them.
+                return true;
+            } else {
+                // If the Player doesn't have Permissions and isn't an Op then
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
     }
