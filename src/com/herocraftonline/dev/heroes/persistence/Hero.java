@@ -123,6 +123,11 @@ public class Hero {
         this.plugin.getInventoryChecker().checkInventory(getPlayer());
     }
 
+    public void changeHeroClass(HeroClass heroClass) {
+        setHeroClass(heroClass);
+        binds.clear();
+    }
+
     public void gainExp(int expGain, ExperienceType source) {
         int exp = getExperience();
         // Work out the correct amount of Exp to award using the Classes Modifier.
