@@ -5,8 +5,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityListener;
+import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.command.skill.ActiveEffectSkill;
@@ -36,12 +36,18 @@ public class SkillManaShield extends ActiveEffectSkill {
         notifyNearbyPlayers(player.getLocation(), useText, playerName, name);
         return true;
     }
-
+    
+    @Override
+    public ConfigurationNode getDefaultConfig() {
+        ConfigurationNode node = super.getDefaultConfig();
+        node.setProperty("mana-amount", 20);
+        return node;
+    }
     public class SkillEntityListener extends EntityListener {
 
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
-            if (event.isCancelled() && event.getCause() != DamageCause.ENTITY_ATTACK) {
+            if (event.isCancelled()) {
                 return;
             }
 
@@ -51,8 +57,9 @@ public class SkillManaShield extends ActiveEffectSkill {
                 Hero hero = plugin.getHeroManager().getHero(player);
                 HeroEffects effects = plugin.getHeroManager().getHero(player).getEffects();
                 if (effects.hasEffect(name)) {
+                    int absorbamount = getSetting(hero.getHeroClass(), "mana-amount", 20);
                     event.setDamage((int) (event.getDamage() * 0.50));
-                    hero.setMana((int) (hero.getMana() * 0.60));
+                    hero.setMana(hero.getMana() - absorbamount);
                 }
             }
         }
