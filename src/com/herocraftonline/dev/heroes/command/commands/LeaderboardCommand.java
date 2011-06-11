@@ -30,6 +30,7 @@ public class LeaderboardCommand extends BaseCommand{
         this.permissionNode = "heroes.leaderboard";
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void execute(CommandSender sender, String[] args) {
         Hero[] heroList = plugin.getHeroManager().getHeroes();
@@ -39,7 +40,7 @@ public class LeaderboardCommand extends BaseCommand{
             heroValues.put(hero, hero.getExperience());
         }
         heroValues = (HashMap<Hero, Integer>) sortByValue(heroValues);
-        for(Hero hero : heroList){
+        for(Hero hero : heroValues.keySet()){
             if(i == 5){
                 return;
             }

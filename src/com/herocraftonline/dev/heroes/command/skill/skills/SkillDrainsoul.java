@@ -18,7 +18,7 @@ public class SkillDrainsoul extends TargettedSkill {
         name = "Drainsoul";
         description = "Absorb health from target";
         minArgs = 0;
-        maxArgs = 0;
+        maxArgs = 1;
         identifiers.add("skill drainsoul");
     }
 
