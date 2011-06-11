@@ -2,7 +2,6 @@ package com.herocraftonline.dev.heroes.command.skill.skills;
 
 import java.util.List;
 
-import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
@@ -32,7 +31,7 @@ public class SkillLickWounds extends ActiveSkill{
         for(Entity n : entityList){
             if(n instanceof Wolf){
                 Wolf nWolf = (Wolf) n;
-                if(nWolf.getOwner().toString() == playerName){
+                if(nWolf.getOwner() == player){
                     nWolf.setHealth(nWolf.getHealth() + 30);
                 }
             }
