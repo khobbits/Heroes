@@ -18,7 +18,7 @@ public class AdminClassCommand extends BaseCommand {
         usage = "/hero admin class §9<player> <class>";
         minArgs = 2;
         maxArgs = 2;
-        identifiers.add("hero admin change");
+        identifiers.add("hero admin class");
         this.permissionNode = "heroes.admin.classchange";
     }
 

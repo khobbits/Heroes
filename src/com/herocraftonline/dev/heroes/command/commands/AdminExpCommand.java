@@ -14,7 +14,7 @@ public class AdminExpCommand extends BaseCommand {
         super(plugin);
         name = "AdminExpCommand";
         description = "Changes a users exp";
-        usage = "/hero admin class §9<player> <exp>";
+        usage = "/hero admin exp §9<player> <exp>";
         minArgs = 2;
         maxArgs = 2;
         identifiers.add("hero admin exp");

@@ -5,24 +5,24 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityListener;
-import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.command.skill.ActiveEffectSkill;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.persistence.HeroEffects;
 
-public class SkillManaShield extends ActiveEffectSkill {
+public class SkillFlameshield extends ActiveEffectSkill {
 
-    public SkillManaShield(Heroes plugin) {
+    public SkillFlameshield(Heroes plugin) {
         super(plugin);
-        name = "ManaShield";
-        description = "Uses your mana as a shield";
-        usage = "/skill manashield";
+        name = "Flameshield";
+        description = "Fire can't hurt you!";
+        usage = "/skill flameshield";
         minArgs = 0;
         maxArgs = 0;
-        identifiers.add("skill manashield");
+        identifiers.add("skill flameshield");
 
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
     }
@@ -36,30 +36,21 @@ public class SkillManaShield extends ActiveEffectSkill {
         notifyNearbyPlayers(player.getLocation(), useText, playerName, name);
         return true;
     }
-    
-    @Override
-    public ConfigurationNode getDefaultConfig() {
-        ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty("mana-amount", 20);
-        return node;
-    }
+
     public class SkillEntityListener extends EntityListener {
 
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
-            if (event.isCancelled()) {
+            if (event.isCancelled() && event.getCause() != DamageCause.FIRE && event.getCause() != DamageCause.LAVA) {
                 return;
             }
 
             Entity defender = event.getEntity();
             if (defender instanceof Player) {
                 Player player = (Player) defender;
-                Hero hero = plugin.getHeroManager().getHero(player);
                 HeroEffects effects = plugin.getHeroManager().getHero(player).getEffects();
                 if (effects.hasEffect(name)) {
-                    int absorbamount = getSetting(hero.getHeroClass(), "mana-amount", 20);
-                    event.setDamage((int) (event.getDamage() * 0.50));
-                    hero.setMana(hero.getMana() - absorbamount);
+                    event.setCancelled(true);
                 }
             }
         }

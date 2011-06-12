@@ -30,6 +30,7 @@ public class LeaderboardCommand extends BaseCommand{
         this.permissionNode = "heroes.leaderboard";
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void execute(CommandSender sender, String[] args) {
         Hero[] heroList = plugin.getHeroManager().getHeroes();
@@ -39,31 +40,30 @@ public class LeaderboardCommand extends BaseCommand{
             heroValues.put(hero, hero.getExperience());
         }
         heroValues = (HashMap<Hero, Integer>) sortByValue(heroValues);
-        for(Hero hero : heroList){
-            if(i == 5){
-                return;
-            }
+        for(Hero hero : heroValues.keySet()){
             i++;
-            Player player = hero.getPlayer();
-            Messaging.send(sender, "$1 - $2", player.getName(), Integer.toString(hero.getExperience()));
+            if(i >= (heroValues.size() - 5)){
+                Player player = hero.getPlayer();
+                Messaging.send(sender, "$1 - $2", player.getName(), Integer.toString(hero.getExperience()));
+            }
         }
     }
-    
+
     @SuppressWarnings({ "unchecked", "rawtypes" })
     static Map sortByValue(Map map) {
         List list = new LinkedList(map.entrySet());
         Collections.sort(list, new Comparator() {
-             public int compare(Object o1, Object o2) {
-                  return ((Comparable) ((Map.Entry) (o1)).getValue())
-                 .compareTo(((Map.Entry) (o2)).getValue());
-             }
+            public int compare(Object o1, Object o2) {
+                return ((Comparable) ((Map.Entry) (o1)).getValue())
+                .compareTo(((Map.Entry) (o2)).getValue());
+            }
         });
 
-       Map result = new LinkedHashMap();
-       for (Iterator it = list.iterator(); it.hasNext();) {
-           Map.Entry entry = (Map.Entry)it.next();
-           result.put(entry.getKey(), entry.getValue());
-       }
-       return result;
-   }
+        Map result = new LinkedHashMap();
+        for (Iterator it = list.iterator(); it.hasNext();) {
+            Map.Entry entry = (Map.Entry)it.next();
+            result.put(entry.getKey(), entry.getValue());
+        }
+        return result;
+    }
 }
