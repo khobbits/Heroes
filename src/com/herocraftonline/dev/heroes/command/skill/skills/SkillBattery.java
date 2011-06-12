@@ -29,6 +29,7 @@ public class SkillBattery extends TargettedSkill {
 
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
+        
         if (!(target instanceof Player)) {
             return false;
         }
@@ -43,7 +44,8 @@ public class SkillBattery extends TargettedSkill {
             }
             hero.setMana(hero.getMana() - transferamount);
             tHero.setMana(tHero.getMana() + transferamount);
-            notifyNearbyPlayers(hero.getPlayer().getLocation(), useText, hero.getPlayer().getName(), name);
+            Player player = hero.getPlayer();
+            notifyNearbyPlayers(player.getLocation(), useText, player.getName(), name, target == player ? "himself" : getEntityName(target));
             return true;
         } else {
             return false;
