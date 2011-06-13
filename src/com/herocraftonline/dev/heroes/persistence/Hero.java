@@ -20,6 +20,7 @@ import com.herocraftonline.dev.heroes.api.LeveledEvent;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
 import com.herocraftonline.dev.heroes.command.skill.Skill;
+import com.herocraftonline.dev.heroes.party.HeroParty;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Properties;
 
@@ -29,6 +30,7 @@ public class Hero {
     protected Player player;
     protected HeroClass heroClass;
     protected int mana = 0;
+    protected HeroParty party;
     protected boolean verbose = true;
     protected HeroEffects effects;
     protected Map<String, Integer> experience = new HashMap<String, Integer>();
@@ -267,5 +269,13 @@ public class Hero {
             return false;
         }
         return true;
+    }
+
+    public HeroParty getParty() {
+        return party;
+    }
+
+    public void setParty(HeroParty party) {
+        this.party = party;
     }
 }

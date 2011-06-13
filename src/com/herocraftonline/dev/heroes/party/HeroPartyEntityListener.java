@@ -15,15 +15,17 @@ public class HeroPartyEntityListener extends EntityListener{
         this.plugin = plugin;
     }
     
+    
+    //Handles PVP
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         if(event.getEntity() instanceof Player && event.getDamager() instanceof Player) {
             Player entityPlayer = (Player) event.getEntity();
             Player damagerPlayer = (Player) event.getDamager();
             Hero entityHero = plugin.getHeroManager().getHero(entityPlayer);
             Hero damagerHero = plugin.getHeroManager().getHero(damagerPlayer);
-            //if players are in same party
-            //if party is pvp off
-            //cancel
+            if(entityHero.getParty() == damagerHero.getParty() && entityHero.getParty().checkMode("PVP")) {
+                event.setCancelled(true);
+            }
         }
     }
 }

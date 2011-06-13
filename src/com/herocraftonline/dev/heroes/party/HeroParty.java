@@ -10,6 +10,10 @@ public class HeroParty {
     private List<String> modes;
     private List<Player> invites;
     
+    public HeroParty(Player leader) {
+        this.leader = leader;
+    }
+    
     public Player getLeader() {
         return leader;
     }
@@ -44,6 +48,14 @@ public class HeroParty {
         members.add(player);
     }
     
+    public List<Player> getMembers() {
+        return members;
+    }
+
+    public void setMembers(List<Player> members) {
+        this.members = members;
+    }
+
     public void addInvite(Player player) {
         for(Player p : invites) {
             if(p == player) {
@@ -69,5 +81,8 @@ public class HeroParty {
         modes.remove(mode);
     }
     
+    public boolean checkMode(String mode) {
+        return modes.contains(mode);
+    }
     
 }
