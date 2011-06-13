@@ -20,7 +20,6 @@ import com.herocraftonline.dev.heroes.api.LeveledEvent;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
 import com.herocraftonline.dev.heroes.command.skill.Skill;
-import com.herocraftonline.dev.heroes.party.HeroParty;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Properties;
 
@@ -31,13 +30,11 @@ public class Hero {
     protected HeroClass heroClass;
     protected int mana = 0;
     protected boolean verbose = true;
-    protected HeroParty party;
     protected HeroEffects effects;
     protected Map<String, Integer> experience = new HashMap<String, Integer>();
     protected Map<String, Long> cooldowns = new HashMap<String, Long>();
     protected Map<Entity, CreatureType> summons = new HashMap<Entity, CreatureType>();
     protected Map<Material, String[]> binds = new HashMap<Material, String[]>();
-    protected Map<Player, HeroParty> invites = new HashMap<Player, HeroParty>();
     protected List<ItemStack> itemRecovery = new ArrayList<ItemStack>();
     protected Set<String> suppressedSkills = new HashSet<String>();
 
@@ -219,18 +216,6 @@ public class Hero {
 
     public void unbind(Material material) {
         binds.remove(material);
-    }
-
-    public HeroParty getParty() {
-        return party;
-    }
-
-    public void setParty(HeroParty party) {
-        this.party = party;
-    }
-
-    public Map<Player, HeroParty> getInvites() {
-        return invites;
     }
 
     public boolean isVerbose() {
