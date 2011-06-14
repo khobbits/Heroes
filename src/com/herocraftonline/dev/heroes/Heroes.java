@@ -317,7 +317,7 @@ public class Heroes extends JavaPlugin {
      * Load all the external classes.
      */
     public void loadSkills() {
-        File dir = new File(getDataFolder(), "externals");
+        File dir = new File(getDataFolder(), "skills");
         ArrayList<String> skNo = new ArrayList<String>();
         dir.mkdir();
         boolean added = false;
