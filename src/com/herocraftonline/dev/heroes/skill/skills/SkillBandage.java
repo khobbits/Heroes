@@ -46,7 +46,7 @@ public class SkillBandage extends TargettedSkill {
                 return false;
             }
             
-            target.setHealth(target.getHealth() + getSetting(hero.getHeroClass(), "health", t));
+            target.setHealth(target.getHealth() + getSetting(hero.getHeroClass(), "health", 5));
             
         }
         return false;
