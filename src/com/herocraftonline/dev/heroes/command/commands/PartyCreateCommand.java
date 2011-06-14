@@ -27,6 +27,7 @@ public class PartyCreateCommand extends BaseCommand {
             Hero hero = plugin.getHeroManager().getHero(player);
             if(hero.getParty() != null) {
                 HeroParty newParty = new HeroParty(player);
+                newParty.addMember(player);
                 plugin.getPartyManager().addParty(newParty);
                 hero.setParty(newParty);
             }

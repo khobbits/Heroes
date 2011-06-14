@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.bukkit.entity.Player;
 
+import com.herocraftonline.dev.heroes.util.Messaging;
+
 public class HeroParty {
     private Player leader;
     private List<Player> members;
@@ -82,6 +84,12 @@ public class HeroParty {
     
     public boolean checkMode(String mode) {
         return modes.contains(mode);
+    }
+    
+    public void messageParty(String msg, String... params) {
+        for(Player p : members) {
+            Messaging.send(p, msg, params);
+        }
     }
     
 }
