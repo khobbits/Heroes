@@ -36,7 +36,7 @@ public class SkillManaShield extends ActiveEffectSkill {
         notifyNearbyPlayers(player.getLocation(), useText, playerName, name);
         return true;
     }
-    
+
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
@@ -59,7 +59,11 @@ public class SkillManaShield extends ActiveEffectSkill {
                 if (effects.hasEffect(name)) {
                     int absorbamount = getSetting(hero.getHeroClass(), "mana-amount", 20);
                     event.setDamage((int) (event.getDamage() * 0.50));
-                    hero.setMana(hero.getMana() - absorbamount);
+                    if(hero.getMana() < 20) {
+                        effects.expireEffect(name);
+                    }else {
+                        hero.setMana(hero.getMana() - absorbamount);
+                    }
                 }
             }
         }

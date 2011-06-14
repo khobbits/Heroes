@@ -26,12 +26,14 @@ import com.herocraftonline.dev.heroes.command.commands.BindSkillCommand;
 import com.herocraftonline.dev.heroes.command.commands.ChooseCommand;
 import com.herocraftonline.dev.heroes.command.commands.ConfigReloadCommand;
 import com.herocraftonline.dev.heroes.command.commands.HelpCommand;
+import com.herocraftonline.dev.heroes.command.commands.HeroSaveCommand;
 import com.herocraftonline.dev.heroes.command.commands.LeaderboardCommand;
 import com.herocraftonline.dev.heroes.command.commands.LevelInformationCommand;
 import com.herocraftonline.dev.heroes.command.commands.ManaCommand;
 import com.herocraftonline.dev.heroes.command.commands.PartyAcceptCommand;
 import com.herocraftonline.dev.heroes.command.commands.PartyCreateCommand;
 import com.herocraftonline.dev.heroes.command.commands.PartyInviteCommand;
+import com.herocraftonline.dev.heroes.command.commands.PartyWhoCommand;
 import com.herocraftonline.dev.heroes.command.commands.PathsCommand;
 import com.herocraftonline.dev.heroes.command.commands.RecoverItemsCommand;
 import com.herocraftonline.dev.heroes.command.commands.SkillListCommand;
@@ -174,7 +176,8 @@ public class Heroes extends JavaPlugin {
     }
 
     /**
-     * Check to see if BukkitContrib is enabled on the server, if so inform Heroes to use BukkitContrib instead.
+     * Check to see if BukkitContrib is enabled on the server, if so inform Heroes to use
+     * BukkitContrib instead.
      */
     public void setupBukkitContrib() {
         Plugin test = this.getServer().getPluginManager().getPlugin("BukkitContrib");
@@ -247,6 +250,7 @@ public class Heroes extends JavaPlugin {
         commandManager.addCommand(new PartyAcceptCommand(this));
         commandManager.addCommand(new PartyCreateCommand(this));
         commandManager.addCommand(new PartyInviteCommand(this));
+        commandManager.addCommand(new PartyWhoCommand(this));
 
         // Page 3
         commandManager.addCommand(new RecoverItemsCommand(this));
@@ -255,6 +259,7 @@ public class Heroes extends JavaPlugin {
         commandManager.addCommand(new AdminExpCommand(this));
         commandManager.addCommand(new AdminClassCommand(this));
         commandManager.addCommand(new LeaderboardCommand(this));
+        commandManager.addCommand(new HeroSaveCommand(this));
     }
 
     /**
@@ -283,7 +288,8 @@ public class Heroes extends JavaPlugin {
     }
 
     /**
-     * Print messages to the server Log as well as to our DebugLog. 'debugLog' is used to seperate Heroes information from the Servers Log Output.
+     * Print messages to the server Log as well as to our DebugLog. 'debugLog' is used to seperate
+     * Heroes information from the Servers Log Output.
      * 
      * @param level
      * @param msg
@@ -294,7 +300,8 @@ public class Heroes extends JavaPlugin {
     }
 
     /**
-     * Print messages to the Debug Log, if the servers in Debug Mode then we also wan't to print the messages to the standard Server Console.
+     * Print messages to the Debug Log, if the servers in Debug Mode then we also wan't to print the
+     * messages to the standard Server Console.
      * 
      * @param level
      * @param msg
@@ -310,7 +317,7 @@ public class Heroes extends JavaPlugin {
      * Load all the external classes.
      */
     public void loadSkills() {
-        File dir = new File(getDataFolder(), "skills");
+        File dir = new File(getDataFolder(), "externals");
         ArrayList<String> skNo = new ArrayList<String>();
         dir.mkdir();
         boolean added = false;

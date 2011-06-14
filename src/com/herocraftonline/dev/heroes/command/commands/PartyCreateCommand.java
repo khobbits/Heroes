@@ -7,6 +7,7 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.command.BaseCommand;
 import com.herocraftonline.dev.heroes.party.HeroParty;
 import com.herocraftonline.dev.heroes.persistence.Hero;
+import com.herocraftonline.dev.heroes.util.Messaging;
 
 public class PartyCreateCommand extends BaseCommand {
 
@@ -25,11 +26,12 @@ public class PartyCreateCommand extends BaseCommand {
         if (sender instanceof Player) {
             Player player = (Player) sender;
             Hero hero = plugin.getHeroManager().getHero(player);
-            if(hero.getParty() != null) {
+            if(hero.getParty() == null) {
                 HeroParty newParty = new HeroParty(player);
                 newParty.addMember(player);
                 plugin.getPartyManager().addParty(newParty);
                 hero.setParty(newParty);
+                Messaging.send(player, "Your party has been created", (String[]) null);
             }
         }
     }

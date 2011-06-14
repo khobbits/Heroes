@@ -22,11 +22,13 @@ public class SkillBarrage extends ActiveSkill {
     @Override
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
+        String playerName = player.getName();
         double diff = (2 * Math.PI) / 24.0;
         for (double a = 0; a < 2 * Math.PI; a += diff) {
             Vector vel = new Vector(Math.cos(a), 0, Math.sin(a));
             player.shootArrow().setVelocity(vel);
         }
+        notifyNearbyPlayers(player.getLocation(), useText, playerName, name);
         return true;
     }
 }

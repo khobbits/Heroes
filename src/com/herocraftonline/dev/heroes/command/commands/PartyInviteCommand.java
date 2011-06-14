@@ -1,5 +1,7 @@
 package com.herocraftonline.dev.heroes.command.commands;
 
+import java.util.logging.Level;
+
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -25,9 +27,14 @@ public class PartyInviteCommand extends BaseCommand {
         if (sender instanceof Player) {
             Player player = (Player) sender;
             Hero hero = plugin.getHeroManager().getHero(player);
-            if(hero.getParty() != null && hero.getParty().getLeader() == player && plugin.getServer().getPlayer(args[0]) != null) {
+            if(hero.getParty() != null &&
+                    hero.getParty().getLeader() == player &&
+                    plugin.getServer().getPlayer(args[0]) != null) {
+                plugin.log(Level.INFO, "It is in a party, is the leader and the target is true!");
                 hero.getParty().addInvite(plugin.getServer().getPlayer(args[0]));
                 Messaging.send(plugin.getServer().getPlayer(args[0]), "$1 has invited you to their party", player.getName());
+            }else {
+                plugin.log(Level.INFO, "The damn command isn't worked, numbnuts");
             }
         }
     }

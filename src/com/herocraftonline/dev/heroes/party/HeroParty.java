@@ -1,6 +1,7 @@
 package com.herocraftonline.dev.heroes.party;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.bukkit.entity.Player;
 
@@ -8,9 +9,9 @@ import com.herocraftonline.dev.heroes.util.Messaging;
 
 public class HeroParty {
     private Player leader;
-    private List<Player> members;
-    private List<String> modes;
-    private List<Player> invites;
+    private Set<Player> members = new HashSet<Player>();
+    private Set<String> modes = new HashSet<String>();
+    private Set<Player> invites = new HashSet<Player>();
     
     public HeroParty(Player leader) {
         this.leader = leader;
@@ -29,44 +30,31 @@ public class HeroParty {
     }
     
     public void removeMember(Player player) {
-        for(Player p : members) {
-            if(p == player) {
-                members.remove(player);
-            }
+        if(members.contains(player)) {
+            members.remove(player);
         }
     }
     
     public void addMember(Player player) {
-        for(Player p : members) {
-            if(p == player) {
-                return;
-            }
+        if(members.contains(player)) {
+            members.add(player);
         }
-        members.add(player);
     }
     
-    public List<Player> getMembers() {
+    public Set<Player> getMembers() {
         return members;
     }
 
-    public void setMembers(List<Player> members) {
-        this.members = members;
-    }
 
     public void addInvite(Player player) {
-        for(Player p : invites) {
-            if(p == player) {
-                return;
-            }
+        if(invites.contains(player)) {
+            invites.add(player);
         }
-        invites.add(player);
     }
     
     public void removeInvite(Player player) {
-        for(Player p : invites) {
-            if(p == player) {
-                invites.remove(player);
-            }
+        if(invites.contains(player)) {
+            invites.remove(player);
         }
     }
     

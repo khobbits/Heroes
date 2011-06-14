@@ -30,7 +30,7 @@ public class Hero {
     protected Player player;
     protected HeroClass heroClass;
     protected int mana = 0;
-    protected HeroParty party;
+    protected HeroParty party = null;
     protected boolean verbose = true;
     protected HeroEffects effects;
     protected Map<String, Integer> experience = new HashMap<String, Integer>();
