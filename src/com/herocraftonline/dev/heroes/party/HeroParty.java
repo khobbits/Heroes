@@ -23,12 +23,7 @@ public class HeroParty {
     }
     
     public boolean isPartyMember(Player player) {
-        for(Player p : members) {
-            if(p == player) {
-                return true;
-            }
-        }
-        return false;
+        return members.contains(player);
     }
     
     public void removeMember(Player player) {
@@ -71,6 +66,10 @@ public class HeroParty {
                 invites.remove(player);
             }
         }
+    }
+    
+    public boolean isInvited(Player player) {
+        return invites.contains(player);
     }
     
     public void addMode(String mode) {

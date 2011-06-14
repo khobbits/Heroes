@@ -14,7 +14,7 @@ public class PartyAcceptCommand extends BaseCommand {
         super(plugin);
         name = "PartyAccept";
         description = "Accept a party invite";
-        usage = "/party accept";
+        usage = "/party accept <player>";
         minArgs = 1;
         maxArgs = 1;
         identifiers.add("party accept");
@@ -25,7 +25,17 @@ public class PartyAcceptCommand extends BaseCommand {
         if (sender instanceof Player) {
             Player player = (Player) sender;
             Hero hero = plugin.getHeroManager().getHero(player);
-            //TODO: finish this
+            if(plugin.getServer().getPlayer(args[0]) != null) {
+                Player newPlayer = plugin.getServer().getPlayer(args[0]);
+                Hero newHero = plugin.getHeroManager().getHero(newPlayer);
+                if(newHero.getParty().isInvited(player)) {
+                    hero.setParty(newHero.getParty());
+                }else {
+                    Messaging.send(player, "Sorry, $1 hasn't invited you to their party", newPlayer.getName());
+                }
+            }else {
+                Messaging.send(player, "Sorry, $1 doesn't match anyone in-game", args[0]);
+            }
         }
     }
 
