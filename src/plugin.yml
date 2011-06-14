@@ -21,6 +21,10 @@ commands:
     aliases: ['hskill']
     description: Heroes command
     usage: /<command> <skill>
+  skills:
+    aliases: ['skilllist']
+    description: Heroes command
+    usage: /<command>
   hlevel:
     aliases: ['level','lvl']
     description: Display Hero level information
