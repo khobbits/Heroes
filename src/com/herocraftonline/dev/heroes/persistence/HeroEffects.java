@@ -9,7 +9,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import com.herocraftonline.dev.heroes.command.BaseCommand;
 import com.herocraftonline.dev.heroes.command.CommandManager;
-import com.herocraftonline.dev.heroes.command.skill.ActiveEffectSkill;
+import com.herocraftonline.dev.heroes.skill.ActiveEffectSkill;
 
 public class HeroEffects {
 

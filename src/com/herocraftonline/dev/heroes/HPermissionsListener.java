@@ -9,8 +9,8 @@ import org.bukkit.event.CustomEventListener;
 import org.bukkit.event.Event;
 
 import com.herocraftonline.dev.heroes.command.BaseCommand;
-import com.herocraftonline.dev.heroes.command.skill.OutsourcedSkill;
 import com.herocraftonline.dev.heroes.persistence.Hero;
+import com.herocraftonline.dev.heroes.skill.OutsourcedSkill;
 import com.nijiko.permissions.StorageReloadEvent;
 import com.nijiko.permissions.WorldConfigLoadEvent;
 
