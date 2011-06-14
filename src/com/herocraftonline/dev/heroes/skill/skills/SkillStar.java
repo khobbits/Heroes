@@ -1,16 +1,19 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
+import org.bukkit.entity.Egg;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
 import org.bukkit.event.entity.EntityDamageByProjectileEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityListener;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.player.PlayerEggThrowEvent;
+import org.bukkit.event.player.PlayerListener;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
+import com.herocraftonline.dev.heroes.persistence.HeroEffects;
 import com.herocraftonline.dev.heroes.skill.PassiveSkill;
 
 public class SkillStar extends PassiveSkill {
@@ -22,7 +25,7 @@ public class SkillStar extends PassiveSkill {
         minArgs = 0;
         maxArgs = 0;
 
-        registerEvent(Type.ENTITY_DAMAGE, new SkillPlayerListener(), Priority.High);
+        registerEvent(Type.PLAYER_EGG_THROW, new SkillPlayerListener(), Priority.High);
     }
 
     @Override
@@ -32,23 +35,18 @@ public class SkillStar extends PassiveSkill {
         return node;
     }
 
-    public class SkillPlayerListener extends EntityListener {
+    public class SkillPlayerListener extends PlayerListener {
 
-        public void onEntityDamage(EntityDamageEvent event) {
-            if (event.isCancelled() || !(event.getCause() == DamageCause.ENTITY_ATTACK)) {
-                return;
+        public void onEntityDamage(PlayerEggThrowEvent event) {
+            Player player = event.getPlayer();
+            Hero hero = plugin.getHeroManager().getHero(player);
+            HeroEffects effects = hero.getEffects();
+            Egg egg = event.getEgg();
+            if(effects.hasEffect(name)) {
+                event.setHatching(false);
+                player.damage(getSetting(hero.getHeroClass(), "damage", 4));
             }
-            if (event instanceof EntityDamageByProjectileEvent) {
-                EntityDamageByProjectileEvent subEvent = (EntityDamageByProjectileEvent) event;
-                if (subEvent.getEntity() instanceof Player) {
-                    Player player = (Player) subEvent.getEntity();
-                    Hero hero = plugin.getHeroManager().getHero(player);
-                    if (hero.getEffects().hasEffect(name)) {
-                        int damage = getSetting(hero.getHeroClass(), "damage", 4);
-                        subEvent.setDamage(damage);
-                    }
-                }
-            }
+            
         }
     }
 
