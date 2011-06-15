@@ -1,7 +1,7 @@
 <project name="Heroes" default="build" basedir=".">
     <property name="dir.bin" value="bin" />
     <property name="dir.dist" value="build" />
-    <property name="dir.bin.skills" value="com/herocraftonline/dev/heroes/command/skill/skills" />
+	<property name="dir.bin.skills" value="com/herocraftonline/dev/heroes/skill/skills" />
     <property name="dir.dist.skills" value="Heroes/externals" />
     
 	<property name="classpath" value="libs"/>
@@ -48,7 +48,7 @@
     <target name="jar-skill">
         <basename file="${files}" suffix=".class" property="basename" />
         <echo message="${basename}" />
-        <echo file="${dir.bin}/skill.info" message="main-class: com.herocraftonline.dev.heroes.command.skill.skills.${basename}" />
+        <echo file="${dir.bin}/skill.info" message="main-class: com.herocraftonline.dev.heroes.skill.skills.${basename}" />
         <jar jarfile="${dir.dist}/${dir.dist.skills}/${basename}.jar" basedir="${dir.bin}" includes="${dir.bin.skills}/${basename}*.class skill.info">
             <manifest>
                 <attribute name="Class-Path" value="../../Heroes.jar" />
