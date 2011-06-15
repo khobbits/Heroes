@@ -73,7 +73,7 @@ public class SkillFirearrow extends ActiveSkill {
                 return;
             }
             if (event instanceof EntityDamageByProjectileEvent) {
-                EntityDamageByProjectileEvent subEvent = (EntityDamageByProjectileEvent) event;
+                EntityDamageByProjectileEvent subEvent = (EntityDamageByProjectileEvent) event; 
                 Entity projectile = subEvent.getProjectile();
                 if (projectile instanceof Snowball) {
                     if (projectile.getFireTicks() > 0) {
