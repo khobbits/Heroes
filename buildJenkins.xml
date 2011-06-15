@@ -20,8 +20,10 @@
     </taskdef>
 
     <target name="build">
+    	<delete dir="${dir.dist}" />
         <mkdir dir="${dir.dist}" />
         <mkdir dir="${dir.dist}/${dir.dist.skills}" />
+    	<delete dir="${dir.bin}" />
         <mkdir dir="${dir.bin}" />
         <mkdir dir="${dir.bin}/${dir.dist.skills}" />
         <javac srcdir="src" destdir="bin">
