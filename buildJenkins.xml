@@ -36,6 +36,8 @@
                 <attribute name="Class-Path" value="${dir.dist.skills}/" />
             </manifest>
         </jar>
+    	<zip destfile="./${ant.project.name}.zip" basedir="${dir.dist}" />
+    	<copy file="./${ant.project.name}.zip" tofile="${dir.dist}/${ant.project.name}.zip" />
     </target>
 
     <target name="jar-skills">
