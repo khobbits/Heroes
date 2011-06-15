@@ -1,7 +1,5 @@
 package com.herocraftonline.dev.heroes.command.commands;
 
-import java.util.logging.Level;
-
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -30,8 +28,8 @@ public class PartyAcceptCommand extends BaseCommand {
             if(plugin.getServer().getPlayer(args[0]) != null) {
                 Player newPlayer = plugin.getServer().getPlayer(args[0]);
                 Hero newHero = plugin.getHeroManager().getHero(newPlayer);
-                plugin.log(Level.INFO, newHero.getParty() + " - " + newHero.getParty().isInvited(player));
-                if(newHero.getParty() != null && newHero.getParty().isInvited(player)) {
+                Messaging.send(player, "$1 - $2 - $3", hero.getParty().toString(), Boolean.toString(hero.getParty().isInvited(player.getName())), hero.getParty().getMembers().toString());
+                if(newHero.getParty() != null && newHero.getParty().isInvited(player.getName())) {
                     hero.setParty(newHero.getParty());
                     hero.getParty().messageParty("$1 has joined the party", player.getName());
                 }else {

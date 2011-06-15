@@ -23,7 +23,6 @@ public class HeroSaveCommand extends BaseCommand {
     public void execute(CommandSender sender, String[] args) {
         if (sender instanceof Player) {
             Player player = (Player) sender;
-            Hero hero = plugin.getHeroManager().getHero(player);
             plugin.getHeroManager().saveHeroFile(player);
         }
     }

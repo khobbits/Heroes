@@ -30,11 +30,8 @@ public class PartyInviteCommand extends BaseCommand {
             if(hero.getParty() != null &&
                     hero.getParty().getLeader() == player &&
                     plugin.getServer().getPlayer(args[0]) != null) {
-                plugin.log(Level.INFO, "It is in a party, is the leader and the target is true!");
-                hero.getParty().addInvite(plugin.getServer().getPlayer(args[0]));
+                hero.getParty().addInvite(plugin.getServer().getPlayer(args[0]).getName());
                 Messaging.send(plugin.getServer().getPlayer(args[0]), "$1 has invited you to their party", player.getName());
-            }else {
-                plugin.log(Level.INFO, "The damn command isn't worked, numbnuts");
             }
         }
     }

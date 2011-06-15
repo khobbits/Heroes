@@ -41,7 +41,6 @@ public class InventoryChecker {
         if (inv.getHelmet() != null && inv.getHelmet().getTypeId() != 0) {
             item = inv.getHelmet().getType().toString();
             if (!hc.getAllowedArmor().contains(item)) {
-                h.addRecoveryItem(inv.getHelmet());
                 if (moveItem(p, -1, inv.getHelmet())) {
                     removedCount++;
                 }
@@ -52,7 +51,6 @@ public class InventoryChecker {
         if (inv.getChestplate() != null && inv.getChestplate().getTypeId() != 0) {
             item = inv.getChestplate().getType().toString();
             if (!hc.getAllowedArmor().contains(item)) {
-                h.addRecoveryItem(inv.getChestplate());
                 if (moveItem(p, -1, inv.getChestplate())) {
                     removedCount++;
                 }
@@ -63,7 +61,6 @@ public class InventoryChecker {
         if (inv.getLeggings() != null && inv.getLeggings().getTypeId() != 0) {
             item = inv.getLeggings().getType().toString();
             if (!hc.getAllowedArmor().contains(item)) {
-                h.addRecoveryItem(inv.getLeggings());
                 if (moveItem(p, -1, inv.getLeggings())) {
                     removedCount++;
                 }
@@ -74,7 +71,6 @@ public class InventoryChecker {
         if (inv.getBoots() != null && inv.getBoots().getTypeId() != 0) {
             item = inv.getBoots().getType().toString();
             if (!hc.getAllowedArmor().contains(item)) {
-                h.addRecoveryItem(inv.getBoots());
                 if (moveItem(p, -1, inv.getBoots())) {
                     removedCount++;
                 }

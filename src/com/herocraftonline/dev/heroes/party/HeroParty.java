@@ -11,7 +11,7 @@ public class HeroParty {
     private Player leader;
     private Set<Player> members = new HashSet<Player>();
     private Set<String> modes = new HashSet<String>();
-    private Set<Player> invites = new HashSet<Player>();
+    private Set<String> invites = new HashSet<String>();
 
     public HeroParty(Player leader) {
         this.leader = leader;
@@ -42,7 +42,7 @@ public class HeroParty {
     }
 
 
-    public void addInvite(Player player) {
+    public void addInvite(String player) {
         invites.add(player);
 
     }
@@ -52,7 +52,7 @@ public class HeroParty {
 
     }
 
-    public boolean isInvited(Player player) {
+    public boolean isInvited(String player) {
         return invites.contains(player);
     }
 

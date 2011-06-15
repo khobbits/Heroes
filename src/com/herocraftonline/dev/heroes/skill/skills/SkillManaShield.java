@@ -59,7 +59,7 @@ public class SkillManaShield extends ActiveEffectSkill {
                 if (effects.hasEffect(name)) {
                     int absorbamount = getSetting(hero.getHeroClass(), "mana-amount", 20);
                     event.setDamage((int) (event.getDamage() * 0.50));
-                    if(hero.getMana() < 20) {
+                    if(hero.getMana() < absorbamount) {
                         effects.expireEffect(name);
                     }else {
                         hero.setMana(hero.getMana() - absorbamount);
