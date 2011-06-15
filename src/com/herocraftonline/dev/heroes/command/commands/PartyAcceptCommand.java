@@ -28,7 +28,6 @@ public class PartyAcceptCommand extends BaseCommand {
             if(plugin.getServer().getPlayer(args[0]) != null) {
                 Player newPlayer = plugin.getServer().getPlayer(args[0]);
                 Hero newHero = plugin.getHeroManager().getHero(newPlayer);
-                Messaging.send(player, "$1 - $2 - $3", hero.getParty().toString(), Boolean.toString(hero.getParty().isInvited(player.getName())), hero.getParty().getMembers().toString());
                 if(newHero.getParty() != null && newHero.getParty().isInvited(player.getName())) {
                     hero.setParty(newHero.getParty());
                     hero.getParty().messageParty("$1 has joined the party", player.getName());

@@ -27,7 +27,7 @@ public class SkillSuperheat extends ActiveEffectSkill{
         maxArgs = 0;
         identifiers.add("skill superheat");
 
-        registerEvent(Type.PLAYER_INTERACT, playerListener, Priority.Normal);
+        registerEvent(Type.BLOCK_BREAK, playerListener, Priority.Normal);
     }
 
 

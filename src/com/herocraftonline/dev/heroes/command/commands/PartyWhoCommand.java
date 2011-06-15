@@ -1,5 +1,8 @@
 package com.herocraftonline.dev.heroes.command.commands;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -32,8 +35,16 @@ public class PartyWhoCommand extends BaseCommand {
                 return;
             }
             HeroParty heroParty = hero.getParty();
-            Messaging.send(player, "$1", heroParty.getMembers().toString());
+            Messaging.send(player, "$1", partyNames(hero.getParty()).toString());
         }
+    }
+    
+    public Set<String> partyNames(HeroParty party) {
+        Set<String> names = new HashSet<String>();
+        for(Player p : party.getMembers()) {
+            names.add(p.getName());
+        }
+        return names;
     }
 
 }
