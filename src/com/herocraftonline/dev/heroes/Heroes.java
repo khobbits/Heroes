@@ -33,6 +33,8 @@ import com.herocraftonline.dev.heroes.command.commands.ManaCommand;
 import com.herocraftonline.dev.heroes.command.commands.PartyAcceptCommand;
 import com.herocraftonline.dev.heroes.command.commands.PartyCreateCommand;
 import com.herocraftonline.dev.heroes.command.commands.PartyInviteCommand;
+import com.herocraftonline.dev.heroes.command.commands.PartyLeaveCommand;
+import com.herocraftonline.dev.heroes.command.commands.PartyModeCommand;
 import com.herocraftonline.dev.heroes.command.commands.PartyWhoCommand;
 import com.herocraftonline.dev.heroes.command.commands.PathsCommand;
 import com.herocraftonline.dev.heroes.command.commands.RecoverItemsCommand;
@@ -253,12 +255,16 @@ public class Heroes extends JavaPlugin {
         commandManager.addCommand(new PartyWhoCommand(this));
 
         // Page 3
+        commandManager.addCommand(new PartyLeaveCommand(this));
+        commandManager.addCommand(new PartyModeCommand(this));
         commandManager.addCommand(new RecoverItemsCommand(this));
         commandManager.addCommand(new ConfigReloadCommand(this));
         commandManager.addCommand(new HelpCommand(this));
         commandManager.addCommand(new AdminExpCommand(this));
         commandManager.addCommand(new AdminClassCommand(this));
         commandManager.addCommand(new LeaderboardCommand(this));
+        
+        // Page 4
         commandManager.addCommand(new HeroSaveCommand(this));
     }
 
