@@ -2,7 +2,7 @@
     <property name="dir.bin" value="bin" />
     <property name="dir.dist" value="build" />
 	<property name="dir.bin.skills" value="com/herocraftonline/dev/heroes/skill/skills" />
-    <property name="dir.dist.skills" value="Heroes/externals" />
+    <property name="dir.dist.skills" value="Heroes/skills" />
     
 	<property name="classpath" value="libs"/>
 
