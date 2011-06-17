@@ -32,6 +32,8 @@ public class PartyCreateCommand extends BaseCommand {
                 hero.setParty(newParty);
                 newParty.addMember(player);
                 Messaging.send(player, "Your party has been created", (String[]) null);
+            }else {
+                Messaging.send(player, "Sorry, you're already in a party", (String[]) null);
             }
         }
     }

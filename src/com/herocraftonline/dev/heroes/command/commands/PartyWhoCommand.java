@@ -18,7 +18,7 @@ public class PartyWhoCommand extends BaseCommand {
         super(plugin);
         name = "PartyWho";
         description = "Check your party members";
-        usage = "/party who";
+        usage = "/party";
         minArgs = 0;
         maxArgs = 0;
         identifiers.add("party who");

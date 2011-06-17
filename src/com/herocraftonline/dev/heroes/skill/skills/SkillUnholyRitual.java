@@ -25,11 +25,8 @@ public class SkillUnholyRitual extends TargettedSkill {
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
-        if (target == player) {
+        if(!(target instanceof Zombie) || !(target instanceof Skeleton) || target == player){
             Messaging.send(player, "You need a target!");
-            return false;
-        }
-        if(!(target instanceof Zombie) || !(target instanceof Skeleton)){
             return false;
         }
         target.damage(target.getHealth());

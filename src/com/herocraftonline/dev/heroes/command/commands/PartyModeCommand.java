@@ -31,16 +31,17 @@ public class PartyModeCommand extends BaseCommand {
             }
             HeroParty heroParty = hero.getParty();
             if(hero.getParty().getLeader() == player) {
-                if(args[0] != "PVP") {
+                String argument = args[0].toUpperCase();
+                if(argument != "PVP") {
                     return;
                 }
                 
-                if(heroParty.checkMode(args[0])) {
-                    heroParty.removeMode(args[0]);
-                    heroParty.messageParty("$1 is now on for this party", args[0]);
+                if(heroParty.checkMode(argument)) {
+                    heroParty.removeMode(argument);
+                    heroParty.messageParty("$1 is now on for this party", argument);
                 }else {
-                    heroParty.addMode(args[0]);
-                    heroParty.messageParty("$1 is now off for this party", args[0]);
+                    heroParty.addMode(argument);
+                    heroParty.messageParty("$1 is now off for this party", argument);
                 }
                 
             }else {

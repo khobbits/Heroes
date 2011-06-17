@@ -51,6 +51,7 @@ public class HEntityListener extends EntityListener {
                     expLoss = exp - currentLevelExp;
                 }
                 heroDefender.setExperience(exp - expLoss);
+                heroDefender.setMana(0);
                 Messaging.send(heroDefender.getPlayer(), "You have lost " + expLoss + " exp for dying.");
             }
         }

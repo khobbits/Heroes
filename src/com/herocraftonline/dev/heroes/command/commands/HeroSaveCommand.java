@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.command.BaseCommand;
-import com.herocraftonline.dev.heroes.persistence.Hero;
+import com.herocraftonline.dev.heroes.util.Messaging;
 
 public class HeroSaveCommand extends BaseCommand {
 
@@ -24,6 +24,7 @@ public class HeroSaveCommand extends BaseCommand {
         if (sender instanceof Player) {
             Player player = (Player) sender;
             plugin.getHeroManager().saveHeroFile(player);
+            Messaging.send(player, "Your hero has been saved sucessfully!", (String[]) null);
         }
     }
 

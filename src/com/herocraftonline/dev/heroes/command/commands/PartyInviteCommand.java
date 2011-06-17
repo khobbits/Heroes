@@ -36,10 +36,11 @@ public class PartyInviteCommand extends BaseCommand {
                 Messaging.send(player, "Your party has been created", (String[]) null); 
             }
             if(hero.getParty().getLeader() == player &&
-                    plugin.getServer().getPlayer(args[0]) != null) {
+                    plugin.getServer().getPlayer(args[0]) != null &&
+                        player != plugin.getServer().getPlayer(args[0])) {
                 hero.getParty().addInvite(plugin.getServer().getPlayer(args[0]).getName());
                 Messaging.send(plugin.getServer().getPlayer(args[0]), "$1 has invited you to their party", player.getName());
-                Messaging.send(plugin.getServer().getPlayer(args[0]), "$1 has been invited to your party", plugin.getServer().getPlayer(args[0]).getName());
+                Messaging.send(player, "$1 has been invited to your party", plugin.getServer().getPlayer(args[0]).getName());
             }
         }
     }
