@@ -29,7 +29,7 @@ public class SkillGills extends PassiveSkill {
                 Player player = (Player) event.getEntity();
                 Hero hero = plugin.getHeroManager().getHero(player);
                 if (hero.getEffects().hasEffect(name)) {
-                    event.setDamage(0);
+                    event.setCancelled(true);
                 }
             }
         }
