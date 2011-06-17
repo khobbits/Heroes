@@ -120,9 +120,9 @@ public class HEntityListener extends EntityListener {
                 // Check if the Attacker is in the Defenders Party.
                 if (attacker instanceof Player && defender instanceof Player) {
                     HeroParty party = plugin.getHeroManager().getHero((Player) attacker).getParty();
-                    if (party != null && party.getMembers().contains(defender)) {
+                    HeroParty partyDefend = plugin.getHeroManager().getHero((Player) defender).getParty();
+                    if (party != null && party == partyDefend) {
                         event.setCancelled(true);
-                        return;
                     }
                 }
                 // If it's a legitimate attack then we add it to the Kills list.
@@ -133,5 +133,6 @@ public class HEntityListener extends EntityListener {
                 }
             }
         }
+        
     }
 }
