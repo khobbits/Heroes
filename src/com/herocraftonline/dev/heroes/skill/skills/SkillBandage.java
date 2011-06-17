@@ -41,9 +41,9 @@ public class SkillBandage extends TargettedSkill {
                 Messaging.send(player, "You need paper to perform this.");
                 return false;
             }
-            
+
             target.setHealth(target.getHealth() + getSetting(hero.getHeroClass(), "health", 5));
-            
+
         }
         return false;
     }

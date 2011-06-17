@@ -98,7 +98,7 @@ public class Heroes extends JavaPlugin {
     // Inventory Event listeners for both Heroes and BukkitContrib
     private final HeroesInventoryListener heroesInventoryListener = new HeroesInventoryListener(this);
     private BukkitContribInventoryListener bukkitContribInventoryListener;
-    
+
     // Party Event Listener
     private final HeroPartyEntityListener partyEntityListener = new HeroPartyEntityListener(this);
 
@@ -232,7 +232,7 @@ public class Heroes extends JavaPlugin {
 
         // Inventory Event Listeners
         pluginManager.registerEvent(Type.CUSTOM_EVENT, heroesInventoryListener, Priority.Monitor, this);
-        
+
         // Party Event Listener
         pluginManager.registerEvent(Type.ENTITY_DAMAGE, partyEntityListener, Priority.Highest, this);
     }
@@ -270,7 +270,7 @@ public class Heroes extends JavaPlugin {
         commandManager.addCommand(new AdminExpCommand(this));
         commandManager.addCommand(new AdminClassCommand(this));
         commandManager.addCommand(new LeaderboardCommand(this));
-        
+
         // Page 4
         commandManager.addCommand(new HeroSaveCommand(this));
     }

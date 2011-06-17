@@ -17,7 +17,7 @@ import com.herocraftonline.dev.heroes.command.BaseCommand;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.util.Messaging;
 
-public class LeaderboardCommand extends BaseCommand{
+public class LeaderboardCommand extends BaseCommand {
 
     public LeaderboardCommand(Heroes plugin) {
         super(plugin);
@@ -36,13 +36,13 @@ public class LeaderboardCommand extends BaseCommand{
         Hero[] heroList = plugin.getHeroManager().getHeroes();
         HashMap<Hero, Integer> heroValues = new HashMap<Hero, Integer>();
         int i = 0;
-        for(Hero hero : heroList){
+        for (Hero hero : heroList) {
             heroValues.put(hero, hero.getExperience());
         }
         heroValues = (HashMap<Hero, Integer>) sortByValue(heroValues);
-        for(Hero hero : heroValues.keySet()){
+        for (Hero hero : heroValues.keySet()) {
             i++;
-            if(i >= (heroValues.size() - 5)){
+            if (i >= (heroValues.size() - 5)) {
                 Player player = hero.getPlayer();
                 Messaging.send(sender, "$1 - $2", player.getName(), Integer.toString(hero.getExperience()));
             }
@@ -54,14 +54,13 @@ public class LeaderboardCommand extends BaseCommand{
         List list = new LinkedList(map.entrySet());
         Collections.sort(list, new Comparator() {
             public int compare(Object o1, Object o2) {
-                return ((Comparable) ((Map.Entry) (o1)).getValue())
-                .compareTo(((Map.Entry) (o2)).getValue());
+                return ((Comparable) ((Map.Entry) (o1)).getValue()).compareTo(((Map.Entry) (o2)).getValue());
             }
         });
 
         Map result = new LinkedHashMap();
         for (Iterator it = list.iterator(); it.hasNext();) {
-            Map.Entry entry = (Map.Entry)it.next();
+            Map.Entry entry = (Map.Entry) it.next();
             result.put(entry.getKey(), entry.getValue());
         }
         return result;

@@ -1,4 +1,5 @@
 package com.herocraftonline.dev.heroes.skill.skills;
+
 // TO BE FIXED LATER
 
 //package com.herocraftonline.dev.heroes.command.skill.skills;

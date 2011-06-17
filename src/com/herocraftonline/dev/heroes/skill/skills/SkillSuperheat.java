@@ -14,7 +14,7 @@ import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.persistence.HeroEffects;
 import com.herocraftonline.dev.heroes.skill.ActiveEffectSkill;
 
-public class SkillSuperheat extends ActiveEffectSkill{
+public class SkillSuperheat extends ActiveEffectSkill {
 
     private BlockListener playerListener = new SkillPlayerListener();
 
@@ -29,7 +29,6 @@ public class SkillSuperheat extends ActiveEffectSkill{
 
         registerEvent(Type.BLOCK_BREAK, playerListener, Priority.Normal);
     }
-
 
     @Override
     public boolean use(Hero hero, String[] args) {
@@ -50,26 +49,26 @@ public class SkillSuperheat extends ActiveEffectSkill{
             Hero hero = plugin.getHeroManager().getHero(player);
             HeroEffects effects = hero.getEffects();
             if (effects.hasEffect(name)) {
-                switch(block.getType()){
+                switch (block.getType()) {
                     case IRON_ORE:
                         event.setCancelled(true);
                         block.setType(Material.AIR);
-                        block.getWorld().dropItem(block.getLocation(),new ItemStack(Material.IRON_INGOT));
+                        block.getWorld().dropItem(block.getLocation(), new ItemStack(Material.IRON_INGOT));
                         break;
                     case GOLD_ORE:
                         event.setCancelled(true);
                         block.setType(Material.AIR);
-                        block.getWorld().dropItem(block.getLocation(),new ItemStack(Material.GOLD_INGOT));
+                        block.getWorld().dropItem(block.getLocation(), new ItemStack(Material.GOLD_INGOT));
                         break;
                     case SAND:
                         event.setCancelled(true);
                         block.setType(Material.AIR);
-                        block.getWorld().dropItem(block.getLocation(),new ItemStack(Material.GLASS));
+                        block.getWorld().dropItem(block.getLocation(), new ItemStack(Material.GLASS));
                         break;
                     case COBBLESTONE:
                         event.setCancelled(true);
                         block.setType(Material.AIR);
-                        block.getWorld().dropItem(block.getLocation(),new ItemStack(Material.STONE));
+                        block.getWorld().dropItem(block.getLocation(), new ItemStack(Material.STONE));
                         break;
                 }
             }

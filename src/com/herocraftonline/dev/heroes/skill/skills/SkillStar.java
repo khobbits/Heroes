@@ -42,11 +42,11 @@ public class SkillStar extends PassiveSkill {
             Hero hero = plugin.getHeroManager().getHero(player);
             HeroEffects effects = hero.getEffects();
             Egg egg = event.getEgg();
-            if(effects.hasEffect(name)) {
+            if (effects.hasEffect(name)) {
                 event.setHatching(false);
                 player.damage(getSetting(hero.getHeroClass(), "damage", 4));
             }
-            
+
         }
     }
 

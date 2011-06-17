@@ -30,7 +30,7 @@ public class PartyWhoCommand extends BaseCommand {
         if (sender instanceof Player) {
             Player player = (Player) sender;
             Hero hero = plugin.getHeroManager().getHero(player);
-            if(hero.getParty() == null) {
+            if (hero.getParty() == null) {
                 Messaging.send(player, "Sorry, you aren't in a party", (String[]) null);
                 return;
             }
@@ -38,14 +38,13 @@ public class PartyWhoCommand extends BaseCommand {
             Messaging.send(player, "$1", partyNames(hero.getParty()).toString());
         }
     }
-    
+
     public Set<String> partyNames(HeroParty party) {
         Set<String> names = new HashSet<String>();
-        for(Player p : party.getMembers()) {
+        for (Player p : party.getMembers()) {
             names.add(p.getName());
         }
         return names;
     }
 
 }
-

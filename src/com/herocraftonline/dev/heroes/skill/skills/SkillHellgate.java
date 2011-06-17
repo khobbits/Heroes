@@ -12,7 +12,7 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 
-public class SkillHellgate extends ActiveSkill{
+public class SkillHellgate extends ActiveSkill {
 
     public SkillHellgate(Heroes plugin) {
         super(plugin);
@@ -21,7 +21,7 @@ public class SkillHellgate extends ActiveSkill{
         usage = "/skill hellgate";
         minArgs = 0;
         maxArgs = 0;
-        identifiers.add("skill hellgate");    
+        identifiers.add("skill hellgate");
     }
 
     @Override
@@ -30,14 +30,14 @@ public class SkillHellgate extends ActiveSkill{
         String playerName = player.getName();
 
         List<Entity> entityList = player.getNearbyEntities(10, 10, 10);
-        for(Entity n : entityList){
-            if(n instanceof Player){
+        for (Entity n : entityList) {
+            if (n instanceof Player) {
                 Player nPlayer = (Player) n;
                 Hero nHero = plugin.getHeroManager().getHero(nPlayer);
-                if(nHero.getParty() == hero.getParty()){
+                if (nHero.getParty() == hero.getParty()) {
                     List<World> worlds = plugin.getServer().getWorlds();
-                    for(World w : worlds){
-                        if(w.getEnvironment() == Environment.NETHER){
+                    for (World w : worlds) {
+                        if (w.getEnvironment() == Environment.NETHER) {
                             nPlayer.teleport(new Location(w, nPlayer.getLocation().getX(), nPlayer.getLocation().getY(), nPlayer.getLocation().getZ()));
                         }
                     }

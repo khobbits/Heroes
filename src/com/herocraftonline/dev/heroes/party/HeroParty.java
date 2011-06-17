@@ -41,7 +41,6 @@ public class HeroParty {
         return members;
     }
 
-
     public void addInvite(String player) {
         invites.add(player);
 
@@ -69,7 +68,7 @@ public class HeroParty {
     }
 
     public void messageParty(String msg, String... params) {
-        for(Player p : members) {
+        for (Player p : members) {
             Messaging.send(p, msg, params);
         }
     }

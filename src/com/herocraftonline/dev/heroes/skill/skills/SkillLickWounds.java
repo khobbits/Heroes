@@ -10,7 +10,7 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 
-public class SkillLickWounds extends ActiveSkill{
+public class SkillLickWounds extends ActiveSkill {
 
     public SkillLickWounds(Heroes plugin) {
         super(plugin);
@@ -19,7 +19,7 @@ public class SkillLickWounds extends ActiveSkill{
         usage = "/skill lickwounds";
         minArgs = 0;
         maxArgs = 0;
-        identifiers.add("skill lickwounds");    
+        identifiers.add("skill lickwounds");
     }
 
     @Override
@@ -28,10 +28,10 @@ public class SkillLickWounds extends ActiveSkill{
         String playerName = player.getName();
 
         List<Entity> entityList = player.getNearbyEntities(10, 10, 10);
-        for(Entity n : entityList){
-            if(n instanceof Wolf){
+        for (Entity n : entityList) {
+            if (n instanceof Wolf) {
                 Wolf nWolf = (Wolf) n;
-                if(nWolf.getOwner() == player){
+                if (nWolf.getOwner() == player) {
                     nWolf.setHealth(nWolf.getHealth() + 30);
                 }
             }

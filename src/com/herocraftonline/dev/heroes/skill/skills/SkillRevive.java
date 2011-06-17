@@ -24,7 +24,7 @@ public class SkillRevive extends ActiveSkill {
         minArgs = 1;
         maxArgs = 1;
         identifiers.add("skill revive");
-        
+
         registerEvent(Type.ENTITY_DAMAGE, new SkillPlayerListener(), Priority.Normal);
     }
 
@@ -54,12 +54,12 @@ public class SkillRevive extends ActiveSkill {
         }
         return true;
     }
-    
+
     public class SkillPlayerListener extends EntityListener {
 
         @Override
         public void onEntityDeath(EntityDeathEvent event) {
-            if(event.getEntity() instanceof Player) {
+            if (event.getEntity() instanceof Player) {
                 Player player = (Player) event.getEntity();
                 Location playerLoc = player.getLocation();
                 deaths.put(player, playerLoc);

@@ -29,4 +29,3 @@ public class HeroSaveCommand extends BaseCommand {
     }
 
 }
-

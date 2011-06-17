@@ -26,25 +26,25 @@ public class PartyModeCommand extends BaseCommand {
         if (sender instanceof Player) {
             Player player = (Player) sender;
             Hero hero = plugin.getHeroManager().getHero(player);
-            if(hero.getParty() == null) {
+            if (hero.getParty() == null) {
                 return;
             }
             HeroParty heroParty = hero.getParty();
-            if(hero.getParty().getLeader() == player) {
+            if (hero.getParty().getLeader() == player) {
                 String argument = args[0].toUpperCase();
-                if(argument != "PVP") {
+                if (argument != "PVP") {
                     return;
                 }
-                
-                if(heroParty.checkMode(argument)) {
+
+                if (heroParty.checkMode(argument)) {
                     heroParty.removeMode(argument);
                     heroParty.messageParty("$1 is now on for this party", argument);
-                }else {
+                } else {
                     heroParty.addMode(argument);
                     heroParty.messageParty("$1 is now off for this party", argument);
                 }
-                
-            }else {
+
+            } else {
                 Messaging.send(player, "Sorry, you need to be the leader to do that", (String[]) null);
 
             }
@@ -52,4 +52,3 @@ public class PartyModeCommand extends BaseCommand {
     }
 
 }
-

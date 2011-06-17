@@ -29,7 +29,7 @@ public class SkillBattery extends TargettedSkill {
 
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
-        
+
         if (!(target instanceof Player)) {
             return false;
         }

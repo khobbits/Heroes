@@ -87,7 +87,7 @@ public class Hero {
 
     public boolean isMaster(HeroClass heroClass) {
         int maxExp = plugin.getConfigManager().getProperties().maxExp;
-        if(getExperience(heroClass) >= maxExp || getExperience(heroClass) - maxExp == 1){
+        if (getExperience(heroClass) >= maxExp || getExperience(heroClass) - maxExp == 1) {
             return true;
         }
         return false;
@@ -139,12 +139,12 @@ public class Hero {
         int currentLevel = prop.getLevel(exp);
         int newLevel = prop.getLevel(exp + expGain);
 
-        /** If they're at max level, we don't add experience
-        if (currentLevel == prop.maxLevel) {
-            return;
-        }
-        **/
-        
+        /**
+         * If they're at max level, we don't add experience
+         * if (currentLevel == prop.maxLevel) {
+         * return;
+         * }
+         **/
 
         // add the experience
         exp += expGain;

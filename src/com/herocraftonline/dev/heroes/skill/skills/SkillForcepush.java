@@ -22,8 +22,8 @@ public class SkillForcepush extends TargettedSkill {
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
-        if(target instanceof Player) {
-            if(((Player) target) == player) {
+        if (target instanceof Player) {
+            if (((Player) target) == player) {
                 return false;
             }
         }
@@ -32,7 +32,7 @@ public class SkillForcepush extends TargettedSkill {
         float multiplier = (90f + pitch) / 40f;
         Vector v = target.getVelocity().setY(1).add(target.getLocation().getDirection().setY(0).normalize().multiply(multiplier * -1));
         target.setVelocity(v);
-        
+
         notifyNearbyPlayers(hero.getPlayer().getLocation(), useText, hero.getPlayer().getName(), name, getEntityName(target));
         return true;
     }
