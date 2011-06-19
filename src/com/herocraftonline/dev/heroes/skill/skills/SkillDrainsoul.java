@@ -1,5 +1,6 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -49,8 +50,8 @@ public class SkillDrainsoul extends TargettedSkill {
 
         int absorbamount = getSetting(hero.getHeroClass(), "absorb-amount", 4);
 
-        if ((hero.getPlayer().getHealth() + absorbamount) > 100) {
-            absorbamount = (100 - hero.getPlayer().getHealth());
+        if ((hero.getPlayer().getHealth() + absorbamount) > 10) {
+            absorbamount = (10 - hero.getPlayer().getHealth());
         }
 
         player.setHealth(player.getHealth() + absorbamount);
