@@ -34,7 +34,9 @@ public class SkillWolf extends ActiveSkill {
             Wolf wolf = (Wolf) le;
             wolf.setOwner(player);
             wolf.setTamed(true);
-            wolves.put(player, wolves.get(player) + 1);
+            int wolfFixIntegerYesImReallyDoingThisILikeLongNamesNeverGonnaGetAErrorAboutCollidingNamesAnymoreFuckJavaConventions = wolves.get(player) + 1;
+            wolves.remove(player);
+            wolves.put(player, wolfFixIntegerYesImReallyDoingThisILikeLongNamesNeverGonnaGetAErrorAboutCollidingNamesAnymoreFuckJavaConventions);
             return true;
         } else {
             Messaging.send(player, "Sorry, you have too many wolves already", (String[]) null);
