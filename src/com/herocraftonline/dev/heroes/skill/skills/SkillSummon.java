@@ -29,16 +29,8 @@ public class SkillSummon extends ActiveSkill {
     }
 
     @Override
-    public void init() {
-        super.init();
-        useText = getSetting(null, SETTING_USETEXT, "%hero% summoned %creature%!");
-        useText = useText.replace("%hero%", "$1").replace("%skill%", "$2").replace("%creature%", "$3");
-    }
-
-    @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty(SETTING_USETEXT, "%hero% summoned %creature%!");
         node.setProperty("max-summons", 3);
         return node;
     }
@@ -47,7 +39,7 @@ public class SkillSummon extends ActiveSkill {
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
         CreatureType creatureType = CreatureType.fromName(args[0].toUpperCase());
-        if (creatureType != null && hero.getSummons().size() <= getSetting(hero.getHeroClass(), "max-summons", 3)) {
+        if (creatureType == CreatureType.SKELETON && hero.getSummons().size() <= getSetting(hero.getHeroClass(), "max-summons", 3)) {
             Entity spawnedEntity = player.getWorld().spawnCreature(player.getLocation(), creatureType);
             if (spawnedEntity instanceof Creature && spawnedEntity instanceof Ghast && spawnedEntity instanceof Slime) {
                 spawnedEntity.remove();
