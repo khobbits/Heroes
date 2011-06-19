@@ -49,8 +49,8 @@ public class SkillDrainsoul extends TargettedSkill {
 
         int absorbamount = getSetting(hero.getHeroClass(), "absorb-amount", 4);
 
-        if ((hero.getPlayer().getHealth() + absorbamount) > 10) {
-            absorbamount = (10 - hero.getPlayer().getHealth());
+        if ((hero.getPlayer().getHealth() + absorbamount) > 20) {
+            absorbamount = (20 - hero.getPlayer().getHealth());
         }
 
         player.setHealth(player.getHealth() + absorbamount);
