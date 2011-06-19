@@ -64,7 +64,7 @@ public class HeroManager {
             playerConfig.load(); // Load the Config File
 
             HeroClass playerClass = loadClass(player, playerConfig);
-            Hero playerHero = new Hero(plugin, player, playerClass);
+            Hero playerHero = new Hero(plugin, player, playerClass, playerClass.getMaxHealth());
 
             loadExperience(playerHero, playerConfig);
             loadRecoveryItems(playerHero, playerConfig);
@@ -243,7 +243,7 @@ public class HeroManager {
     }
 
     public boolean createNewHero(Player player) {
-        Hero hero = new Hero(plugin, player, plugin.getClassManager().getDefaultClass());
+        Hero hero = new Hero(plugin, player, plugin.getClassManager().getDefaultClass(), plugin.getClassManager().getDefaultClass().getMaxHealth());
         return addHero(hero);
     }
 

@@ -24,6 +24,7 @@ public class ConfigManager {
     protected File classConfigFile;
     protected File expConfigFile;
     protected File skillConfigFile;
+    protected File damageConfigFile;
     protected Properties properties = new Properties();
 
     public ConfigManager(Heroes plugin) {
@@ -32,6 +33,7 @@ public class ConfigManager {
         this.classConfigFile = new File(plugin.getDataFolder(), "classes.yml");
         this.expConfigFile = new File(plugin.getDataFolder(), "experience.yml");
         this.skillConfigFile = new File(plugin.getDataFolder(), "skills.yml");
+        this.damageConfigFile = new File(plugin.getDataFolder(), "damage.yml");
     }
 
     public void reload() throws Exception {
@@ -44,6 +46,8 @@ public class ConfigManager {
             checkForConfig(primaryConfigFile);
             checkForConfig(classConfigFile);
             checkForConfig(expConfigFile);
+            checkForConfig(skillConfigFile);
+            checkForConfig(damageConfigFile);
 
             Configuration primaryConfig = new Configuration(primaryConfigFile);
             primaryConfig.load();

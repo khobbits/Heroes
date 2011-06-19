@@ -34,7 +34,6 @@ public class PartyWhoCommand extends BaseCommand {
                 Messaging.send(player, "Sorry, you aren't in a party", (String[]) null);
                 return;
             }
-            HeroParty heroParty = hero.getParty();
             Messaging.send(player, "$1", partyNames(hero.getParty()).toString());
         }
     }

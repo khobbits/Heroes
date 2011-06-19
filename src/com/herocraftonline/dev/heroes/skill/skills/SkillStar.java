@@ -1,12 +1,8 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
-import org.bukkit.entity.Egg;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
-import org.bukkit.event.entity.EntityDamageByProjectileEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerEggThrowEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.util.config.ConfigurationNode;
@@ -41,7 +37,6 @@ public class SkillStar extends PassiveSkill {
             Player player = event.getPlayer();
             Hero hero = plugin.getHeroManager().getHero(player);
             HeroEffects effects = hero.getEffects();
-            Egg egg = event.getEgg();
             if (effects.hasEffect(name)) {
                 event.setHatching(false);
                 player.damage(getSetting(hero.getHeroClass(), "damage", 4));

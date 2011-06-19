@@ -1,6 +1,5 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
-import java.util.HashMap;
 
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
@@ -36,7 +35,6 @@ public class SkillBandage extends TargettedSkill {
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
         if (target instanceof Player) {
-            Player tPlayer = (Player) target;
             if (!(player.getItemInHand().getType() == Material.PAPER)) {
                 Messaging.send(player, "You need paper to perform this.");
                 return false;

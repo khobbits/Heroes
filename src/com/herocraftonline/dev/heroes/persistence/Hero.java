@@ -39,16 +39,18 @@ public class Hero {
     protected Map<Material, String[]> binds = new HashMap<Material, String[]>();
     protected List<ItemStack> itemRecovery = new ArrayList<ItemStack>();
     protected Set<String> suppressedSkills = new HashSet<String>();
+    protected double health;
 
-    public Hero(Heroes plugin, Player player, HeroClass heroClass) {
+    public Hero(Heroes plugin, Player player, HeroClass heroClass, double health) {
         this.plugin = plugin;
         this.player = player;
         this.heroClass = heroClass;
         this.effects = new HeroEffects(plugin.getCommandManager(), this);
+        this.health = health;
     }
 
-    public Hero(Heroes plugin, Player player, HeroClass heroClass, Map<String, Integer> experience, int mana, boolean verbose, List<ItemStack> itemRecovery, Map<Material, String[]> binds, Set<String> suppressedSkills) {
-        this(plugin, player, heroClass);
+    public Hero(Heroes plugin, Player player, HeroClass heroClass, Map<String, Integer> experience, int mana, boolean verbose, List<ItemStack> itemRecovery, Map<Material, String[]> binds, Set<String> suppressedSkills, double health) {
+        this(plugin, player, heroClass, health);
         this.experience = experience;
         this.mana = mana;
         this.itemRecovery = itemRecovery;
@@ -278,4 +280,32 @@ public class Hero {
     public void setParty(HeroParty party) {
         this.party = party;
     }
+    
+    public void dealDamage(double damage) {
+        if(health - damage > 0) {
+            health = health - damage;
+            updatePlayerDisplay();
+        }else {
+            health = 0;
+            updatePlayerDisplay();
+        }
+    }
+
+    public void healHealth(double heal) {
+        if(heal > 0 && health + heal <= heroClass.getMaxHealth()) {
+            health = health + heal;
+            updatePlayerDisplay();
+        }else {
+            health = health + (heroClass.getMaxHealth() - health);
+        }
+    }
+    
+    public double getHealth() {
+        return health;
+    }
+    
+    public void updatePlayerDisplay() {
+        player.setHealth((int) Math.round(health/heroClass.getMaxHealth()*20));
+    }
+    
 }
