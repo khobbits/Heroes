@@ -1,6 +1,5 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
