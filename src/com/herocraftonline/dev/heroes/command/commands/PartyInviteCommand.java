@@ -1,6 +1,5 @@
 package com.herocraftonline.dev.heroes.command.commands;
 
-
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 

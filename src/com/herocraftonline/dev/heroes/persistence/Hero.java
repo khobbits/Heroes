@@ -280,32 +280,32 @@ public class Hero {
     public void setParty(HeroParty party) {
         this.party = party;
     }
-    
+
     public void dealDamage(double damage) {
-        if(health - damage > 0) {
+        if (health - damage > 0) {
             health = health - damage;
             updatePlayerDisplay();
-        }else {
+        } else {
             health = 0;
             updatePlayerDisplay();
         }
     }
 
     public void healHealth(double heal) {
-        if(heal > 0 && health + heal <= heroClass.getMaxHealth()) {
+        if (heal > 0 && health + heal <= heroClass.getMaxHealth()) {
             health = health + heal;
             updatePlayerDisplay();
-        }else {
+        } else {
             health = health + (heroClass.getMaxHealth() - health);
         }
     }
-    
+
     public double getHealth() {
         return health;
     }
-    
+
     public void updatePlayerDisplay() {
-        player.setHealth((int) Math.round(health/heroClass.getMaxHealth()*20));
+        player.setHealth((int) Math.round(health / heroClass.getMaxHealth() * 20));
     }
-    
+
 }

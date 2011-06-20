@@ -28,7 +28,7 @@ public class SkillSafefallOther extends TargettedSkill {
 
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
     }
-    
+
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
@@ -59,12 +59,12 @@ public class SkillSafefallOther extends TargettedSkill {
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
         String playerName = player.getName();
-        if(target instanceof Player) {
+        if (target instanceof Player) {
             Hero newHero = plugin.getHeroManager().getHero((Player) target);
             newHero.getEffects().putEffect(name, 10000.0);
             notifyNearbyPlayers(player.getLocation(), useText, playerName, name);
-            return true; 
-        }else {
+            return true;
+        } else {
             return false;
         }
 

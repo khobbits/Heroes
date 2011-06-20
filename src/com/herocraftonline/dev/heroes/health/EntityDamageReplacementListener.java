@@ -15,54 +15,63 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.util.Properties;
 
-public class HealthReplacement extends EntityListener{
+public class EntityDamageReplacementListener extends EntityListener {
+
     Heroes plugin;
 
-    public HealthReplacement(Heroes plugin) {
+    public EntityDamageReplacementListener(Heroes plugin) {
         this.plugin = plugin;
     }
 
     public void onEntityDamage(EntityDamageEvent event) {
 
-        if(!(event.getEntity() instanceof Player)) {
+        if (!(event.getEntity() instanceof Player)) {
             return;
         }
         Player player = (Player) event.getEntity();
         Hero hero = plugin.getHeroManager().getHero(player);
         Properties prop = plugin.getConfigManager().getProperties();
 
-        if(event instanceof EntityDamageByEntityEvent) {
+        if (event instanceof EntityDamageByEntityEvent) {
             EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
+            // Player VS Mob/Player Damage
+            if (subEvent.getDamager() instanceof Player) {
+                Player attacker = (Player) subEvent.getDamager();
+                if (prop.damages.containsKey(attacker.getItemInHand())) {
+                    event.setCancelled(true);
+                    hero.dealDamage(prop.damages.get(attacker.getItemInHand()));
+                } else {
+                    plugin.log(Level.INFO, "You haven't got (" + attacker.getItemInHand().toString() + ") in your damage.yml - defaulting");
+                }
+            }
             // Monsters VS Player Damage
-            if(getCreatureType(subEvent.getDamager()) != null) {
-                if(prop.damages.containsKey(getCreatureType(subEvent.getDamager()))){
+            if (getCreatureType(subEvent.getDamager()) != null) {
+                if (prop.damages.containsKey(getCreatureType(subEvent.getDamager()))) {
                     event.setCancelled(true);
                     hero.dealDamage(prop.damages.get(getCreatureType(subEvent.getDamager())));
-                }else {
+                } else {
                     plugin.log(Level.INFO, "You haven't got (" + getCreatureType(subEvent.getDamager()) + ") in your damage.yml - defaulting");
                 }
             }
-        }else if(event instanceof EntityDamageByProjectileEvent) {
+        } else if (event instanceof EntityDamageByProjectileEvent) {
             EntityDamageByProjectileEvent subEvent = (EntityDamageByProjectileEvent) event;
             // Projectile VS Player Damage
-            if(prop.damages.containsKey(subEvent.getProjectile().toString())){
+            if (prop.damages.containsKey(subEvent.getProjectile().toString())) {
                 event.setCancelled(true);
                 hero.dealDamage(prop.damages.get(subEvent.getProjectile().toString()));
-            }else {
+            } else {
                 plugin.log(Level.INFO, "You haven't got (" + subEvent.getProjectile().toString() + ") in your damage.yml - defaulting");
             }
-        }else {
+        } else {
             // General enviromental damage
-            if(prop.damages.containsKey(event.getCause().toString())){
+            if (prop.damages.containsKey(event.getCause().toString())) {
                 event.setCancelled(true);
-                hero.dealDamage(prop.damages.get(event.getCause().toString()));   
-            }else {
+                hero.dealDamage(prop.damages.get(event.getCause().toString()));
+            } else {
                 plugin.log(Level.INFO, "You haven't got (" + event.getCause().toString() + ") in your damage.yml - defaulting");
             }
         }
     }
-
-
 
     public CreatureType getCreatureType(Entity entity) {
         CreatureType type = null;

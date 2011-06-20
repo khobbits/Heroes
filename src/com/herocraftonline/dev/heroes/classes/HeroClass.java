@@ -71,7 +71,6 @@ public class HeroClass {
         skills = new LinkedHashMap<String, ConfigurationNode>();
         maxHealth = 20;
     }
-    
 
     public HeroClass(String name) {
         this();
@@ -194,11 +193,9 @@ public class HeroClass {
         return description;
     }
 
-
     public double getMaxHealth() {
         return maxHealth;
     }
-
 
     public void setMaxHealth(double maxHealth) {
         this.maxHealth = maxHealth;
