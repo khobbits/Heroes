@@ -62,6 +62,9 @@ public class ConfigManager {
             Configuration skillConfig = new Configuration(skillConfigFile);
             skillConfig.load();
             generateSkills(skillConfig);
+            
+            Configuration damageConfig = new Configuration(damageConfigFile);
+            loadDamage(damageConfig);
 
             ClassManager classManager = new ClassManager(plugin);
             classManager.loadClasses(classConfigFile);
