@@ -185,7 +185,7 @@ public class ConfigManager {
         config.load();
         String root = "damages";
         for(String cn : config.getKeys(root)) {
-            getProperties().damages.put(cn, config.getDouble(root + cn, 10));
+            getProperties().damages.put(cn, config.getDouble(root + "." + cn, 10));
         }
     }
 
