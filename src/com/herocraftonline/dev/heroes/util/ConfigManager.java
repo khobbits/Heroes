@@ -177,6 +177,14 @@ public class ConfigManager {
             }
         }
     }
+    
+    private void loadDamage(Configuration config) {
+        config.load();
+        String root = "damages";
+        for(String cn : config.getKeys(root)) {
+            getProperties().damages.put(cn, config.getDouble(root + cn, 10));
+        }
+    }
 
     private void generateSkills(Configuration config) {
         for (BaseCommand baseCommand : plugin.getCommandManager().getCommands()) {

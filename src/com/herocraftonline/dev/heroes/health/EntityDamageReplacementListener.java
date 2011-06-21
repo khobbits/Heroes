@@ -29,48 +29,48 @@ public class EntityDamageReplacementListener extends EntityListener {
         Properties prop = plugin.getConfigManager().getProperties();
 
         if (event.getEntity() instanceof Player) {
-        Player player = (Player) event.getEntity();
-        Hero hero = plugin.getHeroManager().getHero(player);
+            Player player = (Player) event.getEntity();
+            Hero hero = plugin.getHeroManager().getHero(player);
 
-        if (event instanceof EntityDamageByEntityEvent) {
-            EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
-            // Player VS Player Damage
-            if (subEvent.getEntity() instanceof Player) {
-                Player attacker = (Player) subEvent.getDamager();
-                if (prop.damages.containsKey(attacker.getItemInHand())) {
+            if (event instanceof EntityDamageByEntityEvent) {
+                EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
+                // Player VS Player Damage
+                if (subEvent.getEntity() instanceof Player) {
+                    Player attacker = (Player) subEvent.getDamager();
+                    if (prop.damages.containsKey(attacker.getItemInHand())) {
+                        event.setCancelled(true);
+                        hero.dealDamage(prop.damages.get(attacker.getItemInHand()));
+                    } else {
+                        plugin.log(Level.INFO, "You haven't got (" + attacker.getItemInHand().toString() + ") in your damage.yml - defaulting");
+                    }
+                }
+                // Monsters VS Player Damage
+                if (getCreatureType(subEvent.getDamager()) != null) {
+                    if (prop.damages.containsKey(getCreatureType(subEvent.getDamager()))) {
+                        event.setCancelled(true);
+                        hero.dealDamage(prop.damages.get(getCreatureType(subEvent.getDamager())));
+                    } else {
+                        plugin.log(Level.INFO, "You haven't got (" + getCreatureType(subEvent.getDamager()) + ") in your damage.yml - defaulting");
+                    }
+                }
+            } else if (event instanceof EntityDamageByProjectileEvent) {
+                EntityDamageByProjectileEvent subEvent = (EntityDamageByProjectileEvent) event;
+                // Projectile VS Player Damage
+                if (prop.damages.containsKey(subEvent.getProjectile().toString())) {
                     event.setCancelled(true);
-                    hero.dealDamage(prop.damages.get(attacker.getItemInHand()));
+                    hero.dealDamage(prop.damages.get(subEvent.getProjectile().toString()));
                 } else {
-                    plugin.log(Level.INFO, "You haven't got (" + attacker.getItemInHand().toString() + ") in your damage.yml - defaulting");
+                    plugin.log(Level.INFO, "You haven't got (" + subEvent.getProjectile().toString() + ") in your damage.yml - defaulting");
+                }
+            } else {
+                // General enviromental damage
+                if (prop.damages.containsKey(event.getCause().toString())) {
+                    event.setCancelled(true);
+                    hero.dealDamage(prop.damages.get(event.getCause().toString()));
+                } else {
+                    plugin.log(Level.INFO, "You haven't got (" + event.getCause().toString() + ") in your damage.yml - defaulting");
                 }
             }
-            // Monsters VS Player Damage
-            if (getCreatureType(subEvent.getDamager()) != null) {
-                if (prop.damages.containsKey(getCreatureType(subEvent.getDamager()))) {
-                    event.setCancelled(true);
-                    hero.dealDamage(prop.damages.get(getCreatureType(subEvent.getDamager())));
-                } else {
-                    plugin.log(Level.INFO, "You haven't got (" + getCreatureType(subEvent.getDamager()) + ") in your damage.yml - defaulting");
-                }
-            }
-        } else if (event instanceof EntityDamageByProjectileEvent) {
-            EntityDamageByProjectileEvent subEvent = (EntityDamageByProjectileEvent) event;
-            // Projectile VS Player Damage
-            if (prop.damages.containsKey(subEvent.getProjectile().toString())) {
-                event.setCancelled(true);
-                hero.dealDamage(prop.damages.get(subEvent.getProjectile().toString()));
-            } else {
-                plugin.log(Level.INFO, "You haven't got (" + subEvent.getProjectile().toString() + ") in your damage.yml - defaulting");
-            }
-        } else {
-            // General enviromental damage
-            if (prop.damages.containsKey(event.getCause().toString())) {
-                event.setCancelled(true);
-                hero.dealDamage(prop.damages.get(event.getCause().toString()));
-            } else {
-                plugin.log(Level.INFO, "You haven't got (" + event.getCause().toString() + ") in your damage.yml - defaulting");
-            }
-        }
         }else {
             if (event instanceof EntityDamageByEntityEvent) {
                 EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
@@ -126,17 +126,17 @@ public class EntityDamageReplacementListener extends EntityListener {
         }
         return type;
     }
-    
+
     public void damageMob(Double damage, int mob, World world) {
-         mobHeal.put(mob, (int) (mobHeal.get(mob) - damage));
-         if(mobHeal.get(mob) <= 0) {
-             for(Entity entity : world.getEntities()) {
-                 if(entity.getEntityId() == mob) {
-                     LivingEntity entityL = (LivingEntity) entity;
-                     entityL.damage(0);
-                     return;
-                 }
-             }
-         }
+        mobHeal.put(mob, (int) (mobHeal.get(mob) - damage));
+        if(mobHeal.get(mob) <= 0) {
+            for(Entity entity : world.getEntities()) {
+                if(entity.getEntityId() == mob) {
+                    LivingEntity entityL = (LivingEntity) entity;
+                    entityL.damage(0);
+                    return;
+                }
+            }
+        }
     }
 }
