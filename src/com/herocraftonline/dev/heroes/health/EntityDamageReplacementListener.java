@@ -39,6 +39,7 @@ public class EntityDamageReplacementListener extends EntityListener {
                     Player attacker = (Player) subEvent.getDamager();
                     if (prop.damages.containsKey(attacker.getItemInHand())) {
                         event.setCancelled(true);
+                        event.setDamage(0);
                         hero.dealDamage(prop.damages.get(attacker.getItemInHand()));
                     } else {
                         plugin.log(Level.INFO, "You haven't got (" + attacker.getItemInHand().getType().toString() + ") in your damage.yml - defaulting");
@@ -48,6 +49,7 @@ public class EntityDamageReplacementListener extends EntityListener {
                 if (getCreatureType(subEvent.getDamager()) != null) {
                     if (prop.damages.containsKey(getCreatureType(subEvent.getDamager()))) {
                         event.setCancelled(true);
+                        event.setDamage(0);
                         hero.dealDamage(prop.damages.get(getCreatureType(subEvent.getDamager())));
                     } else {
                         plugin.log(Level.INFO, "You haven't got (" + getCreatureType(subEvent.getDamager()) + ") in your damage.yml - defaulting");
@@ -58,6 +60,7 @@ public class EntityDamageReplacementListener extends EntityListener {
                 // Projectile VS Player Damage
                 if (prop.damages.containsKey(subEvent.getProjectile().toString())) {
                     event.setCancelled(true);
+                    event.setDamage(0);
                     hero.dealDamage(prop.damages.get(subEvent.getProjectile().toString()));
                 } else {
                     plugin.log(Level.INFO, "You haven't got (" + subEvent.getProjectile().toString() + ") in your damage.yml - defaulting");
@@ -66,6 +69,7 @@ public class EntityDamageReplacementListener extends EntityListener {
                 // General enviromental damage
                 if (prop.damages.containsKey(event.getCause().toString())) {
                     event.setCancelled(true);
+                    event.setDamage(0);
                     hero.dealDamage(prop.damages.get(event.getCause().toString()));
                 } else {
                     plugin.log(Level.INFO, "You haven't got (" + event.getCause().toString() + ") in your damage.yml - defaulting");
@@ -78,6 +82,7 @@ public class EntityDamageReplacementListener extends EntityListener {
                 if (getCreatureType(subEvent.getDamager()) != null) {
                     if (prop.damages.containsKey(getCreatureType(subEvent.getDamager()))) {
                         event.setCancelled(true);
+                        event.setDamage(0);
                         if(!mobHeal.containsKey(event.getEntity().getEntityId())) {
                             mobHeal.put(event.getEntity().getEntityId(), 100);
                         }
@@ -91,6 +96,7 @@ public class EntityDamageReplacementListener extends EntityListener {
 
                 if (prop.damages.containsKey(subEvent.getProjectile().toString())) {
                     event.setCancelled(true);
+                    event.setDamage(0);
                     if(!mobHeal.containsKey(event.getEntity().getEntityId())) {
                         mobHeal.put(event.getEntity().getEntityId(), 100);
                     }
@@ -101,6 +107,7 @@ public class EntityDamageReplacementListener extends EntityListener {
             } else {
                 if (prop.damages.containsKey(event.getCause().toString())) {
                     event.setCancelled(true);
+                    event.setDamage(0);
                     if(!mobHeal.containsKey(event.getEntity().getEntityId())) {
                         mobHeal.put(event.getEntity().getEntityId(), 100);
                     }
