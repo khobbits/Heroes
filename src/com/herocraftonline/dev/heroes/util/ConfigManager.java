@@ -163,6 +163,17 @@ public class ConfigManager {
                 plugin.log(Level.WARNING, "Invalid material type (" + item + ") found in experience.yml.");
             }
         }
+        root = "crafting";
+        for (String item : config.getKeys(root)) {
+            int exp = config.getInt(root + "." + item, 0);
+            Material type = Material.matchMaterial(item);
+
+            if (type != null) {
+                properties.craftingExp.put(type, exp);
+            } else {
+                plugin.log(Level.WARNING, "Invalid material type (" + item + ") found in experience.yml.");
+            }
+        }
     }
 
     private void loadSkills(Configuration config) {

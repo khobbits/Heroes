@@ -24,7 +24,8 @@ public class EntityDamageReplacementListener extends EntityListener {
     public EntityDamageReplacementListener(Heroes plugin) {
         this.plugin = plugin;
     }
-
+    
+    /*
     public void onEntityDamage(EntityDamageEvent event) {
         Properties prop = plugin.getConfigManager().getProperties();
 
@@ -118,7 +119,8 @@ public class EntityDamageReplacementListener extends EntityListener {
             }
         }
     }
-
+    */
+    
     public CreatureType getCreatureType(Entity entity) {
         CreatureType type = null;
         try {

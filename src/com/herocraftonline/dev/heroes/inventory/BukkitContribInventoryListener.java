@@ -5,11 +5,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkitcontrib.event.inventory.InventoryClickEvent;
 import org.bukkitcontrib.event.inventory.InventoryCloseEvent;
+import org.bukkitcontrib.event.inventory.InventoryCraftEvent;
 import org.bukkitcontrib.event.inventory.InventoryListener;
 import org.bukkitcontrib.event.inventory.InventorySlotType;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
+import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
+import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.util.MaterialUtil;
 import com.herocraftonline.dev.heroes.util.Messaging;
 
@@ -24,6 +27,18 @@ public class BukkitContribInventoryListener extends InventoryListener {
     @Override
     public void onInventoryClose(InventoryCloseEvent event) {
         plugin.getInventoryChecker().checkInventory(event.getPlayer());
+    }
+    
+    @Override
+    public void onInventoryCraft(InventoryCraftEvent event) {
+        ItemStack result = event.getResult();
+        if(plugin.getConfigManager().getProperties().craftingExp.containsKey(result)) {
+            Player player = event.getPlayer();
+            Hero hero = plugin.getHeroManager().getHero(player);
+            if(hero.getHeroClass().getExperienceSources().contains("CRAFTING")) {
+                hero.gainExp(plugin.getConfigManager().getProperties().craftingExp.get(result), ExperienceType.CRAFTING);
+            }
+        }
     }
 
     @Override

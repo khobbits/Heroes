@@ -35,6 +35,7 @@ public class Properties {
     public HashMap<CreatureType, Integer> creatureKillingExp = new HashMap<CreatureType, Integer>();
     public HashMap<Material, Integer> miningExp = new HashMap<Material, Integer>();
     public HashMap<Material, Integer> loggingExp = new HashMap<Material, Integer>();
+    public HashMap<Material, Integer> craftingExp = new HashMap<Material, Integer>();
 
     public HashMap<String, String> skillInfo = new HashMap<String, String>();
     public HashMap<Player, Location> playerDeaths = new HashMap<Player, Location>();
