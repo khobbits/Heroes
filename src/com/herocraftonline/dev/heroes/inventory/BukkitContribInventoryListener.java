@@ -32,7 +32,7 @@ public class BukkitContribInventoryListener extends InventoryListener {
     @Override
     public void onInventoryCraft(InventoryCraftEvent event) {
         ItemStack result = event.getResult();
-        if(plugin.getConfigManager().getProperties().craftingExp.containsKey(result.getType().toString())) {
+        if(plugin.getConfigManager().getProperties().craftingExp.containsKey(result.getType())) {
             Player player = event.getPlayer();
             Hero hero = plugin.getHeroManager().getHero(player);
             if(hero.getHeroClass().getExperienceSources().contains("CRAFTING")) {
