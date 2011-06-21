@@ -41,7 +41,7 @@ public class EntityDamageReplacementListener extends EntityListener {
                         event.setCancelled(true);
                         hero.dealDamage(prop.damages.get(attacker.getItemInHand()));
                     } else {
-                        plugin.log(Level.INFO, "You haven't got (" + attacker.getItemInHand().toString() + ") in your damage.yml - defaulting");
+                        plugin.log(Level.INFO, "You haven't got (" + attacker.getItemInHand().getType().toString() + ") in your damage.yml - defaulting");
                     }
                 }
                 // Monsters VS Player Damage
