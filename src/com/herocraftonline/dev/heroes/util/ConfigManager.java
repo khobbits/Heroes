@@ -183,8 +183,10 @@ public class ConfigManager {
     
     private void loadDamage(Configuration config) {
         config.load();
+        plugin.log(Level.INFO, "got here - 1");
         String root = "damages";
         for(String cn : config.getKeys(root)) {
+            plugin.log(Level.INFO, "got here - 2" + cn);
             getProperties().damages.put(cn, config.getDouble(root + "." + cn, 10));
         }
     }
