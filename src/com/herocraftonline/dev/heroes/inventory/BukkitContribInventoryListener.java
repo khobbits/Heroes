@@ -82,7 +82,7 @@ public class BukkitContribInventoryListener extends InventoryListener {
         }
         
         if(event.getSlotType() == InventorySlotType.RESULT) {
-            if(event.getCursor()==null)return;
+            if(event.getCursor() != null)return;
             ItemStack result = event.getItem();
             if(plugin.getConfigManager().getProperties().craftingExp.containsKey(result.getType())) {
                 Hero hero = plugin.getHeroManager().getHero(player);
