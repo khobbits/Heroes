@@ -28,19 +28,6 @@ public class BukkitContribInventoryListener extends InventoryListener {
     public void onInventoryClose(InventoryCloseEvent event) {
         plugin.getInventoryChecker().checkInventory(event.getPlayer());
     }
-    
-    @Override   
-    public void onInventoryCraft(InventoryCraftEvent event) {
-        ItemStack result = event.getResult();
-        if(plugin.getConfigManager().getProperties().craftingExp.containsKey(result.getType())) {
-            Player player = event.getPlayer();
-            Hero hero = plugin.getHeroManager().getHero(player);
-            if(hero.getHeroClass().getExperienceSources().contains(ExperienceType.CRAFTING)) {
-                hero.gainExp(plugin.getConfigManager().getProperties().craftingExp.get(result.getType()), ExperienceType.CRAFTING);
-                return;
-            }
-        }
-    }
 
     @Override
     public void onInventoryClick(InventoryClickEvent event) {
@@ -91,6 +78,18 @@ public class BukkitContribInventoryListener extends InventoryListener {
                 Messaging.send(player, "You are not trained to use a $1.", MaterialUtil.getFriendlyName(itemString));
                 event.setCancelled(true);
                 return;
+            }
+        }
+        
+        if(event.getSlotType() == InventorySlotType.RESULT) {
+            if(event.getCursor()==null)return;
+            ItemStack result = event.getItem();
+            if(plugin.getConfigManager().getProperties().craftingExp.containsKey(result.getType())) {
+                Hero hero = plugin.getHeroManager().getHero(player);
+                if(hero.getHeroClass().getExperienceSources().contains(ExperienceType.CRAFTING)) {
+                    hero.gainExp(plugin.getConfigManager().getProperties().craftingExp.get(result.getType()), ExperienceType.CRAFTING);
+                    return;
+                }
             }
         }
     }
