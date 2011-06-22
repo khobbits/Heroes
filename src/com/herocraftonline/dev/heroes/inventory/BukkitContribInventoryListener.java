@@ -1,5 +1,7 @@
 package com.herocraftonline.dev.heroes.inventory;
 
+import java.util.logging.Level;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -80,13 +82,21 @@ public class BukkitContribInventoryListener extends InventoryListener {
                 return;
             }
         }
-        
+
         if(event.getSlotType() == InventorySlotType.RESULT) {
-            if(event.getCursor() != null)return;
+            plugin.log(Level.INFO, "Step - 1");
+            if(event.getCursor() != null) {
+                plugin.log(Level.INFO, "Step - 1 - null");
+                event.setCancelled(true);
+            }
+            
             ItemStack result = event.getItem();
+            plugin.log(Level.INFO, "Step - 1 - not null");
             if(plugin.getConfigManager().getProperties().craftingExp.containsKey(result.getType())) {
+                plugin.log(Level.INFO, "Step - 2");
                 Hero hero = plugin.getHeroManager().getHero(player);
                 if(hero.getHeroClass().getExperienceSources().contains(ExperienceType.CRAFTING)) {
+                    plugin.log(Level.INFO, "Step - 3");
                     hero.gainExp(plugin.getConfigManager().getProperties().craftingExp.get(result.getType()), ExperienceType.CRAFTING);
                     return;
                 }
