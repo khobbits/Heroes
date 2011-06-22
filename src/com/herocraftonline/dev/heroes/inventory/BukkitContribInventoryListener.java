@@ -86,6 +86,7 @@ public class BukkitContribInventoryListener extends InventoryListener {
         if(event.getSlotType() == InventorySlotType.RESULT) {
             plugin.log(Level.INFO, "Step - 1");
             if(event.getCursor() != null) {
+                plugin.log(Level.INFO, event.getCursor().getType().toString());
                 plugin.log(Level.INFO, "Step - 1 - null");
                 return;
             }
