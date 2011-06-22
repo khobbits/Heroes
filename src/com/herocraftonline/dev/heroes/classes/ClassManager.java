@@ -71,13 +71,6 @@ public class ClassManager {
             StringBuilder aLimits = new StringBuilder();
             StringBuilder wLimits = new StringBuilder();
 
-            double health = config.getDouble("classes." + className + ".permitted-armor", 20);
-            if (health < 0) {
-                plugin.log(Level.WARNING, "Bad HP (" + health + ") defined for " + className);
-                health = 20;
-            }
-            newClass.setMaxHealth(health);
-
             List<String> armor = config.getStringList("classes." + className + ".permitted-armor", defaultType);
             for (String a : armor) {
                 // If it's a generic type like 'DIAMOND' or 'LEATHER' we add all the possible entries.

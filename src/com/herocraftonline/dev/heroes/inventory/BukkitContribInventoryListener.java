@@ -37,6 +37,7 @@ public class BukkitContribInventoryListener extends InventoryListener {
             Hero hero = plugin.getHeroManager().getHero(player);
             if(hero.getHeroClass().getExperienceSources().contains(ExperienceType.CRAFTING)) {
                 hero.gainExp(plugin.getConfigManager().getProperties().craftingExp.get(result.getType()), ExperienceType.CRAFTING);
+                return;
             }
         }
     }

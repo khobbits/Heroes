@@ -44,7 +44,6 @@ import com.herocraftonline.dev.heroes.command.commands.SuppressCommand;
 import com.herocraftonline.dev.heroes.command.commands.ToolsCommand;
 import com.herocraftonline.dev.heroes.command.commands.VerboseCommand;
 import com.herocraftonline.dev.heroes.command.commands.WhoCommand;
-import com.herocraftonline.dev.heroes.health.EntityDamageReplacementListener;
 import com.herocraftonline.dev.heroes.inventory.BukkitContribInventoryListener;
 import com.herocraftonline.dev.heroes.inventory.HeroesInventoryListener;
 import com.herocraftonline.dev.heroes.inventory.InventoryChecker;
@@ -98,7 +97,6 @@ public class Heroes extends JavaPlugin {
     // Inventory Event listeners for both Heroes and BukkitContrib
     private final HeroesInventoryListener heroesInventoryListener = new HeroesInventoryListener(this);
     private BukkitContribInventoryListener bukkitContribInventoryListener;
-    private final EntityDamageReplacementListener hpreplaceEntityListener = new EntityDamageReplacementListener(this);
     
 
     // Inventory Checker Class -- This class has the methods to check a players inventory and
@@ -231,9 +229,6 @@ public class Heroes extends JavaPlugin {
 
         // Inventory Event Listeners
         pluginManager.registerEvent(Type.CUSTOM_EVENT, heroesInventoryListener, Priority.Monitor, this);
-        
-        //HP replace
-        pluginManager.registerEvent(Type.ENTITY_DAMAGE, hpreplaceEntityListener, Priority.Highest, this);
     }
 
     /**

@@ -47,8 +47,6 @@ public class Properties {
     public ChatColor cColor;
     public String prefix;
     public int swapCost;
-    // Damage Events
-    public HashMap<String, Double> damages = new HashMap<String, Double>();
 
     /**
      * Generate experience for the level ArrayList<Integer>

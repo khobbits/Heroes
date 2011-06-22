@@ -33,7 +33,6 @@ public class ConfigManager {
         this.classConfigFile = new File(plugin.getDataFolder(), "classes.yml");
         this.expConfigFile = new File(plugin.getDataFolder(), "experience.yml");
         this.skillConfigFile = new File(plugin.getDataFolder(), "skills.yml");
-        this.damageConfigFile = new File(plugin.getDataFolder(), "damage.yml");
     }
 
     public void reload() throws Exception {
@@ -47,7 +46,6 @@ public class ConfigManager {
             checkForConfig(classConfigFile);
             checkForConfig(expConfigFile);
             checkForConfig(skillConfigFile);
-            checkForConfig(damageConfigFile);
 
             Configuration primaryConfig = new Configuration(primaryConfigFile);
             primaryConfig.load();
@@ -63,8 +61,6 @@ public class ConfigManager {
             skillConfig.load();
             generateSkills(skillConfig);
             
-            Configuration damageConfig = new Configuration(damageConfigFile);
-            loadDamage(damageConfig);
 
             ClassManager classManager = new ClassManager(plugin);
             classManager.loadClasses(classConfigFile);
@@ -189,16 +185,6 @@ public class ConfigManager {
                 }
                 skill.init();
             }
-        }
-    }
-    
-    private void loadDamage(Configuration config) {
-        config.load();
-        plugin.log(Level.INFO, "got here - 1");
-        String root = "damages";
-        for(String cn : config.getKeys(root)) {
-            plugin.log(Level.INFO, "got here - 2" + cn);
-            getProperties().damages.put(cn, config.getDouble(root + "." + cn, 10));
         }
     }
 
