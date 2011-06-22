@@ -87,7 +87,7 @@ public class BukkitContribInventoryListener extends InventoryListener {
             plugin.log(Level.INFO, "Step - 1");
             if(event.getCursor() != null) {
                 plugin.log(Level.INFO, "Step - 1 - null");
-                event.setCancelled(true);
+                return;
             }
             
             ItemStack result = event.getItem();
