@@ -1,7 +1,5 @@
 package com.herocraftonline.dev.heroes.inventory;
 
-import java.util.logging.Level;
-
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -29,6 +27,19 @@ public class BukkitContribInventoryListener extends InventoryListener {
     @Override
     public void onInventoryClose(InventoryCloseEvent event) {
         plugin.getInventoryChecker().checkInventory(event.getPlayer());
+    }
+
+    @Override   
+    public void onInventoryCraft(InventoryCraftEvent event) {
+        ItemStack result = event.getCursor();
+        if(plugin.getConfigManager().getProperties().craftingExp.containsKey(result.getType())) {
+            Player player = event.getPlayer();
+            Hero hero = plugin.getHeroManager().getHero(player);
+            if(hero.getHeroClass().getExperienceSources().contains(ExperienceType.CRAFTING)) {
+                hero.gainExp(plugin.getConfigManager().getProperties().craftingExp.get(result.getType()), ExperienceType.CRAFTING);
+                return;
+            }
+        }
     }
 
     @Override
@@ -80,27 +91,6 @@ public class BukkitContribInventoryListener extends InventoryListener {
                 Messaging.send(player, "You are not trained to use a $1.", MaterialUtil.getFriendlyName(itemString));
                 event.setCancelled(true);
                 return;
-            }
-        }
-
-        if(event.getSlotType() == InventorySlotType.RESULT) {
-            plugin.log(Level.INFO, "Step - 1");
-            if(event.getCursor() != null) {
-                plugin.log(Level.INFO, event.getCursor().getType().toString());
-                plugin.log(Level.INFO, "Step - 1 - null");
-                return;
-            }
-            
-            ItemStack result = event.getItem();
-            plugin.log(Level.INFO, "Step - 1 - not null");
-            if(plugin.getConfigManager().getProperties().craftingExp.containsKey(result.getType())) {
-                plugin.log(Level.INFO, "Step - 2");
-                Hero hero = plugin.getHeroManager().getHero(player);
-                if(hero.getHeroClass().getExperienceSources().contains(ExperienceType.CRAFTING)) {
-                    plugin.log(Level.INFO, "Step - 3");
-                    hero.gainExp(plugin.getConfigManager().getProperties().craftingExp.get(result.getType()), ExperienceType.CRAFTING);
-                    return;
-                }
             }
         }
     }
