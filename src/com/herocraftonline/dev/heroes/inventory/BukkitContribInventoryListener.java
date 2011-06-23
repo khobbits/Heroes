@@ -31,7 +31,7 @@ public class BukkitContribInventoryListener extends InventoryListener {
 
     @Override   
     public void onInventoryCraft(InventoryCraftEvent event) {
-        if(event.getResult() == null) {
+        if(event.getResult() == null || event.getPlayer().getInventory().firstEmpty() == -1) {
             return;
         }
         ItemStack result = event.getResult();
