@@ -38,7 +38,7 @@ public class WhoCommand extends BaseCommand {
                 for(Hero h : plugin.getHeroManager().getHeroes()) {
                     if(h.getHeroClass() == plugin.getClassManager().getClass(args[0])) {
                         int level = prop.getLevel(h.getExperience());
-                        sender.sendMessage("  §aClass : " + h.getHeroClass().getName() + "  §aLevel : " + level);
+                        sender.sendMessage("  §aName : " + h.getPlayer().getName() + "  §aLevel : " + level);
                     }
                 }
             }else {
