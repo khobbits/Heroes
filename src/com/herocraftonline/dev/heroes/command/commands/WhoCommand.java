@@ -33,8 +33,15 @@ public class WhoCommand extends BaseCommand {
                 sender.sendMessage("§c-----[ " + "§f" + ePlayer.getName() + "§c ]-----");
                 sender.sendMessage("  §aClass : " + hero.getHeroClass().getName());
                 sender.sendMessage("  §aLevel : " + level);
-
-            } else {
+            } else if(plugin.getClassManager().getClass(args[0]) != null){
+                Properties prop = this.plugin.getConfigManager().getProperties();
+                for(Hero h : plugin.getHeroManager().getHeroes()) {
+                    if(h.getHeroClass() == plugin.getClassManager().getClass(args[0])) {
+                        int level = prop.getLevel(h.getExperience());
+                        sender.sendMessage("  §aClass : " + h.getHeroClass().getName() + "  §aLevel : " + level);
+                    }
+                }
+            }else {
                 Messaging.send(sender, "Player not online!");
             }
         }
