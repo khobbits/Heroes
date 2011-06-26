@@ -31,14 +31,17 @@ public class BukkitContribInventoryListener extends InventoryListener {
 
     @Override   
     public void onInventoryCraft(InventoryCraftEvent event) {
-        if(event.getResult() == null || event.getPlayer().getInventory().firstEmpty() == -1) {
+        if(event.getResult() == null) {
             return;
+        }
+        if(event.isLeftClick() == false) {
+            if(event.getPlayer().getInventory().firstEmpty() == -1) {
+                return;
+            }
         }
         ItemStack result = event.getResult();
         if(event.getCursor() != null) {
-            if(event.getCursor().getMaxStackSize() == event.getCursor().getAmount()) {
-                return;
-            }
+            return;
         }
         if(plugin.getConfigManager().getProperties().craftingExp.containsKey(result.getType())) {
             Player player = event.getPlayer();
