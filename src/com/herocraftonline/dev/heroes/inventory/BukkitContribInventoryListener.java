@@ -34,7 +34,7 @@ public class BukkitContribInventoryListener extends InventoryListener {
         if(event.getResult() == null) {
             return;
         }
-        if(event.isLeftClick() == false) {
+        if(event.isLeftClick() == true) {
             if(event.getPlayer().getInventory().firstEmpty() == -1) {
                 return;
             }
