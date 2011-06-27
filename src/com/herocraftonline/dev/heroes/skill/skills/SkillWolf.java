@@ -29,14 +29,14 @@ public class SkillWolf extends ActiveSkill {
     @Override
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
-        if (!wolves.containsKey(player) || wolves.get(player) <= 3) {
+        if (wolves.containsKey(player) == false || wolves.get(player) <= 3) {
             LivingEntity le = player.getWorld().spawnCreature(hero.getPlayer().getLocation(), CreatureType.WOLF);
             Wolf wolf = (Wolf) le;
             wolf.setOwner(player);
             wolf.setTamed(true);
-            int wolfFixIntegerYesImReallyDoingThisILikeLongNamesNeverGonnaGetAErrorAboutCollidingNamesAnymoreFuckJavaConventions = wolves.get(player) + 1;
+            int wolf1 = wolves.get(player) + 1;
             wolves.remove(player);
-            wolves.put(player, wolfFixIntegerYesImReallyDoingThisILikeLongNamesNeverGonnaGetAErrorAboutCollidingNamesAnymoreFuckJavaConventions);
+            wolves.put(player, wolf1);
             return true;
         } else {
             Messaging.send(player, "Sorry, you have too many wolves already", (String[]) null);
