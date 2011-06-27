@@ -48,20 +48,20 @@ public class SkillReflect extends ActiveEffectSkill {
             Entity defender = edbe.getEntity();
             Entity attacker = edbe.getDamager();
             if (attacker instanceof LivingEntity && defender instanceof Player) {
-                Player player = (Player) defender;
+                Player defPlayer = (Player) defender;
 
-                HeroEffects effects = plugin.getHeroManager().getHero(player).getEffects();
-                if (effects.hasEffect(name)) {
+                HeroEffects defEffects = plugin.getHeroManager().getHero(defPlayer).getEffects();
+                if (defEffects.hasEffect(name)) {
                     if (attacker instanceof Player) {
-                        Player att = (Player) attacker;
-                        HeroEffects attEffects = plugin.getHeroManager().getHero(att).getEffects();
+                        Player attPlayer = (Player) attacker;
+                        HeroEffects attEffects = plugin.getHeroManager().getHero(attPlayer).getEffects();
                         if (attEffects.hasEffect(name)) {
                             event.setCancelled(true);
                             return;
                         }
                     }
-                    LivingEntity atk = (LivingEntity) attacker;
-                    atk.damage(event.getDamage(), defender);
+                    LivingEntity attEntity = (LivingEntity) attacker;
+                    attEntity.damage(event.getDamage(), defender);
                 }
             }
         }
