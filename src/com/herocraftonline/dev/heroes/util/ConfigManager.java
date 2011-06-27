@@ -60,7 +60,6 @@ public class ConfigManager {
             Configuration skillConfig = new Configuration(skillConfigFile);
             skillConfig.load();
             generateSkills(skillConfig);
-            
 
             ClassManager classManager = new ClassManager(plugin);
             classManager.loadClasses(classConfigFile);
@@ -122,52 +121,65 @@ public class ConfigManager {
 
     private void loadExperience(Configuration config) {
         String root = "killing";
-        for (String item : config.getKeys(root)) {
-            try {
-                int exp = config.getInt(root + "." + item, 0);
-                if (item.equals("player")) {
-                    properties.playerKillingExp = exp;
-                } else {
-                    CreatureType type = CreatureType.valueOf(item.toUpperCase());
-                    properties.creatureKillingExp.put(type, exp);
+        List<String> killing = config.getKeys(root);
+        if (killing != null) {
+            for (String item : killing) {
+                try {
+                    int exp = config.getInt(root + "." + item, 0);
+                    if (item.equals("player")) {
+                        properties.playerKillingExp = exp;
+                    } else {
+                        CreatureType type = CreatureType.valueOf(item.toUpperCase());
+                        properties.creatureKillingExp.put(type, exp);
+                    }
+                } catch (IllegalArgumentException e) {
+                    plugin.log(Level.WARNING, "Invalid creature type (" + item + ") found in experience.yml.");
                 }
-            } catch (IllegalArgumentException e) {
-                plugin.log(Level.WARNING, "Invalid creature type (" + item + ") found in experience.yml.");
             }
         }
 
         root = "mining";
-        for (String item : config.getKeys(root)) {
-            int exp = config.getInt(root + "." + item, 0);
-            Material type = Material.matchMaterial(item);
+        List<String> mining = config.getKeys(root);
+        if (mining != null) {
+            for (String item : mining) {
+                int exp = config.getInt(root + "." + item, 0);
+                Material type = Material.matchMaterial(item);
 
-            if (type != null) {
-                properties.miningExp.put(type, exp);
-            } else {
-                plugin.log(Level.WARNING, "Invalid material type (" + item + ") found in experience.yml.");
+                if (type != null) {
+                    properties.miningExp.put(type, exp);
+                } else {
+                    plugin.log(Level.WARNING, "Invalid material type (" + item + ") found in experience.yml.");
+                }
             }
         }
 
         root = "logging";
-        for (String item : config.getKeys(root)) {
-            int exp = config.getInt(root + "." + item, 0);
-            Material type = Material.matchMaterial(item);
+        List<String> logging = config.getKeys(root);
+        if (logging != null) {
+            for (String item : logging) {
+                int exp = config.getInt(root + "." + item, 0);
+                Material type = Material.matchMaterial(item);
 
-            if (type != null) {
-                properties.loggingExp.put(type, exp);
-            } else {
-                plugin.log(Level.WARNING, "Invalid material type (" + item + ") found in experience.yml.");
+                if (type != null) {
+                    properties.loggingExp.put(type, exp);
+                } else {
+                    plugin.log(Level.WARNING, "Invalid material type (" + item + ") found in experience.yml.");
+                }
             }
         }
-        root = "crafting";
-        for (String item : config.getKeys(root)) {
-            int exp = config.getInt(root + "." + item, 0);
-            Material type = Material.matchMaterial(item);
 
-            if (type != null) {
-                properties.craftingExp.put(type, exp);
-            } else {
-                plugin.log(Level.WARNING, "Invalid material type (" + item + ") found in experience.yml.");
+        root = "crafting";
+        List<String> crafting = config.getKeys(root);
+        if (crafting != null) {
+            for (String item : crafting) {
+                int exp = config.getInt(root + "." + item, 0);
+                Material type = Material.matchMaterial(item);
+
+                if (type != null) {
+                    properties.craftingExp.put(type, exp);
+                } else {
+                    plugin.log(Level.WARNING, "Invalid material type (" + item + ") found in experience.yml.");
+                }
             }
         }
     }
