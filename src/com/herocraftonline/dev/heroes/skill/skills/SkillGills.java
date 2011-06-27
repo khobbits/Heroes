@@ -7,16 +7,19 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
+import com.herocraftonline.dev.heroes.skill.ActiveEffectSkill;
 import com.herocraftonline.dev.heroes.skill.PassiveSkill;
 
-public class SkillGills extends PassiveSkill {
+public class SkillGills extends ActiveEffectSkill {
 
     public SkillGills(Heroes plugin) {
         super(plugin);
         name = "Gills";
         description = "Negate drowning damage";
+        usage = "/skill gills";
         minArgs = 0;
         maxArgs = 0;
+        identifiers.add("skill gills");
     }
 
     public class SkillPlayerListener extends EntityListener {
@@ -33,5 +36,14 @@ public class SkillGills extends PassiveSkill {
                 }
             }
         }
+    }
+
+    @Override
+    public boolean use(Hero hero, String[] args) {
+        Player player = hero.getPlayer();
+        String playerName = player.getName();
+        applyEffect(hero);
+        notifyNearbyPlayers(player.getLocation(), useText, playerName, name);
+        return true;
     }
 }
