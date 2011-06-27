@@ -33,7 +33,7 @@ public class SkillStar extends PassiveSkill {
 
     public class SkillPlayerListener extends PlayerListener {
 
-        public void onEntityDamage(PlayerEggThrowEvent event) {
+        public void onPlayerEggThrow(PlayerEggThrowEvent event) {
             Player player = event.getPlayer();
             Hero hero = plugin.getHeroManager().getHero(player);
             HeroEffects effects = hero.getEffects();

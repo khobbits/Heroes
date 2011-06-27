@@ -15,10 +15,8 @@ import org.bukkit.event.entity.EntityDamageByProjectileEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityListener;
 import org.bukkit.util.Vector;
-import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 
@@ -73,8 +71,6 @@ public class SkillFirearrow extends ActiveSkill {
                         if (entity instanceof LivingEntity) {
                             Entity dmger = subEvent.getDamager();
                             if (dmger instanceof Player) {
-                                Hero hero = plugin.getHeroManager().getHero((Player) dmger);
-                                HeroClass heroClass = hero.getHeroClass();
                                 // Perform a check to see if any plugin is preventing us from damaging the player.
                                 EntityDamageEvent damageEvent = new EntityDamageEvent(dmger, subEvent.getCause(), 4);
                                 Bukkit.getServer().getPluginManager().callEvent(damageEvent);
