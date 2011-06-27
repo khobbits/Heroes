@@ -12,6 +12,7 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.persistence.HeroEffects;
 import com.herocraftonline.dev.heroes.skill.ActiveEffectSkill;
+import com.herocraftonline.dev.heroes.util.Messaging;
 
 public class SkillManaShield extends ActiveEffectSkill {
 
@@ -41,6 +42,7 @@ public class SkillManaShield extends ActiveEffectSkill {
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
         node.setProperty("mana-amount", 20);
+        node.setProperty(SETTING_DURATION, 20000);
         return node;
     }
 
@@ -59,11 +61,16 @@ public class SkillManaShield extends ActiveEffectSkill {
                 HeroEffects effects = plugin.getHeroManager().getHero(player).getEffects();
                 if (effects.hasEffect(name)) {
                     int absorbamount = getSetting(hero.getHeroClass(), "mana-amount", 20);
-                    event.setDamage((int) (event.getDamage() * 0.50));
-                    if (hero.getMana() < absorbamount) {
+                    event.setDamage(event.getDamage() / 2);
+                    int mana = hero.getMana();
+                    if (mana < absorbamount) {
                         effects.expireEffect(name);
                     } else {
-                        hero.setMana(hero.getMana() - absorbamount);
+                        mana -= absorbamount;
+                        hero.setMana(mana);
+                        if (mana != 100 && hero.isVerbose()) {
+                            Messaging.send(hero.getPlayer(), "Mana: " + Messaging.createManaBar(hero.getMana()));
+                        }
                     }
                 }
             }
