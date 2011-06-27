@@ -37,14 +37,6 @@ public class SkillFirearrow extends ActiveSkill {
     }
 
     @Override
-    public ConfigurationNode getDefaultConfig() {
-        ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty("damage", 4);
-        node.setProperty("fire-ticks", 100);
-        return node;
-    }
-
-    @Override
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
         Location location = player.getEyeLocation();
@@ -91,7 +83,7 @@ public class SkillFirearrow extends ActiveSkill {
                                 }
                                 // Damage the player and ignite them.
                                 LivingEntity livingEntity = (LivingEntity) entity;
-                                livingEntity.setFireTicks(getSetting(heroClass, "fire-ticks", 100));
+                                livingEntity.setFireTicks(20);
                                 livingEntity.damage(4);
                             }
                         }

@@ -8,7 +8,6 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveEffectSkill;
-import com.herocraftonline.dev.heroes.skill.PassiveSkill;
 
 public class SkillGills extends ActiveEffectSkill {
 
