@@ -16,7 +16,7 @@ public class SkillBandage extends TargettedSkill {
         super(plugin);
         name = "Bandage";
         description = "Bandages the target";
-        usage = "/skill bandage [target]";
+        usage = "/skill bandage <target>";
         minArgs = 0;
         maxArgs = 1;
         identifiers.add("skill bandage");
@@ -25,7 +25,6 @@ public class SkillBandage extends TargettedSkill {
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty(SETTING_MAXDISTANCE, 5);
         node.setProperty("health", 5);
         return node;
     }
@@ -38,9 +37,11 @@ public class SkillBandage extends TargettedSkill {
                 Messaging.send(player, "You need paper to perform this.");
                 return false;
             }
-
+            int hpPlus = getSetting(hero.getHeroClass(), "health", 5);
+            if(target.getHealth() + hpPlus > 20) {
+                hpPlus = 20 - target.getHealth();
+            }
             target.setHealth(target.getHealth() + getSetting(hero.getHeroClass(), "health", 5));
-
         }
         return false;
     }
