@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
 import org.bukkit.event.block.Action;
@@ -75,13 +76,9 @@ public class SkillIcebolt extends ActiveSkill {
                         if (damageEvent.isCancelled()) {
                             return;
                         }
-                        // Blockplace Event //
-                        PlayerInteractEvent blockplaceEvent = new PlayerInteractEvent((Player) event.getEntity(), Action.RIGHT_CLICK_BLOCK, null, null, null);
-                        Bukkit.getServer().getPluginManager().callEvent(damageEvent);
-                        if (blockplaceEvent.isCancelled()) {
-                            return;
-                        }
-                        event.getEntity().getWorld().getBlockAt(event.getEntity().getLocation()).setType(Material.ICE);
+                        LivingEntity lEntity = (LivingEntity) event.getEntity();
+                        event.getEntity().setFireTicks(0);
+                        lEntity.damage(3);
                     }
                 }
             }
