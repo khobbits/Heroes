@@ -22,7 +22,7 @@ public class SkillGills extends ActiveEffectSkill {
         maxArgs = 0;
         identifiers.add("skill gills");
         
-        registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Monitor);
+        registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
     }
 
     public class SkillEntityListener extends EntityListener {
