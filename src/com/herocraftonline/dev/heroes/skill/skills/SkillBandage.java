@@ -38,10 +38,12 @@ public class SkillBandage extends TargettedSkill {
                 return false;
             }
             int hpPlus = getSetting(hero.getHeroClass(), "health", 5);
-            if(target.getHealth() + hpPlus > 20) {
-                hpPlus = 20 - target.getHealth();
+            int targetHealth = target.getHealth();
+            if (targetHealth + hpPlus > 20) {
+                hpPlus = 20 - targetHealth;
             }
-            target.setHealth(target.getHealth() + getSetting(hero.getHeroClass(), "health", 5));
+            target.setHealth(target.getHealth() + hpPlus);
+            notifyNearbyPlayers(player.getLocation(), useText, player.getName(), name, target == player ? "himself" : getEntityName(target));
         }
         return false;
     }
