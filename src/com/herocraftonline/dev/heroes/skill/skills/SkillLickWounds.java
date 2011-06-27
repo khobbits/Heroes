@@ -32,7 +32,11 @@ public class SkillLickWounds extends ActiveSkill {
             if (n instanceof Wolf) {
                 Wolf nWolf = (Wolf) n;
                 if (nWolf.getOwner() == player) {
-                    nWolf.setHealth(nWolf.getHealth() + 30);
+                    int hpPlus = 30;
+                    if(nWolf.getHealth() + hpPlus > 200) {
+                        hpPlus = 200 - nWolf.getHealth();
+                    }
+                    nWolf.setHealth(nWolf.getHealth() + hpPlus);
                 }
             }
         }
