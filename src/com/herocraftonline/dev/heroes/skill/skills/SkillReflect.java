@@ -62,7 +62,6 @@ public class SkillReflect extends ActiveEffectSkill {
                     }
                     LivingEntity atk = (LivingEntity) attacker;
                     atk.damage(event.getDamage(), defender);
-                    event.setCancelled(true);
                 }
             }
         }
