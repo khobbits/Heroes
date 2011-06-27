@@ -1,10 +1,8 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import org.bukkit.entity.Egg;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
@@ -22,9 +20,6 @@ import com.herocraftonline.dev.heroes.skill.PassiveSkill;
 
 public class SkillStar extends PassiveSkill {
 
-    private LinkedHashMap<Integer, Integer> eggs;
-
-    @SuppressWarnings("serial")
     public SkillStar(Heroes plugin) {
         super(plugin);
         name = "Star";
@@ -34,14 +29,6 @@ public class SkillStar extends PassiveSkill {
 
         registerEvent(Type.PLAYER_EGG_THROW, new SkillPlayerListener(), Priority.Normal);
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
-
-        eggs = new LinkedHashMap<Integer, Integer>() {
-            private static final int MAX_ENTRIES = 1000;
-
-            protected boolean removeEldestEntry(Map.Entry<Integer, Integer> eldest) {
-                return size() > MAX_ENTRIES;
-            }
-        };
     }
 
     @Override
@@ -59,7 +46,6 @@ public class SkillStar extends PassiveSkill {
             HeroEffects effects = hero.getEffects();
             if (effects.hasEffect(name)) {
                 event.setHatching(false);
-                eggs.put(event.getEgg().getEntityId(), getSetting(hero.getHeroClass(), "damage", 4));
             }
 
         }
@@ -77,9 +63,15 @@ public class SkillStar extends PassiveSkill {
                 EntityDamageByProjectileEvent subEvent = (EntityDamageByProjectileEvent) event;
                 Entity projectile = subEvent.getProjectile();
                 if (projectile instanceof Egg) {
-                    if (eggs.containsKey(projectile.getEntityId())) {
-                        event.setDamage(eggs.get(projectile));
-                        eggs.remove(projectile);
+                    Egg egg = (Egg) projectile;
+                    LivingEntity shooter = egg.getShooter();
+                    if (shooter instanceof Player) {
+                        Player shootingPlayer = (Player) shooter;
+                        Hero hero = plugin.getHeroManager().getHero(shootingPlayer);
+                        if (hero.getEffects().hasEffect(name)) {
+                            int damage = getSetting(hero.getHeroClass(), "damage", 4);
+                            event.setDamage(damage);
+                        }
                     }
                 }
             }
