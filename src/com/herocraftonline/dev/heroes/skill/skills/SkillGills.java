@@ -1,6 +1,8 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event.Priority;
+import org.bukkit.event.Event.Type;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityListener;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
@@ -19,9 +21,11 @@ public class SkillGills extends ActiveEffectSkill {
         minArgs = 0;
         maxArgs = 0;
         identifiers.add("skill gills");
+        
+        registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Monitor);
     }
 
-    public class SkillPlayerListener extends EntityListener {
+    public class SkillEntityListener extends EntityListener {
 
         public void onEntityDamage(EntityDamageEvent event) {
             if (event.isCancelled() || !(event.getCause() == DamageCause.DROWNING)) {
