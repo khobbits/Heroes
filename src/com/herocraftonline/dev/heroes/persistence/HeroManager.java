@@ -328,7 +328,11 @@ class ManaUpdater extends TimerTask {
             if (hero == null) {
                 continue;
             }
+
             int mana = hero.getMana();
+            if(hero.getEffects().hasEffect("ManaFreeze")) {
+                mana = 100;
+            }
             hero.setMana(mana > 100 ? mana : mana > 95 ? 100 : mana + 5); // Hooray for the ternary operator!
             if (mana != 100 && hero.isVerbose()) {
                 Messaging.send(hero.getPlayer(), "Mana: " + Messaging.createManaBar(hero.getMana()));

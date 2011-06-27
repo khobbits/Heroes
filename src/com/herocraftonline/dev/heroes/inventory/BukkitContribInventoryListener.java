@@ -40,6 +40,9 @@ public class BukkitContribInventoryListener extends InventoryListener {
             }
         }
         ItemStack result = event.getResult();
+        if(event.getCursor() != null) {
+            return;
+        }
         if(plugin.getConfigManager().getProperties().craftingExp.containsKey(result.getType())) {
             Player player = event.getPlayer();
             Hero hero = plugin.getHeroManager().getHero(player);

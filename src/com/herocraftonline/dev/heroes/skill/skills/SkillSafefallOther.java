@@ -19,7 +19,7 @@ public class SkillSafefallOther extends TargettedSkill {
 
     public SkillSafefallOther(Heroes plugin) {
         super(plugin);
-        name = "Safefall";
+        name = "SafefallOther";
         description = "Skill - Safefall";
         usage = "/skill safefall";
         minArgs = 0;
