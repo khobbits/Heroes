@@ -34,7 +34,7 @@ public class SkillWolf extends ActiveSkill {
             Wolf wolf = (Wolf) le;
             wolf.setOwner(player);
             wolf.setTamed(true);
-            int wolf1 = wolves.get(player) + 1;
+            int wolf1 = wolves.containsKey(player) ? wolves.get(player) + 1 : 1;
             wolves.remove(player);
             wolves.put(player, wolf1);
             return true;

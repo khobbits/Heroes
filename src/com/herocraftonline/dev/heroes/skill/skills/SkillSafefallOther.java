@@ -58,7 +58,6 @@ public class SkillSafefallOther extends TargettedSkill {
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
-        String playerName = player.getName();
         if (target instanceof Player) {
             Hero newHero = plugin.getHeroManager().getHero((Player) target);
             double duration = getSetting(hero.getHeroClass(), "duration", 5000);
