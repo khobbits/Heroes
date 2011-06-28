@@ -31,7 +31,7 @@ public class PartyWhoCommand extends BaseCommand {
             Player player = (Player) sender;
             Hero hero = plugin.getHeroManager().getHero(player);
             if (hero.getParty() == null) {
-                Messaging.send(player, "Sorry, you aren't in a party", (String[]) null);
+                Messaging.send(player, "Sorry, you aren't in a party");
                 return;
             }
             Messaging.send(player, "$1", partyNames(hero.getParty()).toString());

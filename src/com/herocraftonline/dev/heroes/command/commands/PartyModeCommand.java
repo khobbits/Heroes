@@ -39,7 +39,7 @@ public class PartyModeCommand extends BaseCommand {
                     }
                 }
             } else {
-                Messaging.send(player, "Sorry, you need to be the leader to do that", (String[]) null);
+                Messaging.send(player, "Sorry, you need to be the leader to do that");
 
             }
         }

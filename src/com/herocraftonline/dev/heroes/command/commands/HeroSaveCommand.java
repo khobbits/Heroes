@@ -24,7 +24,7 @@ public class HeroSaveCommand extends BaseCommand {
         if (sender instanceof Player) {
             Player player = (Player) sender;
             plugin.getHeroManager().saveHeroFile(player);
-            Messaging.send(player, "Your hero has been saved sucessfully!", (String[]) null);
+            Messaging.send(player, "Your hero has been saved sucessfully!");
         }
     }
 

@@ -39,7 +39,7 @@ public class SkillWolf extends ActiveSkill {
             wolves.put(player, wolf1);
             return true;
         } else {
-            Messaging.send(player, "Sorry, you have too many wolves already", (String[]) null);
+            Messaging.send(player, "Sorry, you have too many wolves already");
             return false;
         }
     }

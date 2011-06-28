@@ -65,7 +65,7 @@ public class SkillXMuteOre extends ActiveSkill {
         Player p = hero.getPlayer();
         ItemStack is = p.getItemInHand();
         if (is == null) {
-            Messaging.send(p, "You do not have any item in your hand!", (String[]) null);
+            Messaging.send(p, "You do not have any item in your hand!");
             return false;
         }
         Material mat = is.getType();

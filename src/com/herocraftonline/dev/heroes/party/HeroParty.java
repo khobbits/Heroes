@@ -67,7 +67,7 @@ public class HeroParty {
         return modes.contains(mode);
     }
 
-    public void messageParty(String msg, String... params) {
+    public void messageParty(String msg, Object... params) {
         for (Player p : members) {
             Messaging.send(p, msg, params);
         }
