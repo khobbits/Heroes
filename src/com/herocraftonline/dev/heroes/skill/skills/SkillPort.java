@@ -9,7 +9,6 @@ import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 
 public class SkillPort extends ActiveSkill {
 
-    // TODO: Register this command in Heroes
     public SkillPort(Heroes plugin) {
         super(plugin);
         name = "Port";
