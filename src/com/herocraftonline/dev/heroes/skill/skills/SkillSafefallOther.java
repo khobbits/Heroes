@@ -21,9 +21,9 @@ public class SkillSafefallOther extends TargettedSkill {
         super(plugin);
         name = "SafefallOther";
         description = "Skill - Safefall";
-        usage = "/skill safefallother";
+        usage = "/skill safefallother <target>";
         minArgs = 0;
-        maxArgs = 0;
+        maxArgs = 1;
         identifiers.add("skill safefallother");
 
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
@@ -63,7 +63,7 @@ public class SkillSafefallOther extends TargettedSkill {
             Hero newHero = plugin.getHeroManager().getHero((Player) target);
             double duration = getSetting(hero.getHeroClass(), "duration", 5000);
             newHero.getEffects().putEffect(name, duration);
-            notifyNearbyPlayers(player.getLocation(), useText, playerName, name);
+            notifyNearbyPlayers(player.getLocation(), useText, player.getName(), name, target == player ? "himself" : getEntityName(target));
             return true;
         } else {
             return false;
