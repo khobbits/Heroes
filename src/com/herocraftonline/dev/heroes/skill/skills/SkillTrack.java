@@ -1,16 +1,20 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
+import java.util.Random;
+
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.util.config.Configuration;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
 
 public class SkillTrack extends ActiveSkill {
+
+    private static final Random random = new Random();
 
     public SkillTrack(Heroes plugin) {
         super(plugin);
@@ -23,12 +27,10 @@ public class SkillTrack extends ActiveSkill {
     }
 
     @Override
-    public void init() {
-    }
-
-    @Override
     public ConfigurationNode getDefaultConfig() {
-        return Configuration.getEmptyNode();
+        ConfigurationNode node = super.getDefaultConfig();
+        node.setProperty("randomness", 50);
+        return node;
     }
 
     @Override
@@ -41,8 +43,15 @@ public class SkillTrack extends ActiveSkill {
             return false;
         }
 
+        HeroClass heroClass = plugin.getHeroManager().getHero(player).getHeroClass();
+
         Location location = target.getLocation();
-        Messaging.send(player, "Tracked $1: $2:$3:$4", target.getName(), Double.toString(location.getX() + (Math.random() * 50)), Double.toString(location.getY() + (Math.random() * 50)), Double.toString(location.getZ() + (Math.random() * 50)));
+        int randomness = getSetting(heroClass, "randomness", 50);
+        int x = location.getBlockX() + random.nextInt(randomness);
+        int y = location.getBlockY() + random.nextInt(randomness / 10);
+        int z = location.getBlockZ() + random.nextInt(randomness);
+
+        Messaging.send(player, "Tracked $1: $2,$3,$4", target.getName(), x, y, z);
         player.setCompassTarget(location);
         notifyNearbyPlayers(player.getLocation(), useText, player.getName(), name);
         return true;

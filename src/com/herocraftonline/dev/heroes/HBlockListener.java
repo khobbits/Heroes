@@ -106,7 +106,8 @@ public class HBlockListener extends BlockListener {
             }
         }
 
-        if (addedExp != 0 && prop.getLevel(hero.getExperience()) != prop.maxLevel) {
+        int postMultiplierExp = (int) (addedExp * hero.getHeroClass().getExpModifier());
+        if (postMultiplierExp != 0 && prop.getLevel(hero.getExperience()) != prop.maxLevel) {
             if (wasBlockPlaced(block)) {
                 if (hero.isVerbose()) {
                     Messaging.send(player, "No experience gained - block placed too recently.");

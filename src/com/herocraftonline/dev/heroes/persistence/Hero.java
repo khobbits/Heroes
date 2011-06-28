@@ -141,13 +141,6 @@ public class Hero {
         int currentLevel = prop.getLevel(exp);
         int newLevel = prop.getLevel(exp + expGain);
 
-        /**
-         * If they're at max level, we don't add experience
-         * if (currentLevel == prop.maxLevel) {
-         * return;
-         * }
-         **/
-
         // add the experience
         exp += expGain;
 
