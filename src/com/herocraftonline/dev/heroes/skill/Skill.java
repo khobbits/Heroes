@@ -29,7 +29,7 @@ public abstract class Skill extends BaseCommand {
     public void init() {
     }
 
-    protected void notifyNearbyPlayers(Location source, String message, String... args) {
+    protected void notifyNearbyPlayers(Location source, String message, Object... args) {
         Player[] players = plugin.getServer().getOnlinePlayers();
         for (Player player : players) {
             Location playerLocation = player.getLocation();

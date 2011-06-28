@@ -8,6 +8,8 @@ import org.bukkit.event.Event.Type;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityListener;
+import org.bukkit.util.config.ConfigurationNode;
+
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.persistence.HeroEffects;
@@ -25,6 +27,13 @@ public class SkillReflect extends ActiveEffectSkill {
         identifiers.add("skill reflect");
 
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
+    }
+
+    @Override
+    public ConfigurationNode getDefaultConfig() {
+        ConfigurationNode node = super.getDefaultConfig();
+        node.setProperty("reflected-amount", 0.5);
+        return node;
     }
 
     @Override
@@ -49,8 +58,8 @@ public class SkillReflect extends ActiveEffectSkill {
             Entity attacker = edbe.getDamager();
             if (attacker instanceof LivingEntity && defender instanceof Player) {
                 Player defPlayer = (Player) defender;
-
-                HeroEffects defEffects = plugin.getHeroManager().getHero(defPlayer).getEffects();
+                Hero hero = plugin.getHeroManager().getHero(defPlayer);
+                HeroEffects defEffects = hero.getEffects();
                 if (defEffects.hasEffect(name)) {
                     if (attacker instanceof Player) {
                         Player attPlayer = (Player) attacker;
@@ -61,7 +70,8 @@ public class SkillReflect extends ActiveEffectSkill {
                         }
                     }
                     LivingEntity attEntity = (LivingEntity) attacker;
-                    attEntity.damage(event.getDamage(), defender);
+                    int damage = (int) (event.getDamage() * getSetting(hero.getHeroClass(), "reflected-amount", 0.5));
+                    attEntity.damage(damage, defender);
                 }
             }
         }

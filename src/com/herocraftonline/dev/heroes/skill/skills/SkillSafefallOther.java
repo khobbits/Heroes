@@ -32,7 +32,7 @@ public class SkillSafefallOther extends TargettedSkill {
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty("duration", 5000d);
+        node.setProperty("duration", 5000);
         return node;
     }
 
@@ -61,7 +61,7 @@ public class SkillSafefallOther extends TargettedSkill {
         String playerName = player.getName();
         if (target instanceof Player) {
             Hero newHero = plugin.getHeroManager().getHero((Player) target);
-            double duration = getSetting(hero.getHeroClass(), "duration", 5000d);
+            double duration = getSetting(hero.getHeroClass(), "duration", 5000);
             newHero.getEffects().putEffect(name, duration);
             notifyNearbyPlayers(player.getLocation(), useText, playerName, name);
             return true;
