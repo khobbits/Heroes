@@ -23,14 +23,10 @@ public class SkillPort extends ActiveSkill {
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
         if (getSetting(hero.getHeroClass(), args[0].toLowerCase(), null) != null) {
-            try {
             String[] splitArg = getSetting(hero.getHeroClass(), args[0].toLowerCase(), null).split(":");
             player.teleport(new Location(hero.getPlayer().getWorld(), Double.parseDouble(splitArg[0]), Double.parseDouble(splitArg[1]), Double.parseDouble(splitArg[2])));
             notifyNearbyPlayers(player.getLocation(), useText, player.getName(), name);
             return true;
-            }catch(NullPointerException NPE) {
-                return false;
-            }
         } else {
             return false;
         }
