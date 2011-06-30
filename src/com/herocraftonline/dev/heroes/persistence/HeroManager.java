@@ -260,7 +260,7 @@ public class HeroManager {
     }
 
     public Hero getHero(Player player) {
-        Hero[] heroes = getHeroes();
+        final Hero[] heroes = getHeroes();
         for (Hero hero : heroes) {
             if (hero == null || hero.getPlayer() == null) {
                 this.heroes.remove(hero); // Seeing as it's null we might as well remove it.
@@ -272,7 +272,7 @@ public class HeroManager {
         }
         // If it gets to this stage then clearly the HeroManager doesn't have it so we create it...
         loadHeroFile(player);
-        Hero[] heroez = getHeroes();
+        final Hero[] heroez = getHeroes();
         for (Hero hero : heroez) {
             if (hero == null) {
                 continue;
