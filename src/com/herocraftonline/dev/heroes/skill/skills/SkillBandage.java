@@ -34,24 +34,33 @@ public class SkillBandage extends TargettedSkill {
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
         if (target instanceof Player) {
+            int hpPlus = getSetting(hero.getHeroClass(), "health", 5);
+            int targetHealth = target.getHealth();
+            
+            if (targetHealth >= 20) {
+                Messaging.send(player, "Target is already fully healed.");
+                return false;
+            }
+            
             ItemStack inHand = player.getItemInHand();
             if (!(inHand.getType() == Material.PAPER)) {
                 Messaging.send(player, "You need paper to perform this.");
                 return false;
             }
+            
             int amount = inHand.getAmount();
             if (amount > 1) {
                 inHand.setAmount(amount - 1);
             } else {
                 inHand.setType(Material.AIR);
             }
-            int hpPlus = getSetting(hero.getHeroClass(), "health", 5);
-            int targetHealth = target.getHealth();
+            
             if (targetHealth + hpPlus > 20) {
                 hpPlus = 20 - targetHealth;
             }
             target.setHealth(target.getHealth() + hpPlus);
             notifyNearbyPlayers(player.getLocation(), useText, player.getName(), name, target == player ? "himself" : getEntityName(target));
+            return true;
         }
         return false;
     }
