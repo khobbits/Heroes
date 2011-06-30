@@ -4,6 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
@@ -36,25 +37,27 @@ public class SkillBandage extends TargettedSkill {
         if (target instanceof Player) {
             int hpPlus = getSetting(hero.getHeroClass(), "health", 5);
             int targetHealth = target.getHealth();
-            
+
             if (targetHealth >= 20) {
                 Messaging.send(player, "Target is already fully healed.");
                 return false;
             }
             
-            ItemStack inHand = player.getItemInHand();
+            PlayerInventory inv = player.getInventory();
+            ItemStack inHand = inv.getItem(inv.getHeldItemSlot());
+            
             if (!(inHand.getType() == Material.PAPER)) {
                 Messaging.send(player, "You need paper to perform this.");
                 return false;
             }
-            
+
             int amount = inHand.getAmount();
             if (amount > 1) {
                 inHand.setAmount(amount - 1);
             } else {
-                inHand.setType(Material.AIR);
+                inv.setItemInHand(null);
             }
-            
+
             if (targetHealth + hpPlus > 20) {
                 hpPlus = 20 - targetHealth;
             }
