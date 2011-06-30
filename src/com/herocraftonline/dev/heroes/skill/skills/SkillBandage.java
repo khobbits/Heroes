@@ -32,6 +32,7 @@ public class SkillBandage extends TargettedSkill {
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
+        Messaging.send(player, "OMG YOU USED BANDAGE!!");
         if (target instanceof Player) {
             if (!(player.getItemInHand().getType() == Material.PAPER)) {
                 Messaging.send(player, "You need paper to perform this.");
