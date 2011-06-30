@@ -39,7 +39,12 @@ public class SkillBandage extends TargettedSkill {
                 Messaging.send(player, "You need paper to perform this.");
                 return false;
             }
-            inHand.setAmount(inHand.getAmount() - 1);
+            int amount = inHand.getAmount();
+            if (amount > 1) {
+                inHand.setAmount(amount - 1);
+            } else {
+                inHand.setType(Material.AIR);
+            }
             int hpPlus = getSetting(hero.getHeroClass(), "health", 5);
             int targetHealth = target.getHealth();
             if (targetHealth + hpPlus > 20) {
