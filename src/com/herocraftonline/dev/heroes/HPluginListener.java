@@ -57,7 +57,8 @@ public class HPluginListener extends ServerListener {
             // If BukkitContrib just Disabled then we tell Heroes to stop using BukkitContrib
             Heroes.useBukkitContrib = false;
             // Then we swap all the Players NSH to our Custom NSH.
-            for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+            final Player[] players = this.plugin.getServer().getOnlinePlayers();
+            for (Player player : players) {
                 this.plugin.switchToHNSH(player);
             }
         }

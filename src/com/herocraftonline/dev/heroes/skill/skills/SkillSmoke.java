@@ -38,7 +38,8 @@ public class SkillSmoke extends ActiveEffectSkill {
     public boolean use(Hero hero, String[] args) {
         CraftPlayer craftPlayer = (CraftPlayer) hero.getPlayer();
         // Tell all the logged in Clients to Destroy the Entity - Appears Invisible.
-        for (Player player : plugin.getServer().getOnlinePlayers()) {
+        final Player[] players = plugin.getServer().getOnlinePlayers();
+        for (Player player : players) {
             CraftPlayer hostilePlayer = (CraftPlayer) player;
             hostilePlayer.getHandle().netServerHandler.sendPacket(new Packet29DestroyEntity(craftPlayer.getEntityId()));
         }
@@ -77,7 +78,8 @@ public class SkillSmoke extends ActiveEffectSkill {
     public void onExpire(Hero hero) {
         Player player = hero.getPlayer();
         EntityHuman entity = ((CraftPlayer) player).getHandle();
-        for (Player p : Bukkit.getServer().getOnlinePlayers()) {
+        final Player[] players = plugin.getServer().getOnlinePlayers();
+        for (Player p : players) {
             if (p.getName().equalsIgnoreCase(player.getName())) {
                 continue;
             }
