@@ -3,6 +3,7 @@ package com.herocraftonline.dev.heroes.skill.skills;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
@@ -32,12 +33,13 @@ public class SkillBandage extends TargettedSkill {
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
-        Messaging.send(player, "OMG YOU USED BANDAGE!!");
         if (target instanceof Player) {
-            if (!(player.getItemInHand().getType() == Material.PAPER)) {
+            ItemStack inHand = player.getItemInHand();
+            if (!(inHand.getType() == Material.PAPER)) {
                 Messaging.send(player, "You need paper to perform this.");
                 return false;
             }
+            inHand.setAmount(inHand.getAmount() - 1);
             int hpPlus = getSetting(hero.getHeroClass(), "health", 5);
             int targetHealth = target.getHealth();
             if (targetHealth + hpPlus > 20) {
