@@ -4,11 +4,13 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityListener;
+import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
@@ -38,6 +40,13 @@ public class SkillRevive extends ActiveSkill {
             }
         };
     }
+    
+    @Override
+    public ConfigurationNode getDefaultConfig() {
+        ConfigurationNode node = super.getDefaultConfig();
+        node.setProperty("slime-amount", 1);
+        return node;
+    }
 
     @Override
     public boolean use(Hero hero, String[] args) {
@@ -65,6 +74,12 @@ public class SkillRevive extends ActiveSkill {
 
         if (targetPlayer.isDead()) {
             Messaging.send(player, "$1 is still dead.", targetName);
+            return false;
+        }
+        
+        int slimeballs = getSetting(hero.getHeroClass(), "slime-amount", 1);
+        if(!player.getInventory().contains(Material.SLIME_BALL, slimeballs)) {
+            Messaging.send(player, "You don't have enough slimeballs (" + slimeballs + ")");
             return false;
         }
 
