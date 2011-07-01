@@ -26,7 +26,7 @@ public class SkillTeleport extends ActiveEffectSkill {
         Player player = hero.getPlayer();
         String playerName = player.getName();
         
-        if(!(hero.getParty() != null || hero.getParty().getMembers().size() > 0)) {
+        if(!(hero.getParty() != null && hero.getParty().getMembers().size() > 0)) {
             Messaging.send(player, "Sorry, you need to be in a party with players!");
             return false;
         }

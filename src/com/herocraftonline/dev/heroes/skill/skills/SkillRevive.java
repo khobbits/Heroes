@@ -10,6 +10,7 @@ import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityListener;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
@@ -84,7 +85,9 @@ public class SkillRevive extends ActiveSkill {
         }
 
         targetPlayer.teleport(playerLoc);
-        notifyNearbyPlayers(player.getLocation(), useText, player.getName(), name, target == player ? "himself" : targetName);
+        
+        player.getInventory().remove(new ItemStack(Material.SLIME_BALL, slimeballs));
+        notifyNearbyPlayers(player.getLocation(), useText, player.getName(), name, targetName);
         return true;
     }
 
