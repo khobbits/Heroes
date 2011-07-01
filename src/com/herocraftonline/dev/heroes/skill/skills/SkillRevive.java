@@ -1,6 +1,7 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -12,10 +13,12 @@ import org.bukkit.event.entity.EntityListener;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
+import com.herocraftonline.dev.heroes.util.Messaging;
 
 public class SkillRevive extends ActiveSkill {
-    public HashMap<Player, Location> deaths = new HashMap<Player, Location>();
+    public Map<String, Location> deaths = new LinkedHashMap<String, Location>();
 
+    @SuppressWarnings("serial")
     public SkillRevive(Heroes plugin) {
         super(plugin);
         name = "Revive";
@@ -25,33 +28,48 @@ public class SkillRevive extends ActiveSkill {
         maxArgs = 1;
         identifiers.add("skill revive");
 
-        registerEvent(Type.ENTITY_DAMAGE, new SkillPlayerListener(), Priority.Normal);
+        registerEvent(Type.ENTITY_DEATH, new SkillPlayerListener(), Priority.Normal);
+
+        deaths = new LinkedHashMap<String, Location>() {
+            private static final int MAX_ENTRIES = 50;
+
+            protected boolean removeEldestEntry(Map.Entry<String, Location> eldest) {
+                return size() > MAX_ENTRIES;
+            }
+        };
     }
 
     @Override
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
         Player target = plugin.getServer().getPlayer(args[0]);
+
         if (target == null) {
-            player.sendMessage("You must target a player.");
+            player.sendMessage("Player not found.");
             return false;
         }
 
         Player targetPlayer = (Player) target;
-        if (deaths.containsKey(targetPlayer)) {
-            Location loc = deaths.get(targetPlayer);
-            double dx = player.getLocation().getX() - loc.getX();
-            double dz = player.getLocation().getZ() - loc.getZ();
-            double distance = Math.sqrt(dx * dx + dz * dz);
-            if (distance < 50) {
-                if (targetPlayer.isDead()) {
-                    player.sendMessage("That player is still dead");
-                } else {
-                    targetPlayer.teleport(loc);
-                    notifyNearbyPlayers(player.getLocation(), useText, player.getName(), name, target == player ? "himself" : targetPlayer.getName());
-                }
-            }
+        String targetName = targetPlayer.getName();
+        if (!deaths.containsKey(targetName)) {
+            Messaging.send(player, "$1 has not died recently.", targetName);
+            return false;
         }
+
+        Location deathLoc = deaths.get(targetName);
+        Location playerLoc = player.getLocation();
+        if (!playerLoc.getWorld().equals(deathLoc.getWorld()) || playerLoc.distance(deathLoc) > 50.0) {
+            Messaging.send(player, "You are out of range.");
+            return false;
+        }
+
+        if (targetPlayer.isDead()) {
+            Messaging.send(player, "$1 is still dead.", targetName);
+            return false;
+        }
+
+        targetPlayer.teleport(playerLoc);
+        notifyNearbyPlayers(player.getLocation(), useText, player.getName(), name, target == player ? "himself" : targetName);
         return true;
     }
 
@@ -62,7 +80,7 @@ public class SkillRevive extends ActiveSkill {
             if (event.getEntity() instanceof Player) {
                 Player player = (Player) event.getEntity();
                 Location playerLoc = player.getLocation();
-                deaths.put(player, playerLoc);
+                deaths.put(player.getName(), playerLoc);
             }
         }
 

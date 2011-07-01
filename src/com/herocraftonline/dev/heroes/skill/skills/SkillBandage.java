@@ -42,10 +42,10 @@ public class SkillBandage extends TargettedSkill {
                 Messaging.send(player, "Target is already fully healed.");
                 return false;
             }
-            
+
             PlayerInventory inv = player.getInventory();
             ItemStack inHand = inv.getItem(inv.getHeldItemSlot());
-            
+
             if (!(inHand.getType() == Material.PAPER)) {
                 Messaging.send(player, "You need paper to perform this.");
                 return false;
