@@ -6,10 +6,10 @@ import org.bukkit.entity.Player;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
-import com.herocraftonline.dev.heroes.skill.ActiveEffectSkill;
+import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
 
-public class SkillTeleport extends ActiveEffectSkill {
+public class SkillTeleport extends ActiveSkill {
 
     public SkillTeleport(Heroes plugin) {
         super(plugin);
@@ -42,9 +42,10 @@ public class SkillTeleport extends ActiveEffectSkill {
             return false;
         }
 
-        Location targetLocation = targetPlayer.getLocation().add(Math.random()*((-50 + hero.getLevel()) - (50 - hero.getLevel())), Math.random()*((-50 + hero.getLevel()) - (50 - hero.getLevel())), Math.random()*((-50 + hero.getLevel()) - (50 - hero.getLevel())));
-        
-        player.teleport(targetLocation);
+        Location loc1 = targetPlayer.getLocation().add(Math.random()*((-50 + hero.getLevel()) - (50 - hero.getLevel())), 0, Math.random()*((-50 + hero.getLevel()) - (50 - hero.getLevel())));
+        Double highestBlock = (double) targetPlayer.getWorld().getHighestBlockYAt(loc1);
+        loc1.setY(highestBlock);
+        player.teleport(loc1);
         
         notifyNearbyPlayers(player.getLocation(), useText, playerName, name);
         return true;

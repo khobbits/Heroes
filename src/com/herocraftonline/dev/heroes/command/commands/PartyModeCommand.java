@@ -30,13 +30,11 @@ public class PartyModeCommand extends BaseCommand {
                 return;
             }
             HeroParty heroParty = hero.getParty();
-            if (hero.getParty().getLeader() == player) {
-                if (args[0].equalsIgnoreCase("pvp")) {
-                    if (heroParty.checkMode("PVP")) {
-                        heroParty.removeMode("PVP");
-                    } else {
-                        heroParty.addMode("PVP");
-                    }
+            if (heroParty.getLeader() == player) {
+                if(heroParty.checkMode(args[1])){
+                    heroParty.removeMode(args[1]);
+                }else {
+                    heroParty.addMode(args[1]);
                 }
             } else {
                 Messaging.send(player, "Sorry, you need to be the leader to do that");
