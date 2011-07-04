@@ -1,5 +1,7 @@
 package com.herocraftonline.dev.heroes.party;
 
+import java.util.logging.Level;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -15,6 +17,7 @@ public class PartyEntityListener extends EntityListener{
     }
     
     public void onEntity(EntityDamageEvent initialEvent) {
+        plugin.log(Level.INFO, initialEvent.getCause().toString());
         if(initialEvent instanceof EntityDamageByEntityEvent) {
             EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) initialEvent;
             if(subEvent.getEntity() instanceof Player && subEvent.getDamager() instanceof Player) {
@@ -25,8 +28,8 @@ public class PartyEntityListener extends EntityListener{
                 if(attackParty == null) {
                     return;
                 }
-
-                if(attackParty.isPartyMember(defender)) {
+                plugin.log(Level.INFO, Boolean.toString(attackParty.isPartyMember(defender)));
+                if(attackParty.isPartyMember(defender) && attackParty.getPvp()) {
                     initialEvent.setCancelled(true);
                 }
             }
