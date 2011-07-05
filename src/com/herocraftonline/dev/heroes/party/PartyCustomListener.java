@@ -18,7 +18,11 @@ public class PartyCustomListener extends CustomEventListener{
     public void onCustomEvent(Event event) {
         if(event instanceof ExperienceGainEvent) {
             ExperienceGainEvent subEvent = (ExperienceGainEvent) event;
-            if(subEvent.getHero().getParty() == null && subEvent.getHero().getParty().getExp()) {
+            if(subEvent.getHero().getParty() == null) {
+                return;
+            }
+            
+            if(!subEvent.getHero().getParty().getExp()) {
                 return;
             }
 
@@ -32,11 +36,12 @@ public class PartyCustomListener extends CustomEventListener{
             for(Player p : hero.getParty().getMembers()) {
                 if(p != subEvent.getHero().getPlayer()) {
                     Hero pHero = plugin.getHeroManager().getHero(p);
-                    pHero.gainExp(expGain, subEvent.getSource());
+                    pHero.quietExpGain(expGain, subEvent.getSource());
                 }
             }
             subEvent.setExpGain(expGain);
         }
     }
+    
 
 }
