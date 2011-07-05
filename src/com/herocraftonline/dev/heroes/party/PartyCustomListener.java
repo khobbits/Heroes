@@ -18,7 +18,7 @@ public class PartyCustomListener extends CustomEventListener{
     public void onCustomEvent(Event event) {
         if(event instanceof ExperienceGainEvent) {
             ExperienceGainEvent subEvent = (ExperienceGainEvent) event;
-            if(!(subEvent.getHero().getParty() != null) && subEvent.getHero().getParty().getExp()) {
+            if(!(subEvent.getHero().getParty() != null) && subEvent.getHero().getParty().getMembers().size() > 0 && subEvent.getHero().getParty().getExp()) {
                 return;
             }
             Hero hero = subEvent.getHero();
