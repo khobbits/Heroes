@@ -25,8 +25,10 @@ public class PartyCustomListener extends CustomEventListener{
             Integer expGain = Math.round(subEvent.getExpGain() / hero.getParty().getMembers().size());
 
             for(Player p : hero.getParty().getMembers()) {
+                if(p != subEvent.getHero().getPlayer()) {
                 Hero pHero = plugin.getHeroManager().getHero(p);
                 pHero.gainExp(expGain, subEvent.getSource());
+            }
             }
             subEvent.setExpGain(expGain);
         }
