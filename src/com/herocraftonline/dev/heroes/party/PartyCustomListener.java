@@ -39,7 +39,8 @@ public class PartyCustomListener extends CustomEventListener{
                     pHero.quietExpGain(expGain, subEvent.getSource());
                 }
             }
-            subEvent.setExpGain(expGain);
+            subEvent.setCancelled(true);
+            hero.quietExpGain(expGain, subEvent.getSource());
         }
     }
     

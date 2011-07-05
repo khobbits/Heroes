@@ -18,7 +18,6 @@ public class PartyEntityListener extends EntityListener {
 
     @Override
     public void onEntityDamage(EntityDamageEvent initialEvent) {
-        plugin.log(Level.INFO, initialEvent.getCause().toString());
         if (initialEvent instanceof EntityDamageByEntityEvent) {
             EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) initialEvent;
             if (subEvent.getEntity() instanceof Player && subEvent.getDamager() instanceof Player) {
@@ -29,7 +28,6 @@ public class PartyEntityListener extends EntityListener {
                 if (attackParty == null) {
                     return;
                 }
-                plugin.log(Level.INFO, Boolean.toString(attackParty.isPartyMember(defender)));
                 if (attackParty.isPartyMember(defender) && attackParty.getPvp()) {
                     initialEvent.setCancelled(true);
                 }
