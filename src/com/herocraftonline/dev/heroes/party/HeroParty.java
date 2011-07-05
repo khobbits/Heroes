@@ -60,16 +60,20 @@ public class HeroParty {
     public void pvpToggle() {
         if(pvp == true) {
             pvp = false;
+            messageParty("PvP is now enabled!");
         }else {
             pvp = true;
+            messageParty("PvP is now disabled!");
         }
     }
     
     public void expToggle() {
         if(exp == true) {
             exp = false;
+            messageParty("ExpShare is now enabled!");
         }else {
             exp = true;
+            messageParty("ExpShare is now enabled!");
         }
     }
 

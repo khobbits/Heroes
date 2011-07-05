@@ -47,6 +47,7 @@ import com.herocraftonline.dev.heroes.command.commands.WhoCommand;
 import com.herocraftonline.dev.heroes.inventory.BukkitContribInventoryListener;
 import com.herocraftonline.dev.heroes.inventory.HeroesInventoryListener;
 import com.herocraftonline.dev.heroes.inventory.InventoryChecker;
+import com.herocraftonline.dev.heroes.party.PartyCustomListener;
 import com.herocraftonline.dev.heroes.party.PartyEntityListener;
 import com.herocraftonline.dev.heroes.party.PartyManager;
 import com.herocraftonline.dev.heroes.persistence.Hero;
@@ -101,7 +102,8 @@ public class Heroes extends JavaPlugin {
     
     //Party Listener
     private PartyEntityListener partyEntityListener = new PartyEntityListener(this);
-
+    private PartyCustomListener partyCustomListener = new PartyCustomListener(this);
+    
     // Inventory Checker Class -- This class has the methods to check a players inventory and
     // restrictions.
     private final InventoryChecker inventoryChecker = new InventoryChecker(this);
@@ -231,7 +233,8 @@ public class Heroes extends JavaPlugin {
 
         pluginManager.registerEvent(Type.CUSTOM_EVENT, new HLevelListener(this), Priority.Monitor, this);
         pluginManager.registerEvent(Type.CUSTOM_EVENT, new HPermissionsListener(this), Priority.Monitor, this);
-
+        pluginManager.registerEvent(Type.CUSTOM_EVENT, new PartyCustomListener(this), Priority.Highest, this);
+        
         // Inventory Event Listeners
         pluginManager.registerEvent(Type.CUSTOM_EVENT, heroesInventoryListener, Priority.Monitor, this);
     }
