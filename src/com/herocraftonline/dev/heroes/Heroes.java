@@ -47,6 +47,7 @@ import com.herocraftonline.dev.heroes.command.commands.WhoCommand;
 import com.herocraftonline.dev.heroes.inventory.BukkitContribInventoryListener;
 import com.herocraftonline.dev.heroes.inventory.HeroesInventoryListener;
 import com.herocraftonline.dev.heroes.inventory.InventoryChecker;
+import com.herocraftonline.dev.heroes.party.PartyEntityListener;
 import com.herocraftonline.dev.heroes.party.PartyManager;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.persistence.HeroManager;
@@ -98,6 +99,8 @@ public class Heroes extends JavaPlugin {
     private final HeroesInventoryListener heroesInventoryListener = new HeroesInventoryListener(this);
     private BukkitContribInventoryListener bukkitContribInventoryListener;
     
+    //Party Listener
+    private PartyEntityListener partyEntityListener = new PartyEntityListener(this);
 
     // Inventory Checker Class -- This class has the methods to check a players inventory and
     // restrictions.
@@ -134,7 +137,8 @@ public class Heroes extends JavaPlugin {
 
         blockListener.init();
 
-        for (Player player : getServer().getOnlinePlayers()) {
+        final Player[] players = getServer().getOnlinePlayers();
+        for (Player player : players) {
             switchToHNSH(player);
             heroManager.loadHeroFile(player);
             getInventoryChecker().checkInventory(player);
@@ -158,7 +162,8 @@ public class Heroes extends JavaPlugin {
             if (test != null) {
                 Heroes.Permissions = ((Permissions) test).getHandler();
                 log(Level.INFO, "Permissions found.");
-                for (Player player : getServer().getOnlinePlayers()) {
+                final Player[] players = getServer().getOnlinePlayers();
+                for (Player player : players) {
                     Hero hero = heroManager.getHero(player);
                     HeroClass heroClass = hero.getHeroClass();
 
@@ -179,8 +184,7 @@ public class Heroes extends JavaPlugin {
     }
 
     /**
-     * Check to see if BukkitContrib is enabled on the server, if so inform Heroes to use
-     * BukkitContrib instead.
+     * Check to see if BukkitContrib is enabled on the server, if so inform Heroes to use BukkitContrib instead.
      */
     public void setupBukkitContrib() {
         Plugin test = this.getServer().getPluginManager().getPlugin("BukkitContrib");
@@ -213,7 +217,8 @@ public class Heroes extends JavaPlugin {
         pluginManager.registerEvent(Type.PLAYER_ITEM_HELD, playerListener, Priority.Monitor, this);
         pluginManager.registerEvent(Type.PLAYER_PICKUP_ITEM, playerListener, Priority.Monitor, this);
         pluginManager.registerEvent(Type.PLAYER_TELEPORT, playerListener, Priority.Monitor, this);
-
+        
+        pluginManager.registerEvent(Type.ENTITY_DAMAGE, partyEntityListener, Priority.Highest, this);
         pluginManager.registerEvent(Type.ENTITY_DAMAGE, entityListener, Priority.Monitor, this);
         pluginManager.registerEvent(Type.ENTITY_DEATH, entityListener, Priority.Monitor, this);
         pluginManager.registerEvent(Type.ENTITY_TARGET, entityListener, Priority.Normal, this);
@@ -275,7 +280,8 @@ public class Heroes extends JavaPlugin {
     @Override
     public void onDisable() {
         heroManager.stopTimers();
-        for (Player player : getServer().getOnlinePlayers()) {
+        final Player[] players = getServer().getOnlinePlayers();
+        for (Player player : players) {
             heroManager.saveHeroFile(player);
             switchToBNSH(player);
         }
@@ -295,8 +301,7 @@ public class Heroes extends JavaPlugin {
     }
 
     /**
-     * Print messages to the server Log as well as to our DebugLog. 'debugLog' is used to seperate
-     * Heroes information from the Servers Log Output.
+     * Print messages to the server Log as well as to our DebugLog. 'debugLog' is used to seperate Heroes information from the Servers Log Output.
      * 
      * @param level
      * @param msg
@@ -307,8 +312,7 @@ public class Heroes extends JavaPlugin {
     }
 
     /**
-     * Print messages to the Debug Log, if the servers in Debug Mode then we also wan't to print the
-     * messages to the standard Server Console.
+     * Print messages to the Debug Log, if the servers in Debug Mode then we also wan't to print the messages to the standard Server Console.
      * 
      * @param level
      * @param msg

@@ -37,6 +37,9 @@ public class LeaderboardCommand extends BaseCommand {
         HashMap<Hero, Integer> heroValues = new HashMap<Hero, Integer>();
         int i = 0;
         for (Hero hero : heroList) {
+            if (hero == null) {
+                continue;
+            }
             heroValues.put(hero, hero.getExperience());
         }
         heroValues = (HashMap<Hero, Integer>) sortByValue(heroValues);

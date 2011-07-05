@@ -1,6 +1,5 @@
 package com.herocraftonline.dev.heroes;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.event.server.PluginEnableEvent;
@@ -57,7 +56,8 @@ public class HPluginListener extends ServerListener {
             // If BukkitContrib just Disabled then we tell Heroes to stop using BukkitContrib
             Heroes.useBukkitContrib = false;
             // Then we swap all the Players NSH to our Custom NSH.
-            for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+            final Player[] players = this.plugin.getServer().getOnlinePlayers();
+            for (Player player : players) {
                 this.plugin.switchToHNSH(player);
             }
         }

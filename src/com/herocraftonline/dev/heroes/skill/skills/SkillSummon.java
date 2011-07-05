@@ -58,7 +58,8 @@ public class SkillSummon extends ActiveSkill {
         @Override
         public void onEntityTarget(EntityTargetEvent event) {
             if (event.getTarget() instanceof Player) {
-                for (Hero hero : plugin.getHeroManager().getHeroes()) {
+                Hero[] heroes = plugin.getHeroManager().getHeroes();
+                for (Hero hero : heroes) {
                     if (hero.getSummons().containsKey(event.getEntity())) {
                         if (hero.getPlayer() == event.getTarget()) {
                             event.setCancelled(true);
@@ -71,7 +72,8 @@ public class SkillSummon extends ActiveSkill {
         @Override
         public void onEntityDeath(EntityDeathEvent event) {
             Entity defender = event.getEntity();
-            for (Hero hero : plugin.getHeroManager().getHeroes()) {
+            Hero[] heroes = plugin.getHeroManager().getHeroes();
+            for (Hero hero : heroes) {
                 if (hero.getSummons().containsKey(defender)) {
                     hero.getSummons().remove(defender);
                 }
