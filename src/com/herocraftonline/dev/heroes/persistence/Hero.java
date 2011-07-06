@@ -204,10 +204,9 @@ public class Hero {
         }
     }
 
-    public void quietExpGain(int expGain, ExperienceType source) {
+    public void sharedExpGain(int expGain, ExperienceType source) {
         int exp = getExperience();
         // Work out the correct amount of Exp to award using the Classes Modifier.
-        expGain = (int) (expGain * this.getHeroClass().getExpModifier());
 
         Properties prop = plugin.getConfigManager().getProperties();
         int currentLevel = prop.getLevel(exp);
