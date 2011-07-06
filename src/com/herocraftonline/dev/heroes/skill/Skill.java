@@ -37,7 +37,7 @@ public abstract class Skill extends BaseCommand {
                 continue;
             }
             if (source.getWorld().equals(playerLocation.getWorld())) {
-                if (playerLocation.toVector().distance(source.toVector()) < 30) {
+                if (playerLocation.distance(source) < 30) {
                     Messaging.send(player, message, args);
                 }
             }
