@@ -233,7 +233,7 @@ public class Heroes extends JavaPlugin {
 
         pluginManager.registerEvent(Type.CUSTOM_EVENT, new HLevelListener(this), Priority.Monitor, this);
         pluginManager.registerEvent(Type.CUSTOM_EVENT, new HPermissionsListener(this), Priority.Monitor, this);
-        pluginManager.registerEvent(Type.CUSTOM_EVENT, new PartyCustomListener(this), Priority.Highest, this);
+        pluginManager.registerEvent(Type.CUSTOM_EVENT, partyCustomListener, Priority.Highest, this);
         
         // Inventory Event Listeners
         pluginManager.registerEvent(Type.CUSTOM_EVENT, heroesInventoryListener, Priority.Monitor, this);

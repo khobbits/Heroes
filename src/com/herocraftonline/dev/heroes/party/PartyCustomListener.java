@@ -28,7 +28,7 @@ public class PartyCustomListener extends CustomEventListener{
                 return;
             }
 
-            if(subEvent.getHero().getParty().getMembers().size() > 0) {
+            if(subEvent.getHero().getParty().getMembers().size() < 1) {
                 return;
             }
 
