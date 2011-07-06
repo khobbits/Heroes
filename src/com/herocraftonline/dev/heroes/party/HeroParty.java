@@ -70,7 +70,7 @@ public class HeroParty {
     public void expToggle() {
         if(exp == true) {
             exp = false;
-            messageParty("ExpShare is now enabled!");
+            messageParty("ExpShare is now disabled!");
         }else {
             exp = true;
             messageParty("ExpShare is now enabled!");

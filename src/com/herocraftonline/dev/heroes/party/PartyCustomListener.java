@@ -1,5 +1,7 @@
 package com.herocraftonline.dev.heroes.party;
 
+import java.util.logging.Level;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.CustomEventListener;
 import org.bukkit.event.Event;
@@ -21,7 +23,7 @@ public class PartyCustomListener extends CustomEventListener{
             if(subEvent.getHero().getParty() == null) {
                 return;
             }
-            
+
             if(!subEvent.getHero().getParty().getExp()) {
                 return;
             }
@@ -29,20 +31,18 @@ public class PartyCustomListener extends CustomEventListener{
             if(subEvent.getHero().getParty().getMembers().size() > 0) {
                 return;
             }
-            
+
             Hero hero = subEvent.getHero();
             Integer expGain = Math.round(subEvent.getExpGain() / hero.getParty().getMembers().size());
 
             for(Player p : hero.getParty().getMembers()) {
-                if(p != subEvent.getHero().getPlayer()) {
-                    Hero pHero = plugin.getHeroManager().getHero(p);
-                    pHero.quietExpGain(expGain, subEvent.getSource());
-                }
+                plugin.log(Level.INFO, p.getName() + ":" + expGain);
+                Hero pHero = plugin.getHeroManager().getHero(p);
+                pHero.quietExpGain(expGain, subEvent.getSource());
             }
             subEvent.setCancelled(true);
-            hero.quietExpGain(expGain, subEvent.getSource());
         }
     }
-    
+
 
 }
