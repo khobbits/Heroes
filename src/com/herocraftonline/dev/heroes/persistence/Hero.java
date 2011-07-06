@@ -162,7 +162,7 @@ public class Hero {
             if(party.getMembers().size() > 0) {
                 if(party.getExp()) {
                     for(Player p : party.getMembers()) {
-                        plugin.getHeroManager().getHero(p).quietExpGain((int) Math.ceil((double)expGain / party.getMembers().size()), source);
+                        plugin.getHeroManager().getHero(p).quietExpGain(Math.round(party.getMembers().size() / expGain), source);
                     }
                     return;
                 }
