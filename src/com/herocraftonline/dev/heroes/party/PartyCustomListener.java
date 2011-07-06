@@ -33,8 +33,8 @@ public class PartyCustomListener extends CustomEventListener {
             }
 
             Hero hero = subEvent.getHero();
-            Integer expGain = (int) Math.ceil((double)subEvent.getExpGain() / hero.getParty().getMembers().size());
-            plugin.log(Level.INFO, expGain.toString());
+            int expGain = (int) Math.ceil((double)subEvent.getExpGain() / hero.getParty().getMembers().size());
+            plugin.log(Level.INFO, String.valueOf(expGain));
             for (Player p : hero.getParty().getMembers()) {
                 plugin.log(Level.INFO, p.getName() + ":" + expGain);
                 Hero pHero = plugin.getHeroManager().getHero(p);
