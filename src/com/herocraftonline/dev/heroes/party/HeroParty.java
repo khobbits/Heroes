@@ -10,7 +10,7 @@ import com.herocraftonline.dev.heroes.util.Messaging;
 public class HeroParty {
     private Player leader;
     private Set<Player> members = new HashSet<Player>();
-    private Boolean pvp = false;
+    private Boolean pvp = true;
     private Boolean exp = false;
     private Set<String> invites = new HashSet<String>();
 
