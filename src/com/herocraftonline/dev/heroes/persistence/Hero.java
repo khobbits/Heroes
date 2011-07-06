@@ -167,7 +167,7 @@ public class Hero {
                         plugin.log(Level.INFO, Integer.toString(party.getMembers().size()));
                         plugin.log(Level.INFO, Double.toString(Math.ceil((double)expGain / party.getMembers().size())));
 
-                        plugin.getHeroManager().getHero(p).quietExpGain((int) Math.ceil((double)expGain / party.getMembers().size()), source);
+                        plugin.getHeroManager().getHero(p).sharedExpGain((int) Math.ceil((double)expGain / party.getMembers().size()), source);
                     }
                     return;
                 }
