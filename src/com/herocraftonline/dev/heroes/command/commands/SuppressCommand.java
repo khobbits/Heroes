@@ -1,5 +1,7 @@
 package com.herocraftonline.dev.heroes.command.commands;
 
+import java.util.Set;
+
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -29,8 +31,8 @@ public class SuppressCommand extends BaseCommand {
             Hero hero = plugin.getHeroManager().getHero(player);
 
             if (args.length == 0) {
-                String[] suppressions = hero.getSuppressedSkills();
-                if (suppressions.length == 0) {
+                Set<String> suppressions = hero.getSuppressedSkills();
+                if (suppressions.isEmpty()) {
                     Messaging.send(player, "No skills suppressed.");
                     return;
                 }
