@@ -8,10 +8,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.util.config.ConfigurationNode;
+
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
-import com.herocraftonline.dev.heroes.util.Messaging;
 
 public class SkillBolt extends TargettedSkill {
 
@@ -26,11 +27,17 @@ public class SkillBolt extends TargettedSkill {
     }
 
     @Override
+    public ConfigurationNode getDefaultConfig() {
+        ConfigurationNode node = super.getDefaultConfig();
+        node.setProperty("range", 10);
+        return node;
+    }
+
+    @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
 
-        if (target == player) {
-            Messaging.send(player, "You need a target.");
+        if (target.equals(player)) {
             return false;
         }
 
@@ -40,16 +47,16 @@ public class SkillBolt extends TargettedSkill {
             return false;
         }
 
-        int radius = getSetting(hero.getHeroClass(), "radius", 10);
-        List<Entity> entityList = target.getNearbyEntities(radius, radius, radius);
-        for (Entity n : entityList) {
-            if (n instanceof LivingEntity) {
-                if (n != player) {
+        int range = getSetting(hero.getHeroClass(), "range", 10);
+        List<Entity> entityList = target.getNearbyEntities(range, range, range);
+        for (Entity entity : entityList) {
+            if (entity instanceof LivingEntity) {
+                if (entity != player) {
                     // Throw a dummy damage event to make it obey PvP restricting plugins
                     EntityDamageEvent event = new EntityDamageByEntityEvent(player, target, DamageCause.ENTITY_ATTACK, 0);
                     plugin.getServer().getPluginManager().callEvent(event);
                     if (!event.isCancelled()) {
-                        target.getWorld().strikeLightning(n.getLocation());
+                        target.getWorld().strikeLightning(entity.getLocation());
                     }
                 }
             }

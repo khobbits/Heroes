@@ -1,7 +1,5 @@
 package com.herocraftonline.dev.heroes.party;
 
-import java.util.logging.Level;
-
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;

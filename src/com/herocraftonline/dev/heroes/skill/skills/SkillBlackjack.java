@@ -130,7 +130,6 @@ public class SkillBlackjack extends ActiveEffectSkill {
             if (checkStunned(event.getPlayer())) {
                 event.setCancelled(true);
                 event.getPlayer().teleport(event.getFrom());
-                // event.getPlayer().setVelocity(event.getPlayer().getVelocity().setX(0).setZ(0)); <-- can be used for hamstring ability
             }
         }
 

@@ -10,7 +10,7 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.ExperienceGainEvent;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 
-public class PartyCustomListener extends CustomEventListener{
+public class PartyCustomListener extends CustomEventListener {
     Heroes plugin;
 
     public PartyCustomListener(Heroes plugin) {
@@ -18,24 +18,24 @@ public class PartyCustomListener extends CustomEventListener{
     }
 
     public void onCustomEvent(Event event) {
-        if(event instanceof ExperienceGainEvent) {
+        if (event instanceof ExperienceGainEvent) {
             ExperienceGainEvent subEvent = (ExperienceGainEvent) event;
-            if(subEvent.getHero().getParty() == null) {
+            if (subEvent.getHero().getParty() == null) {
                 return;
             }
 
-            if(!subEvent.getHero().getParty().getExp()) {
+            if (!subEvent.getHero().getParty().getExp()) {
                 return;
             }
 
-            if(subEvent.getHero().getParty().getMembers().size() < 1) {
+            if (subEvent.getHero().getParty().getMembers().size() < 1) {
                 return;
             }
 
             Hero hero = subEvent.getHero();
             Integer expGain = (int) Math.ceil(subEvent.getExpGain() / hero.getParty().getMembers().size());
             plugin.log(Level.INFO, expGain.toString());
-            for(Player p : hero.getParty().getMembers()) {
+            for (Player p : hero.getParty().getMembers()) {
                 plugin.log(Level.INFO, p.getName() + ":" + expGain);
                 Hero pHero = plugin.getHeroManager().getHero(p);
                 pHero.quietExpGain(expGain, subEvent.getSource());
@@ -43,6 +43,5 @@ public class PartyCustomListener extends CustomEventListener{
             subEvent.setCancelled(true);
         }
     }
-
 
 }

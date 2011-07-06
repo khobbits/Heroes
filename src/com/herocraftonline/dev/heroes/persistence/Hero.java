@@ -186,7 +186,7 @@ public class Hero {
             plugin.getServer().getPluginManager().callEvent(new LeveledEvent(this, currentLevel, newLevel));
         }
     }
-    
+
     public void quietExpGain(int expGain, ExperienceType source) {
         int exp = getExperience();
         // Work out the correct amount of Exp to award using the Classes Modifier.
@@ -269,8 +269,8 @@ public class Hero {
         return suppressedSkills.contains(skill.getName());
     }
 
-    public final String[] getSuppressedSkills() {
-        return suppressedSkills.toArray(new String[0]);
+    public Set<String> getSuppressedSkills() {
+        return new HashSet<String>(suppressedSkills);
     }
 
     @Override
