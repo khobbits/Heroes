@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 
 import org.bukkit.Material;
 import org.bukkit.entity.CreatureType;
@@ -162,12 +163,17 @@ public class Hero {
             if(party.getMembers().size() > 0) {
                 if(party.getExp()) {
                     for(Player p : party.getMembers()) {
-                        plugin.getHeroManager().getHero(p).quietExpGain((int) (Math.ceil((double)expGain / party.getMembers().size()) / 5.5), source);
+                        plugin.log(Level.INFO, Integer.toString(expGain));
+                        plugin.log(Level.INFO, Integer.toString(party.getMembers().size()));
+                        plugin.log(Level.INFO, Double.toString(Math.ceil((double)expGain / party.getMembers().size())));
+
+                        plugin.getHeroManager().getHero(p).quietExpGain(expGain / party.getMembers().size()^2, source);
                     }
                     return;
                 }
             }
         }
+        
 
         // undo the previous gain to make sure we use the updated value
         exp -= expGain;
