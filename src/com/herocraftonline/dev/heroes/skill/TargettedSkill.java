@@ -47,7 +47,7 @@ public abstract class TargettedSkill extends ActiveSkill {
     @Override
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
-        int maxDistance = getSetting(hero.getHeroClass(), SETTING_MAXDISTANCE, 10);
+        int maxDistance = getSetting(hero.getHeroClass(), SETTING_MAXDISTANCE, 15);
         LivingEntity target = null;
         if (args.length > 0) {
             target = plugin.getServer().getPlayer(args[0]);

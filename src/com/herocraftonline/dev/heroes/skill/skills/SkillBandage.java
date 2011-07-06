@@ -28,6 +28,7 @@ public class SkillBandage extends TargettedSkill {
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
         node.setProperty("health", 5);
+        node.setProperty(SETTING_MAXDISTANCE, 5);
         return node;
     }
 

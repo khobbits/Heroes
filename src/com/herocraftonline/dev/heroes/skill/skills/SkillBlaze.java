@@ -29,21 +29,23 @@ public class SkillBlaze extends ActiveSkill {
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
         node.setProperty("fire-length", 3000);
+        node.setProperty("range", 5);
         return node;
     }
 
     @Override
     public boolean use(Hero hero, String[] args) {
-        List<Entity> entities = hero.getPlayer().getNearbyEntities(5, 5, 5);
+        int range = getSetting(hero.getHeroClass(), "range", 5);
+        List<Entity> entities = hero.getPlayer().getNearbyEntities(range, range, range);
+        int fireTicks = getSetting(hero.getHeroClass(), "fire-length", 3000);
         for (Entity n : entities) {
             Player pN = (Player) n;
-            int healamount = getSetting(hero.getHeroClass(), "fire-length", 3000);
             EntityDamageEvent damageEvent = new EntityDamageEvent(hero.getPlayer(), DamageCause.ENTITY_ATTACK, 0);
             Bukkit.getServer().getPluginManager().callEvent(damageEvent);
             if (damageEvent.isCancelled()) {
                 return false;
             }
-            pN.setFireTicks(healamount);
+            pN.setFireTicks(fireTicks);
         }
         notifyNearbyPlayers(hero.getPlayer().getLocation(), useText, hero.getPlayer().getName(), name);
         return true;

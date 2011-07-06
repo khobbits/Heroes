@@ -187,6 +187,40 @@ public class Hero {
         }
     }
 
+    public void quietExpGain(int expGain, ExperienceType source) {
+        int exp = getExperience();
+        // Work out the correct amount of Exp to award using the Classes Modifier.
+        expGain = (int) (expGain * this.getHeroClass().getExpModifier());
+
+        Properties prop = plugin.getConfigManager().getProperties();
+        int currentLevel = prop.getLevel(exp);
+        int newLevel = prop.getLevel(exp + expGain);
+
+        // add the updated experience
+        exp += expGain;
+
+        // notify the user
+        if (expGain != 0) {
+            if (verbose) {
+                Messaging.send(player, "$1: Gained $2 Exp", heroClass.getName(), String.valueOf(expGain));
+            }
+            if (newLevel != currentLevel) {
+                Messaging.send(player, "You leveled up! (Lvl $1 $2)", String.valueOf(newLevel), heroClass.getName());
+                if (newLevel >= prop.maxLevel) {
+                    exp = prop.getExperience(prop.maxLevel);
+                    Messaging.broadcast(plugin, "$1 has become a master $2!", player.getName(), heroClass.getName());
+                    plugin.getHeroManager().saveHeroFile(player);
+                }
+            }
+        }
+
+        setExperience(exp);
+
+        if (newLevel != currentLevel) {
+            plugin.getServer().getPluginManager().callEvent(new LeveledEvent(this, currentLevel, newLevel));
+        }
+    }
+
     public void setMana(int mana) {
         this.mana = mana;
     }
@@ -235,8 +269,8 @@ public class Hero {
         return suppressedSkills.contains(skill.getName());
     }
 
-    public final String[] getSuppressedSkills() {
-        return suppressedSkills.toArray(new String[0]);
+    public Set<String> getSuppressedSkills() {
+        return new HashSet<String>(suppressedSkills);
     }
 
     @Override

@@ -10,7 +10,8 @@ import com.herocraftonline.dev.heroes.util.Messaging;
 public class HeroParty {
     private Player leader;
     private Set<Player> members = new HashSet<Player>();
-    private Set<String> modes = new HashSet<String>();
+    private Boolean pvp = false;
+    private Boolean exp = false;
     private Set<String> invites = new HashSet<String>();
 
     public HeroParty(Player leader) {
@@ -55,16 +56,33 @@ public class HeroParty {
         return invites.contains(player);
     }
 
-    public void addMode(String mode) {
-        modes.add(mode);
+
+    public void pvpToggle() {
+        if(pvp == true) {
+            pvp = false;
+            messageParty("PvP is now enabled!");
+        }else {
+            pvp = true;
+            messageParty("PvP is now disabled!");
+        }
+    }
+    
+    public void expToggle() {
+        if(exp == true) {
+            exp = false;
+            messageParty("ExpShare is now disabled!");
+        }else {
+            exp = true;
+            messageParty("ExpShare is now enabled!");
+        }
     }
 
-    public void removeMode(String mode) {
-        modes.remove(mode);
+    public Boolean getPvp() {
+        return pvp;
     }
 
-    public boolean checkMode(String mode) {
-        return modes.contains(mode);
+    public Boolean getExp() {
+        return exp;
     }
 
     public void messageParty(String msg, Object... params) {

@@ -25,7 +25,7 @@ public class SkillReplenish extends ActiveSkill {
             Messaging.send(hero.getPlayer(), Messaging.createManaBar(100));
         }
         notifyNearbyPlayers(hero.getPlayer().getLocation(), useText, hero.getPlayer().getName(), name);
-        return false;
+        return true;
     }
 
 }
