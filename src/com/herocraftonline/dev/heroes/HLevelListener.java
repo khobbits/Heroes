@@ -5,7 +5,7 @@ import java.util.List;
 import org.bukkit.event.CustomEventListener;
 import org.bukkit.event.Event;
 
-import com.herocraftonline.dev.heroes.api.LeveledEvent;
+import com.herocraftonline.dev.heroes.api.LevelEvent;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.command.BaseCommand;
 import com.herocraftonline.dev.heroes.persistence.Hero;
@@ -22,8 +22,8 @@ public class HLevelListener extends CustomEventListener {
 
     @Override
     public void onCustomEvent(Event event) {
-        if (event instanceof LeveledEvent) {
-            LeveledEvent subEvent = (LeveledEvent) event;
+        if (event instanceof LevelEvent) {
+            LevelEvent subEvent = (LevelEvent) event;
             Hero hero = subEvent.getHero();
             HeroClass heroClass = hero.getHeroClass();
 

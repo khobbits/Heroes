@@ -10,7 +10,7 @@ import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.ClassChangeEvent;
-import com.herocraftonline.dev.heroes.api.LeveledEvent;
+import com.herocraftonline.dev.heroes.api.LevelEvent;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 
@@ -98,8 +98,8 @@ public class OutsourcedSkill extends Skill {
             if (event instanceof ClassChangeEvent) {
                 ClassChangeEvent subEvent = (ClassChangeEvent) event;
                 tryLearningSkill(subEvent.getHero(), subEvent.getTo());
-            } else if (event instanceof LeveledEvent) {
-                LeveledEvent subEvent = (LeveledEvent) event;
+            } else if (event instanceof LevelEvent) {
+                LevelEvent subEvent = (LevelEvent) event;
                 tryLearningSkill(subEvent.getHero());
             }
         }

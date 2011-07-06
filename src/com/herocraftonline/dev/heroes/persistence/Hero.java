@@ -6,8 +6,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
 
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Entity;
@@ -17,7 +17,6 @@ import org.bukkit.inventory.ItemStack;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.ExperienceGainEvent;
 import com.herocraftonline.dev.heroes.api.LevelEvent;
-import com.herocraftonline.dev.heroes.api.LeveledEvent;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
 import com.herocraftonline.dev.heroes.party.HeroParty;
@@ -133,9 +132,29 @@ public class Hero {
         binds.clear();
     }
 
-    public void gainExp(int expGain, ExperienceType source) {
+    public void gainExp(int expGain, ExperienceType source, boolean distributeToParty) {
+        if (distributeToParty && party != null && party.getExp()) {
+            Location location = getPlayer().getLocation();
+
+            Set<Player> partyMembers = new HashSet<Player>(party.getMembers());
+            Set<Player> inRangeMembers = new HashSet<Player>();
+            for (Player partyMember : partyMembers) {
+                if (location.distance(partyMember.getLocation()) <= 50) {
+                    inRangeMembers.add(partyMember);
+                }
+            }
+
+            int sharedExpGain = (int) Math.ceil((double) expGain / inRangeMembers.size());
+            for (Player partyMember : inRangeMembers) {
+                plugin.getHeroManager().getHero(partyMember).gainExp(sharedExpGain, source, false);
+            }
+
+            return;
+        }
+
         int exp = getExperience();
-        // Work out the correct amount of Exp to award using the Classes Modifier.
+
+        // adjust exp using the class modifier
         expGain = (int) (expGain * this.getHeroClass().getExpModifier());
 
         Properties prop = plugin.getConfigManager().getProperties();
@@ -158,22 +177,6 @@ public class Hero {
             exp -= expGain;
             return;
         }
-        
-        if(party != null) {
-            if(party.getMembers().size() > 0) {
-                if(party.getExp()) {
-                    for(Player p : party.getMembers()) {
-                        plugin.log(Level.INFO, Integer.toString(expGain));
-                        plugin.log(Level.INFO, Integer.toString(party.getMembers().size()));
-                        plugin.log(Level.INFO, Double.toString(Math.ceil((double)expGain / party.getMembers().size())));
-
-                        plugin.getHeroManager().getHero(p).sharedExpGain((int) Math.ceil((double)expGain / party.getMembers().size()), source);
-                    }
-                    return;
-                }
-            }
-        }
-        
 
         // undo the previous gain to make sure we use the updated value
         exp -= expGain;
@@ -198,43 +201,10 @@ public class Hero {
         }
 
         setExperience(exp);
-
-        if (newLevel != currentLevel) {
-            plugin.getServer().getPluginManager().callEvent(new LeveledEvent(this, currentLevel, newLevel));
-        }
     }
 
-    public void sharedExpGain(int expGain, ExperienceType source) {
-        int exp = getExperience();
-        // Work out the correct amount of Exp to award using the Classes Modifier.
-
-        Properties prop = plugin.getConfigManager().getProperties();
-        int currentLevel = prop.getLevel(exp);
-        int newLevel = prop.getLevel(exp + expGain);
-
-        // add the updated experience
-        exp += expGain;
-
-        // notify the user
-        if (expGain != 0) {
-            if (verbose) {
-                Messaging.send(player, "$1: Gained $2 Exp", heroClass.getName(), String.valueOf(expGain));
-            }
-            if (newLevel != currentLevel) {
-                Messaging.send(player, "You leveled up! (Lvl $1 $2)", String.valueOf(newLevel), heroClass.getName());
-                if (newLevel >= prop.maxLevel) {
-                    exp = prop.getExperience(prop.maxLevel);
-                    Messaging.broadcast(plugin, "$1 has become a master $2!", player.getName(), heroClass.getName());
-                    plugin.getHeroManager().saveHeroFile(player);
-                }
-            }
-        }
-
-        setExperience(exp);
-
-        if (newLevel != currentLevel) {
-            plugin.getServer().getPluginManager().callEvent(new LeveledEvent(this, currentLevel, newLevel));
-        }
+    public void gainExp(int expGain, ExperienceType source) {
+        gainExp(expGain, source, true);
     }
 
     public void setMana(int mana) {
