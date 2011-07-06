@@ -157,6 +157,17 @@ public class Hero {
             exp -= expGain;
             return;
         }
+        
+        if(party != null) {
+            if(party.getMembers().size() > 0) {
+                if(party.getExp()) {
+                    for(Player p : party.getMembers()) {
+                        plugin.getHeroManager().getHero(p).quietExpGain((int) Math.ceil((double)expGain / party.getMembers().size()), source);
+                    }
+                    return;
+                }
+            }
+        }
 
         // undo the previous gain to make sure we use the updated value
         exp -= expGain;
