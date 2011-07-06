@@ -34,11 +34,10 @@ public class BukkitContribInventoryListener extends InventoryListener {
         if(event.getResult() == null) {
             return;
         }
-        if(event.isLeftClick() == true) {
-            if(event.getPlayer().getInventory().firstEmpty() == -1) {
-                return;
-            }
+        if(event.getPlayer().getInventory().firstEmpty() == -1) {
+            return;
         }
+
         ItemStack result = event.getResult();
         if(event.getCursor() != null) {
             return;
