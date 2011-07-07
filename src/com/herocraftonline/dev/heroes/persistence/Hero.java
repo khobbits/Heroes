@@ -147,7 +147,7 @@ public class Hero {
             int partySize = inRangeMembers.size();
             double partyBonus = 0.10;
             int sharedExpGain = (int) Math.ceil((double) expGain / partySize * (((partySize - 1) * partyBonus) + 1.0));
-            
+
             for (Player partyMember : inRangeMembers) {
                 plugin.getHeroManager().getHero(partyMember).gainExp(sharedExpGain, source, false);
             }
@@ -292,7 +292,7 @@ public class Hero {
     public boolean hasParty() {
         return party != null;
     }
-    
+
     public HeroParty getParty() {
         return party;
     }

@@ -20,21 +20,52 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.util.Messaging;
 
+/**
+ * A triggered skill that requires a target. TargettedSkills define a maximum distance setting. A target can be supplied
+ * as the first argument to the command. If no such argument is provided, then the skill will use whatever target the
+ * player is looking at within the configurable maximum distance, if any. The primary method to be overridden by
+ * TargettedSkills is {@link #use(Hero, LivingEntity, String[])}, which is called by {@link #use(Hero, String[])} after
+ * determining the target.
+ * </br></br>
+ * See {@link ActiveSkill} for an overview of command triggered skills.
+ */
 public abstract class TargettedSkill extends ActiveSkill {
 
+    /**
+     * Identifier used to store maximum targetting distance setting
+     */
     public static final String SETTING_MAXDISTANCE = "max-distance";
 
+    /**
+     * When defining your own constructor, be sure to assign the name, description, usage, argument bounds and
+     * identifier fields as defined in {@link BaseCommand}. Remember that each identifier must begin with <i>skill</i>.
+     * 
+     * @param plugin
+     *            the active Heroes instance
+     */
     public TargettedSkill(Heroes plugin) {
         super(plugin);
     }
 
+    /**
+     * Loads and stores the skill's usage text from the configuration. By default, this text is
+     * "%hero% used %skill% on %target!" where %hero%, %skill% and %target% are replaced with the Hero's, skill's and
+     * target's names, respectively.
+     */
     @Override
     public void init() {
-        String useText = getSetting(null, SETTING_USETEXT, "%hero% used %skill%!");
+        String useText = getSetting(null, SETTING_USETEXT, "%hero% used %skill% on %target%!");
         useText = useText.replace("%hero%", "$1").replace("%skill%", "$2").replace("%target%", "$3");
         setUseText(useText);
     }
 
+    /**
+     * Creates and returns a <code>ConfigurationNode</code> containing the default usage text and targetting range. When
+     * using additional configuration settings in your skills, be sure to override this method to define them with
+     * defaults.
+     * 
+     * @return a default configuration
+     */
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = Configuration.getEmptyNode();
@@ -43,6 +74,15 @@ public abstract class TargettedSkill extends ActiveSkill {
         return node;
     }
 
+    /**
+     * Handles target acquisition before calling {@link #use(Hero, LivingEntity, String[])}.
+     * 
+     * @param hero
+     *            the {@link Hero} using the skill
+     * @param args
+     *            the arguments provided with the command
+     * @return <code>true</code> if the skill executed properly, <code>false</code> otherwise
+     */
     @Override
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
@@ -76,6 +116,15 @@ public abstract class TargettedSkill extends ActiveSkill {
         return use(hero, target, args);
     }
 
+    /**
+     * The heart of any TargettedSkill, this method defines what actually happens when the skill is used.
+     * 
+     * @param hero
+     *            the {@link Hero} using the skill
+     * @param args
+     *            the arguments provided with the command
+     * @return <code>true</code> if the skill executed properly, <code>false</code> otherwise
+     */
     public abstract boolean use(Hero hero, LivingEntity target, String[] args);
 
     /**
@@ -109,6 +158,15 @@ public abstract class TargettedSkill extends ActiveSkill {
         return null;
     }
 
+    /**
+     * Helper method to check whether a player is in another player's line of sight.
+     * 
+     * @param a
+     *            the source
+     * @param b
+     *            the target
+     * @return <code>true</code> if <code>b</code> is in <code>a</code>'s line of sight; <code>false</code> otherwise
+     */
     public static boolean inLineOfSight(Player a, Player b) {
         if (a == b) {
             return true;
@@ -132,6 +190,13 @@ public abstract class TargettedSkill extends ActiveSkill {
         return true;
     }
 
+    /**
+     * Returns the pretty name of a <code>LivingEntity</code>.
+     * 
+     * @param entity
+     *            the entity
+     * @return the pretty name of the entity
+     */
     public static String getEntityName(LivingEntity entity) {
         return entity instanceof Player ? ((Player) entity).getName() : entity.getClass().getSimpleName().substring(5);
     }

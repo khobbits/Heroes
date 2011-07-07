@@ -3,7 +3,6 @@ classes:
     #experience.
     Vagrant:
         default: true
-        summon-max: 0
         permitted-armor: []
         permitted-weapon: []
         permitted-skills:
@@ -14,7 +13,6 @@ classes:
     #It gets experience from KILLING.
     Warrior:
         default: false
-        summon-max: 0
         permitted-armor: [LEATHER, IRON, CHAINMAIL]
         permitted-weapon: [WOOD, STONE, IRON_PICKAXE]
         permitted-skills:
@@ -34,7 +32,6 @@ classes:
     Knight:
         default: false
         parent: CRAFTER
-        summon-max: 0
         permitted-armor: [LEATHER, CHAINMAIL, IRON]
         permitted-weapon: [WOOD, IRON, STONE, DIAMOND_PICKAXE, DIAMOND_AXE, DIAMOND_SPADE, DIAMOND_HOE]
         permitted-skills:
