@@ -3,6 +3,7 @@ package com.herocraftonline.dev.heroes.skill;
 import java.util.List;
 
 import org.bukkit.Location;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
@@ -16,7 +17,7 @@ import com.herocraftonline.dev.heroes.command.BaseCommand;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.util.Messaging;
 
-/***
+/**
  * The root class of the skill heirarchy. This class implements the basic functionality of every Heroes skill including
  * configuration handling, area-based player notifications and event registration. Because this class extends
  * {@link BaseCommand}, the constructor of every skill should define a name, description, usage, min and max
@@ -29,20 +30,21 @@ import com.herocraftonline.dev.heroes.util.Messaging;
  * <li>{@link ActiveSkill}</li>
  * <ul>
  * <li>{@link ActiveEffectSkill}</li>
+ * <li>{@link TargettedSkill}</li>
  * </ul>
  * <li>{@link PassiveSkill}</li> <li>{@link OutsourcedSkill}</li> </ul>
- * 
+ * <b>Note:</b> All skill identifiers <i>must</i> begin with <i>skill</i>, e.g. "skill fireball".
  */
 public abstract class Skill extends BaseCommand {
 
-    /***
-     * The identifier used to store level requirement settings
+    /**
+     * Identifier used to store level requirement setting
      */
     public static final String SETTING_LEVEL = "level";
 
     private ConfigurationNode config;
 
-    /***
+    /**
      * The constructor of every skill must define:
      * <ul>
      * <li><code>name</code></li>
@@ -61,7 +63,7 @@ public abstract class Skill extends BaseCommand {
         super(plugin);
     }
 
-    /***
+    /**
      * Creates and returns a <code>ConfigurationNode</code> containing all the default data for the skill. By default,
      * this configuration is empty.
      * 
@@ -71,7 +73,7 @@ public abstract class Skill extends BaseCommand {
         return Configuration.getEmptyNode();
     }
 
-    /***
+    /**
      * Retrieves a <code>double</code> value from the skill's configuration. Data from the provided
      * <code>HeroClass</code> will be preferred over the skill's own data, if found. If the setting is found in neither
      * of these sources, the default value is returned.
@@ -93,7 +95,7 @@ public abstract class Skill extends BaseCommand {
         }
     }
 
-    /***
+    /**
      * Retrieves a <code>int</code> value from the skill's configuration. Data from the provided <code>HeroClass</code>
      * will be preferred over the skill's own data, if found. If the setting is found in neither of these sources, the
      * default value is returned.
@@ -115,7 +117,7 @@ public abstract class Skill extends BaseCommand {
         }
     }
 
-    /***
+    /**
      * Retrieves a <code>String</code> value from the skill's configuration. Data from the provided
      * <code>HeroClass</code> will be preferred over the skill's own data, if found. If the setting is found in neither
      * of these sources, the default value is returned.
@@ -137,12 +139,12 @@ public abstract class Skill extends BaseCommand {
         }
     }
 
-    /***
+    /**
      * An initialization method called after all configuration data is loaded.
      */
     public abstract void init();
 
-    /***
+    /**
      * Sets the configuration containing all settings related to the skill. This should only be used by the skill loader
      * in most cases.
      * 
@@ -153,7 +155,7 @@ public abstract class Skill extends BaseCommand {
         this.config = config;
     }
 
-    /***
+    /**
      * Helper method that broadcasts a message to all players within 30 blocks of the specified source. These messages
      * can be suppressed by players on an individual basis.
      * 
@@ -195,5 +197,16 @@ public abstract class Skill extends BaseCommand {
     protected void registerEvent(Type type, Listener listener, Priority priority) {
         plugin.getServer().getPluginManager().registerEvent(type, listener, priority, plugin);
     }
+
+    /**
+     * The end of the execution path of a skill, this method is called whenever a command with a registered identifier
+     * is used.
+     * 
+     * @param sender
+     *            the <code>CommandSender</code> issuing the command
+     * @param args
+     *            the arguments provided with the command
+     */
+    public abstract void execute(CommandSender sender, String[] args);
 
 }

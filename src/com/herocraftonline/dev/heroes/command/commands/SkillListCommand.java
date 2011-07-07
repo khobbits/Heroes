@@ -55,7 +55,7 @@ public class SkillListCommand extends BaseCommand {
             if (command instanceof Skill) {
                 Skill skill = (Skill) command;
                 if (heroClass.hasSkill(skill.getName()) && !skills.containsKey(skill)) {
-                    skills.put(skill, skill.getSetting(heroClass, skill.SETTING_LEVEL, 1));
+                    skills.put(skill, skill.getSetting(heroClass, Skill.SETTING_LEVEL, 1));
                 }
             }
         }
@@ -93,7 +93,7 @@ public class SkillListCommand extends BaseCommand {
             count++;
         }
 
-        sender.sendMessage(ChatColor.RED + "To use a skill, type " + ChatColor.WHITE + "/skill <name>" + ChatColor.RED + ". For info use " + ChatColor.WHITE + "/skill <name> ?" + ChatColor.RED + ".");
+        sender.sendMessage(ChatColor.RED + "To use a skill, type " + ChatColor.WHITE + "/skill <name>" + ChatColor.RED + ". For info use " + ChatColor.WHITE + "/skill <name> ?");
     }
 
     // The following method is needed to sort the Skills by level order.
