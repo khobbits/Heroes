@@ -1,18 +1,19 @@
 package com.herocraftonline.dev.heroes.party;
 
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Set;
 
 import org.bukkit.entity.Player;
 
 import com.herocraftonline.dev.heroes.util.Messaging;
 
-public class HeroParty {
+public class HeroParty {    
     private Player leader;
     private Set<Player> members = new HashSet<Player>();
     private Boolean pvp = true;
     private Boolean exp = true;
-    private Set<String> invites = new HashSet<String>();
+    private LinkedList<String> invites = new LinkedList<String>();
 
     public HeroParty(Player leader) {
         this.leader = leader;
@@ -55,9 +56,17 @@ public class HeroParty {
         invites.remove(player);
 
     }
+    
+    public void removeOldestInvite() {
+        invites.pop();
+    }
 
     public boolean isInvited(String player) {
         return invites.contains(player);
+    }
+    
+    public int getInviteCount() {
+        return invites.size();
     }
 
 
