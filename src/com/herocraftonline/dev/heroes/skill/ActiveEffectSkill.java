@@ -11,7 +11,7 @@ public abstract class ActiveEffectSkill extends ActiveSkill {
     public final String SETTING_EXPIRETEXT = "expire-text";
     public final String SETTING_DURATION = "effect-duration";
 
-    protected String expireText = null;
+    private String expireText;
 
     public ActiveEffectSkill(Heroes plugin) {
         super(plugin);
@@ -19,10 +19,21 @@ public abstract class ActiveEffectSkill extends ActiveSkill {
 
     @Override
     public void init() {
-        useText = getSetting(null, SETTING_USETEXT, "%hero% gained %skill%!");
+        String useText = getSetting(null, SETTING_USETEXT, "%hero% gained %skill%!");
         useText = useText.replace("%hero%", "$1").replace("%skill%", "$2");
-        expireText = getSetting(null, SETTING_EXPIRETEXT, "%hero% lost %skill%!");
+        setUseText(useText);
+
+        String expireText = getSetting(null, SETTING_EXPIRETEXT, "%hero% lost %skill%!");
         expireText = expireText.replace("%hero%", "$1").replace("%skill%", "$2");
+        setExpireText(expireText);
+    }
+
+    public String getExpireText() {
+        return expireText;
+    }
+
+    public void setExpireText(String expireText) {
+        this.expireText = expireText;
     }
 
     @Override

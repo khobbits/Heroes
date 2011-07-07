@@ -34,7 +34,7 @@ public class SkillManaFreeze extends TargettedSkill {
         if (target instanceof Player) {
             Hero newHero = plugin.getHeroManager().getHero((Player) target);
             newHero.getEffects().putEffect(name, getSetting(hero.getHeroClass(), "duration", 5000L));
-            notifyNearbyPlayers(player.getLocation(), useText, playerName, name);
+            notifyNearbyPlayers(player.getLocation(), getUseText(), playerName, name);
             return true;
         } else {
             return false;

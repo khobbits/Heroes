@@ -52,7 +52,7 @@ public class SkillBattery extends TargettedSkill {
             hero.setMana(hero.getMana() - transferAmount);
             tHero.setMana(tHero.getMana() + transferAmount);
             Player player = hero.getPlayer();
-            notifyNearbyPlayers(player.getLocation(), useText, player.getName(), name, target == player ? "himself" : getEntityName(target));
+            notifyNearbyPlayers(player.getLocation(), getUseText(), player.getName(), name, target == player ? "himself" : getEntityName(target));
             return true;
         } else {
             Messaging.send(hero.getPlayer(), "You need at least $1 mana to transfer.", transferAmount);

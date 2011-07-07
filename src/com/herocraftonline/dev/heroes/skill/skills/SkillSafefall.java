@@ -31,7 +31,7 @@ public class SkillSafefall extends ActiveEffectSkill {
         Player player = hero.getPlayer();
         String playerName = player.getName();
         applyEffect(hero);
-        notifyNearbyPlayers(player.getLocation(), useText, playerName, name);
+        notifyNearbyPlayers(player.getLocation(), getUseText(), playerName, name);
         return true;
     }
 

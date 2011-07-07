@@ -24,7 +24,7 @@ public class SkillReplenish extends ActiveSkill {
         if (hero.isVerbose()) {
             Messaging.send(hero.getPlayer(), Messaging.createManaBar(100));
         }
-        notifyNearbyPlayers(hero.getPlayer().getLocation(), useText, hero.getPlayer().getName(), name);
+        notifyNearbyPlayers(hero.getPlayer().getLocation(), getUseText(), hero.getPlayer().getName(), name);
         return true;
     }
 

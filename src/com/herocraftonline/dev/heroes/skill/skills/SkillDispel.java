@@ -32,7 +32,7 @@ public class SkillDispel extends TargettedSkill {
             targetHero.getEffects().removeEffect(s);
         }
 
-        notifyNearbyPlayers(player.getLocation(), useText, player.getName(), name, getEntityName(target));
+        notifyNearbyPlayers(player.getLocation(), getUseText(), player.getName(), name, getEntityName(target));
         return true;
     }
 

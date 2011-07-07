@@ -47,7 +47,7 @@ public class SkillBlaze extends ActiveSkill {
             }
             pN.setFireTicks(fireTicks);
         }
-        notifyNearbyPlayers(hero.getPlayer().getLocation(), useText, hero.getPlayer().getName(), name);
+        notifyNearbyPlayers(hero.getPlayer().getLocation(), getUseText(), hero.getPlayer().getName(), name);
         return true;
     }
 

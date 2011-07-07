@@ -38,7 +38,7 @@ public class SkillOne extends ActiveEffectSkill {
     @Override
     public boolean use(Hero hero, String[] args) {
         applyEffect(hero);
-        notifyNearbyPlayers(hero.getPlayer().getLocation(), useText, hero.getPlayer().getName(), name);
+        notifyNearbyPlayers(hero.getPlayer().getLocation(), getUseText(), hero.getPlayer().getName(), name);
         return true;
     }
 

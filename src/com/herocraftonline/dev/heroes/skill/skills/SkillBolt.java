@@ -63,7 +63,7 @@ public class SkillBolt extends TargettedSkill {
         }
         target.getWorld().strikeLightning(target.getLocation());
 
-        notifyNearbyPlayers(player.getLocation(), useText, player.getName(), name, target == player ? "himself" : getEntityName(target));
+        notifyNearbyPlayers(player.getLocation(), getUseText(), player.getName(), name, target == player ? "himself" : getEntityName(target));
         return true;
     }
 }

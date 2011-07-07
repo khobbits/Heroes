@@ -15,22 +15,31 @@ import com.herocraftonline.dev.heroes.util.Messaging;
 
 public abstract class ActiveSkill extends Skill {
 
-    public final String SETTING_MANA = "mana";
-    public final String SETTING_COOLDOWN = "cooldown";
-    public final String SETTING_EXP = "exp";
-    public final String SETTING_USETEXT = "use-text";
+    public static final String SETTING_MANA = "mana";
+    public static final String SETTING_COOLDOWN = "cooldown";
+    public static final String SETTING_EXP = "exp";
+    public static final String SETTING_USETEXT = "use-text";
 
-    protected String useText;
-    protected boolean awardExpOnCast = true;
+    private String useText;
+    private boolean awardExpOnCast = true;
 
     public ActiveSkill(Heroes plugin) {
         super(plugin);
     }
 
+    public String getUseText() {
+        return useText;
+    }
+
+    public void setUseText(String useText) {
+        this.useText = useText;
+    }
+
     @Override
     public void init() {
-        useText = getSetting(null, SETTING_USETEXT, "%hero% used %skill%!");
+        String useText = getSetting(null, SETTING_USETEXT, "%hero% used %skill%!");
         useText = useText.replace("%hero%", "$1").replace("%skill%", "$2");
+        setUseText(useText);
     }
 
     @Override
@@ -97,7 +106,7 @@ public abstract class ActiveSkill extends Skill {
     private void awardExp(Hero hero) {
         HeroClass heroClass = hero.getHeroClass();
         if (heroClass.getExperienceSources().contains(ExperienceType.SKILL)) {
-            hero.gainExp(this.getSetting(heroClass, this.SETTING_EXP, 0), ExperienceType.SKILL);
+            hero.gainExp(this.getSetting(heroClass, SETTING_EXP, 0), ExperienceType.SKILL);
         }
     }
 

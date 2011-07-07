@@ -45,7 +45,7 @@ public class SkillHarmtouch extends TargettedSkill {
             return false;
         }
         target.damage(damage, player);
-        notifyNearbyPlayers(player.getLocation(), useText, player.getName(), name, target == player ? "himself" : getEntityName(target));
+        notifyNearbyPlayers(player.getLocation(), getUseText(), player.getName(), name, target == player ? "himself" : getEntityName(target));
         return true;
     }
 

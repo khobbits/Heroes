@@ -62,7 +62,7 @@ public class SkillSafefallOther extends TargettedSkill {
             Hero newHero = plugin.getHeroManager().getHero((Player) target);
             double duration = getSetting(hero.getHeroClass(), "duration", 5000);
             newHero.getEffects().putEffect(name, duration);
-            notifyNearbyPlayers(player.getLocation(), useText, player.getName(), name, target == player ? "himself" : getEntityName(target));
+            notifyNearbyPlayers(player.getLocation(), getUseText(), player.getName(), name, target == player ? "himself" : getEntityName(target));
             return true;
         } else {
             return false;

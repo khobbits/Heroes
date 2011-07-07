@@ -49,7 +49,7 @@ public class SkillFirearrow extends ActiveSkill {
         Arrow arrow = player.shootArrow();
         arrow.setFireTicks(1000);
 
-        notifyNearbyPlayers(location, useText, hero.getPlayer().getName(), name);
+        notifyNearbyPlayers(location, getUseText(), hero.getPlayer().getName(), name);
         return true;
     }
 

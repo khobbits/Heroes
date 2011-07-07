@@ -60,7 +60,7 @@ public class SkillFireball extends ActiveSkill {
         snowball.setFireTicks(1000);
         snowball.setVelocity(velocity);
 
-        notifyNearbyPlayers(location, useText, hero.getPlayer().getName(), name);
+        notifyNearbyPlayers(location, getUseText(), hero.getPlayer().getName(), name);
         return true;
     }
 

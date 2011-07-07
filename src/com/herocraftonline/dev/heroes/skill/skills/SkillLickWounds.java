@@ -40,7 +40,7 @@ public class SkillLickWounds extends ActiveSkill {
                 }
             }
         }
-        notifyNearbyPlayers(player.getLocation(), useText, playerName, name);
+        notifyNearbyPlayers(player.getLocation(), getUseText(), playerName, name);
         return true;
     }
 

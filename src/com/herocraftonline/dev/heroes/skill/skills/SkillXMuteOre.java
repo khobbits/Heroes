@@ -73,7 +73,8 @@ public class SkillXMuteOre extends ActiveSkill {
         int count = 1;
         byte data = -1;
 
-        data = (byte) getSetting(hero.getHeroClass(), mat.toString() + ".reagentdata", -1); // Narrowing primitive conversion
+        // Narrowing primitive conversion
+        data = (byte) getSetting(hero.getHeroClass(), mat.toString() + ".reagentdata", -1);
         count = getSetting(hero.getHeroClass(), mat.toString() + ".count", 1);
         String productName = getSetting(hero.getHeroClass(), mat.toString() + ".product", null);
         nextMat = Material.getMaterial(productName);
@@ -106,7 +107,7 @@ public class SkillXMuteOre extends ActiveSkill {
                 p.setItemInHand(is);
 
                 p.sendMessage("You turn the " + MaterialUtil.getFriendlyName(mat) + " into " + MaterialUtil.getFriendlyName(nextMat) + "!");
-                notifyNearbyPlayers(p.getLocation(), useText, p.getName(), name);
+                notifyNearbyPlayers(p.getLocation(), getUseText(), p.getName(), name);
                 return true;
             }
         }

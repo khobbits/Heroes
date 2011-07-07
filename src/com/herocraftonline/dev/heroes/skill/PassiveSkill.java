@@ -16,11 +16,11 @@ import com.herocraftonline.dev.heroes.persistence.Hero;
 
 public abstract class PassiveSkill extends Skill {
 
-    public final String SETTING_APPLYTEXT = "apply-text";
-    public final String SETTING_UNAPPLYTEXT = "unapply-text";
+    public static final String SETTING_APPLYTEXT = "apply-text";
+    public static final String SETTING_UNAPPLYTEXT = "unapply-text";
 
-    protected String applyText = null;
-    protected String unapplyText = null;
+    private String applyText = null;
+    private String unapplyText = null;
 
     public PassiveSkill(Heroes plugin) {
         super(plugin);

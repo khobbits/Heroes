@@ -17,11 +17,10 @@ import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.util.Messaging;
 
 /***
- * The root class of the skill heirarchy. This class implements the basic
- * functionality of every Heroes skill including configuration handling and
- * area-based player notifications. Because this class extends
- * <code>BaseCommand</code>, the constructor of every skill should define a
- * name, description, usage, min and max arguments and at least one identifier.
+ * The root class of the skill heirarchy. This class implements the basic functionality of every Heroes skill including
+ * configuration handling and area-based player notifications. Because this class extends <code>BaseCommand</code>, the
+ * constructor of every skill should define a name, description, usage, min and max arguments and at least one
+ * identifier.
  */
 public abstract class Skill extends BaseCommand {
 
@@ -49,8 +48,8 @@ public abstract class Skill extends BaseCommand {
     }
 
     /***
-     * Creates and returns a <code>ConfigurationNode</code> containing all the
-     * default data for the skill. By default, this configuration is empty.
+     * Creates and returns a <code>ConfigurationNode</code> containing all the default data for the skill. By default,
+     * this configuration is empty.
      * 
      * @return an empty configuration
      */
@@ -59,10 +58,9 @@ public abstract class Skill extends BaseCommand {
     }
 
     /***
-     * Retrieves a <code>double</code> value from the skill's configuration.
-     * Data from the provided <code>HeroClass</code> will be preferred over the
-     * skill's own data, if found. If the setting is found in neither of these
-     * sources, the default value is returned.
+     * Retrieves a <code>double</code> value from the skill's configuration. Data from the provided
+     * <code>HeroClass</code> will be preferred over the skill's own data, if found. If the setting is found in neither
+     * of these sources, the default value is returned.
      * 
      * @param heroClass
      *            the class to search for skill data
@@ -82,10 +80,9 @@ public abstract class Skill extends BaseCommand {
     }
 
     /***
-     * Retrieves a <code>int</code> value from the skill's configuration.
-     * Data from the provided <code>HeroClass</code> will be preferred over the
-     * skill's own data, if found. If the setting is found in neither of these
-     * sources, the default value is returned.
+     * Retrieves a <code>int</code> value from the skill's configuration. Data from the provided <code>HeroClass</code>
+     * will be preferred over the skill's own data, if found. If the setting is found in neither of these sources, the
+     * default value is returned.
      * 
      * @param heroClass
      *            the class to search for skill data
@@ -105,10 +102,9 @@ public abstract class Skill extends BaseCommand {
     }
 
     /***
-     * Retrieves a <code>String</code> value from the skill's configuration.
-     * Data from the provided <code>HeroClass</code> will be preferred over the
-     * skill's own data, if found. If the setting is found in neither of these
-     * sources, the default value is returned.
+     * Retrieves a <code>String</code> value from the skill's configuration. Data from the provided
+     * <code>HeroClass</code> will be preferred over the skill's own data, if found. If the setting is found in neither
+     * of these sources, the default value is returned.
      * 
      * @param heroClass
      *            the class to search for skill data
@@ -133,8 +129,8 @@ public abstract class Skill extends BaseCommand {
     public abstract void init();
 
     /***
-     * Sets the configuration containing all settings related to the skill. This
-     * should only be used by the skill loader in most cases.
+     * Sets the configuration containing all settings related to the skill. This should only be used by the skill loader
+     * in most cases.
      * 
      * @param config
      *            the new skill configuration
@@ -144,9 +140,8 @@ public abstract class Skill extends BaseCommand {
     }
 
     /***
-     * Helper method that broadcasts a message to all players within 30 blocks
-     * of the specified source. These messages can be suppressed by players on
-     * an individual basis.
+     * Helper method that broadcasts a message to all players within 30 blocks of the specified source. These messages
+     * can be suppressed by players on an individual basis.
      * 
      * @param source
      *            the <code>Location</code> to measure from

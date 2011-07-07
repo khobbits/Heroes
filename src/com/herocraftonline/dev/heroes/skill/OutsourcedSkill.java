@@ -16,7 +16,7 @@ import com.herocraftonline.dev.heroes.persistence.Hero;
 
 public class OutsourcedSkill extends Skill {
 
-    protected String[] permissions;
+    private String[] permissions;
 
     public OutsourcedSkill(Heroes plugin, String name, String[] permissions, String usage) {
         super(plugin);

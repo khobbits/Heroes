@@ -25,7 +25,7 @@ public class SkillPort extends ActiveSkill {
         if (getSetting(hero.getHeroClass(), args[0].toLowerCase(), null) != null) {
             String[] splitArg = getSetting(hero.getHeroClass(), args[0].toLowerCase(), null).split(":");
             player.teleport(new Location(hero.getPlayer().getWorld(), Double.parseDouble(splitArg[0]), Double.parseDouble(splitArg[1]), Double.parseDouble(splitArg[2])));
-            notifyNearbyPlayers(player.getLocation(), useText, player.getName(), name);
+            notifyNearbyPlayers(player.getLocation(), getUseText(), player.getName(), name);
             return true;
         } else {
             return false;

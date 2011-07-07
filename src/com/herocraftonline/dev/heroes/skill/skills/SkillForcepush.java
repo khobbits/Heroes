@@ -33,7 +33,7 @@ public class SkillForcepush extends TargettedSkill {
         Vector v = target.getVelocity().setY(1).add(target.getLocation().getDirection().setY(0).normalize().multiply(multiplier * -1));
         target.setVelocity(v);
 
-        notifyNearbyPlayers(hero.getPlayer().getLocation(), useText, hero.getPlayer().getName(), name, getEntityName(target));
+        notifyNearbyPlayers(hero.getPlayer().getLocation(), getUseText(), hero.getPlayer().getName(), name, getEntityName(target));
         return true;
     }
 

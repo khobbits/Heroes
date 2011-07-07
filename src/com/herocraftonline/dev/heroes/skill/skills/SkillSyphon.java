@@ -51,7 +51,7 @@ public class SkillSyphon extends TargettedSkill {
         transferredHealth = maxHealth - targetHealth < transferredHealth ? maxHealth - targetHealth : transferredHealth < 0 ? 0 : transferredHealth;
         target.setHealth(targetHealth + transferredHealth);
 
-        notifyNearbyPlayers(player.getLocation(), useText, player.getName(), name, target == player ? "himself" : getEntityName(target));
+        notifyNearbyPlayers(player.getLocation(), getUseText(), player.getName(), name, target == player ? "himself" : getEntityName(target));
         return true;
     }
 
