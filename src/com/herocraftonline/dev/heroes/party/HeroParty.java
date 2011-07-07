@@ -11,7 +11,7 @@ public class HeroParty {
     private Player leader;
     private Set<Player> members = new HashSet<Player>();
     private Boolean pvp = true;
-    private Boolean exp = false;
+    private Boolean exp = true;
     private Set<String> invites = new HashSet<String>();
 
     public HeroParty(Player leader) {
