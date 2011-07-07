@@ -33,10 +33,14 @@ public class PartyInviteCommand extends BaseCommand {
                 newParty.addMember(player);
                 Messaging.send(player, "Your party has been created");
             }
-            if (hero.getParty().getLeader() == player && plugin.getServer().getPlayer(args[0]) != null && player != plugin.getServer().getPlayer(args[0])) {
-                hero.getParty().addInvite(plugin.getServer().getPlayer(args[0]).getName());
-                Messaging.send(plugin.getServer().getPlayer(args[0]), "$1 has invited you to their party", player.getName());
-                Messaging.send(player, "$1 has been invited to your party", plugin.getServer().getPlayer(args[0]).getName());
+            
+            Player target = plugin.getServer().getPlayer(args[0]);
+            
+            if (hero.getParty().getLeader().equals(player) && target != null && !player.equals(target)) {
+                hero.getParty().addInvite(target.getName());
+                Messaging.send(target, "$1 has invited you to their party", player.getName());
+                Messaging.send(target, "Type /party accept $1 to join", player.getName());
+                Messaging.send(player, "$1 has been invited to your party", target.getName());
             }
         }
     }
