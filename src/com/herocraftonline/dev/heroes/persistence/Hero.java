@@ -286,6 +286,10 @@ public class Hero {
         return true;
     }
 
+    public boolean hasParty() {
+        return party != null;
+    }
+    
     public HeroParty getParty() {
         return party;
     }

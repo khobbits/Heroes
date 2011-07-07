@@ -45,7 +45,7 @@ public class LeaderboardCommand extends BaseCommand {
         heroValues = (HashMap<Hero, Integer>) sortByValue(heroValues);
         for (Hero hero : heroValues.keySet()) {
             i++;
-            if (i >= (heroValues.size() - 5)) {
+            if (i >= heroValues.size() - 5) {
                 Player player = hero.getPlayer();
                 Messaging.send(sender, "$1 - $2", player.getName(), Integer.toString(hero.getExperience()));
             }
@@ -56,8 +56,9 @@ public class LeaderboardCommand extends BaseCommand {
     static Map sortByValue(Map map) {
         List list = new LinkedList(map.entrySet());
         Collections.sort(list, new Comparator() {
+            @Override
             public int compare(Object o1, Object o2) {
-                return ((Comparable) ((Map.Entry) (o1)).getValue()).compareTo(((Map.Entry) (o2)).getValue());
+                return ((Comparable) ((Map.Entry) o1).getValue()).compareTo(((Map.Entry) o2).getValue());
             }
         });
 

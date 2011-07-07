@@ -35,3 +35,7 @@ commands:
   mana:
     description: Displays the hero's current mana
     usage: /<command>
+  party:
+    aliases: ['p','pc']
+    description: Chat with Heroes party members
+    usage: /<command> <message>
