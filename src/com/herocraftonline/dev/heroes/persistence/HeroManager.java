@@ -72,7 +72,11 @@ public class HeroManager {
             playerHero.mana = playerConfig.getInt("mana", 0);
 
             playerHero.setVerbose(playerConfig.getBoolean("verbose", true));
-            playerHero.suppressedSkills = new HashSet<String>(playerConfig.getStringList("suppressed", null));
+            try {
+                playerHero.suppressedSkills = new HashSet<String>(playerConfig.getStringList("suppressed", null));
+            } catch (Exception e) {
+                playerHero.suppressedSkills = new HashSet<String>();
+            }
 
             addHero(playerHero);
 
@@ -90,14 +94,16 @@ public class HeroManager {
         HeroClass playerClass = null;
 
         if (config.getString("class") != null) {
-            playerClass = plugin.getClassManager().getClass(config.getString("class")); // Grab the Players Class from the File.
+            playerClass = plugin.getClassManager().getClass(config.getString("class")); // Grab the Players Class from
+                                                                                        // the File.
             if (Heroes.Permissions != null && playerClass != plugin.getClassManager().getDefaultClass()) {
                 if (!Heroes.Permissions.has(player, "heroes.classes." + playerClass.getName().toLowerCase())) {
                     playerClass = plugin.getClassManager().getDefaultClass();
                 }
             }
         } else {
-            playerClass = plugin.getClassManager().getDefaultClass(); // If no Class saved then revert to the Default Class.
+            playerClass = plugin.getClassManager().getDefaultClass(); // If no Class saved then revert to the Default
+                                                                      // Class.
         }
         return playerClass;
     }
@@ -199,9 +205,10 @@ public class HeroManager {
         Hero hero = getHero(player);
         playerConfig.setProperty("class", hero.getHeroClass().toString());
         playerConfig.setProperty("verbose", hero.isVerbose());
-        playerConfig.setProperty("suppressed", hero.getSuppressedSkills());
+        playerConfig.setProperty("suppressed", new ArrayList<String>(hero.getSuppressedSkills()));
         playerConfig.setProperty("mana", hero.getMana());
-        playerConfig.removeProperty("itemrecovery"); // Just a precaution, we'll remove any values before resaving the list.
+        playerConfig.removeProperty("itemrecovery"); // Just a precaution, we'll remove any values before resaving the
+                                                     // list.
 
         saveExperience(hero, playerConfig);
         saveRecoveryItems(hero, playerConfig);
@@ -338,7 +345,7 @@ class ManaUpdater extends TimerTask {
             }
 
             int mana = hero.getMana();
-            if(hero.getEffects().hasEffect("ManaFreeze")) {
+            if (hero.getEffects().hasEffect("ManaFreeze")) {
                 mana = 100;
             }
             hero.setMana(mana > 100 ? mana : mana > 95 ? 100 : mana + 5); // Hooray for the ternary operator!
