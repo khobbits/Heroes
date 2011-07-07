@@ -96,7 +96,7 @@ public class Hero {
     }
 
     public int getLevel() {
-        return plugin.getConfigManager().getProperties().getLevel(getExperience(heroClass));
+        return plugin.getConfigManager().getProperties().getLevel(getExperience());
     }
 
     public int getExperience() {

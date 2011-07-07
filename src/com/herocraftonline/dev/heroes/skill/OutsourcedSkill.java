@@ -43,7 +43,7 @@ public class OutsourcedSkill extends Skill {
         String playerName = player.getName();
         ConfigurationNode settings = heroClass.getSkillSettings(name);
         if (settings != null) {
-            if (meetsLevelRequirement(hero, getSetting(heroClass, SETTING_LEVEL, 1))) {
+            if (hero.getLevel() >= getSetting(heroClass, SETTING_LEVEL, 1)) {
                 for (String permission : permissions) {
                     if (!hasPermission(world, playerName, permission)) {
                         addPermission(world, playerName, permission);
