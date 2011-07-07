@@ -35,20 +35,16 @@ public class LevelInformationCommand extends BaseCommand {
             int current = prop.getExperience(level);
 
             sender.sendMessage(ChatColor.RED + "-----[ " + ChatColor.WHITE + "Your Level Information" + ChatColor.RED + " ]-----");
-            sender.sendMessage(ChatColor.GREEN + "  Class : " + hero.getHeroClass().getName());
-            sender.sendMessage(ChatColor.GREEN + "  Level : " + level);
-            sender.sendMessage(ChatColor.GREEN + "  Total Exp : " + exp);
+            sender.sendMessage(ChatColor.GREEN + "  Class: " + ChatColor.WHITE + hero.getHeroClass().getName());
+            sender.sendMessage(ChatColor.GREEN + "  Level: " + ChatColor.WHITE + level);
+            sender.sendMessage(ChatColor.GREEN + "  Total Exp: " + ChatColor.WHITE + exp);
             if (level != prop.maxLevel) {
                 int next = prop.getExperience(level + 1);
-                sender.sendMessage(ChatColor.GREEN + "  Next Level : " + (level + 1));
-                sender.sendMessage(ChatColor.GREEN + "  Exp this level: " + (exp - current) + "/" + (next - current));
-                sender.sendMessage(ChatColor.GREEN + "  Experience Bar:");
-                sender.sendMessage("  " + createExperienceBar(exp, current, next));
+                sender.sendMessage(ChatColor.DARK_GREEN + "  EXP.  " + createExperienceBar(exp, current, next));
             } else {
-                sender.sendMessage(ChatColor.GREEN + "  MASTERED!");
+                sender.sendMessage(ChatColor.YELLOW + "  MASTERED!");
             }
-            sender.sendMessage(ChatColor.GREEN + "  Mana Bar:");
-            sender.sendMessage("  " + Messaging.createManaBar(hero.getMana()));
+            sender.sendMessage(ChatColor.BLUE + "  MANA " + Messaging.createManaBar(hero.getMana()));
         }
     }
 
@@ -63,7 +59,9 @@ public class LevelInformationCommand extends BaseCommand {
             expBar += "|";
         }
         expBar += ChatColor.RED + "]";
-        return expBar + " - " + ChatColor.DARK_GREEN + progress * 2 + "%";
+        expBar += " - " + ChatColor.DARK_GREEN + progress * 2 + "%  ";
+        expBar += "" + ChatColor.DARK_GREEN + (exp - currentLevelExp) + ChatColor.RED + "/" + ChatColor.DARK_GREEN + (nextLevelExp - currentLevelExp);
+        return expBar;
     }
 
 }

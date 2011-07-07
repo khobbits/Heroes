@@ -72,11 +72,7 @@ public class HeroManager {
             playerHero.mana = playerConfig.getInt("mana", 0);
 
             playerHero.setVerbose(playerConfig.getBoolean("verbose", true));
-            try {
-                playerHero.suppressedSkills = new HashSet<String>(playerConfig.getStringList("suppressed", null));
-            } catch (Exception e) {
-                playerHero.suppressedSkills = new HashSet<String>();
-            }
+            playerHero.suppressedSkills = new HashSet<String>(playerConfig.getStringList("suppressed", null));
 
             addHero(playerHero);
 
@@ -94,16 +90,14 @@ public class HeroManager {
         HeroClass playerClass = null;
 
         if (config.getString("class") != null) {
-            playerClass = plugin.getClassManager().getClass(config.getString("class")); // Grab the Players Class from
-                                                                                        // the File.
+            playerClass = plugin.getClassManager().getClass(config.getString("class"));
             if (Heroes.Permissions != null && playerClass != plugin.getClassManager().getDefaultClass()) {
                 if (!Heroes.Permissions.has(player, "heroes.classes." + playerClass.getName().toLowerCase())) {
                     playerClass = plugin.getClassManager().getDefaultClass();
                 }
             }
         } else {
-            playerClass = plugin.getClassManager().getDefaultClass(); // If no Class saved then revert to the Default
-                                                                      // Class.
+            playerClass = plugin.getClassManager().getDefaultClass();
         }
         return playerClass;
     }
@@ -120,13 +114,14 @@ public class HeroManager {
                 int exp = config.getInt(root + "." + className, 0);
                 HeroClass heroClass = plugin.getClassManager().getClass(className);
                 if (heroClass != null) {
-                    hero.setExperience(heroClass, exp);
+                    if (hero.getExperience(heroClass) == 0) {
+                        hero.setExperience(heroClass, exp);
+                        if (!heroClass.isPrimary() && exp > 0) {
+                            hero.setExperience(heroClass.getParent(), plugin.getConfigManager().getProperties().maxExp);
+                        }
+                    }
                 }
             }
-        }
-
-        if (hero.experience.get(hero.getHeroClass().getName()) == null) {
-            hero.setExperience(0);
         }
     }
 
