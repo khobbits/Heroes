@@ -32,6 +32,10 @@ public class HeroParty {
 
     public void removeMember(Player player) {
         members.remove(player);
+        if (player.equals(leader) && !members.isEmpty()) {
+            leader = members.iterator().next();
+            messageParty("$1 is now leading the party.", leader.getDisplayName());
+        }
     }
 
     public void addMember(Player player) {

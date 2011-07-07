@@ -49,7 +49,11 @@ public class PartyChatCommand extends BaseCommand {
             }
             msg = msg.trim();
 
-            msg = "\u00a7b[Party] \u00a7f" + player.getDisplayName() + "\u00a7b: " + msg;
+            if (player.equals(party.getLeader())) {
+                msg = "\u00a7a[Party] \u00a7e" + player.getDisplayName() + "\u00a7a:\u00a73 " + msg;
+            } else {
+                msg = "\u00a7a[Party] \u00a77" + player.getDisplayName() + "\u00a7a:\u00a73 " + msg;
+            }
 
             for (Player partyMember : partyMembers) {
                 partyMember.sendMessage(msg);

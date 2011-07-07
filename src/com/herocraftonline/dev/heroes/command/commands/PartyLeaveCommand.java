@@ -29,18 +29,9 @@ public class PartyLeaveCommand extends BaseCommand {
                 return;
             }
             HeroParty heroParty = hero.getParty();
-            if (hero.getParty().getLeader() == player) {
-                heroParty.messageParty("$1 has disbanded the party", player.getName());
-                for (Player p : hero.getParty().getMembers()) {
-                    Hero tempHero = plugin.getHeroManager().getHero(p);
-                    tempHero.setParty(null);
-                }
-                plugin.getPartyManager().removeParty(heroParty);
-            } else {
-                heroParty.removeMember(player);
-                hero.setParty(null);
-                heroParty.messageParty("$1 has left the party", player.getName());
-            }
+            heroParty.messageParty("$1 has left the party", player.getName());
+            heroParty.removeMember(player);
+            hero.setParty(null);
         }
     }
 

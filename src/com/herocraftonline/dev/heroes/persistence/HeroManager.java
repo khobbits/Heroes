@@ -252,6 +252,9 @@ public class HeroManager {
     }
 
     public boolean removeHero(Hero hero) {
+        if (hero.hasParty()) {
+            hero.getParty().removeMember(hero.getPlayer());
+        }
         return heroes.remove(hero);
     }
 
