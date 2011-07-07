@@ -18,13 +18,27 @@ import com.herocraftonline.dev.heroes.util.Messaging;
 
 /***
  * The root class of the skill heirarchy. This class implements the basic functionality of every Heroes skill including
- * configuration handling and area-based player notifications. Because this class extends <code>BaseCommand</code>, the
- * constructor of every skill should define a name, description, usage, min and max arguments and at least one
- * identifier.
+ * configuration handling, area-based player notifications and event registration. Because this class extends
+ * {@link BaseCommand}, the constructor of every skill should define a name, description, usage, min and max
+ * arguments and at least one identifier. Any registered events must provide an event listener, usually created as an
+ * inner class.
+ * </br>
+ * </br>
+ * <b>Skill Framework:</b>
+ * <ul>
+ * <li>{@link ActiveSkill}</li>
+ * <ul>
+ * <li>{@link ActiveEffectSkill}</li>
+ * </ul>
+ * <li>{@link PassiveSkill}</li> <li>{@link OutsourcedSkill}</li> </ul>
+ * 
  */
 public abstract class Skill extends BaseCommand {
 
-    public final String SETTING_LEVEL = "level";
+    /***
+     * The identifier used to store level requirement settings
+     */
+    public static final String SETTING_LEVEL = "level";
 
     private ConfigurationNode config;
 
