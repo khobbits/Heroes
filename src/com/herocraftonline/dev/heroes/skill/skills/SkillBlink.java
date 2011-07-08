@@ -27,9 +27,9 @@ public class SkillBlink extends ActiveSkill {
         if (blocks.get(blocks.size() - 1).getType() != Material.AIR) {
 
         }
-        float yaw = hero.getPlayer().getLocation().getYaw();
+        float yaw = hero.getPlayer().getLocation().getPitch();
         hero.getPlayer().teleport(blocks.get(blocks.size() - 1).getLocation());
-        hero.getPlayer().getLocation().setYaw(yaw);
+        hero.getPlayer().getLocation().setPitch(yaw);
         return true;
     }
 

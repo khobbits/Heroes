@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.util.config.ConfigurationNode;
@@ -39,7 +39,7 @@ public class SkillBlaze extends ActiveSkill {
         List<Entity> entities = hero.getPlayer().getNearbyEntities(range, range, range);
         int fireTicks = getSetting(hero.getHeroClass(), "fire-length", 3000);
         for (Entity n : entities) {
-            Player pN = (Player) n;
+            LivingEntity pN = (LivingEntity) n;
             EntityDamageEvent damageEvent = new EntityDamageEvent(hero.getPlayer(), DamageCause.ENTITY_ATTACK, 0);
             Bukkit.getServer().getPluginManager().callEvent(damageEvent);
             if (damageEvent.isCancelled()) {
