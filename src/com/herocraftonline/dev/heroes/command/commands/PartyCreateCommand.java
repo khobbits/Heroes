@@ -27,10 +27,9 @@ public class PartyCreateCommand extends BaseCommand {
             Player player = (Player) sender;
             Hero hero = plugin.getHeroManager().getHero(player);
             if (hero.getParty() == null) {
-                HeroParty newParty = new HeroParty(player);
+                HeroParty newParty = new HeroParty(hero);
                 plugin.getPartyManager().addParty(newParty);
                 hero.setParty(newParty);
-                newParty.addMember(player);
                 Messaging.send(player, "Your party has been created");
             } else {
                 Messaging.send(player, "Sorry, you're already in a party");

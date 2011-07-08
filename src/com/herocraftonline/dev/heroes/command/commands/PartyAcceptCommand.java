@@ -34,7 +34,7 @@ public class PartyAcceptCommand extends BaseCommand {
                 }
                 if (newHero.getParty() != null && newHero.getParty().isInvited(player.getName())) {
                     hero.setParty(newHero.getParty());
-                    newHero.getParty().addMember(hero.getPlayer());
+                    newHero.getParty().addMember(hero);
                     hero.getParty().messageParty("$1 has joined the party", player.getName());
                     Messaging.send(player, "You're now in $1's party", newPlayer.getName());
                     hero.getParty().removeInvite(player);

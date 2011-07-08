@@ -37,7 +37,7 @@ public class PartyChatCommand extends BaseCommand {
                 return;
             }
 
-            Set<Player> partyMembers = party.getMembers();
+            Set<Hero> partyMembers = party.getMembers();
             if (partyMembers.size() <= 1) {
                 Messaging.send(player, "Your party is empty.");
                 return;
@@ -55,8 +55,8 @@ public class PartyChatCommand extends BaseCommand {
                 msg = "\u00a7a[Party] \u00a77" + player.getDisplayName() + "\u00a7a:\u00a73 " + msg;
             }
 
-            for (Player partyMember : partyMembers) {
-                partyMember.sendMessage(msg);
+            for (Hero partyMember : partyMembers) {
+                partyMember.getPlayer().sendMessage(msg);
             }
         }
     }

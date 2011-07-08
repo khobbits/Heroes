@@ -28,7 +28,7 @@ import com.herocraftonline.dev.heroes.util.Properties;
 public class Hero {
 
     private static final DecimalFormat decFormat = new DecimalFormat("#0.##");
-    
+
     protected final Heroes plugin;
     protected Player player;
     protected HeroClass heroClass;
@@ -129,10 +129,10 @@ public class Hero {
         if (distributeToParty && party != null && party.getExp()) {
             Location location = getPlayer().getLocation();
 
-            Set<Player> partyMembers = new HashSet<Player>(party.getMembers());
-            Set<Player> inRangeMembers = new HashSet<Player>();
-            for (Player partyMember : partyMembers) {
-                if (location.distance(partyMember.getLocation()) <= 50) {
+            Set<Hero> partyMembers = party.getMembers();
+            Set<Hero> inRangeMembers = new HashSet<Hero>();
+            for (Hero partyMember : partyMembers) {
+                if (location.distance(partyMember.getPlayer().getLocation()) <= 50) {
                     inRangeMembers.add(partyMember);
                 }
             }
@@ -141,8 +141,8 @@ public class Hero {
             double partyBonus = 0.10;
             double sharedExpGain = expGain / partySize * (((partySize - 1) * partyBonus) + 1.0);
 
-            for (Player partyMember : inRangeMembers) {
-                plugin.getHeroManager().getHero(partyMember).gainExp(sharedExpGain, source, false);
+            for (Hero partyMember : inRangeMembers) {
+                partyMember.gainExp(sharedExpGain, source, false);
             }
 
             return;

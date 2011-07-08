@@ -6,6 +6,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityListener;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.persistence.HeroManager;
 
 public class PartyEntityListener extends EntityListener {
     public Heroes plugin;
@@ -21,12 +22,13 @@ public class PartyEntityListener extends EntityListener {
             if (subEvent.getEntity() instanceof Player && subEvent.getDamager() instanceof Player) {
                 Player attacker = (Player) subEvent.getDamager();
                 Player defender = (Player) subEvent.getEntity();
-                HeroParty attackParty = plugin.getHeroManager().getHero(attacker).getParty();
+                HeroManager heroManager = plugin.getHeroManager();
+                HeroParty attackParty = heroManager.getHero(attacker).getParty();
 
                 if (attackParty == null) {
                     return;
                 }
-                if (attackParty.isPartyMember(defender) && attackParty.getPvp()) {
+                if (attackParty.isPartyMember(heroManager.getHero(defender)) && attackParty.getPvp()) {
                     initialEvent.setCancelled(true);
                 }
             }

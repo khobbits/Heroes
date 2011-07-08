@@ -40,8 +40,8 @@ public class PartyWhoCommand extends BaseCommand {
 
     public Set<String> partyNames(HeroParty party) {
         Set<String> names = new HashSet<String>();
-        for (Player p : party.getMembers()) {
-            names.add(p.getName());
+        for (Hero partyMember : party.getMembers()) {
+            names.add(partyMember.getPlayer().getName());
         }
         return names;
     }

@@ -29,10 +29,9 @@ public class PartyInviteCommand extends BaseCommand {
             Player player = (Player) sender;
             Hero hero = plugin.getHeroManager().getHero(player);
             if (hero.getParty() == null) {
-                HeroParty newParty = new HeroParty(player);
+                HeroParty newParty = new HeroParty(hero);
                 plugin.getPartyManager().addParty(newParty);
                 hero.setParty(newParty);
-                newParty.addMember(player);
                 Messaging.send(player, "Your party has been created");
             }
 
@@ -40,23 +39,36 @@ public class PartyInviteCommand extends BaseCommand {
 
             Player target = plugin.getServer().getPlayer(args[0]);
 
-            if (party.getLeader().equals(player) && target != null && !player.equals(target)) {
-                int memberCount = party.getMembers().size();
-
-                if (memberCount >= MAX_PARTY_SIZE) {
-                    Messaging.send(player, "Your party is full.");
-                    return;
-                }
-
-                if (memberCount + party.getInviteCount() >= MAX_PARTY_SIZE) {
-                    party.removeOldestInvite();
-                }
-
-                party.addInvite(target.getName());
-                Messaging.send(target, "$1 has invited you to their party", player.getName());
-                Messaging.send(target, "Type /party accept $1 to join", player.getName());
-                Messaging.send(player, "$1 has been invited to your party", target.getName());
+            if (target == null) {
+                Messaging.send(player, "Player not found.");
+                return;
             }
+
+            if (!party.getLeader().equals(hero)) {
+                Messaging.send(player, "You are not leader of this party.");
+                return;
+            }
+
+            if (target.equals(player)) {
+                Messaging.send(player, "You cannot invite yourself.");
+                return;
+            }
+
+            int memberCount = party.getMembers().size();
+
+            if (memberCount >= MAX_PARTY_SIZE) {
+                Messaging.send(player, "Your party is full.");
+                return;
+            }
+
+            if (memberCount + party.getInviteCount() >= MAX_PARTY_SIZE) {
+                party.removeOldestInvite();
+            }
+
+            party.addInvite(target.getName());
+            Messaging.send(target, "$1 has invited you to their party", player.getName());
+            Messaging.send(target, "Type /party accept $1 to join", player.getName());
+            Messaging.send(player, "$1 has been invited to your party", target.getName());
         }
     }
 

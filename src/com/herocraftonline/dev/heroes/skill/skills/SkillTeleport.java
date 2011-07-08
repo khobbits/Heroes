@@ -3,7 +3,6 @@ package com.herocraftonline.dev.heroes.skill.skills;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
@@ -25,28 +24,28 @@ public class SkillTeleport extends ActiveSkill {
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
         String playerName = player.getName();
-        
-        if(!(hero.getParty() != null && hero.getParty().getMembers().size() > 0)) {
+
+        if (!(hero.getParty() != null && hero.getParty().getMembers().size() > 0)) {
             Messaging.send(player, "Sorry, you need to be in a party with players!");
             return false;
         }
-        
+
         Player targetPlayer = plugin.getServer().getPlayer(args[0]);
-        if(targetPlayer == null) {
+        if (targetPlayer == null) {
             Messaging.send(player, "Sorry, that player doesn't exist!");
             return false;
         }
-        
-        if(!hero.getParty().isPartyMember(targetPlayer)) {
+
+        if (!hero.getParty().isPartyMember(plugin.getHeroManager().getHero(targetPlayer))) {
             Messaging.send(player, "Sorry, that player isn't in your party!");
             return false;
         }
 
-        Location loc1 = targetPlayer.getLocation().add(Math.random()*((-50 + hero.getLevel()) - (50 - hero.getLevel())), 0, Math.random()*((-50 + hero.getLevel()) - (50 - hero.getLevel())));
+        Location loc1 = targetPlayer.getLocation().add(Math.random() * ((-50 + hero.getLevel()) - (50 - hero.getLevel())), 0, Math.random() * ((-50 + hero.getLevel()) - (50 - hero.getLevel())));
         Double highestBlock = (double) targetPlayer.getWorld().getHighestBlockYAt(loc1);
         loc1.setY(highestBlock);
         player.teleport(loc1);
-        
+
         notifyNearbyPlayers(player.getLocation(), getUseText(), playerName, name);
         return true;
     }

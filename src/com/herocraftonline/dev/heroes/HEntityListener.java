@@ -1,5 +1,6 @@
 package com.herocraftonline.dev.heroes;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -22,6 +23,8 @@ import com.herocraftonline.dev.heroes.util.Properties;
 
 public class HEntityListener extends EntityListener {
 
+    private static final DecimalFormat decFormat = new DecimalFormat("#0.##");
+    
     private final Heroes plugin;
     private HashMap<Integer, Player> kills = new HashMap<Integer, Player>();
 
@@ -52,7 +55,7 @@ public class HEntityListener extends EntityListener {
                 }
                 heroDefender.setExperience(exp - expLoss);
                 heroDefender.setMana(0);
-                Messaging.send(heroDefender.getPlayer(), "You have lost " + expLoss + " exp for dying.");
+                Messaging.send(heroDefender.getPlayer(), "You have lost " + decFormat.format(expLoss) + " exp for dying.");
             }
         }
 

@@ -202,8 +202,7 @@ public class HeroManager {
         playerConfig.setProperty("verbose", hero.isVerbose());
         playerConfig.setProperty("suppressed", new ArrayList<String>(hero.getSuppressedSkills()));
         playerConfig.setProperty("mana", hero.getMana());
-        playerConfig.removeProperty("itemrecovery"); // Just a precaution, we'll remove any values before resaving the
-                                                     // list.
+        playerConfig.removeProperty("itemrecovery");
 
         saveExperience(hero, playerConfig);
         saveRecoveryItems(hero, playerConfig);
@@ -220,7 +219,7 @@ public class HeroManager {
 
         String root = "experience";
         for (Map.Entry<String, Double> entry : hero.experience.entrySet()) {
-            config.setProperty(root + "." + entry.getKey(), entry.getValue());
+            config.setProperty(root + "." + entry.getKey(), (double) entry.getValue());
         }
     }
 
@@ -255,7 +254,7 @@ public class HeroManager {
 
     public boolean removeHero(Hero hero) {
         if (hero.hasParty()) {
-            hero.getParty().removeMember(hero.getPlayer());
+            hero.getParty().removeMember(hero);
         }
         return heroes.remove(hero);
     }

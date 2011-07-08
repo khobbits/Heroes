@@ -30,7 +30,7 @@ public class PartyLeaveCommand extends BaseCommand {
             }
             HeroParty heroParty = hero.getParty();
             heroParty.messageParty("$1 has left the party", player.getName());
-            heroParty.removeMember(player);
+            heroParty.removeMember(hero);
             hero.setParty(null);
         }
     }
