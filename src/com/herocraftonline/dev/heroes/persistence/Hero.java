@@ -132,7 +132,7 @@ public class Hero {
         binds.clear();
     }
 
-    public void gainExp(int expGain, ExperienceType source, boolean distributeToParty) {
+    public void gainExp(double expGain, ExperienceType source, boolean distributeToParty) {
         if (distributeToParty && party != null && party.getExp()) {
             Location location = getPlayer().getLocation();
 
@@ -146,7 +146,7 @@ public class Hero {
 
             int partySize = inRangeMembers.size();
             double partyBonus = 0.10;
-            int sharedExpGain = (int) Math.ceil((double) expGain / partySize * (((partySize - 1) * partyBonus) + 1.0));
+            double sharedExpGain = Math.ceil(expGain / partySize * (((partySize - 1) * partyBonus) + 1.0));
 
             for (Player partyMember : inRangeMembers) {
                 plugin.getHeroManager().getHero(partyMember).gainExp(sharedExpGain, source, false);
@@ -158,11 +158,12 @@ public class Hero {
         int exp = getExperience();
 
         // adjust exp using the class modifier
-        expGain = (int) (expGain * this.getHeroClass().getExpModifier());
+        expGain *= heroClass.getExpModifier();
+        int roundedExpGain = (int) Math.ceil(expGain);
 
         Properties prop = plugin.getConfigManager().getProperties();
         int currentLevel = prop.getLevel(exp);
-        int newLevel = prop.getLevel(exp + expGain);
+        int newLevel = prop.getLevel(exp + roundedExpGain);
 
         // add the experience
         exp += expGain;
@@ -170,9 +171,9 @@ public class Hero {
         // call event
         ExperienceGainEvent expEvent;
         if (newLevel == currentLevel) {
-            expEvent = new ExperienceGainEvent(this, expGain, source);
+            expEvent = new ExperienceGainEvent(this, roundedExpGain, source);
         } else {
-            expEvent = new LevelEvent(this, expGain, currentLevel, newLevel, source);
+            expEvent = new LevelEvent(this, roundedExpGain, currentLevel, newLevel, source);
         }
         plugin.getServer().getPluginManager().callEvent(expEvent);
         if (expEvent.isCancelled()) {
