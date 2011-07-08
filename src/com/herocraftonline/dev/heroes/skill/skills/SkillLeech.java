@@ -33,7 +33,7 @@ public class SkillLeech extends TargettedSkill {
             return false;
         }
         Hero tHero = plugin.getHeroManager().getHero((Player) target);
-        if (tHero == null && tHero != hero) {
+        if (tHero == null || tHero == hero) {
             return false;
         }
         int transferamount = getSetting(hero.getHeroClass(), "transfer-amount", 20);
