@@ -1,5 +1,6 @@
 package com.herocraftonline.dev.heroes.persistence;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -26,6 +27,8 @@ import com.herocraftonline.dev.heroes.util.Properties;
 
 public class Hero {
 
+    private static final DecimalFormat decFormat = new DecimalFormat("#0.##");
+    
     protected final Heroes plugin;
     protected Player player;
     protected HeroClass heroClass;
@@ -33,7 +36,7 @@ public class Hero {
     protected HeroParty party = null;
     protected boolean verbose = true;
     protected HeroEffects effects;
-    protected Map<String, Integer> experience = new HashMap<String, Integer>();
+    protected Map<String, Double> experience = new HashMap<String, Double>();
     protected Map<String, Long> cooldowns = new HashMap<String, Long>();
     protected Map<Entity, CreatureType> summons = new HashMap<Entity, CreatureType>();
     protected Map<Material, String[]> binds = new HashMap<Material, String[]>();
@@ -47,16 +50,6 @@ public class Hero {
         this.heroClass = heroClass;
         this.effects = new HeroEffects(plugin.getCommandManager(), this);
         this.health = health;
-    }
-
-    public Hero(Heroes plugin, Player player, HeroClass heroClass, Map<String, Integer> experience, int mana, boolean verbose, List<ItemStack> itemRecovery, Map<Material, String[]> binds, Set<String> suppressedSkills, double health) {
-        this(plugin, player, heroClass, health);
-        this.experience = experience;
-        this.mana = mana;
-        this.itemRecovery = itemRecovery;
-        this.binds = binds;
-        this.verbose = verbose;
-        this.suppressedSkills = suppressedSkills;
     }
 
     public void addRecoveryItem(ItemStack item) {
@@ -89,7 +82,7 @@ public class Hero {
 
     public boolean isMaster(HeroClass heroClass) {
         int maxExp = plugin.getConfigManager().getProperties().maxExp;
-        if (getExperience(heroClass) >= maxExp || getExperience(heroClass) - maxExp == 1) {
+        if (getExperience(heroClass) >= maxExp || getExperience(heroClass) - maxExp > 0) {
             return true;
         }
         return false;
@@ -99,20 +92,20 @@ public class Hero {
         return plugin.getConfigManager().getProperties().getLevel(getExperience());
     }
 
-    public int getExperience() {
+    public double getExperience() {
         return getExperience(heroClass);
     }
 
-    public int getExperience(HeroClass heroClass) {
-        Integer exp = experience.get(heroClass.getName());
+    public double getExperience(HeroClass heroClass) {
+        Double exp = experience.get(heroClass.getName());
         return exp == null ? 0 : exp;
     }
 
-    public void setExperience(int experience) {
+    public void setExperience(double experience) {
         setExperience(heroClass, experience);
     }
 
-    public void setExperience(HeroClass heroClass, int experience) {
+    public void setExperience(HeroClass heroClass, double experience) {
         this.experience.put(heroClass.getName(), experience);
     }
 
@@ -146,7 +139,7 @@ public class Hero {
 
             int partySize = inRangeMembers.size();
             double partyBonus = 0.10;
-            double sharedExpGain = Math.ceil(expGain / partySize * (((partySize - 1) * partyBonus) + 1.0));
+            double sharedExpGain = expGain / partySize * (((partySize - 1) * partyBonus) + 1.0);
 
             for (Player partyMember : inRangeMembers) {
                 plugin.getHeroManager().getHero(partyMember).gainExp(sharedExpGain, source, false);
@@ -155,15 +148,17 @@ public class Hero {
             return;
         }
 
-        int exp = getExperience();
+        double exp = getExperience();
 
         // adjust exp using the class modifier
         expGain *= heroClass.getExpModifier();
-        int roundedExpGain = (int) Math.ceil(expGain);
 
         Properties prop = plugin.getConfigManager().getProperties();
         int currentLevel = prop.getLevel(exp);
-        int newLevel = prop.getLevel(exp + roundedExpGain);
+        int newLevel = prop.getLevel(exp + expGain);
+        if (currentLevel >= prop.maxLevel) {
+            expGain = 0;
+        }
 
         // add the experience
         exp += expGain;
@@ -171,9 +166,9 @@ public class Hero {
         // call event
         ExperienceGainEvent expEvent;
         if (newLevel == currentLevel) {
-            expEvent = new ExperienceGainEvent(this, roundedExpGain, source);
+            expEvent = new ExperienceGainEvent(this, expGain, source);
         } else {
-            expEvent = new LevelEvent(this, roundedExpGain, currentLevel, newLevel, source);
+            expEvent = new LevelEvent(this, expGain, currentLevel, newLevel, source);
         }
         plugin.getServer().getPluginManager().callEvent(expEvent);
         if (expEvent.isCancelled()) {
@@ -192,7 +187,7 @@ public class Hero {
         // notify the user
         if (expGain != 0) {
             if (verbose) {
-                Messaging.send(player, "$1: Gained $2 Exp", heroClass.getName(), String.valueOf(expGain));
+                Messaging.send(player, "$1: Gained $2 Exp", heroClass.getName(), decFormat.format(expGain));
             }
             if (newLevel != currentLevel) {
                 Messaging.send(player, "You leveled up! (Lvl $1 $2)", String.valueOf(newLevel), heroClass.getName());

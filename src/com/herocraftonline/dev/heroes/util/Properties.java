@@ -66,7 +66,7 @@ public class Properties {
      * @param exp
      * @return
      */
-    public int getLevel(int exp) {
+    public int getLevel(double exp) {
         for (int i = maxLevel - 1; i >= 0; i--) {
             if (exp >= levels[i]) {
                 return i + 1;
@@ -75,7 +75,7 @@ public class Properties {
         return -1;
     }
 
-    public int getExperience(int level) {
+    public double getExperience(int level) {
         return levels[level - 1];
     }
 }

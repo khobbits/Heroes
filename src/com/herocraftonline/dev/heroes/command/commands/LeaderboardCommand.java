@@ -34,7 +34,7 @@ public class LeaderboardCommand extends BaseCommand {
     @Override
     public void execute(CommandSender sender, String[] args) {
         Hero[] heroList = plugin.getHeroManager().getHeroes();
-        HashMap<Hero, Integer> heroValues = new HashMap<Hero, Integer>();
+        HashMap<Hero, Double> heroValues = new HashMap<Hero, Double>();
         int i = 0;
         for (Hero hero : heroList) {
             if (hero == null) {
@@ -42,12 +42,12 @@ public class LeaderboardCommand extends BaseCommand {
             }
             heroValues.put(hero, hero.getExperience());
         }
-        heroValues = (HashMap<Hero, Integer>) sortByValue(heroValues);
+        heroValues = (HashMap<Hero, Double>) sortByValue(heroValues);
         for (Hero hero : heroValues.keySet()) {
             i++;
             if (i >= heroValues.size() - 5) {
                 Player player = hero.getPlayer();
-                Messaging.send(sender, "$1 - $2", player.getName(), Integer.toString(hero.getExperience()));
+                Messaging.send(sender, "$1 - $2", player.getName(), String.valueOf((int)hero.getExperience()));
             }
         }
     }

@@ -111,7 +111,7 @@ public class HeroManager {
         List<String> expList = config.getKeys(root);
         if (expList != null) {
             for (String className : expList) {
-                int exp = config.getInt(root + "." + className, 0);
+                double exp = config.getDouble(root + "." + className, 0);
                 HeroClass heroClass = plugin.getClassManager().getClass(className);
                 if (heroClass != null) {
                     if (hero.getExperience(heroClass) == 0) {
@@ -219,7 +219,7 @@ public class HeroManager {
         }
 
         String root = "experience";
-        for (Map.Entry<String, Integer> entry : hero.experience.entrySet()) {
+        for (Map.Entry<String, Double> entry : hero.experience.entrySet()) {
             config.setProperty(root + "." + entry.getKey(), entry.getValue());
         }
     }
