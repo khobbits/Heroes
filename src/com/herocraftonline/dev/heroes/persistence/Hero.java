@@ -126,6 +126,8 @@ public class Hero {
     }
 
     public void gainExp(double expGain, ExperienceType source, boolean distributeToParty) {
+        Properties prop = plugin.getConfigManager().getProperties();
+
         if (distributeToParty && party != null && party.getExp()) {
             Location location = getPlayer().getLocation();
 
@@ -138,8 +140,7 @@ public class Hero {
             }
 
             int partySize = inRangeMembers.size();
-            double partyBonus = 0.10;
-            double sharedExpGain = expGain / partySize * (((partySize - 1) * partyBonus) + 1.0);
+            double sharedExpGain = expGain / partySize * (((partySize - 1) * prop.partyBonus) + 1.0);
 
             for (Hero partyMember : inRangeMembers) {
                 partyMember.gainExp(sharedExpGain, source, false);
@@ -153,7 +154,6 @@ public class Hero {
         // adjust exp using the class modifier
         expGain *= heroClass.getExpModifier();
 
-        Properties prop = plugin.getConfigManager().getProperties();
         int currentLevel = prop.getLevel(exp);
         int newLevel = prop.getLevel(exp + expGain);
         if (currentLevel >= prop.maxLevel) {
