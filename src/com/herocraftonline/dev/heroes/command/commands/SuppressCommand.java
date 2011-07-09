@@ -15,13 +15,13 @@ public class SuppressCommand extends BaseCommand {
 
     public SuppressCommand(Heroes plugin) {
         super(plugin);
-        name = "Suppress";
-        description = "Toggles the suppression of skill messages";
-        usage = "/hero stfu [skill]";
-        minArgs = 0;
-        maxArgs = 1;
-        identifiers.add("hero stfu");
-        identifiers.add("hero suppress");
+        setName("Suppress");
+        setDescription("Toggles the suppression of skill messages");
+        setUsage("/hero stfu <skill>");
+        setMinArgs(1);
+        setMaxArgs(1);
+        getIdentifiers().add("hero stfu");
+        getIdentifiers().add("hero suppress");
     }
 
     @Override

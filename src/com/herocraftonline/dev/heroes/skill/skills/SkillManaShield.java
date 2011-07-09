@@ -18,12 +18,12 @@ public class SkillManaShield extends ActiveEffectSkill {
 
     public SkillManaShield(Heroes plugin) {
         super(plugin);
-        name = "ManaShield";
-        description = "Uses your mana as a shield";
-        usage = "/skill manashield";
-        minArgs = 0;
-        maxArgs = 0;
-        identifiers.add("skill manashield");
+        setName("ManaShield");
+        setDescription("Uses your mana as a shield");
+        setUsage("/skill manashield");
+        setMinArgs(0);
+        setMaxArgs(0);
+        getIdentifiers().add("skill manashield");
 
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
     }
@@ -34,7 +34,7 @@ public class SkillManaShield extends ActiveEffectSkill {
         String playerName = player.getName();
         applyEffect(hero);
 
-        notifyNearbyPlayers(player.getLocation(), getUseText(), playerName, name);
+        notifyNearbyPlayers(player.getLocation(), getUseText(), playerName, getName());
         return true;
     }
 
@@ -59,12 +59,12 @@ public class SkillManaShield extends ActiveEffectSkill {
                 Player player = (Player) defender;
                 Hero hero = plugin.getHeroManager().getHero(player);
                 HeroEffects effects = plugin.getHeroManager().getHero(player).getEffects();
-                if (effects.hasEffect(name)) {
+                if (effects.hasEffect(getName())) {
                     int absorbamount = getSetting(hero.getHeroClass(), "mana-amount", 20);
                     event.setDamage(event.getDamage() / 2);
                     int mana = hero.getMana();
                     if (mana < absorbamount) {
-                        effects.expireEffect(name);
+                        effects.expireEffect(getName());
                     } else {
                         mana -= absorbamount;
                         hero.setMana(mana);

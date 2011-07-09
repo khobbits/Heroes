@@ -20,12 +20,12 @@ public class OutsourcedSkill extends Skill {
 
     public OutsourcedSkill(Heroes plugin, String name, String[] permissions, String usage) {
         super(plugin);
-        this.name = name;
+        setName(name);
+        setUsage(usage);
+        setMinArgs(0);
+        setMaxArgs(0);
+        setDescription(usage);
         this.permissions = permissions;
-        this.usage = usage;
-        this.minArgs = 0;
-        this.maxArgs = 0;
-        this.description = usage;
         registerEvent(Type.CUSTOM_EVENT, new SkillCustomListener(), Priority.Normal);
     }
 
@@ -41,7 +41,7 @@ public class OutsourcedSkill extends Skill {
         Player player = hero.getPlayer();
         String world = player.getWorld().getName();
         String playerName = player.getName();
-        ConfigurationNode settings = heroClass.getSkillSettings(name);
+        ConfigurationNode settings = heroClass.getSkillSettings(getName());
         if (settings != null) {
             if (hero.getLevel() >= getSetting(heroClass, SETTING_LEVEL, 1)) {
                 for (String permission : permissions) {

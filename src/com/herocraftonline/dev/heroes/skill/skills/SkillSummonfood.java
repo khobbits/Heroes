@@ -15,12 +15,12 @@ public class SkillSummonfood extends ActiveSkill{
 
     public SkillSummonfood(Heroes plugin) {
         super(plugin);
-        name = "Summonfood";
-        description = "Summons you food!";
-        usage = "/skill summonfood";
-        minArgs = 0;
-        maxArgs = 0;
-        identifiers.add("skill summonfood");
+        setName("Summonfood");
+        setDescription("Summons you food!");
+        setUsage("/skill summonfood");
+        setMinArgs(0);
+        setMaxArgs(0);
+        getIdentifiers().add("skill summonfood");
     }
 
     @Override

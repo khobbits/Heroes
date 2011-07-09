@@ -12,13 +12,13 @@ public class AdminExpCommand extends BaseCommand {
 
     public AdminExpCommand(Heroes plugin) {
         super(plugin);
-        name = "AdminExpCommand";
-        description = "Changes a users exp";
-        usage = "/hero admin exp §9<player> <exp>";
-        minArgs = 2;
-        maxArgs = 2;
-        identifiers.add("hero admin exp");
-        this.permissionNode = "heroes.admin.exp";
+        setName("AdminExpCommand");
+        setDescription("Changes a users exp");
+        setUsage("/hero admin exp §9<player> <exp>");
+        setMinArgs(2);
+        setMaxArgs(2);
+        getIdentifiers().add("hero admin exp");
+        setPermissionNode("heroes.admin.exp");
     }
 
     @Override

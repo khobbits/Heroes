@@ -12,11 +12,11 @@ public class SkillForcepush extends TargettedSkill {
 
     public SkillForcepush(Heroes plugin) {
         super(plugin);
-        name = "Forcepush";
-        description = "Forces your target backwards";
-        minArgs = 0;
-        maxArgs = 1;
-        identifiers.add("skill forcepush");
+        setName("Forcepush");
+        setDescription("Forces your target backwards");
+        setMinArgs(0);
+        setMaxArgs(1);
+        getIdentifiers().add("skill forcepush");
     }
 
     @Override
@@ -33,7 +33,7 @@ public class SkillForcepush extends TargettedSkill {
         Vector v = target.getVelocity().setY(1).add(target.getLocation().getDirection().setY(0).normalize().multiply(multiplier * -1));
         target.setVelocity(v);
 
-        notifyNearbyPlayers(hero.getPlayer().getLocation(), getUseText(), hero.getPlayer().getName(), name, getEntityName(target));
+        notifyNearbyPlayers(hero.getPlayer().getLocation(), getUseText(), hero.getPlayer().getName(), getName(), getEntityName(target));
         return true;
     }
 

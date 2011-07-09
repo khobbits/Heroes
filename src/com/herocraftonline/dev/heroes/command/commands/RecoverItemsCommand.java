@@ -17,13 +17,12 @@ public class RecoverItemsCommand extends BaseCommand {
 
     public RecoverItemsCommand(Heroes plugin) {
         super(plugin);
-        name = "RecoverItems";
-        description = "Recover removed items";
-        usage = "/hero recoveritems";
-        minArgs = 0;
-        maxArgs = 0;
-        identifiers.add("hero recoveritems");
-        identifiers.add("hrecover");
+        setName("Recover Items");
+        setDescription("Recover removed items");
+        setUsage("/hero recover");
+        setMinArgs(0);
+        setMaxArgs(0);
+        getIdentifiers().add("hero recover");
     }
 
     @Override

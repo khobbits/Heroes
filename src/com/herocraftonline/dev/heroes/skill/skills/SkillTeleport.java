@@ -12,12 +12,12 @@ public class SkillTeleport extends ActiveSkill {
 
     public SkillTeleport(Heroes plugin) {
         super(plugin);
-        name = "Teleport";
-        description = "Teleports you to (roughly) to your party member!";
-        usage = "/skill teleport <player>";
-        minArgs = 1;
-        maxArgs = 1;
-        identifiers.add("skill teleport");
+        setName("Teleport");
+        setDescription("Teleports you to (roughly) to your party member!");
+        setUsage("/skill teleport <player>");
+        setMinArgs(1);
+        setMaxArgs(1);
+        getIdentifiers().add("skill teleport");
     }
 
     @Override
@@ -46,7 +46,7 @@ public class SkillTeleport extends ActiveSkill {
         loc1.setY(highestBlock);
         player.teleport(loc1);
 
-        notifyNearbyPlayers(player.getLocation(), getUseText(), playerName, name);
+        notifyNearbyPlayers(player.getLocation(), getUseText(), playerName, getName());
         return true;
     }
 }

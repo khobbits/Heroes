@@ -20,11 +20,11 @@ public class SkillIronFist extends PassiveSkill {
 
     public SkillIronFist(Heroes plugin) {
         super(plugin);
-        name = "IronFist";
-        description = "Increases your unarmed damage (passive)";
-        minArgs = 1;
-        maxArgs = 1;
-        identifiers.add("skill ironfist");
+        setName("IronFist");
+        setDescription("Increases your unarmed damage (passive)");
+        setMinArgs(1);
+        setMaxArgs(1);
+        getIdentifiers().add("skill ironfist");
 
         registerEvent(Type.ENTITY_DAMAGE, new SkillPlayerListener(), Priority.Normal);
     }
@@ -48,7 +48,7 @@ public class SkillIronFist extends PassiveSkill {
                 if (subEvent.getDamager() instanceof Player) {
                     Player player = (Player) subEvent.getDamager();
                     Hero hero = plugin.getHeroManager().getHero(player);
-                    if (hero.getEffects().hasEffect(name)) {
+                    if (hero.getEffects().hasEffect(getName())) {
                         if (player.getItemInHand().getType() == Material.AIR) {
                             double multiplier = getSetting(hero.getHeroClass(), "damage-multiplier", 2d);
                             event.setDamage((int) (baseDamage * multiplier));

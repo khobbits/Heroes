@@ -23,13 +23,13 @@ public class SkillListCommand extends BaseCommand {
 
     public SkillListCommand(Heroes plugin) {
         super(plugin);
-        name = "Skill";
-        description = "Displays a list of your class skills";
-        usage = "/skills [page#]";
-        minArgs = 0;
-        maxArgs = 1;
-        identifiers.add("skills");
-        identifiers.add("skilllist");
+        setName("List Skills");
+        setDescription("Displays a list of your class skills");
+        setUsage("/skills [page#]");
+        setMinArgs(0);
+        setMaxArgs(1);
+        getIdentifiers().add("skills");
+        getIdentifiers().add("hero skills");
     }
 
     @Override

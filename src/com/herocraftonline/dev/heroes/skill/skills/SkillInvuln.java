@@ -16,12 +16,12 @@ public class SkillInvuln extends ActiveEffectSkill {
 
     public SkillInvuln(Heroes plugin) {
         super(plugin);
-        name = "Invuln";
-        description = "Grants total damage immunity";
-        usage = "/skill invuln";
-        minArgs = 0;
-        maxArgs = 0;
-        identifiers.add("skill invuln");
+        setName("Invuln");
+        setDescription("Grants total damage immunity");
+        setUsage("/skill invuln");
+        setMinArgs(0);
+        setMaxArgs(0);
+        getIdentifiers().add("skill invuln");
 
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
     }
@@ -32,7 +32,7 @@ public class SkillInvuln extends ActiveEffectSkill {
         String playerName = player.getName();
         applyEffect(hero);
 
-        notifyNearbyPlayers(player.getLocation(), getUseText(), playerName, name);
+        notifyNearbyPlayers(player.getLocation(), getUseText(), playerName, getName());
         return true;
     }
 
@@ -48,7 +48,7 @@ public class SkillInvuln extends ActiveEffectSkill {
             if (defender instanceof Player) {
                 Player player = (Player) defender;
                 HeroEffects effects = plugin.getHeroManager().getHero(player).getEffects();
-                if (effects.hasEffect(name)) {
+                if (effects.hasEffect(getName())) {
                     event.setCancelled(true);
                 }
             }

@@ -13,12 +13,12 @@ public class PartyModeCommand extends BaseCommand {
 
     public PartyModeCommand(Heroes plugin) {
         super(plugin);
-        name = "PartyMode";
-        description = "Change your parties mode";
-        usage = "/party mode <pvp>";
-        minArgs = 1;
-        maxArgs = 1;
-        identifiers.add("party mode");
+        setName("Party Mode");
+        setDescription("Toggles exp sharing or party pvp");
+        setUsage("/party mode <pvp|exp>");
+        setMinArgs(1);
+        setMaxArgs(1);
+        getIdentifiers().add("party mode");
     }
 
     @Override

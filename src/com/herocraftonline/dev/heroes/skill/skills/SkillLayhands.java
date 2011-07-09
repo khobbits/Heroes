@@ -10,19 +10,19 @@ public class SkillLayhands extends TargettedSkill {
 
     public SkillLayhands(Heroes plugin) {
         super(plugin);
-        name = "Layhands";
-        description = "Heals the target to full";
-        usage = "/skill layhands [target]";
-        minArgs = 0;
-        maxArgs = 1;
-        identifiers.add("skill layhands");
+        setName("Layhands");
+        setDescription("Heals the target to full");
+        setUsage("/skill layhands [target]");
+        setMinArgs(0);
+        setMaxArgs(1);
+        getIdentifiers().add("skill layhands");
     }
 
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
         target.setHealth(20);
-        notifyNearbyPlayers(player.getLocation(), getUseText(), player.getName(), name, target == player ? "himself" : getEntityName(target));
+        notifyNearbyPlayers(player.getLocation(), getUseText(), player.getName(), getName(), target == player ? "himself" : getEntityName(target));
         return true;
     }
 }

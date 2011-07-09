@@ -18,12 +18,12 @@ public class SkillBolt extends TargettedSkill {
 
     public SkillBolt(Heroes plugin) {
         super(plugin);
-        name = "Bolt";
-        description = "Calls a bolt of thunder down on the target";
-        usage = "/skill bolt [target]";
-        minArgs = 0;
-        maxArgs = 1;
-        identifiers.add("skill bolt");
+        setName("Bolt");
+        setDescription("Calls a bolt of thunder down on the target");
+        setUsage("/skill bolt [target]");
+        setMinArgs(0);
+        setMaxArgs(1);
+        getIdentifiers().add("skill bolt");
     }
 
     @Override
@@ -63,7 +63,7 @@ public class SkillBolt extends TargettedSkill {
         }
         target.getWorld().strikeLightning(target.getLocation());
 
-        notifyNearbyPlayers(player.getLocation(), getUseText(), player.getName(), name, target == player ? "himself" : getEntityName(target));
+        notifyNearbyPlayers(player.getLocation(), getUseText(), player.getName(), getName(), target == player ? "himself" : getEntityName(target));
         return true;
     }
 }

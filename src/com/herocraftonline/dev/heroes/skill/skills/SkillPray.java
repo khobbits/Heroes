@@ -13,12 +13,12 @@ public class SkillPray extends TargettedSkill {
 
     public SkillPray(Heroes plugin) {
         super(plugin);
-        name = "Pray";
-        description = "Heals the target";
-        usage = "/skill pray <target>";
-        minArgs = 0;
-        maxArgs = 1;
-        identifiers.add("skill pray");
+        setName("Pray");
+        setDescription("Heals the target");
+        setUsage("/skill pray <target>");
+        setMinArgs(0);
+        setMaxArgs(1);
+        getIdentifiers().add("skill pray");
     }
 
     @Override
@@ -45,7 +45,7 @@ public class SkillPray extends TargettedSkill {
                 hpPlus = 20 - targetHealth;
             }
             target.setHealth(target.getHealth() + hpPlus);
-            notifyNearbyPlayers(player.getLocation(), getUseText(), player.getName(), name, target == player ? "himself" : getEntityName(target));
+            notifyNearbyPlayers(player.getLocation(), getUseText(), player.getName(), getName(), target == player ? "himself" : getEntityName(target));
             return true;
         }
         return false;

@@ -19,12 +19,12 @@ public class SkillReflect extends ActiveEffectSkill {
 
     public SkillReflect(Heroes plugin) {
         super(plugin);
-        name = "Reflect";
-        description = "Skill - Reflect";
-        usage = "/skill reflect";
-        minArgs = 0;
-        maxArgs = 0;
-        identifiers.add("skill reflect");
+        setName("Reflect");
+        setDescription("Skill - Reflect");
+        setUsage("/skill reflect");
+        setMinArgs(0);
+        setMaxArgs(0);
+        getIdentifiers().add("skill reflect");
 
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
     }
@@ -41,7 +41,7 @@ public class SkillReflect extends ActiveEffectSkill {
         Player player = hero.getPlayer();
         String playerName = player.getName();
         applyEffect(hero);
-        notifyNearbyPlayers(player.getLocation(), getUseText(), playerName, name);
+        notifyNearbyPlayers(player.getLocation(), getUseText(), playerName, getName());
         return true;
     }
 
@@ -60,11 +60,11 @@ public class SkillReflect extends ActiveEffectSkill {
                 Player defPlayer = (Player) defender;
                 Hero hero = plugin.getHeroManager().getHero(defPlayer);
                 HeroEffects defEffects = hero.getEffects();
-                if (defEffects.hasEffect(name)) {
+                if (defEffects.hasEffect(getName())) {
                     if (attacker instanceof Player) {
                         Player attPlayer = (Player) attacker;
                         HeroEffects attEffects = plugin.getHeroManager().getHero(attPlayer).getEffects();
-                        if (attEffects.hasEffect(name)) {
+                        if (attEffects.hasEffect(getName())) {
                             event.setCancelled(true);
                             return;
                         }

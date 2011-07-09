@@ -11,12 +11,12 @@ public class HeroSaveCommand extends BaseCommand {
 
     public HeroSaveCommand(Heroes plugin) {
         super(plugin);
-        name = "HeroSave";
-        description = "Saves your hero file";
-        usage = "/hero save";
-        minArgs = 0;
-        maxArgs = 0;
-        identifiers.add("hero save");
+        setName("Save");
+        setDescription("Saves your hero file");
+        setUsage("/hero save");
+        setMinArgs(0);
+        setMaxArgs(0);
+        getIdentifiers().add("hero save");
     }
 
     @Override

@@ -17,12 +17,12 @@ public class SkillBarrage extends ActiveSkill {
 
     public SkillBarrage(Heroes plugin) {
         super(plugin);
-        name = "Barrage";
-        description = "Fire a Barrage of Arrows around you.";
-        usage = "/skill barrage";
-        minArgs = 0;
-        maxArgs = 0;
-        identifiers.add("skill barrage");
+        setName("Barrage");
+        setDescription("Fire a Barrage of Arrows around you.");
+        setUsage("/skill barrage");
+        setMinArgs(0);
+        setMaxArgs(0);
+        getIdentifiers().add("skill barrage");
     }
 
     @SuppressWarnings("deprecation")
@@ -70,7 +70,7 @@ public class SkillBarrage extends ActiveSkill {
             Vector vel = new Vector(Math.cos(a), 0, Math.sin(a));
             player.shootArrow().setVelocity(vel);
         }
-        notifyNearbyPlayers(player.getLocation(), getUseText(), player.getName(), name);
+        notifyNearbyPlayers(player.getLocation(), getUseText(), player.getName(), getName());
         return true;
     }
 }

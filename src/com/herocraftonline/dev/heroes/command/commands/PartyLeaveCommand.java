@@ -12,12 +12,12 @@ public class PartyLeaveCommand extends BaseCommand {
 
     public PartyLeaveCommand(Heroes plugin) {
         super(plugin);
-        name = "PartyLeave";
-        description = "Leave your current party";
-        usage = "/party leave";
-        minArgs = 0;
-        maxArgs = 0;
-        identifiers.add("party leave");
+        setName("Party Leave");
+        setDescription("Leaves your party");
+        setUsage("/party leave");
+        setMinArgs(0);
+        setMaxArgs(0);
+        getIdentifiers().add("party leave");
     }
 
     @Override

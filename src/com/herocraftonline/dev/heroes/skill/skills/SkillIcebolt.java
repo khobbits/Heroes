@@ -25,12 +25,12 @@ public class SkillIcebolt extends ActiveSkill {
 
     public SkillIcebolt(Heroes plugin) {
         super(plugin);
-        name = "Icebolt";
-        description = "Fires a snowball that encases the players feet in ice";
-        usage = "/skill icebolt";
-        minArgs = 0;
-        maxArgs = 0;
-        identifiers.add("skill icebolt");
+        setName("Icebolt");
+        setDescription("Fires a snowball that encases the players feet in ice");
+        setUsage("/skill icebolt");
+        setMinArgs(0);
+        setMaxArgs(0);
+        getIdentifiers().add("skill icebolt");
     }
 
     @Override
@@ -50,7 +50,7 @@ public class SkillIcebolt extends ActiveSkill {
         snowball.setVelocity(velocity);
         snowballs.add(snowball);
 
-        notifyNearbyPlayers(location, getUseText(), hero.getPlayer().getName(), name);
+        notifyNearbyPlayers(location, getUseText(), hero.getPlayer().getName(), getName());
         return true;
     }
 

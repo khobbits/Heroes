@@ -15,12 +15,12 @@ public class SkillDrainsoul extends TargettedSkill {
 
     public SkillDrainsoul(Heroes plugin) {
         super(plugin);
-        name = "Drainsoul";
-        description = "Absorb health from target";
-        usage = "/skill drainsoul <target>";
-        minArgs = 0;
-        maxArgs = 1;
-        identifiers.add("skill drainsoul");
+        setName("Drainsoul");
+        setDescription("Absorb health from target");
+        setUsage("/skill drainsoul <target>");
+        setMinArgs(0);
+        setMaxArgs(1);
+        getIdentifiers().add("skill drainsoul");
     }
 
     @Override
@@ -57,7 +57,7 @@ public class SkillDrainsoul extends TargettedSkill {
         player.setHealth(player.getHealth() + absorbAmount);
         target.damage(absorbAmount);
 
-        notifyNearbyPlayers(player.getLocation(), getUseText(), player.getName(), name, getEntityName(target));
+        notifyNearbyPlayers(player.getLocation(), getUseText(), player.getName(), getName(), getEntityName(target));
         return true;
     }
 

@@ -17,12 +17,12 @@ public class SkillPulse extends ActiveSkill {
 
     public SkillPulse(Heroes plugin) {
         super(plugin);
-        name = "Blaze";
-        description = "Sets everyone around you on fire";
-        usage = "/skill blaze";
-        minArgs = 0;
-        maxArgs = 0;
-        identifiers.add("skill blaze");
+        setName("Blaze");
+        setDescription("Sets everyone around you on fire");
+        setUsage("/skill blaze");
+        setMinArgs(0);
+        setMaxArgs(0);
+        getIdentifiers().add("skill blaze");
     }
 
     @Override
@@ -46,7 +46,7 @@ public class SkillPulse extends ActiveSkill {
             }
             pN.damage(healamount);
         }
-        notifyNearbyPlayers(hero.getPlayer().getLocation(), getUseText(), hero.getPlayer().getName(), name);
+        notifyNearbyPlayers(hero.getPlayer().getLocation(), getUseText(), hero.getPlayer().getName(), getName());
         return true;
     }
 

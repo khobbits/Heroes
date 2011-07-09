@@ -28,12 +28,12 @@ public class SkillPiggify extends TargettedSkill {
 
     public SkillPiggify(Heroes plugin) {
         super(plugin);
-        name = "Piggify";
-        description = "Forces your target to ride a pig";
-        usage = "/skill piggify [target]";
-        minArgs = 0;
-        maxArgs = 1;
-        identifiers.add("skill piggify");
+        setName("Piggify");
+        setDescription("Forces your target to ride a pig");
+        setUsage("/skill piggify [target]");
+        setMinArgs(0);
+        setMaxArgs(1);
+        getIdentifiers().add("skill piggify");
 
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
     }
@@ -77,7 +77,7 @@ public class SkillPiggify extends TargettedSkill {
         }, (long) (getSetting(hero.getHeroClass(), "duration", 10000) * 0.02));
 
         String targetName = target instanceof Player ? ((Player) target).getName() : target.getClass().getSimpleName().substring(5);
-        notifyNearbyPlayers(player.getLocation(), getUseText(), player.getName(), name, target == player ? "himself" : targetName);
+        notifyNearbyPlayers(player.getLocation(), getUseText(), player.getName(), getName(), target == player ? "himself" : targetName);
         return true;
     }
 

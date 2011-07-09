@@ -12,12 +12,12 @@ public class SkillLeech extends TargettedSkill {
 
     public SkillLeech(Heroes plugin) {
         super(plugin);
-        name = "Leech";
-        description = "Steals mana from an opponant";
-        usage = "/skill leech";
-        minArgs = 0;
-        maxArgs = 1;
-        identifiers.add("skill leech");
+        setName("Leech");
+        setDescription("Steals mana from an opponant");
+        setUsage("/skill leech");
+        setMinArgs(0);
+        setMaxArgs(1);
+        getIdentifiers().add("skill leech");
     }
 
     @Override
@@ -43,7 +43,7 @@ public class SkillLeech extends TargettedSkill {
             }
             hero.setMana(hero.getMana() + transferamount);
             tHero.setMana(tHero.getMana() - transferamount);
-            notifyNearbyPlayers(hero.getPlayer().getLocation(), getUseText(), hero.getPlayer().getName(), name, target == hero.getPlayer() ? "himself" : getEntityName(target));
+            notifyNearbyPlayers(hero.getPlayer().getLocation(), getUseText(), hero.getPlayer().getName(), getName(), target == hero.getPlayer() ? "himself" : getEntityName(target));
             return true;
         } else {
             return false;

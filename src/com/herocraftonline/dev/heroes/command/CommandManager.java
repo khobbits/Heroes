@@ -57,7 +57,8 @@ public class CommandManager {
                 }
             } else {
                 // If there is no Permission Node we allow the Command, otherwise we check against the Permissions.
-                if ((match.permissionNode.length() == 0) || (hasPermission(sender, match.permissionNode))) {
+                String permission = match.getPermissionNode();
+                if ((permission.length() == 0) || (hasPermission(sender, permission))) {
                     match.execute(sender, trimmedArgs);
                 } else {
                     sender.sendMessage("You do not have permission to use this command.");
@@ -68,7 +69,7 @@ public class CommandManager {
     }
 
     public void addCommand(BaseCommand command) {
-        commands.put(command.name.toLowerCase(), command);
+        commands.put(command.getName().toLowerCase(), command);
     }
 
     public void removeCommand(BaseCommand command) {

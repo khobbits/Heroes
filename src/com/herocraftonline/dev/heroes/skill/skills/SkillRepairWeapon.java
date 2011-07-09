@@ -26,11 +26,11 @@ package com.herocraftonline.dev.heroes.skill.skills;
 //
 //    public SkillRepairWeapon(Heroes plugin) {
 //        super(plugin);
-//        name = "RepairWeapon";
-//        description = "Allows materials to repair weapons (passive)";
-//        usage = "Drop material on weapon";
-//        minArgs = 0;
-//        maxArgs = 0;
+//        setName("RepairWeapon");
+//        setDescription("Allows materials to repair weapons (passive)");
+//        setUsage("Drop material on weapon");
+//        setMinArgs(0);
+//        setMaxArgs(0);
 //        plugin.getServer().getPluginManager().registerEvent(Type.CUSTOM_EVENT, new SkillRepairListener(), Priority.Monitor, plugin);
 //    }
 //
@@ -65,22 +65,22 @@ package com.herocraftonline.dev.heroes.skill.skills;
 //                    if (is == null) {
 //                        continue;
 //                    }
-//                    String[] name = Material.getMaterial(is.id).toString().split("_", 2);
-//                    if (name.length==2 && name[1].equals("SWORD")) {
+//                    String[] getName() = Material.getMaterial(is.id).toString().split("_", 2);
+//                    if (getName().length==2 && name[1].equals("SWORD")) {
 //                        int newLevel = -1;
-//                        if (name[0].equals("WOOD")) {
+//                        if (getName()[0].equals("WOOD")) {
 //                            newLevel = 0;
 //                            repairTypeId = Material.WOOD.getId();
-//                        } else if (name[0].equals("STONE")) {
+//                        } else if (getName()[0].equals("STONE")) {
 //                            newLevel = 1;
 //                            repairTypeId = Material.COBBLESTONE.getId();
-//                        } else if (name[0].equals("IRON")) {
+//                        } else if (getName()[0].equals("IRON")) {
 //                            newLevel = 2;
 //                            repairTypeId = Material.IRON_INGOT.getId();
-//                        } else if (name[0].equals("GOLD")) {
+//                        } else if (getName()[0].equals("GOLD")) {
 //                            newLevel = 3;
 //                            repairTypeId = Material.GOLD_INGOT.getId();
-//                        } else if (name[0].equals("DIAMOND")) {
+//                        } else if (getName()[0].equals("DIAMOND")) {
 //                            newLevel = 4;
 //                            repairTypeId = Material.DIAMOND.getId();
 //                        }

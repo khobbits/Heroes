@@ -22,13 +22,13 @@ public class SkillSmoke extends ActiveEffectSkill {
 
     public SkillSmoke(Heroes plugin) {
         super(plugin);
-        name = "Smoke";
-        description = "You completely disappear from view";
-        usage = "/skill smoke";
-        minArgs = 0;
-        maxArgs = 0;
-        identifiers.add("skill smoke");
-        notes.add("Note: Taking damage removes the effect");
+        setName("Smoke");
+        setDescription("You completely disappear from view");
+        setUsage("/skill smoke");
+        setMinArgs(0);
+        setMaxArgs(0);
+        getIdentifiers().add("skill smoke");
+        getNotes().add("Note: Taking damage removes the effect");
 
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
     }
@@ -43,7 +43,8 @@ public class SkillSmoke extends ActiveEffectSkill {
             hostilePlayer.getHandle().netServerHandler.sendPacket(new Packet29DestroyEntity(craftPlayer.getEntityId()));
         }
         applyEffect(hero);
-        notifyNearbyPlayers(craftPlayer.getLocation(), getUseText(), craftPlayer.getName(), name); // Kinda ruins the stealthy part, but can be set to null to disable it
+        // Kinda ruins the stealthy part, but can be set to null to disable it
+        notifyNearbyPlayers(craftPlayer.getLocation(), getUseText(), craftPlayer.getName(), getName());
         return true;
     }
 
@@ -54,7 +55,7 @@ public class SkillSmoke extends ActiveEffectSkill {
                 Player player = (Player) event.getEntity();
                 Hero hero = plugin.getHeroManager().getHero(player);
                 if (hero.getEffects().hasEffect(getName())) {
-                    hero.getEffects().expireEffect(name);
+                    hero.getEffects().expireEffect(getName());
                 }
             }
         }
@@ -67,7 +68,7 @@ public class SkillSmoke extends ActiveEffectSkill {
                 Player player = event.getPlayer();
                 Hero hero = plugin.getHeroManager().getHero(player);
                 if (hero.getEffects().hasEffect(getName())) {
-                    hero.getEffects().expireEffect(name);
+                    hero.getEffects().expireEffect(getName());
                 }
             }
         }

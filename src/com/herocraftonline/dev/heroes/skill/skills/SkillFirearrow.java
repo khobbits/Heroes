@@ -22,12 +22,12 @@ public class SkillFirearrow extends ActiveSkill {
 
     public SkillFirearrow(Heroes plugin) {
         super(plugin);
-        name = "Firearrow";
-        description = "Shoots a burning arrow";
-        usage = "/skill firearrow";
-        minArgs = 0;
-        maxArgs = 0;
-        identifiers.add("skill firearrow");
+        setName("Firearrow");
+        setDescription("Shoots a burning arrow");
+        setUsage("/skill firearrow");
+        setMinArgs(0);
+        setMaxArgs(0);
+        getIdentifiers().add("skill firearrow");
 
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Monitor);
     }
@@ -48,7 +48,7 @@ public class SkillFirearrow extends ActiveSkill {
         Arrow arrow = player.shootArrow();
         arrow.setFireTicks(1000);
 
-        notifyNearbyPlayers(location, getUseText(), hero.getPlayer().getName(), name);
+        notifyNearbyPlayers(location, getUseText(), hero.getPlayer().getName(), getName());
         return true;
     }
 

@@ -14,12 +14,12 @@ public class SkillSyphon extends TargettedSkill {
 
     public SkillSyphon(Heroes plugin) {
         super(plugin);
-        name = "Syphon";
-        description = "Gives your health to the target";
-        usage = "/skill syphon [target] [health]";
-        minArgs = 0;
-        maxArgs = 2;
-        identifiers.add("skill syphon");
+        setName("Syphon");
+        setDescription("Gives your health to the target");
+        setUsage("/skill syphon [target] [health]");
+        setMinArgs(0);
+        setMaxArgs(2);
+        getIdentifiers().add("skill syphon");
     }
 
     @Override
@@ -51,7 +51,7 @@ public class SkillSyphon extends TargettedSkill {
         transferredHealth = maxHealth - targetHealth < transferredHealth ? maxHealth - targetHealth : transferredHealth < 0 ? 0 : transferredHealth;
         target.setHealth(targetHealth + transferredHealth);
 
-        notifyNearbyPlayers(player.getLocation(), getUseText(), player.getName(), name, target == player ? "himself" : getEntityName(target));
+        notifyNearbyPlayers(player.getLocation(), getUseText(), player.getName(), getName(), target == player ? "himself" : getEntityName(target));
         return true;
     }
 

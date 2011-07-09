@@ -24,33 +24,32 @@ public abstract class PassiveSkill extends Skill {
 
     public PassiveSkill(Heroes plugin) {
         super(plugin);
-        usage = "Passive Skill";
+        setUsage("Passive Skill");
 
         registerEvent(Type.CUSTOM_EVENT, new SkillCustomEventListener(), Priority.Monitor);
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args) {
-    }
+    public void execute(CommandSender sender, String[] args) {}
 
     protected void apply(Hero hero) {
-        hero.getEffects().putEffect(name, Double.POSITIVE_INFINITY);
-        notifyNearbyPlayers(hero.getPlayer().getLocation(), applyText, hero.getPlayer().getName(), name);
+        hero.getEffects().putEffect(getName(), Double.POSITIVE_INFINITY);
+        notifyNearbyPlayers(hero.getPlayer().getLocation(), applyText, hero.getPlayer().getName(), getName());
     }
 
     protected void unapply(Hero hero) {
-        Double effect = hero.getEffects().removeEffect(name.toLowerCase());
+        Double effect = hero.getEffects().removeEffect(getName().toLowerCase());
         if (effect != null) {
-            notifyNearbyPlayers(hero.getPlayer().getLocation(), unapplyText, hero.getPlayer().getName(), name);
+            notifyNearbyPlayers(hero.getPlayer().getLocation(), unapplyText, hero.getPlayer().getName(), getName());
         }
     }
 
     public void tryApplying(Hero hero) {
         HeroClass heroClass = hero.getHeroClass();
-        if (!heroClass.hasSkill(name)) {
+        if (!heroClass.hasSkill(getName())) {
             return;
         }
-        ConfigurationNode settings = heroClass.getSkillSettings(name);
+        ConfigurationNode settings = heroClass.getSkillSettings(getName());
         if (settings != null) {
             if (hero.getLevel() >= getSetting(heroClass, SETTING_LEVEL, 1)) {
                 apply(hero);

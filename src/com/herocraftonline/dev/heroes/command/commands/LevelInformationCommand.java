@@ -14,14 +14,14 @@ public class LevelInformationCommand extends BaseCommand {
 
     public LevelInformationCommand(Heroes plugin) {
         super(plugin);
-        name = "LevelInformation";
-        description = "Player Level information";
-        usage = "/lvl OR /level OR /hero level";
-        minArgs = 0;
-        maxArgs = 0;
-        identifiers.add("hero level");
-        identifiers.add("level");
-        identifiers.add("lvl");
+        setName("Level Information");
+        setDescription("Displays hero information");
+        setUsage("/hero level");
+        setMinArgs(0);
+        setMaxArgs(0);
+        getIdentifiers().add("hero level");
+        getIdentifiers().add("level");
+        getIdentifiers().add("lvl");
     }
 
     @Override

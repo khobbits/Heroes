@@ -19,11 +19,11 @@ public class SkillLance extends PassiveSkill {
 
     public SkillLance(Heroes plugin) {
         super(plugin);
-        name = "Lance";
-        description = "Increases your shovel damage (passive)";
-        minArgs = 1;
-        maxArgs = 1;
-        identifiers.add("skill lance");
+        setName("Lance");
+        setDescription("Increases your shovel damage (passive)");
+        setMinArgs(1);
+        setMaxArgs(1);
+        getIdentifiers().add("skill lance");
 
         registerEvent(Type.ENTITY_DAMAGE, new SkillPlayerListener(), Priority.Normal);
     }
@@ -47,7 +47,7 @@ public class SkillLance extends PassiveSkill {
                 if (subEvent.getDamager() instanceof Player) {
                     Player player = (Player) subEvent.getDamager();
                     Hero hero = plugin.getHeroManager().getHero(player);
-                    if (hero.getEffects().hasEffect(name)) {
+                    if (hero.getEffects().hasEffect(getName())) {
                         if (player.getItemInHand().getType().toString().contains("SHOVEL")) {
                             double multiplier = getSetting(hero.getHeroClass(), "damage-multiplier", 2d);
                             event.setDamage((int) (baseDamage * multiplier));

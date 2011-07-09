@@ -16,13 +16,12 @@ public class PartyWhoCommand extends BaseCommand {
 
     public PartyWhoCommand(Heroes plugin) {
         super(plugin);
-        name = "PartyWho";
-        description = "Check your party members";
-        usage = "/party";
-        minArgs = 0;
-        maxArgs = 0;
-        identifiers.add("party who");
-        identifiers.add("party");
+        setName("Party Who");
+        setDescription("Lists your party members");
+        setUsage("/party who");
+        setMinArgs(0);
+        setMaxArgs(0);
+        getIdentifiers().add("party who");
     }
 
     @Override

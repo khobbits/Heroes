@@ -46,10 +46,10 @@ public abstract class ActiveEffectSkill extends ActiveSkill {
     }
 
     protected void applyEffect(Hero hero) {
-        hero.getEffects().putEffect(name, getSetting(hero.getHeroClass(), SETTING_DURATION, 10000d));
+        hero.getEffects().putEffect(getName(), getSetting(hero.getHeroClass(), SETTING_DURATION, 10000d));
     }
 
     public void onExpire(Hero hero) {
-        notifyNearbyPlayers(hero.getPlayer().getLocation(), expireText, hero.getPlayer().getName(), name);
+        notifyNearbyPlayers(hero.getPlayer().getLocation(), expireText, hero.getPlayer().getName(), getName());
     }
 }

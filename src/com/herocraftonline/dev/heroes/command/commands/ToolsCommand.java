@@ -15,12 +15,12 @@ public class ToolsCommand extends BaseCommand {
 
     public ToolsCommand(Heroes plugin) {
         super(plugin);
-        name = "Tools";
-        description = "Displays tools available for your class";
-        usage = "/hero tools";
-        minArgs = 0;
-        maxArgs = 0;
-        identifiers.add("hero tools");
+        setName("Tools");
+        setDescription("Displays tools available for your class");
+        setUsage("/hero tools");
+        setMinArgs(0);
+        setMaxArgs(0);
+        getIdentifiers().add("hero tools");
     }
 
     @Override

@@ -21,13 +21,13 @@ public class LeaderboardCommand extends BaseCommand {
 
     public LeaderboardCommand(Heroes plugin) {
         super(plugin);
-        name = "Leaderboard";
-        description = "Checks the online players and returns the 5 highest";
-        usage = "/hero leaderboard";
-        minArgs = 0;
-        maxArgs = 0;
-        identifiers.add("hero leaderboard");
-        this.permissionNode = "heroes.leaderboard";
+        setName("Leaderboard");
+        setDescription("Displays Hero rankings");
+        setUsage("/hero leaderboard");
+        setMinArgs(0);
+        setMaxArgs(0);
+        getIdentifiers().add("hero leaderboard");
+        setPermissionNode("heroes.leaderboard");
     }
 
     @SuppressWarnings("unchecked")
@@ -47,7 +47,7 @@ public class LeaderboardCommand extends BaseCommand {
             i++;
             if (i >= heroValues.size() - 5) {
                 Player player = hero.getPlayer();
-                Messaging.send(sender, "$1 - $2", player.getName(), String.valueOf((int)hero.getExperience()));
+                Messaging.send(sender, "$1 - $2", player.getName(), String.valueOf((int) hero.getExperience()));
             }
         }
     }

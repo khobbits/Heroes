@@ -15,12 +15,12 @@ public class ChooseCommand extends BaseCommand {
 
     public ChooseCommand(Heroes plugin) {
         super(plugin);
-        name = "Choose Class";
-        description = "Selects a new profession or specialty";
-        usage = "/hero choose §9<type>";
-        minArgs = 1;
-        maxArgs = 1;
-        identifiers.add("hero choose");
+        setName("Choose Class");
+        setDescription("Selects a new path or specialization");
+        setUsage("/hero choose §9<type>");
+        setMinArgs(1);
+        setMaxArgs(1);
+        getIdentifiers().add("hero choose");
     }
 
     @Override
@@ -64,7 +64,8 @@ public class ChooseCommand extends BaseCommand {
 
         if (prop.iConomy && this.plugin.Method != null && cost > 0) {
             if (!this.plugin.Method.getAccount(player.getName()).hasEnough(cost)) {
-                // You have insufficient funds, you require $1 to change your class to the $2. -- Make the text customiseable.
+                // You have insufficient funds, you require $1 to change your class to the $2. -- Make the text
+                // customiseable.
                 Messaging.send(hero.getPlayer(), "You're unable to meet the offering of $1 to become $2.", this.plugin.Method.format(cost), newClass.getName());
 
                 return;

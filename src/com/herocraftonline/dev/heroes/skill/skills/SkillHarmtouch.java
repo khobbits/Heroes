@@ -15,12 +15,12 @@ public class SkillHarmtouch extends TargettedSkill {
 
     public SkillHarmtouch(Heroes plugin) {
         super(plugin);
-        name = "Harmtouch";
-        description = "Deals direct damage to the target";
-        usage = "/skill harmtouch [target]";
-        minArgs = 0;
-        maxArgs = 1;
-        identifiers.add("skill harmtouch");
+        setName("Harmtouch");
+        setDescription("Deals direct damage to the target");
+        setUsage("/skill harmtouch [target]");
+        setMinArgs(0);
+        setMaxArgs(1);
+        getIdentifiers().add("skill harmtouch");
     }
 
     @Override
@@ -45,7 +45,7 @@ public class SkillHarmtouch extends TargettedSkill {
             return false;
         }
         target.damage(damage, player);
-        notifyNearbyPlayers(player.getLocation(), getUseText(), player.getName(), name, target == player ? "himself" : getEntityName(target));
+        notifyNearbyPlayers(player.getLocation(), getUseText(), player.getName(), getName(), target == player ? "himself" : getEntityName(target));
         return true;
     }
 

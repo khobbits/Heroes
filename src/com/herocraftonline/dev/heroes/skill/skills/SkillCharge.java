@@ -11,12 +11,12 @@ public class SkillCharge extends TargettedSkill {
 
     public SkillCharge(Heroes plugin) {
         super(plugin);
-        name = "Charge";
-        description = "Charges towards your target";
-        usage = "/skill charge";
-        minArgs = 0;
-        maxArgs = 1;
-        identifiers.add("skill charge");
+        setName("Charge");
+        setDescription("Charges towards your target");
+        setUsage("/skill charge");
+        setMinArgs(0);
+        setMaxArgs(1);
+        getIdentifiers().add("skill charge");
     }
 
     @Override
@@ -28,7 +28,7 @@ public class SkillCharge extends TargettedSkill {
             }
         }
         hero.getPlayer().teleport(target.getLocation());
-        notifyNearbyPlayers(hero.getPlayer().getLocation(), getUseText(), hero.getPlayer().getName(), name);
+        notifyNearbyPlayers(hero.getPlayer().getLocation(), getUseText(), hero.getPlayer().getName(), getName());
         return true;
     }
 

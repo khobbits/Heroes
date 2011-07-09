@@ -13,12 +13,12 @@ public class SkillBlink extends ActiveSkill {
 
     public SkillBlink(Heroes plugin) {
         super(plugin);
-        name = "Blink";
-        description = "Teleports you 4-5 blocks";
-        usage = "/skill blink";
-        minArgs = 0;
-        maxArgs = 0;
-        identifiers.add("skill blink");
+        setName("Blink");
+        setDescription("Teleports you 4-5 blocks");
+        setUsage("/skill blink");
+        setMinArgs(0);
+        setMaxArgs(0);
+        getIdentifiers().add("skill blink");
     }
 
     @Override

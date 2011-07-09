@@ -18,12 +18,12 @@ public class SkillWolf extends ActiveSkill {
 
     public SkillWolf(Heroes plugin) {
         super(plugin);
-        name = "Wolf";
-        description = "Summons and tames a wolf to your side";
-        usage = "/skill wolf";
-        minArgs = 0;
-        maxArgs = 0;
-        identifiers.add("skill wolf");
+        setName("Wolf");
+        setDescription("Summons and tames a wolf to your side");
+        setUsage("/skill wolf");
+        setMinArgs(0);
+        setMaxArgs(0);
+        getIdentifiers().add("skill wolf");
     }
 
     @Override

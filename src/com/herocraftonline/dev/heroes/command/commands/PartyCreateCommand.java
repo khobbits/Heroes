@@ -13,12 +13,12 @@ public class PartyCreateCommand extends BaseCommand {
 
     public PartyCreateCommand(Heroes plugin) {
         super(plugin);
-        name = "PartyCreate";
-        description = "Creates a party";
-        usage = "/party create";
-        minArgs = 0;
-        maxArgs = 0;
-        identifiers.add("party create");
+        setName("Party Create");
+        setDescription("Creates a party");
+        setUsage("/party create");
+        setMinArgs(0);
+        setMaxArgs(0);
+        getIdentifiers().add("party create");
     }
 
     @Override

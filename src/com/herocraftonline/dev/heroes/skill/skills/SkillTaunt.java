@@ -13,12 +13,12 @@ public class SkillTaunt extends ActiveSkill {
 
     public SkillTaunt(Heroes plugin) {
         super(plugin);
-        name = "Taunt";
-        description = "Taunts enemies around you";
-        usage = "/skill taunt";
-        minArgs = 0;
-        maxArgs = 0;
-        identifiers.add("skill taunt");
+        setName("Taunt");
+        setDescription("Taunts enemies around you");
+        setUsage("/skill taunt");
+        setMinArgs(0);
+        setMaxArgs(0);
+        getIdentifiers().add("skill taunt");
     }
 
     @Override

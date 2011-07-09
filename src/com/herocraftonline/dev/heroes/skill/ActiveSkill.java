@@ -116,6 +116,7 @@ public abstract class ActiveSkill extends Skill {
     @Override
     public void execute(CommandSender sender, String[] args) {
         if (sender instanceof Player) {
+            String name = this.getName();
             Player player = (Player) sender;
             Hero hero = plugin.getHeroManager().getHero(player);
             if (hero == null) {

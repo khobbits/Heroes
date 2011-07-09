@@ -14,12 +14,12 @@ public class SkillLickWounds extends ActiveSkill {
 
     public SkillLickWounds(Heroes plugin) {
         super(plugin);
-        name = "LickWounds";
-        description = "Heals all your wolves which are around you";
-        usage = "/skill lickwounds";
-        minArgs = 0;
-        maxArgs = 0;
-        identifiers.add("skill lickwounds");
+        setName("LickWounds");
+        setDescription("Heals all your wolves which are around you");
+        setUsage("/skill lickwounds");
+        setMinArgs(0);
+        setMaxArgs(0);
+        getIdentifiers().add("skill lickwounds");
     }
 
     @Override
@@ -40,7 +40,7 @@ public class SkillLickWounds extends ActiveSkill {
                 }
             }
         }
-        notifyNearbyPlayers(player.getLocation(), getUseText(), playerName, name);
+        notifyNearbyPlayers(player.getLocation(), getUseText(), playerName, getName());
         return true;
     }
 

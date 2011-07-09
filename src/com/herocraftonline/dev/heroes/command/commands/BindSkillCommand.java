@@ -15,12 +15,12 @@ public class BindSkillCommand extends BaseCommand {
 
     public BindSkillCommand(Heroes plugin) {
         super(plugin);
-        name = "BindSkill";
-        description = "Binds a skill with an item";
-        usage = "/bind <skill>";
-        minArgs = 0;
-        maxArgs = 1000;
-        identifiers.add("bind");
+        setName("BindSkill");
+        setDescription("Binds a skill with an item");
+        setUsage("/bind <skill> [args]");
+        setMinArgs(0);
+        setMaxArgs(1000);
+        getIdentifiers().add("bind");
     }
 
     @Override

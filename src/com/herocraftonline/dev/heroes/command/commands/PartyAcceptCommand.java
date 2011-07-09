@@ -12,12 +12,12 @@ public class PartyAcceptCommand extends BaseCommand {
 
     public PartyAcceptCommand(Heroes plugin) {
         super(plugin);
-        name = "PartyAccept";
-        description = "Accept a party invite";
-        usage = "/party accept <player>";
-        minArgs = 1;
-        maxArgs = 1;
-        identifiers.add("party accept");
+        setName("Party Accept");
+        setDescription("Accept a party invite");
+        setUsage("/party accept <player>");
+        setMinArgs(1);
+        setMaxArgs(1);
+        getIdentifiers().add("party accept");
     }
 
     @Override

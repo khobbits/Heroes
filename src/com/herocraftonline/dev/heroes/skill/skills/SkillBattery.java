@@ -13,12 +13,12 @@ public class SkillBattery extends TargettedSkill {
 
     public SkillBattery(Heroes plugin) {
         super(plugin);
-        name = "Battery";
-        description = "Gives your target mana";
-        usage = "/skill battery";
-        minArgs = 0;
-        maxArgs = 1;
-        identifiers.add("skill battery");
+        setName("Battery");
+        setDescription("Gives your target mana");
+        setUsage("/skill battery");
+        setMinArgs(0);
+        setMaxArgs(1);
+        getIdentifiers().add("skill battery");
     }
 
     @Override
@@ -52,7 +52,7 @@ public class SkillBattery extends TargettedSkill {
             hero.setMana(hero.getMana() - transferAmount);
             tHero.setMana(tHero.getMana() + transferAmount);
             Player player = hero.getPlayer();
-            notifyNearbyPlayers(player.getLocation(), getUseText(), player.getName(), name, target == player ? "himself" : getEntityName(target));
+            notifyNearbyPlayers(player.getLocation(), getUseText(), player.getName(), getName(), target == player ? "himself" : getEntityName(target));
             return true;
         } else {
             Messaging.send(hero.getPlayer(), "You need at least $1 mana to transfer.", transferAmount);

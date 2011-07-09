@@ -16,12 +16,12 @@ public class SkillSafefall extends ActiveEffectSkill {
 
     public SkillSafefall(Heroes plugin) {
         super(plugin);
-        name = "Safefall";
-        description = "Skill - Safefall";
-        usage = "/skill safefall";
-        minArgs = 0;
-        maxArgs = 0;
-        identifiers.add("skill safefall");
+        setName("Safefall");
+        setDescription("Skill - Safefall");
+        setUsage("/skill safefall");
+        setMinArgs(0);
+        setMaxArgs(0);
+        getIdentifiers().add("skill safefall");
 
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
     }
@@ -31,7 +31,7 @@ public class SkillSafefall extends ActiveEffectSkill {
         Player player = hero.getPlayer();
         String playerName = player.getName();
         applyEffect(hero);
-        notifyNearbyPlayers(player.getLocation(), getUseText(), playerName, name);
+        notifyNearbyPlayers(player.getLocation(), getUseText(), playerName, getName());
         return true;
     }
 
@@ -47,7 +47,7 @@ public class SkillSafefall extends ActiveEffectSkill {
             if (defender instanceof Player) {
                 Player player = (Player) defender;
                 HeroEffects effects = plugin.getHeroManager().getHero(player).getEffects();
-                if (effects.hasEffect(name)) {
+                if (effects.hasEffect(getName())) {
                     event.setCancelled(true);
                 }
             }

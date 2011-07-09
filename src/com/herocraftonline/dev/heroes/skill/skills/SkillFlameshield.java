@@ -17,12 +17,12 @@ public class SkillFlameshield extends ActiveEffectSkill {
 
     public SkillFlameshield(Heroes plugin) {
         super(plugin);
-        name = "Flameshield";
-        description = "Fire can't hurt you!";
-        usage = "/skill flameshield";
-        minArgs = 0;
-        maxArgs = 0;
-        identifiers.add("skill flameshield");
+        setName("Flameshield");
+        setDescription("Fire can't hurt you!");
+        setUsage("/skill flameshield");
+        setMinArgs(0);
+        setMaxArgs(0);
+        getIdentifiers().add("skill flameshield");
 
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
     }
@@ -33,7 +33,7 @@ public class SkillFlameshield extends ActiveEffectSkill {
         String playerName = player.getName();
         applyEffect(hero);
 
-        notifyNearbyPlayers(player.getLocation(), getUseText(), playerName, name);
+        notifyNearbyPlayers(player.getLocation(), getUseText(), playerName, getName());
         return true;
     }
 
@@ -49,7 +49,7 @@ public class SkillFlameshield extends ActiveEffectSkill {
             if (defender instanceof Player) {
                 Player player = (Player) defender;
                 HeroEffects effects = plugin.getHeroManager().getHero(player).getEffects();
-                if (effects.hasEffect(name)) {
+                if (effects.hasEffect(getName())) {
                     event.setCancelled(true);
                 }
             }

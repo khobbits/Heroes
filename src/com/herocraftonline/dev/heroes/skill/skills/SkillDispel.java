@@ -11,12 +11,12 @@ public class SkillDispel extends TargettedSkill {
 
     public SkillDispel(Heroes plugin) {
         super(plugin);
-        name = "Dispel";
-        description = "Removes all effects from your target";
-        usage = "/skill dispel";
-        minArgs = 0;
-        maxArgs = 1;
-        identifiers.add("skill dispel");
+        setName("Dispel");
+        setDescription("Removes all effects from your target");
+        setUsage("/skill dispel");
+        setMinArgs(0);
+        setMaxArgs(1);
+        getIdentifiers().add("skill dispel");
     }
 
     @Override
@@ -32,7 +32,7 @@ public class SkillDispel extends TargettedSkill {
             targetHero.getEffects().removeEffect(s);
         }
 
-        notifyNearbyPlayers(player.getLocation(), getUseText(), player.getName(), name, getEntityName(target));
+        notifyNearbyPlayers(player.getLocation(), getUseText(), player.getName(), getName(), getEntityName(target));
         return true;
     }
 

@@ -15,12 +15,12 @@ public class PartyInviteCommand extends BaseCommand {
 
     public PartyInviteCommand(Heroes plugin) {
         super(plugin);
-        name = "PartyInvite";
-        description = "Invite a player to a party, must be party leader";
-        usage = "/party invite";
-        minArgs = 1;
-        maxArgs = 1;
-        identifiers.add("party invite");
+        setName("Party Invite");
+        setDescription("Invites a player to your party");
+        setUsage("/party invite");
+        setMinArgs(1);
+        setMaxArgs(1);
+        getIdentifiers().add("party invite");
     }
 
     @Override

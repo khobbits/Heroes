@@ -22,10 +22,10 @@ public class SkillStar extends PassiveSkill {
 
     public SkillStar(Heroes plugin) {
         super(plugin);
-        name = "Star";
-        description = "Throw eggs for damage";
-        minArgs = 0;
-        maxArgs = 0;
+        setName("Star");
+        setDescription("Throw eggs for damage");
+        setMinArgs(0);
+        setMaxArgs(0);
 
         registerEvent(Type.PLAYER_EGG_THROW, new SkillPlayerListener(), Priority.Normal);
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
@@ -44,7 +44,7 @@ public class SkillStar extends PassiveSkill {
             Player player = event.getPlayer();
             Hero hero = plugin.getHeroManager().getHero(player);
             HeroEffects effects = hero.getEffects();
-            if (effects.hasEffect(name)) {
+            if (effects.hasEffect(getName())) {
                 event.setHatching(false);
             }
 
@@ -68,7 +68,7 @@ public class SkillStar extends PassiveSkill {
                     if (shooter instanceof Player) {
                         Player shootingPlayer = (Player) shooter;
                         Hero hero = plugin.getHeroManager().getHero(shootingPlayer);
-                        if (hero.getEffects().hasEffect(name)) {
+                        if (hero.getEffects().hasEffect(getName())) {
                             int damage = getSetting(hero.getHeroClass(), "damage", 4);
                             event.setDamage(damage);
                         }

@@ -15,14 +15,14 @@ public class PartyChatCommand extends BaseCommand {
 
     public PartyChatCommand(Heroes plugin) {
         super(plugin);
-        name = "PartyChat";
-        description = "Sends messages to your party";
-        usage = "/party <msg> OR /p <msg>";
-        minArgs = 1;
-        maxArgs = 1000000;
-        identifiers.add("pc");
-        identifiers.add("p");
-        identifiers.add("party");
+        setName("Party Chat");
+        setDescription("Sends messages to your party");
+        setUsage("/party <msg> OR /p <msg>");
+        setMinArgs(1);
+        setMaxArgs(1000);
+        getIdentifiers().add("pc");
+        getIdentifiers().add("p");
+        getIdentifiers().add("party");
     }
 
     @Override

@@ -20,12 +20,12 @@ public class SkillSummon extends ActiveSkill {
 
     public SkillSummon(Heroes plugin) {
         super(plugin);
-        name = "Summon";
-        description = "Summons a creature to fight by your side";
-        usage = "/skill summon <creature>";
-        minArgs = 1;
-        maxArgs = 1;
-        identifiers.add("skill summon");
+        setName("Summon");
+        setDescription("Summons a creature to fight by your side");
+        setUsage("/skill summon <creature>");
+        setMinArgs(1);
+        setMaxArgs(1);
+        getIdentifiers().add("skill summon");
     }
 
     @Override
@@ -46,7 +46,7 @@ public class SkillSummon extends ActiveSkill {
                 return false;
             }
             hero.getSummons().put(spawnedEntity, creatureType);
-            notifyNearbyPlayers(player.getLocation(), getUseText(), player.getName(), name, creatureType.toString());
+            notifyNearbyPlayers(player.getLocation(), getUseText(), player.getName(), getName(), creatureType.toString());
             Messaging.send(player, "You have succesfully summoned a " + creatureType.toString());
             return true;
         }
