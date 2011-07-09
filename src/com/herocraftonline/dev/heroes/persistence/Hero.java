@@ -202,7 +202,7 @@ public class Hero {
         setExperience(exp);
     }
 
-    public void gainExp(int expGain, ExperienceType source) {
+    public void gainExp(double expGain, ExperienceType source) {
         gainExp(expGain, source, true);
     }
 

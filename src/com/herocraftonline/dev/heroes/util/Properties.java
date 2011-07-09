@@ -31,11 +31,11 @@ public class Properties {
     public boolean resetExpOnClassChange = true;
     public int blockTrackingDuration;
     public int maxTrackedBlocks;
-    public int playerKillingExp = 0;
-    public HashMap<CreatureType, Integer> creatureKillingExp = new HashMap<CreatureType, Integer>();
-    public HashMap<Material, Integer> miningExp = new HashMap<Material, Integer>();
-    public HashMap<Material, Integer> loggingExp = new HashMap<Material, Integer>();
-    public HashMap<Material, Integer> craftingExp = new HashMap<Material, Integer>();
+    public double playerKillingExp = 0;
+    public HashMap<CreatureType, Double> creatureKillingExp = new HashMap<CreatureType, Double>();
+    public HashMap<Material, Double> miningExp = new HashMap<Material, Double>();
+    public HashMap<Material, Double> loggingExp = new HashMap<Material, Double>();
+    public HashMap<Material, Double> craftingExp = new HashMap<Material, Double>();
 
     public HashMap<String, String> skillInfo = new HashMap<String, String>();
     public HashMap<Player, Location> playerDeaths = new HashMap<Player, Location>();

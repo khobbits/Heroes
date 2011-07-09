@@ -67,7 +67,7 @@ public class HEntityListener extends EntityListener {
             // Get the sources of experience for the player's class
             Set<ExperienceType> expSources = playerClass.getExperienceSources();
 
-            int addedExp = 0;
+            double addedExp = 0;
             ExperienceType experienceType = null;
 
             // If the Player killed another Player we check to see if they can earn EXP from PVP.
