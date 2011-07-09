@@ -17,11 +17,11 @@ public class LevelEvent extends ExperienceGainEvent {
     }
 
     public final int getTo() {
-        return from;
+        return to;
     }
 
     public final int getFrom() {
-        return to;
+        return from;
     }
 
 }

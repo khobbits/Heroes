@@ -27,15 +27,15 @@ public class HLevelListener extends CustomEventListener {
             Hero hero = subEvent.getHero();
             HeroClass heroClass = hero.getHeroClass();
 
+            int level = subEvent.getTo();
             List<BaseCommand> sortCommands = plugin.getCommandManager().getCommands();
             for (BaseCommand command : sortCommands) {
                 if (command instanceof Skill) {
                     Skill skill = (Skill) command;
                     if (heroClass.hasSkill(skill.getName())) {
                         int levelRequired = skill.getSetting(heroClass, "level", 1);
-                        int level = hero.getLevel();
                         if (levelRequired == level) {
-                            Messaging.send(subEvent.getHero().getPlayer(), "You have just learnt $1.", skill.getName());
+                            Messaging.send(subEvent.getHero().getPlayer(), "You have learned $1.", skill.getName());
                         }
                     }
                 }

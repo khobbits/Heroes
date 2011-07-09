@@ -30,16 +30,16 @@ public class LevelInformationCommand extends BaseCommand {
             Player player = (Player) sender;
             Hero hero = plugin.getHeroManager().getHero(player);
             Properties prop = this.plugin.getConfigManager().getProperties();
-            int exp = (int)hero.getExperience();
+            int exp = (int) hero.getExperience();
             int level = prop.getLevel(exp);
-            int current = (int)prop.getExperience(level);
+            int current = (int) prop.getExperience(level);
 
             sender.sendMessage(ChatColor.RED + "-----[ " + ChatColor.WHITE + "Your Level Information" + ChatColor.RED + " ]-----");
             sender.sendMessage(ChatColor.GREEN + "  Class: " + ChatColor.WHITE + hero.getHeroClass().getName());
             sender.sendMessage(ChatColor.GREEN + "  Level: " + ChatColor.WHITE + level);
             sender.sendMessage(ChatColor.GREEN + "  Total Exp: " + ChatColor.WHITE + exp);
             if (level != prop.maxLevel) {
-                int next = (int)prop.getExperience(level + 1);
+                int next = (int) prop.getExperience(level + 1);
                 sender.sendMessage(ChatColor.DARK_GREEN + "  EXP.  " + createExperienceBar(exp, current, next));
             } else {
                 sender.sendMessage(ChatColor.YELLOW + "  MASTERED!");
