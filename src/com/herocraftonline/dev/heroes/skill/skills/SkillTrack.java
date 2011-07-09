@@ -18,12 +18,12 @@ public class SkillTrack extends ActiveSkill {
 
     public SkillTrack(Heroes plugin) {
         super(plugin);
-        name = "Track";
-        description = "Locates a player";
-        usage = "/skill track <player>";
-        minArgs = 1;
-        maxArgs = 1;
-        identifiers.add("skill track");
+        setName("Track");
+        setDescription("Locates a player");
+        setUsage("/skill track <player>");
+        setMinArgs(1);
+        setMaxArgs(1);
+        getIdentifiers().add("skill track");
     }
 
     @Override
@@ -53,7 +53,7 @@ public class SkillTrack extends ActiveSkill {
 
         Messaging.send(player, "Tracked $1: $2,$3,$4", target.getName(), x, y, z);
         player.setCompassTarget(location);
-        notifyNearbyPlayers(player.getLocation(), useText, player.getName(), name);
+        notifyNearbyPlayers(player.getLocation(), getUseText(), player.getName(), getName());
         return true;
     }
 

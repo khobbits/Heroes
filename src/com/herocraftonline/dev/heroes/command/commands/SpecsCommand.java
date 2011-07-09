@@ -15,14 +15,12 @@ public class SpecsCommand extends BaseCommand {
 
     public SpecsCommand(Heroes plugin) {
         super(plugin);
-        name = "Specializations";
-        description = "Lists all specializations available to your path";
-        usage = "/hero specs [page#]";
-        minArgs = 0;
-        maxArgs = 1;
-        identifiers.add("hero specs");
-        identifiers.add("hero specializations");
-        identifiers.add("hero specialties");
+        setName("Specializations");
+        setDescription("Lists all specializations available to your path");
+        setUsage("/hero specs [page#]");
+        setMinArgs(0);
+        setMaxArgs(1);
+        getIdentifiers().add("hero specs");
     }
 
     @Override
@@ -36,8 +34,7 @@ public class SpecsCommand extends BaseCommand {
         if (args.length != 0) {
             try {
                 page = Integer.parseInt(args[0]) - 1;
-            } catch (NumberFormatException e) {
-            }
+            } catch (NumberFormatException e) {}
         }
 
         Set<HeroClass> childClasses = playerClass.getSpecializations();

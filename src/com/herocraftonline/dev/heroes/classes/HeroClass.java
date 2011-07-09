@@ -47,6 +47,7 @@ public class HeroClass {
         MINING,
         CRAFTING,
         LOGGING,
+        EXTERNAL
     }
 
     private String name;

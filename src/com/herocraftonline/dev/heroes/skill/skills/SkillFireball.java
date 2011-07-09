@@ -25,12 +25,12 @@ public class SkillFireball extends ActiveSkill {
 
     public SkillFireball(Heroes plugin) {
         super(plugin);
-        name = "Fireball";
-        description = "Shoots a dangerous ball of fire";
-        usage = "/skill fireball";
-        minArgs = 0;
-        maxArgs = 0;
-        identifiers.add("skill fireball");
+        setName("Fireball");
+        setDescription("Shoots a dangerous ball of fire");
+        setUsage("/skill fireball");
+        setMinArgs(0);
+        setMaxArgs(0);
+        getIdentifiers().add("skill fireball");
 
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Monitor);
     }
@@ -60,7 +60,7 @@ public class SkillFireball extends ActiveSkill {
         snowball.setFireTicks(1000);
         snowball.setVelocity(velocity);
 
-        notifyNearbyPlayers(location, useText, hero.getPlayer().getName(), name);
+        notifyNearbyPlayers(location, getUseText(), hero.getPlayer().getName(), getName());
         return true;
     }
 

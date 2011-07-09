@@ -18,12 +18,12 @@ public class SkillOne extends ActiveEffectSkill {
 
     public SkillOne(Heroes plugin) {
         super(plugin);
-        name = "One";
-        description = "Provides a short burst of speed";
-        usage = "/skill one";
-        minArgs = 0;
-        maxArgs = 0;
-        identifiers.add("skill one");
+        setName("One");
+        setDescription("Provides a short burst of speed");
+        setUsage("/skill one");
+        setMinArgs(0);
+        setMaxArgs(0);
+        getIdentifiers().add("skill one");
 
         registerEvent(Type.PLAYER_MOVE, new SkillPlayerListener(), Priority.Normal);
     }
@@ -38,7 +38,7 @@ public class SkillOne extends ActiveEffectSkill {
     @Override
     public boolean use(Hero hero, String[] args) {
         applyEffect(hero);
-        notifyNearbyPlayers(hero.getPlayer().getLocation(), useText, hero.getPlayer().getName(), name);
+        notifyNearbyPlayers(hero.getPlayer().getLocation(), getUseText(), hero.getPlayer().getName(), getName());
         return true;
     }
 
@@ -50,7 +50,7 @@ public class SkillOne extends ActiveEffectSkill {
             Hero hero = plugin.getHeroManager().getHero(player);
 
             HeroEffects effects = hero.getEffects();
-            if (effects.hasEffect(name)) {
+            if (effects.hasEffect(getName())) {
                 double speed = getSetting(hero.getHeroClass(), "speed", 0.7);
                 Location loc = player.getLocation();
                 Vector dir = loc.getDirection().normalize();

@@ -10,22 +10,22 @@ import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.ClassChangeEvent;
-import com.herocraftonline.dev.heroes.api.LeveledEvent;
+import com.herocraftonline.dev.heroes.api.LevelEvent;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 
 public class OutsourcedSkill extends Skill {
 
-    protected String[] permissions;
+    private String[] permissions;
 
     public OutsourcedSkill(Heroes plugin, String name, String[] permissions, String usage) {
         super(plugin);
-        this.name = name;
+        setName(name);
+        setUsage(usage);
+        setMinArgs(0);
+        setMaxArgs(0);
+        setDescription(usage);
         this.permissions = permissions;
-        this.usage = usage;
-        this.minArgs = 0;
-        this.maxArgs = 0;
-        this.description = usage;
         registerEvent(Type.CUSTOM_EVENT, new SkillCustomListener(), Priority.Normal);
     }
 
@@ -41,9 +41,9 @@ public class OutsourcedSkill extends Skill {
         Player player = hero.getPlayer();
         String world = player.getWorld().getName();
         String playerName = player.getName();
-        ConfigurationNode settings = heroClass.getSkillSettings(name);
+        ConfigurationNode settings = heroClass.getSkillSettings(getName());
         if (settings != null) {
-            if (meetsLevelRequirement(hero, getSetting(heroClass, SETTING_LEVEL, 1))) {
+            if (hero.getLevel() >= getSetting(heroClass, SETTING_LEVEL, 1)) {
                 for (String permission : permissions) {
                     if (!hasPermission(world, playerName, permission)) {
                         addPermission(world, playerName, permission);
@@ -98,15 +98,17 @@ public class OutsourcedSkill extends Skill {
             if (event instanceof ClassChangeEvent) {
                 ClassChangeEvent subEvent = (ClassChangeEvent) event;
                 tryLearningSkill(subEvent.getHero(), subEvent.getTo());
-            } else if (event instanceof LeveledEvent) {
-                LeveledEvent subEvent = (LeveledEvent) event;
+            } else if (event instanceof LevelEvent) {
+                LevelEvent subEvent = (LevelEvent) event;
                 tryLearningSkill(subEvent.getHero());
             }
         }
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args) {
-    }
+    public void execute(CommandSender sender, String[] args) {}
+
+    @Override
+    public void init() {}
 
 }

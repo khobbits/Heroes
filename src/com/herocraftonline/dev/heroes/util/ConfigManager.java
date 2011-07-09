@@ -98,6 +98,7 @@ public class ConfigManager {
         properties.power = config.getDouble(root + "power", 1.03);
         properties.maxExp = config.getInt(root + "maxExperience", 90000);
         properties.maxLevel = config.getInt(root + "maxLevel", 20);
+        properties.partyBonus = config.getDouble(root + "partyBonus", 0.20);
         properties.expLoss = config.getDouble(root + "expLoss", 0.05);
         properties.blockTrackingDuration = config.getInt(root + "block-tracking-duration", 10 * 60 * 1000);
         properties.maxTrackedBlocks = config.getInt(root + "max-tracked-blocks", 1000);
@@ -125,7 +126,7 @@ public class ConfigManager {
         if (killing != null) {
             for (String item : killing) {
                 try {
-                    int exp = config.getInt(root + "." + item, 0);
+                    double exp = config.getDouble(root + "." + item, 0);
                     if (item.equals("player")) {
                         properties.playerKillingExp = exp;
                     } else {
@@ -142,7 +143,7 @@ public class ConfigManager {
         List<String> mining = config.getKeys(root);
         if (mining != null) {
             for (String item : mining) {
-                int exp = config.getInt(root + "." + item, 0);
+                double exp = config.getDouble(root + "." + item, 0);
                 Material type = Material.matchMaterial(item);
 
                 if (type != null) {
@@ -157,7 +158,7 @@ public class ConfigManager {
         List<String> logging = config.getKeys(root);
         if (logging != null) {
             for (String item : logging) {
-                int exp = config.getInt(root + "." + item, 0);
+                double exp = config.getDouble(root + "." + item, 0);
                 Material type = Material.matchMaterial(item);
 
                 if (type != null) {
@@ -172,7 +173,7 @@ public class ConfigManager {
         List<String> crafting = config.getKeys(root);
         if (crafting != null) {
             for (String item : crafting) {
-                int exp = config.getInt(root + "." + item, 0);
+                double exp = config.getDouble(root + "." + item, 0);
                 Material type = Material.matchMaterial(item);
 
                 if (type != null) {

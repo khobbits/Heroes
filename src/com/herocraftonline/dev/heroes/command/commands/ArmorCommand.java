@@ -15,12 +15,12 @@ public class ArmorCommand extends BaseCommand {
 
     public ArmorCommand(Heroes plugin) {
         super(plugin);
-        name = "Armor";
-        description = "Displays armor available for your class";
-        usage = "/hero armor";
-        minArgs = 0;
-        maxArgs = 0;
-        identifiers.add("hero armor");
+        setName("Armor");
+        setDescription("Displays armor available for your class");
+        setUsage("/hero armor");
+        setMinArgs(0);
+        setMaxArgs(0);
+        getIdentifiers().add("hero armor");
     }
 
     @Override

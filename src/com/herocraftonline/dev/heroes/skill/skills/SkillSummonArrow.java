@@ -15,12 +15,12 @@ public class SkillSummonArrow extends ActiveSkill{
 
     public SkillSummonArrow(Heroes plugin) {
         super(plugin);
-        name = "SummonArrow";
-        description = "Summons you some arrows!";
-        usage = "/skill summonarrow";
-        minArgs = 0;
-        maxArgs = 0;
-        identifiers.add("skill summonarrow");
+        setName("SummonArrow");
+        setDescription("Summons you some arrows!");
+        setUsage("/skill summonarrow");
+        setMinArgs(0);
+        setMaxArgs(0);
+        getIdentifiers().add("skill summonarrow");
     }
 
     @Override

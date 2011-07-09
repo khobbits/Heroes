@@ -12,12 +12,12 @@ public class VerboseCommand extends BaseCommand {
 
     public VerboseCommand(Heroes plugin) {
         super(plugin);
-        name = "Verbose";
-        description = "Toggles display of mana and exp gains";
-        usage = "/hero verbose";
-        minArgs = 0;
-        maxArgs = 0;
-        identifiers.add("hero verbose");
+        setName("Verbose");
+        setDescription("Toggles display of mana and exp gains");
+        setUsage("/hero verbose");
+        setMinArgs(0);
+        setMaxArgs(0);
+        getIdentifiers().add("hero verbose");
     }
 
     @Override

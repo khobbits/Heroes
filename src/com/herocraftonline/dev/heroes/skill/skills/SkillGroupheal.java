@@ -14,12 +14,12 @@ public class SkillGroupheal extends ActiveSkill {
 
     public SkillGroupheal(Heroes plugin) {
         super(plugin);
-        name = "Groupheal";
-        description = "Heals all players around you";
-        usage = "/skill groupheal";
-        minArgs = 0;
-        maxArgs = 0;
-        identifiers.add("skill groupheal");
+        setName("Groupheal");
+        setDescription("Heals all players around you");
+        setUsage("/skill groupheal");
+        setMinArgs(0);
+        setMaxArgs(0);
+        getIdentifiers().add("skill groupheal");
     }
 
     @Override
@@ -39,7 +39,7 @@ public class SkillGroupheal extends ActiveSkill {
                 pN.setHealth(pN.getHealth() + healamount);
             }
         }
-        notifyNearbyPlayers(hero.getPlayer().getLocation(), useText, hero.getPlayer().getName(), name);
+        notifyNearbyPlayers(hero.getPlayer().getLocation(), getUseText(), hero.getPlayer().getName(), getName());
         return true;
     }
 

@@ -21,20 +21,20 @@ public class LeaderboardCommand extends BaseCommand {
 
     public LeaderboardCommand(Heroes plugin) {
         super(plugin);
-        name = "Leaderboard";
-        description = "Checks the online players and returns the 5 highest";
-        usage = "/hero leaderboard";
-        minArgs = 0;
-        maxArgs = 0;
-        identifiers.add("hero leaderboard");
-        this.permissionNode = "heroes.leaderboard";
+        setName("Leaderboard");
+        setDescription("Displays Hero rankings");
+        setUsage("/hero leaderboard");
+        setMinArgs(0);
+        setMaxArgs(0);
+        getIdentifiers().add("hero leaderboard");
+        setPermissionNode("heroes.leaderboard");
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public void execute(CommandSender sender, String[] args) {
         Hero[] heroList = plugin.getHeroManager().getHeroes();
-        HashMap<Hero, Integer> heroValues = new HashMap<Hero, Integer>();
+        HashMap<Hero, Double> heroValues = new HashMap<Hero, Double>();
         int i = 0;
         for (Hero hero : heroList) {
             if (hero == null) {
@@ -42,12 +42,12 @@ public class LeaderboardCommand extends BaseCommand {
             }
             heroValues.put(hero, hero.getExperience());
         }
-        heroValues = (HashMap<Hero, Integer>) sortByValue(heroValues);
+        heroValues = (HashMap<Hero, Double>) sortByValue(heroValues);
         for (Hero hero : heroValues.keySet()) {
             i++;
-            if (i >= (heroValues.size() - 5)) {
+            if (i >= heroValues.size() - 5) {
                 Player player = hero.getPlayer();
-                Messaging.send(sender, "$1 - $2", player.getName(), Integer.toString(hero.getExperience()));
+                Messaging.send(sender, "$1 - $2", player.getName(), String.valueOf((int) hero.getExperience()));
             }
         }
     }
@@ -56,8 +56,9 @@ public class LeaderboardCommand extends BaseCommand {
     static Map sortByValue(Map map) {
         List list = new LinkedList(map.entrySet());
         Collections.sort(list, new Comparator() {
+            @Override
             public int compare(Object o1, Object o2) {
-                return ((Comparable) ((Map.Entry) (o1)).getValue()).compareTo(((Map.Entry) (o2)).getValue());
+                return ((Comparable) ((Map.Entry) o1).getValue()).compareTo(((Map.Entry) o2).getValue());
             }
         });
 

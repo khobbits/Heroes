@@ -33,12 +33,12 @@ public class SkillBlackjack extends ActiveEffectSkill {
 
     public SkillBlackjack(Heroes plugin) {
         super(plugin);
-        name = "Blackjack";
-        description = "Gives your melee attacks a chance to stun";
-        usage = "/skill blackjack";
-        minArgs = 0;
-        maxArgs = 0;
-        identifiers.add("skill blackjack");
+        setName("Blackjack");
+        setDescription("Gives your melee attacks a chance to stun");
+        setUsage("/skill blackjack");
+        setMinArgs(0);
+        setMaxArgs(0);
+        getIdentifiers().add("skill blackjack");
 
         registerEvent(Type.ENTITY_DAMAGE, entityListener, Priority.Normal);
         registerEvent(Type.ENTITY_TARGET, entityListener, Priority.Normal);
@@ -49,7 +49,7 @@ public class SkillBlackjack extends ActiveEffectSkill {
     @Override
     public boolean use(Hero hero, String[] args) {
         applyEffect(hero);
-        notifyNearbyPlayers(hero.getPlayer().getLocation(), useText, hero.getPlayer().getName(), name);
+        notifyNearbyPlayers(hero.getPlayer().getLocation(), getUseText(), hero.getPlayer().getName(), getName());
         return true;
     }
 
@@ -100,7 +100,7 @@ public class SkillBlackjack extends ActiveEffectSkill {
                         Hero attackingHero = plugin.getHeroManager().getHero((Player) attackingEntity);
                         HeroClass heroClass = attackingHero.getHeroClass();
                         HeroEffects effects = attackingHero.getEffects();
-                        if (effects.hasEffect(name)) {
+                        if (effects.hasEffect(getName())) {
                             double chance = getSetting(heroClass, "stun-chance", 0.20);
                             if (random.nextDouble() < chance) {
                                 int duration = getSetting(heroClass, "stun-duration", 5000);
@@ -130,7 +130,6 @@ public class SkillBlackjack extends ActiveEffectSkill {
             if (checkStunned(event.getPlayer())) {
                 event.setCancelled(true);
                 event.getPlayer().teleport(event.getFrom());
-                // event.getPlayer().setVelocity(event.getPlayer().getVelocity().setX(0).setZ(0)); <-- can be used for hamstring ability
             }
         }
 

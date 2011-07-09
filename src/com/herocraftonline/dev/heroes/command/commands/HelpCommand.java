@@ -22,13 +22,13 @@ public class HelpCommand extends BaseCommand {
 
     public HelpCommand(Heroes plugin) {
         super(plugin);
-        name = "Help";
-        description = "Displays the help menu";
-        usage = "/hero help [page#]";
-        minArgs = 0;
-        maxArgs = 1;
-        identifiers.add("hero");
-        identifiers.add("hero help");
+        setName("Help");
+        setDescription("Displays the help menu");
+        setUsage("/hero help [page#]");
+        setMinArgs(0);
+        setMaxArgs(1);
+        getIdentifiers().add("hero");
+        getIdentifiers().add("hero help");
     }
 
     @Override
@@ -37,8 +37,7 @@ public class HelpCommand extends BaseCommand {
         if (args.length != 0) {
             try {
                 page = Integer.parseInt(args[0]) - 1;
-            } catch (NumberFormatException e) {
-            }
+            } catch (NumberFormatException e) {}
         }
 
         List<BaseCommand> sortCommands = plugin.getCommandManager().getCommands();

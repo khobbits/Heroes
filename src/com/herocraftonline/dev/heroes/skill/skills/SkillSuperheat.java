@@ -20,12 +20,12 @@ public class SkillSuperheat extends ActiveEffectSkill {
 
     public SkillSuperheat(Heroes plugin) {
         super(plugin);
-        name = "Superheat";
-        description = "Your pickaxe becomes superheated";
-        usage = "/skill superheat";
-        minArgs = 0;
-        maxArgs = 0;
-        identifiers.add("skill superheat");
+        setName("Superheat");
+        setDescription("Your pickaxe becomes superheated");
+        setUsage("/skill superheat");
+        setMinArgs(0);
+        setMaxArgs(0);
+        getIdentifiers().add("skill superheat");
 
         registerEvent(Type.BLOCK_BREAK, playerListener, Priority.Normal);
     }
@@ -36,7 +36,7 @@ public class SkillSuperheat extends ActiveEffectSkill {
         String playerName = player.getName();
         applyEffect(hero);
 
-        notifyNearbyPlayers(player.getLocation(), useText, playerName, name);
+        notifyNearbyPlayers(player.getLocation(), getUseText(), playerName, getName());
         return true;
     }
 
@@ -48,7 +48,7 @@ public class SkillSuperheat extends ActiveEffectSkill {
             Player player = event.getPlayer();
             Hero hero = plugin.getHeroManager().getHero(player);
             HeroEffects effects = hero.getEffects();
-            if (effects.hasEffect(name)) {
+            if (effects.hasEffect(getName())) {
                 switch (block.getType()) {
                     case IRON_ORE:
                         event.setCancelled(true);

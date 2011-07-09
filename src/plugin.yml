@@ -2,7 +2,7 @@ name: Heroes
 main: com.herocraftonline.dev.heroes.Heroes
 version: 0.0.1
 website: http://www.herocraftonline.com
-authors: [DThielke, Rigby, RightLegRed]
+authors: [DThielke, Rigby, RightLegRed, Kainzo]
 description: Experience, leveling and class system for Minecraft developed by the Herocraft coding team.
 softdepend: [Permissions, BukkitContrib, BOSEconomy, Essentials, iConomy]
 commands:
@@ -35,3 +35,7 @@ commands:
   mana:
     description: Displays the hero's current mana
     usage: /<command>
+  party:
+    aliases: ['p','pc']
+    description: Chat with Heroes party members
+    usage: /<command> <message>

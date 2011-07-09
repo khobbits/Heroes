@@ -20,12 +20,12 @@ public class SkillXMuteOre extends ActiveSkill {
 
     public SkillXMuteOre(Heroes plugin) {
         super(plugin);
-        name = "XMuteOre";
-        description = "Transmutes ores into more valuable ones";
-        usage = "/skill xmuteore";
-        minArgs = 0;
-        maxArgs = 0;
-        identifiers.add("skill xmuteore");
+        setName("XMuteOre");
+        setDescription("Transmutes ores into more valuable ones");
+        setUsage("/skill xmuteore");
+        setMinArgs(0);
+        setMaxArgs(0);
+        getIdentifiers().add("skill xmuteore");
     }
 
     @Override
@@ -73,7 +73,8 @@ public class SkillXMuteOre extends ActiveSkill {
         int count = 1;
         byte data = -1;
 
-        data = (byte) getSetting(hero.getHeroClass(), mat.toString() + ".reagentdata", -1); // Narrowing primitive conversion
+        // Narrowing primitive conversion
+        data = (byte) getSetting(hero.getHeroClass(), mat.toString() + ".reagentdata", -1);
         count = getSetting(hero.getHeroClass(), mat.toString() + ".count", 1);
         String productName = getSetting(hero.getHeroClass(), mat.toString() + ".product", null);
         nextMat = Material.getMaterial(productName);
@@ -106,7 +107,7 @@ public class SkillXMuteOre extends ActiveSkill {
                 p.setItemInHand(is);
 
                 p.sendMessage("You turn the " + MaterialUtil.getFriendlyName(mat) + " into " + MaterialUtil.getFriendlyName(nextMat) + "!");
-                notifyNearbyPlayers(p.getLocation(), useText, p.getName(), name);
+                notifyNearbyPlayers(p.getLocation(), getUseText(), p.getName(), getName());
                 return true;
             }
         }

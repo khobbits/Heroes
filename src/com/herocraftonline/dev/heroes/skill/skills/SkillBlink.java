@@ -13,23 +13,23 @@ public class SkillBlink extends ActiveSkill {
 
     public SkillBlink(Heroes plugin) {
         super(plugin);
-        name = "Blink";
-        description = "Teleports you 4-5 blocks";
-        usage = "/skill blink";
-        minArgs = 0;
-        maxArgs = 0;
-        identifiers.add("skill blink");
+        setName("Blink");
+        setDescription("Teleports you 4-5 blocks");
+        setUsage("/skill blink");
+        setMinArgs(0);
+        setMaxArgs(0);
+        getIdentifiers().add("skill blink");
     }
 
     @Override
     public boolean use(Hero hero, String[] args) {
         List<Block> blocks = hero.getPlayer().getLineOfSight(null, 6);
-        if(blocks.get(blocks.size() - 1).getType() != Material.AIR) {
-            
+        if (blocks.get(blocks.size() - 1).getType() != Material.AIR) {
+
         }
-        float yawn = hero.getPlayer().getLocation().getYaw();
+        float yaw = hero.getPlayer().getLocation().getPitch();
         hero.getPlayer().teleport(blocks.get(blocks.size() - 1).getLocation());
-        hero.getPlayer().getLocation().setYaw(yawn);
+        hero.getPlayer().getLocation().setPitch(yaw);
         return true;
     }
 

@@ -11,12 +11,13 @@ public class ConfigReloadCommand extends BaseCommand {
 
     public ConfigReloadCommand(Heroes plugin) {
         super(plugin);
-        name = "Reload";
-        description = "Reloads the heroes config file";
-        usage = "/hero admin reload";
-        minArgs = 0;
-        maxArgs = 0;
-        identifiers.add("hero admin reload");
+        setName("Reload");
+        setDescription("Reloads the heroes config file");
+        setUsage("/hero admin reload");
+        setMinArgs(0);
+        setMaxArgs(0);
+        getIdentifiers().add("hero admin reload");
+        setPermissionNode("heroes.admin.reload");
     }
 
     @Override

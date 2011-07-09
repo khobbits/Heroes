@@ -3,6 +3,7 @@ leveling:
     maxExperience: 90000
     maxLevel: 20
     classSwitchLevel: 20
+    partyBonus: 0.20
     expLoss: 0.05
     max-tracked-blocks: 1000
     block-tracking-duration: 600000

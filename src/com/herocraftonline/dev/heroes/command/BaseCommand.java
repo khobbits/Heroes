@@ -10,14 +10,14 @@ import com.herocraftonline.dev.heroes.Heroes;
 public abstract class BaseCommand {
 
     protected Heroes plugin;
-    protected String name;
-    protected String description;
-    protected String usage;
-    protected String permissionNode = "";
-    protected int minArgs;
-    protected int maxArgs;
-    protected List<String> identifiers;
-    protected List<String> notes;
+    private String name = "Default Name";
+    private String description = "Default Description";
+    private String usage = "Default Usage";
+    private String permissionNode = "";
+    private int minArgs = 0;
+    private int maxArgs = 0;
+    private List<String> identifiers;
+    private List<String> notes;
 
     public BaseCommand(Heroes plugin) {
         this.plugin = plugin;
@@ -64,26 +64,6 @@ public abstract class BaseCommand {
         }
     }
 
-    public List<String> getIdentifiers() {
-        return identifiers;
-    }
-
-    public void setIdentifiers(List<String> identifiers) {
-        this.identifiers = identifiers;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getUsage() {
-        return usage;
-    }
-
     @Override
     public int hashCode() {
         return name == null ? 0 : name.hashCode();
@@ -111,8 +91,60 @@ public abstract class BaseCommand {
         return true;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getUsage() {
+        return usage;
+    }
+
+    public void setUsage(String usage) {
+        this.usage = usage;
+    }
+
+    public int getMinArgs() {
+        return minArgs;
+    }
+
+    public void setMinArgs(int minArgs) {
+        this.minArgs = minArgs;
+    }
+
+    public int getMaxArgs() {
+        return maxArgs;
+    }
+
+    public void setMaxArgs(int maxArgs) {
+        this.maxArgs = maxArgs;
+    }
+
+    public List<String> getIdentifiers() {
+        return identifiers;
+    }
+
     public List<String> getNotes() {
         return notes;
+    }
+
+    public String getPermissionNode() {
+        return permissionNode;
+    }
+
+    public void setPermissionNode(String permissionNode) {
+        this.permissionNode = permissionNode;
     }
 
 }

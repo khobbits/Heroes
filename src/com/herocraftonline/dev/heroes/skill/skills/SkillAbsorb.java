@@ -17,12 +17,12 @@ public class SkillAbsorb extends ActiveEffectSkill {
 
     public SkillAbsorb(Heroes plugin) {
         super(plugin);
-        name = "Absorb";
-        description = "Converts all damage into mana";
-        usage = "/skill absorb";
-        minArgs = 0;
-        maxArgs = 0;
-        identifiers.add("skill absorb");
+        setName("Absorb");
+        setDescription("Converts all damage into mana");
+        setUsage("/skill absorb");
+        setMinArgs(0);
+        setMaxArgs(0);
+        getIdentifiers().add("skill absorb");
 
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
     }
@@ -33,7 +33,7 @@ public class SkillAbsorb extends ActiveEffectSkill {
         String playerName = player.getName();
         applyEffect(hero);
 
-        notifyNearbyPlayers(player.getLocation(), useText, playerName, name);
+        notifyNearbyPlayers(player.getLocation(), getUseText(), playerName, getName());
         return true;
     }
 
@@ -57,11 +57,11 @@ public class SkillAbsorb extends ActiveEffectSkill {
                 Player player = (Player) defender;
                 Hero hero = plugin.getHeroManager().getHero(player);
                 HeroEffects effects = plugin.getHeroManager().getHero(player).getEffects();
-                if (effects.hasEffect(name)) {
+                if (effects.hasEffect(getName())) {
                     int absorbamount = getSetting(hero.getHeroClass(), "mana-amount", 20);
                     event.setDamage((int) (event.getDamage() * 0.50));
                     if (hero.getMana() + absorbamount > 100) {
-                        effects.expireEffect(name);
+                        effects.expireEffect(getName());
                     } else {
                         hero.setMana(hero.getMana() + absorbamount);
                     }

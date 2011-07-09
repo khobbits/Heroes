@@ -7,17 +7,18 @@ import org.bukkit.util.config.ConfigurationNode;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
+import com.herocraftonline.dev.heroes.util.Messaging;
 
 public class SkillBattery extends TargettedSkill {
 
     public SkillBattery(Heroes plugin) {
         super(plugin);
-        name = "Battery";
-        description = "Gives your target mana";
-        usage = "/skill battery";
-        minArgs = 0;
-        maxArgs = 1;
-        identifiers.add("skill battery");
+        setName("Battery");
+        setDescription("Gives your target mana");
+        setUsage("/skill battery");
+        setMinArgs(0);
+        setMaxArgs(1);
+        getIdentifiers().add("skill battery");
     }
 
     @Override
@@ -33,21 +34,28 @@ public class SkillBattery extends TargettedSkill {
         if (!(target instanceof Player)) {
             return false;
         }
+        
         Hero tHero = plugin.getHeroManager().getHero((Player) target);
         if (tHero == null) {
             return false;
         }
-        int transferamount = getSetting(hero.getHeroClass(), "transfer-amount", 20);
-        if (hero.getMana() > transferamount) {
-            if ((tHero.getMana() + transferamount) > 100) {
-                transferamount = (100 - tHero.getMana());
+        
+        if (tHero.equals(hero)) {
+            return false;
+        }
+        
+        int transferAmount = getSetting(hero.getHeroClass(), "transfer-amount", 20);
+        if (hero.getMana() > transferAmount) {
+            if ((tHero.getMana() + transferAmount) > 100) {
+                transferAmount = (100 - tHero.getMana());
             }
-            hero.setMana(hero.getMana() - transferamount);
-            tHero.setMana(tHero.getMana() + transferamount);
+            hero.setMana(hero.getMana() - transferAmount);
+            tHero.setMana(tHero.getMana() + transferAmount);
             Player player = hero.getPlayer();
-            notifyNearbyPlayers(player.getLocation(), useText, player.getName(), name, target == player ? "himself" : getEntityName(target));
+            notifyNearbyPlayers(player.getLocation(), getUseText(), player.getName(), getName(), target == player ? "himself" : getEntityName(target));
             return true;
         } else {
+            Messaging.send(hero.getPlayer(), "You need at least $1 mana to transfer.", transferAmount);
             return false;
         }
     }

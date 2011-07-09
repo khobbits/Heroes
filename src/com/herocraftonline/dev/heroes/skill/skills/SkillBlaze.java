@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.util.config.ConfigurationNode;
@@ -17,35 +17,37 @@ public class SkillBlaze extends ActiveSkill {
 
     public SkillBlaze(Heroes plugin) {
         super(plugin);
-        name = "Blaze";
-        description = "Sets everyone around you on fire";
-        usage = "/skill blaze";
-        minArgs = 0;
-        maxArgs = 0;
-        identifiers.add("skill blaze");
+        setName("Blaze");
+        setDescription("Sets everyone around you on fire");
+        setUsage("/skill blaze");
+        setMinArgs(0);
+        setMaxArgs(0);
+        getIdentifiers().add("skill blaze");
     }
 
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
         node.setProperty("fire-length", 3000);
+        node.setProperty("range", 5);
         return node;
     }
 
     @Override
     public boolean use(Hero hero, String[] args) {
-        List<Entity> entities = hero.getPlayer().getNearbyEntities(5, 5, 5);
+        int range = getSetting(hero.getHeroClass(), "range", 5);
+        List<Entity> entities = hero.getPlayer().getNearbyEntities(range, range, range);
+        int fireTicks = getSetting(hero.getHeroClass(), "fire-length", 3000);
         for (Entity n : entities) {
-            Player pN = (Player) n;
-            int healamount = getSetting(hero.getHeroClass(), "fire-length", 3000);
+            LivingEntity pN = (LivingEntity) n;
             EntityDamageEvent damageEvent = new EntityDamageEvent(hero.getPlayer(), DamageCause.ENTITY_ATTACK, 0);
             Bukkit.getServer().getPluginManager().callEvent(damageEvent);
             if (damageEvent.isCancelled()) {
                 return false;
             }
-            pN.setFireTicks(healamount);
+            pN.setFireTicks(fireTicks);
         }
-        notifyNearbyPlayers(hero.getPlayer().getLocation(), useText, hero.getPlayer().getName(), name);
+        notifyNearbyPlayers(hero.getPlayer().getLocation(), getUseText(), hero.getPlayer().getName(), getName());
         return true;
     }
 

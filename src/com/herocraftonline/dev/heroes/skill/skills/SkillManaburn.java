@@ -12,12 +12,12 @@ public class SkillManaburn extends TargettedSkill {
 
     public SkillManaburn(Heroes plugin) {
         super(plugin);
-        name = "Manaburn";
-        description = "Burns the targets mana";
-        usage = "/skill manaburn";
-        minArgs = 0;
-        maxArgs = 1;
-        identifiers.add("skill manaburn");
+        setName("Manaburn");
+        setDescription("Burns the targets mana");
+        setUsage("/skill manaburn");
+        setMinArgs(0);
+        setMaxArgs(1);
+        getIdentifiers().add("skill manaburn");
     }
 
     @Override
@@ -42,7 +42,7 @@ public class SkillManaburn extends TargettedSkill {
                 transferamount = (100 - hero.getMana());
             }
             tHero.setMana(tHero.getMana() - transferamount);
-            notifyNearbyPlayers(hero.getPlayer().getLocation(), useText, hero.getPlayer().getName(), name);
+            notifyNearbyPlayers(hero.getPlayer().getLocation(), getUseText(), hero.getPlayer().getName(), getName());
             return true;
         } else {
             return false;

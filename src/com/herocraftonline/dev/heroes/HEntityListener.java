@@ -1,5 +1,6 @@
 package com.herocraftonline.dev.heroes;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -22,6 +23,8 @@ import com.herocraftonline.dev.heroes.util.Properties;
 
 public class HEntityListener extends EntityListener {
 
+    private static final DecimalFormat decFormat = new DecimalFormat("#0.##");
+    
     private final Heroes plugin;
     private HashMap<Integer, Player> kills = new HashMap<Integer, Player>();
 
@@ -41,18 +44,18 @@ public class HEntityListener extends EntityListener {
             // 5% of the next level's experience requirement
             // Experience loss can't reduce level
             Hero heroDefender = plugin.getHeroManager().getHero((Player) defender);
-            int exp = heroDefender.getExperience();
+            double exp = heroDefender.getExperience();
             int level = prop.getLevel(exp);
             if (level < prop.maxLevel) {
-                int currentLevelExp = prop.getExperience(level);
-                int nextLevelExp = prop.getExperience(level + 1);
-                int expLoss = (int) ((nextLevelExp - currentLevelExp) * prop.expLoss);
+                int currentLevelExp = (int)prop.getExperience(level);
+                int nextLevelExp = (int)prop.getExperience(level + 1);
+                double expLoss = (nextLevelExp - currentLevelExp) * prop.expLoss;
                 if (exp - expLoss < currentLevelExp) {
                     expLoss = exp - currentLevelExp;
                 }
                 heroDefender.setExperience(exp - expLoss);
                 heroDefender.setMana(0);
-                Messaging.send(heroDefender.getPlayer(), "You have lost " + expLoss + " exp for dying.");
+                Messaging.send(heroDefender.getPlayer(), "You have lost " + decFormat.format(expLoss) + " exp for dying.");
             }
         }
 
@@ -64,7 +67,7 @@ public class HEntityListener extends EntityListener {
             // Get the sources of experience for the player's class
             Set<ExperienceType> expSources = playerClass.getExperienceSources();
 
-            int addedExp = 0;
+            double addedExp = 0;
             ExperienceType experienceType = null;
 
             // If the Player killed another Player we check to see if they can earn EXP from PVP.

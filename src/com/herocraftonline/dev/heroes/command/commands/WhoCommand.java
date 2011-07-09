@@ -13,12 +13,12 @@ public class WhoCommand extends BaseCommand {
 
     public WhoCommand(Heroes plugin) {
         super(plugin);
-        name = "Hero Who";
-        description = "Checks the players level and other information";
-        usage = "/hero who";
-        minArgs = 1;
-        maxArgs = 1;
-        identifiers.add("hero who");
+        setName("Who");
+        setDescription("Checks the players level and other information");
+        setUsage("/hero who <player>");
+        setMinArgs(1);
+        setMaxArgs(1);
+        getIdentifiers().add("hero who");
     }
 
     @Override

@@ -15,12 +15,12 @@ public class SkillSmite extends TargettedSkill {
 
     public SkillSmite(Heroes plugin) {
         super(plugin);
-        name = "Smite";
-        description = "Uses smite on a player";
-        usage = "/skill smite";
-        minArgs = 0;
-        maxArgs = 0;
-        identifiers.add("skill smite");
+        setName("Smite");
+        setDescription("Uses smite on a player");
+        setUsage("/skill smite");
+        setMinArgs(0);
+        setMaxArgs(0);
+        getIdentifiers().add("skill smite");
     }
 
     @Override
@@ -46,7 +46,7 @@ public class SkillSmite extends TargettedSkill {
         }
         target.damage(damage, player);
         String targetName = target instanceof Player ? ((Player) target).getName() : target.getClass().getSimpleName().substring(5);
-        notifyNearbyPlayers(player.getLocation(), "$1 used $2 on $3!", player.getName(), name, target == player ? "himself" : targetName);
+        notifyNearbyPlayers(player.getLocation(), "$1 used $2 on $3!", player.getName(), getName(), target == player ? "himself" : targetName);
         return true;
     }
 

@@ -92,7 +92,7 @@ public class HBlockListener extends BlockListener {
         Set<ExperienceType> expSources = playerClass.getExperienceSources();
         Properties prop = plugin.getConfigManager().getProperties();
 
-        int addedExp = 0;
+        double addedExp = 0;
 
         if (expSources.contains(ExperienceType.MINING)) {
             if (prop.miningExp.containsKey(block.getType())) {

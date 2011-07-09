@@ -11,10 +11,10 @@ public class ExperienceGainEvent extends Event implements Cancellable {
 
     protected boolean cancelled = false;
     protected final Hero hero;
-    protected int expGain;
+    protected double expGain;
     protected final ExperienceType source;
 
-    public ExperienceGainEvent(Hero hero, int expGain, ExperienceType source) {
+    public ExperienceGainEvent(Hero hero, double expGain, ExperienceType source) {
         super("ExperienceGainEvent");
         this.hero = hero;
         this.expGain = expGain;
@@ -34,7 +34,7 @@ public class ExperienceGainEvent extends Event implements Cancellable {
      * 
      * @return
      */
-    public int getExpGain() {
+    public double getExpGain() {
         return expGain;
     }
 
@@ -43,7 +43,7 @@ public class ExperienceGainEvent extends Event implements Cancellable {
      * 
      * @param exp
      */
-    public void setExpGain(int exp) {
+    public void setExpGain(double exp) {
         this.expGain = exp;
     }
 

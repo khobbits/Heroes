@@ -8,32 +8,22 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityListener;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.PassiveSkill;
 
-public class SkillIronFist extends PassiveSkill {
+public class SkillSwordMastery extends PassiveSkill{
 
-    private static final int baseDamage = 2;
-
-    public SkillIronFist(Heroes plugin) {
+    public SkillSwordMastery(Heroes plugin) {
         super(plugin);
-        setName("IronFist");
-        setDescription("Increases your unarmed damage (passive)");
-        setMinArgs(1);
-        setMaxArgs(1);
-        getIdentifiers().add("skill ironfist");
+        setName("SwordMastery");
+        setDescription("Scales your damage with a gold sword depending on your level");
+        setMinArgs(0);
+        setMaxArgs(0);
+        getIdentifiers().add("skill swordmastery");
 
         registerEvent(Type.ENTITY_DAMAGE, new SkillPlayerListener(), Priority.Normal);
-    }
-
-    @Override
-    public ConfigurationNode getDefaultConfig() {
-        ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty("damage-multipler", 2d);
-        return node;
     }
 
     public class SkillPlayerListener extends EntityListener {
@@ -49,9 +39,8 @@ public class SkillIronFist extends PassiveSkill {
                     Player player = (Player) subEvent.getDamager();
                     Hero hero = plugin.getHeroManager().getHero(player);
                     if (hero.getEffects().hasEffect(getName())) {
-                        if (player.getItemInHand().getType() == Material.AIR) {
-                            double multiplier = getSetting(hero.getHeroClass(), "damage-multiplier", 2d);
-                            event.setDamage((int) (baseDamage * multiplier));
+                        if (player.getItemInHand().getType() == Material.GOLD_SWORD) {
+                            event.setDamage(event.getDamage() + Math.round(hero.getLevel() / 20));
                         }
                     }
                 }

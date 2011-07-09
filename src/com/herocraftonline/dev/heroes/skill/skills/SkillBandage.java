@@ -16,18 +16,19 @@ public class SkillBandage extends TargettedSkill {
 
     public SkillBandage(Heroes plugin) {
         super(plugin);
-        name = "Bandage";
-        description = "Bandages the target";
-        usage = "/skill bandage <target>";
-        minArgs = 0;
-        maxArgs = 1;
-        identifiers.add("skill bandage");
+        setName("Bandage");
+        setDescription("Bandages the target");
+        setUsage("/skill bandage <target>");
+        setMinArgs(0);
+        setMaxArgs(1);
+        getIdentifiers().add("skill bandage");
     }
 
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
         node.setProperty("health", 5);
+        node.setProperty(SETTING_MAXDISTANCE, 5);
         return node;
     }
 
@@ -62,7 +63,7 @@ public class SkillBandage extends TargettedSkill {
                 hpPlus = 20 - targetHealth;
             }
             target.setHealth(target.getHealth() + hpPlus);
-            notifyNearbyPlayers(player.getLocation(), useText, player.getName(), name, target == player ? "himself" : getEntityName(target));
+            notifyNearbyPlayers(player.getLocation(), getUseText(), player.getName(), getName(), target == player ? "himself" : getEntityName(target));
             return true;
         }
         return false;

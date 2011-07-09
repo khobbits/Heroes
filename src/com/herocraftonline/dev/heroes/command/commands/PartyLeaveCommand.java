@@ -12,12 +12,12 @@ public class PartyLeaveCommand extends BaseCommand {
 
     public PartyLeaveCommand(Heroes plugin) {
         super(plugin);
-        name = "PartyLeave";
-        description = "Leave your current party";
-        usage = "/party leave";
-        minArgs = 0;
-        maxArgs = 0;
-        identifiers.add("party leave");
+        setName("Party Leave");
+        setDescription("Leaves your party");
+        setUsage("/party leave");
+        setMinArgs(0);
+        setMaxArgs(0);
+        getIdentifiers().add("party leave");
     }
 
     @Override
@@ -29,18 +29,9 @@ public class PartyLeaveCommand extends BaseCommand {
                 return;
             }
             HeroParty heroParty = hero.getParty();
-            if (hero.getParty().getLeader() == player) {
-                heroParty.messageParty("$1 has disbanded the party", player.getName());
-                for (Player p : hero.getParty().getMembers()) {
-                    Hero tempHero = plugin.getHeroManager().getHero(p);
-                    tempHero.setParty(null);
-                }
-                plugin.getPartyManager().removeParty(heroParty);
-            } else {
-                heroParty.removeMember(player);
-                hero.setParty(null);
-                heroParty.messageParty("$1 has left the party", player.getName());
-            }
+            heroParty.messageParty("$1 has left the party", player.getName());
+            heroParty.removeMember(hero);
+            hero.setParty(null);
         }
     }
 

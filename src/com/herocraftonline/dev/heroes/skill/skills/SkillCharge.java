@@ -1,6 +1,7 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
@@ -10,18 +11,24 @@ public class SkillCharge extends TargettedSkill {
 
     public SkillCharge(Heroes plugin) {
         super(plugin);
-        name = "Charge";
-        description = "Charges towards your target";
-        usage = "/skill charge";
-        minArgs = 0;
-        maxArgs = 0;
-        identifiers.add("skill charge");
+        setName("Charge");
+        setDescription("Charges towards your target");
+        setUsage("/skill charge");
+        setMinArgs(0);
+        setMaxArgs(1);
+        getIdentifiers().add("skill charge");
     }
 
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
+        if(target instanceof Player) {
+            Player p = (Player) target;
+            if(p == hero.getPlayer()) {
+                return false;
+            }
+        }
         hero.getPlayer().teleport(target.getLocation());
-        notifyNearbyPlayers(hero.getPlayer().getLocation(), useText, hero.getPlayer().getName(), name);
+        notifyNearbyPlayers(hero.getPlayer().getLocation(), getUseText(), hero.getPlayer().getName(), getName());
         return true;
     }
 

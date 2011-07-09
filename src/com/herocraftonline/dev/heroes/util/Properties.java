@@ -28,14 +28,15 @@ public class Properties {
     public int[] levels;
     public double expLoss;
     // Experience//
+    public double partyBonus = 0;
     public boolean resetExpOnClassChange = true;
     public int blockTrackingDuration;
     public int maxTrackedBlocks;
-    public int playerKillingExp = 0;
-    public HashMap<CreatureType, Integer> creatureKillingExp = new HashMap<CreatureType, Integer>();
-    public HashMap<Material, Integer> miningExp = new HashMap<Material, Integer>();
-    public HashMap<Material, Integer> loggingExp = new HashMap<Material, Integer>();
-    public HashMap<Material, Integer> craftingExp = new HashMap<Material, Integer>();
+    public double playerKillingExp = 0;
+    public HashMap<CreatureType, Double> creatureKillingExp = new HashMap<CreatureType, Double>();
+    public HashMap<Material, Double> miningExp = new HashMap<Material, Double>();
+    public HashMap<Material, Double> loggingExp = new HashMap<Material, Double>();
+    public HashMap<Material, Double> craftingExp = new HashMap<Material, Double>();
 
     public HashMap<String, String> skillInfo = new HashMap<String, String>();
     public HashMap<Player, Location> playerDeaths = new HashMap<Player, Location>();
@@ -66,7 +67,7 @@ public class Properties {
      * @param exp
      * @return
      */
-    public int getLevel(int exp) {
+    public int getLevel(double exp) {
         for (int i = maxLevel - 1; i >= 0; i--) {
             if (exp >= levels[i]) {
                 return i + 1;
@@ -75,7 +76,7 @@ public class Properties {
         return -1;
     }
 
-    public int getExperience(int level) {
+    public double getExperience(int level) {
         return levels[level - 1];
     }
 }

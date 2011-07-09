@@ -12,12 +12,12 @@ public class SkillManaFreeze extends TargettedSkill {
 
     public SkillManaFreeze(Heroes plugin) {
         super(plugin);
-        name = "ManaFreeze";
-        description = "Stops your target regening mana";
-        usage = "/skill manafreeze";
-        minArgs = 0;
-        maxArgs = 1;
-        identifiers.add("skill manafreeze");
+        setName("ManaFreeze");
+        setDescription("Stops your target regening mana");
+        setUsage("/skill manafreeze");
+        setMinArgs(0);
+        setMaxArgs(1);
+        getIdentifiers().add("skill manafreeze");
     }
 
     @Override
@@ -33,8 +33,8 @@ public class SkillManaFreeze extends TargettedSkill {
         String playerName = player.getName();
         if (target instanceof Player) {
             Hero newHero = plugin.getHeroManager().getHero((Player) target);
-            newHero.getEffects().putEffect(name, getSetting(hero.getHeroClass(), "duration", 5000L));
-            notifyNearbyPlayers(player.getLocation(), useText, playerName, name);
+            newHero.getEffects().putEffect(getName(), getSetting(hero.getHeroClass(), "duration", 5000L));
+            notifyNearbyPlayers(player.getLocation(), getUseText(), playerName, getName());
             return true;
         } else {
             return false;

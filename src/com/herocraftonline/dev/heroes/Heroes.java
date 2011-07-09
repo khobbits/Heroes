@@ -31,6 +31,7 @@ import com.herocraftonline.dev.heroes.command.commands.LeaderboardCommand;
 import com.herocraftonline.dev.heroes.command.commands.LevelInformationCommand;
 import com.herocraftonline.dev.heroes.command.commands.ManaCommand;
 import com.herocraftonline.dev.heroes.command.commands.PartyAcceptCommand;
+import com.herocraftonline.dev.heroes.command.commands.PartyChatCommand;
 import com.herocraftonline.dev.heroes.command.commands.PartyCreateCommand;
 import com.herocraftonline.dev.heroes.command.commands.PartyInviteCommand;
 import com.herocraftonline.dev.heroes.command.commands.PartyLeaveCommand;
@@ -101,7 +102,7 @@ public class Heroes extends JavaPlugin {
     
     //Party Listener
     private PartyEntityListener partyEntityListener = new PartyEntityListener(this);
-
+    
     // Inventory Checker Class -- This class has the methods to check a players inventory and
     // restrictions.
     private final InventoryChecker inventoryChecker = new InventoryChecker(this);
@@ -231,7 +232,7 @@ public class Heroes extends JavaPlugin {
 
         pluginManager.registerEvent(Type.CUSTOM_EVENT, new HLevelListener(this), Priority.Monitor, this);
         pluginManager.registerEvent(Type.CUSTOM_EVENT, new HPermissionsListener(this), Priority.Monitor, this);
-
+        
         // Inventory Event Listeners
         pluginManager.registerEvent(Type.CUSTOM_EVENT, heroesInventoryListener, Priority.Monitor, this);
     }
@@ -263,14 +264,15 @@ public class Heroes extends JavaPlugin {
         // Page 3
         commandManager.addCommand(new PartyLeaveCommand(this));
         commandManager.addCommand(new PartyModeCommand(this));
+        commandManager.addCommand(new PartyChatCommand(this));
         commandManager.addCommand(new RecoverItemsCommand(this));
         commandManager.addCommand(new ConfigReloadCommand(this));
         commandManager.addCommand(new HelpCommand(this));
         commandManager.addCommand(new AdminExpCommand(this));
         commandManager.addCommand(new AdminClassCommand(this));
-        commandManager.addCommand(new LeaderboardCommand(this));
 
         // Page 4
+        commandManager.addCommand(new LeaderboardCommand(this));
         commandManager.addCommand(new HeroSaveCommand(this));
     }
 

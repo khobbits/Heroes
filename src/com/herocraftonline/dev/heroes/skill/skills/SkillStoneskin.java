@@ -17,10 +17,10 @@ public class SkillStoneskin extends PassiveSkill {
 
     public SkillStoneskin(Heroes plugin) {
         super(plugin);
-        name = "Stoneskin";
-        description = "Absorb damage";
-        minArgs = 0;
-        maxArgs = 0;
+        setName("Stoneskin");
+        setDescription("Absorb damage");
+        setMinArgs(0);
+        setMaxArgs(0);
 
         registerEvent(Type.ENTITY_DAMAGE, new SkillPlayerListener(), Priority.High);
     }
@@ -43,7 +43,7 @@ public class SkillStoneskin extends PassiveSkill {
                 if (subEvent.getEntity() instanceof Player) {
                     Player player = (Player) subEvent.getEntity();
                     Hero hero = plugin.getHeroManager().getHero(player);
-                    if (hero.getEffects().hasEffect(name)) {
+                    if (hero.getEffects().hasEffect(getName())) {
                         double multiplier = getSetting(hero.getHeroClass(), "damage-multiplier", 0.80);
                         subEvent.setDamage((int) (subEvent.getDamage() * multiplier));
                     }

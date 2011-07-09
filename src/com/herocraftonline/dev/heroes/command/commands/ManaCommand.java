@@ -12,12 +12,12 @@ public class ManaCommand extends BaseCommand {
 
     public ManaCommand(Heroes plugin) {
         super(plugin);
-        name = "Mana";
-        description = "Displays your current mana";
-        usage = "/mana";
-        minArgs = 0;
-        maxArgs = 0;
-        identifiers.add("mana");
+        setName("Mana");
+        setDescription("Displays your current mana");
+        setUsage("/level");
+        setMinArgs(0);
+        setMaxArgs(0);
+        getIdentifiers().add("mana");
     }
 
     @Override

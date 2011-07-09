@@ -14,12 +14,12 @@ public class PathsCommand extends BaseCommand {
 
     public PathsCommand(Heroes plugin) {
         super(plugin);
-        name = "Paths";
-        description = "Lists all paths available to you";
-        usage = "/hero paths [page#]";
-        minArgs = 0;
-        maxArgs = 1;
-        identifiers.add("hero paths");
+        setName("Paths");
+        setDescription("Lists all paths available to you");
+        setUsage("/hero paths [page#]");
+        setMinArgs(0);
+        setMaxArgs(1);
+        getIdentifiers().add("hero paths");
     }
 
     @Override
@@ -28,8 +28,7 @@ public class PathsCommand extends BaseCommand {
         if (args.length != 0) {
             try {
                 page = Integer.parseInt(args[0]) - 1;
-            } catch (NumberFormatException e) {
-            }
+            } catch (NumberFormatException e) {}
         }
 
         Set<HeroClass> classes = plugin.getClassManager().getClasses();

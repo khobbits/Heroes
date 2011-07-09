@@ -13,13 +13,13 @@ public class AdminClassCommand extends BaseCommand {
 
     public AdminClassCommand(Heroes plugin) {
         super(plugin);
-        name = "AdminClassCommand";
-        description = "Changes a users class";
-        usage = "/hero admin class §9<player> <class>";
-        minArgs = 2;
-        maxArgs = 2;
-        identifiers.add("hero admin class");
-        this.permissionNode = "heroes.admin.classchange";
+        setName("AdminClassCommand");
+        setDescription("Changes a users class");
+        setUsage("/hero admin class §9<player> <class>");
+        setMinArgs(2);
+        setMaxArgs(2);
+        getIdentifiers().add("hero admin class");
+        setPermissionNode("heroes.admin.classchange");
     }
 
     @Override

@@ -16,12 +16,12 @@ public class SkillHellgate extends ActiveSkill {
 
     public SkillHellgate(Heroes plugin) {
         super(plugin);
-        name = "Hellgate";
-        description = "Teleports you and your nearby party to or from the nether - 5 bones";
-        usage = "/skill hellgate";
-        minArgs = 0;
-        maxArgs = 0;
-        identifiers.add("skill hellgate");
+        setName("Hellgate");
+        setDescription("Teleports you and your nearby party to or from the nether - 5 bones");
+        setUsage("/skill hellgate");
+        setMinArgs(0);
+        setMaxArgs(0);
+        getIdentifiers().add("skill hellgate");
     }
 
     @Override
@@ -44,7 +44,7 @@ public class SkillHellgate extends ActiveSkill {
                 }
             }
         }
-        notifyNearbyPlayers(player.getLocation(), useText, playerName, name);
+        notifyNearbyPlayers(player.getLocation(), getUseText(), playerName, getName());
         return true;
     }
 

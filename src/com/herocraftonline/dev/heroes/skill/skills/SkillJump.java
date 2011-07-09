@@ -12,12 +12,12 @@ public class SkillJump extends ActiveSkill {
     // TODO: Register this command in Heroes
     public SkillJump(Heroes plugin) {
         super(plugin);
-        name = "Jump";
-        description = "Launches you into the air";
-        usage = "/skill jump";
-        minArgs = 0;
-        maxArgs = 0;
-        identifiers.add("skill jump");
+        setName("Jump");
+        setDescription("Launches you into the air");
+        setUsage("/skill jump");
+        setMinArgs(0);
+        setMaxArgs(0);
+        getIdentifiers().add("skill jump");
     }
 
     @Override
@@ -35,7 +35,7 @@ public class SkillJump extends ActiveSkill {
         Vector v = player.getVelocity().setY(1).add(player.getLocation().getDirection().setY(0).normalize().multiply(multiplier * jumpForwards));
         player.setVelocity(v);
         player.setFallDistance(-8f);
-        notifyNearbyPlayers(player.getLocation(), useText, player.getName(), name);
+        notifyNearbyPlayers(player.getLocation(), getUseText(), player.getName(), getName());
         return true;
     }
 }

@@ -10,12 +10,12 @@ public class SkillGTeleport extends ActiveSkill {
 
     public SkillGTeleport(Heroes plugin) {
         super(plugin);
-        name = "GroupTeleport";
-        description = "Summons your group to your location";
-        usage = "/skill groupteleport";
-        minArgs = 0;
-        maxArgs = 0;
-        identifiers.add("skill groupteleport");
+        setName("GroupTeleport");
+        setDescription("Summons your group to your location");
+        setUsage("/skill groupteleport");
+        setMinArgs(0);
+        setMaxArgs(0);
+        getIdentifiers().add("skill groupteleport");
     }
 
     @Override
@@ -23,10 +23,10 @@ public class SkillGTeleport extends ActiveSkill {
         if (hero.getParty() != null && hero.getParty().getMembers().size() != 1) {
             Player player = hero.getPlayer();
             String heroName = player.getName();
-            for (Player n : hero.getParty().getMembers()) {
-                n.teleport(player);
+            for (Hero partyMember : hero.getParty().getMembers()) {
+                partyMember.getPlayer().teleport(player);
             }
-            notifyNearbyPlayers(player.getLocation(), useText, heroName, name);
+            notifyNearbyPlayers(player.getLocation(), getUseText(), heroName, getName());
             return true;
         }
         return false;

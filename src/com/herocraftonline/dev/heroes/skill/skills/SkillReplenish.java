@@ -9,12 +9,12 @@ public class SkillReplenish extends ActiveSkill {
 
     public SkillReplenish(Heroes plugin) {
         super(plugin);
-        name = "Replenish";
-        description = "Brings your mana back to full";
-        usage = "/skill replenish";
-        minArgs = 0;
-        maxArgs = 0;
-        identifiers.add("skill replenish");
+        setName("Replenish");
+        setDescription("Brings your mana back to full");
+        setUsage("/skill replenish");
+        setMinArgs(0);
+        setMaxArgs(0);
+        getIdentifiers().add("skill replenish");
     }
 
     @Override
@@ -24,8 +24,8 @@ public class SkillReplenish extends ActiveSkill {
         if (hero.isVerbose()) {
             Messaging.send(hero.getPlayer(), Messaging.createManaBar(100));
         }
-        notifyNearbyPlayers(hero.getPlayer().getLocation(), useText, hero.getPlayer().getName(), name);
-        return false;
+        notifyNearbyPlayers(hero.getPlayer().getLocation(), getUseText(), hero.getPlayer().getName(), getName());
+        return true;
     }
 
 }

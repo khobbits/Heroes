@@ -1,45 +1,60 @@
 package com.herocraftonline.dev.heroes.party;
 
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Set;
 
 import org.bukkit.entity.Player;
 
+import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.util.Messaging;
 
 public class HeroParty {
-    private Player leader;
-    private Set<Player> members = new HashSet<Player>();
-    private Boolean pvp = false;
-    private Boolean exp = false;
-    private Set<String> invites = new HashSet<String>();
+    private Hero leader;
+    private Set<Hero> members = new HashSet<Hero>();
+    private Boolean pvp = true;
+    private Boolean exp = true;
+    private LinkedList<String> invites = new LinkedList<String>();
 
-    public HeroParty(Player leader) {
+    public HeroParty(Hero leader) {
         this.leader = leader;
+        members.add(leader);
     }
 
-    public Player getLeader() {
+    public Hero getLeader() {
         return leader;
     }
 
-    public void setLeader(Player leader) {
+    public void setLeader(Hero leader) {
         this.leader = leader;
     }
 
-    public boolean isPartyMember(Player player) {
-        return members.contains(player);
+    public boolean isPartyMember(Hero hero) {
+        return members.contains(hero);
     }
 
-    public void removeMember(Player player) {
-        members.remove(player);
+    public void removeMember(Hero hero) {
+        members.remove(hero);
+        hero.setParty(null);
+        if (members.size() == 1) {
+            Hero remainingMember = members.iterator().next();
+            remainingMember.setParty(null);
+            messageParty("Party disbanded.");
+            members.remove(remainingMember);
+            return;
+        }
+        if (hero.equals(leader) && !members.isEmpty()) {
+            leader = members.iterator().next();
+            messageParty("$1 is now leading the party.", leader.getPlayer().getDisplayName());
+        }
     }
 
-    public void addMember(Player player) {
-        members.add(player);
+    public void addMember(Hero hero) {
+        members.add(hero);
     }
 
-    public Set<Player> getMembers() {
-        return members;
+    public Set<Hero> getMembers() {
+        return new HashSet<Hero>(members);
     }
 
     public void addInvite(String player) {
@@ -49,27 +64,37 @@ public class HeroParty {
 
     public void removeInvite(Player player) {
         invites.remove(player);
+    }
 
+    public void removeOldestInvite() {
+        invites.pop();
     }
 
     public boolean isInvited(String player) {
         return invites.contains(player);
     }
 
+    public int getInviteCount() {
+        return invites.size();
+    }
 
     public void pvpToggle() {
-        if(pvp == true) {
+        if (pvp == true) {
             pvp = false;
-        }else {
+            messageParty("PvP is now enabled!");
+        } else {
             pvp = true;
+            messageParty("PvP is now disabled!");
         }
     }
-    
+
     public void expToggle() {
-        if(exp == true) {
+        if (exp == true) {
             exp = false;
-        }else {
+            messageParty("ExpShare is now disabled!");
+        } else {
             exp = true;
+            messageParty("ExpShare is now enabled!");
         }
     }
 
@@ -82,8 +107,8 @@ public class HeroParty {
     }
 
     public void messageParty(String msg, Object... params) {
-        for (Player p : members) {
-            Messaging.send(p, msg, params);
+        for (Hero hero : members) {
+            Messaging.send(hero.getPlayer(), msg, params);
         }
     }
 

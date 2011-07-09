@@ -24,12 +24,12 @@ public class SkillRevive extends ActiveSkill {
     @SuppressWarnings("serial")
     public SkillRevive(Heroes plugin) {
         super(plugin);
-        name = "Revive";
-        description = "Teleports the target to their place of death";
-        usage = "/skill revive [target]";
-        minArgs = 1;
-        maxArgs = 1;
-        identifiers.add("skill revive");
+        setName("Revive");
+        setDescription("Teleports the target to their place of death");
+        setUsage("/skill revive [target]");
+        setMinArgs(1);
+        setMaxArgs(1);
+        getIdentifiers().add("skill revive");
 
         registerEvent(Type.ENTITY_DEATH, new SkillPlayerListener(), Priority.Normal);
 
@@ -87,7 +87,7 @@ public class SkillRevive extends ActiveSkill {
         targetPlayer.teleport(playerLoc);
         
         player.getInventory().remove(new ItemStack(Material.SLIME_BALL, slimeballs));
-        notifyNearbyPlayers(player.getLocation(), useText, player.getName(), name, targetName);
+        notifyNearbyPlayers(player.getLocation(), getUseText(), player.getName(), getName(), targetName);
         return true;
     }
 

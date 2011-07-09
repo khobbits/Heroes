@@ -14,12 +14,12 @@ public class SkillUnholyRitual extends TargettedSkill {
 
     public SkillUnholyRitual(Heroes plugin) {
         super(plugin);
-        name = "UnholyRitual";
-        description = "Target Zombie or Skeleton is sacrificed, necromancer receives mana";
-        usage = "/skill unholyritual [target]";
-        minArgs = 0;
-        maxArgs = 1;
-        identifiers.add("skill unholyritual");
+        setName("UnholyRitual");
+        setDescription("Target Zombie or Skeleton is sacrificed, necromancer receives mana");
+        setUsage("/skill unholyritual [target]");
+        setMinArgs(0);
+        setMaxArgs(1);
+        getIdentifiers().add("skill unholyritual");
     }
 
     @Override
@@ -31,7 +31,7 @@ public class SkillUnholyRitual extends TargettedSkill {
         }
         target.damage(target.getHealth());
         hero.setMana(hero.getMana() + 20);
-        notifyNearbyPlayers(player.getLocation(), useText, player.getName(), name, target == player ? "himself" : getEntityName(target));
+        notifyNearbyPlayers(player.getLocation(), getUseText(), player.getName(), getName(), target == player ? "himself" : getEntityName(target));
         return true;
     }
 

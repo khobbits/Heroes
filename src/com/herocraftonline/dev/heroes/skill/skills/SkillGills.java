@@ -15,12 +15,12 @@ public class SkillGills extends ActiveEffectSkill {
 
     public SkillGills(Heroes plugin) {
         super(plugin);
-        name = "Gills";
-        description = "Negate drowning damage";
-        usage = "/skill gills";
-        minArgs = 0;
-        maxArgs = 0;
-        identifiers.add("skill gills");
+        setName("Gills");
+        setDescription("Negate drowning damage");
+        setUsage("/skill gills");
+        setMinArgs(0);
+        setMaxArgs(0);
+        getIdentifiers().add("skill gills");
         
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
     }
@@ -34,7 +34,7 @@ public class SkillGills extends ActiveEffectSkill {
             if (event.getEntity() instanceof Player) {
                 Player player = (Player) event.getEntity();
                 Hero hero = plugin.getHeroManager().getHero(player);
-                if (hero.getEffects().hasEffect(name)) {
+                if (hero.getEffects().hasEffect(getName())) {
                     event.setCancelled(true);
                 }
             }
@@ -46,7 +46,7 @@ public class SkillGills extends ActiveEffectSkill {
         Player player = hero.getPlayer();
         String playerName = player.getName();
         applyEffect(hero);
-        notifyNearbyPlayers(player.getLocation(), useText, playerName, name);
+        notifyNearbyPlayers(player.getLocation(), getUseText(), playerName, getName());
         return true;
     }
 }

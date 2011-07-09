@@ -9,7 +9,7 @@ public class LevelEvent extends ExperienceGainEvent {
     protected final int from;
     protected final int to;
 
-    public LevelEvent(Hero hero, int expGain, int from, int to, ExperienceType source) {
+    public LevelEvent(Hero hero, double expGain, int from, int to, ExperienceType source) {
         super(hero, expGain, source);
         this.expGain = expGain;
         this.from = from;
@@ -17,11 +17,11 @@ public class LevelEvent extends ExperienceGainEvent {
     }
 
     public final int getTo() {
-        return from;
+        return to;
     }
 
     public final int getFrom() {
-        return to;
+        return from;
     }
 
 }
