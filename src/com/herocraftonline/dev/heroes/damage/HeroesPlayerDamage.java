@@ -18,6 +18,7 @@ public class HeroesPlayerDamage extends EntityListener{
         this.heroesDamage = heroesDamage;
     }
     
+    @SuppressWarnings("unused")
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         if(!(event.getDamager() instanceof Player)) {
             return;
