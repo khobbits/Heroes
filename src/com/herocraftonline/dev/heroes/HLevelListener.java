@@ -5,6 +5,7 @@ import java.util.List;
 import org.bukkit.event.CustomEventListener;
 import org.bukkit.event.Event;
 
+import com.herocraftonline.dev.heroes.api.ClassChangeEvent;
 import com.herocraftonline.dev.heroes.api.LevelEvent;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.command.BaseCommand;

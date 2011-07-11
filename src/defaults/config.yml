@@ -13,3 +13,4 @@ properties:
     swapCost: 10
     prefix: 'Heroes:'
     color: 'RED'
+    swapMasteryCost: false

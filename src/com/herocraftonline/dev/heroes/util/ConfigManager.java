@@ -103,6 +103,7 @@ public class ConfigManager {
         properties.blockTrackingDuration = config.getInt(root + "block-tracking-duration", 10 * 60 * 1000);
         properties.maxTrackedBlocks = config.getInt(root + "max-tracked-blocks", 1000);
         properties.resetExpOnClassChange = config.getBoolean(root + "resetExpOnClassChange", true);
+        properties.swapMasteryCost = config.getBoolean(root + "swapMasteryCost", false);
         properties.calcExp();
     }
 

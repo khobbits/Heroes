@@ -1,6 +1,0 @@
-damage:
-    STONE: 4
-    DIAMOND: 11
-    AIR: 100
-    FIRE: 1
-    FIRE_TICK: 5

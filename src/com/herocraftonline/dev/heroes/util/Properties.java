@@ -48,6 +48,7 @@ public class Properties {
     public ChatColor cColor;
     public String prefix;
     public int swapCost;
+    public boolean swapMasteryCost;
 
     /**
      * Generate experience for the level ArrayList<Integer>
