@@ -63,7 +63,7 @@ public class SkillPort extends ActiveSkill {
             for(Entity n : surrounding) {
                 if(n instanceof Player  ) {
                     Player playerN = (Player)n;
-                    if(plugin.getHeroManager().getHero(playerN).getParty() == hero.getParty()){
+                    if(plugin.getHeroManager().getHero(playerN).getParty().isPartyMember(hero)){
                         playerN.teleport(new Location(hero.getPlayer().getWorld(), Double.parseDouble(splitArg[0]), Double.parseDouble(splitArg[1]), Double.parseDouble(splitArg[2])));
                     }
                 }
