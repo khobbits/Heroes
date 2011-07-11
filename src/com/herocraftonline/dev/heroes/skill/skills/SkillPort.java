@@ -50,7 +50,7 @@ public class SkillPort extends ActiveSkill {
                 itemStack = new ItemStack(Material.matchMaterial(getSetting(hero.getHeroClass(), "itemcost", "redstone")), 1);
             }
 
-            if(!(itemStack != null)) {
+            if(!(itemStack == null)) {
                 if(player.getInventory().contains(itemStack.getType())){
                     player.getInventory().remove(itemStack);
                 }else {
