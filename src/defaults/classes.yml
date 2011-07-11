@@ -1,46 +1,139 @@
 classes:
-    #This is a starter class, when you first join a server this will be your class, this class cannot use any tools or armor types. It has no skills and doesn't gain 
-    #experience.
     Vagrant:
         default: true
-        permitted-armor: []
-        permitted-weapon: []
+        summon-max: 0
+        description: The vagrant, starter PATH
+        permitted-armor:
+        - LEATHER
+        permitted-weapon:
+        - WOOD
         permitted-skills:
         experience-sources: []
-    #This warrior class has the use of leather, iron and chainmail. It can use wood, stone and an iron-pickaxe. 
-    #It has Jump and TestSkill, TestSkill is a permission based skill. It's from the plugin "herosneak".
-    #Permission based skills allow you to make other plugins provide your classes skills.
-    #It gets experience from KILLING.
+        expmodifier: 0
+        permission-skills:
     Warrior:
         default: false
-        permitted-armor: [LEATHER, IRON, CHAINMAIL]
-        permitted-weapon: [WOOD, STONE, IRON_PICKAXE]
+        summon-max: 0
+        description: Skilled in Defense Combat and Heavy Armor
+        permitted-armor:
+        - LEATHER
+        - CHAINMAIL
+        - IRON_CHESTPLATE
+        permitted-weapon:
+        - WOOD
+        - STONE
+        - IRON_PICKAXE
         permitted-skills:
-            Jump:
+            Taunt:
                 level: 5
-                mana: 25
+                mana: 75
                 cooldown: 30000
-        permission-skills:
-            TestSkill:
-                level: 1
-                usage: '/sneak'
-                permissions: ['herosneak.sneak']
-        experience-sources: [KILLING]
-    #This is a "sub-class". Basically you need to be part of the Warrior (See parent) profession to be able to switch to this class. The switch level is determined by the config file.
-    #This class can use LEATHER, Chainmail and Iron armour
-    #It can use WOOD, DIAMOND_PICKAXE, DIAMOND_AXE, DIAMOND_SPADE, DIAMOND_HOE tools ansd weapons
-    Knight:
-        default: false
-        parent: CRAFTER
-        permitted-armor: [LEATHER, CHAINMAIL, IRON]
-        permitted-weapon: [WOOD, IRON, STONE, DIAMOND_PICKAXE, DIAMOND_AXE, DIAMOND_SPADE, DIAMOND_HOE]
-        permitted-skills:
-            Jump:
-                level: 1
-                mana: 25
-                cooldown: 30000
-            Invuln:
+            Fireball:
                 level: 10
                 mana: 20
-                cooldown: 50000
-        experience-sources: [KILLING]
+                cooldown: 3000
+            Manaburn:
+                level: 20
+                mana: 30
+                cooldown: 40000
+        experience-sources:
+        - KILLING
+        - MINING
+        - PVP
+        - CRAFTING
+        - LOGGING
+        - SKILL
+        expmodifier: 1.5
+    Paladin:
+        default: false
+        parent: Warrior
+        summon-max: 0
+        description: Divine Knight
+        permitted-armor:
+        - LEATHER
+        - DIAMOND_CHESTPLATE
+        - DIAMOND_LEGGINGS
+        - IRON
+        - CHAINMAIL
+        - GOLD
+        permitted-weapon:
+        - WOOD
+        - GOLD
+        - STONE
+        - IRON_PICKAXE
+        permitted-skills:
+            Layhands:
+                level: 10
+                mana: 100
+                cooldown: 30000
+            Invuln:
+                level: 40
+                mana: 100
+                cooldown: 500000
+            Revive:
+                level: 50
+                mana: 100
+                cooldown: 60000
+            Taunt:
+                level: 1
+                mana: 20
+                cooldown: 3000
+            Fireball:
+                level: 1
+                mana: 5
+                cooldown: 2000
+            Dispel:
+                level: 1
+                mana: 5
+                cooldown: 2000
+        experience-sources:
+        - KILLING
+        - PVP
+        - SKILL
+        expmodifier: 1.0
+    Shadowknight:
+        default: false
+        parent: Warrior
+        summon-max: 0
+        description: Dark Knight
+        permitted-armor:
+        - LEATHER
+        - DIAMOND_LEGGINGS
+        - IRON
+        - CHAINMAIL
+        - GOLD
+        permitted-weapon:
+        - WOOD
+        - GOLD
+        - STONE
+        - IRON_PICKAXE
+        permitted-skills:
+            Layhands:
+                level: 10
+                mana: 100
+                cooldown: 30000
+            Invuln:
+                level: 40
+                mana: 100
+                cooldown: 500000
+            Revive:
+                level: 50
+                mana: 100
+                cooldown: 60000
+            Taunt:
+                level: 1
+                mana: 20
+                cooldown: 3000
+            Fireball:
+                level: 1
+                mana: 5
+                cooldown: 2000
+            Manaburn:
+                level: 1
+                mana: 50
+                cooldown: 3000
+        experience-sources:
+        - KILLING
+        - PVP
+        - SKILL
+        expmodifier: 1.0
