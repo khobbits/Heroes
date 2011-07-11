@@ -51,7 +51,7 @@ public class SkillPort extends ActiveSkill {
             }
             
             if(!(itemStack == null)) {
-                if(player.getInventory().contains(itemStack)){
+                if(player.getInventory().contains(itemStack.getType())){
                     player.getInventory().remove(itemStack);
                 }else {
                     Messaging.send(player, "Sorry, you need to have $1 to use that!", itemStack.getType().toString());
