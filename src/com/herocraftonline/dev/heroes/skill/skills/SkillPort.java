@@ -6,6 +6,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
@@ -44,11 +45,18 @@ public class SkillPort extends ActiveSkill {
                 return false;
             }
             
-            if(player.getInventory().contains(Material.matchMaterial(getSetting(hero.getHeroClass(), "itemcost", "redstone")))){
-                player.getInventory().remove(Material.matchMaterial(getSetting(hero.getHeroClass(), "itemcost", "redstone")));
-            }else {
-                Messaging.send(player, "Sorry, you need to have $1 to use that!", Material.matchMaterial(getSetting(hero.getHeroClass(), "itemcost", null)));
-                return false;   
+            ItemStack itemStack = null;
+            if(Material.matchMaterial(getSetting(hero.getHeroClass(), "itemcost", "redstone")) != null){
+                itemStack = new ItemStack(Material.matchMaterial(getSetting(hero.getHeroClass(), "itemcost", "redstone")), 1);
+            }
+            
+            if(!(itemStack == null)) {
+                if(player.getInventory().contains(itemStack)){
+                    player.getInventory().remove(itemStack);
+                }else {
+                    Messaging.send(player, "Sorry, you need to have $1 to use that!", itemStack.getType().toString());
+                    return false;   
+                }
             }
             
             List<Entity> surrounding = player.getNearbyEntities(10, 10, 10);
