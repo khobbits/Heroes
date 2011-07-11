@@ -28,7 +28,7 @@ public class SkillPort extends ActiveSkill {
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty("item-cost", 331);
+        node.setProperty("item-cost", "redstone");
         return node;
     }
     
@@ -44,8 +44,8 @@ public class SkillPort extends ActiveSkill {
                 return false;
             }
             
-            if(player.getInventory().contains(Material.matchMaterial(getSetting(hero.getHeroClass(), "itemcost", null)))){
-                player.getInventory().remove(Material.matchMaterial(getSetting(hero.getHeroClass(), "itemcost", null)));
+            if(player.getInventory().contains(Material.matchMaterial(getSetting(hero.getHeroClass(), "itemcost", "redstone")))){
+                player.getInventory().remove(Material.matchMaterial(getSetting(hero.getHeroClass(), "itemcost", "redstone")));
             }else {
                 Messaging.send(player, "Sorry, you need to have $1 to use that!", Material.matchMaterial(getSetting(hero.getHeroClass(), "itemcost", null)));
                 return false;   
