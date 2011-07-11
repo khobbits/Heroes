@@ -49,6 +49,9 @@ public class Properties {
     public String prefix;
     public int swapCost;
     public boolean swapMasteryCost;
+    public boolean damageSystem;
+    // Damage//
+    public HashMap<Material, Integer> damageValues = new HashMap<Material, Integer>();
 
     /**
      * Generate experience for the level ArrayList<Integer>
