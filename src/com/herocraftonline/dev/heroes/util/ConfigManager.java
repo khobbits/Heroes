@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 
 import org.bukkit.ChatColor;
@@ -35,38 +37,41 @@ public class ConfigManager {
         this.skillConfigFile = new File(plugin.getDataFolder(), "skills.yml");
     }
 
-    public void reload() throws Exception {
-        load();
+    public void reload() {
+        try {
+            load();
+        } catch (Exception e) {
+            e.printStackTrace();
+            plugin.log(Level.SEVERE, "Critical error encountered while loading. Disabling...");
+            plugin.getServer().getPluginManager().disablePlugin(plugin);
+            return;
+        }
         plugin.log(Level.INFO, "Reloaded Configuration");
     }
 
-    public void load() {
-        try {
-            checkForConfig(primaryConfigFile);
-            checkForConfig(classConfigFile);
-            checkForConfig(expConfigFile);
-            checkForConfig(skillConfigFile);
+    public void load() throws Exception {
+        checkForConfig(primaryConfigFile);
+        checkForConfig(classConfigFile);
+        checkForConfig(expConfigFile);
+        checkForConfig(skillConfigFile);
 
-            Configuration primaryConfig = new Configuration(primaryConfigFile);
-            primaryConfig.load();
-            loadLevelConfig(primaryConfig);
-            loadDefaultConfig(primaryConfig);
-            loadProperties(primaryConfig);
+        Configuration primaryConfig = new Configuration(primaryConfigFile);
+        primaryConfig.load();
+        loadLevelConfig(primaryConfig);
+        loadDefaultConfig(primaryConfig);
+        loadProperties(primaryConfig);
 
-            Configuration expConfig = new Configuration(expConfigFile);
-            expConfig.load();
-            loadExperience(expConfig);
+        Configuration expConfig = new Configuration(expConfigFile);
+        expConfig.load();
+        loadExperience(expConfig);
 
-            Configuration skillConfig = new Configuration(skillConfigFile);
-            skillConfig.load();
-            generateSkills(skillConfig);
+        Configuration skillConfig = new Configuration(skillConfigFile);
+        skillConfig.load();
+        generateSkills(skillConfig);
 
-            ClassManager classManager = new ClassManager(plugin);
-            classManager.loadClasses(classConfigFile);
-            plugin.setClassManager(classManager);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        ClassManager classManager = new ClassManager(plugin);
+        classManager.loadClasses(classConfigFile);
+        plugin.setClassManager(classManager);
     }
 
     private void checkForConfig(File config) {
@@ -121,12 +126,11 @@ public class ConfigManager {
     }
 
     private void loadExperience(Configuration config) {
-        String root = "killing";
-        List<String> killing = config.getKeys(root);
-        if (killing != null) {
-            for (String item : killing) {
+        List<String> keys = config.getKeys("killing");
+        if (keys != null) {
+            for (String item : keys) {
                 try {
-                    double exp = config.getDouble(root + "." + item, 0);
+                    double exp = config.getDouble("killing." + item, 0);
                     if (item.equals("player")) {
                         properties.playerKillingExp = exp;
                     } else {
@@ -139,50 +143,27 @@ public class ConfigManager {
             }
         }
 
-        root = "mining";
-        List<String> mining = config.getKeys(root);
-        if (mining != null) {
-            for (String item : mining) {
-                double exp = config.getDouble(root + "." + item, 0);
+        properties.miningExp = loadMaterialExperience(config, "mining");
+        properties.loggingExp = loadMaterialExperience(config, "logging");
+        properties.craftingExp = loadMaterialExperience(config, "crafting");
+    }
+
+    private Map<Material, Double> loadMaterialExperience(ConfigurationNode config, String path) {
+        Map<Material, Double> expMap = new HashMap<Material, Double>();
+        List<String> keys = config.getKeys(path);
+        if (keys != null) {
+            for (String item : keys) {
+                double exp = config.getDouble(path + "." + item, 0);
                 Material type = Material.matchMaterial(item);
 
                 if (type != null) {
-                    properties.miningExp.put(type, exp);
+                    expMap.put(type, exp);
                 } else {
                     plugin.log(Level.WARNING, "Invalid material type (" + item + ") found in experience.yml.");
                 }
             }
         }
-
-        root = "logging";
-        List<String> logging = config.getKeys(root);
-        if (logging != null) {
-            for (String item : logging) {
-                double exp = config.getDouble(root + "." + item, 0);
-                Material type = Material.matchMaterial(item);
-
-                if (type != null) {
-                    properties.loggingExp.put(type, exp);
-                } else {
-                    plugin.log(Level.WARNING, "Invalid material type (" + item + ") found in experience.yml.");
-                }
-            }
-        }
-
-        root = "crafting";
-        List<String> crafting = config.getKeys(root);
-        if (crafting != null) {
-            for (String item : crafting) {
-                double exp = config.getDouble(root + "." + item, 0);
-                Material type = Material.matchMaterial(item);
-
-                if (type != null) {
-                    properties.craftingExp.put(type, exp);
-                } else {
-                    plugin.log(Level.WARNING, "Invalid material type (" + item + ") found in experience.yml.");
-                }
-            }
-        }
+        return expMap;
     }
 
     private void loadSkills(Configuration config) {
