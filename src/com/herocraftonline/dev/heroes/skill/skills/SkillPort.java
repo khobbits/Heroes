@@ -25,31 +25,31 @@ public class SkillPort extends ActiveSkill {
         setMaxArgs(1);
         getIdentifiers().add("skill port");
     }
-    
+
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
         node.setProperty("item-cost", "redstone");
         return node;
     }
-    
+
     @Override
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
         if (getSetting(hero.getHeroClass(), args[0].toLowerCase(), null) != null) {
             String[] splitArg = getSetting(hero.getHeroClass(), args[0].toLowerCase(), null).split(":");
             int levelRequirement = Integer.parseInt(splitArg[3]);
-            
+
             if(hero.getLevel() < levelRequirement) {
                 Messaging.send(player, "Sorry, you need to be level $1 to use that!", levelRequirement);
                 return false;
             }
-            
+
             ItemStack itemStack = null;
             if(Material.matchMaterial(getSetting(hero.getHeroClass(), "itemcost", "redstone")) != null){
                 itemStack = new ItemStack(Material.matchMaterial(getSetting(hero.getHeroClass(), "itemcost", "redstone")), 1);
             }
-            
+
             if(!(itemStack == null)) {
                 if(player.getInventory().contains(itemStack.getType())){
                     player.getInventory().remove(itemStack);
@@ -58,13 +58,15 @@ public class SkillPort extends ActiveSkill {
                     return false;   
                 }
             }
-            
+
             List<Entity> surrounding = player.getNearbyEntities(10, 10, 10);
             for(Entity n : surrounding) {
                 if(n instanceof Player  ) {
                     Player playerN = (Player)n;
-                    if(plugin.getHeroManager().getHero(playerN).getParty().isPartyMember(hero)){
-                        playerN.teleport(new Location(hero.getPlayer().getWorld(), Double.parseDouble(splitArg[0]), Double.parseDouble(splitArg[1]), Double.parseDouble(splitArg[2])));
+                    if(plugin.getHeroManager().getHero(playerN).getParty() != null) {
+                        if(plugin.getHeroManager().getHero(playerN).getParty().isPartyMember(hero)){
+                            playerN.teleport(new Location(hero.getPlayer().getWorld(), Double.parseDouble(splitArg[0]), Double.parseDouble(splitArg[1]), Double.parseDouble(splitArg[2])));
+                        }
                     }
                 }
             }
