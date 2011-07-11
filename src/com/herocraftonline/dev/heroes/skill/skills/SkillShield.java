@@ -31,6 +31,7 @@ public class SkillShield extends PassiveSkill{
         ConfigurationNode node = super.getDefaultConfig();
         node.setProperty("iron-door", 0.75);
         node.setProperty("wooden-door", 0.85);
+        node.setProperty("trapdoor", 0.60);
         return node;
     }
     
@@ -46,13 +47,15 @@ public class SkillShield extends PassiveSkill{
                 if (subEvent.getEntity() instanceof Player) {
                     Player player = (Player) subEvent.getEntity();
                     Hero hero = plugin.getHeroManager().getHero(player);
-                    if (hero.getEffects().hasEffect(getName())) {
+                    if (hero.getEffects().hasEffect(getName())) {   
                         double multiplier = 0;
                         if(player.getItemInHand().getType() == Material.IRON_DOOR) {
                             multiplier = getSetting(hero.getHeroClass(), "iron-door", 0.75);
 
                         }else if(player.getItemInHand().getType() == Material.WOODEN_DOOR) {
                             multiplier = getSetting(hero.getHeroClass(), "wooden-door", 0.85);
+                        }else if(player.getItemInHand().getType() == Material.TRAP_DOOR) {
+                            multiplier = getSetting(hero.getHeroClass(), "trapdoor", 0.60);
                         }
                         subEvent.setDamage((int) (subEvent.getDamage() * multiplier));
                     }
