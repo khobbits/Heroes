@@ -34,9 +34,9 @@ public class HeroManager {
     private Set<Hero> heroes;
     private File playerFolder;
     private Timer effectTimer;
-    private Timer manaTimer;
+    private Runnable manaTimer;
     private final static int effectInterval = 100;
-    private final static int manaInterval = 5000; // Possible to be configurable?
+    private final static int manaInterval = 5 * 20;
 
     public HeroManager(Heroes plugin) {
         this.plugin = plugin;
@@ -47,8 +47,8 @@ public class HeroManager {
         effectTimer = new Timer(false); // Maintenance thread only
         effectTimer.scheduleAtFixedRate(new EffectChecker(effectInterval, this), 0, effectInterval);
 
-        manaTimer = new Timer(false); // Maintenance thread only
-        manaTimer.scheduleAtFixedRate(new ManaUpdater(this), 0, manaInterval);
+        manaTimer = new ManaUpdater(this); // Maintenance thread only
+        plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, manaTimer, 0, manaInterval);
     }
 
     /**
@@ -320,7 +320,7 @@ public class HeroManager {
 
     public void stopTimers() {
         effectTimer.cancel();
-        manaTimer.cancel();
+        plugin.getServer().getScheduler().cancelTasks(plugin);
     }
 }
 
@@ -345,7 +345,7 @@ class EffectChecker extends TimerTask {
     }
 }
 
-class ManaUpdater extends TimerTask {
+class ManaUpdater implements Runnable {
     private final HeroManager manager;
 
     ManaUpdater(HeroManager manager) {
@@ -354,6 +354,7 @@ class ManaUpdater extends TimerTask {
 
     @Override
     public void run() {
+        System.out.println("Running mana updater");
         Set<Hero> heroes = manager.getHeroes();
         for (Hero hero : heroes) {
             if (hero == null) {
