@@ -1,6 +1,7 @@
 package com.herocraftonline.dev.heroes.util;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -33,13 +34,13 @@ public class Properties {
     public int blockTrackingDuration;
     public int maxTrackedBlocks;
     public double playerKillingExp = 0;
-    public HashMap<CreatureType, Double> creatureKillingExp = new HashMap<CreatureType, Double>();
-    public HashMap<Material, Double> miningExp = new HashMap<Material, Double>();
-    public HashMap<Material, Double> loggingExp = new HashMap<Material, Double>();
-    public HashMap<Material, Double> craftingExp = new HashMap<Material, Double>();
+    public Map<CreatureType, Double> creatureKillingExp = new HashMap<CreatureType, Double>();
+    public Map<Material, Double> miningExp = new HashMap<Material, Double>();
+    public Map<Material, Double> loggingExp = new HashMap<Material, Double>();
+    public Map<Material, Double> craftingExp = new HashMap<Material, Double>();
 
-    public HashMap<String, String> skillInfo = new HashMap<String, String>();
-    public HashMap<Player, Location> playerDeaths = new HashMap<Player, Location>();
+    public Map<String, String> skillInfo = new HashMap<String, String>();
+    public Map<Player, Location> playerDeaths = new HashMap<Player, Location>();
     // Default//
     public String defClass;
     public int defLevel;
@@ -48,6 +49,10 @@ public class Properties {
     public ChatColor cColor;
     public String prefix;
     public int swapCost;
+    public boolean swapMasteryCost;
+    public boolean damageSystem;
+    // Damage//
+    public HashMap<Material, Integer> damageValues = new HashMap<Material, Integer>();
 
     /**
      * Generate experience for the level ArrayList<Integer>
@@ -59,6 +64,7 @@ public class Properties {
         for (int i = 0; i < maxLevel; i++) {
             levels[i] = (int) (A * Math.pow(i, power + 1));
         }
+        levels[maxLevel - 1] = maxExp;
     }
 
     /**

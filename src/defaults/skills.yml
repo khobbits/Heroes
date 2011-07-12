@@ -1,5 +1,23 @@
-Smoke:
-    use-text: "%hero% vanishes in a puff of smoke! (%skill%)"
-    expire-text: "%hero% reappears in a puff of smoke! (%skill%)"
-Summon:
-    use-text: "%hero% summoned %creature%!"
+Manaburn:
+    max-distance: 15
+    transfer-amount: 20
+    use-text: '%hero% used %skill% on %target%!'
+Taunt:
+    use-text: '%hero% used %skill%!'
+Layhands:
+    max-distance: 15
+    use-text: '%hero% used %skill% on %target%!'
+Invuln:
+    effect-duration: 10000.0
+    use-text: '%hero% gained %skill%!'
+    expire-text: '%hero% lost %skill%!'
+Revive:
+    slime-amount: 1
+    use-text: '%hero% used %skill%!'
+Fireball:
+    damage: 4
+    fire-ticks: 100
+    use-text: '%hero% used %skill%!'
+Dispel:
+    max-distance: 15
+    use-text: '%hero% used %skill% on %target%!'

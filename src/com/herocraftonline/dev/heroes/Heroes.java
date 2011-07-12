@@ -123,9 +123,6 @@ public class Heroes extends JavaPlugin {
         // Check for BukkitContrib
         setupBukkitContrib();
 
-        // Setup the Property for Levels * Exp
-        getConfigManager().getProperties().calcExp();
-
         // Skills Loader
         loadSkills();
 
@@ -134,6 +131,9 @@ public class Heroes extends JavaPlugin {
             configManager.load();
         } catch (Exception e) {
             e.printStackTrace();
+            log(Level.SEVERE, "Critical error encountered while loading. Disabling...");
+            getServer().getPluginManager().disablePlugin(this);
+            return;
         }
 
         blockListener.init();
