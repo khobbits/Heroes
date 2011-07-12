@@ -21,7 +21,6 @@ import org.bukkit.util.Vector;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
-import com.herocraftonline.dev.heroes.skill.skills.SkillReflect.SkillEntityListener;
 
 public class SkillIcebolt extends ActiveSkill {
     private HashSet<Snowball> snowballs = new HashSet<Snowball>();

@@ -56,7 +56,7 @@ public class HeroManager {
      * 
      * @param player
      */
-    public void loadHeroFile(Player player) {
+    public Hero loadHeroFile(Player player) {
         File playerFile = new File(playerFolder, player.getName() + ".yml"); // Setup our Players Data File.
         // Check if it already exists, if so we load the data.
         if (playerFile.exists()) {
@@ -80,10 +80,11 @@ public class HeroManager {
             performSkillChecks(playerHero);
 
             plugin.log(Level.INFO, "Loaded hero: " + player.getName());
+            return playerHero;
         } else {
             // Create a New Hero with the Default Setup.
-            createNewHero(player);
             plugin.log(Level.INFO, "Created hero: " + player.getName());
+            return createNewHero(player);
         }
     }
 
@@ -277,9 +278,10 @@ public class HeroManager {
         }
     }
 
-    public boolean createNewHero(Player player) {
+    public Hero createNewHero(Player player) {
         Hero hero = new Hero(plugin, player, plugin.getClassManager().getDefaultClass(), plugin.getClassManager().getDefaultClass().getMaxHealth());
-        return addHero(hero);
+        addHero(hero);
+        return hero;
     }
 
     public boolean addHero(Hero hero) {
@@ -287,7 +289,7 @@ public class HeroManager {
     }
 
     public boolean removeHero(Hero hero) {
-        if (hero.hasParty()) {
+        if (hero != null && hero.hasParty()) {
             hero.getParty().removeMember(hero);
         }
         return heroes.remove(hero);
@@ -298,10 +300,10 @@ public class HeroManager {
     }
 
     public Hero getHero(Player player) {
-        final Hero[] heroes = getHeroes();
-        for (Hero hero : heroes) {
+        Set<Hero> tmpHeroes = getHeroes();
+        for (Hero hero : tmpHeroes) {
             if (hero == null || hero.getPlayer() == null) {
-                this.heroes.remove(hero); // Seeing as it's null we might as well remove it.
+                removeHero(hero); // Seeing as it's null we might as well remove it.
                 continue;
             }
             if (player.getName().equalsIgnoreCase(hero.getPlayer().getName())) {
@@ -309,25 +311,11 @@ public class HeroManager {
             }
         }
         // If it gets to this stage then clearly the HeroManager doesn't have it so we create it...
-        loadHeroFile(player);
-        final Hero[] heroez = getHeroes();
-        for (Hero hero : heroez) {
-            if (hero == null) {
-                continue;
-            }
-            if (player.getName().equalsIgnoreCase(hero.getPlayer().getName())) {
-                return hero;
-            }
-        }
-        return null;
+        return loadHeroFile(player);
     }
 
-    public final Hero[] getHeroes() {
-        return heroes.toArray(new Hero[0]);
-    }
-
-    public Set<Hero> getHeroSet() {
-        return heroes;
+    public Set<Hero> getHeroes() {
+        return new HashSet<Hero>(heroes);
     }
 
     public void stopTimers() {
@@ -347,7 +335,7 @@ class EffectChecker extends TimerTask {
 
     @Override
     public void run() {
-        Hero[] heroes = manager.getHeroes();
+        Set<Hero> heroes = manager.getHeroes();
         for (Hero hero : heroes) {
             if (hero == null) {
                 continue;
@@ -366,7 +354,7 @@ class ManaUpdater extends TimerTask {
 
     @Override
     public void run() {
-        Hero[] heroes = manager.getHeroes();
+        Set<Hero> heroes = manager.getHeroes();
         for (Hero hero : heroes) {
             if (hero == null) {
                 continue;
