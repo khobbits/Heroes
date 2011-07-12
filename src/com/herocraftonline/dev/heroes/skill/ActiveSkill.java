@@ -142,18 +142,18 @@ public abstract class ActiveSkill extends Skill {
             long time = System.currentTimeMillis();
             int cooldown = getSetting(heroClass, SETTING_COOLDOWN, 0);
             if (cooldown > 0) {
-                Long timeUsed = cooldowns.get(name);
-                if (timeUsed != null) {
-                    if (time < timeUsed + cooldown) {
-                        long remaining = timeUsed + cooldown - time;
-                        Messaging.send(hero.getPlayer(), "Sorry, $1 still has $2 seconds left on cooldown!", name, Long.toString(remaining / 1000));
+                Long expiry = cooldowns.get(name);
+                if (expiry != null) {
+                    if (time < expiry) {
+                        long remaining = expiry - time;
+                        Messaging.send(hero.getPlayer(), "Sorry, $1 still has $2 seconds left on cooldown!", name, remaining / 1000);
                         return;
                     }
                 }
             }
             if (use(hero, args)) {
                 if (cooldown > 0) {
-                    cooldowns.put(name, time);
+                    cooldowns.put(name, time + cooldown);
                 }
 
                 if (this.awardExpOnCast) {
