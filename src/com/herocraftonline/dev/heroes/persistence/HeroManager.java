@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -33,8 +34,8 @@ public class HeroManager {
     private File playerFolder;
     private Runnable effectTimer;
     private Runnable manaTimer;
-    private final static int effectInterval = 100 * 20 / 1000;
-    private final static int manaInterval = 5 * 20;
+    private final static int effectInterval = 2;
+    private final static int manaInterval = 5;
 
     public HeroManager(Heroes plugin) {
         this.plugin = plugin;
@@ -350,6 +351,8 @@ class EffectUpdater implements Runnable {
 
 class ManaUpdater implements Runnable {
     private final HeroManager manager;
+    private final long updateInterval = 5000;
+    private long lastUpdate = 0;
 
     ManaUpdater(HeroManager manager) {
         this.manager = manager;
@@ -357,7 +360,12 @@ class ManaUpdater implements Runnable {
 
     @Override
     public void run() {
-        System.out.println("Running mana updater");
+        long time = System.currentTimeMillis();
+        if (time < lastUpdate + updateInterval) {
+            return;
+        }
+        lastUpdate = time;
+        
         Set<Hero> heroes = manager.getHeroes();
         for (Hero hero : heroes) {
             if (hero == null) {
@@ -367,7 +375,7 @@ class ManaUpdater implements Runnable {
             int mana = hero.getMana();
             hero.setMana(mana > 100 ? mana : mana > 95 ? 100 : mana + 5); // Hooray for the ternary operator!
             if (mana != 100 && hero.isVerbose()) {
-                Messaging.send(hero.getPlayer(), "Mana: " + Messaging.createManaBar(hero.getMana()));
+                Messaging.send(hero.getPlayer(), ChatColor.BLUE + "MANA " + Messaging.createManaBar(hero.getMana()));
             }
         }
     }

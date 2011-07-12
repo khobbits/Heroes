@@ -2,6 +2,7 @@ package com.herocraftonline.dev.heroes.skill;
 
 import java.util.Map;
 
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.util.config.Configuration;
@@ -162,7 +163,7 @@ public abstract class ActiveSkill extends Skill {
 
                 hero.setMana(hero.getMana() - manaCost);
                 if (hero.isVerbose() && manaCost > 0) {
-                    Messaging.send(hero.getPlayer(), Messaging.createManaBar(hero.getMana()));
+                    Messaging.send(hero.getPlayer(), ChatColor.BLUE + "MANA " + Messaging.createManaBar(hero.getMana()));
                 }
             }
         }
