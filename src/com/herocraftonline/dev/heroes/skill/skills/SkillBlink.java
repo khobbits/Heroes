@@ -24,9 +24,6 @@ public class SkillBlink extends ActiveSkill {
     @Override
     public boolean use(Hero hero, String[] args) {
         List<Block> blocks = hero.getPlayer().getLineOfSight(null, 6);
-        if (blocks.get(blocks.size() - 1).getType() != Material.AIR) {
-
-        }
         float yaw = hero.getPlayer().getLocation().getPitch();
         hero.getPlayer().teleport(blocks.get(blocks.size() - 1).getLocation());
         hero.getPlayer().getLocation().setPitch(yaw);
