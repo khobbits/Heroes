@@ -10,6 +10,8 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
+import org.bukkit.event.Event.Priority;
+import org.bukkit.event.Event.Type;
 import org.bukkit.event.entity.EntityDamageByProjectileEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityListener;
@@ -19,6 +21,7 @@ import org.bukkit.util.Vector;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
+import com.herocraftonline.dev.heroes.skill.skills.SkillReflect.SkillEntityListener;
 
 public class SkillIcebolt extends ActiveSkill {
     private HashSet<Snowball> snowballs = new HashSet<Snowball>();
@@ -31,6 +34,8 @@ public class SkillIcebolt extends ActiveSkill {
         setMinArgs(0);
         setMaxArgs(0);
         getIdentifiers().add("skill icebolt");
+        
+        registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
     }
 
     @Override
