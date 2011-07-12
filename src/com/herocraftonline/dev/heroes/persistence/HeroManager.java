@@ -66,6 +66,7 @@ public class HeroManager {
             HeroClass playerClass = loadClass(player, playerConfig);
             Hero playerHero = new Hero(plugin, player, playerClass, playerClass.getMaxHealth());
 
+            loadCooldowns(playerHero, playerConfig);
             loadExperience(playerHero, playerConfig);
             loadRecoveryItems(playerHero, playerConfig);
             loadBinds(playerHero, playerConfig);
@@ -83,6 +84,24 @@ public class HeroManager {
             // Create a New Hero with the Default Setup.
             createNewHero(player);
             plugin.log(Level.INFO, "Created hero: " + player.getName());
+        }
+    }
+
+    private void loadCooldowns(Hero hero, Configuration config) {
+        HeroClass heroClass = hero.getHeroClass();
+
+        String path = "cooldowns";
+        List<String> storedCooldowns = config.getKeys(path);
+        if (storedCooldowns != null) {
+            long time = System.currentTimeMillis();
+            Map<String, Long> cooldowns = new HashMap<String, Long>();
+            for (String skillName : storedCooldowns) {
+                long cooldown = (long) config.getDouble(path + "." + skillName, 0);
+                if (heroClass.hasSkill(skillName) && cooldown > time) {
+                    cooldowns.put(skillName, cooldown);
+                }
+            }
+            hero.cooldowns = cooldowns;
         }
     }
 
@@ -204,12 +223,27 @@ public class HeroManager {
         playerConfig.setProperty("mana", hero.getMana());
         playerConfig.removeProperty("itemrecovery");
 
+        saveCooldowns(hero, playerConfig);
         saveExperience(hero, playerConfig);
         saveRecoveryItems(hero, playerConfig);
         saveBinds(hero, playerConfig);
 
         playerConfig.save();
         plugin.log(Level.INFO, "Saved hero: " + player.getName());
+    }
+
+    private void saveCooldowns(Hero hero, Configuration config) {
+        String path = "cooldowns";
+        long time = System.currentTimeMillis();
+        Map<String, Long> cooldowns = hero.getCooldowns();
+        for (Map.Entry<String, Long> entry : cooldowns.entrySet()) {
+            String skillName = entry.getKey();
+            long cooldown = entry.getValue();
+            if (cooldown > time) {
+                System.out.println(path + "." + skillName);
+                config.setProperty(path + "." + skillName, cooldown);
+            }
+        }
     }
 
     private void saveExperience(Hero hero, Configuration config) {
