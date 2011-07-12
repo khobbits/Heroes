@@ -76,6 +76,9 @@ public class SkillRoot extends TargettedSkill {
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
         if (target instanceof Player) {
+            if(((Player) target).getName() == player.getName()) {
+                return false;
+            }
             Hero newHero = plugin.getHeroManager().getHero((Player) target);
             long duration = getSetting(hero.getHeroClass(), "duration", 5000);
             newHero.applyEffect(getName(), duration);
