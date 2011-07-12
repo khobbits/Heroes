@@ -33,7 +33,7 @@ public class SkillIcebolt extends ActiveSkill {
         setMinArgs(0);
         setMaxArgs(0);
         getIdentifiers().add("skill icebolt");
-        
+
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
     }
 

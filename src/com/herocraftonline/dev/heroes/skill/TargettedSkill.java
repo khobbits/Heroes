@@ -41,7 +41,7 @@ public abstract class TargettedSkill extends ActiveSkill {
      * identifier fields as defined in {@link BaseCommand}. Remember that each identifier must begin with <i>skill</i>.
      * 
      * @param plugin
-     *            the active Heroes instance
+     *        the active Heroes instance
      */
     public TargettedSkill(Heroes plugin) {
         super(plugin);
@@ -78,9 +78,9 @@ public abstract class TargettedSkill extends ActiveSkill {
      * Handles target acquisition before calling {@link #use(Hero, LivingEntity, String[])}.
      * 
      * @param hero
-     *            the {@link Hero} using the skill
+     *        the {@link Hero} using the skill
      * @param args
-     *            the arguments provided with the command
+     *        the arguments provided with the command
      * @return <code>true</code> if the skill executed properly, <code>false</code> otherwise
      */
     @Override
@@ -120,9 +120,9 @@ public abstract class TargettedSkill extends ActiveSkill {
      * The heart of any TargettedSkill, this method defines what actually happens when the skill is used.
      * 
      * @param hero
-     *            the {@link Hero} using the skill
+     *        the {@link Hero} using the skill
      * @param args
-     *            the arguments provided with the command
+     *        the arguments provided with the command
      * @return <code>true</code> if the skill executed properly, <code>false</code> otherwise
      */
     public abstract boolean use(Hero hero, LivingEntity target, String[] args);
@@ -131,9 +131,9 @@ public abstract class TargettedSkill extends ActiveSkill {
      * Returns the first LivingEntity in the line of sight of a Player.
      * 
      * @param player
-     *            the player being checked
+     *        the player being checked
      * @param maxDistance
-     *            the maximum distance to search for a target
+     *        the maximum distance to search for a target
      * @return the player's target or null if no target is found
      */
     public static LivingEntity getPlayerTarget(Player player, int maxDistance) {
@@ -162,9 +162,9 @@ public abstract class TargettedSkill extends ActiveSkill {
      * Helper method to check whether a player is in another player's line of sight.
      * 
      * @param a
-     *            the source
+     *        the source
      * @param b
-     *            the target
+     *        the target
      * @return <code>true</code> if <code>b</code> is in <code>a</code>'s line of sight; <code>false</code> otherwise
      */
     public static boolean inLineOfSight(Player a, Player b) {
@@ -194,7 +194,7 @@ public abstract class TargettedSkill extends ActiveSkill {
      * Returns the pretty name of a <code>LivingEntity</code>.
      * 
      * @param entity
-     *            the entity
+     *        the entity
      * @return the pretty name of the entity
      */
     public static String getEntityName(LivingEntity entity) {

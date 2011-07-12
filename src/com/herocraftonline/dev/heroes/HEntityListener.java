@@ -24,7 +24,7 @@ import com.herocraftonline.dev.heroes.util.Properties;
 public class HEntityListener extends EntityListener {
 
     private static final DecimalFormat decFormat = new DecimalFormat("#0.##");
-    
+
     private final Heroes plugin;
     private HashMap<Integer, Player> kills = new HashMap<Integer, Player>();
 
@@ -47,8 +47,8 @@ public class HEntityListener extends EntityListener {
             double exp = heroDefender.getExperience();
             int level = prop.getLevel(exp);
             if (level < prop.maxLevel) {
-                int currentLevelExp = (int)prop.getExperience(level);
-                int nextLevelExp = (int)prop.getExperience(level + 1);
+                int currentLevelExp = (int) prop.getExperience(level);
+                int nextLevelExp = (int) prop.getExperience(level + 1);
                 double expLoss = (nextLevelExp - currentLevelExp) * prop.expLoss;
                 if (exp - expLoss < currentLevelExp) {
                     expLoss = exp - currentLevelExp;

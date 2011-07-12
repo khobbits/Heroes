@@ -17,9 +17,7 @@ import com.herocraftonline.dev.heroes.util.Messaging;
 /**
  * A skill that performs an action in direct response to a user command. All skill identifiers <i>must</i>
  * begin with <i>skill</i>, e.g. "skill fireball", in order to be recognized. ActiveSkills define four default settings:
- * mana, cooldown, experience and usage text. Mana is deducted and a cooldown is activated when the
- * {@link #use(Hero, String[])} method returns <code>true</code>. The {@link #execute(CommandSender, String[])}
- * automatically handles class, level, mana and cooldown checks on a player attempting to use a skill and should not be
+ * mana, cooldown, experience and usage text. Mana is deducted and a cooldown is activated when the {@link #use(Hero, String[])} method returns <code>true</code>. The {@link #execute(CommandSender, String[])} automatically handles class, level, mana and cooldown checks on a player attempting to use a skill and should not be
  * overridden. If all of these checks pass, the <code>use</code> method is called, which should contain the heart of the
  * skill's behavior that is unique to each skill.
  */
@@ -53,15 +51,14 @@ public abstract class ActiveSkill extends Skill {
      * identifier fields as defined in {@link BaseCommand}. Remember that each identifier must begin with <i>skill</i>.
      * 
      * @param plugin
-     *            the active Heroes instance
+     *        the active Heroes instance
      */
     public ActiveSkill(Heroes plugin) {
         super(plugin);
     }
 
     /**
-     * Returns the text to be displayed when the skill is successfully used. This text is pulled from the
-     * {@link #SETTING_USETEXT} entry in the skill's configuration during initialization.
+     * Returns the text to be displayed when the skill is successfully used. This text is pulled from the {@link #SETTING_USETEXT} entry in the skill's configuration during initialization.
      * 
      * @return the usage text
      */
@@ -73,7 +70,7 @@ public abstract class ActiveSkill extends Skill {
      * Changes the stored usage text. This can be used to override the message found in the skill's configuration.
      * 
      * @param useText
-     *            the new usage text
+     *        the new usage text
      */
     public void setUseText(String useText) {
         this.useText = useText;
@@ -106,13 +103,12 @@ public abstract class ActiveSkill extends Skill {
     /**
      * Called whenever a command with an identifier registered to this skill is used. This implementation performs all
      * necessary class, level, mana and cooldown checks. This method should <i>not</i> be overridden unless you really
-     * know what you're doing. If all checks pass, this method calls {@link #use(Hero, String[])}. If <code>use</code>
-     * returns <code>true</code>, this method automatically deducts mana, awards experience and sets a cooldown.
+     * know what you're doing. If all checks pass, this method calls {@link #use(Hero, String[])}. If <code>use</code> returns <code>true</code>, this method automatically deducts mana, awards experience and sets a cooldown.
      * 
      * @param sender
-     *            the <code>CommandSender</code> issuing the command
+     *        the <code>CommandSender</code> issuing the command
      * @param args
-     *            the arguments provided with the command
+     *        the arguments provided with the command
      */
     @Override
     public void execute(CommandSender sender, String[] args) {
@@ -177,13 +173,12 @@ public abstract class ActiveSkill extends Skill {
     }
 
     /**
-     * The heart of any ActiveSkill, this method defines what actually happens when the skill is used. See
-     * {@link #execute(CommandSender, String[])} for a brief explanation of the execution process.
+     * The heart of any ActiveSkill, this method defines what actually happens when the skill is used. See {@link #execute(CommandSender, String[])} for a brief explanation of the execution process.
      * 
      * @param hero
-     *            the {@link Hero} using the skill
+     *        the {@link Hero} using the skill
      * @param args
-     *            the arguments provided with the command
+     *        the arguments provided with the command
      * @return <code>true</code> if the skill executed properly, <code>false</code> otherwise
      */
     public abstract boolean use(Hero hero, String[] args);

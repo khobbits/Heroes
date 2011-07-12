@@ -106,9 +106,11 @@ public class OutsourcedSkill extends Skill {
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args) {}
+    public void execute(CommandSender sender, String[] args) {
+    }
 
     @Override
-    public void init() {}
+    public void init() {
+    }
 
 }

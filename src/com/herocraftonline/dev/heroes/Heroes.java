@@ -99,10 +99,10 @@ public class Heroes extends JavaPlugin {
     // Inventory Event listeners for both Heroes and BukkitContrib
     private final HeroesInventoryListener heroesInventoryListener = new HeroesInventoryListener(this);
     private BukkitContribInventoryListener bukkitContribInventoryListener;
-    
-    //Party Listener
+
+    // Party Listener
     private PartyEntityListener partyEntityListener = new PartyEntityListener(this);
-    
+
     // Inventory Checker Class -- This class has the methods to check a players inventory and
     // restrictions.
     private final InventoryChecker inventoryChecker = new InventoryChecker(this);
@@ -218,7 +218,7 @@ public class Heroes extends JavaPlugin {
         pluginManager.registerEvent(Type.PLAYER_ITEM_HELD, playerListener, Priority.Monitor, this);
         pluginManager.registerEvent(Type.PLAYER_PICKUP_ITEM, playerListener, Priority.Monitor, this);
         pluginManager.registerEvent(Type.PLAYER_TELEPORT, playerListener, Priority.Monitor, this);
-        
+
         pluginManager.registerEvent(Type.ENTITY_DAMAGE, partyEntityListener, Priority.Highest, this);
         pluginManager.registerEvent(Type.ENTITY_DAMAGE, entityListener, Priority.Monitor, this);
         pluginManager.registerEvent(Type.ENTITY_DEATH, entityListener, Priority.Monitor, this);
@@ -232,7 +232,7 @@ public class Heroes extends JavaPlugin {
 
         pluginManager.registerEvent(Type.CUSTOM_EVENT, new HLevelListener(this), Priority.Monitor, this);
         pluginManager.registerEvent(Type.CUSTOM_EVENT, new HPermissionsListener(this), Priority.Monitor, this);
-        
+
         // Inventory Event Listeners
         pluginManager.registerEvent(Type.CUSTOM_EVENT, heroesInventoryListener, Priority.Monitor, this);
     }

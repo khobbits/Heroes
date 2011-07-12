@@ -13,7 +13,7 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 
-public class SkillTelekinesis extends ActiveSkill{
+public class SkillTelekinesis extends ActiveSkill {
 
     public SkillTelekinesis(Heroes plugin) {
         super(plugin);
@@ -33,13 +33,13 @@ public class SkillTelekinesis extends ActiveSkill{
         transparent.add((byte) Material.WATER.getId());
         List<Block> lineOfSight = player.getLineOfSight(transparent, 15);
         Block block = lineOfSight.get(lineOfSight.size() - 1);
-        if(block.getType() == Material.LEVER){
+        if (block.getType() == Material.LEVER) {
             Lever lever = (Lever) block;
             lever.setPowered(!lever.isPowered());
-        }else if(block.getType() == Material.STONE_BUTTON) {
+        } else if (block.getType() == Material.STONE_BUTTON) {
             Button button = (Button) block;
             button.setPowered(!button.isPowered());
-        }else {
+        } else {
             return false;
         }
         return true;

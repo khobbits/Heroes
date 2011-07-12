@@ -11,7 +11,7 @@ import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 
-public class SkillSummonfood extends ActiveSkill{
+public class SkillSummonfood extends ActiveSkill {
 
     public SkillSummonfood(Heroes plugin) {
         super(plugin);
@@ -29,7 +29,7 @@ public class SkillSummonfood extends ActiveSkill{
         node.setProperty("food-type", "BREAD");
         return node;
     }
-    
+
     @Override
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
