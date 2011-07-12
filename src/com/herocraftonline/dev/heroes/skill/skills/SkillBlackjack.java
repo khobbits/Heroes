@@ -21,7 +21,6 @@ import org.bukkit.util.config.ConfigurationNode;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.persistence.Hero;
-import com.herocraftonline.dev.heroes.persistence.HeroEffects;
 import com.herocraftonline.dev.heroes.skill.ActiveEffectSkill;
 
 public class SkillBlackjack extends ActiveEffectSkill {
@@ -99,8 +98,7 @@ public class SkillBlackjack extends ActiveEffectSkill {
                     if (attackingEntity instanceof Player) {
                         Hero attackingHero = plugin.getHeroManager().getHero((Player) attackingEntity);
                         HeroClass heroClass = attackingHero.getHeroClass();
-                        HeroEffects effects = attackingHero.getEffects();
-                        if (effects.hasEffect(getName())) {
+                        if (attackingHero.hasEffect(getName())) {
                             double chance = getSetting(heroClass, "stun-chance", 0.20);
                             if (random.nextDouble() < chance) {
                                 int duration = getSetting(heroClass, "stun-duration", 5000);

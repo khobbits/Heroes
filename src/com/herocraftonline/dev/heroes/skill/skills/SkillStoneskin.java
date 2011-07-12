@@ -43,7 +43,7 @@ public class SkillStoneskin extends PassiveSkill {
                 if (subEvent.getEntity() instanceof Player) {
                     Player player = (Player) subEvent.getEntity();
                     Hero hero = plugin.getHeroManager().getHero(player);
-                    if (hero.getEffects().hasEffect(getName())) {
+                    if (hero.hasEffect(getName())) {
                         double multiplier = getSetting(hero.getHeroClass(), "damage-multiplier", 0.80);
                         subEvent.setDamage((int) (subEvent.getDamage() * multiplier));
                     }

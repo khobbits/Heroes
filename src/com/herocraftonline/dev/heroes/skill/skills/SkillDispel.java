@@ -28,8 +28,10 @@ public class SkillDispel extends TargettedSkill {
 
         Player targetPlayer = (Player) target;
         Hero targetHero = plugin.getHeroManager().getHero(targetPlayer);
-        for (String s : targetHero.getEffects().getEffects()) {
-            targetHero.getEffects().removeEffect(s);
+        for (String s : targetHero.getEffects()) {
+            if (targetHero.getEffectExpiry(s) > 0) {
+                targetHero.removeEffect(s);
+            }
         }
 
         notifyNearbyPlayers(player.getLocation(), getUseText(), player.getName(), getName(), getEntityName(target));

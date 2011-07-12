@@ -11,7 +11,6 @@ import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
-import com.herocraftonline.dev.heroes.persistence.HeroEffects;
 import com.herocraftonline.dev.heroes.skill.ActiveEffectSkill;
 
 public class SkillOne extends ActiveEffectSkill {
@@ -49,8 +48,7 @@ public class SkillOne extends ActiveEffectSkill {
             Player player = event.getPlayer();
             Hero hero = plugin.getHeroManager().getHero(player);
 
-            HeroEffects effects = hero.getEffects();
-            if (effects.hasEffect(getName())) {
+            if (hero.hasEffect(getName())) {
                 double speed = getSetting(hero.getHeroClass(), "speed", 0.7);
                 Location loc = player.getLocation();
                 Vector dir = loc.getDirection().normalize();

@@ -11,7 +11,6 @@ import org.bukkit.inventory.ItemStack;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
-import com.herocraftonline.dev.heroes.persistence.HeroEffects;
 import com.herocraftonline.dev.heroes.skill.ActiveEffectSkill;
 
 public class SkillSuperheat extends ActiveEffectSkill {
@@ -47,8 +46,7 @@ public class SkillSuperheat extends ActiveEffectSkill {
             Block block = event.getBlock();
             Player player = event.getPlayer();
             Hero hero = plugin.getHeroManager().getHero(player);
-            HeroEffects effects = hero.getEffects();
-            if (effects.hasEffect(getName())) {
+            if (hero.hasEffect(getName())) {
                 switch (block.getType()) {
                     case IRON_ORE:
                         event.setCancelled(true);

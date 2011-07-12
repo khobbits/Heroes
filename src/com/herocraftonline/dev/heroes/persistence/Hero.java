@@ -20,7 +20,9 @@ import com.herocraftonline.dev.heroes.api.ExperienceGainEvent;
 import com.herocraftonline.dev.heroes.api.LevelEvent;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
+import com.herocraftonline.dev.heroes.command.BaseCommand;
 import com.herocraftonline.dev.heroes.party.HeroParty;
+import com.herocraftonline.dev.heroes.skill.ActiveEffectSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Properties;
@@ -35,7 +37,7 @@ public class Hero {
     protected int mana = 0;
     protected HeroParty party = null;
     protected boolean verbose = true;
-    protected HeroEffects effects;
+    protected Map<String, Long> effects = new HashMap<String, Long>();
     protected Map<String, Double> experience = new HashMap<String, Double>();
     protected Map<String, Long> cooldowns = new HashMap<String, Long>();
     protected Map<Entity, CreatureType> summons = new HashMap<Entity, CreatureType>();
@@ -48,7 +50,6 @@ public class Hero {
         this.plugin = plugin;
         this.player = player;
         this.heroClass = heroClass;
-        this.effects = new HeroEffects(plugin.getCommandManager(), this);
         this.health = health;
     }
 
@@ -218,8 +219,33 @@ public class Hero {
         return summons;
     }
 
-    public HeroEffects getEffects() {
-        return effects;
+    public void expireEffect(String effect) {
+        BaseCommand cmd = plugin.getCommandManager().getCommand(effect);
+        if (cmd != null && cmd instanceof ActiveEffectSkill) {
+            ((ActiveEffectSkill) cmd).onExpire(this);
+        }
+        removeEffect(effect);
+    }
+
+    public boolean hasEffect(String effect) {
+        return effects.containsKey(effect.toLowerCase());
+    }
+
+    public void applyEffect(String effect, long duration) {
+        long time = System.currentTimeMillis();
+        effects.put(effect.toLowerCase(), time + duration);
+    }
+
+    public Long removeEffect(String effect) {
+        return effects.remove(effect.toLowerCase());
+    }
+    
+    public Long getEffectExpiry(String effect) {
+        return effects.get(effect.toLowerCase());
+    }
+
+    public Set<String> getEffects() {
+        return new HashSet<String>(effects.keySet());
     }
 
     public Map<Material, String[]> getBinds() {

@@ -12,7 +12,6 @@ import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
-import com.herocraftonline.dev.heroes.persistence.HeroEffects;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 
 public class SkillSafefallOther extends TargettedSkill {
@@ -47,8 +46,8 @@ public class SkillSafefallOther extends TargettedSkill {
             Entity defender = event.getEntity();
             if (defender instanceof Player) {
                 Player player = (Player) defender;
-                HeroEffects effects = plugin.getHeroManager().getHero(player).getEffects();
-                if (effects.hasEffect(getName())) {
+                Hero hero = plugin.getHeroManager().getHero(player);
+                if (hero.hasEffect(getName())) {
                     event.setCancelled(true);
                 }
             }
@@ -60,8 +59,8 @@ public class SkillSafefallOther extends TargettedSkill {
         Player player = hero.getPlayer();
         if (target instanceof Player) {
             Hero newHero = plugin.getHeroManager().getHero((Player) target);
-            double duration = getSetting(hero.getHeroClass(), "duration", 5000);
-            newHero.getEffects().putEffect(getName(), duration);
+            long duration = getSetting(hero.getHeroClass(), "duration", 5000);
+            newHero.applyEffect(getName(), duration);
             notifyNearbyPlayers(player.getLocation(), getUseText(), player.getName(), getName(), target == player ? "himself" : getEntityName(target));
             return true;
         } else {

@@ -15,7 +15,6 @@ import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
-import com.herocraftonline.dev.heroes.persistence.HeroEffects;
 import com.herocraftonline.dev.heroes.skill.PassiveSkill;
 
 public class SkillStar extends PassiveSkill {
@@ -43,8 +42,7 @@ public class SkillStar extends PassiveSkill {
         public void onPlayerEggThrow(PlayerEggThrowEvent event) {
             Player player = event.getPlayer();
             Hero hero = plugin.getHeroManager().getHero(player);
-            HeroEffects effects = hero.getEffects();
-            if (effects.hasEffect(getName())) {
+            if (hero.hasEffect(getName())) {
                 event.setHatching(false);
             }
 
@@ -68,7 +66,7 @@ public class SkillStar extends PassiveSkill {
                     if (shooter instanceof Player) {
                         Player shootingPlayer = (Player) shooter;
                         Hero hero = plugin.getHeroManager().getHero(shootingPlayer);
-                        if (hero.getEffects().hasEffect(getName())) {
+                        if (hero.hasEffect(getName())) {
                             int damage = getSetting(hero.getHeroClass(), "damage", 4);
                             event.setDamage(damage);
                         }

@@ -7,8 +7,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.logging.Level;
 
 import org.bukkit.Material;
@@ -33,9 +31,9 @@ public class HeroManager {
     private Heroes plugin;
     private Set<Hero> heroes;
     private File playerFolder;
-    private Timer effectTimer;
+    private Runnable effectTimer;
     private Runnable manaTimer;
-    private final static int effectInterval = 100;
+    private final static int effectInterval = 100 * 20 / 1000;
     private final static int manaInterval = 5 * 20;
 
     public HeroManager(Heroes plugin) {
@@ -44,10 +42,10 @@ public class HeroManager {
         playerFolder = new File(plugin.getDataFolder(), "players"); // Setup our Player Data Folder
         playerFolder.mkdirs(); // Create the folder if it doesn't exist.
 
-        effectTimer = new Timer(false); // Maintenance thread only
-        effectTimer.scheduleAtFixedRate(new EffectChecker(effectInterval, this), 0, effectInterval);
+        effectTimer = new EffectUpdater(this);
+        plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, effectTimer, 0, effectInterval);
 
-        manaTimer = new ManaUpdater(this); // Maintenance thread only
+        manaTimer = new ManaUpdater(this);
         plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, manaTimer, 0, manaInterval);
     }
 
@@ -319,28 +317,33 @@ public class HeroManager {
     }
 
     public void stopTimers() {
-        effectTimer.cancel();
         plugin.getServer().getScheduler().cancelTasks(plugin);
     }
 }
 
-class EffectChecker extends TimerTask {
-    private final int interval;
-    private final HeroManager manager;
+class EffectUpdater implements Runnable {
+    private final HeroManager heroManager;
 
-    EffectChecker(int interval, HeroManager manager) {
-        this.interval = interval;
-        this.manager = manager;
+    EffectUpdater(HeroManager heroManager) {
+        this.heroManager = heroManager;
     }
 
     @Override
     public void run() {
-        Set<Hero> heroes = manager.getHeroes();
+        Set<Hero> heroes = heroManager.getHeroes();
+        long time = System.currentTimeMillis();
         for (Hero hero : heroes) {
             if (hero == null) {
                 continue;
             }
-            hero.getEffects().update(interval);
+            Set<String> effects = hero.getEffects();
+            for (String effect : effects) {
+                long expiry = hero.getEffectExpiry(effect);
+
+                if (time >= expiry && expiry != -1) {
+                    hero.expireEffect(effect);
+                }
+            }
         }
     }
 }
@@ -362,9 +365,6 @@ class ManaUpdater implements Runnable {
             }
 
             int mana = hero.getMana();
-            if (hero.getEffects().hasEffect("ManaFreeze")) {
-                mana = 100;
-            }
             hero.setMana(mana > 100 ? mana : mana > 95 ? 100 : mana + 5); // Hooray for the ternary operator!
             if (mana != 100 && hero.isVerbose()) {
                 Messaging.send(hero.getPlayer(), "Mana: " + Messaging.createManaBar(hero.getMana()));

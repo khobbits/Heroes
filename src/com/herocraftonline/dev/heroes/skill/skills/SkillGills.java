@@ -34,7 +34,7 @@ public class SkillGills extends ActiveEffectSkill {
             if (event.getEntity() instanceof Player) {
                 Player player = (Player) event.getEntity();
                 Hero hero = plugin.getHeroManager().getHero(player);
-                if (hero.getEffects().hasEffect(getName())) {
+                if (hero.hasEffect(getName())) {
                     event.setCancelled(true);
                 }
             }

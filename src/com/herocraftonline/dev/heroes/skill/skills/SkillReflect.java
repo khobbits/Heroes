@@ -12,7 +12,6 @@ import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
-import com.herocraftonline.dev.heroes.persistence.HeroEffects;
 import com.herocraftonline.dev.heroes.skill.ActiveEffectSkill;
 
 public class SkillReflect extends ActiveEffectSkill {
@@ -59,12 +58,10 @@ public class SkillReflect extends ActiveEffectSkill {
             if (attacker instanceof LivingEntity && defender instanceof Player) {
                 Player defPlayer = (Player) defender;
                 Hero hero = plugin.getHeroManager().getHero(defPlayer);
-                HeroEffects defEffects = hero.getEffects();
-                if (defEffects.hasEffect(getName())) {
+                if (hero.hasEffect(getName())) {
                     if (attacker instanceof Player) {
                         Player attPlayer = (Player) attacker;
-                        HeroEffects attEffects = plugin.getHeroManager().getHero(attPlayer).getEffects();
-                        if (attEffects.hasEffect(getName())) {
+                        if (plugin.getHeroManager().getHero(attPlayer).hasEffect(getName())) {
                             event.setCancelled(true);
                             return;
                         }

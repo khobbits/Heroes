@@ -9,7 +9,6 @@ import org.bukkit.event.entity.EntityListener;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
-import com.herocraftonline.dev.heroes.persistence.HeroEffects;
 import com.herocraftonline.dev.heroes.skill.ActiveEffectSkill;
 
 public class SkillInvuln extends ActiveEffectSkill {
@@ -47,8 +46,8 @@ public class SkillInvuln extends ActiveEffectSkill {
             Entity defender = event.getEntity();
             if (defender instanceof Player) {
                 Player player = (Player) defender;
-                HeroEffects effects = plugin.getHeroManager().getHero(player).getEffects();
-                if (effects.hasEffect(getName())) {
+                Hero hero = plugin.getHeroManager().getHero(player);
+                if (hero.hasEffect(getName())) {
                     event.setCancelled(true);
                 }
             }
