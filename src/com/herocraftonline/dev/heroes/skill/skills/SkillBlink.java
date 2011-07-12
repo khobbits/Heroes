@@ -2,7 +2,6 @@ package com.herocraftonline.dev.heroes.skill.skills;
 
 import java.util.List;
 
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 
 import com.herocraftonline.dev.heroes.Heroes;
