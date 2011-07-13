@@ -1,0 +1,48 @@
+package com.herocraftonline.dev.heroes.skill.skills;
+
+import java.util.HashSet;
+import java.util.List;
+
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
+import org.bukkit.material.Button;
+import org.bukkit.material.Lever;
+
+import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.persistence.Hero;
+import com.herocraftonline.dev.heroes.skill.ActiveSkill;
+
+public class SkillTelekinesis extends ActiveSkill {
+
+    public SkillTelekinesis(Heroes plugin) {
+        super(plugin);
+        setName("Telekinesis");
+        setDescription("Activate levers, buttons and other interactable objects from afar!");
+        setUsage("/skill telekinesis");
+        setMinArgs(0);
+        setMaxArgs(0);
+        getIdentifiers().add("skill telekinesis");
+    }
+
+    @Override
+    public boolean use(Hero hero, String[] args) {
+        Player player = hero.getPlayer();
+        HashSet<Byte> transparent = new HashSet<Byte>();
+        transparent.add((byte) Material.AIR.getId());
+        transparent.add((byte) Material.WATER.getId());
+        List<Block> lineOfSight = player.getLineOfSight(transparent, 15);
+        Block block = lineOfSight.get(lineOfSight.size() - 1);
+        if (block.getType() == Material.LEVER) {
+            Lever lever = (Lever) block;
+            lever.setPowered(!lever.isPowered());
+        } else if (block.getType() == Material.STONE_BUTTON) {
+            Button button = (Button) block;
+            button.setPowered(!button.isPowered());
+        } else {
+            return false;
+        }
+        return true;
+    }
+
+}

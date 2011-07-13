@@ -1,5 +1,7 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
+import java.util.Set;
+
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Entity;
@@ -58,7 +60,7 @@ public class SkillSummon extends ActiveSkill {
         @Override
         public void onEntityTarget(EntityTargetEvent event) {
             if (event.getTarget() instanceof Player) {
-                Hero[] heroes = plugin.getHeroManager().getHeroes();
+                Set<Hero> heroes = plugin.getHeroManager().getHeroes();
                 for (Hero hero : heroes) {
                     if (hero.getSummons().containsKey(event.getEntity())) {
                         if (hero.getPlayer() == event.getTarget()) {
@@ -72,7 +74,7 @@ public class SkillSummon extends ActiveSkill {
         @Override
         public void onEntityDeath(EntityDeathEvent event) {
             Entity defender = event.getEntity();
-            Hero[] heroes = plugin.getHeroManager().getHeroes();
+            Set<Hero> heroes = plugin.getHeroManager().getHeroes();
             for (Hero hero : heroes) {
                 if (hero.getSummons().containsKey(defender)) {
                     hero.getSummons().remove(defender);

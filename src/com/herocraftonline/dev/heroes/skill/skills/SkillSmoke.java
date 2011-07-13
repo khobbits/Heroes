@@ -54,8 +54,8 @@ public class SkillSmoke extends ActiveEffectSkill {
             if (event.getEntity() instanceof Player) {
                 Player player = (Player) event.getEntity();
                 Hero hero = plugin.getHeroManager().getHero(player);
-                if (hero.getEffects().hasEffect(getName())) {
-                    hero.getEffects().expireEffect(getName());
+                if (hero.hasEffect(getName())) {
+                    hero.expireEffect(getName());
                 }
             }
         }
@@ -67,8 +67,8 @@ public class SkillSmoke extends ActiveEffectSkill {
             if (event.getAction() != Action.PHYSICAL) {
                 Player player = event.getPlayer();
                 Hero hero = plugin.getHeroManager().getHero(player);
-                if (hero.getEffects().hasEffect(getName())) {
-                    hero.getEffects().expireEffect(getName());
+                if (hero.hasEffect(getName())) {
+                    hero.expireEffect(getName());
                 }
             }
         }

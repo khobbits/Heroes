@@ -14,8 +14,7 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.PassiveSkill;
 
-
-public class SkillShield extends PassiveSkill{
+public class SkillShield extends PassiveSkill {
 
     public SkillShield(Heroes plugin) {
         super(plugin);
@@ -24,7 +23,8 @@ public class SkillShield extends PassiveSkill{
         setMinArgs(0);
         setMaxArgs(0);
 
-        registerEvent(Type.ENTITY_DAMAGE, new SkillPlayerListener(), Priority.High);    }
+        registerEvent(Type.ENTITY_DAMAGE, new SkillPlayerListener(), Priority.High);
+    }
 
     @Override
     public ConfigurationNode getDefaultConfig() {
@@ -34,8 +34,7 @@ public class SkillShield extends PassiveSkill{
         node.setProperty("trapdoor", 0.60);
         return node;
     }
-    
-    
+
     public class SkillPlayerListener extends EntityListener {
 
         public void onEntityDamage(EntityDamageEvent event) {
@@ -47,14 +46,14 @@ public class SkillShield extends PassiveSkill{
                 if (subEvent.getEntity() instanceof Player) {
                     Player player = (Player) subEvent.getEntity();
                     Hero hero = plugin.getHeroManager().getHero(player);
-                    if (hero.getEffects().hasEffect(getName())) {   
+                    if (hero.hasEffect(getName())) {
                         double multiplier = 0;
-                        if(player.getItemInHand().getType() == Material.IRON_DOOR) {
+                        if (player.getItemInHand().getType() == Material.IRON_DOOR) {
                             multiplier = getSetting(hero.getHeroClass(), "iron-door", 0.75);
 
-                        }else if(player.getItemInHand().getType() == Material.WOODEN_DOOR) {
+                        } else if (player.getItemInHand().getType() == Material.WOODEN_DOOR) {
                             multiplier = getSetting(hero.getHeroClass(), "wooden-door", 0.85);
-                        }else if(player.getItemInHand().getType() == Material.TRAP_DOOR) {
+                        } else if (player.getItemInHand().getType() == Material.TRAP_DOOR) {
                             multiplier = getSetting(hero.getHeroClass(), "trapdoor", 0.60);
                         }
                         subEvent.setDamage((int) (subEvent.getDamage() * multiplier));

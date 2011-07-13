@@ -7,10 +7,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.logging.Level;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -33,10 +32,10 @@ public class HeroManager {
     private Heroes plugin;
     private Set<Hero> heroes;
     private File playerFolder;
-    private Timer effectTimer;
-    private Timer manaTimer;
-    private final static int effectInterval = 100;
-    private final static int manaInterval = 5000; // Possible to be configurable?
+    private Runnable effectTimer;
+    private Runnable manaTimer;
+    private final static int effectInterval = 2;
+    private final static int manaInterval = 5;
 
     public HeroManager(Heroes plugin) {
         this.plugin = plugin;
@@ -44,11 +43,11 @@ public class HeroManager {
         playerFolder = new File(plugin.getDataFolder(), "players"); // Setup our Player Data Folder
         playerFolder.mkdirs(); // Create the folder if it doesn't exist.
 
-        effectTimer = new Timer(false); // Maintenance thread only
-        effectTimer.scheduleAtFixedRate(new EffectChecker(effectInterval, this), 0, effectInterval);
+        effectTimer = new EffectUpdater(this);
+        plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, effectTimer, 0, effectInterval);
 
-        manaTimer = new Timer(false); // Maintenance thread only
-        manaTimer.scheduleAtFixedRate(new ManaUpdater(this), 0, manaInterval);
+        manaTimer = new ManaUpdater(this);
+        plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, manaTimer, 0, manaInterval);
     }
 
     /**
@@ -56,7 +55,7 @@ public class HeroManager {
      * 
      * @param player
      */
-    public void loadHeroFile(Player player) {
+    public Hero loadHeroFile(Player player) {
         File playerFile = new File(playerFolder, player.getName() + ".yml"); // Setup our Players Data File.
         // Check if it already exists, if so we load the data.
         if (playerFile.exists()) {
@@ -66,6 +65,7 @@ public class HeroManager {
             HeroClass playerClass = loadClass(player, playerConfig);
             Hero playerHero = new Hero(plugin, player, playerClass, playerClass.getMaxHealth());
 
+            loadCooldowns(playerHero, playerConfig);
             loadExperience(playerHero, playerConfig);
             loadRecoveryItems(playerHero, playerConfig);
             loadBinds(playerHero, playerConfig);
@@ -79,10 +79,29 @@ public class HeroManager {
             performSkillChecks(playerHero);
 
             plugin.log(Level.INFO, "Loaded hero: " + player.getName());
+            return playerHero;
         } else {
             // Create a New Hero with the Default Setup.
-            createNewHero(player);
             plugin.log(Level.INFO, "Created hero: " + player.getName());
+            return createNewHero(player);
+        }
+    }
+
+    private void loadCooldowns(Hero hero, Configuration config) {
+        HeroClass heroClass = hero.getHeroClass();
+
+        String path = "cooldowns";
+        List<String> storedCooldowns = config.getKeys(path);
+        if (storedCooldowns != null) {
+            long time = System.currentTimeMillis();
+            Map<String, Long> cooldowns = new HashMap<String, Long>();
+            for (String skillName : storedCooldowns) {
+                long cooldown = (long) config.getDouble(path + "." + skillName, 0);
+                if (heroClass.hasSkill(skillName) && cooldown > time) {
+                    cooldowns.put(skillName, cooldown);
+                }
+            }
+            hero.cooldowns = cooldowns;
         }
     }
 
@@ -204,12 +223,27 @@ public class HeroManager {
         playerConfig.setProperty("mana", hero.getMana());
         playerConfig.removeProperty("itemrecovery");
 
+        saveCooldowns(hero, playerConfig);
         saveExperience(hero, playerConfig);
         saveRecoveryItems(hero, playerConfig);
         saveBinds(hero, playerConfig);
 
         playerConfig.save();
         plugin.log(Level.INFO, "Saved hero: " + player.getName());
+    }
+
+    private void saveCooldowns(Hero hero, Configuration config) {
+        String path = "cooldowns";
+        long time = System.currentTimeMillis();
+        Map<String, Long> cooldowns = hero.getCooldowns();
+        for (Map.Entry<String, Long> entry : cooldowns.entrySet()) {
+            String skillName = entry.getKey();
+            long cooldown = entry.getValue();
+            if (cooldown > time) {
+                System.out.println(path + "." + skillName);
+                config.setProperty(path + "." + skillName, cooldown);
+            }
+        }
     }
 
     private void saveExperience(Hero hero, Configuration config) {
@@ -243,9 +277,10 @@ public class HeroManager {
         }
     }
 
-    public boolean createNewHero(Player player) {
+    public Hero createNewHero(Player player) {
         Hero hero = new Hero(plugin, player, plugin.getClassManager().getDefaultClass(), plugin.getClassManager().getDefaultClass().getMaxHealth());
-        return addHero(hero);
+        addHero(hero);
+        return hero;
     }
 
     public boolean addHero(Hero hero) {
@@ -253,7 +288,7 @@ public class HeroManager {
     }
 
     public boolean removeHero(Hero hero) {
-        if (hero.hasParty()) {
+        if (hero != null && hero.hasParty()) {
             hero.getParty().removeMember(hero);
         }
         return heroes.remove(hero);
@@ -264,10 +299,10 @@ public class HeroManager {
     }
 
     public Hero getHero(Player player) {
-        final Hero[] heroes = getHeroes();
-        for (Hero hero : heroes) {
+        Set<Hero> tmpHeroes = getHeroes();
+        for (Hero hero : tmpHeroes) {
             if (hero == null || hero.getPlayer() == null) {
-                this.heroes.remove(hero); // Seeing as it's null we might as well remove it.
+                removeHero(hero); // Seeing as it's null we might as well remove it.
                 continue;
             }
             if (player.getName().equalsIgnoreCase(hero.getPlayer().getName())) {
@@ -275,56 +310,49 @@ public class HeroManager {
             }
         }
         // If it gets to this stage then clearly the HeroManager doesn't have it so we create it...
-        loadHeroFile(player);
-        final Hero[] heroez = getHeroes();
-        for (Hero hero : heroez) {
-            if (hero == null) {
-                continue;
-            }
-            if (player.getName().equalsIgnoreCase(hero.getPlayer().getName())) {
-                return hero;
-            }
-        }
-        return null;
+        return loadHeroFile(player);
     }
 
-    public final Hero[] getHeroes() {
-        return heroes.toArray(new Hero[0]);
-    }
-
-    public Set<Hero> getHeroSet() {
-        return heroes;
+    public Set<Hero> getHeroes() {
+        return new HashSet<Hero>(heroes);
     }
 
     public void stopTimers() {
-        effectTimer.cancel();
-        manaTimer.cancel();
+        plugin.getServer().getScheduler().cancelTasks(plugin);
     }
 }
 
-class EffectChecker extends TimerTask {
-    private final int interval;
-    private final HeroManager manager;
+class EffectUpdater implements Runnable {
+    private final HeroManager heroManager;
 
-    EffectChecker(int interval, HeroManager manager) {
-        this.interval = interval;
-        this.manager = manager;
+    EffectUpdater(HeroManager heroManager) {
+        this.heroManager = heroManager;
     }
 
     @Override
     public void run() {
-        Hero[] heroes = manager.getHeroes();
+        Set<Hero> heroes = heroManager.getHeroes();
+        long time = System.currentTimeMillis();
         for (Hero hero : heroes) {
             if (hero == null) {
                 continue;
             }
-            hero.getEffects().update(interval);
+            Set<String> effects = hero.getEffects();
+            for (String effect : effects) {
+                long expiry = hero.getEffectExpiry(effect);
+
+                if (time >= expiry && expiry != -1) {
+                    hero.expireEffect(effect);
+                }
+            }
         }
     }
 }
 
-class ManaUpdater extends TimerTask {
+class ManaUpdater implements Runnable {
     private final HeroManager manager;
+    private final long updateInterval = 5000;
+    private long lastUpdate = 0;
 
     ManaUpdater(HeroManager manager) {
         this.manager = manager;
@@ -332,19 +360,22 @@ class ManaUpdater extends TimerTask {
 
     @Override
     public void run() {
-        Hero[] heroes = manager.getHeroes();
+        long time = System.currentTimeMillis();
+        if (time < lastUpdate + updateInterval) {
+            return;
+        }
+        lastUpdate = time;
+
+        Set<Hero> heroes = manager.getHeroes();
         for (Hero hero : heroes) {
             if (hero == null) {
                 continue;
             }
 
             int mana = hero.getMana();
-            if (hero.getEffects().hasEffect("ManaFreeze")) {
-                mana = 100;
-            }
             hero.setMana(mana > 100 ? mana : mana > 95 ? 100 : mana + 5); // Hooray for the ternary operator!
             if (mana != 100 && hero.isVerbose()) {
-                Messaging.send(hero.getPlayer(), "Mana: " + Messaging.createManaBar(hero.getMana()));
+                Messaging.send(hero.getPlayer(), ChatColor.BLUE + "MANA " + Messaging.createManaBar(hero.getMana()));
             }
         }
     }

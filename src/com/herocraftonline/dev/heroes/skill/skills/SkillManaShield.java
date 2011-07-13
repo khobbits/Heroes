@@ -10,7 +10,6 @@ import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
-import com.herocraftonline.dev.heroes.persistence.HeroEffects;
 import com.herocraftonline.dev.heroes.skill.ActiveEffectSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
 
@@ -58,13 +57,12 @@ public class SkillManaShield extends ActiveEffectSkill {
             if (defender instanceof Player) {
                 Player player = (Player) defender;
                 Hero hero = plugin.getHeroManager().getHero(player);
-                HeroEffects effects = plugin.getHeroManager().getHero(player).getEffects();
-                if (effects.hasEffect(getName())) {
+                if (hero.hasEffect(getName())) {
                     int absorbamount = getSetting(hero.getHeroClass(), "mana-amount", 20);
                     event.setDamage(event.getDamage() / 2);
                     int mana = hero.getMana();
                     if (mana < absorbamount) {
-                        effects.expireEffect(getName());
+                        hero.expireEffect(getName());
                     } else {
                         mana -= absorbamount;
                         hero.setMana(mana);

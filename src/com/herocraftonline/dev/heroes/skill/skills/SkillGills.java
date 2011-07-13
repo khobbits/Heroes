@@ -21,7 +21,7 @@ public class SkillGills extends ActiveEffectSkill {
         setMinArgs(0);
         setMaxArgs(0);
         getIdentifiers().add("skill gills");
-        
+
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
     }
 
@@ -34,7 +34,7 @@ public class SkillGills extends ActiveEffectSkill {
             if (event.getEntity() instanceof Player) {
                 Player player = (Player) event.getEntity();
                 Hero hero = plugin.getHeroManager().getHero(player);
-                if (hero.getEffects().hasEffect(getName())) {
+                if (hero.hasEffect(getName())) {
                     event.setCancelled(true);
                 }
             }

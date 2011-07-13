@@ -37,7 +37,7 @@ public class SkillBarrage extends ActiveSkill {
         for (Map.Entry<Integer, ? extends ItemStack> entry : arrowSlots.entrySet()) {
             numArrows += entry.getValue().getAmount();
         }
-        
+
         if (numArrows == 0) {
             Messaging.send(player, "You have no arrows.");
             return false;

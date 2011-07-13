@@ -11,7 +11,7 @@ import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 
-public class SkillSummonArrow extends ActiveSkill{
+public class SkillSummonArrow extends ActiveSkill {
 
     public SkillSummonArrow(Heroes plugin) {
         super(plugin);
@@ -29,7 +29,7 @@ public class SkillSummonArrow extends ActiveSkill{
         node.setProperty("amount", 1);
         return node;
     }
-    
+
     @Override
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();

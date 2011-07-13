@@ -5,15 +5,15 @@ import java.util.HashMap;
 import com.herocraftonline.dev.heroes.Heroes;
 
 public class HeroesDamage {
-    public Heroes plugin;   
+    public Heroes plugin;
     private HashMap<Integer, Integer> mobHealthValues = new HashMap<Integer, Integer>();
-    
+
     public HeroesDamage(Heroes plugin) {
         this.plugin = plugin;
     }
-    
+
     public void registerEvents() {
-        
+
     }
 
     /**
@@ -22,9 +22,9 @@ public class HeroesDamage {
     public HashMap<Integer, Integer> getMobHealthValues() {
         return mobHealthValues;
     }
-    
+
     public void addMonster(Integer entityID, Integer hp) {
         mobHealthValues.put(entityID, hp);
     }
-    
+
 }

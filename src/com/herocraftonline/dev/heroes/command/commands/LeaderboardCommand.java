@@ -8,6 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -33,10 +34,10 @@ public class LeaderboardCommand extends BaseCommand {
     @SuppressWarnings("unchecked")
     @Override
     public void execute(CommandSender sender, String[] args) {
-        Hero[] heroList = plugin.getHeroManager().getHeroes();
+        Set<Hero> heroes = plugin.getHeroManager().getHeroes();
         HashMap<Hero, Double> heroValues = new HashMap<Hero, Double>();
         int i = 0;
-        for (Hero hero : heroList) {
+        for (Hero hero : heroes) {
             if (hero == null) {
                 continue;
             }

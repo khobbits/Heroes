@@ -8,24 +8,27 @@ import org.bukkit.event.Event.Type;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityListener;
+import org.bukkit.event.player.PlayerListener;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 
-public class SkillSafefallOther extends TargettedSkill {
+public class SkillRoot extends TargettedSkill {
 
-    public SkillSafefallOther(Heroes plugin) {
+    public SkillRoot(Heroes plugin) {
         super(plugin);
-        setName("SafefallOther");
-        setDescription("Skill - Safefall");
-        setUsage("/skill safefallother <target>");
+        setName("Root");
+        setDescription("Skill - Root");
+        setUsage("/skill root <target>");
         setMinArgs(0);
         setMaxArgs(1);
-        getIdentifiers().add("skill safefallother");
+        getIdentifiers().add("skill root");
 
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
+        registerEvent(Type.PLAYER_MOVE, new SkillPlayerListener(), Priority.Normal);
     }
 
     @Override
@@ -48,8 +51,23 @@ public class SkillSafefallOther extends TargettedSkill {
                 Player player = (Player) defender;
                 Hero hero = plugin.getHeroManager().getHero(player);
                 if (hero.hasEffect(getName())) {
-                    event.setCancelled(true);
+                    hero.expireEffect(getName());
                 }
+            }
+        }
+    }
+
+    public class SkillPlayerListener extends PlayerListener {
+
+        @Override
+        public void onPlayerMove(PlayerMoveEvent event) {
+            if (event.isCancelled()) {
+                return;
+            }
+            Player player = event.getPlayer();
+            Hero hero = plugin.getHeroManager().getHero(player);
+            if (hero.hasEffect(getName())) {
+                event.setCancelled(true);
             }
         }
     }
@@ -58,6 +76,9 @@ public class SkillSafefallOther extends TargettedSkill {
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
         if (target instanceof Player) {
+            if(((Player) target).getName() == player.getName()) {
+                return false;
+            }
             Hero newHero = plugin.getHeroManager().getHero((Player) target);
             long duration = getSetting(hero.getHeroClass(), "duration", 5000);
             newHero.applyEffect(getName(), duration);

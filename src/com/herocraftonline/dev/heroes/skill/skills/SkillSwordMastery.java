@@ -13,7 +13,7 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.PassiveSkill;
 
-public class SkillSwordMastery extends PassiveSkill{
+public class SkillSwordMastery extends PassiveSkill {
 
     public SkillSwordMastery(Heroes plugin) {
         super(plugin);
@@ -38,7 +38,7 @@ public class SkillSwordMastery extends PassiveSkill{
                 if (subEvent.getDamager() instanceof Player) {
                     Player player = (Player) subEvent.getDamager();
                     Hero hero = plugin.getHeroManager().getHero(player);
-                    if (hero.getEffects().hasEffect(getName())) {
+                    if (hero.hasEffect(getName())) {
                         if (player.getItemInHand().getType() == Material.GOLD_SWORD) {
                             event.setDamage(event.getDamage() + Math.round(hero.getLevel() / 20));
                         }
