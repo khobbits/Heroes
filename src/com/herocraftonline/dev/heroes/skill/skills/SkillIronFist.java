@@ -26,7 +26,7 @@ public class SkillIronFist extends PassiveSkill {
         setMaxArgs(1);
         getIdentifiers().add("skill ironfist");
 
-        registerEvent(Type.ENTITY_DAMAGE, new SkillPlayerListener(), Priority.Normal);
+        registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
     }
 
     @Override
@@ -36,7 +36,7 @@ public class SkillIronFist extends PassiveSkill {
         return node;
     }
 
-    public class SkillPlayerListener extends EntityListener {
+    public class SkillEntityListener extends EntityListener {
 
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
