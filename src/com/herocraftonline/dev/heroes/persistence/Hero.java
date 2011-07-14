@@ -239,7 +239,7 @@ public class Hero {
     public Long removeEffect(String effect) {
         return effects.remove(effect.toLowerCase());
     }
-    
+
     public Long getEffectExpiry(String effect) {
         return effects.get(effect.toLowerCase());
     }

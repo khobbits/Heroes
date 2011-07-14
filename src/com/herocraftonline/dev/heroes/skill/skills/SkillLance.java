@@ -12,6 +12,7 @@ import org.bukkit.util.config.ConfigurationNode;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.PassiveSkill;
+import com.herocraftonline.dev.heroes.skill.skills.SkillIronFist.SkillEntityListener;
 
 public class SkillLance extends PassiveSkill {
 
@@ -25,7 +26,7 @@ public class SkillLance extends PassiveSkill {
         setMaxArgs(1);
         getIdentifiers().add("skill lance");
 
-        registerEvent(Type.ENTITY_DAMAGE, new SkillPlayerListener(), Priority.Normal);
+        registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
     }
 
     @Override
@@ -35,7 +36,7 @@ public class SkillLance extends PassiveSkill {
         return node;
     }
 
-    public class SkillPlayerListener extends EntityListener {
+    public class SkillEntityListener extends EntityListener {
 
         @Override
         public void onEntityDamage(EntityDamageEvent event) {

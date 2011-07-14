@@ -41,7 +41,7 @@ public class SkillRevive extends ActiveSkill {
             }
         };
     }
-    
+
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
@@ -77,15 +77,15 @@ public class SkillRevive extends ActiveSkill {
             Messaging.send(player, "$1 is still dead.", targetName);
             return false;
         }
-        
+
         int slimeballs = getSetting(hero.getHeroClass(), "slime-amount", 1);
-        if(!player.getInventory().contains(Material.SLIME_BALL, slimeballs)) {
+        if (!player.getInventory().contains(Material.SLIME_BALL, slimeballs)) {
             Messaging.send(player, "You don't have enough slimeballs (" + slimeballs + ")");
             return false;
         }
 
         targetPlayer.teleport(playerLoc);
-        
+
         player.getInventory().remove(new ItemStack(Material.SLIME_BALL, slimeballs));
         notifyNearbyPlayers(player.getLocation(), getUseText(), player.getName(), getName(), targetName);
         return true;

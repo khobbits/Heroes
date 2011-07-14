@@ -21,7 +21,7 @@ public class SkillGills extends ActiveEffectSkill {
         setMinArgs(0);
         setMaxArgs(0);
         getIdentifiers().add("skill gills");
-        
+
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
     }
 

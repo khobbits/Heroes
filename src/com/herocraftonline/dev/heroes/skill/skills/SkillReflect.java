@@ -19,7 +19,7 @@ public class SkillReflect extends ActiveEffectSkill {
     public SkillReflect(Heroes plugin) {
         super(plugin);
         setName("Reflect");
-        setDescription("Skill - Reflect");
+        setDescription("Reflects all the damage done to you back to your target");
         setUsage("/skill reflect");
         setMinArgs(0);
         setMaxArgs(0);

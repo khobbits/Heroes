@@ -87,7 +87,7 @@ public class ChooseCommand extends BaseCommand {
         }
 
         if (prop.iConomy && this.plugin.Method != null && cost > 0) {
-            if(!plugin.getConfigManager().getProperties().swapMasteryCost && !hero.isMaster(newClass)) {
+            if (!plugin.getConfigManager().getProperties().swapMasteryCost && !hero.isMaster(newClass)) {
                 this.plugin.Method.getAccount(player.getName()).subtract(cost);
                 // You have been charged $1 to swap to the $2. -- Make the text customiseable.
                 Messaging.send(hero.getPlayer(), "The Gods are pleased with your offering of $1", this.plugin.Method.format(cost));

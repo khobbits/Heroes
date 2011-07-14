@@ -55,7 +55,8 @@ public abstract class PassiveSkill extends Skill {
      * Serves no purpose for a passive skill.
      */
     @Override
-    public void execute(CommandSender sender, String[] args) {}
+    public void execute(CommandSender sender, String[] args) {
+    }
 
     /**
      * Applies the effect to the provided {@link Hero}.

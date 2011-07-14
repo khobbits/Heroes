@@ -28,12 +28,12 @@ public class SkillIcebolt extends ActiveSkill {
     public SkillIcebolt(Heroes plugin) {
         super(plugin);
         setName("Icebolt");
-        setDescription("Fires a snowball that encases the players feet in ice");
+        setDescription("Fires a snowball that hurts the player and if they're on fire, puts them out");
         setUsage("/skill icebolt");
         setMinArgs(0);
         setMaxArgs(0);
         getIdentifiers().add("skill icebolt");
-        
+
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
     }
 

@@ -148,12 +148,14 @@ public class OutsourcedSkill extends Skill {
      * Serves no purpose for an outsourced skill.
      */
     @Override
-    public void execute(CommandSender sender, String[] args) {}
+    public void execute(CommandSender sender, String[] args) {
+    }
 
     /**
      * Serves no purpose for an outsourced skill.
      */
     @Override
-    public void init() {}
+    public void init() {
+    }
 
 }

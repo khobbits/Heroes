@@ -34,16 +34,16 @@ public class SkillBattery extends TargettedSkill {
         if (!(target instanceof Player)) {
             return false;
         }
-        
+
         Hero tHero = plugin.getHeroManager().getHero((Player) target);
         if (tHero == null) {
             return false;
         }
-        
+
         if (tHero.equals(hero)) {
             return false;
         }
-        
+
         int transferAmount = getSetting(hero.getHeroClass(), "transfer-amount", 20);
         if (hero.getMana() > transferAmount) {
             if ((tHero.getMana() + transferAmount) > 100) {

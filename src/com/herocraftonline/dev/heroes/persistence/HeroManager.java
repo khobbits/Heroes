@@ -365,7 +365,7 @@ class ManaUpdater implements Runnable {
             return;
         }
         lastUpdate = time;
-        
+
         Set<Hero> heroes = manager.getHeroes();
         for (Hero hero : heroes) {
             if (hero == null) {

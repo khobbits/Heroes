@@ -29,23 +29,23 @@ public class BukkitContribInventoryListener extends InventoryListener {
         plugin.getInventoryChecker().checkInventory(event.getPlayer());
     }
 
-    @Override   
+    @Override
     public void onInventoryCraft(InventoryCraftEvent event) {
-        if(event.getResult() == null) {
+        if (event.getResult() == null) {
             return;
         }
-        if(event.getPlayer().getInventory().firstEmpty() == -1) {
+        if (event.getPlayer().getInventory().firstEmpty() == -1) {
             return;
         }
 
         ItemStack result = event.getResult();
-        if(event.getCursor() != null) {
+        if (event.getCursor() != null) {
             return;
         }
-        if(plugin.getConfigManager().getProperties().craftingExp.containsKey(result.getType())) {
+        if (plugin.getConfigManager().getProperties().craftingExp.containsKey(result.getType())) {
             Player player = event.getPlayer();
             Hero hero = plugin.getHeroManager().getHero(player);
-            if(hero.getHeroClass().getExperienceSources().contains(ExperienceType.CRAFTING)) {
+            if (hero.getHeroClass().getExperienceSources().contains(ExperienceType.CRAFTING)) {
                 hero.gainExp(plugin.getConfigManager().getProperties().craftingExp.get(result.getType()), ExperienceType.CRAFTING);
                 return;
             }
