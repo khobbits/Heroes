@@ -16,7 +16,7 @@ public class SkillSafefall extends ActiveEffectSkill {
     public SkillSafefall(Heroes plugin) {
         super(plugin);
         setName("Safefall");
-        setDescription("Skill - Safefall");
+        setDescription("Stops you from taking fall damage for a short amount of time");
         setUsage("/skill safefall");
         setMinArgs(0);
         setMaxArgs(0);

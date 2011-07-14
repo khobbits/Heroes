@@ -19,7 +19,7 @@ public class SkillSafefallOther extends TargettedSkill {
     public SkillSafefallOther(Heroes plugin) {
         super(plugin);
         setName("SafefallOther");
-        setDescription("Skill - Safefall");
+        setDescription("Stops your target from taking fall damage for a short amount of time");
         setUsage("/skill safefallother <target>");
         setMinArgs(0);
         setMaxArgs(1);

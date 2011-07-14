@@ -21,7 +21,7 @@ public class SkillRoot extends TargettedSkill {
     public SkillRoot(Heroes plugin) {
         super(plugin);
         setName("Root");
-        setDescription("Skill - Root");
+        setDescription("Roots your target in place");
         setUsage("/skill root <target>");
         setMinArgs(0);
         setMaxArgs(1);
