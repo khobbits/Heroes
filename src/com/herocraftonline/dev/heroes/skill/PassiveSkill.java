@@ -14,14 +14,36 @@ import com.herocraftonline.dev.heroes.api.LevelEvent;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 
+/**
+ * A skill that provides a passive bonus to a {@link Hero}. The skill's effects are automatically applied when a Hero of
+ * the appropriate class reaches the level specified in classes.yml. Because this skill is passive, there is no need to
+ * override the {@link #execute(CommandSender, String[])} nor {@link #setUsage(String)}. Messages displayed when the
+ * passive effect is applied or removed are automatically pulled from the configs. By default, the effect applied is
+ * simply the name of the skill. This can be changed by overriding {@link #apply(Hero)} and {@link #unapply(Hero)}.
+ */
 public abstract class PassiveSkill extends Skill {
 
+    /**
+     * Identifier used to store apply text setting
+     */
     public static final String SETTING_APPLYTEXT = "apply-text";
+
+    /**
+     * Identifier used to store unapply text setting
+     */
     public static final String SETTING_UNAPPLYTEXT = "unapply-text";
 
     private String applyText = null;
     private String unapplyText = null;
 
+    /**
+     * Typical skill constructor, except that it automatically sets the usage text to <i>Passive Skill</i>, which should
+     * not be changed for normal use. There should be no identifiers defined as a passive skill is not meant to be
+     * executed.
+     * 
+     * @param plugin
+     *            the active Heroes instance
+     */
     public PassiveSkill(Heroes plugin) {
         super(plugin);
         setUsage("Passive Skill");
@@ -29,14 +51,29 @@ public abstract class PassiveSkill extends Skill {
         registerEvent(Type.CUSTOM_EVENT, new SkillCustomEventListener(), Priority.Monitor);
     }
 
+    /**
+     * Serves no purpose for a passive skill.
+     */
     @Override
     public void execute(CommandSender sender, String[] args) {}
 
+    /**
+     * Applies the effect to the provided {@link Hero}.
+     * 
+     * @param hero
+     *            the Hero to apply the effect to
+     */
     protected void apply(Hero hero) {
         hero.applyEffect(getName(), -1);
         notifyNearbyPlayers(hero.getPlayer().getLocation(), applyText, hero.getPlayer().getName(), getName());
     }
 
+    /**
+     * Removes the effect from the provided {@link Hero}.
+     * 
+     * @param hero
+     *            the Hero to remove the effect from
+     */
     protected void unapply(Hero hero) {
         Long effect = hero.removeEffect(getName());
         if (effect != null) {
@@ -44,6 +81,12 @@ public abstract class PassiveSkill extends Skill {
         }
     }
 
+    /**
+     * Attempts to apply this skill's effect to the provided {@link Hero} if the it is the correct class and level.
+     * 
+     * @param hero
+     *            the Hero to try applying the effect to
+     */
     public void tryApplying(Hero hero) {
         HeroClass heroClass = hero.getHeroClass();
         if (!heroClass.hasSkill(getName())) {
@@ -59,6 +102,11 @@ public abstract class PassiveSkill extends Skill {
         }
     }
 
+    /**
+     * Loads and stores the skill's apply and unapply texts from the configuration. By default, these texts are
+     * "%hero% gained %skill%!" and "%hero% lost %skill%!", where %hero% and %skill% are replaced with the
+     * Hero's and skill's names, respectively.
+     */
     @Override
     public void init() {
         applyText = getSetting(null, SETTING_APPLYTEXT, "%hero% gained %skill%!");
@@ -67,6 +115,12 @@ public abstract class PassiveSkill extends Skill {
         unapplyText = unapplyText.replace("%hero%", "$1").replace("%skill%", "$2");
     }
 
+    /**
+     * Creates and returns a <code>ConfigurationNode</code> containing the default apply and unapply texts. When using
+     * additional configuration settings in your skills, be sure to override this method to define them with defaults.
+     * 
+     * @return a default configuration
+     */
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = Configuration.getEmptyNode();
@@ -75,8 +129,10 @@ public abstract class PassiveSkill extends Skill {
         return node;
     }
 
+    /**
+     * Monitors level and class change events and tries to apply or remove the skill's effect when appropriate.
+     */
     public class SkillCustomEventListener extends CustomEventListener {
-
         @Override
         public void onCustomEvent(Event event) {
             if (event instanceof LevelEvent) {

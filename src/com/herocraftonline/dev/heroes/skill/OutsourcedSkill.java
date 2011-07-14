@@ -128,6 +128,9 @@ public class OutsourcedSkill extends Skill {
         }
     }
 
+    /**
+     * Monitors level and class change events and tries to give or remove the skill's permissions when appropriate.
+     */
     public class SkillCustomListener extends CustomEventListener {
         @Override
         public void onCustomEvent(Event event) {
@@ -141,9 +144,15 @@ public class OutsourcedSkill extends Skill {
         }
     }
 
+    /**
+     * Serves no purpose for an outsourced skill.
+     */
     @Override
     public void execute(CommandSender sender, String[] args) {}
 
+    /**
+     * Serves no purpose for an outsourced skill.
+     */
     @Override
     public void init() {}
 
