@@ -19,9 +19,10 @@ import com.herocraftonline.dev.heroes.util.Messaging;
 
 /**
  * The root class of the skill heirarchy. This class implements the basic functionality of every Heroes skill including
- * configuration handling, area-based player notifications and event registration. Because this class extends {@link BaseCommand}, the constructor of every skill should define a name, description, usage, min and max
- * arguments and at least one identifier. Any registered events must provide an event listener, usually created as an
- * inner class.
+ * configuration handling, area-based player notifications and event registration. Because this class extends
+ * {@link com.herocraftonline.dev.heroes.command.BaseCommand}, the constructor of every skill should define a name,
+ * description, usage, min and max arguments and at least one identifier. Any registered events must provide an event
+ * listener, usually created as an inner class.
  * </br>
  * </br>
  * <b>Skill Framework:</b>
@@ -56,7 +57,7 @@ public abstract class Skill extends BaseCommand {
      * </ul>
      * 
      * @param plugin
-     *        the active Heroes instance
+     *            the active Heroes instance
      */
     public Skill(Heroes plugin) {
         super(plugin);
@@ -73,15 +74,16 @@ public abstract class Skill extends BaseCommand {
     }
 
     /**
-     * Retrieves a <code>double</code> value from the skill's configuration. Data from the provided <code>HeroClass</code> will be preferred over the skill's own data, if found. If the setting is found in neither
+     * Retrieves a <code>double</code> value from the skill's configuration. Data from the provided
+     * <code>HeroClass</code> will be preferred over the skill's own data, if found. If the setting is found in neither
      * of these sources, the default value is returned.
      * 
      * @param heroClass
-     *        the class to search for skill data
+     *            the class to search for skill data
      * @param setting
-     *        the name of the data entry to retrieve
+     *            the name of the data entry to retrieve
      * @param def
-     *        the default value to be used if no entry is found
+     *            the default value to be used if no entry is found
      * @return the stored setting
      */
     public double getSetting(HeroClass heroClass, String setting, double def) {
@@ -94,15 +96,16 @@ public abstract class Skill extends BaseCommand {
     }
 
     /**
-     * Retrieves a <code>int</code> value from the skill's configuration. Data from the provided <code>HeroClass</code> will be preferred over the skill's own data, if found. If the setting is found in neither of these sources, the
+     * Retrieves a <code>int</code> value from the skill's configuration. Data from the provided <code>HeroClass</code>
+     * will be preferred over the skill's own data, if found. If the setting is found in neither of these sources, the
      * default value is returned.
      * 
      * @param heroClass
-     *        the class to search for skill data
+     *            the class to search for skill data
      * @param setting
-     *        the name of the data entry to retrieve
+     *            the name of the data entry to retrieve
      * @param def
-     *        the default value to be used if no entry is found
+     *            the default value to be used if no entry is found
      * @return the stored setting
      */
     public int getSetting(HeroClass heroClass, String setting, int def) {
@@ -115,15 +118,16 @@ public abstract class Skill extends BaseCommand {
     }
 
     /**
-     * Retrieves a <code>String</code> value from the skill's configuration. Data from the provided <code>HeroClass</code> will be preferred over the skill's own data, if found. If the setting is found in neither
+     * Retrieves a <code>String</code> value from the skill's configuration. Data from the provided
+     * <code>HeroClass</code> will be preferred over the skill's own data, if found. If the setting is found in neither
      * of these sources, the default value is returned.
      * 
      * @param heroClass
-     *        the class to search for skill data
+     *            the class to search for skill data
      * @param setting
-     *        the name of the data entry to retrieve
+     *            the name of the data entry to retrieve
      * @param def
-     *        the default value to be used if no entry is found
+     *            the default value to be used if no entry is found
      * @return the stored setting
      */
     public String getSetting(HeroClass heroClass, String setting, String def) {
@@ -145,7 +149,7 @@ public abstract class Skill extends BaseCommand {
      * in most cases.
      * 
      * @param config
-     *        the new skill configuration
+     *            the new skill configuration
      */
     public void setConfig(ConfigurationNode config) {
         this.config = config;
@@ -156,13 +160,13 @@ public abstract class Skill extends BaseCommand {
      * can be suppressed by players on an individual basis.
      * 
      * @param source
-     *        the <code>Location</code> to measure from
+     *            the <code>Location</code> to measure from
      * @param message
-     *        the content of the message
+     *            the content of the message
      * @param args
-     *        any text in the message of the format $<i>n</i> where <i>n</i>
-     *        is an integer will be replaced with the <i>n</i>th element of
-     *        this array
+     *            any text in the message of the format $<i>n</i> where <i>n</i>
+     *            is an integer will be replaced with the <i>n</i>th element of
+     *            this array
      */
     protected void notifyNearbyPlayers(Location source, String message, Object... args) {
         final Player[] players = plugin.getServer().getOnlinePlayers();
@@ -184,11 +188,11 @@ public abstract class Skill extends BaseCommand {
      * Helper method to make registering an event a little easier.
      * 
      * @param type
-     *        the type of event
+     *            the type of event
      * @param listener
-     *        the listener used to handle the event
+     *            the listener used to handle the event
      * @param priority
-     *        the priority given to the event handler
+     *            the priority given to the event handler
      */
     protected void registerEvent(Type type, Listener listener, Priority priority) {
         plugin.getServer().getPluginManager().registerEvent(type, listener, priority, plugin);
@@ -199,9 +203,9 @@ public abstract class Skill extends BaseCommand {
      * is used.
      * 
      * @param sender
-     *        the <code>CommandSender</code> issuing the command
+     *            the <code>CommandSender</code> issuing the command
      * @param args
-     *        the arguments provided with the command
+     *            the arguments provided with the command
      */
     public abstract void execute(CommandSender sender, String[] args);
 

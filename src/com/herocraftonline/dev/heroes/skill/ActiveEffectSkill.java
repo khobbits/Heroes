@@ -9,9 +9,10 @@ import com.herocraftonline.dev.heroes.persistence.Hero;
 /**
  * Similar to {@link ActiveSkill} except for the inclusion of helper methods for applying an effect on a Hero that will
  * automatically last for a duration specified in the config. When the effect expires, an expiry message is
- * automatically displayed to nearby users. To apply an effect, simply call {@link #applyEffect(Hero)} from your
- * {@link #execute(org.bukkit.command.CommandSender, String[])} method. The {@link #onExpire(Hero)} method can be
- * overriden if additional behavior is desired when an effect expires. The effect applied defaults to the skill's name.
+ * automatically displayed to nearby users. To apply an effect, simply call {@link #applyEffect(Hero) applyEffect} from
+ * your {@link ActiveSkill#execute(CommandSender, String[]) execute} method. The {@link #onExpire(Hero) onExpire} method
+ * can be overriden if additional behavior is desired when an effect expires. The effect applied defaults to the skill's
+ * name.
  */
 public abstract class ActiveEffectSkill extends ActiveSkill {
 
@@ -29,7 +30,8 @@ public abstract class ActiveEffectSkill extends ActiveSkill {
 
     /**
      * When defining your own constructor, be sure to assign the name, description, usage, argument bounds and
-     * identifier fields as defined in {@link BaseCommand}. Remember that each identifier must begin with <i>skill</i>.
+     * identifier fields as defined in {@link com.herocraftonline.dev.heroes.command.BaseCommand}. Remember that each
+     * identifier must begin with <i>skill</i>.
      * 
      * @param plugin
      *            the active Heroes instance

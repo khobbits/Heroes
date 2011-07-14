@@ -25,10 +25,10 @@ public class OutsourcedSkill extends Skill {
     private String[] permissions;
 
     /**
-     * Constructor which defines the parameters required of any {@link BaseCommand} as well as the permissions to be
-     * managed by this faux skill. The description is automatically set to be the same as the usage so that the usage is
-     * readily displayed in the skills list. No arguments are allowed for such a skill as it has no identifier to be
-     * executed with.
+     * Constructor which defines the parameters required of any
+     * {@link com.herocraftonline.dev.heroes.command.BaseCommand} as well as the permissions to be managed by this faux
+     * skill. The description is automatically set to be the same as the usage so that the usage is readily displayed in
+     * the skills list. No arguments are allowed for such a skill as it has no identifier to be executed with.
      * 
      * @param plugin
      *            the active Heroes instance
@@ -148,14 +148,12 @@ public class OutsourcedSkill extends Skill {
      * Serves no purpose for an outsourced skill.
      */
     @Override
-    public void execute(CommandSender sender, String[] args) {
-    }
+    public void execute(CommandSender sender, String[] args) {}
 
     /**
      * Serves no purpose for an outsourced skill.
      */
     @Override
-    public void init() {
-    }
+    public void init() {}
 
 }

@@ -17,9 +17,10 @@ import com.herocraftonline.dev.heroes.persistence.Hero;
 /**
  * A skill that provides a passive bonus to a {@link Hero}. The skill's effects are automatically applied when a Hero of
  * the appropriate class reaches the level specified in classes.yml. Because this skill is passive, there is no need to
- * override the {@link #execute(CommandSender, String[])} nor {@link #setUsage(String)}. Messages displayed when the
- * passive effect is applied or removed are automatically pulled from the configs. By default, the effect applied is
- * simply the name of the skill. This can be changed by overriding {@link #apply(Hero)} and {@link #unapply(Hero)}.
+ * override the {@link #execute(CommandSender, String[]) execute} nor
+ * {@link com.herocraftonline.dev.heroes.command.BaseCommand#setUsage(String) use}. Messages displayed when the passive
+ * effect is applied or removed are automatically pulled from the configs. By default, the effect applied is simply the
+ * name of the skill. This can be changed by overriding {@link #apply(Hero) apply} and {@link #unapply(Hero) unapply}.
  */
 public abstract class PassiveSkill extends Skill {
 
@@ -55,8 +56,7 @@ public abstract class PassiveSkill extends Skill {
      * Serves no purpose for a passive skill.
      */
     @Override
-    public void execute(CommandSender sender, String[] args) {
-    }
+    public void execute(CommandSender sender, String[] args) {}
 
     /**
      * Applies the effect to the provided {@link Hero}.
