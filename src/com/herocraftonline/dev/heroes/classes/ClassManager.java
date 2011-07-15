@@ -56,7 +56,7 @@ public class ClassManager {
         config.load();
         List<String> classNames = config.getKeys("classes");
         if (classNames == null) {
-            plugin.log(Level.WARNING, "You have no Classes defined in your setup!");
+            plugin.log(Level.WARNING, "You have no classes defined in your setup!");
             return;
         }
         for (String className : classNames) {
@@ -72,80 +72,91 @@ public class ClassManager {
             StringBuilder wLimits = new StringBuilder();
 
             List<String> armor = config.getStringList("classes." + className + ".permitted-armor", defaultType);
-            for (String a : armor) {
-                // If it's a generic type like 'DIAMOND' or 'LEATHER' we add all the possible entries.
-                if (!a.contains("_")) {
-                    try {
-                        ArmorType aType = ArmorType.valueOf(a);
-                        newClass.addAllowedArmor(aType + "_HELMET");
-                        aLimits.append(" " + aType + "_HELMET");
-                        newClass.addAllowedArmor(aType + "_CHESTPLATE");
-                        aLimits.append(" " + aType + "_CHESTPLATE");
-                        newClass.addAllowedArmor(aType + "_LEGGINGS");
-                        aLimits.append(" " + aType + "_LEGGINGS");
-                        newClass.addAllowedArmor(aType + "_BOOTS");
-                        aLimits.append(" " + aType + "_BOOTS");
-                    } catch (IllegalArgumentException e) {
-                        plugin.log(Level.WARNING, "Invalid armor type (" + a + ") defined for " + className);
-                    }
-                } else {
-                    String type = a.substring(0, a.indexOf("_"));
-                    String item = a.substring(a.indexOf("_") + 1, a.length());
-                    try {
-                        ArmorType aType = ArmorType.valueOf(type);
-                        ArmorItems aItem = ArmorItems.valueOf(item);
-                        newClass.addAllowedArmor(aType + "_" + aItem);
-                        aLimits.append(" " + aType + "_" + aItem);
-                    } catch (IllegalArgumentException e) {
-                        plugin.log(Level.WARNING, "Invalid armor type (" + type + "_" + item + ") defined for " + className);
+            if (armor == null) {
+                plugin.log(Level.WARNING, className + " has no permitted-armor section");
+            } else {
+                for (String a : armor) {
+                    // If it's a generic type like 'DIAMOND' or 'LEATHER' we add all the possible entries.
+                    if (!a.contains("_")) {
+                        try {
+                            ArmorType aType = ArmorType.valueOf(a);
+                            newClass.addAllowedArmor(aType + "_HELMET");
+                            aLimits.append(" " + aType + "_HELMET");
+                            newClass.addAllowedArmor(aType + "_CHESTPLATE");
+                            aLimits.append(" " + aType + "_CHESTPLATE");
+                            newClass.addAllowedArmor(aType + "_LEGGINGS");
+                            aLimits.append(" " + aType + "_LEGGINGS");
+                            newClass.addAllowedArmor(aType + "_BOOTS");
+                            aLimits.append(" " + aType + "_BOOTS");
+                        } catch (IllegalArgumentException e) {
+                            plugin.log(Level.WARNING, "Invalid armor type (" + a + ") defined for " + className);
+                        }
+                    } else {
+                        String type = a.substring(0, a.indexOf("_"));
+                        String item = a.substring(a.indexOf("_") + 1, a.length());
+                        try {
+                            ArmorType aType = ArmorType.valueOf(type);
+                            ArmorItems aItem = ArmorItems.valueOf(item);
+                            newClass.addAllowedArmor(aType + "_" + aItem);
+                            aLimits.append(" " + aType + "_" + aItem);
+                        } catch (IllegalArgumentException e) {
+                            plugin.log(Level.WARNING, "Invalid armor type (" + type + "_" + item + ") defined for " + className);
+                        }
                     }
                 }
             }
 
             List<String> weapon = config.getStringList("classes." + className + ".permitted-weapon", defaultType);
-            for (String w : weapon) {
-                // A BOW has no ItemType so we just add it straight away.
-                if (w.equalsIgnoreCase("BOW")) {
-                    newClass.addAllowedWeapon("BOW");
-                    wLimits.append(" BOW");
-                    continue;
-                }
-                // If it's a generic type like 'DIAMOND' or 'LEATHER' we add all the possible entries.
-                if (!w.contains("_")) {
-                    try {
-                        WeaponType wType = WeaponType.valueOf(w);
-                        newClass.addAllowedWeapon(wType + "_PICKAXE");
-                        wLimits.append(" " + wType + "_PICKAXE");
-                        newClass.addAllowedWeapon(wType + "_AXE");
-                        wLimits.append(" " + wType + "_AXE");
-                        newClass.addAllowedWeapon(wType + "_HOE");
-                        wLimits.append(" " + wType + "_HOE");
-                        newClass.addAllowedWeapon(wType + "_SPADE");
-                        wLimits.append(" " + wType + "_SPADE");
-                        newClass.addAllowedWeapon(wType + "_SWORD");
-                        wLimits.append(" " + wType + "_SWORD");
-                    } catch (IllegalArgumentException e) {
-                        plugin.log(Level.WARNING, "Invalid weapon type (" + w + ") defined for " + className);
+            if (armor == null) {
+                plugin.log(Level.WARNING, className + " has no permitted-weapon section");
+            } else {
+                for (String w : weapon) {
+                    // A BOW has no ItemType so we just add it straight away.
+                    if (w.equalsIgnoreCase("BOW")) {
+                        newClass.addAllowedWeapon("BOW");
+                        wLimits.append(" BOW");
+                        continue;
                     }
-                } else {
-                    String type = w.substring(0, w.indexOf("_"));
-                    String item = w.substring(w.indexOf("_") + 1, w.length());
-                    try {
-                        WeaponType wType = WeaponType.valueOf(type);
-                        WeaponItems wItem = WeaponItems.valueOf(item);
-                        newClass.addAllowedWeapon(wType + "_" + wItem);
-                        wLimits.append(" - " + wType + "_" + wItem);
-                    } catch (IllegalArgumentException e) {
-                        plugin.log(Level.WARNING, "Invalid weapon type (" + type + "_" + item + ") defined for " + className);
+                    // If it's a generic type like 'DIAMOND' or 'LEATHER' we add all the possible entries.
+                    if (!w.contains("_")) {
+                        try {
+                            WeaponType wType = WeaponType.valueOf(w);
+                            newClass.addAllowedWeapon(wType + "_PICKAXE");
+                            wLimits.append(" " + wType + "_PICKAXE");
+                            newClass.addAllowedWeapon(wType + "_AXE");
+                            wLimits.append(" " + wType + "_AXE");
+                            newClass.addAllowedWeapon(wType + "_HOE");
+                            wLimits.append(" " + wType + "_HOE");
+                            newClass.addAllowedWeapon(wType + "_SPADE");
+                            wLimits.append(" " + wType + "_SPADE");
+                            newClass.addAllowedWeapon(wType + "_SWORD");
+                            wLimits.append(" " + wType + "_SWORD");
+                        } catch (IllegalArgumentException e) {
+                            plugin.log(Level.WARNING, "Invalid weapon type (" + w + ") defined for " + className);
+                        }
+                    } else {
+                        String type = w.substring(0, w.indexOf("_"));
+                        String item = w.substring(w.indexOf("_") + 1, w.length());
+                        try {
+                            WeaponType wType = WeaponType.valueOf(type);
+                            WeaponItems wItem = WeaponItems.valueOf(item);
+                            newClass.addAllowedWeapon(wType + "_" + wItem);
+                            wLimits.append(" - " + wType + "_" + wItem);
+                        } catch (IllegalArgumentException e) {
+                            plugin.log(Level.WARNING, "Invalid weapon type (" + type + "_" + item + ") defined for " + className);
+                        }
                     }
-                }
 
+                }
             }
+
             plugin.debugLog(Level.INFO, "Allowed Weapons - " + wLimits.toString());
             plugin.debugLog(Level.INFO, "Allowed Armor - " + aLimits.toString());
 
             List<String> skillNames = config.getKeys("classes." + className + ".permitted-skills");
-            if (skillNames != null) {
+            if (skillNames == null) {
+                plugin.log(Level.WARNING, className + " has no permitted-skills section");
+            } else {
                 for (String skillName : skillNames) {
                     try {
                         Skill skill = (Skill) plugin.getCommandManager().getCommand(skillName);
@@ -166,8 +177,6 @@ public class ClassManager {
                         plugin.log(Level.WARNING, "Invalid skill (" + skillName + ") defined for " + className + ". Skipping this skill.");
                     }
                 }
-            } else {
-                plugin.log(Level.WARNING, className + " has no Skills defined!");
             }
 
             List<String> permissionSkillNames = config.getKeys("classes." + className + ".permission-skills");
@@ -190,7 +199,9 @@ public class ClassManager {
 
             List<String> experienceNames = config.getStringList("classes." + className + ".experience-sources", null);
             Set<ExperienceType> experienceSources = new HashSet<ExperienceType>();
-            if (experienceNames != null) {
+            if (experienceNames == null) {
+                plugin.log(Level.WARNING, className + " has no experience-sources section");
+            } else {
                 for (String experience : experienceNames) {
                     try {
                         boolean added = experienceSources.add(ExperienceType.valueOf(experience));
@@ -225,14 +236,15 @@ public class ClassManager {
                     parent.getSpecializations().add(unlinkedClass);
                     unlinkedClass.setParent(parent);
                 } else {
-                    plugin.log(Level.WARNING, "Cannot assign '" + className + "' a Parent Class as '" + parentName + "' does not exist.");
+                    plugin.log(Level.WARNING, "Cannot assign " + className + " a parent class as " + parentName + " does not exist.");
                 }
             }
         }
 
         if (defaultClass == null) {
-            plugin.log(Level.SEVERE, "You are missing a Default Class, this will cause ALOT of issues!");
+            plugin.log(Level.SEVERE, "You are missing a default class, this will cause A LOT of issues!");
         }
+
         // Save the Configuration setup to file, we do this so that any defaults values loaded are saved to file.
         config.save();
     }
