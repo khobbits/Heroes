@@ -168,7 +168,7 @@ public abstract class Skill extends BaseCommand {
      *            is an integer will be replaced with the <i>n</i>th element of
      *            this array
      */
-    protected void notifyNearbyPlayers(Location source, String message, Object... args) {
+    public void notifyNearbyPlayers(Location source, String message, Object... args) {
         final Player[] players = plugin.getServer().getOnlinePlayers();
         for (Player player : players) {
             Location playerLocation = player.getLocation();

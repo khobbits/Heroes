@@ -23,6 +23,7 @@ import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
 import com.herocraftonline.dev.heroes.command.BaseCommand;
 import com.herocraftonline.dev.heroes.party.HeroParty;
 import com.herocraftonline.dev.heroes.skill.ActiveEffectSkill;
+import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Properties;
@@ -221,27 +222,32 @@ public class Hero {
 
     public void expireEffect(String effect) {
         BaseCommand cmd = plugin.getCommandManager().getCommand(effect);
-        if (cmd != null && cmd instanceof ActiveEffectSkill) {
-            ((ActiveEffectSkill) cmd).onExpire(this);
+        if (cmd != null) {
+            if (cmd instanceof ActiveEffectSkill) {
+                ((ActiveEffectSkill) cmd).onExpire(this);
+            } else if (cmd instanceof ActiveSkill) {
+                Player player = getPlayer();
+                ((ActiveSkill) cmd).notifyNearbyPlayers(player.getLocation(), "$1 faded from $2.", effect, player.getDisplayName());
+            }
         }
         removeEffect(effect);
     }
 
     public boolean hasEffect(String effect) {
-        return effects.containsKey(effect.toLowerCase());
+        return effects.containsKey(effect);
     }
 
     public void applyEffect(String effect, long duration) {
         long time = System.currentTimeMillis();
-        effects.put(effect.toLowerCase(), time + duration);
+        effects.put(effect, time + duration);
     }
 
     public Long removeEffect(String effect) {
-        return effects.remove(effect.toLowerCase());
+        return effects.remove(effect);
     }
 
     public Long getEffectExpiry(String effect) {
-        return effects.get(effect.toLowerCase());
+        return effects.get(effect);
     }
 
     public Set<String> getEffects() {
