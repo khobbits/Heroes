@@ -19,6 +19,16 @@ import com.herocraftonline.dev.heroes.persistence.Hero;
  * automatically created based on data in the permission skills section of the server's classes.yml file. Listed
  * permissions are automatically applied and removed when a player becomes eligible (correct class and level) for the
  * skill as defined in the config. There should not be any need to extend this class.
+ * </br>
+ * </br>
+ * <b>Skill Framework:</b>
+ * <ul>
+ * <li>{@link ActiveSkill}</li>
+ * <ul>
+ * <li>{@link ActiveEffectSkill}</li>
+ * <li>{@link TargettedSkill}</li>
+ * </ul>
+ * <li>{@link PassiveSkill}</li> <li>{@link OutsourcedSkill}</li> </ul>
  */
 public class OutsourcedSkill extends Skill {
 

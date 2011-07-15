@@ -21,6 +21,16 @@ import com.herocraftonline.dev.heroes.persistence.Hero;
  * {@link com.herocraftonline.dev.heroes.command.BaseCommand#setUsage(String) use}. Messages displayed when the passive
  * effect is applied or removed are automatically pulled from the configs. By default, the effect applied is simply the
  * name of the skill. This can be changed by overriding {@link #apply(Hero) apply} and {@link #unapply(Hero) unapply}.
+ * </br>
+ * </br>
+ * <b>Skill Framework:</b>
+ * <ul>
+ * <li>{@link ActiveSkill}</li>
+ * <ul>
+ * <li>{@link ActiveEffectSkill}</li>
+ * <li>{@link TargettedSkill}</li>
+ * </ul>
+ * <li>{@link PassiveSkill}</li> <li>{@link OutsourcedSkill}</li> </ul>
  */
 public abstract class PassiveSkill extends Skill {
 

@@ -26,6 +26,16 @@ import com.herocraftonline.dev.heroes.util.Messaging;
  * player is looking at within the configurable maximum distance, if any. The primary method to be overridden by
  * TargettedSkills is {@link #use(Hero, LivingEntity, String[])}, which is called by {@link #use(Hero, String[])} after
  * determining the target.
+ * </br>
+ * </br>
+ * <b>Skill Framework:</b>
+ * <ul>
+ * <li>{@link ActiveSkill}</li>
+ * <ul>
+ * <li>{@link ActiveEffectSkill}</li>
+ * <li>{@link TargettedSkill}</li>
+ * </ul>
+ * <li>{@link PassiveSkill}</li> <li>{@link OutsourcedSkill}</li> </ul>
  * </br></br>
  * See {@link ActiveSkill} for an overview of command triggered skills.
  */

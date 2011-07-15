@@ -13,6 +13,16 @@ import com.herocraftonline.dev.heroes.persistence.Hero;
  * your {@link ActiveSkill#execute(CommandSender, String[]) execute} method. The {@link #onExpire(Hero) onExpire} method
  * can be overriden if additional behavior is desired when an effect expires. The effect applied defaults to the skill's
  * name.
+ * </br>
+ * </br>
+ * <b>Skill Framework:</b>
+ * <ul>
+ * <li>{@link ActiveSkill}</li>
+ * <ul>
+ * <li>{@link ActiveEffectSkill}</li>
+ * <li>{@link TargettedSkill}</li>
+ * </ul>
+ * <li>{@link PassiveSkill}</li> <li>{@link OutsourcedSkill}</li> </ul>
  */
 public abstract class ActiveEffectSkill extends ActiveSkill {
 

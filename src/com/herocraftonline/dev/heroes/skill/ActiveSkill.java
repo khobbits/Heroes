@@ -22,6 +22,16 @@ import com.herocraftonline.dev.heroes.util.Messaging;
  * execute} automatically handles class, level, mana and cooldown checks on a player attempting to use a skill and
  * should not be overridden. If all of these checks pass, the <code>use</code> method is called, which should contain
  * the heart of the skill's behavior that is unique to each skill.
+ * </br>
+ * </br>
+ * <b>Skill Framework:</b>
+ * <ul>
+ * <li>{@link ActiveSkill}</li>
+ * <ul>
+ * <li>{@link ActiveEffectSkill}</li>
+ * <li>{@link TargettedSkill}</li>
+ * </ul>
+ * <li>{@link PassiveSkill}</li> <li>{@link OutsourcedSkill}</li> </ul>
  */
 public abstract class ActiveSkill extends Skill {
 
