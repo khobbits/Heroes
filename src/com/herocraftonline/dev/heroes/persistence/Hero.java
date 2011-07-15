@@ -20,10 +20,8 @@ import com.herocraftonline.dev.heroes.api.ExperienceGainEvent;
 import com.herocraftonline.dev.heroes.api.LevelEvent;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
-import com.herocraftonline.dev.heroes.command.BaseCommand;
+import com.herocraftonline.dev.heroes.effects.Effect;
 import com.herocraftonline.dev.heroes.party.HeroParty;
-import com.herocraftonline.dev.heroes.skill.ActiveEffectSkill;
-import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Properties;
@@ -38,7 +36,7 @@ public class Hero {
     protected int mana = 0;
     protected HeroParty party = null;
     protected boolean verbose = true;
-    protected Map<String, Long> effects = new HashMap<String, Long>();
+    protected Set<Effect> effects = new HashSet<Effect>();
     protected Map<String, Double> experience = new HashMap<String, Double>();
     protected Map<String, Long> cooldowns = new HashMap<String, Long>();
     protected Map<Entity, CreatureType> summons = new HashMap<Entity, CreatureType>();
@@ -56,11 +54,6 @@ public class Hero {
 
     public void addRecoveryItem(ItemStack item) {
         this.itemRecovery.add(item);
-    }
-
-    public void applyEffect(String effect, long duration) {
-        long time = System.currentTimeMillis();
-        effects.put(effect, time + duration);
     }
 
     public void bind(Material material, String[] skillName) {
@@ -102,19 +95,6 @@ public class Hero {
             return false;
         }
         return true;
-    }
-
-    public void expireEffect(String effect) {
-        BaseCommand cmd = plugin.getCommandManager().getCommand(effect);
-        if (cmd != null) {
-            if (cmd instanceof ActiveEffectSkill) {
-                ((ActiveEffectSkill) cmd).onExpire(this);
-            } else if (cmd instanceof ActiveSkill) {
-                Player player = getPlayer();
-                ((ActiveSkill) cmd).notifyNearbyPlayers(player.getLocation(), "$1 faded from $2.", effect, player.getDisplayName());
-            }
-        }
-        removeEffect(effect);
     }
 
     public void gainExp(double expGain, ExperienceType source) {
@@ -205,13 +185,37 @@ public class Hero {
     public Map<String, Long> getCooldowns() {
         return cooldowns;
     }
-
-    public Long getEffectExpiry(String effect) {
-        return effects.get(effect);
+    
+    public Set<Effect> getEffects() {
+        return new HashSet<Effect>(effects);
     }
-
-    public Set<String> getEffects() {
-        return new HashSet<String>(effects.keySet());
+    
+    public void addEffect(Effect effect) {
+        effects.add(effect);
+        effect.apply(this);
+    }
+    
+    public void removeEffect(Effect effect) {
+        effects.remove(effect);
+        effect.remove(this);
+    }
+    
+    public boolean hasEffect(String name) {
+        for (Effect effect : effects) {
+            if (effect.getName().equalsIgnoreCase(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public Effect getEffect(String name) {
+        for (Effect effect : effects) {
+            if (effect.getName().equalsIgnoreCase(name)) {
+                return effect;
+            }
+        }
+        return null;
     }
 
     public double getExperience() {
@@ -263,10 +267,6 @@ public class Hero {
         return new HashSet<String>(suppressedSkills);
     }
 
-    public boolean hasEffect(String effect) {
-        return effects.containsKey(effect);
-    }
-
     @Override
     public int hashCode() {
         return player == null ? 0 : player.getName().hashCode();
@@ -303,10 +303,6 @@ public class Hero {
 
     public boolean isVerbose() {
         return verbose;
-    }
-
-    public Long removeEffect(String effect) {
-        return effects.remove(effect);
     }
 
     public void setExperience(double experience) {

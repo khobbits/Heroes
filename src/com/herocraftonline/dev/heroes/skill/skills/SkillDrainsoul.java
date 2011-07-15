@@ -57,7 +57,7 @@ public class SkillDrainsoul extends TargettedSkill {
         player.setHealth(player.getHealth() + absorbAmount);
         target.damage(absorbAmount);
 
-        notifyNearbyPlayers(player.getLocation(), getUseText(), player.getName(), getName(), getEntityName(target));
+        broadcast(player.getLocation(), getUseText(), player.getName(), getName(), getEntityName(target));
         return true;
     }
 

@@ -46,7 +46,7 @@ public class SkillTeleport extends ActiveSkill {
         loc1.setY(highestBlock);
         player.teleport(loc1);
 
-        notifyNearbyPlayers(player.getLocation(), getUseText(), playerName, getName());
+        broadcast(player.getLocation(), getUseText(), playerName, getName());
         return true;
     }
 }

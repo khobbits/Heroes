@@ -46,7 +46,7 @@ public class SkillSmite extends TargettedSkill {
         }
         target.damage(damage, player);
         String targetName = target instanceof Player ? ((Player) target).getName() : target.getClass().getSimpleName().substring(5);
-        notifyNearbyPlayers(player.getLocation(), "$1 used $2 on $3!", player.getName(), getName(), target == player ? "himself" : targetName);
+        broadcast(player.getLocation(), "$1 used $2 on $3!", player.getName(), getName(), target == player ? "himself" : targetName);
         return true;
     }
 

@@ -16,17 +16,22 @@ import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.util.config.Configuration;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
+import com.herocraftonline.dev.heroes.effects.Effect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
-import com.herocraftonline.dev.heroes.skill.ActiveEffectSkill;
+import com.herocraftonline.dev.heroes.skill.ActiveSkill;
+import com.herocraftonline.dev.heroes.skill.Skill;
 
-public class SkillBlackjack extends ActiveEffectSkill {
+public class SkillBlackjack extends ActiveSkill {
+    
+    private String applyText;
+    private String expireText;
 
     private PlayerListener playerListener = new SkillPlayerListener();
-
     private EntityListener entityListener = new SkillEntityListener();
 
     private Map<Integer, Long> stunnedEntities = new HashMap<Integer, Long>();
@@ -49,17 +54,24 @@ public class SkillBlackjack extends ActiveEffectSkill {
 
     @Override
     public ConfigurationNode getDefaultConfig() {
-        ConfigurationNode node = super.getDefaultConfig();
+        ConfigurationNode node = Configuration.getEmptyNode();
+        node.setProperty("apply-text", "%hero% prepared his blackjack!");
+        node.setProperty("expire-text", "%hero% sheathed his blackjack!");
         node.setProperty("stun-duration", 5000);
         node.setProperty("stun-chance", 0.20);
-        node.setProperty(SETTING_DURATION, 20000);
+        node.setProperty("duration", 20000);
         return node;
+    }
+    
+    @Override
+    public void init() {
+        applyText = getSetting(null, "apply-text", "%hero% prepared his blackjack!").replace("%hero%", "$1");
+        expireText = getSetting(null, "expire-text", "%hero% sheathed his blackjack!").replace("%hero%", "$1");
     }
 
     @Override
     public boolean use(Hero hero, String[] args) {
-        applyEffect(hero);
-        notifyNearbyPlayers(hero.getPlayer().getLocation(), getUseText(), hero.getPlayer().getName(), getName());
+        hero.addEffect(new BlackjackEffect(this));
         return true;
     }
 
@@ -77,6 +89,26 @@ public class SkillBlackjack extends ActiveEffectSkill {
             }
         }
         return false;
+    }
+
+    public class BlackjackEffect extends Effect {
+
+        public BlackjackEffect(Skill skill) {
+            super(skill, "Blackjack");
+        }
+
+        @Override
+        public void apply(Hero hero) {
+            Player player = hero.getPlayer();
+            broadcast(player.getLocation(), applyText, player.getDisplayName());
+        }
+
+        @Override
+        public void remove(Hero hero) {
+            Player player = hero.getPlayer();
+            broadcast(player.getLocation(), expireText, player.getDisplayName());
+        }
+
     }
 
     public class SkillEntityListener extends EntityListener {
@@ -100,13 +132,13 @@ public class SkillBlackjack extends ActiveEffectSkill {
                     if (attackingEntity instanceof Player) {
                         Hero attackingHero = plugin.getHeroManager().getHero((Player) attackingEntity);
                         HeroClass heroClass = attackingHero.getHeroClass();
-                        if (attackingHero.hasEffect(getName())) {
+                        if (attackingHero.hasEffect("Blackjack")) {
                             double chance = getSetting(heroClass, "stun-chance", 0.20);
                             if (random.nextDouble() < chance) {
                                 int duration = getSetting(heroClass, "stun-duration", 5000);
                                 stunnedEntities.put(defendingEntity.getEntityId(), System.currentTimeMillis() + duration);
                                 String targetName = defendingEntity instanceof Player ? ((Player) defendingEntity).getName() : defendingEntity.getClass().getSimpleName().substring(5);
-                                notifyNearbyPlayers(attackingHero.getPlayer().getLocation(), "$1 stunned $2!", attackingHero.getPlayer().getName(), targetName);
+                                broadcast(attackingHero.getPlayer().getLocation(), "$1 stunned $2!", attackingHero.getPlayer().getName(), targetName);
                             }
                         }
                     }

@@ -107,7 +107,7 @@ public class SkillXMuteOre extends ActiveSkill {
                 p.setItemInHand(is);
 
                 p.sendMessage("You turn the " + MaterialUtil.getFriendlyName(mat) + " into " + MaterialUtil.getFriendlyName(nextMat) + "!");
-                notifyNearbyPlayers(p.getLocation(), getUseText(), p.getName(), getName());
+                broadcast(p.getLocation(), getUseText(), p.getName(), getName());
                 return true;
             }
         }

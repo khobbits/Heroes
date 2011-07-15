@@ -70,7 +70,7 @@ public class SkillBarrage extends ActiveSkill {
             Vector vel = new Vector(Math.cos(a), 0, Math.sin(a));
             player.shootArrow().setVelocity(vel);
         }
-        notifyNearbyPlayers(player.getLocation(), getUseText(), player.getName(), getName());
+        broadcast(player.getLocation(), getUseText(), player.getName(), getName());
         return true;
     }
 }

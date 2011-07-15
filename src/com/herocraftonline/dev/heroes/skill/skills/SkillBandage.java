@@ -63,7 +63,7 @@ public class SkillBandage extends TargettedSkill {
                 hpPlus = 20 - targetHealth;
             }
             target.setHealth(target.getHealth() + hpPlus);
-            notifyNearbyPlayers(player.getLocation(), getUseText(), player.getName(), getName(), target == player ? "himself" : getEntityName(target));
+            broadcast(player.getLocation(), getUseText(), player.getName(), getName(), target == player ? "himself" : getEntityName(target));
             return true;
         }
         return false;
