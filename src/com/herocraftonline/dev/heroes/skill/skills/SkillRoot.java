@@ -58,6 +58,7 @@ public class SkillRoot extends TargettedSkill {
         Player player = hero.getPlayer();
         if (!(target instanceof Player)) {
             Messaging.send(player, "You need a target!");
+            return false;
         }
 
         Player targetPlayer = (Player) target;

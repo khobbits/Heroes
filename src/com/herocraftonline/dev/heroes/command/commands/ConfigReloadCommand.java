@@ -1,11 +1,11 @@
 package com.herocraftonline.dev.heroes.command.commands;
 
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.command.BaseCommand;
+import com.herocraftonline.dev.heroes.util.Messaging;
 
 public class ConfigReloadCommand extends BaseCommand {
 
@@ -24,11 +24,12 @@ public class ConfigReloadCommand extends BaseCommand {
     public void execute(CommandSender sender, String[] args) {
         if (sender instanceof Player) {
             if (!Heroes.Permissions.has((Player) sender, "heroes.admin.reload")) {
-                sender.sendMessage(ChatColor.RED + "You don't have permission to do this");
+                Messaging.send(sender, "Insufficient permission.");
                 return;
             }
             try {
                 plugin.getConfigManager().reload();
+                Messaging.send(sender, "Configs reloaded.");
             } catch (Exception e) {
                 e.printStackTrace();
             }
