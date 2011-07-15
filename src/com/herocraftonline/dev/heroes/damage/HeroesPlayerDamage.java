@@ -6,6 +6,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityListener;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.util.Properties;
 
@@ -19,7 +20,6 @@ public class HeroesPlayerDamage extends EntityListener {
         this.heroesDamage = heroesDamage;
     }
 
-    @SuppressWarnings("unused")
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         if (!(event.getDamager() instanceof Player)) {
             return;
@@ -36,8 +36,17 @@ public class HeroesPlayerDamage extends EntityListener {
             if (event.getEntity() instanceof Player) {
                 Player playerEntity = (Player) event.getEntity();
                 Hero heroEntity = plugin.getHeroManager().getHero(playerEntity);
-                // Remove Player HP
-                // Update Player Hearts
+                HeroClass entityClass = heroEntity.getHeroClass();
+                Integer damage = prop.damageValues.get(damager.getItemInHand().getType());
+
+                heroEntity.setHealth(heroEntity.getHealth() - damage);
+
+                Integer health = (int) ((heroEntity.getHealth() / entityClass.getMaxHealth()) * 20);
+
+                if(playerEntity.getHealth() != health) {
+                    playerEntity.damage((int) (playerEntity.getHealth() - (health)));
+                }
+
             } else if (event.getEntity() instanceof Monster) {
                 Monster monsterEntity = (Monster) event.getEntity();
                 if (!heroesDamage.getMobHealthValues().containsKey(monsterEntity.getEntityId())) {

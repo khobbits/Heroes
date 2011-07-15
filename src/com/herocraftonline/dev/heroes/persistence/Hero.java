@@ -72,16 +72,6 @@ public class Hero {
         binds.clear();
     }
 
-    public void dealDamage(double damage) {
-        if (health - damage > 0) {
-            health = health - damage;
-            updatePlayerDisplay();
-        } else {
-            health = 0;
-            updatePlayerDisplay();
-        }
-    }
-
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -276,15 +266,6 @@ public class Hero {
         return party != null;
     }
 
-    public void healHealth(double heal) {
-        if (heal > 0 && health + heal <= heroClass.getMaxHealth()) {
-            health = health + heal;
-            updatePlayerDisplay();
-        } else {
-            health = health + heroClass.getMaxHealth() - health;
-        }
-    }
-
     public boolean isMaster() {
         return isMaster(heroClass);
     }
@@ -351,9 +332,9 @@ public class Hero {
     public void unbind(Material material) {
         binds.remove(material);
     }
-
-    public void updatePlayerDisplay() {
-        player.setHealth((int) Math.round(health / heroClass.getMaxHealth() * 20));
+    
+    public void setHealth(Double health) {
+        this.health = health;
     }
 
 }
