@@ -14,8 +14,8 @@ import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
 import org.bukkit.event.entity.EntityDamageByProjectileEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityListener;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.entity.EntityListener;
 import org.bukkit.util.Vector;
 
 import com.herocraftonline.dev.heroes.Heroes;
@@ -69,8 +69,8 @@ public class SkillIcebolt extends ActiveSkill {
                 EntityDamageByProjectileEvent subEvent = (EntityDamageByProjectileEvent) event;
                 Entity projectile = subEvent.getProjectile();
                 if (projectile instanceof Snowball) {
-                    if (snowballs.contains((Snowball) projectile)) {
-                        snowballs.remove((Snowball) projectile);
+                    if (snowballs.contains(projectile)) {
+                        snowballs.remove(projectile);
                         // Damage Event //
                         EntityDamageEvent damageEvent = new EntityDamageEvent(event.getEntity(), DamageCause.ENTITY_ATTACK, 0);
                         Bukkit.getServer().getPluginManager().callEvent(damageEvent);

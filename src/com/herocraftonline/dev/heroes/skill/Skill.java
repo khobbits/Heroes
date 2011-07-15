@@ -64,6 +64,18 @@ public abstract class Skill extends BaseCommand {
     }
 
     /**
+     * The end of the execution path of a skill, this method is called whenever a command with a registered identifier
+     * is used.
+     * 
+     * @param sender
+     *            the <code>CommandSender</code> issuing the command
+     * @param args
+     *            the arguments provided with the command
+     */
+    @Override
+    public abstract void execute(CommandSender sender, String[] args);
+
+    /**
      * Creates and returns a <code>ConfigurationNode</code> containing all the default data for the skill. By default,
      * this configuration is empty.
      * 
@@ -145,17 +157,6 @@ public abstract class Skill extends BaseCommand {
     public abstract void init();
 
     /**
-     * Sets the configuration containing all settings related to the skill. This should only be used by the skill loader
-     * in most cases.
-     * 
-     * @param config
-     *            the new skill configuration
-     */
-    public void setConfig(ConfigurationNode config) {
-        this.config = config;
-    }
-
-    /**
      * Helper method that broadcasts a message to all players within 30 blocks of the specified source. These messages
      * can be suppressed by players on an individual basis.
      * 
@@ -185,6 +186,17 @@ public abstract class Skill extends BaseCommand {
     }
 
     /**
+     * Sets the configuration containing all settings related to the skill. This should only be used by the skill loader
+     * in most cases.
+     * 
+     * @param config
+     *            the new skill configuration
+     */
+    public void setConfig(ConfigurationNode config) {
+        this.config = config;
+    }
+
+    /**
      * Helper method to make registering an event a little easier.
      * 
      * @param type
@@ -197,16 +209,5 @@ public abstract class Skill extends BaseCommand {
     protected void registerEvent(Type type, Listener listener, Priority priority) {
         plugin.getServer().getPluginManager().registerEvent(type, listener, priority, plugin);
     }
-
-    /**
-     * The end of the execution path of a skill, this method is called whenever a command with a registered identifier
-     * is used.
-     * 
-     * @param sender
-     *            the <code>CommandSender</code> issuing the command
-     * @param args
-     *            the arguments provided with the command
-     */
-    public abstract void execute(CommandSender sender, String[] args);
 
 }

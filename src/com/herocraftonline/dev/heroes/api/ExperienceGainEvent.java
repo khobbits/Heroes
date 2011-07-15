@@ -21,14 +21,6 @@ public class ExperienceGainEvent extends Event implements Cancellable {
         this.source = source;
     }
 
-    public final Hero getHero() {
-        return hero;
-    }
-
-    public final ExperienceType getSource() {
-        return source;
-    }
-
     /**
      * Returns the player's experience
      * 
@@ -38,13 +30,12 @@ public class ExperienceGainEvent extends Event implements Cancellable {
         return expGain;
     }
 
-    /**
-     * Sets the player's experience
-     * 
-     * @param exp
-     */
-    public void setExpGain(double exp) {
-        this.expGain = exp;
+    public final Hero getHero() {
+        return hero;
+    }
+
+    public final ExperienceType getSource() {
+        return source;
     }
 
     @Override
@@ -55,6 +46,15 @@ public class ExperienceGainEvent extends Event implements Cancellable {
     @Override
     public void setCancelled(boolean cancelled) {
         this.cancelled = cancelled;
+    }
+
+    /**
+     * Sets the player's experience
+     * 
+     * @param exp
+     */
+    public void setExpGain(double exp) {
+        this.expGain = exp;
     }
 
 }

@@ -33,6 +33,39 @@ public class HEntityListener extends EntityListener {
     }
 
     @Override
+    public void onEntityDamage(EntityDamageEvent event) {
+        Entity defender = event.getEntity();
+        if (defender instanceof LivingEntity) {
+            if (((LivingEntity) defender).getHealth() - event.getDamage() <= 0) {
+                // Grab the Attacker regardless of the Event.
+                Entity attacker = null;
+                if (event instanceof EntityDamageByProjectileEvent) {
+                    EntityDamageByProjectileEvent subEvent = (EntityDamageByProjectileEvent) event;
+                    attacker = subEvent.getDamager();
+                } else if (event instanceof EntityDamageByEntityEvent) {
+                    EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
+                    attacker = subEvent.getDamager();
+                }
+                // Check if the Attacker is in the Defenders Party.
+                if (attacker instanceof Player && defender instanceof Player) {
+                    HeroParty party = plugin.getHeroManager().getHero((Player) attacker).getParty();
+                    HeroParty partyDefend = plugin.getHeroManager().getHero((Player) defender).getParty();
+                    if (party != null && party == partyDefend) {
+                        event.setCancelled(true);
+                    }
+                }
+                // If it's a legitimate attack then we add it to the Kills list.
+                if (attacker != null && attacker instanceof Player) {
+                    kills.put(defender.getEntityId(), (Player) attacker);
+                } else {
+                    kills.remove(defender.getEntityId());
+                }
+            }
+        }
+
+    }
+
+    @Override
     public void onEntityDeath(EntityDeathEvent event) {
         Entity defender = event.getEntity();
         Player attacker = kills.get(defender.getEntityId());
@@ -89,8 +122,7 @@ public class HEntityListener extends EntityListener {
                             break;
                         }
                     }
-                } catch (IllegalArgumentException e) {
-                }
+                } catch (IllegalArgumentException e) {}
                 if (type != null) {
                     // If EXP hasn't been assigned for this Entity then we stop here.
                     if (!prop.creatureKillingExp.containsKey(type)) {
@@ -104,38 +136,5 @@ public class HEntityListener extends EntityListener {
                 hero.gainExp(addedExp, experienceType);
             }
         }
-    }
-
-    @Override
-    public void onEntityDamage(EntityDamageEvent event) {
-        Entity defender = event.getEntity();
-        if (defender instanceof LivingEntity) {
-            if (((LivingEntity) defender).getHealth() - event.getDamage() <= 0) {
-                // Grab the Attacker regardless of the Event.
-                Entity attacker = null;
-                if (event instanceof EntityDamageByProjectileEvent) {
-                    EntityDamageByProjectileEvent subEvent = (EntityDamageByProjectileEvent) event;
-                    attacker = subEvent.getDamager();
-                } else if (event instanceof EntityDamageByEntityEvent) {
-                    EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
-                    attacker = subEvent.getDamager();
-                }
-                // Check if the Attacker is in the Defenders Party.
-                if (attacker instanceof Player && defender instanceof Player) {
-                    HeroParty party = plugin.getHeroManager().getHero((Player) attacker).getParty();
-                    HeroParty partyDefend = plugin.getHeroManager().getHero((Player) defender).getParty();
-                    if (party != null && party == partyDefend) {
-                        event.setCancelled(true);
-                    }
-                }
-                // If it's a legitimate attack then we add it to the Kills list.
-                if (attacker != null && attacker instanceof Player) {
-                    kills.put(defender.getEntityId(), (Player) attacker);
-                } else {
-                    kills.remove(defender.getEntityId());
-                }
-            }
-        }
-
     }
 }

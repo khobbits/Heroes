@@ -69,27 +69,30 @@ public abstract class PassiveSkill extends Skill {
     public void execute(CommandSender sender, String[] args) {}
 
     /**
-     * Applies the effect to the provided {@link Hero}.
+     * Creates and returns a <code>ConfigurationNode</code> containing the default apply and unapply texts. When using
+     * additional configuration settings in your skills, be sure to override this method to define them with defaults.
      * 
-     * @param hero
-     *            the Hero to apply the effect to
+     * @return a default configuration
      */
-    protected void apply(Hero hero) {
-        hero.applyEffect(getName(), -1);
-        notifyNearbyPlayers(hero.getPlayer().getLocation(), applyText, hero.getPlayer().getName(), getName());
+    @Override
+    public ConfigurationNode getDefaultConfig() {
+        ConfigurationNode node = Configuration.getEmptyNode();
+        node.setProperty(SETTING_APPLYTEXT, "%hero% gained %skill%!");
+        node.setProperty(SETTING_UNAPPLYTEXT, "%hero% lost %skill%!");
+        return node;
     }
 
     /**
-     * Removes the effect from the provided {@link Hero}.
-     * 
-     * @param hero
-     *            the Hero to remove the effect from
+     * Loads and stores the skill's apply and unapply texts from the configuration. By default, these texts are
+     * "%hero% gained %skill%!" and "%hero% lost %skill%!", where %hero% and %skill% are replaced with the
+     * Hero's and skill's names, respectively.
      */
-    protected void unapply(Hero hero) {
-        Long effect = hero.removeEffect(getName());
-        if (effect != null) {
-            notifyNearbyPlayers(hero.getPlayer().getLocation(), unapplyText, hero.getPlayer().getName(), getName());
-        }
+    @Override
+    public void init() {
+        applyText = getSetting(null, SETTING_APPLYTEXT, "%hero% gained %skill%!");
+        applyText = applyText.replace("%hero%", "$1").replace("%skill%", "$2");
+        unapplyText = getSetting(null, SETTING_UNAPPLYTEXT, "%hero% lost %skill%!");
+        unapplyText = unapplyText.replace("%hero%", "$1").replace("%skill%", "$2");
     }
 
     /**
@@ -114,30 +117,27 @@ public abstract class PassiveSkill extends Skill {
     }
 
     /**
-     * Loads and stores the skill's apply and unapply texts from the configuration. By default, these texts are
-     * "%hero% gained %skill%!" and "%hero% lost %skill%!", where %hero% and %skill% are replaced with the
-     * Hero's and skill's names, respectively.
+     * Applies the effect to the provided {@link Hero}.
+     * 
+     * @param hero
+     *            the Hero to apply the effect to
      */
-    @Override
-    public void init() {
-        applyText = getSetting(null, SETTING_APPLYTEXT, "%hero% gained %skill%!");
-        applyText = applyText.replace("%hero%", "$1").replace("%skill%", "$2");
-        unapplyText = getSetting(null, SETTING_UNAPPLYTEXT, "%hero% lost %skill%!");
-        unapplyText = unapplyText.replace("%hero%", "$1").replace("%skill%", "$2");
+    protected void apply(Hero hero) {
+        hero.applyEffect(getName(), -1);
+        notifyNearbyPlayers(hero.getPlayer().getLocation(), applyText, hero.getPlayer().getName(), getName());
     }
 
     /**
-     * Creates and returns a <code>ConfigurationNode</code> containing the default apply and unapply texts. When using
-     * additional configuration settings in your skills, be sure to override this method to define them with defaults.
+     * Removes the effect from the provided {@link Hero}.
      * 
-     * @return a default configuration
+     * @param hero
+     *            the Hero to remove the effect from
      */
-    @Override
-    public ConfigurationNode getDefaultConfig() {
-        ConfigurationNode node = Configuration.getEmptyNode();
-        node.setProperty(SETTING_APPLYTEXT, "%hero% gained %skill%!");
-        node.setProperty(SETTING_UNAPPLYTEXT, "%hero% lost %skill%!");
-        return node;
+    protected void unapply(Hero hero) {
+        Long effect = hero.removeEffect(getName());
+        if (effect != null) {
+            notifyNearbyPlayers(hero.getPlayer().getLocation(), unapplyText, hero.getPlayer().getName(), getName());
+        }
     }
 
     /**

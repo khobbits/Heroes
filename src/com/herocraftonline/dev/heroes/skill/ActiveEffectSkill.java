@@ -1,5 +1,6 @@
 package com.herocraftonline.dev.heroes.skill;
 
+import org.bukkit.command.CommandSender;
 import org.bukkit.util.config.Configuration;
 import org.bukkit.util.config.ConfigurationNode;
 
@@ -51,41 +52,6 @@ public abstract class ActiveEffectSkill extends ActiveSkill {
     }
 
     /**
-     * Loads and stores the skill's effect gain and loss texts from the configuration. By default, these texts are
-     * "%hero% gained %skill%!" and "%hero% lost %skill%!" where %hero% and %skill% are replaced with the Hero's and
-     * skill's names, respectively.
-     */
-    @Override
-    public void init() {
-        String useText = getSetting(null, SETTING_USETEXT, "%hero% gained %skill%!");
-        useText = useText.replace("%hero%", "$1").replace("%skill%", "$2");
-        setUseText(useText);
-
-        String expireText = getSetting(null, SETTING_EXPIRETEXT, "%hero% lost %skill%!");
-        expireText = expireText.replace("%hero%", "$1").replace("%skill%", "$2");
-        setExpireText(expireText);
-    }
-
-    /**
-     * Returns the effect expiry message
-     * 
-     * @return the effect expire text
-     */
-    public String getExpireText() {
-        return expireText;
-    }
-
-    /**
-     * Manually modifies the effect expiry message
-     * 
-     * @param expireText
-     *            the effect expire text
-     */
-    public void setExpireText(String expireText) {
-        this.expireText = expireText;
-    }
-
-    /**
      * Creates and returns a <code>ConfigurationNode</code> containing the default usage text, expiry text and effect
      * duration. When using additional configuration settings in your skills, be sure to override this method to define
      * them with defaults.
@@ -102,13 +68,28 @@ public abstract class ActiveEffectSkill extends ActiveSkill {
     }
 
     /**
-     * Applies an effect with the skill's name for the configured duration to the specified Hero
+     * Returns the effect expiry message
      * 
-     * @param hero
-     *            the Hero to which the effect is applied
+     * @return the effect expire text
      */
-    protected void applyEffect(Hero hero) {
-        hero.applyEffect(getName(), getSetting(hero.getHeroClass(), SETTING_DURATION, 10000));
+    public String getExpireText() {
+        return expireText;
+    }
+
+    /**
+     * Loads and stores the skill's effect gain and loss texts from the configuration. By default, these texts are
+     * "%hero% gained %skill%!" and "%hero% lost %skill%!" where %hero% and %skill% are replaced with the Hero's and
+     * skill's names, respectively.
+     */
+    @Override
+    public void init() {
+        String useText = getSetting(null, SETTING_USETEXT, "%hero% gained %skill%!");
+        useText = useText.replace("%hero%", "$1").replace("%skill%", "$2");
+        setUseText(useText);
+
+        String expireText = getSetting(null, SETTING_EXPIRETEXT, "%hero% lost %skill%!");
+        expireText = expireText.replace("%hero%", "$1").replace("%skill%", "$2");
+        setExpireText(expireText);
     }
 
     /**
@@ -119,5 +100,25 @@ public abstract class ActiveEffectSkill extends ActiveSkill {
      */
     public void onExpire(Hero hero) {
         notifyNearbyPlayers(hero.getPlayer().getLocation(), expireText, hero.getPlayer().getName(), getName());
+    }
+
+    /**
+     * Manually modifies the effect expiry message
+     * 
+     * @param expireText
+     *            the effect expire text
+     */
+    public void setExpireText(String expireText) {
+        this.expireText = expireText;
+    }
+
+    /**
+     * Applies an effect with the skill's name for the configured duration to the specified Hero
+     * 
+     * @param hero
+     *            the Hero to which the effect is applied
+     */
+    protected void applyEffect(Hero hero) {
+        hero.applyEffect(getName(), getSetting(hero.getHeroClass(), SETTING_DURATION, 10000));
     }
 }

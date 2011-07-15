@@ -26,7 +26,9 @@ import com.herocraftonline.dev.heroes.skill.ActiveEffectSkill;
 public class SkillBlackjack extends ActiveEffectSkill {
 
     private PlayerListener playerListener = new SkillPlayerListener();
+
     private EntityListener entityListener = new SkillEntityListener();
+
     private Map<Integer, Long> stunnedEntities = new HashMap<Integer, Long>();
     private Random random = new Random();
 
@@ -46,19 +48,19 @@ public class SkillBlackjack extends ActiveEffectSkill {
     }
 
     @Override
-    public boolean use(Hero hero, String[] args) {
-        applyEffect(hero);
-        notifyNearbyPlayers(hero.getPlayer().getLocation(), getUseText(), hero.getPlayer().getName(), getName());
-        return true;
-    }
-
-    @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
         node.setProperty("stun-duration", 5000);
         node.setProperty("stun-chance", 0.20);
         node.setProperty(SETTING_DURATION, 20000);
         return node;
+    }
+
+    @Override
+    public boolean use(Hero hero, String[] args) {
+        applyEffect(hero);
+        notifyNearbyPlayers(hero.getPlayer().getLocation(), getUseText(), hero.getPlayer().getName(), getName());
+        return true;
     }
 
     private boolean checkStunned(Entity entity) {
@@ -124,17 +126,17 @@ public class SkillBlackjack extends ActiveEffectSkill {
     public class SkillPlayerListener extends PlayerListener {
 
         @Override
-        public void onPlayerMove(PlayerMoveEvent event) {
+        public void onPlayerInteract(PlayerInteractEvent event) {
             if (checkStunned(event.getPlayer())) {
                 event.setCancelled(true);
-                event.getPlayer().teleport(event.getFrom());
             }
         }
 
         @Override
-        public void onPlayerInteract(PlayerInteractEvent event) {
+        public void onPlayerMove(PlayerMoveEvent event) {
             if (checkStunned(event.getPlayer())) {
                 event.setCancelled(true);
+                event.getPlayer().teleport(event.getFrom());
             }
         }
 

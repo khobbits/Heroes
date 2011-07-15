@@ -23,6 +23,7 @@ import com.herocraftonline.dev.heroes.util.Messaging;
 public class SkillRoot extends TargettedSkill {
 
     private Map<String, Integer> teleporterTasks = new HashMap<String, Integer>();
+
     private String expireText;
 
     public SkillRoot(Heroes plugin) {
@@ -52,45 +53,26 @@ public class SkillRoot extends TargettedSkill {
         expireText = expireText.replace("%hero%", "$1").replace("%skill%", "$2");
     }
 
-    public class TimedTeleporter implements Runnable {
-
-        private final String target;
-        private final long endTime;
-        private final double x, y, z;
-        private int taskID = 0;
-
-        public TimedTeleporter(Player target, long duration) {
-            this.target = target.getName();
-            Location location = target.getLocation();
-            x = location.getX();
-            y = location.getY();
-            z = location.getZ();
-            this.endTime = System.currentTimeMillis() + duration;
+    @Override
+    public boolean use(Hero hero, LivingEntity target, String[] args) {
+        Player player = hero.getPlayer();
+        if (!(target instanceof Player)) {
+            Messaging.send(player, "You need a target!");
         }
 
-        public void setTaskID(int taskID) {
-            this.taskID = taskID;
+        Player targetPlayer = (Player) target;
+        Hero targetHero = plugin.getHeroManager().getHero(targetPlayer);
+        if (targetHero.equals(hero)) {
+            Messaging.send(player, "You need a target!");
+            return false;
         }
 
-        @Override
-        public void run() {
-            Player targetPlayer = Bukkit.getServer().getPlayer(target);
-            if (targetPlayer != null) {
-                Location location = targetPlayer.getLocation();
-                if (location.getX() != x || location.getY() != y || location.getZ() != z) {
-                    location.setX(x);
-                    location.setY(y);
-                    location.setZ(z);
-                    targetPlayer.teleport(location);
-                }
-            }
-
-            if (System.currentTimeMillis() >= endTime) {
-                teleporterTasks.remove(taskID);
-                Bukkit.getServer().getScheduler().cancelTask(taskID);
-            }
-        }
-
+        long duration = getSetting(hero.getHeroClass(), "duration", 5000);
+        TimedTeleporter task = new TimedTeleporter(targetPlayer, duration);
+        task.setTaskID(plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, task, 0, 5));
+        targetHero.applyEffect(getName(), duration);
+        notifyNearbyPlayers(player.getLocation(), getUseText(), player.getName(), getName(), getEntityName(target));
+        return true;
     }
 
     public class SkillEntityListener extends EntityListener {
@@ -117,25 +99,44 @@ public class SkillRoot extends TargettedSkill {
         }
     }
 
-    @Override
-    public boolean use(Hero hero, LivingEntity target, String[] args) {
-        Player player = hero.getPlayer();
-        if (!(target instanceof Player)) {
-            Messaging.send(player, "You need a target!");
+    public class TimedTeleporter implements Runnable {
+
+        private final String target;
+        private final long endTime;
+        private final double x, y, z;
+        private int taskID = 0;
+
+        public TimedTeleporter(Player target, long duration) {
+            this.target = target.getName();
+            Location location = target.getLocation();
+            x = location.getX();
+            y = location.getY();
+            z = location.getZ();
+            this.endTime = System.currentTimeMillis() + duration;
         }
 
-        Player targetPlayer = (Player) target;
-        Hero targetHero = plugin.getHeroManager().getHero(targetPlayer);
-        if (targetHero.equals(hero)) {
-            Messaging.send(player, "You need a target!");
-            return false;
+        @Override
+        public void run() {
+            Player targetPlayer = Bukkit.getServer().getPlayer(target);
+            if (targetPlayer != null) {
+                Location location = targetPlayer.getLocation();
+                if (location.getX() != x || location.getY() != y || location.getZ() != z) {
+                    location.setX(x);
+                    location.setY(y);
+                    location.setZ(z);
+                    targetPlayer.teleport(location);
+                }
+            }
+
+            if (System.currentTimeMillis() >= endTime) {
+                teleporterTasks.remove(taskID);
+                Bukkit.getServer().getScheduler().cancelTask(taskID);
+            }
         }
 
-        long duration = getSetting(hero.getHeroClass(), "duration", 5000);
-        TimedTeleporter task = new TimedTeleporter(targetPlayer, duration);
-        task.setTaskID(plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, task, 0, 5));
-        targetHero.applyEffect(getName(), duration);
-        notifyNearbyPlayers(player.getLocation(), getUseText(), player.getName(), getName(), getEntityName(target));
-        return true;
+        public void setTaskID(int taskID) {
+            this.taskID = taskID;
+        }
+
     }
 }

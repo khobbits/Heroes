@@ -65,7 +65,7 @@ public class SkillBarrage extends ActiveSkill {
         }
         player.updateInventory();
 
-        double diff = (2 * Math.PI) / numArrows;
+        double diff = 2 * Math.PI / numArrows;
         for (double a = 0; a < 2 * Math.PI; a += diff) {
             Vector vel = new Vector(Math.cos(a), 0, Math.sin(a));
             player.shootArrow().setVelocity(vel);

@@ -20,17 +20,6 @@ public class InventoryChecker {
         this.plugin = plugin;
     }
 
-    /**
-     * Check the given Players inventory for any Armor or Weapons which are restricted.
-     * @param p
-     */
-    public void checkInventory(String name) {
-        Player player = Bukkit.getServer().getPlayer(name);
-        if (player != null) {
-            checkInventory(player);
-        }
-    }
-
     public void checkInventory(Player p) {
         PlayerInventory inv = p.getInventory();
         Hero h = plugin.getHeroManager().getHero(p);
@@ -110,19 +99,31 @@ public class InventoryChecker {
     }
 
     /**
-     * Synchronize the Clients Inventory with the Server. This is dealt during a scheduler so it happens after ANY changes are made.
-     * Synchronizing during changes often results in the client losing Sync.
+     * Check the given Players inventory for any Armor or Weapons which are restricted.
      * 
-     * @param player
+     * @param p
      */
-    public void syncInventory(final Player player) {
-        plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-            @SuppressWarnings("deprecation")
-            @Override
-            public void run() {
-                player.updateInventory();
+    public void checkInventory(String name) {
+        Player player = Bukkit.getServer().getPlayer(name);
+        if (player != null) {
+            checkInventory(player);
+        }
+    }
+
+    /**
+     * Grab the first empty INVENTORY SLOT, skips the Hotbar.
+     * 
+     * @param p
+     * @return
+     */
+    public int firstEmpty(Player p) {
+        ItemStack[] inventory = p.getInventory().getContents();
+        for (int i = 9; i < inventory.length; i++) {
+            if (inventory[i] == null) {
+                return i;
             }
-        });
+        }
+        return -1;
     }
 
     /**
@@ -154,18 +155,19 @@ public class InventoryChecker {
     }
 
     /**
-     * Grab the first empty INVENTORY SLOT, skips the Hotbar.
+     * Synchronize the Clients Inventory with the Server. This is dealt during a scheduler so it happens after ANY
+     * changes are made.
+     * Synchronizing during changes often results in the client losing Sync.
      * 
-     * @param p
-     * @return
+     * @param player
      */
-    public int firstEmpty(Player p) {
-        ItemStack[] inventory = p.getInventory().getContents();
-        for (int i = 9; i < inventory.length; i++) {
-            if (inventory[i] == null) {
-                return i;
+    public void syncInventory(final Player player) {
+        plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+            @SuppressWarnings("deprecation")
+            @Override
+            public void run() {
+                player.updateInventory();
             }
-        }
-        return -1;
+        });
     }
 }

@@ -59,18 +59,6 @@ public abstract class TargettedSkill extends ActiveSkill {
     }
 
     /**
-     * Loads and stores the skill's usage text from the configuration. By default, this text is
-     * "%hero% used %skill% on %target!" where %hero%, %skill% and %target% are replaced with the Hero's, skill's and
-     * target's names, respectively.
-     */
-    @Override
-    public void init() {
-        String useText = getSetting(null, SETTING_USETEXT, "%hero% used %skill% on %target%!");
-        useText = useText.replace("%hero%", "$1").replace("%skill%", "$2").replace("%target%", "$3");
-        setUseText(useText);
-    }
-
-    /**
      * Creates and returns a <code>ConfigurationNode</code> containing the default usage text and targetting range. When
      * using additional configuration settings in your skills, be sure to override this method to define them with
      * defaults.
@@ -84,6 +72,29 @@ public abstract class TargettedSkill extends ActiveSkill {
         node.setProperty(SETTING_MAXDISTANCE, 15);
         return node;
     }
+
+    /**
+     * Loads and stores the skill's usage text from the configuration. By default, this text is
+     * "%hero% used %skill% on %target!" where %hero%, %skill% and %target% are replaced with the Hero's, skill's and
+     * target's names, respectively.
+     */
+    @Override
+    public void init() {
+        String useText = getSetting(null, SETTING_USETEXT, "%hero% used %skill% on %target%!");
+        useText = useText.replace("%hero%", "$1").replace("%skill%", "$2").replace("%target%", "$3");
+        setUseText(useText);
+    }
+
+    /**
+     * The heart of any TargettedSkill, this method defines what actually happens when the skill is used.
+     * 
+     * @param hero
+     *            the {@link Hero} using the skill
+     * @param args
+     *            the arguments provided with the command
+     * @return <code>true</code> if the skill executed properly, <code>false</code> otherwise
+     */
+    public abstract boolean use(Hero hero, LivingEntity target, String[] args);
 
     /**
      * Handles target acquisition before calling {@link #use(Hero, LivingEntity, String[])}.
@@ -128,15 +139,15 @@ public abstract class TargettedSkill extends ActiveSkill {
     }
 
     /**
-     * The heart of any TargettedSkill, this method defines what actually happens when the skill is used.
+     * Returns the pretty name of a <code>LivingEntity</code>.
      * 
-     * @param hero
-     *            the {@link Hero} using the skill
-     * @param args
-     *            the arguments provided with the command
-     * @return <code>true</code> if the skill executed properly, <code>false</code> otherwise
+     * @param entity
+     *            the entity
+     * @return the pretty name of the entity
      */
-    public abstract boolean use(Hero hero, LivingEntity target, String[] args);
+    public static String getEntityName(LivingEntity entity) {
+        return entity instanceof Player ? ((Player) entity).getName() : entity.getClass().getSimpleName().substring(5);
+    }
 
     /**
      * Returns the first LivingEntity in the line of sight of a Player.
@@ -199,17 +210,6 @@ public abstract class TargettedSkill extends ActiveSkill {
             }
         }
         return true;
-    }
-
-    /**
-     * Returns the pretty name of a <code>LivingEntity</code>.
-     * 
-     * @param entity
-     *            the entity
-     * @return the pretty name of the entity
-     */
-    public static String getEntityName(LivingEntity entity) {
-        return entity instanceof Player ? ((Player) entity).getName() : entity.getClass().getSimpleName().substring(5);
     }
 
 }

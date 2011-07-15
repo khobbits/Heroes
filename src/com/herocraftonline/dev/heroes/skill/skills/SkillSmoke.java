@@ -34,6 +34,21 @@ public class SkillSmoke extends ActiveEffectSkill {
     }
 
     @Override
+    public void onExpire(Hero hero) {
+        Player player = hero.getPlayer();
+        EntityHuman entity = ((CraftPlayer) player).getHandle();
+        final Player[] players = plugin.getServer().getOnlinePlayers();
+        for (Player p : players) {
+            if (p.getName().equalsIgnoreCase(player.getName())) {
+                continue;
+            }
+            CraftPlayer hostilePlayer = (CraftPlayer) p;
+            hostilePlayer.getHandle().netServerHandler.sendPacket(new Packet20NamedEntitySpawn(entity));
+        }
+        super.onExpire(hero);
+    }
+
+    @Override
     public boolean use(Hero hero, String[] args) {
         CraftPlayer craftPlayer = (CraftPlayer) hero.getPlayer();
         // Tell all the logged in Clients to Destroy the Entity - Appears Invisible.
@@ -72,20 +87,5 @@ public class SkillSmoke extends ActiveEffectSkill {
                 }
             }
         }
-    }
-
-    @Override
-    public void onExpire(Hero hero) {
-        Player player = hero.getPlayer();
-        EntityHuman entity = ((CraftPlayer) player).getHandle();
-        final Player[] players = plugin.getServer().getOnlinePlayers();
-        for (Player p : players) {
-            if (p.getName().equalsIgnoreCase(player.getName())) {
-                continue;
-            }
-            CraftPlayer hostilePlayer = (CraftPlayer) p;
-            hostilePlayer.getHandle().netServerHandler.sendPacket(new Packet20NamedEntitySpawn(entity));
-        }
-        super.onExpire(hero);
     }
 }

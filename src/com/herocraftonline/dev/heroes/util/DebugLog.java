@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 public class DebugLog {
 
     private FileHandler fh;
+
     private Logger log;
 
     public DebugLog(String logger, String file) {
@@ -33,6 +34,10 @@ public class DebugLog {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void close() {
+        fh.close();
     }
 
     public void log(Level level, String msg) {
@@ -62,9 +67,5 @@ public class DebugLog {
 
             return builder.toString();
         }
-    }
-
-    public void close() {
-        fh.close();
     }
 }

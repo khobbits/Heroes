@@ -9,52 +9,16 @@ import org.bukkit.util.config.ConfigurationNode;
 
 public class HeroClass {
 
-    public static enum ArmorType {
-        LEATHER,
-        IRON,
-        GOLD,
-        DIAMOND,
-        CHAINMAIL
-    }
-
-    public static enum ArmorItems {
-        HELMET,
-        CHESTPLATE,
-        LEGGINGS,
-        BOOTS
-    }
-
-    public static enum WeaponType {
-        WOOD,
-        STONE,
-        IRON,
-        GOLD,
-        DIAMOND
-    }
-
-    public static enum WeaponItems {
-        PICKAXE,
-        AXE,
-        HOE,
-        SPADE,
-        SWORD
-    }
-
-    public static enum ExperienceType {
-        SKILL,
-        KILLING,
-        PVP,
-        MINING,
-        CRAFTING,
-        LOGGING,
-        EXTERNAL
-    }
-
     private String name;
+
     private String description;
+
     private HeroClass parent;
+
     private Set<String> allowedArmor;
+
     private Set<String> allowedWeapons;
+
     private Set<ExperienceType> experienceSources;
     private double expModifier;
     private Map<String, ConfigurationNode> skills;
@@ -78,90 +42,16 @@ public class HeroClass {
         this.name = name;
     }
 
-    public void setExpModifier(double modifier) {
-        this.expModifier = modifier;
-    }
-
-    public double getExpModifier() {
-        return this.expModifier;
-    }
-
-    public boolean hasSkill(String name) {
-        return skills.containsKey(name.toLowerCase());
-    }
-
-    public void addSkill(String name, ConfigurationNode settings) {
-        skills.put(name.toLowerCase(), settings);
-    }
-
-    public void removeSkill(String name) {
-        skills.remove(name.toLowerCase());
-    }
-
-    public boolean isPrimary() {
-        return parent == null;
-    }
-
-    @Override
-    public String toString() {
-        return name;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Set<String> getAllowedArmor() {
-        return this.allowedArmor;
-    }
-
     public void addAllowedArmor(String armor) {
         this.allowedArmor.add(armor);
-    }
-
-    public Set<String> getAllowedWeapons() {
-        return this.allowedWeapons;
     }
 
     public void addAllowedWeapon(String weapon) {
         this.allowedWeapons.add(weapon);
     }
 
-    public HeroClass getParent() {
-        return parent == null ? null : parent;
-    }
-
-    public void setParent(HeroClass parent) {
-        this.parent = parent;
-    }
-
-    public Set<HeroClass> getSpecializations() {
-        return specializations;
-    }
-
-    public void setSpecializations(Set<HeroClass> specializations) {
-        this.specializations = specializations;
-    }
-
-    public ConfigurationNode getSkillSettings(String name) {
-        return skills.get(name.toLowerCase());
-    }
-
-    public Set<ExperienceType> getExperienceSources() {
-        return experienceSources;
-    }
-
-    public void setExperienceSources(Set<ExperienceType> experienceSources) {
-        this.experienceSources = experienceSources;
-    }
-
-    @Override
-    public int hashCode() {
-        return name == null ? 0 : name.hashCode();
+    public void addSkill(String name, ConfigurationNode settings) {
+        skills.put(name.toLowerCase(), settings);
     }
 
     @Override
@@ -186,20 +76,135 @@ public class HeroClass {
         return true;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public Set<String> getAllowedArmor() {
+        return this.allowedArmor;
+    }
+
+    public Set<String> getAllowedWeapons() {
+        return this.allowedWeapons;
     }
 
     public String getDescription() {
         return description;
     }
 
+    public Set<ExperienceType> getExperienceSources() {
+        return experienceSources;
+    }
+
+    public double getExpModifier() {
+        return this.expModifier;
+    }
+
     public double getMaxHealth() {
         return maxHealth;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public HeroClass getParent() {
+        return parent == null ? null : parent;
+    }
+
+    public ConfigurationNode getSkillSettings(String name) {
+        return skills.get(name.toLowerCase());
+    }
+
+    public Set<HeroClass> getSpecializations() {
+        return specializations;
+    }
+
+    @Override
+    public int hashCode() {
+        return name == null ? 0 : name.hashCode();
+    }
+
+    public boolean hasSkill(String name) {
+        return skills.containsKey(name.toLowerCase());
+    }
+
+    public boolean isPrimary() {
+        return parent == null;
+    }
+
+    public void removeSkill(String name) {
+        skills.remove(name.toLowerCase());
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setExperienceSources(Set<ExperienceType> experienceSources) {
+        this.experienceSources = experienceSources;
+    }
+
+    public void setExpModifier(double modifier) {
+        this.expModifier = modifier;
+    }
+
     public void setMaxHealth(double maxHealth) {
         this.maxHealth = maxHealth;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setParent(HeroClass parent) {
+        this.parent = parent;
+    }
+
+    public void setSpecializations(Set<HeroClass> specializations) {
+        this.specializations = specializations;
+    }
+
+    @Override
+    public String toString() {
+        return name;
+    }
+
+    public static enum ArmorItems {
+        HELMET,
+        CHESTPLATE,
+        LEGGINGS,
+        BOOTS
+    }
+
+    public static enum ArmorType {
+        LEATHER,
+        IRON,
+        GOLD,
+        DIAMOND,
+        CHAINMAIL
+    }
+
+    public static enum ExperienceType {
+        SKILL,
+        KILLING,
+        PVP,
+        MINING,
+        CRAFTING,
+        LOGGING,
+        EXTERNAL
+    }
+
+    public static enum WeaponItems {
+        PICKAXE,
+        AXE,
+        HOE,
+        SPADE,
+        SWORD
+    }
+
+    public static enum WeaponType {
+        WOOD,
+        STONE,
+        IRON,
+        GOLD,
+        DIAMOND
     }
 
 }

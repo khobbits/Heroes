@@ -38,8 +38,8 @@ public class SkillLeech extends TargettedSkill {
         }
         int transferamount = getSetting(hero.getHeroClass(), "transfer-amount", 20);
         if (tHero.getMana() > transferamount) {
-            if ((hero.getMana() + transferamount) > 100) {
-                transferamount = (100 - hero.getMana());
+            if (hero.getMana() + transferamount > 100) {
+                transferamount = 100 - hero.getMana();
             }
             hero.setMana(hero.getMana() + transferamount);
             tHero.setMana(tHero.getMana() - transferamount);

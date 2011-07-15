@@ -12,8 +12,8 @@ public class HeroesDamage {
         this.plugin = plugin;
     }
 
-    public void registerEvents() {
-
+    public void addMonster(Integer entityID, Integer hp) {
+        mobHealthValues.put(entityID, hp);
     }
 
     /**
@@ -23,8 +23,8 @@ public class HeroesDamage {
         return mobHealthValues;
     }
 
-    public void addMonster(Integer entityID, Integer hp) {
-        mobHealthValues.put(entityID, hp);
+    public void registerEvents() {
+
     }
 
 }

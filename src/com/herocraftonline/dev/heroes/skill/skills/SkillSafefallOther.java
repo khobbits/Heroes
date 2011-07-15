@@ -35,6 +35,21 @@ public class SkillSafefallOther extends TargettedSkill {
         return node;
     }
 
+    @Override
+    public boolean use(Hero hero, LivingEntity target, String[] args) {
+        Player player = hero.getPlayer();
+        if (target instanceof Player) {
+            Hero newHero = plugin.getHeroManager().getHero((Player) target);
+            long duration = getSetting(hero.getHeroClass(), "duration", 5000);
+            newHero.applyEffect(getName(), duration);
+            notifyNearbyPlayers(player.getLocation(), getUseText(), player.getName(), getName(), target == player ? "himself" : getEntityName(target));
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
     public class SkillEntityListener extends EntityListener {
 
         @Override
@@ -52,20 +67,5 @@ public class SkillSafefallOther extends TargettedSkill {
                 }
             }
         }
-    }
-
-    @Override
-    public boolean use(Hero hero, LivingEntity target, String[] args) {
-        Player player = hero.getPlayer();
-        if (target instanceof Player) {
-            Hero newHero = plugin.getHeroManager().getHero((Player) target);
-            long duration = getSetting(hero.getHeroClass(), "duration", 5000);
-            newHero.applyEffect(getName(), duration);
-            notifyNearbyPlayers(player.getLocation(), getUseText(), player.getName(), getName(), target == player ? "himself" : getEntityName(target));
-            return true;
-        } else {
-            return false;
-        }
-
     }
 }

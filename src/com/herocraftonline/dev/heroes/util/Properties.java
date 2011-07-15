@@ -67,6 +67,10 @@ public class Properties {
         levels[maxLevel - 1] = maxExp;
     }
 
+    public double getExperience(int level) {
+        return levels[level - 1];
+    }
+
     /**
      * Convert the given Exp into the correct Level.
      * 
@@ -80,9 +84,5 @@ public class Properties {
             }
         }
         return -1;
-    }
-
-    public double getExperience(int level) {
-        return levels[level - 1];
     }
 }

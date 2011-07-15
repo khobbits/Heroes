@@ -38,8 +38,8 @@ public class SkillManaburn extends TargettedSkill {
         }
         int transferamount = getSetting(hero.getHeroClass(), "transfer-amount", 20);
         if (tHero.getMana() > transferamount) {
-            if ((hero.getMana() + transferamount) > 100) {
-                transferamount = (100 - hero.getMana());
+            if (hero.getMana() + transferamount > 100) {
+                transferamount = 100 - hero.getMana();
             }
             tHero.setMana(tHero.getMana() - transferamount);
             notifyNearbyPlayers(hero.getPlayer().getLocation(), getUseText(), hero.getPlayer().getName(), getName());

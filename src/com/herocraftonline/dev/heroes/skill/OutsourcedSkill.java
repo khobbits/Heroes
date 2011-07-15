@@ -61,6 +61,18 @@ public class OutsourcedSkill extends Skill {
     }
 
     /**
+     * Serves no purpose for an outsourced skill.
+     */
+    @Override
+    public void execute(CommandSender sender, String[] args) {}
+
+    /**
+     * Serves no purpose for an outsourced skill.
+     */
+    @Override
+    public void init() {}
+
+    /**
      * Grants this skill's associated permissions to the provided {@link Hero} if it is the correct class and level.
      * 
      * @param hero
@@ -111,6 +123,15 @@ public class OutsourcedSkill extends Skill {
         }
     }
 
+    private void addPermission(String world, String player, String permission) {
+        try {
+            // Heroes.Permissions.safeGetUser(world, player).addPermission(permission); -- Incase we need it.
+            Heroes.Permissions.safeGetUser(world, player).addTransientPermission(permission);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private boolean hasPermission(String world, String player, String permission) {
         try {
             return Heroes.Permissions.safeGetUser(world, player).hasPermission(permission);
@@ -124,15 +145,6 @@ public class OutsourcedSkill extends Skill {
         try {
             Heroes.Permissions.safeGetUser(world, player).removePermission(permission);
             Heroes.Permissions.safeGetUser(world, player).removeTransientPermission(permission);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void addPermission(String world, String player, String permission) {
-        try {
-            // Heroes.Permissions.safeGetUser(world, player).addPermission(permission); -- Incase we need it.
-            Heroes.Permissions.safeGetUser(world, player).addTransientPermission(permission);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -153,17 +165,5 @@ public class OutsourcedSkill extends Skill {
             }
         }
     }
-
-    /**
-     * Serves no purpose for an outsourced skill.
-     */
-    @Override
-    public void execute(CommandSender sender, String[] args) {}
-
-    /**
-     * Serves no purpose for an outsourced skill.
-     */
-    @Override
-    public void init() {}
 
 }

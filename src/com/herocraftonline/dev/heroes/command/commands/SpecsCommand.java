@@ -34,8 +34,7 @@ public class SpecsCommand extends BaseCommand {
         if (args.length != 0) {
             try {
                 page = Integer.parseInt(args[0]) - 1;
-            } catch (NumberFormatException e) {
-            }
+            } catch (NumberFormatException e) {}
         }
 
         Set<HeroClass> childClasses = playerClass.getSpecializations();

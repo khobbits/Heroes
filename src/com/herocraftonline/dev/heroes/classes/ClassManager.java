@@ -30,6 +30,10 @@ public class ClassManager {
         this.classes = new HashSet<HeroClass>();
     }
 
+    public boolean addClass(HeroClass c) {
+        return classes.add(c);
+    }
+
     public HeroClass getClass(String name) {
         for (HeroClass c : classes) {
             if (name.equalsIgnoreCase(c.getName())) {
@@ -39,16 +43,12 @@ public class ClassManager {
         return null;
     }
 
-    public boolean addClass(HeroClass c) {
-        return classes.add(c);
-    }
-
-    public boolean removeClass(HeroClass c) {
-        return classes.remove(c);
-    }
-
     public Set<HeroClass> getClasses() {
         return classes;
+    }
+
+    public HeroClass getDefaultClass() {
+        return defaultClass;
     }
 
     public void loadClasses(File file) {
@@ -249,12 +249,12 @@ public class ClassManager {
         config.save();
     }
 
-    public void setDefaultClass(HeroClass defaultClass) {
-        this.defaultClass = defaultClass;
+    public boolean removeClass(HeroClass c) {
+        return classes.remove(c);
     }
 
-    public HeroClass getDefaultClass() {
-        return defaultClass;
+    public void setDefaultClass(HeroClass defaultClass) {
+        this.defaultClass = defaultClass;
     }
 
 }

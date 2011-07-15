@@ -16,12 +16,12 @@ public class LevelEvent extends ExperienceGainEvent {
         this.to = to;
     }
 
-    public final int getTo() {
-        return to;
-    }
-
     public final int getFrom() {
         return from;
+    }
+
+    public final int getTo() {
+        return to;
     }
 
 }

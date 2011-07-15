@@ -41,41 +41,6 @@ public class HBlockListener extends BlockListener {
     }
 
     @Override
-    public void onBlockPlace(BlockPlaceEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
-
-        Block block = event.getBlock();
-        Material material = block.getType();
-
-        Properties prop = plugin.getConfigManager().getProperties();
-        if (prop.miningExp.containsKey(material) || prop.loggingExp.containsKey(material)) {
-            Location loc = block.getLocation();
-            if (placedBlocks.containsKey(loc)) {
-                placedBlocks.remove(loc);
-            }
-            placedBlocks.put(loc, System.currentTimeMillis());
-        }
-    }
-
-    private boolean wasBlockPlaced(Block block) {
-        Location loc = block.getLocation();
-        int blockTrackingDuration = plugin.getConfigManager().getProperties().blockTrackingDuration;
-
-        if (placedBlocks.containsKey(loc)) {
-            long timePlaced = placedBlocks.get(loc);
-            if (timePlaced + blockTrackingDuration > System.currentTimeMillis()) {
-                return true;
-            } else {
-                placedBlocks.remove(block.getLocation());
-                return false;
-            }
-        }
-        return false;
-    }
-
-    @Override
     public void onBlockBreak(BlockBreakEvent event) {
         if (event.isCancelled()) {
             return;
@@ -117,6 +82,41 @@ public class HBlockListener extends BlockListener {
             }
         }
         hero.gainExp(addedExp, block.getType() == Material.LOG ? ExperienceType.LOGGING : ExperienceType.MINING);
+    }
+
+    @Override
+    public void onBlockPlace(BlockPlaceEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
+
+        Block block = event.getBlock();
+        Material material = block.getType();
+
+        Properties prop = plugin.getConfigManager().getProperties();
+        if (prop.miningExp.containsKey(material) || prop.loggingExp.containsKey(material)) {
+            Location loc = block.getLocation();
+            if (placedBlocks.containsKey(loc)) {
+                placedBlocks.remove(loc);
+            }
+            placedBlocks.put(loc, System.currentTimeMillis());
+        }
+    }
+
+    private boolean wasBlockPlaced(Block block) {
+        Location loc = block.getLocation();
+        int blockTrackingDuration = plugin.getConfigManager().getProperties().blockTrackingDuration;
+
+        if (placedBlocks.containsKey(loc)) {
+            long timePlaced = placedBlocks.get(loc);
+            if (timePlaced + blockTrackingDuration > System.currentTimeMillis()) {
+                return true;
+            } else {
+                placedBlocks.remove(block.getLocation());
+                return false;
+            }
+        }
+        return false;
     }
 
 }

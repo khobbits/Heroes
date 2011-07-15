@@ -7,22 +7,8 @@ import com.herocraftonline.dev.heroes.Heroes;
 
 public final class Messaging {
 
-    public static void send(CommandSender player, String msg, Object... params) {
-        player.sendMessage(parameterizeMessage(msg, params));
-    }
-
     public static void broadcast(Heroes plugin, String msg, Object... params) {
         plugin.getServer().broadcastMessage(parameterizeMessage(msg, params));
-    }
-
-    private static String parameterizeMessage(String msg, Object... params) {
-        msg = ChatColor.BLUE + "Heroes: " + ChatColor.RED + msg;
-        if (params != null) {
-            for (int i = 0; i < params.length; i++) {
-                msg = msg.replace("$" + (i + 1), ChatColor.WHITE + params[i].toString() + ChatColor.RED);
-            }
-        }
-        return msg;
     }
 
     public static String createManaBar(int mana) {
@@ -37,6 +23,20 @@ public final class Messaging {
         }
         manaBar += ChatColor.RED + "]";
         return manaBar + " - " + ChatColor.BLUE + mana + "%";
+    }
+
+    public static void send(CommandSender player, String msg, Object... params) {
+        player.sendMessage(parameterizeMessage(msg, params));
+    }
+
+    private static String parameterizeMessage(String msg, Object... params) {
+        msg = ChatColor.BLUE + "Heroes: " + ChatColor.RED + msg;
+        if (params != null) {
+            for (int i = 0; i < params.length; i++) {
+                msg = msg.replace("$" + (i + 1), ChatColor.WHITE + params[i].toString() + ChatColor.RED);
+            }
+        }
+        return msg;
     }
 
 }

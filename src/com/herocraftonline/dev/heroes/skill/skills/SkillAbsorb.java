@@ -27,6 +27,13 @@ public class SkillAbsorb extends ActiveEffectSkill {
     }
 
     @Override
+    public ConfigurationNode getDefaultConfig() {
+        ConfigurationNode node = super.getDefaultConfig();
+        node.setProperty("mana-amount", 20);
+        return node;
+    }
+
+    @Override
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
         String playerName = player.getName();
@@ -34,13 +41,6 @@ public class SkillAbsorb extends ActiveEffectSkill {
 
         notifyNearbyPlayers(player.getLocation(), getUseText(), playerName, getName());
         return true;
-    }
-
-    @Override
-    public ConfigurationNode getDefaultConfig() {
-        ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty("mana-amount", 20);
-        return node;
     }
 
     public class SkillEntityListener extends EntityListener {

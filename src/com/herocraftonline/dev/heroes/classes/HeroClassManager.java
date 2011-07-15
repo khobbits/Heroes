@@ -11,27 +11,27 @@ public class HeroClassManager {
         this.plugin = plugin;
     }
 
-    public Set<HeroClass> getHeroClasses() {
-        return plugin.getClassManager().getClasses();
-    }
-
-    public void setDefaultClass(HeroClass defaultClass) {
-        plugin.getClassManager().setDefaultClass(defaultClass);
-    }
-
-    public HeroClass getDefaultClass() {
-        return plugin.getClassManager().getDefaultClass();
+    public void addClass(HeroClass c) {
+        plugin.getClassManager().addClass(c);
     }
 
     public HeroClass getClass(String name) {
         return plugin.getClassManager().getClass(name);
     }
 
+    public HeroClass getDefaultClass() {
+        return plugin.getClassManager().getDefaultClass();
+    }
+
+    public Set<HeroClass> getHeroClasses() {
+        return plugin.getClassManager().getClasses();
+    }
+
     public void removeClass(HeroClass c) {
         plugin.getClassManager().removeClass(c);
     }
 
-    public void addClass(HeroClass c) {
-        plugin.getClassManager().addClass(c);
+    public void setDefaultClass(HeroClass defaultClass) {
+        plugin.getClassManager().setDefaultClass(defaultClass);
     }
 }

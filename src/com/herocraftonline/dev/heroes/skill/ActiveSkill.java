@@ -71,50 +71,6 @@ public abstract class ActiveSkill extends Skill {
     }
 
     /**
-     * Returns the text to be displayed when the skill is successfully used. This text is pulled from the
-     * {@link #SETTING_USETEXT} entry in the skill's configuration during initialization.
-     * 
-     * @return the usage text
-     */
-    public String getUseText() {
-        return useText;
-    }
-
-    /**
-     * Changes the stored usage text. This can be used to override the message found in the skill's configuration.
-     * 
-     * @param useText
-     *            the new usage text
-     */
-    public void setUseText(String useText) {
-        this.useText = useText;
-    }
-
-    /**
-     * Loads and stores the skill's usage text from the configuration. By default, this text is "%hero% used %skill%!"
-     * where %hero% and %skill% are replaced with the Hero's and skill's names, respectively.
-     */
-    @Override
-    public void init() {
-        String useText = getSetting(null, SETTING_USETEXT, "%hero% used %skill%!");
-        useText = useText.replace("%hero%", "$1").replace("%skill%", "$2");
-        setUseText(useText);
-    }
-
-    /**
-     * Creates and returns a <code>ConfigurationNode</code> containing the default usage text. When using additional
-     * configuration settings in your skills, be sure to override this method to define them with defaults.
-     * 
-     * @return a default configuration
-     */
-    @Override
-    public ConfigurationNode getDefaultConfig() {
-        ConfigurationNode node = Configuration.getEmptyNode();
-        node.setProperty(SETTING_USETEXT, "%hero% used %skill%!");
-        return node;
-    }
-
-    /**
      * Called whenever a command with an identifier registered to this skill is used. This implementation performs all
      * necessary class, level, mana and cooldown checks. This method should <i>not</i> be overridden unless you really
      * know what you're doing. If all checks pass, this method calls {@link #use(Hero, String[]) use}. If
@@ -181,11 +137,48 @@ public abstract class ActiveSkill extends Skill {
         }
     }
 
-    private void awardExp(Hero hero) {
-        HeroClass heroClass = hero.getHeroClass();
-        if (heroClass.getExperienceSources().contains(ExperienceType.SKILL)) {
-            hero.gainExp(this.getSetting(heroClass, SETTING_EXP, 0), ExperienceType.SKILL);
-        }
+    /**
+     * Creates and returns a <code>ConfigurationNode</code> containing the default usage text. When using additional
+     * configuration settings in your skills, be sure to override this method to define them with defaults.
+     * 
+     * @return a default configuration
+     */
+    @Override
+    public ConfigurationNode getDefaultConfig() {
+        ConfigurationNode node = Configuration.getEmptyNode();
+        node.setProperty(SETTING_USETEXT, "%hero% used %skill%!");
+        return node;
+    }
+
+    /**
+     * Returns the text to be displayed when the skill is successfully used. This text is pulled from the
+     * {@link #SETTING_USETEXT} entry in the skill's configuration during initialization.
+     * 
+     * @return the usage text
+     */
+    public String getUseText() {
+        return useText;
+    }
+
+    /**
+     * Loads and stores the skill's usage text from the configuration. By default, this text is "%hero% used %skill%!"
+     * where %hero% and %skill% are replaced with the Hero's and skill's names, respectively.
+     */
+    @Override
+    public void init() {
+        String useText = getSetting(null, SETTING_USETEXT, "%hero% used %skill%!");
+        useText = useText.replace("%hero%", "$1").replace("%skill%", "$2");
+        setUseText(useText);
+    }
+
+    /**
+     * Changes the stored usage text. This can be used to override the message found in the skill's configuration.
+     * 
+     * @param useText
+     *            the new usage text
+     */
+    public void setUseText(String useText) {
+        this.useText = useText;
     }
 
     /**
@@ -199,5 +192,12 @@ public abstract class ActiveSkill extends Skill {
      * @return <code>true</code> if the skill executed properly, <code>false</code> otherwise
      */
     public abstract boolean use(Hero hero, String[] args);
+
+    private void awardExp(Hero hero) {
+        HeroClass heroClass = hero.getHeroClass();
+        if (heroClass.getExperienceSources().contains(ExperienceType.SKILL)) {
+            hero.gainExp(this.getSetting(heroClass, SETTING_EXP, 0), ExperienceType.SKILL);
+        }
+    }
 
 }

@@ -37,18 +37,6 @@ public class SkillStar extends PassiveSkill {
         return node;
     }
 
-    public class SkillPlayerListener extends PlayerListener {
-
-        public void onPlayerEggThrow(PlayerEggThrowEvent event) {
-            Player player = event.getPlayer();
-            Hero hero = plugin.getHeroManager().getHero(player);
-            if (hero.hasEffect(getName())) {
-                event.setHatching(false);
-            }
-
-        }
-    }
-
     public class SkillEntityListener extends EntityListener {
 
         @Override
@@ -75,6 +63,19 @@ public class SkillStar extends PassiveSkill {
             }
         }
 
+    }
+
+    public class SkillPlayerListener extends PlayerListener {
+
+        @Override
+        public void onPlayerEggThrow(PlayerEggThrowEvent event) {
+            Player player = event.getPlayer();
+            Hero hero = plugin.getHeroManager().getHero(player);
+            if (hero.hasEffect(getName())) {
+                event.setHatching(false);
+            }
+
+        }
     }
 
 }
