@@ -4,6 +4,8 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.effects.Effect;
+import com.herocraftonline.dev.heroes.effects.Expirable;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 
@@ -21,20 +23,19 @@ public class SkillDispel extends TargettedSkill {
 
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
-        Player player = hero.getPlayer();
         if (!(target instanceof Player)) {
             return false;
         }
 
         Player targetPlayer = (Player) target;
         Hero targetHero = plugin.getHeroManager().getHero(targetPlayer);
-        for (String s : targetHero.getEffects()) {
-            if (targetHero.getEffectExpiry(s) > 0) {
-                targetHero.removeEffect(s);
+        for (Effect effect : targetHero.getEffects()) {
+            if (effect instanceof Expirable) {
+                targetHero.removeEffect(effect);
             }
         }
 
-        notifyNearbyPlayers(player.getLocation(), getUseText(), player.getName(), getName(), getEntityName(target));
+        broadcastExecuteText(hero, target);
         return true;
     }
 

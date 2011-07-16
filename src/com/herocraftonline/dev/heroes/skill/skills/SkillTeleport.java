@@ -23,8 +23,6 @@ public class SkillTeleport extends ActiveSkill {
     @Override
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
-        String playerName = player.getName();
-
         if (!(hero.getParty() != null && hero.getParty().getMembers().size() > 0)) {
             Messaging.send(player, "Sorry, you need to be in a party with players!");
             return false;
@@ -46,7 +44,7 @@ public class SkillTeleport extends ActiveSkill {
         loc1.setY(highestBlock);
         player.teleport(loc1);
 
-        notifyNearbyPlayers(player.getLocation(), getUseText(), playerName, getName());
+        broadcastExecuteText(hero);
         return true;
     }
 }

@@ -18,6 +18,9 @@ import org.bukkit.util.config.Configuration;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.command.BaseCommand;
+import com.herocraftonline.dev.heroes.effects.Effect;
+import com.herocraftonline.dev.heroes.effects.Expirable;
+import com.herocraftonline.dev.heroes.effects.Periodic;
 import com.herocraftonline.dev.heroes.skill.OutsourcedSkill;
 import com.herocraftonline.dev.heroes.skill.PassiveSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
@@ -329,21 +332,24 @@ class EffectUpdater implements Runnable {
     EffectUpdater(HeroManager heroManager) {
         this.heroManager = heroManager;
     }
-
+    
     @Override
     public void run() {
-        Set<Hero> heroes = heroManager.getHeroes();
-        long time = System.currentTimeMillis();
-        for (Hero hero : heroes) {
-            if (hero == null) {
-                continue;
-            }
-            Set<String> effects = hero.getEffects();
-            for (String effect : effects) {
-                long expiry = hero.getEffectExpiry(effect);
-
-                if (time >= expiry && expiry != -1) {
-                    hero.expireEffect(effect);
+        for (Hero hero : heroManager.getHeroes()) {
+            for (Effect effect : hero.getEffects()) {
+                if (effect instanceof Expirable) {
+                    Expirable expirable = (Expirable) effect;
+                    if (expirable.isExpired()) {
+                        hero.removeEffect(effect);
+                        continue;
+                    }
+                }
+                
+                if (effect instanceof Periodic) {
+                    Periodic periodic = (Periodic) effect;
+                    if (periodic.isReady()) {
+                        periodic.tick(hero);
+                    }
                 }
             }
         }

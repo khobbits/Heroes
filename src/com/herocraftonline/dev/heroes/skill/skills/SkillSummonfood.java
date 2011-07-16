@@ -37,6 +37,7 @@ public class SkillSummonfood extends ActiveSkill {
         HeroClass heroClass = hero.getHeroClass();
         ItemStack dropItem = new ItemStack(Material.matchMaterial(getSetting(heroClass, "food-type", "BREAD")), 1);
         world.dropItem(player.getLocation(), dropItem);
+        broadcastExecuteText(hero);
         return true;
     }
 

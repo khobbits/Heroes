@@ -1,6 +1,7 @@
 package com.herocraftonline.dev.heroes.skill;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.event.CustomEventListener;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
@@ -12,6 +13,7 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.ClassChangeEvent;
 import com.herocraftonline.dev.heroes.api.LevelEvent;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
+import com.herocraftonline.dev.heroes.effects.Effect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 
 /**
@@ -123,8 +125,9 @@ public abstract class PassiveSkill extends Skill {
      *            the Hero to apply the effect to
      */
     protected void apply(Hero hero) {
-        hero.applyEffect(getName(), -1);
-        notifyNearbyPlayers(hero.getPlayer().getLocation(), applyText, hero.getPlayer().getName(), getName());
+        hero.addEffect(new Effect(this, getName()));
+        Player player = hero.getPlayer();
+        broadcast(player.getLocation(), applyText, player.getDisplayName(), getName());
     }
 
     /**
@@ -134,10 +137,9 @@ public abstract class PassiveSkill extends Skill {
      *            the Hero to remove the effect from
      */
     protected void unapply(Hero hero) {
-        Long effect = hero.removeEffect(getName());
-        if (effect != null) {
-            notifyNearbyPlayers(hero.getPlayer().getLocation(), unapplyText, hero.getPlayer().getName(), getName());
-        }
+        hero.removeEffect(hero.getEffect(getName()));
+        Player player = hero.getPlayer();
+        broadcast(player.getLocation(), unapplyText, player.getDisplayName(), getName());
     }
 
     /**

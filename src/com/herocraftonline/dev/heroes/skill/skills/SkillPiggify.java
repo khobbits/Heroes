@@ -76,8 +76,7 @@ public class SkillPiggify extends TargettedSkill {
             }
         }, (long) (getSetting(hero.getHeroClass(), "duration", 10000) * 0.02));
 
-        String targetName = target instanceof Player ? ((Player) target).getName() : target.getClass().getSimpleName().substring(5);
-        notifyNearbyPlayers(player.getLocation(), getUseText(), player.getName(), getName(), target == player ? "himself" : targetName);
+        broadcastExecuteText(hero, target);
         return true;
     }
 

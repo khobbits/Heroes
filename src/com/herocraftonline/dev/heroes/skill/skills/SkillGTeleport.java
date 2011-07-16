@@ -22,11 +22,10 @@ public class SkillGTeleport extends ActiveSkill {
     public boolean use(Hero hero, String[] args) {
         if (hero.getParty() != null && hero.getParty().getMembers().size() != 1) {
             Player player = hero.getPlayer();
-            String heroName = player.getName();
             for (Hero partyMember : hero.getParty().getMembers()) {
                 partyMember.getPlayer().teleport(player);
             }
-            notifyNearbyPlayers(player.getLocation(), getUseText(), heroName, getName());
+            broadcastExecuteText(hero);
             return true;
         }
         return false;

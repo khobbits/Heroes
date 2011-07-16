@@ -28,7 +28,7 @@ public class SkillCharge extends TargettedSkill {
             }
         }
         hero.getPlayer().teleport(target.getLocation());
-        notifyNearbyPlayers(hero.getPlayer().getLocation(), getUseText(), hero.getPlayer().getName(), getName());
+        broadcastExecuteText(hero, target);
         return true;
     }
 
