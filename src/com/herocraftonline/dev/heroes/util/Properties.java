@@ -92,7 +92,7 @@ public class Properties {
      * @param entity
      * @return
      */
-    public CreatureType getCreatureFromEntity(Entity entity) {
+    public static CreatureType getCreatureFromEntity(Entity entity) {
         CreatureType type = null;
         try {
             Class<?>[] interfaces = entity.getClass().getInterfaces();

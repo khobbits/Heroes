@@ -26,7 +26,7 @@ public class DamageManager {
         SNOWBALL,
         EGG;
 
-        ProjectileType valueOf(Entity entity) {
+        public static ProjectileType valueOf(Entity entity) {
             if (entity instanceof Arrow) {
                 return ARROW;
             } else if (entity instanceof Snowball) {
@@ -76,7 +76,7 @@ public class DamageManager {
             int health = creatureHealth.get(type);
             return health > 200 ? 200 : (health < 0 ? health : 0);
         } else {
-            return 10;
+            return null;
         }
     }
 
@@ -84,13 +84,21 @@ public class DamageManager {
         if (creatureDamage.containsKey(type)) {
             return creatureDamage.get(type);
         } else {
-            return 2;
+            return null;
         }
     }
 
     public Integer getEnvironmentalDamage(DamageCause cause) {
         if (environmentalDamage.containsValue(cause)) {
             return environmentalDamage.get(cause);
+        } else {
+            return null;
+        }
+    }
+
+    public Integer getProjectileDamage(ProjectileType type) {
+        if (projectileDamage.containsKey(type)) {
+            return projectileDamage.get(type);
         } else {
             return null;
         }

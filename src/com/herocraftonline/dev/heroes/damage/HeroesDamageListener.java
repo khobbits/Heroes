@@ -1,24 +1,29 @@
 package com.herocraftonline.dev.heroes.damage;
 
 import net.minecraft.server.EntityLiving;
-import net.minecraft.server.EntityPlayer;
 import net.minecraft.server.Packet18ArmAnimation;
 
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
+import org.bukkit.entity.Creature;
 import org.bukkit.entity.CreatureType;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageByProjectileEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityListener;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.classes.HeroClass;
+import com.herocraftonline.dev.heroes.damage.DamageManager.ProjectileType;
 import com.herocraftonline.dev.heroes.persistence.Hero;
+import com.herocraftonline.dev.heroes.util.Properties;
 
 public class HeroesDamageListener extends EntityListener {
 
@@ -34,8 +39,10 @@ public class HeroesDamageListener extends EntityListener {
     public void onCreatureSpawn(CreatureSpawnEvent event) {
         LivingEntity entity = (LivingEntity) event.getEntity();
         CreatureType type = event.getCreatureType();
-        int maxHealth = damageManager.getCreatureHealth(type);
-        entity.setHealth(maxHealth);
+        Integer maxHealth = damageManager.getCreatureHealth(type);
+        if (maxHealth != null) {
+            entity.setHealth(maxHealth);
+        }
     }
 
     @Override
@@ -43,61 +50,63 @@ public class HeroesDamageListener extends EntityListener {
         if (event.isCancelled()) {
             return;
         }
-        
-        if(event.getCause() != DamageCause.ENTITY_ATTACK) {
-            if(!(event.getEntity() instanceof Player)) {
-                return;
+
+        DamageCause cause = event.getCause();
+        int damage = event.getDamage();
+
+        if (event instanceof EntityDamageByEntityEvent) {
+            Entity attacker = ((EntityDamageByEntityEvent) event).getDamager();
+            if (attacker instanceof HumanEntity) {
+                HumanEntity attackingHuman = (HumanEntity) attacker;
+                Material item = attackingHuman.getItemInHand().getType();
+                Integer tmpDamage = damageManager.getItemDamage(item);
+                if (tmpDamage != null) {
+                    damage = tmpDamage;
+                }
+            } else if (attacker instanceof Creature) {
+                Creature attackingCreature = (Creature) attacker;
+                CreatureType type = Properties.getCreatureFromEntity(attackingCreature);
+                Integer tmpDamage = damageManager.getCreatureDamage(type);
+                if (tmpDamage != null) {
+                    damage = tmpDamage;
+                }
             }
-            int damage = damageManager.getEnvironmentalDamage(event.getCause());
-
-            if(event.getCause() == DamageCause.FALL) {
-                damage += damage / 3 * (event.getDamage() - 3);
+        } else if (event instanceof EntityDamageByProjectileEvent) {
+            Projectile projectile = ((EntityDamageByProjectileEvent) event).getProjectile();
+            ProjectileType type = ProjectileType.valueOf(projectile);
+            Integer tmpDamage = damageManager.getProjectileDamage(type);
+            if (tmpDamage != null) {
+                damage = tmpDamage;
             }
-            Player playerEntity = (Player) event.getEntity();
-            Hero heroEntity = plugin.getHeroManager().getHero(playerEntity);
-            HeroClass entityClass = heroEntity.getHeroClass();
-
-            heroEntity.setHealth(heroEntity.getHealth() - damage);
-            int newHealth = (int) ((heroEntity.getHealth() / entityClass.getMaxHealth()) * 20);
-
-            damage = playerEntity.getHealth() - newHealth;
-            event.setDamage(damage);
-
-            EntityPlayer defenderEntityPlayer = ((CraftPlayer) playerEntity).getHandle();
-            if (damage == 0) {
-                for (Player player : playerEntity.getWorld().getPlayers()) {
-                    CraftPlayer craftPlayer = (CraftPlayer) player;
-                    craftPlayer.getHandle().netServerHandler.sendPacket(new Packet18ArmAnimation(defenderEntityPlayer, (byte) 2));
+        } else if (cause != DamageCause.CUSTOM) {
+            Integer tmpDamage = damageManager.getEnvironmentalDamage(cause);
+            if (tmpDamage != null) {
+                damage = tmpDamage;
+                if (cause == DamageCause.FALL) {
+                    damage += damage / 3 * (event.getDamage() - 3);
                 }
             }
         }
-        
-        if (!(event instanceof EntityDamageByEntityEvent)) {
-            return;
+
+        Entity entity = event.getEntity();
+        if (entity instanceof Player) {
+            onPlayerDamage(event, damage);
+        } else if (entity instanceof LivingEntity) {
+            event.setDamage(damage);
+        }
+    }
+
+    private void onPlayerDamage(EntityDamageEvent event, int damage) {
+        Player player = (Player) event.getEntity();
+        Hero heroEntity = plugin.getHeroManager().getHero(player);
+
+        int visualDamage = DamageManager.getVisualDamage(heroEntity, damage);
+        event.setDamage(visualDamage);
+
+        if (visualDamage == 0) {
+            fakeDamageAnimation(player);
         }
 
-        EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
-        if (!(subEvent.getDamager() instanceof Player)) {
-            return;
-        }
-
-        Player damager = (Player) subEvent.getDamager();
-        Material item = damager.getItemInHand().getType();
-        int damage = damageManager.getItemDamage(item);
-
-        if (subEvent.getEntity() instanceof Player) {
-            Player playerEntity = (Player) subEvent.getEntity();
-            Hero heroEntity = plugin.getHeroManager().getHero(playerEntity);
-
-            int visualDamage = DamageManager.getVisualDamage(heroEntity, damage);
-            subEvent.setDamage(visualDamage);
-
-            if (visualDamage == 0) {
-                fakeDamageAnimation(playerEntity);
-            }
-        } else if (subEvent.getEntity() instanceof LivingEntity) {
-            subEvent.setDamage(damage);
-        }
     }
 
     private void fakeDamageAnimation(LivingEntity entity) {
