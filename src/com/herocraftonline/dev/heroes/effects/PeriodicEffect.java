@@ -26,7 +26,6 @@ public class PeriodicEffect extends ExpirableEffect implements Periodic, Expirab
     @Override
     public void apply(Hero hero) {
         super.apply(hero);
-        tick(hero);
     }
 
     @Override
