@@ -270,12 +270,11 @@ public class ConfigManager {
         if(enviromentalDamageKeys != null) { 
             for(String n : enviromentalDamageKeys) {
                 List<DamageCause> damageCauses = Arrays.asList(DamageCause.values());
-                plugin.log(Level.INFO, damageCauses.toString());
+                plugin.log(Level.INFO, Boolean.toString(damageCauses.contains(n)));
                 /*
                 if(damageCauses.contains(n)) {
                     getProperties().enviromentalDamageValues.put(damageCause, config.getInt("enviromentalDamages." + n, 2));
-                }
-                */
+                }*/
             }
         }
     }
