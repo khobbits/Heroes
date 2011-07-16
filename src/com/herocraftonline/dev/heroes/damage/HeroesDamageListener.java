@@ -13,9 +13,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityListener;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 
 public class HeroesDamageListener extends EntityListener {
@@ -41,7 +43,35 @@ public class HeroesDamageListener extends EntityListener {
         if (event.isCancelled()) {
             return;
         }
+        
+        if(event.getCause() != DamageCause.ENTITY_ATTACK) {
+            if(!(event.getEntity() instanceof Player)) {
+                return;
+            }
+            int damage = damageManager.getEnvironmentalDamage(event.getCause());
 
+            if(event.getCause() == DamageCause.FALL) {
+                damage += damage / 3 * (event.getDamage() - 3);
+            }
+            Player playerEntity = (Player) event.getEntity();
+            Hero heroEntity = plugin.getHeroManager().getHero(playerEntity);
+            HeroClass entityClass = heroEntity.getHeroClass();
+
+            heroEntity.setHealth(heroEntity.getHealth() - damage);
+            int newHealth = (int) ((heroEntity.getHealth() / entityClass.getMaxHealth()) * 20);
+
+            damage = playerEntity.getHealth() - newHealth;
+            event.setDamage(damage);
+
+            EntityPlayer defenderEntityPlayer = ((CraftPlayer) playerEntity).getHandle();
+            if (damage == 0) {
+                for (Player player : playerEntity.getWorld().getPlayers()) {
+                    CraftPlayer craftPlayer = (CraftPlayer) player;
+                    craftPlayer.getHandle().netServerHandler.sendPacket(new Packet18ArmAnimation(defenderEntityPlayer, (byte) 2));
+                }
+            }
+        }
+        
         if (!(event instanceof EntityDamageByEntityEvent)) {
             return;
         }
