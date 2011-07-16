@@ -241,7 +241,7 @@ public class ConfigManager {
         if(mobHpKeys != null) {
             for(String n : mobHpKeys) {
                 if(CreatureType.fromName(n) != null) {
-                    getProperties().mobMaxHealth.put(CreatureType.fromName(n), config.getDouble("monsterHealth." + n, 10));
+                    getProperties().mobMaxHealth.put(CreatureType.fromName(n), config.getInt("monsterHealth." + n, 10));
                 }
             }
         }
@@ -250,7 +250,7 @@ public class ConfigManager {
         if(mobDamageKeys != null) {
             for(String n : mobDamageKeys) {
                 if(CreatureType.fromName(n) != null) {
-                    getProperties().mobMaxHealth.put(CreatureType.fromName(n), config.getDouble("monsterDamages." + n, 1));
+                    getProperties().mobDamageValues.put(CreatureType.fromName(n), config.getDouble("monsterDamages." + n, 1));
                 }
             }
         }

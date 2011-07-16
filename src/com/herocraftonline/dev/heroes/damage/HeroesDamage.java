@@ -4,24 +4,17 @@ import java.util.HashMap;
 
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
+import org.bukkit.plugin.PluginManager;
 
 import com.herocraftonline.dev.heroes.Heroes;
 
 public class HeroesDamage {
     public Heroes plugin;
-    private HashMap<Integer, Double> mobHealthValues = new HashMap<Integer, Double>();
-    private HeroesPlayerDamage heroesPlayerListener;
+    private HeroesDamageListener listener;
 
     public HeroesDamage(Heroes plugin) {
         this.plugin = plugin;
-        heroesPlayerListener = new HeroesPlayerDamage(  plugin, this);
-    }
-
-    /**
-     * @return the mobHealthValues
-     */
-    public HashMap<Integer, Double> getMobHealthValues() {
-        return mobHealthValues;
+        listener = new HeroesDamageListener(  plugin, this);
     }
 
     /**
@@ -29,7 +22,9 @@ public class HeroesDamage {
      */
     public void registerEvents() {
         if(plugin.getConfigManager().getProperties().damageSystem) {
-            plugin.getServer().getPluginManager().registerEvent(Type.ENTITY_DAMAGE, heroesPlayerListener, Priority.Highest, plugin);
+            PluginManager pluginManager = plugin.getServer().getPluginManager();
+            pluginManager.registerEvent(Type.ENTITY_DAMAGE, listener, Priority.Highest, plugin);
+            pluginManager.registerEvent(Type.CREATURE_SPAWN, listener, Priority.Highest, plugin);
         }
     }
 
