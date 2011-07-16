@@ -71,6 +71,7 @@ public class SkillSmoke extends ActiveSkill {
 
         @Override
         public void apply(Hero hero) {
+            super.apply(hero);
             Player player = hero.getPlayer();
             CraftPlayer craftPlayer = (CraftPlayer) hero.getPlayer();
             // Tell all the logged in Clients to Destroy the Entity - Appears Invisible.

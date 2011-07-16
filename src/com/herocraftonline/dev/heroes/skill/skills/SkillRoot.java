@@ -40,7 +40,6 @@ public class SkillRoot extends TargettedSkill {
 
     @Override
     public void init() {
-        super.init();
         applyText = getSetting(null, "apply-text", "%target% was rooted!").replace("%target%", "$1");
         expireText = getSetting(null, "expire-text", "Root faded from %target%!").replace("%target%", "$1");
     }

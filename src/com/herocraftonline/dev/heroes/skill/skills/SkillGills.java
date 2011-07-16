@@ -10,7 +10,7 @@ import org.bukkit.util.config.Configuration;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.effects.Effect;
+import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
@@ -35,6 +35,7 @@ public class SkillGills extends ActiveSkill {
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = Configuration.getEmptyNode();
+        node.setProperty("duration", 30000);
         node.setProperty("apply-text", "%hero% has grown a set of gills!");
         node.setProperty("expire-text", "%hero% lost his gills!");
         return node;
@@ -48,18 +49,21 @@ public class SkillGills extends ActiveSkill {
 
     @Override
     public boolean use(Hero hero, String[] args) {
-        hero.addEffect(new GillsEffect(this));
+        int duration = getSetting(hero.getHeroClass(), "duration", 5000);
+        hero.addEffect(new GillsEffect(this, duration));
+        
         return true;
     }
 
-    public class GillsEffect extends Effect {
+    public class GillsEffect extends ExpirableEffect {
 
-        public GillsEffect(Skill skill) {
-            super(skill, "Gills");
+        public GillsEffect(Skill skill, long duration) {
+            super(skill, "Gills", duration);
         }
 
         @Override
         public void apply(Hero hero) {
+            super.apply(hero);
             Player player = hero.getPlayer();
             broadcast(player.getLocation(), applyText, player.getDisplayName());
         }

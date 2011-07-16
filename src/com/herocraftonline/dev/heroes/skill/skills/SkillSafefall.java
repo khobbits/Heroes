@@ -64,6 +64,7 @@ public class SkillSafefall extends ActiveSkill {
 
         @Override
         public void apply(Hero hero) {
+            super.apply(hero);
             Player player = hero.getPlayer();
             broadcast(player.getLocation(), applyText, player.getDisplayName());
         }
