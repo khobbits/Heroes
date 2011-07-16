@@ -2,6 +2,7 @@ package com.herocraftonline.dev.heroes.damage;
 
 import java.util.logging.Level;
 
+import net.minecraft.server.Packet18ArmAnimation;
 import net.minecraft.server.Packet29DestroyEntity;
 import net.minecraft.server.Packet38EntityStatus;
 import net.minecraft.server.Packet8UpdateHealth;
@@ -66,10 +67,8 @@ public class HeroesPlayerDamage extends EntityListener {
                 subEvent.setDamage(damage);
                 
                 if (damage == 0) {
-                    subEvent.setDamage(-1);
-                    playerEntity.setHealth(newHealth);
                     CraftPlayer craftPlayer = (CraftPlayer) playerEntity;
-                    craftPlayer.getHandle().netServerHandler.sendPacket(new Packet8UpdateHealth(newHealth));
+                    craftPlayer.getHandle().netServerHandler.sendPacket(new Packet18ArmAnimation(craftPlayer.getHandle(), (byte)2));
                 }
 
             } else if (subEvent.getEntity() instanceof LivingEntity) {
