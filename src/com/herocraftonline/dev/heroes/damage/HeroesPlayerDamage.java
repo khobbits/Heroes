@@ -51,13 +51,13 @@ public class HeroesPlayerDamage extends EntityListener {
                 Player playerEntity = (Player) subEvent.getEntity();
                 Hero heroEntity = plugin.getHeroManager().getHero(playerEntity);
                 HeroClass entityClass = heroEntity.getHeroClass();
-                
+
                 double iHeroHP = heroEntity.getHealth();
                 double iPlayerHP = playerEntity.getHealth();
 
                 heroEntity.setHealth(heroEntity.getHealth() - damage);
                 int newHealth = (int) ((heroEntity.getHealth() / entityClass.getMaxHealth()) * 20);
-                
+
                 double fHeroHP = heroEntity.getHealth();
                 double fPlayerHP = newHealth;
 
@@ -65,10 +65,12 @@ public class HeroesPlayerDamage extends EntityListener {
 
                 damage = playerEntity.getHealth() - newHealth;
                 subEvent.setDamage(damage);
-                
+
                 if (damage == 0) {
-                    CraftPlayer craftPlayer = (CraftPlayer) playerEntity;
-                    craftPlayer.getHandle().netServerHandler.sendPacket(new Packet18ArmAnimation(craftPlayer.getHandle(), (byte)2));
+                    for (Player player : plugin.getServer().getOnlinePlayers()) {
+                        CraftPlayer craftPlayer = (CraftPlayer) player;
+                        craftPlayer.getHandle().netServerHandler.sendPacket(new Packet18ArmAnimation(craftPlayer.getHandle(), (byte) 2));
+                    }
                 }
 
             } else if (subEvent.getEntity() instanceof LivingEntity) {
