@@ -1,6 +1,5 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;

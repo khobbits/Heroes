@@ -12,6 +12,7 @@ import java.util.logging.Level;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.CreatureType;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.util.config.Configuration;
 import org.bukkit.util.config.ConfigurationNode;
 
@@ -35,6 +36,7 @@ public class ConfigManager {
         this.classConfigFile = new File(plugin.getDataFolder(), "classes.yml");
         this.expConfigFile = new File(plugin.getDataFolder(), "experience.yml");
         this.skillConfigFile = new File(plugin.getDataFolder(), "skills.yml");
+        this.damageConfigFile = new File(plugin.getDataFolder(), "damages.yml");
     }
 
     public Properties getProperties() {
@@ -46,12 +48,17 @@ public class ConfigManager {
         checkForConfig(classConfigFile);
         checkForConfig(expConfigFile);
         checkForConfig(skillConfigFile);
+        checkForConfig(damageConfigFile);
 
         Configuration primaryConfig = new Configuration(primaryConfigFile);
         primaryConfig.load();
         loadLevelConfig(primaryConfig);
         loadDefaultConfig(primaryConfig);
         loadProperties(primaryConfig);
+        
+        Configuration damageConfig = new Configuration(damageConfigFile);
+        damageConfig.load();
+        loadDamages(damageConfig);
 
         Configuration expConfig = new Configuration(expConfigFile);
         expConfig.load();
@@ -223,4 +230,50 @@ public class ConfigManager {
             }
         }
     }
+    
+    /**
+     * Loads all of the configuration settings required for the damage system
+     * 
+     * @param config
+     */
+    private void loadDamages(Configuration config) {
+        List<String> mobHpKeys = config.getKeys("monsterHealth");
+        if(mobHpKeys != null) {
+            for(String n : mobHpKeys) {
+                if(CreatureType.fromName(n) != null) {
+                    getProperties().mobMaxHealth.put(CreatureType.fromName(n), config.getDouble("monsterHealth." + n, 10));
+                }
+            }
+        }
+        
+        List<String> mobDamageKeys = config.getKeys("monsterDamages");
+        if(mobDamageKeys != null) {
+            for(String n : mobDamageKeys) {
+                if(CreatureType.fromName(n) != null) {
+                    getProperties().mobMaxHealth.put(CreatureType.fromName(n), config.getDouble("monsterDamages." + n, 1));
+                }
+            }
+        }
+        
+        List<String> playerDamageKeys = config.getKeys("playerDamages");
+        if(playerDamageKeys != null) {
+            for(String n : playerDamageKeys) {
+                Material materialN = Material.matchMaterial(n);
+                if(materialN != null) {
+                    getProperties().damageValues.put(materialN, config.getInt("playerDamages." + n, 2));
+                }
+            }
+        }
+        
+        List<String> enviromentalDamageKeys = config.getKeys("enviromentalDamages");
+        if(enviromentalDamageKeys != null) {
+            for(String n : enviromentalDamageKeys) {
+                DamageCause damageCause = DamageCause.valueOf(n);
+                if(damageCause != null) {
+                    getProperties().enviromentalDamageValues.put(damageCause, config.getInt("enviromentalDamages." + n, 2));
+                }
+            }
+        }
+    }
+    
 }

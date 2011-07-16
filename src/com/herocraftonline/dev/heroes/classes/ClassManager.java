@@ -18,6 +18,7 @@ import com.herocraftonline.dev.heroes.classes.HeroClass.WeaponItems;
 import com.herocraftonline.dev.heroes.classes.HeroClass.WeaponType;
 import com.herocraftonline.dev.heroes.skill.OutsourcedSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
+import com.herocraftonline.dev.heroes.util.Properties;
 
 public class ClassManager {
 
@@ -52,6 +53,7 @@ public class ClassManager {
     }
 
     public void loadClasses(File file) {
+        Properties prop = plugin.getConfigManager().getProperties();
         Configuration config = new Configuration(file);
         config.load();
         List<String> classNames = config.getKeys("classes");
@@ -195,6 +197,11 @@ public class ClassManager {
                         plugin.log(Level.WARNING, "Invalid permission skill (" + skill + ") defined for " + className + ". Skipping this skill.");
                     }
                 }
+            }
+            
+            Double maxHealth = config.getDouble("classes." + className + ".maxHealth", 20);
+            if(prop.damageSystem) {
+                newClass.setMaxHealth(maxHealth);
             }
 
             List<String> experienceNames = config.getStringList("classes." + className + ".experience-sources", null);

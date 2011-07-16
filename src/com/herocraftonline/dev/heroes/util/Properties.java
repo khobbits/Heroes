@@ -10,6 +10,7 @@ import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
 public class Properties {
 
@@ -56,6 +57,9 @@ public class Properties {
     // Damage//
     public HashMap<Material, Integer> damageValues = new HashMap<Material, Integer>();
     public HashMap<CreatureType, Double> mobMaxHealth = new HashMap<CreatureType, Double>();
+    public HashMap<CreatureType, Double> mobDamageValues = new HashMap<CreatureType, Double>();
+    public HashMap<DamageCause, Integer> enviromentalDamageValues = new HashMap<DamageCause, Integer>();
+
     /**
      * Generate experience for the level ArrayList<Integer>
      */

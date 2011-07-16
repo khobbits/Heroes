@@ -45,7 +45,9 @@ public class HeroesPlayerDamage extends EntityListener {
                 Integer health = (int) ((heroEntity.getHealth() / entityClass.getMaxHealth()) * 20);
 
                 if(playerEntity.getHealth() != health) {
-                    playerEntity.damage((int) (playerEntity.getHealth() - (health)));
+                    event.setDamage((int) (playerEntity.getHealth() - (health)));
+                }else {
+                    event.setCancelled(true);
                 }
 
             } else if (event.getEntity() instanceof LivingEntity) {
@@ -75,8 +77,10 @@ public class HeroesPlayerDamage extends EntityListener {
                 Integer health = (int) ((livingEntity.getHealth() / entityMaxHp) * 20);
 
                 if(livingEntity.getHealth() != health) {
-                    livingEntity.damage((int) (livingEntity.getHealth() - (health)));
-                }                
+                    event.setDamage((int) (livingEntity.getHealth() - (health)));
+                }else {
+                    event.setCancelled(true);
+                }         
             }
         }
     }
