@@ -52,9 +52,9 @@ public class HeroesPlayerDamage extends EntityListener {
 
                 Integer health = (int) ((heroEntity.getHealth() / entityClass.getMaxHealth()) * 20);
                 
-                plugin.log(Level.INFO, "Health Variable:" + health.toString());
+                plugin.log(Level.INFO, "Health Variable:" + health);
                 plugin.log(Level.INFO, "event.setDamage:" + Integer.toString(playerEntity.getHealth() - health));
-                plugin.log(Level.INFO, "Health from Hero:"+Double.toString(heroEntity.getHealth()));
+                plugin.log(Level.INFO, "Health from Hero:"+heroEntity.getHealth());
                 plugin.log(Level.INFO, "Damage:" + damage.toString());
                 plugin.log(Level.INFO, "Class Max HP" + Double.toString(heroEntity.getHeroClass().getMaxHealth()));
 
