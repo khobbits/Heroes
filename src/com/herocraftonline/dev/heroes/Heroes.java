@@ -82,6 +82,9 @@ public class Heroes extends JavaPlugin {
     private final HPluginListener pluginListener = new HPluginListener(this);
     private final HEntityListener entityListener = new HEntityListener(this);
     private final HBlockListener blockListener = new HBlockListener(this);
+    
+    // Damage refactoring stuff
+    private final HeroesDamage heroesDamage = new HeroesDamage(this);
 
     // Various data managers
     private ConfigManager configManager;
@@ -108,8 +111,8 @@ public class Heroes extends JavaPlugin {
     // restrictions.
     private final InventoryChecker inventoryChecker = new InventoryChecker(this);
 
-    // Damage refactoring stuff
-    private final HeroesDamage heroesDamage = new HeroesDamage(this);
+    
+    
     /**
      * Print messages to the Debug Log, if the servers in Debug Mode then we also wan't to print the messages to the
      * standard Server Console.
