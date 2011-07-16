@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +22,7 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.ClassManager;
 import com.herocraftonline.dev.heroes.command.BaseCommand;
 import com.herocraftonline.dev.heroes.skill.Skill;
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 
 public class ConfigManager {
     protected Heroes plugin;
@@ -266,12 +269,15 @@ public class ConfigManager {
         }
         
         List<String> enviromentalDamageKeys = config.getKeys("enviromentalDamages");
-        if(enviromentalDamageKeys != null) {
+        if(enviromentalDamageKeys != null) { 
             for(String n : enviromentalDamageKeys) {
-                DamageCause damageCause = DamageCause.valueOf(n);
-                if(damageCause != null) {
+                List<DamageCause> damageCauses = Arrays.asList(DamageCause.values());
+                plugin.log(Level.INFO, damageCauses.toString());
+                /*
+                if(damageCauses.contains(n)) {
                     getProperties().enviromentalDamageValues.put(damageCause, config.getInt("enviromentalDamages." + n, 2));
                 }
+                */
             }
         }
     }
