@@ -25,7 +25,7 @@ public class HeroesPlayerDamage extends EntityListener {
     }
 
     public void onEntityDamage(EntityDamageEvent event) {
-        if(!(event instanceof EntityDamageByEntityEvent)) {
+        if (!(event instanceof EntityDamageByEntityEvent)) {
             return;
         }
         EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
@@ -51,49 +51,45 @@ public class HeroesPlayerDamage extends EntityListener {
                 heroEntity.setHealth(heroEntity.getHealth() - damage);
 
                 Integer health = (int) ((heroEntity.getHealth() / entityClass.getMaxHealth()) * 20);
-                
+
                 plugin.log(Level.INFO, "Damage Done:\t" + damage + "\t|\t" + (playerEntity.getHealth() - health));
                 plugin.log(Level.INFO, "Final HP:\t" + heroEntity.getHealth() + "\t|\t" + health);
 
-                if(playerEntity.getHealth() != health) {
-                    subEvent.setDamage((int) (playerEntity.getHealth() - health));
-                }else {
-                    subEvent.setDamage(0);
-                }
+                subEvent.setDamage((int) (playerEntity.getHealth() - health));
 
             } else if (subEvent.getEntity() instanceof LivingEntity) {
                 plugin.log(Level.INFO, "Recognized as livingentity!");
 
                 LivingEntity livingEntity = (LivingEntity) subEvent.getEntity();
                 CreatureType creatureType = prop.getCreatureFromEntity(livingEntity);
-                
-                if(!prop.mobMaxHealth.containsKey(creatureType)) {
+
+                if (!prop.mobMaxHealth.containsKey(creatureType)) {
                     return;
                 }
-                
+
                 Double maxHealth = prop.mobMaxHealth.get(creatureType);
 
                 if (!heroesDamage.getMobHealthValues().containsKey(livingEntity.getEntityId())) {
                     heroesDamage.getMobHealthValues().put(livingEntity.getEntityId(), maxHealth);
                 }
-                
+
                 Integer entityMaxHp = 20;
-                
-                if(creatureType == CreatureType.GIANT) {
+
+                if (creatureType == CreatureType.GIANT) {
                     entityMaxHp = 50;
-                }else if(creatureType == CreatureType.GHAST) {
+                } else if (creatureType == CreatureType.GHAST) {
                     entityMaxHp = 10;
                 }
-                
+
                 heroesDamage.getMobHealthValues().put(livingEntity.getEntityId(), maxHealth - damage);
 
                 Integer health = (int) ((livingEntity.getHealth() / entityMaxHp) * 20);
 
-                if(livingEntity.getHealth() != health) {
+                if (livingEntity.getHealth() != health) {
                     subEvent.setDamage((int) (livingEntity.getHealth() - (health)));
-                }else {
+                } else {
                     subEvent.setCancelled(true);
-                }         
+                }
             }
         }
     }
