@@ -45,6 +45,7 @@ import com.herocraftonline.dev.heroes.command.commands.SuppressCommand;
 import com.herocraftonline.dev.heroes.command.commands.ToolsCommand;
 import com.herocraftonline.dev.heroes.command.commands.VerboseCommand;
 import com.herocraftonline.dev.heroes.command.commands.WhoCommand;
+import com.herocraftonline.dev.heroes.damage.HeroesDamage;
 import com.herocraftonline.dev.heroes.inventory.BukkitContribInventoryListener;
 import com.herocraftonline.dev.heroes.inventory.HeroesInventoryListener;
 import com.herocraftonline.dev.heroes.inventory.InventoryChecker;
@@ -107,6 +108,8 @@ public class Heroes extends JavaPlugin {
     // restrictions.
     private final InventoryChecker inventoryChecker = new InventoryChecker(this);
 
+    // Damage refactoring stuff
+    private final HeroesDamage heroesDamage = new HeroesDamage(this);
     /**
      * Print messages to the Debug Log, if the servers in Debug Mode then we also wan't to print the messages to the
      * standard Server Console.
@@ -241,7 +244,7 @@ public class Heroes extends JavaPlugin {
         registerEvents();
         // Call our function to setup Heroes Commands.
         registerCommands();
-
+        heroesDamage.registerEvents();
         // Perform the Permissions check.
         setupPermissions();
     }
