@@ -1,9 +1,12 @@
 package com.herocraftonline.dev.heroes.damage;
 
+import java.util.logging.Level;
+
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityListener;
 
 import com.herocraftonline.dev.heroes.Heroes;
@@ -21,13 +24,17 @@ public class HeroesPlayerDamage extends EntityListener {
         this.heroesDamage = heroesDamage;
     }
 
-    public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-        if (!(event.getDamager() instanceof Player)) {
+    public void onEntityDamage(EntityDamageEvent event) {
+        if(!(event instanceof EntityDamageByEntityEvent)) {
             return;
         }
-        Player damager = (Player) event.getDamager();
+        EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
+        if (!(subEvent.getDamager() instanceof Player)) {
+            return;
+        }
+        Player damager = (Player) subEvent.getDamager();
         Properties prop = plugin.getConfigManager().getProperties();
-
+        plugin.log(Level.INFO, "event caught!");
         if (prop.damageSystem) {
 
             if (!prop.damageValues.containsKey(damager.getItemInHand().getType())) {
@@ -35,8 +42,10 @@ public class HeroesPlayerDamage extends EntityListener {
             }
             Integer damage = prop.damageValues.get(damager.getItemInHand().getType());
 
-            if (event.getEntity() instanceof Player) {
-                Player playerEntity = (Player) event.getEntity();
+            if (subEvent.getEntity() instanceof Player) {
+                plugin.log(Level.INFO, "Recognized as player!");
+
+                Player playerEntity = (Player) subEvent.getEntity();
                 Hero heroEntity = plugin.getHeroManager().getHero(playerEntity);
                 HeroClass entityClass = heroEntity.getHeroClass();
 
@@ -45,13 +54,15 @@ public class HeroesPlayerDamage extends EntityListener {
                 Integer health = (int) ((heroEntity.getHealth() / entityClass.getMaxHealth()) * 20);
 
                 if(playerEntity.getHealth() != health) {
-                    event.setDamage((int) (playerEntity.getHealth() - (health)));
+                    subEvent.setDamage((int) (playerEntity.getHealth() - (health)));
                 }else {
-                    event.setCancelled(true);
+                    subEvent.setCancelled(true);
                 }
 
-            } else if (event.getEntity() instanceof LivingEntity) {
-                LivingEntity livingEntity = (LivingEntity) event.getEntity();
+            } else if (subEvent.getEntity() instanceof LivingEntity) {
+                plugin.log(Level.INFO, "Recognized as livingentity!");
+
+                LivingEntity livingEntity = (LivingEntity) subEvent.getEntity();
                 CreatureType creatureType = prop.getCreatureFromEntity(livingEntity);
                 
                 if(!prop.mobMaxHealth.containsKey(creatureType)) {
@@ -77,9 +88,9 @@ public class HeroesPlayerDamage extends EntityListener {
                 Integer health = (int) ((livingEntity.getHealth() / entityMaxHp) * 20);
 
                 if(livingEntity.getHealth() != health) {
-                    event.setDamage((int) (livingEntity.getHealth() - (health)));
+                    subEvent.setDamage((int) (livingEntity.getHealth() - (health)));
                 }else {
-                    event.setCancelled(true);
+                    subEvent.setCancelled(true);
                 }         
             }
         }
