@@ -63,12 +63,11 @@ public class HeroesPlayerDamage extends EntityListener {
                 plugin.log(Level.INFO, "Damage Done: " + iHeroHP + " (" + iPlayerHP + ") --> " + fHeroHP + " (" + fPlayerHP + ")");
 
                 damage = playerEntity.getHealth() - newHealth;
+                subEvent.setDamage(damage);
                 
                 if (damage == 0) {
                     CraftPlayer craftPlayer = (CraftPlayer) playerEntity;
                     craftPlayer.getHandle().netServerHandler.sendPacket(new Packet38EntityStatus(playerEntity.getEntityId(), (byte)2));
-                } else {
-                    subEvent.setDamage(damage);
                 }
 
             } else if (subEvent.getEntity() instanceof LivingEntity) {
