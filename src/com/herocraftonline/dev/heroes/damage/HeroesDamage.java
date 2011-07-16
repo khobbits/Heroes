@@ -10,10 +10,11 @@ import com.herocraftonline.dev.heroes.Heroes;
 public class HeroesDamage {
     public Heroes plugin;
     private HashMap<Integer, Double> mobHealthValues = new HashMap<Integer, Double>();
-    private HeroesPlayerDamage heroesPlayerListener = new HeroesPlayerDamage(plugin, this);
+    private HeroesPlayerDamage heroesPlayerListener;
 
     public HeroesDamage(Heroes plugin) {
         this.plugin = plugin;
+        heroesPlayerListener = new HeroesPlayerDamage(  plugin, this);
     }
 
     /**
