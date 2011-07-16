@@ -46,6 +46,7 @@ public class HeroesPlayerDamage extends EntityListener {
                 Player playerEntity = (Player) subEvent.getEntity();
                 Hero heroEntity = plugin.getHeroManager().getHero(playerEntity);
                 HeroClass entityClass = heroEntity.getHeroClass();
+                plugin.log(Level.INFO, Double.toString(heroEntity.getHealth()));
 
                 heroEntity.setHealth(heroEntity.getHealth() - damage);
 
@@ -55,7 +56,6 @@ public class HeroesPlayerDamage extends EntityListener {
                 plugin.log(Level.INFO, Integer.toString(playerEntity.getHealth() - health));
                 plugin.log(Level.INFO, Double.toString(heroEntity.getHealth()));
                 plugin.log(Level.INFO, damage.toString());
-                plugin.log(Level.INFO, Double.toString(heroEntity.getHealth()));
                 plugin.log(Level.INFO, Double.toString(heroEntity.getHeroClass().getMaxHealth()));
 
 
