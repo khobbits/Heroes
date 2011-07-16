@@ -3,6 +3,7 @@ package com.herocraftonline.dev.heroes.damage;
 import java.util.logging.Level;
 
 import net.minecraft.server.Packet29DestroyEntity;
+import net.minecraft.server.Packet38EntityStatus;
 import net.minecraft.server.Packet8UpdateHealth;
 
 import org.bukkit.craftbukkit.entity.CraftPlayer;
@@ -38,7 +39,6 @@ public class HeroesPlayerDamage extends EntityListener {
         }
         Player damager = (Player) subEvent.getDamager();
         Properties prop = plugin.getConfigManager().getProperties();
-        plugin.log(Level.INFO, "event caught!");
         if (prop.damageSystem) {
 
             if (!prop.damageValues.containsKey(damager.getItemInHand().getType())) {
@@ -66,7 +66,7 @@ public class HeroesPlayerDamage extends EntityListener {
                 
                 if (damage == 0) {
                     CraftPlayer craftPlayer = (CraftPlayer) playerEntity;
-                    craftPlayer.getHandle().netServerHandler.sendPacket(new Packet8UpdateHealth(newHealth));
+                    craftPlayer.getHandle().netServerHandler.sendPacket(new Packet38EntityStatus(playerEntity.getEntityId(), (byte)2));
                 } else {
                     subEvent.setDamage(damage);
                 }
