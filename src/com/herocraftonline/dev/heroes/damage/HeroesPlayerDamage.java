@@ -55,7 +55,14 @@ public class HeroesPlayerDamage extends EntityListener {
                 plugin.log(Level.INFO, "Damage Done:\t" + damage + "\t|\t" + (playerEntity.getHealth() - health));
                 plugin.log(Level.INFO, "Final HP:\t" + heroEntity.getHealth() + "\t|\t" + health);
 
-                subEvent.setDamage((int) (playerEntity.getHealth() - health));
+                damage = playerEntity.getHealth() - health;
+                
+                if (damage == 0) {
+                    playerEntity.damage(-1);
+                    playerEntity.setHealth(health);
+                } else {
+                    subEvent.setDamage(damage);
+                }
 
             } else if (subEvent.getEntity() instanceof LivingEntity) {
                 plugin.log(Level.INFO, "Recognized as livingentity!");
