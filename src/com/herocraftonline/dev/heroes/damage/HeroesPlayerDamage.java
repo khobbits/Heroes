@@ -50,20 +50,23 @@ public class HeroesPlayerDamage extends EntityListener {
                 Player playerEntity = (Player) subEvent.getEntity();
                 Hero heroEntity = plugin.getHeroManager().getHero(playerEntity);
                 HeroClass entityClass = heroEntity.getHeroClass();
-                plugin.log(Level.INFO, "Initial HP:\t" + heroEntity.getHealth() + "\t|\t" + playerEntity.getHealth());
+                
+                double iHeroHP = heroEntity.getHealth();
+                double iPlayerHP = playerEntity.getHealth();
 
                 heroEntity.setHealth(heroEntity.getHealth() - damage);
+                int newHealth = (int) ((heroEntity.getHealth() / entityClass.getMaxHealth()) * 20);
+                
+                double fHeroHP = heroEntity.getHealth();
+                double fPlayerHP = newHealth;
 
-                Integer health = (int) ((heroEntity.getHealth() / entityClass.getMaxHealth()) * 20);
+                plugin.log(Level.INFO, "Damage Done: " + iHeroHP + " (" + iPlayerHP + ") --> " + fHeroHP + " (" + fPlayerHP + ")");
 
-                plugin.log(Level.INFO, "Damage Done:\t" + damage + "\t|\t" + (playerEntity.getHealth() - health));
-                plugin.log(Level.INFO, "Final HP:\t" + heroEntity.getHealth() + "\t|\t" + health);
-
-                damage = playerEntity.getHealth() - health;
+                damage = playerEntity.getHealth() - newHealth;
                 
                 if (damage == 0) {
                     CraftPlayer craftPlayer = (CraftPlayer) playerEntity;
-                    craftPlayer.getHandle().netServerHandler.sendPacket(new Packet8UpdateHealth());
+                    craftPlayer.getHandle().netServerHandler.sendPacket(new Packet8UpdateHealth(newHealth));
                 } else {
                     subEvent.setDamage(damage);
                 }
