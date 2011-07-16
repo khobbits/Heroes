@@ -11,15 +11,16 @@ import org.bukkit.util.config.Configuration;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.effects.Effect;
+import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
 
 public class SkillBladegrasp extends ActiveSkill {
-    
+
     private String applyText;
     private String expireText;
+    private String parryText;
 
     public SkillBladegrasp(Heroes plugin) {
         super(plugin);
@@ -36,27 +37,32 @@ public class SkillBladegrasp extends ActiveSkill {
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = Configuration.getEmptyNode();
+        node.setProperty("duration", 5000);
         node.setProperty("apply-text", "%hero% tightened his grip!");
-        node.setProperty("expire-text", "%hero% parried an attack!");
+        node.setProperty("expire-text", "%hero% loosened his grip!");
+        node.setProperty("parry-text", "%hero% parried an attack!");
         return node;
     }
-    
+
     @Override
     public void init() {
         applyText = getSetting(null, "apply-text", "%hero% tightened his grip!").replace("%hero%", "$1");
-        expireText = getSetting(null, "expire-text", "%hero% parried an attack!").replace("%hero%", "$1");
+        expireText = getSetting(null, "expire-text", "%hero% loosened his grip!").replace("%hero%", "$1");
+        parryText = getSetting(null, "parry-text", "%hero% parried an attack!").replace("%hero%", "$1");
     }
-    
+
     @Override
     public boolean use(Hero hero, String[] args) {
-        hero.addEffect(new BladegraspEffect(this));
+        int duration = getSetting(hero.getHeroClass(), "duration", 5000);
+        hero.addEffect(new BladegraspEffect(this, duration));
+        
         return true;
     }
-    
-    public class BladegraspEffect extends Effect {
 
-        public BladegraspEffect(Skill skill) {
-            super(skill, "Bladegrasp");
+    public class BladegraspEffect extends ExpirableEffect {
+
+        public BladegraspEffect(Skill skill, long duration) {
+            super(skill, "Bladegrasp", duration);
         }
 
         @Override
@@ -84,7 +90,7 @@ public class SkillBladegrasp extends ActiveSkill {
                 if (hero.hasEffect(getName())) {
                     if (event.getCause() == DamageCause.ENTITY_ATTACK || event.getCause() == DamageCause.ENTITY_EXPLOSION) {
                         event.setCancelled(true);
-                        hero.removeEffect(hero.getEffect("Bladegrasp"));
+                        broadcast(player.getLocation(), parryText, player.getDisplayName());
                     }
                 }
             }

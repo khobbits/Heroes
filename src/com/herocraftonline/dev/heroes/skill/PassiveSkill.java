@@ -1,6 +1,7 @@
 package com.herocraftonline.dev.heroes.skill;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.event.CustomEventListener;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
@@ -125,6 +126,8 @@ public abstract class PassiveSkill extends Skill {
      */
     protected void apply(Hero hero) {
         hero.addEffect(new Effect(this, getName()));
+        Player player = hero.getPlayer();
+        broadcast(player.getLocation(), applyText, player.getDisplayName(), getName());
     }
 
     /**
@@ -135,6 +138,8 @@ public abstract class PassiveSkill extends Skill {
      */
     protected void unapply(Hero hero) {
         hero.removeEffect(hero.getEffect(getName()));
+        Player player = hero.getPlayer();
+        broadcast(player.getLocation(), unapplyText, player.getDisplayName(), getName());
     }
 
     /**

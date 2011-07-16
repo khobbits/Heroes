@@ -21,13 +21,13 @@ import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
-import com.herocraftonline.dev.heroes.effects.Effect;
+import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
 
 public class SkillBlackjack extends ActiveSkill {
-    
+
     private String applyText;
     private String expireText;
 
@@ -62,7 +62,7 @@ public class SkillBlackjack extends ActiveSkill {
         node.setProperty("duration", 20000);
         return node;
     }
-    
+
     @Override
     public void init() {
         applyText = getSetting(null, "apply-text", "%hero% prepared his blackjack!").replace("%hero%", "$1");
@@ -71,7 +71,9 @@ public class SkillBlackjack extends ActiveSkill {
 
     @Override
     public boolean use(Hero hero, String[] args) {
-        hero.addEffect(new BlackjackEffect(this));
+        int duration = getSetting(hero.getHeroClass(), "duration", 5000);
+        hero.addEffect(new BlackjackEffect(this, duration));
+        
         return true;
     }
 
@@ -91,10 +93,10 @@ public class SkillBlackjack extends ActiveSkill {
         return false;
     }
 
-    public class BlackjackEffect extends Effect {
+    public class BlackjackEffect extends ExpirableEffect {
 
-        public BlackjackEffect(Skill skill) {
-            super(skill, "Blackjack");
+        public BlackjackEffect(Skill skill, long duration) {
+            super(skill, "Blackjack", duration);
         }
 
         @Override

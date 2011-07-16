@@ -13,12 +13,19 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityListener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerListener;
+import org.bukkit.util.config.Configuration;
+import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
-import com.herocraftonline.dev.heroes.skill.ActiveEffectSkill;
+import com.herocraftonline.dev.heroes.skill.ActiveSkill;
+import com.herocraftonline.dev.heroes.skill.Skill;
 
-public class SkillSmoke extends ActiveEffectSkill {
+public class SkillSmoke extends ActiveSkill {
+
+    private String applyText;
+    private String expireText;
 
     public SkillSmoke(Heroes plugin) {
         super(plugin);
@@ -34,33 +41,64 @@ public class SkillSmoke extends ActiveEffectSkill {
     }
 
     @Override
-    public void onExpire(Hero hero) {
-        Player player = hero.getPlayer();
-        EntityHuman entity = ((CraftPlayer) player).getHandle();
-        final Player[] players = plugin.getServer().getOnlinePlayers();
-        for (Player p : players) {
-            if (p.getName().equalsIgnoreCase(player.getName())) {
-                continue;
-            }
-            CraftPlayer hostilePlayer = (CraftPlayer) p;
-            hostilePlayer.getHandle().netServerHandler.sendPacket(new Packet20NamedEntitySpawn(entity));
-        }
-        super.onExpire(hero);
+    public ConfigurationNode getDefaultConfig() {
+        ConfigurationNode node = Configuration.getEmptyNode();
+        node.setProperty("duration", 20000);
+        node.setProperty("apply-text", "%hero% vanished in a cloud of smoke!");
+        node.setProperty("expire-text", "%hero% reappeared!");
+        return node;
+    }
+
+    @Override
+    public void init() {
+        applyText = getSetting(null, "apply-text", "%hero% vanished in a cloud of smoke!").replace("%hero%", "$1");
+        expireText = getSetting(null, "expire-text", "%hero% reappeard!").replace("%hero%", "$1");
     }
 
     @Override
     public boolean use(Hero hero, String[] args) {
-        CraftPlayer craftPlayer = (CraftPlayer) hero.getPlayer();
-        // Tell all the logged in Clients to Destroy the Entity - Appears Invisible.
-        final Player[] players = plugin.getServer().getOnlinePlayers();
-        for (Player player : players) {
-            CraftPlayer hostilePlayer = (CraftPlayer) player;
-            hostilePlayer.getHandle().netServerHandler.sendPacket(new Packet29DestroyEntity(craftPlayer.getEntityId()));
-        }
-        applyEffect(hero);
-        // Kinda ruins the stealthy part, but can be set to null to disable it
-        notifyNearbyPlayers(craftPlayer.getLocation(), getUseText(), craftPlayer.getName(), getName());
+        int duration = getSetting(hero.getHeroClass(), "duration", 20000);
+        hero.addEffect(new SmokeEffect(this, duration));
+
         return true;
+    }
+
+    public class SmokeEffect extends ExpirableEffect {
+
+        public SmokeEffect(Skill skill, long duration) {
+            super(skill, "Smoke", duration);
+        }
+
+        @Override
+        public void apply(Hero hero) {
+            Player player = hero.getPlayer();
+            CraftPlayer craftPlayer = (CraftPlayer) hero.getPlayer();
+            // Tell all the logged in Clients to Destroy the Entity - Appears Invisible.
+            final Player[] players = plugin.getServer().getOnlinePlayers();
+            for (Player onlinePlayer : players) {
+                CraftPlayer hostilePlayer = (CraftPlayer) onlinePlayer;
+                hostilePlayer.getHandle().netServerHandler.sendPacket(new Packet29DestroyEntity(craftPlayer.getEntityId()));
+            }
+
+            broadcast(player.getLocation(), applyText, player.getDisplayName());
+        }
+
+        @Override
+        public void remove(Hero hero) {
+            Player player = hero.getPlayer();
+            EntityHuman entity = ((CraftPlayer) player).getHandle();
+            final Player[] players = plugin.getServer().getOnlinePlayers();
+            for (Player onlinePlayer : players) {
+                if (onlinePlayer.equals(player)) {
+                    continue;
+                }
+                CraftPlayer hostilePlayer = (CraftPlayer) onlinePlayer;
+                hostilePlayer.getHandle().netServerHandler.sendPacket(new Packet20NamedEntitySpawn(entity));
+            }
+
+            broadcast(player.getLocation(), expireText, player.getDisplayName());
+        }
+
     }
 
     public class SkillEntityListener extends EntityListener {
@@ -69,8 +107,8 @@ public class SkillSmoke extends ActiveEffectSkill {
             if (event.getEntity() instanceof Player) {
                 Player player = (Player) event.getEntity();
                 Hero hero = plugin.getHeroManager().getHero(player);
-                if (hero.hasEffect(getName())) {
-                    hero.expireEffect(getName());
+                if (hero.hasEffect("Smoke")) {
+                    hero.removeEffect(hero.getEffect("Smoke"));
                 }
             }
         }
@@ -82,8 +120,8 @@ public class SkillSmoke extends ActiveEffectSkill {
             if (event.getAction() != Action.PHYSICAL) {
                 Player player = event.getPlayer();
                 Hero hero = plugin.getHeroManager().getHero(player);
-                if (hero.hasEffect(getName())) {
-                    hero.expireEffect(getName());
+                if (hero.hasEffect("Smoke")) {
+                    hero.removeEffect(hero.getEffect("Smoke"));
                 }
             }
         }

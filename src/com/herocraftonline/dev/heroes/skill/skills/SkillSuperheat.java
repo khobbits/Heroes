@@ -8,14 +8,20 @@ import org.bukkit.event.Event.Type;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockListener;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.config.Configuration;
+import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
-import com.herocraftonline.dev.heroes.skill.ActiveEffectSkill;
+import com.herocraftonline.dev.heroes.skill.ActiveSkill;
+import com.herocraftonline.dev.heroes.skill.Skill;
 
-public class SkillSuperheat extends ActiveEffectSkill {
+public class SkillSuperheat extends ActiveSkill {
 
     private BlockListener playerListener = new SkillPlayerListener();
+    private String applyText;
+    private String expireText;
 
     public SkillSuperheat(Heroes plugin) {
         super(plugin);
@@ -30,13 +36,46 @@ public class SkillSuperheat extends ActiveEffectSkill {
     }
 
     @Override
-    public boolean use(Hero hero, String[] args) {
-        Player player = hero.getPlayer();
-        String playerName = player.getName();
-        applyEffect(hero);
+    public ConfigurationNode getDefaultConfig() {
+        ConfigurationNode node = Configuration.getEmptyNode();
+        node.setProperty("duration", 20000);
+        node.setProperty("apply-text", "%hero%'s pick has become superheated!");
+        node.setProperty("expire-text", "%hero%'s pick has cooled down!");
+        return node;
+    }
 
-        notifyNearbyPlayers(player.getLocation(), getUseText(), playerName, getName());
+    @Override
+    public void init() {
+        applyText = getSetting(null, "apply-text", "%hero%'s pick has become superheated!").replace("%hero%", "$1");
+        expireText = getSetting(null, "expire-text", "%hero%'s pick has cooled down!").replace("%hero%", "$1");
+    }
+
+    @Override
+    public boolean use(Hero hero, String[] args) {
+        int duration = getSetting(hero.getHeroClass(), "duration", 20000);
+        hero.addEffect(new SuperheatEffect(this, duration));
+
         return true;
+    }
+
+    public class SuperheatEffect extends ExpirableEffect {
+
+        public SuperheatEffect(Skill skill, long duration) {
+            super(skill, "Superheat", duration);
+        }
+
+        @Override
+        public void apply(Hero hero) {
+            Player player = hero.getPlayer();
+            broadcast(player.getLocation(), applyText, player.getDisplayName());
+        }
+
+        @Override
+        public void remove(Hero hero) {
+            Player player = hero.getPlayer();
+            broadcast(player.getLocation(), expireText, player.getDisplayName());
+        }
+
     }
 
     public class SkillPlayerListener extends BlockListener {
@@ -46,7 +85,7 @@ public class SkillSuperheat extends ActiveEffectSkill {
             Block block = event.getBlock();
             Player player = event.getPlayer();
             Hero hero = plugin.getHeroManager().getHero(player);
-            if (hero.hasEffect(getName())) {
+            if (hero.hasEffect("Superheat")) {
                 switch (block.getType()) {
                     case IRON_ORE:
                         event.setCancelled(true);

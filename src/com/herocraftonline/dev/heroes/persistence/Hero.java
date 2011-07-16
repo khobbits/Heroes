@@ -321,6 +321,11 @@ public class Hero {
     }
 
     public void setMana(int mana) {
+        if (mana > 100) {
+            mana = 100;
+        } else if (mana < 0) {
+            mana = 0;
+        }
         this.mana = mana;
     }
 

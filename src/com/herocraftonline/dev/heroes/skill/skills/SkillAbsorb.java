@@ -1,5 +1,6 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Priority;
@@ -14,6 +15,7 @@ import com.herocraftonline.dev.heroes.effects.Effect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
+import com.herocraftonline.dev.heroes.util.Messaging;
 
 public class SkillAbsorb extends ActiveSkill {
 
@@ -93,6 +95,9 @@ public class SkillAbsorb extends ActiveSkill {
                         hero.removeEffect(hero.getEffect("Absorb"));
                     } else {
                         hero.setMana(hero.getMana() + absorbAmount);
+                        if (hero.isVerbose()) {
+                            Messaging.send(hero.getPlayer(), ChatColor.BLUE + "MANA " + Messaging.createManaBar(hero.getMana()));
+                        }
                     }
                 }
             }

@@ -54,7 +54,7 @@ public class SkillStar extends PassiveSkill {
                     if (shooter instanceof Player) {
                         Player shootingPlayer = (Player) shooter;
                         Hero hero = plugin.getHeroManager().getHero(shootingPlayer);
-                        if (hero.hasEffect(getName())) {
+                        if (hero.hasEffect("Star")) {
                             int damage = getSetting(hero.getHeroClass(), "damage", 4);
                             event.setDamage(damage);
                         }

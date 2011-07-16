@@ -11,7 +11,7 @@ import org.bukkit.util.config.Configuration;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.effects.Effect;
+import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
@@ -36,6 +36,7 @@ public class SkillFlameshield extends ActiveSkill {
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = Configuration.getEmptyNode();
+        node.setProperty("duration", 5000);
         node.setProperty("apply-text", "%hero% conjured a shield of flames!");
         node.setProperty("expire-text", "%hero% lost his shield of flames!");
         return node;
@@ -49,15 +50,16 @@ public class SkillFlameshield extends ActiveSkill {
 
     @Override
     public boolean use(Hero hero, String[] args) {
-        hero.addEffect(new FlameshieldEffect(this));
+        int duration = getSetting(hero.getHeroClass(), "duration", 5000);
+        hero.addEffect(new FlameshieldEffect(this, duration));
 
         return true;
     }
 
-    public class FlameshieldEffect extends Effect {
+    public class FlameshieldEffect extends ExpirableEffect {
 
-        public FlameshieldEffect(Skill skill) {
-            super(skill, "Flameshield");
+        public FlameshieldEffect(Skill skill, long duration) {
+            super(skill, "Flameshield", duration);
         }
 
         @Override
