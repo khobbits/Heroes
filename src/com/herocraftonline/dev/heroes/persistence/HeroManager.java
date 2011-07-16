@@ -79,7 +79,7 @@ public class HeroManager {
             }
         }
         // If it gets to this stage then clearly the HeroManager doesn't have it so we create it...
-        return loadHeroFile(player);
+        return loadHero(player);
     }
 
     public Set<Hero> getHeroes() {
@@ -91,7 +91,7 @@ public class HeroManager {
      * 
      * @param player
      */
-    public Hero loadHeroFile(Player player) {
+    public Hero loadHero(Player player) {
         File playerFile = new File(playerFolder, player.getName() + ".yml"); // Setup our Players Data File.
         // Check if it already exists, if so we load the data.
         if (playerFile.exists()) {
@@ -135,7 +135,7 @@ public class HeroManager {
      * 
      * @param player
      */
-    public void saveHeroFile(Player player) {
+    public void saveHero(Player player) {
         File playerFile = new File(playerFolder, player.getName() + ".yml");
         Configuration playerConfig = new Configuration(playerFile);
         // Save the players stuff

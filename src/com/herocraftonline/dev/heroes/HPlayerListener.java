@@ -54,7 +54,7 @@ public class HPlayerListener extends PlayerListener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         HeroManager heroManager = plugin.getHeroManager();
-        heroManager.loadHeroFile(player);
+        heroManager.loadHero(player);
         plugin.switchToHNSH(player);
         this.plugin.getInventoryChecker().checkInventory(player);
     }
@@ -77,7 +77,7 @@ public class HPlayerListener extends PlayerListener {
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
         HeroManager heroManager = plugin.getHeroManager();
-        heroManager.saveHeroFile(player);
+        heroManager.saveHero(player);
         heroManager.removeHero(heroManager.getHero(player));
     }
 

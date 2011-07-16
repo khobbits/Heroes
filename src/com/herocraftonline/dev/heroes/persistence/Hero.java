@@ -163,7 +163,7 @@ public class Hero {
                 if (newLevel >= prop.maxLevel) {
                     exp = prop.getExperience(prop.maxLevel);
                     Messaging.broadcast(plugin, "$1 has become a master $2!", player.getName(), heroClass.getName());
-                    plugin.getHeroManager().saveHeroFile(player);
+                    plugin.getHeroManager().saveHero(player);
                 }
             }
         }

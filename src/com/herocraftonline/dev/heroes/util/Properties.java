@@ -54,11 +54,6 @@ public class Properties {
     public int swapCost;
     public boolean swapMasteryCost;
     public boolean damageSystem;
-    // Damage//
-    public HashMap<Material, Integer> damageValues = new HashMap<Material, Integer>();
-    public HashMap<CreatureType, Integer> mobMaxHealth = new HashMap<CreatureType, Integer>();
-    public HashMap<CreatureType, Double> mobDamageValues = new HashMap<CreatureType, Double>();
-    public HashMap<DamageCause, Integer> enviromentalDamageValues = new HashMap<DamageCause, Integer>();
 
     /**
      * Generate experience for the level ArrayList<Integer>

@@ -45,7 +45,7 @@ import com.herocraftonline.dev.heroes.command.commands.SuppressCommand;
 import com.herocraftonline.dev.heroes.command.commands.ToolsCommand;
 import com.herocraftonline.dev.heroes.command.commands.VerboseCommand;
 import com.herocraftonline.dev.heroes.command.commands.WhoCommand;
-import com.herocraftonline.dev.heroes.damage.HeroesDamage;
+import com.herocraftonline.dev.heroes.damage.DamageManager;
 import com.herocraftonline.dev.heroes.inventory.BukkitContribInventoryListener;
 import com.herocraftonline.dev.heroes.inventory.HeroesInventoryListener;
 import com.herocraftonline.dev.heroes.inventory.InventoryChecker;
@@ -82,9 +82,6 @@ public class Heroes extends JavaPlugin {
     private final HPluginListener pluginListener = new HPluginListener(this);
     private final HEntityListener entityListener = new HEntityListener(this);
     private final HBlockListener blockListener = new HBlockListener(this);
-    
-    // Damage refactoring stuff
-    private final HeroesDamage heroesDamage = new HeroesDamage(this);
 
     // Various data managers
     private ConfigManager configManager;
@@ -92,6 +89,7 @@ public class Heroes extends JavaPlugin {
     private ClassManager classManager;
     private HeroManager heroManager;
     private PartyManager partyManager;
+    private DamageManager damageManager;
 
     // Variable for the Permissions plugin handler.
     public static PermissionHandler Permissions;
@@ -150,6 +148,10 @@ public class Heroes extends JavaPlugin {
     public PartyManager getPartyManager() {
         return partyManager;
     }
+    
+    public DamageManager getDamageManager() {
+        return damageManager;
+    }
 
     /**
      * Load all the external classes.
@@ -204,7 +206,7 @@ public class Heroes extends JavaPlugin {
         heroManager.stopTimers();
         final Player[] players = getServer().getOnlinePlayers();
         for (Player player : players) {
-            heroManager.saveHeroFile(player);
+            heroManager.saveHero(player);
             switchToBNSH(player);
         }
 
@@ -239,7 +241,7 @@ public class Heroes extends JavaPlugin {
         final Player[] players = getServer().getOnlinePlayers();
         for (Player player : players) {
             switchToHNSH(player);
-            heroManager.loadHeroFile(player);
+            heroManager.loadHero(player);
             getInventoryChecker().checkInventory(player);
         }
 
@@ -247,7 +249,6 @@ public class Heroes extends JavaPlugin {
         registerEvents();
         // Call our function to setup Heroes Commands.
         registerCommands();
-        heroesDamage.registerEvents();
         // Perform the Permissions check.
         setupPermissions();
     }
@@ -258,6 +259,7 @@ public class Heroes extends JavaPlugin {
         configManager = new ConfigManager(this);
         heroManager = new HeroManager(this);
         partyManager = new PartyManager(this);
+        damageManager = new DamageManager(this);
         debugLog = new DebugLog("Heroes", dataFolder + File.separator + "debug.log");
     }
 
