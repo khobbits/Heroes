@@ -16,6 +16,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageByProjectileEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityListener;
 
@@ -66,16 +67,12 @@ public class HeroesDamageListener extends EntityListener {
             if (subEvent.getEntity() instanceof Player) {
                 Player playerEntity = (Player) subEvent.getEntity();
                 Hero heroEntity = plugin.getHeroManager().getHero(playerEntity);
-                HeroClass entityClass = heroEntity.getHeroClass();
 
-                heroEntity.setHealth(heroEntity.getHealth() - damage);
-                int newHealth = (int) ((heroEntity.getHealth() / entityClass.getMaxHealth()) * 20);
-
-                damage = playerEntity.getHealth() - newHealth;
-                subEvent.setDamage(damage);
+                int visualDamage = DamageManager.getVisualDamage(heroEntity, damage);
+                subEvent.setDamage(visualDamage);
 
                 EntityPlayer defenderEntityPlayer = ((CraftPlayer) playerEntity).getHandle();
-                if (damage == 0) {
+                if (visualDamage == 0) {
                     for (Player player : playerEntity.getWorld().getPlayers()) {
                         CraftPlayer craftPlayer = (CraftPlayer) player;
                         craftPlayer.getHandle().netServerHandler.sendPacket(new Packet18ArmAnimation(defenderEntityPlayer, (byte) 2));
