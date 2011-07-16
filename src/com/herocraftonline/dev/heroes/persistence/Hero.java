@@ -47,11 +47,14 @@ public class Hero {
     protected Set<String> suppressedSkills = new HashSet<String>();
     protected double health;
 
-    public Hero(Heroes plugin, Player player, HeroClass heroClass, double health) {
+    public Hero(Heroes plugin, Player player, HeroClass heroClass) {
         this.plugin = plugin;
         this.player = player;
         this.heroClass = heroClass;
-        this.health = health;
+        
+        int playerHealth = player.getHealth();
+        double maxHealth = heroClass.getMaxHealth();
+        this.health = playerHealth / 20.0 * maxHealth;
     }
 
     public void addRecoveryItem(ItemStack item) {
@@ -299,6 +302,13 @@ public class Hero {
     }
 
     public void setHeroClass(HeroClass heroClass) {
+        double currentMaxHP = this.heroClass.getMaxHealth();
+        double newMaxHP = heroClass.getMaxHealth();
+        health *= newMaxHP / currentMaxHP;
+        if (health > newMaxHP) {
+            health = newMaxHP;
+        }
+        
         this.heroClass = heroClass;
 
         // Check the Players inventory now that they have changed class.

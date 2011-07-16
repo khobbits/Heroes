@@ -59,7 +59,7 @@ public class HeroManager {
     }
 
     public Hero createNewHero(Player player) {
-        Hero hero = new Hero(plugin, player, plugin.getClassManager().getDefaultClass(), plugin.getClassManager().getDefaultClass().getMaxHealth());
+        Hero hero = new Hero(plugin, player, plugin.getClassManager().getDefaultClass());
         addHero(hero);
         return hero;
     }
@@ -96,7 +96,7 @@ public class HeroManager {
             playerConfig.load(); // Load the Config File
 
             HeroClass playerClass = loadClass(player, playerConfig);
-            Hero playerHero = new Hero(plugin, player, playerClass, playerClass.getMaxHealth());
+            Hero playerHero = new Hero(plugin, player, playerClass);
 
             loadCooldowns(playerHero, playerConfig);
             loadExperience(playerHero, playerConfig);
