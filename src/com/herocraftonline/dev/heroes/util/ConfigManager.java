@@ -56,7 +56,7 @@ public class ConfigManager {
         loadLevelConfig(primaryConfig);
         loadDefaultConfig(primaryConfig);
         loadProperties(primaryConfig);
-        
+
         Configuration damageConfig = new Configuration(damageConfigFile);
         damageConfig.load();
         loadDamages(damageConfig);
@@ -231,7 +231,7 @@ public class ConfigManager {
             }
         }
     }
-    
+
     /**
      * Loads all of the configuration settings required for the damage system
      * 
@@ -246,7 +246,7 @@ public class ConfigManager {
                 }
             }
         }
-        
+
         List<String> mobDamageKeys = config.getKeys("monsterDamages");
         if(mobDamageKeys != null) {
             for(String n : mobDamageKeys) {
@@ -255,7 +255,7 @@ public class ConfigManager {
                 }
             }
         }
-        
+
         List<String> playerDamageKeys = config.getKeys("playerDamages");
         if(playerDamageKeys != null) {
             for(String n : playerDamageKeys) {
@@ -265,19 +265,21 @@ public class ConfigManager {
                 }
             }
         }
-        
+
         List<String> enviromentalDamageKeys = config.getKeys("enviromentalDamages");
         if(enviromentalDamageKeys != null) { 
             for(String n : enviromentalDamageKeys) {
-                plugin.log(Level.INFO, n);
-                DamageCause damageCauses = DamageCause.valueOf(n);
+                try {
+                    DamageCause damageCause = DamageCause.valueOf(n.toUpperCase());
+                    if(damageCause != null) {
+                        getProperties().enviromentalDamageValues.put(damageCause, config.getInt("enviromentalDamages." + n, 2));
+                    }
+                }catch(IllegalArgumentException e) {
+                    plugin.log(Level.SEVERE, "Invalid enviromental damage (" + n + ")");
+                }
 
-                /*
-                if(damageCauses.contains(n)) {
-                    getProperties().enviromentalDamageValues.put(damageCause, config.getInt("enviromentalDamages." + n, 2));
-                }*/
             }
         }
     }
-    
+
 }
