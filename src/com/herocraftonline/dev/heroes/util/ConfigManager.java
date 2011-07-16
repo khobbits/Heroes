@@ -269,8 +269,9 @@ public class ConfigManager {
         List<String> enviromentalDamageKeys = config.getKeys("enviromentalDamages");
         if(enviromentalDamageKeys != null) { 
             for(String n : enviromentalDamageKeys) {
-                List<DamageCause> damageCauses = Arrays.asList(DamageCause.values());
-                plugin.log(Level.INFO, Boolean.toString(damageCauses.contains(n)));
+                plugin.log(Level.INFO, n);
+                DamageCause damageCauses = DamageCause.valueOf(n);
+
                 /*
                 if(damageCauses.contains(n)) {
                     getProperties().enviromentalDamageValues.put(damageCause, config.getInt("enviromentalDamages." + n, 2));
