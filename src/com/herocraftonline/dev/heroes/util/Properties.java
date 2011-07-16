@@ -7,6 +7,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.CreatureType;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 public class Properties {
@@ -53,7 +55,7 @@ public class Properties {
     public boolean damageSystem;
     // Damage//
     public HashMap<Material, Integer> damageValues = new HashMap<Material, Integer>();
-
+    public HashMap<CreatureType, Double> mobMaxHealth = new HashMap<CreatureType, Double>();
     /**
      * Generate experience for the level ArrayList<Integer>
      */
@@ -84,5 +86,24 @@ public class Properties {
             }
         }
         return -1;
+    }
+    /**
+     * Converts an entity into its CreatureType
+     * 
+     * @param entity
+     * @return
+     */
+    public CreatureType getCreatureFromEntity(Entity entity) {
+        CreatureType type = null;
+        try {
+            Class<?>[] interfaces = entity.getClass().getInterfaces();
+            for (Class<?> c : interfaces) {
+                if (LivingEntity.class.isAssignableFrom(c)) {
+                    type = CreatureType.fromName(c.getSimpleName());
+                    break;
+                }
+            }
+        } catch (IllegalArgumentException e) {}
+        return type;
     }
 }

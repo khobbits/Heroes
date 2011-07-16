@@ -1,6 +1,7 @@
 package com.herocraftonline.dev.heroes.damage;
 
-import org.bukkit.entity.Monster;
+import org.bukkit.entity.CreatureType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityListener;
@@ -32,12 +33,12 @@ public class HeroesPlayerDamage extends EntityListener {
             if (!prop.damageValues.containsKey(damager.getItemInHand().getType())) {
                 return;
             }
+            Integer damage = prop.damageValues.get(damager.getItemInHand().getType());
 
             if (event.getEntity() instanceof Player) {
                 Player playerEntity = (Player) event.getEntity();
                 Hero heroEntity = plugin.getHeroManager().getHero(playerEntity);
                 HeroClass entityClass = heroEntity.getHeroClass();
-                Integer damage = prop.damageValues.get(damager.getItemInHand().getType());
 
                 heroEntity.setHealth(heroEntity.getHealth() - damage);
 
@@ -47,12 +48,35 @@ public class HeroesPlayerDamage extends EntityListener {
                     playerEntity.damage((int) (playerEntity.getHealth() - (health)));
                 }
 
-            } else if (event.getEntity() instanceof Monster) {
-                Monster monsterEntity = (Monster) event.getEntity();
-                if (!heroesDamage.getMobHealthValues().containsKey(monsterEntity.getEntityId())) {
-                    heroesDamage.getMobHealthValues().put(monsterEntity.getEntityId(), 100);
+            } else if (event.getEntity() instanceof LivingEntity) {
+                LivingEntity livingEntity = (LivingEntity) event.getEntity();
+                CreatureType creatureType = prop.getCreatureFromEntity(livingEntity);
+                
+                if(!prop.mobMaxHealth.containsKey(creatureType)) {
+                    return;
                 }
-                // Remove Mob HP
+                
+                Double maxHealth = prop.mobMaxHealth.get(creatureType);
+
+                if (!heroesDamage.getMobHealthValues().containsKey(livingEntity.getEntityId())) {
+                    heroesDamage.getMobHealthValues().put(livingEntity.getEntityId(), maxHealth);
+                }
+                
+                Integer entityMaxHp = 20;
+                
+                if(creatureType == CreatureType.GIANT) {
+                    entityMaxHp = 50;
+                }else if(creatureType == CreatureType.GHAST) {
+                    entityMaxHp = 10;
+                }
+                
+                heroesDamage.getMobHealthValues().put(livingEntity.getEntityId(), maxHealth - damage);
+
+                Integer health = (int) ((livingEntity.getHealth() / entityMaxHp) * 20);
+
+                if(livingEntity.getHealth() != health) {
+                    livingEntity.damage((int) (livingEntity.getHealth() - (health)));
+                }                
             }
         }
     }

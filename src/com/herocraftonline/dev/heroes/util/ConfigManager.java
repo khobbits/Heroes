@@ -193,6 +193,7 @@ public class ConfigManager {
         properties.cColor = ChatColor.valueOf(config.getString(root + "color", "WHITE"));
         properties.swapCost = config.getInt(root + "swapcost", 0);
         properties.debug = config.getBoolean(root + "debug", false);
+        properties.damageSystem = config.getBoolean(root + "useDamageSystem", false);
     }
 
     private void loadSkills(Configuration config) {
