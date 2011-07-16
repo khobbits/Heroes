@@ -59,7 +59,7 @@ public class HeroesPlayerDamage extends EntityListener {
                 
                 if (damage == 0) {
                     playerEntity.damage(-1);
-                    playerEntity.setHealth(health);
+                    playerEntity.damage(1);
                 } else {
                     subEvent.setDamage(damage);
                 }
