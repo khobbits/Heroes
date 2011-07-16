@@ -68,8 +68,8 @@ public class HeroesPlayerDamage extends EntityListener {
                 if (damage == 0) {
                     subEvent.setDamage(-1);
                     playerEntity.setHealth(newHealth);
-                    //CraftPlayer craftPlayer = (CraftPlayer) playerEntity;
-                    //craftPlayer.getHandle().netServerHandler.sendPacket(new Packet38EntityStatus(playerEntity.getEntityId(), (byte)2));
+                    CraftPlayer craftPlayer = (CraftPlayer) playerEntity;
+                    craftPlayer.getHandle().netServerHandler.sendPacket(new Packet8UpdateHealth(newHealth));
                 }
 
             } else if (subEvent.getEntity() instanceof LivingEntity) {
