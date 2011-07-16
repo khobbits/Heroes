@@ -46,18 +46,15 @@ public class HeroesPlayerDamage extends EntityListener {
                 Player playerEntity = (Player) subEvent.getEntity();
                 Hero heroEntity = plugin.getHeroManager().getHero(playerEntity);
                 HeroClass entityClass = heroEntity.getHeroClass();
-                plugin.log(Level.INFO, "Health from Hero" + Double.toString(heroEntity.getHealth()));
+                plugin.log(Level.INFO, "Item Damage:\t" + damage);
+                plugin.log(Level.INFO, "Initial HP:\t" + heroEntity.getHealth() + "\t|\t" + playerEntity.getHealth());
 
                 heroEntity.setHealth(heroEntity.getHealth() - damage);
 
                 Integer health = (int) ((heroEntity.getHealth() / entityClass.getMaxHealth()) * 20);
                 
-                plugin.log(Level.INFO, "Health Variable:" + health);
-                plugin.log(Level.INFO, "event.setDamage:" + Integer.toString(playerEntity.getHealth() - health));
-                plugin.log(Level.INFO, "Health from Hero:"+heroEntity.getHealth());
-                plugin.log(Level.INFO, "Damage:" + damage.toString());
-                plugin.log(Level.INFO, "Class Max HP" + Double.toString(heroEntity.getHeroClass().getMaxHealth()));
-
+                plugin.log(Level.INFO, "Damage Done:\t" + damage + "\t|\t" + (playerEntity.getHealth() - health));
+                plugin.log(Level.INFO, "Final HP:\t" + heroEntity.getHealth() + "\t|\t" + health);
 
                 if(playerEntity.getHealth() != health) {
                     subEvent.setDamage((int) (playerEntity.getHealth() - health));
