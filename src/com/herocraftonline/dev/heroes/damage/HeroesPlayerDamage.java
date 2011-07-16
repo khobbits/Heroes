@@ -2,6 +2,10 @@ package com.herocraftonline.dev.heroes.damage;
 
 import java.util.logging.Level;
 
+import net.minecraft.server.Packet29DestroyEntity;
+import net.minecraft.server.Packet8UpdateHealth;
+
+import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -58,8 +62,8 @@ public class HeroesPlayerDamage extends EntityListener {
                 damage = playerEntity.getHealth() - health;
                 
                 if (damage == 0) {
-                    playerEntity.damage(-1);
-                    playerEntity.damage(1);
+                    CraftPlayer craftPlayer = (CraftPlayer) playerEntity;
+                    craftPlayer.getHandle().netServerHandler.sendPacket(new Packet8UpdateHealth());
                 } else {
                     subEvent.setDamage(damage);
                 }
