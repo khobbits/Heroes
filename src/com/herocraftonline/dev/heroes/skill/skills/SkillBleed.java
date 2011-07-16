@@ -41,6 +41,7 @@ public class SkillBleed extends TargettedSkill {
 
     @Override
     public void init() {
+        super.init();
         applyText = getSetting(null, "apply-text", "%target% is bleeding!").replace("%target%", "$1");
         expireText = getSetting(null, "expire-text", "%target% has stopped bleeding!").replace("%target%", "$1");
     }
@@ -60,6 +61,8 @@ public class SkillBleed extends TargettedSkill {
             return false;
         }
 
+        broadcastExecuteText(hero, target);
+        
         long duration = getSetting(hero.getHeroClass(), "duration", 10000);
         long period = getSetting(hero.getHeroClass(), "period", 2000);
         int tickDamage = getSetting(hero.getHeroClass(), "tick-damage", 1);

@@ -8,7 +8,6 @@ import org.bukkit.event.Event.Type;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityListener;
-import org.bukkit.util.config.Configuration;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
@@ -36,7 +35,7 @@ public class SkillSafefallOther extends TargettedSkill {
 
     @Override
     public ConfigurationNode getDefaultConfig() {
-        ConfigurationNode node = Configuration.getEmptyNode();
+        ConfigurationNode node = super.getDefaultConfig();
         node.setProperty("duration", 10000);
         node.setProperty("apply-text", "%target% has gained safefall!");
         node.setProperty("expire-text", "%target% has lost safefall!");
@@ -45,6 +44,7 @@ public class SkillSafefallOther extends TargettedSkill {
 
     @Override
     public void init() {
+        super.init();
         applyText = getSetting(null, "apply-text", "%target% has gained safefall!").replace("%target%", "$1");
         expireText = getSetting(null, "expire-text", "%target% has lost safefall!").replace("%target%", "$1");
     }
@@ -54,6 +54,8 @@ public class SkillSafefallOther extends TargettedSkill {
         if (target instanceof Player) {
             Hero targetHero = plugin.getHeroManager().getHero((Player) target);
 
+            broadcastExecuteText(hero, target);
+            
             int duration = getSetting(hero.getHeroClass(), "duration", 10000);
             targetHero.addEffect(new SafefallEffect(this, duration));
 

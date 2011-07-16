@@ -46,7 +46,7 @@ public class SkillPulse extends ActiveSkill {
             }
             pN.damage(healamount);
         }
-        broadcast(hero.getPlayer().getLocation(), getUseText(), hero.getPlayer().getName(), getName());
+        broadcastExecuteText(hero);
         return true;
     }
 

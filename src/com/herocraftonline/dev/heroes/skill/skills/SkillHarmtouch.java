@@ -45,7 +45,7 @@ public class SkillHarmtouch extends TargettedSkill {
             return false;
         }
         target.damage(damage, player);
-        broadcast(player.getLocation(), getUseText(), player.getName(), getName(), target == player ? "himself" : getEntityName(target));
+        broadcastExecuteText(hero, target);
         return true;
     }
 

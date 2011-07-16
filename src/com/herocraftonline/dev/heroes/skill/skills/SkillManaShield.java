@@ -7,7 +7,6 @@ import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityListener;
-import org.bukkit.util.config.Configuration;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
@@ -36,7 +35,7 @@ public class SkillManaShield extends ActiveSkill {
 
     @Override
     public ConfigurationNode getDefaultConfig() {
-        ConfigurationNode node = Configuration.getEmptyNode();
+        ConfigurationNode node = super.getDefaultConfig();
         node.setProperty("mana-amount", 20);
         node.setProperty("duration", 20000);
         node.setProperty("apply-text", "%hero% was surrounded by a mana shield!");
@@ -46,12 +45,15 @@ public class SkillManaShield extends ActiveSkill {
 
     @Override
     public void init() {
+        super.init();
         applyText = getSetting(null, "apply-text", "%hero% was surrounded by a mana shield!").replace("%hero%", "$1");
         expireText = getSetting(null, "expire-text", "%hero% lost his mana shield!").replace("%hero%", "$1");
     }
 
     @Override
     public boolean use(Hero hero, String[] args) {
+        broadcastExecuteText(hero);
+        
         int duration = getSetting(hero.getHeroClass(), "duration", 5000);
         hero.addEffect(new ManaShieldEffect(this, duration));
 

@@ -43,7 +43,7 @@ public class SkillLeech extends TargettedSkill {
             }
             hero.setMana(hero.getMana() + transferamount);
             tHero.setMana(tHero.getMana() - transferamount);
-            broadcast(hero.getPlayer().getLocation(), getUseText(), hero.getPlayer().getName(), getName(), target == hero.getPlayer() ? "himself" : getEntityName(target));
+            broadcastExecuteText(hero, target);
             return true;
         } else {
             return false;

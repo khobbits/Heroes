@@ -42,7 +42,7 @@ public class SkillManaburn extends TargettedSkill {
                 transferamount = 100 - hero.getMana();
             }
             tHero.setMana(tHero.getMana() - transferamount);
-            broadcast(hero.getPlayer().getLocation(), getUseText(), hero.getPlayer().getName(), getName());
+            broadcastExecuteText(hero, target);
             return true;
         } else {
             return false;

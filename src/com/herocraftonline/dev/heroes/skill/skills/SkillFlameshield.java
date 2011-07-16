@@ -7,7 +7,6 @@ import org.bukkit.event.Event.Type;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityListener;
-import org.bukkit.util.config.Configuration;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
@@ -35,7 +34,7 @@ public class SkillFlameshield extends ActiveSkill {
 
     @Override
     public ConfigurationNode getDefaultConfig() {
-        ConfigurationNode node = Configuration.getEmptyNode();
+        ConfigurationNode node = super.getDefaultConfig();
         node.setProperty("duration", 5000);
         node.setProperty("apply-text", "%hero% conjured a shield of flames!");
         node.setProperty("expire-text", "%hero% lost his shield of flames!");
@@ -44,12 +43,15 @@ public class SkillFlameshield extends ActiveSkill {
 
     @Override
     public void init() {
+        super.init();
         applyText = getSetting(null, "apply-text", "%hero% conjured a shield of flames!").replace("%hero%", "$1");
         expireText = getSetting(null, "expire-text", "%hero% lost his shield of flames!").replace("%hero%", "$1");
     }
 
     @Override
     public boolean use(Hero hero, String[] args) {
+        broadcastExecuteText(hero);
+        
         int duration = getSetting(hero.getHeroClass(), "duration", 5000);
         hero.addEffect(new FlameshieldEffect(this, duration));
 

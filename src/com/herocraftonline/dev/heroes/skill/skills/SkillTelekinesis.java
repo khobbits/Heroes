@@ -36,9 +36,11 @@ public class SkillTelekinesis extends ActiveSkill {
         if (block.getType() == Material.LEVER) {
             Lever lever = (Lever) block;
             lever.setPowered(!lever.isPowered());
+            broadcastExecuteText(hero);
         } else if (block.getType() == Material.STONE_BUTTON) {
             Button button = (Button) block;
             button.setPowered(!button.isPowered());
+            broadcastExecuteText(hero);
         } else {
             return false;
         }

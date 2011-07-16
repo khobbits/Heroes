@@ -136,6 +136,11 @@ public abstract class ActiveSkill extends Skill {
             }
         }
     }
+    
+    protected void broadcastExecuteText(Hero hero) {
+        Player player = hero.getPlayer();
+        broadcast(player.getLocation(), getUseText(), player.getDisplayName(), getName());
+    }
 
     /**
      * Creates and returns a <code>ConfigurationNode</code> containing the default usage text. When using additional

@@ -54,7 +54,7 @@ public class SkillIcebolt extends ActiveSkill {
         snowball.setVelocity(velocity);
         snowballs.add(snowball);
 
-        broadcast(location, getUseText(), hero.getPlayer().getName(), getName());
+        broadcastExecuteText(hero);
         return true;
     }
 

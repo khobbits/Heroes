@@ -39,7 +39,7 @@ public class SkillGroupheal extends ActiveSkill {
                 pN.setHealth(pN.getHealth() + healamount);
             }
         }
-        broadcast(hero.getPlayer().getLocation(), getUseText(), hero.getPlayer().getName(), getName());
+        broadcastExecuteText(hero);
         return true;
     }
 

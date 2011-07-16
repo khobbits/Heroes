@@ -7,7 +7,6 @@ import org.bukkit.event.Event.Type;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.util.Vector;
-import org.bukkit.util.config.Configuration;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
@@ -35,7 +34,7 @@ public class SkillOne extends ActiveSkill {
     
     @Override
     public ConfigurationNode getDefaultConfig() {
-        ConfigurationNode node = Configuration.getEmptyNode();
+        ConfigurationNode node = super.getDefaultConfig();
         node.setProperty("speed", 0.7);
         node.setProperty("duration", 15000);
         node.setProperty("apply-text", "%hero% gained a burst of speed!");
@@ -45,12 +44,15 @@ public class SkillOne extends ActiveSkill {
 
     @Override
     public void init() {
+        super.init();
         applyText = getSetting(null, "apply-text", "%hero% gained a burst of speed!").replace("%hero%", "$1");
         expireText = getSetting(null, "expire-text", "%hero% returned to normal speed!").replace("%hero%", "$1");
     }
 
     @Override
     public boolean use(Hero hero, String[] args) {
+        broadcastExecuteText(hero);
+        
         int duration = getSetting(hero.getHeroClass(), "duration", 5000);
         hero.addEffect(new OneEffect(this, duration));
 

@@ -1,7 +1,6 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -43,12 +42,11 @@ public class SkillFirearrow extends ActiveSkill {
     @Override
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
-        Location location = player.getEyeLocation();
 
         Arrow arrow = player.shootArrow();
         arrow.setFireTicks(1000);
 
-        broadcast(location, getUseText(), hero.getPlayer().getName(), getName());
+        broadcastExecuteText(hero);
         return true;
     }
 

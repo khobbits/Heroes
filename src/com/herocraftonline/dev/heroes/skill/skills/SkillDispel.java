@@ -23,7 +23,6 @@ public class SkillDispel extends TargettedSkill {
 
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
-        Player player = hero.getPlayer();
         if (!(target instanceof Player)) {
             return false;
         }
@@ -36,7 +35,7 @@ public class SkillDispel extends TargettedSkill {
             }
         }
 
-        broadcast(player.getLocation(), getUseText(), player.getName(), getName(), getEntityName(target));
+        broadcastExecuteText(hero, target);
         return true;
     }
 

@@ -8,7 +8,6 @@ import org.bukkit.event.Event.Type;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockListener;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.config.Configuration;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
@@ -37,7 +36,7 @@ public class SkillSuperheat extends ActiveSkill {
 
     @Override
     public ConfigurationNode getDefaultConfig() {
-        ConfigurationNode node = Configuration.getEmptyNode();
+        ConfigurationNode node = super.getDefaultConfig();
         node.setProperty("duration", 20000);
         node.setProperty("apply-text", "%hero%'s pick has become superheated!");
         node.setProperty("expire-text", "%hero%'s pick has cooled down!");
@@ -46,12 +45,15 @@ public class SkillSuperheat extends ActiveSkill {
 
     @Override
     public void init() {
+        super.init();
         applyText = getSetting(null, "apply-text", "%hero%'s pick has become superheated!").replace("%hero%", "$1");
         expireText = getSetting(null, "expire-text", "%hero%'s pick has cooled down!").replace("%hero%", "$1");
     }
 
     @Override
     public boolean use(Hero hero, String[] args) {
+        broadcastExecuteText(hero);
+        
         int duration = getSetting(hero.getHeroClass(), "duration", 20000);
         hero.addEffect(new SuperheatEffect(this, duration));
 

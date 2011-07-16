@@ -6,7 +6,6 @@ import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityListener;
-import org.bukkit.util.config.Configuration;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
@@ -34,7 +33,7 @@ public class SkillInvuln extends ActiveSkill {
 
     @Override
     public ConfigurationNode getDefaultConfig() {
-        ConfigurationNode node = Configuration.getEmptyNode();
+        ConfigurationNode node = super.getDefaultConfig();
         node.setProperty("duration", 10000);
         node.setProperty("apply-text", "%hero% has become invulnerable!");
         node.setProperty("expire-text", "%hero% is once again vulnerable!");
@@ -43,12 +42,15 @@ public class SkillInvuln extends ActiveSkill {
 
     @Override
     public void init() {
+        super.init();
         applyText = getSetting(null, "apply-text", "%hero% has become invulnerable!").replace("%hero%", "$1");
         expireText = getSetting(null, "expire-text", "%hero% is once again vulnerable!").replace("%hero%", "$1");
     }
 
     @Override
     public boolean use(Hero hero, String[] args) {
+        broadcastExecuteText(hero);
+        
         int duration = getSetting(hero.getHeroClass(), "duration", 5000);
         hero.addEffect(new InvulnerabilityEffect(this, duration));
 

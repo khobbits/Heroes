@@ -48,7 +48,7 @@ public class SkillSummon extends ActiveSkill {
                 return false;
             }
             hero.getSummons().put(spawnedEntity, creatureType);
-            broadcast(player.getLocation(), getUseText(), player.getName(), getName(), creatureType.toString());
+            broadcastExecuteText(hero);
             Messaging.send(player, "You have succesfully summoned a " + creatureType.toString());
             return true;
         }

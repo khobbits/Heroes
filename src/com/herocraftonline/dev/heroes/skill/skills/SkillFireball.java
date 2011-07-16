@@ -60,7 +60,7 @@ public class SkillFireball extends ActiveSkill {
         snowball.setFireTicks(1000);
         snowball.setVelocity(velocity);
 
-        broadcast(location, getUseText(), hero.getPlayer().getName(), getName());
+        broadcastExecuteText(hero);
         return true;
     }
 

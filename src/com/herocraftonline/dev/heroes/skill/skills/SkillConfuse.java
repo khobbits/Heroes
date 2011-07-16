@@ -46,6 +46,7 @@ public class SkillConfuse extends TargettedSkill {
 
     @Override
     public void init() {
+        super.init();
         applyText = getSetting(null, "apply-text", "%target% is confused!").replace("%target%", "$1");
         expireText = getSetting(null, "expire-text", "%target% has regained his wit!").replace("%target%", "$1");
     }
@@ -64,6 +65,8 @@ public class SkillConfuse extends TargettedSkill {
             Messaging.send(player, "You need a target!");
             return false;
         }
+        
+        broadcastExecuteText(hero, target);
 
         long duration = getSetting(hero.getHeroClass(), "duration", 10000);
         long period = getSetting(hero.getHeroClass(), "period", 2000);

@@ -170,6 +170,10 @@ public abstract class Skill extends BaseCommand {
      *            this array
      */
     public void broadcast(Location source, String message, Object... args) {
+        if (message.isEmpty()) {
+            return;
+        }
+
         final Player[] players = plugin.getServer().getOnlinePlayers();
         for (Player player : players) {
             Location playerLocation = player.getLocation();

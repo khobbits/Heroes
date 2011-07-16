@@ -36,23 +36,24 @@ public class SkillAbsorb extends ActiveSkill {
 
     @Override
     public ConfigurationNode getDefaultConfig() {
-        ConfigurationNode node = Configuration.getEmptyNode();
+        ConfigurationNode node = super.getDefaultConfig();
         node.setProperty("mana-amount", 20);
-        node.setProperty("apply-text", "%target% was rooted!");
-        node.setProperty("expire-text", "Root faded from %target%!");
+        node.setProperty("apply-text", "%target% is absorbing damage");
+        node.setProperty("expire-text", "Absorb faded from %target%!");
         return node;
     }
 
     @Override
     public void init() {
+        super.init();
         applyText = getSetting(null, "apply-text", "%target% is absorbing damage!").replace("%target%", "$1");
         expireText = getSetting(null, "expire-text", "Absorb faded from %target%!").replace("%target%", "$1");
     }
 
     @Override
     public boolean use(Hero hero, String[] args) {
+        broadcastExecuteText(hero);
         hero.addEffect(new AbsorbEffect(this));
-
         return true;
     }
 

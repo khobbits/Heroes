@@ -88,7 +88,7 @@ public class SkillRevive extends ActiveSkill {
         targetPlayer.teleport(playerLoc);
 
         player.getInventory().remove(new ItemStack(Material.SLIME_BALL, slimeballs));
-        broadcast(player.getLocation(), getUseText(), player.getName(), getName(), targetName);
+        broadcastExecuteText(hero);
         return true;
     }
 

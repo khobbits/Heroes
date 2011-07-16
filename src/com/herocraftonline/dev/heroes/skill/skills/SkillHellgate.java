@@ -27,7 +27,6 @@ public class SkillHellgate extends ActiveSkill {
     @Override
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
-        String playerName = player.getName();
 
         List<Entity> entityList = player.getNearbyEntities(10, 10, 10);
         for (Entity n : entityList) {
@@ -44,7 +43,7 @@ public class SkillHellgate extends ActiveSkill {
                 }
             }
         }
-        broadcast(player.getLocation(), getUseText(), playerName, getName());
+        broadcastExecuteText(hero);
         return true;
     }
 

@@ -2,7 +2,6 @@ package com.herocraftonline.dev.heroes.skill.skills;
 
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.util.config.Configuration;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
@@ -28,7 +27,7 @@ public class SkillManaFreeze extends TargettedSkill {
 
     @Override
     public ConfigurationNode getDefaultConfig() {
-        ConfigurationNode node = Configuration.getEmptyNode();
+        ConfigurationNode node = super.getDefaultConfig();
         node.setProperty("duration", 5000);
         node.setProperty("apply-text", "%target% has stopped regenerating mana!");
         node.setProperty("expire-text", "%target% is once again regenerating mana!");
@@ -37,6 +36,7 @@ public class SkillManaFreeze extends TargettedSkill {
 
     @Override
     public void init() {
+        super.init();
         applyText = getSetting(null, "apply-text", "%target% has stopped regenerating mana!").replace("%target%", "$1");
         expireText = getSetting(null, "expire-text", "%target% is once again regenerating mana!").replace("%target%", "$1");
     }
@@ -44,6 +44,8 @@ public class SkillManaFreeze extends TargettedSkill {
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         if (target instanceof Player) {
+            broadcastExecuteText(hero, target);
+            
             Hero targetHero = plugin.getHeroManager().getHero((Player) target);
             int duration = getSetting(hero.getHeroClass(), "duration", 5000);
             targetHero.addEffect(new ManaFreezeEffect(this, duration));
