@@ -96,17 +96,21 @@ public class SkillListCommand extends BaseCommand {
         sender.sendMessage(ChatColor.RED + "To use a skill, type " + ChatColor.WHITE + "/skill <name>" + ChatColor.RED + ". For info use " + ChatColor.WHITE + "/skill <name> ?");
     }
 
-    // The following method is needed to sort the Skills by level order.
-    static <K, V extends Comparable<? super V>> SortedSet<Map.Entry<K, V>> entriesSortedByValues(Map<K, V> map) {
-        SortedSet<Map.Entry<K, V>> sortedEntries = new TreeSet<Map.Entry<K, V>>(new Comparator<Map.Entry<K, V>>() {
+    private static SortedSet<Entry<Skill, Integer>> entriesSortedByValues(Map<Skill, Integer> map) {
+        SortedSet<Entry<Skill, Integer>> sortedEntries = new TreeSet<Map.Entry<Skill, Integer>>(new Comparator<Map.Entry<Skill, Integer>>() {
+
             @Override
-            public int compare(Map.Entry<K, V> e1, Map.Entry<K, V> e2) {
+            public int compare(Map.Entry<Skill, Integer> e1, Map.Entry<Skill, Integer> e2) {
                 int res = e1.getValue().compareTo(e2.getValue());
-                return res != 0 ? res : 1;
+                if (res == 0) {
+                    return e1.getKey().getName().compareTo(e2.getKey().getName());
+                } else {
+                    return res;
+                }
             }
         });
+
         sortedEntries.addAll(map.entrySet());
         return sortedEntries;
     }
-
 }

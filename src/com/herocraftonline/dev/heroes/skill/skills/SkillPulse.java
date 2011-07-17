@@ -17,12 +17,12 @@ public class SkillPulse extends ActiveSkill {
 
     public SkillPulse(Heroes plugin) {
         super(plugin);
-        setName("Blaze");
-        setDescription("Sets everyone around you on fire");
-        setUsage("/skill blaze");
+        setName("Pulse");
+        setDescription("Damages everyone around you");
+        setUsage("/skill pulse");
         setMinArgs(0);
         setMaxArgs(0);
-        getIdentifiers().add("skill blaze");
+        getIdentifiers().add("skill pulse");
     }
 
     @Override
@@ -38,13 +38,13 @@ public class SkillPulse extends ActiveSkill {
         for (Entity n : entities) {
 
             Player pN = (Player) n;
-            int healamount = getSetting(hero.getHeroClass(), "damage", 1);
-            EntityDamageEvent damageEvent = new EntityDamageEvent(hero.getPlayer(), DamageCause.ENTITY_ATTACK, healamount);
+            int damage = getSetting(hero.getHeroClass(), "damage", 1);
+            EntityDamageEvent damageEvent = new EntityDamageEvent(hero.getPlayer(), DamageCause.CUSTOM, damage);
             Bukkit.getServer().getPluginManager().callEvent(damageEvent);
             if (damageEvent.isCancelled()) {
                 return false;
             }
-            pN.damage(healamount);
+            pN.damage(damage);
         }
         broadcastExecuteText(hero);
         return true;

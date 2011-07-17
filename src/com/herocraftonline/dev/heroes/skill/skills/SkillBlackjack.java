@@ -41,7 +41,7 @@ public class SkillBlackjack extends ActiveSkill {
     public SkillBlackjack(Heroes plugin) {
         super(plugin);
         setName("Blackjack");
-        setDescription("Gives your melee attacks a chance to stun");
+        setDescription("Occasionally stuns your opponent");
         setUsage("/skill blackjack");
         setMinArgs(0);
         setMaxArgs(0);
