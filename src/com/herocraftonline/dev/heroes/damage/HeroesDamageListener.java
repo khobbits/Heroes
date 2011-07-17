@@ -56,29 +56,31 @@ public class HeroesDamageListener extends EntityListener {
         int damage = event.getDamage();
 
         if (event instanceof EntityDamageByEntityEvent) {
-            Entity attacker = ((EntityDamageByEntityEvent) event).getDamager();
-            if (attacker instanceof HumanEntity) {
-                HumanEntity attackingHuman = (HumanEntity) attacker;
-                Material item = attackingHuman.getItemInHand().getType();
-                Integer tmpDamage = damageManager.getItemDamage(item);
+            if (event instanceof EntityDamageByProjectileEvent) {
+                Projectile projectile = ((EntityDamageByProjectileEvent) event).getProjectile();
+                ProjectileType type = ProjectileType.valueOf(projectile);
+                plugin.getServer().broadcastMessage("ProjectileType: " + type.name());
+                Integer tmpDamage = damageManager.getProjectileDamage(type);
+                plugin.getServer().broadcastMessage("tmpDamage: " + tmpDamage);
                 if (tmpDamage != null) {
                     damage = tmpDamage;
                 }
             } else {
-                CreatureType type = Properties.getCreatureFromEntity(attacker);
-                Integer tmpDamage = damageManager.getCreatureDamage(type);
-                if (tmpDamage != null) {
-                    damage = tmpDamage;
+                Entity attacker = ((EntityDamageByEntityEvent) event).getDamager();
+                if (attacker instanceof HumanEntity) {
+                    HumanEntity attackingHuman = (HumanEntity) attacker;
+                    Material item = attackingHuman.getItemInHand().getType();
+                    Integer tmpDamage = damageManager.getItemDamage(item);
+                    if (tmpDamage != null) {
+                        damage = tmpDamage;
+                    }
+                } else {
+                    CreatureType type = Properties.getCreatureFromEntity(attacker);
+                    Integer tmpDamage = damageManager.getCreatureDamage(type);
+                    if (tmpDamage != null) {
+                        damage = tmpDamage;
+                    }
                 }
-            }
-        } else if (event instanceof EntityDamageByProjectileEvent) {
-            Projectile projectile = ((EntityDamageByProjectileEvent) event).getProjectile();
-            ProjectileType type = ProjectileType.valueOf(projectile);
-            plugin.getServer().broadcastMessage("ProjectileType: " + type.name());
-            Integer tmpDamage = damageManager.getProjectileDamage(type);
-            plugin.getServer().broadcastMessage("tmpDamage: " + tmpDamage);
-            if (tmpDamage != null) {
-                damage = tmpDamage;
             }
         } else if (cause != DamageCause.CUSTOM) {
             Integer tmpDamage = damageManager.getEnvironmentalDamage(cause);
@@ -105,7 +107,7 @@ public class HeroesDamageListener extends EntityListener {
         hero.setHealth(hero.getHealth() - damage);
         int visualDamage = (int) (player.getHealth() - hero.getHealth() / hero.getHeroClass().getMaxHealth() * 20);
         event.setDamage(visualDamage);
-        
+
         plugin.getServer().broadcastMessage("Damage done: " + damage + "  |  " + visualDamage);
 
         if (visualDamage == 0) {
