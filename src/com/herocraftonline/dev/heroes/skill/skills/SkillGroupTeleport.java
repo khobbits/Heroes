@@ -6,9 +6,9 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 
-public class SkillGTeleport extends ActiveSkill {
+public class SkillGroupTeleport extends ActiveSkill {
 
-    public SkillGTeleport(Heroes plugin) {
+    public SkillGroupTeleport(Heroes plugin) {
         super(plugin);
         setName("GroupTeleport");
         setDescription("Summons your group to your location");
