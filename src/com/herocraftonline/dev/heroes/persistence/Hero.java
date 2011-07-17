@@ -227,7 +227,7 @@ public class Hero {
 
     public double getMaxHealth() {
         int level = plugin.getConfigManager().getProperties().getLevel(getExperience());
-        return heroClass.getBaseMaxHealth() + level * heroClass.getMaxHealthPerLevel();
+        return heroClass.getBaseMaxHealth() + (level - 1) * heroClass.getMaxHealthPerLevel();
     }
 
     public HeroClass getHeroClass() {

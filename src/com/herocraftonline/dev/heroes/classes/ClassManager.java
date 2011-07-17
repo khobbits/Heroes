@@ -200,7 +200,7 @@ public class ClassManager {
             }
             
             Double baseMaxHealth = config.getDouble("classes." + className + ".base-max-health", 20);
-            Double maxHealthPerLevel = config.getDouble("classes." + className + ".max-health-per-level", 20);
+            Double maxHealthPerLevel = config.getDouble("classes." + className + ".max-health-per-level", 0);
             if(prop.damageSystem) {
                 newClass.setBaseMaxHealth(baseMaxHealth);
                 newClass.setMaxHealthPerLevel(maxHealthPerLevel);
