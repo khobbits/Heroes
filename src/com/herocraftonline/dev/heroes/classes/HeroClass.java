@@ -155,6 +155,10 @@ public class HeroClass {
         this.baseMaxHealth = baseMaxHealth;
     }
 
+    public void setMaxHealthPerLevel(double maxHealthPerLevel) {
+        this.maxHealthPerLevel = maxHealthPerLevel;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
