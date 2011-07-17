@@ -54,6 +54,11 @@ public class Hero {
         this.health = playerHealth / 20.0 * getMaxHealth();;
     }
 
+    public void syncHealth() {
+        int playerHealth = (int) (health / getMaxHealth() * 20);
+        getPlayer().setHealth(playerHealth);
+    }
+
     public void addRecoveryItem(ItemStack item) {
         this.itemRecovery.add(item);
     }
@@ -350,7 +355,14 @@ public class Hero {
     }
 
     public void setHealth(Double health) {
-        this.health = health;
+        double maxHealth = getMaxHealth();
+        if (health > maxHealth) {
+            this.health = maxHealth;
+        } else if (health < 0) {
+            this.health = 0;
+        } else {
+            this.health = health;
+        }
     }
 
 }

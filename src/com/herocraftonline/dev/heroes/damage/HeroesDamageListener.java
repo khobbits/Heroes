@@ -18,6 +18,7 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageByProjectileEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityListener;
 
@@ -45,6 +46,26 @@ public class HeroesDamageListener extends EntityListener {
         Integer maxHealth = damageManager.getCreatureHealth(type);
         if (maxHealth != null) {
             entity.setHealth(maxHealth);
+        }
+    }
+
+    @Override
+    public void onEntityRegainHealth(EntityRegainHealthEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
+
+        Entity entity = event.getEntity();
+        int amount = event.getAmount();
+
+        if (entity instanceof Player) {
+            Player player = (Player) entity;
+            Hero hero = plugin.getHeroManager().getHero(player);
+            double newHeroHealth = hero.getHealth() + amount;
+            int newHealth = (int) (newHeroHealth / hero.getMaxHealth() * 20);
+            int newAmount = newHealth - player.getHealth();
+            hero.setHealth(newHeroHealth);
+            event.setAmount(newAmount);
         }
     }
 
