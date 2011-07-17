@@ -48,7 +48,6 @@ public class HeroesDamageListener extends EntityListener {
 
     @Override
     public void onEntityDamage(EntityDamageEvent event) {
-        plugin.log(Level.INFO, "event happened.");
         if (event.isCancelled()) {
             return;
         }
@@ -90,7 +89,6 @@ public class HeroesDamageListener extends EntityListener {
         }
 
         plugin.getServer().broadcastMessage("Damage done: " + damage);
-        plugin.log(Level.INFO, "Damage done: " + damage);
 
         Entity entity = event.getEntity();
         if (entity instanceof Player) {

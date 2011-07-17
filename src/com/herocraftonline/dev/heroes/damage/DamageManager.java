@@ -49,17 +49,16 @@ public class DamageManager {
     public DamageManager(Heroes plugin) {
         this.plugin = plugin;
         listener = new HeroesDamageListener(plugin, this);
+        registerEvents();
     }
 
     /**
      * Register the events for the damage system
      */
     public void registerEvents() {
-        if (plugin.getConfigManager().getProperties().damageSystem) {
-            PluginManager pluginManager = plugin.getServer().getPluginManager();
-            pluginManager.registerEvent(Type.ENTITY_DAMAGE, listener, Priority.Highest, plugin);
-            pluginManager.registerEvent(Type.CREATURE_SPAWN, listener, Priority.Highest, plugin);
-        }
+        PluginManager pluginManager = plugin.getServer().getPluginManager();
+        pluginManager.registerEvent(Type.ENTITY_DAMAGE, listener, Priority.Highest, plugin);
+        pluginManager.registerEvent(Type.CREATURE_SPAWN, listener, Priority.Highest, plugin);
     }
 
     public Integer getItemDamage(Material item) {
