@@ -31,7 +31,7 @@ public class SkillUnholyRitual extends TargettedSkill {
         }
         target.damage(target.getHealth());
         hero.setMana(hero.getMana() + 20);
-        notifyNearbyPlayers(player.getLocation(), getUseText(), player.getName(), getName(), target == player ? "himself" : getEntityName(target));
+        broadcastExecuteText(hero, target);
         return true;
     }
 

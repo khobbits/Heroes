@@ -1,13 +1,12 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityListener;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.entity.EntityListener;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
@@ -26,7 +25,7 @@ public class SkillIronFist extends PassiveSkill {
         setMaxArgs(1);
         getIdentifiers().add("skill ironfist");
 
-        registerEvent(Type.ENTITY_DAMAGE, new SkillPlayerListener(), Priority.Normal);
+        registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
     }
 
     @Override
@@ -36,7 +35,7 @@ public class SkillIronFist extends PassiveSkill {
         return node;
     }
 
-    public class SkillPlayerListener extends EntityListener {
+    public class SkillEntityListener extends EntityListener {
 
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
@@ -48,8 +47,8 @@ public class SkillIronFist extends PassiveSkill {
                 if (subEvent.getDamager() instanceof Player) {
                     Player player = (Player) subEvent.getDamager();
                     Hero hero = plugin.getHeroManager().getHero(player);
-                    if (hero.hasEffect(getName())) {
-                        if (player.getItemInHand().getType() == Material.AIR) {
+                    if (hero.hasEffect("IronFist")) {
+                        if (player.getItemInHand() == null) {
                             double multiplier = getSetting(hero.getHeroClass(), "damage-multiplier", 2d);
                             event.setDamage((int) (baseDamage * multiplier));
                         }

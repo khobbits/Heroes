@@ -18,6 +18,9 @@ import org.bukkit.util.config.Configuration;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.command.BaseCommand;
+import com.herocraftonline.dev.heroes.effects.Effect;
+import com.herocraftonline.dev.heroes.effects.Expirable;
+import com.herocraftonline.dev.heroes.effects.Periodic;
 import com.herocraftonline.dev.heroes.skill.OutsourcedSkill;
 import com.herocraftonline.dev.heroes.skill.PassiveSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
@@ -50,12 +53,45 @@ public class HeroManager {
         plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, manaTimer, 0, manaInterval);
     }
 
+    public boolean addHero(Hero hero) {
+        return heroes.add(hero);
+    }
+
+    public boolean containsPlayer(Player player) {
+        return getHero(player) != null;
+    }
+
+    public Hero createNewHero(Player player) {
+        Hero hero = new Hero(plugin, player, plugin.getClassManager().getDefaultClass());
+        addHero(hero);
+        return hero;
+    }
+
+    public Hero getHero(Player player) {
+        Set<Hero> tmpHeroes = getHeroes();
+        for (Hero hero : tmpHeroes) {
+            if (hero == null || hero.getPlayer() == null) {
+                removeHero(hero); // Seeing as it's null we might as well remove it.
+                continue;
+            }
+            if (player.getName().equalsIgnoreCase(hero.getPlayer().getName())) {
+                return hero;
+            }
+        }
+        // If it gets to this stage then clearly the HeroManager doesn't have it so we create it...
+        return loadHero(player);
+    }
+
+    public Set<Hero> getHeroes() {
+        return new HashSet<Hero>(heroes);
+    }
+
     /**
      * Load the given Players Data file.
      * 
      * @param player
      */
-    public Hero loadHeroFile(Player player) {
+    public Hero loadHero(Player player) {
         File playerFile = new File(playerFolder, player.getName() + ".yml"); // Setup our Players Data File.
         // Check if it already exists, if so we load the data.
         if (playerFile.exists()) {
@@ -63,14 +99,14 @@ public class HeroManager {
             playerConfig.load(); // Load the Config File
 
             HeroClass playerClass = loadClass(player, playerConfig);
-            Hero playerHero = new Hero(plugin, player, playerClass, playerClass.getMaxHealth());
+            Hero playerHero = new Hero(plugin, player, playerClass);
 
             loadCooldowns(playerHero, playerConfig);
             loadExperience(playerHero, playerConfig);
             loadRecoveryItems(playerHero, playerConfig);
             loadBinds(playerHero, playerConfig);
             playerHero.mana = playerConfig.getInt("mana", 0);
-
+            playerHero.health = playerConfig.getDouble("health", 100);
             playerHero.setVerbose(playerConfig.getBoolean("verbose", true));
             playerHero.suppressedSkills = new HashSet<String>(playerConfig.getStringList("suppressed", null));
 
@@ -85,6 +121,79 @@ public class HeroManager {
             plugin.log(Level.INFO, "Created hero: " + player.getName());
             return createNewHero(player);
         }
+    }
+
+    public boolean removeHero(Hero hero) {
+        if (hero != null && hero.hasParty()) {
+            hero.getParty().removeMember(hero);
+        }
+        return heroes.remove(hero);
+    }
+
+    /**
+     * Save the given Players Data to a file.
+     * 
+     * @param player
+     */
+    public void saveHero(Player player) {
+        File playerFile = new File(playerFolder, player.getName() + ".yml");
+        Configuration playerConfig = new Configuration(playerFile);
+        // Save the players stuff
+        Hero hero = getHero(player);
+        playerConfig.setProperty("class", hero.getHeroClass().toString());
+        playerConfig.setProperty("verbose", hero.isVerbose());
+        playerConfig.setProperty("suppressed", new ArrayList<String>(hero.getSuppressedSkills()));
+        playerConfig.setProperty("mana", hero.getMana());
+        playerConfig.removeProperty("itemrecovery");
+        playerConfig.setProperty("health", hero.getHealth());
+
+        saveCooldowns(hero, playerConfig);
+        saveExperience(hero, playerConfig);
+        saveRecoveryItems(hero, playerConfig);
+        saveBinds(hero, playerConfig);
+
+        playerConfig.save();
+        plugin.log(Level.INFO, "Saved hero: " + player.getName());
+    }
+
+    public void stopTimers() {
+        plugin.getServer().getScheduler().cancelTasks(plugin);
+    }
+
+    private void loadBinds(Hero hero, Configuration config) {
+        Map<Material, String[]> binds = new HashMap<Material, String[]>();
+        List<String> bindKeys = config.getKeys("binds");
+        if (bindKeys != null && bindKeys.size() > 0) {
+            for (String material : bindKeys) {
+                try {
+                    Material item = Material.valueOf(material);
+                    String bind = config.getString("binds." + material, "");
+                    if (bind.length() > 0) {
+                        binds.put(item, bind.split(" "));
+                    }
+                } catch (IllegalArgumentException e) {
+                    this.plugin.debugLog(Level.WARNING, material + " isn't a valid Item to bind a Skill to.");
+                    continue;
+                }
+            }
+        }
+        hero.binds = binds;
+    }
+
+    private HeroClass loadClass(Player player, Configuration config) {
+        HeroClass playerClass = null;
+
+        if (config.getString("class") != null) {
+            playerClass = plugin.getClassManager().getClass(config.getString("class"));
+            if (Heroes.Permissions != null && playerClass != plugin.getClassManager().getDefaultClass()) {
+                if (!Heroes.Permissions.has(player, "heroes.classes." + playerClass.getName().toLowerCase())) {
+                    playerClass = plugin.getClassManager().getDefaultClass();
+                }
+            }
+        } else {
+            playerClass = plugin.getClassManager().getDefaultClass();
+        }
+        return playerClass;
     }
 
     private void loadCooldowns(Hero hero, Configuration config) {
@@ -103,22 +212,6 @@ public class HeroManager {
             }
             hero.cooldowns = cooldowns;
         }
-    }
-
-    private HeroClass loadClass(Player player, Configuration config) {
-        HeroClass playerClass = null;
-
-        if (config.getString("class") != null) {
-            playerClass = plugin.getClassManager().getClass(config.getString("class"));
-            if (Heroes.Permissions != null && playerClass != plugin.getClassManager().getDefaultClass()) {
-                if (!Heroes.Permissions.has(player, "heroes.classes." + playerClass.getName().toLowerCase())) {
-                    playerClass = plugin.getClassManager().getDefaultClass();
-                }
-            }
-        } else {
-            playerClass = plugin.getClassManager().getDefaultClass();
-        }
-        return playerClass;
     }
 
     private void loadExperience(Hero hero, Configuration config) {
@@ -162,26 +255,6 @@ public class HeroManager {
         hero.setRecoveryItems(itemRecovery);
     }
 
-    private void loadBinds(Hero hero, Configuration config) {
-        Map<Material, String[]> binds = new HashMap<Material, String[]>();
-        List<String> bindKeys = config.getKeys("binds");
-        if (bindKeys != null && bindKeys.size() > 0) {
-            for (String material : bindKeys) {
-                try {
-                    Material item = Material.valueOf(material);
-                    String bind = config.getString("binds." + material, "");
-                    if (bind.length() > 0) {
-                        binds.put(item, bind.split(" "));
-                    }
-                } catch (IllegalArgumentException e) {
-                    this.plugin.debugLog(Level.WARNING, material + " isn't a valid Item to bind a Skill to.");
-                    continue;
-                }
-            }
-        }
-        hero.binds = binds;
-    }
-
     private void performSkillChecks(Hero hero) {
         HeroClass playerClass = hero.getHeroClass();
 
@@ -207,29 +280,17 @@ public class HeroManager {
         }
     }
 
-    /**
-     * Save the given Players Data to a file.
-     * 
-     * @param player
-     */
-    public void saveHeroFile(Player player) {
-        File playerFile = new File(playerFolder, player.getName() + ".yml");
-        Configuration playerConfig = new Configuration(playerFile);
-        // Save the players stuff
-        Hero hero = getHero(player);
-        playerConfig.setProperty("class", hero.getHeroClass().toString());
-        playerConfig.setProperty("verbose", hero.isVerbose());
-        playerConfig.setProperty("suppressed", new ArrayList<String>(hero.getSuppressedSkills()));
-        playerConfig.setProperty("mana", hero.getMana());
-        playerConfig.removeProperty("itemrecovery");
-
-        saveCooldowns(hero, playerConfig);
-        saveExperience(hero, playerConfig);
-        saveRecoveryItems(hero, playerConfig);
-        saveBinds(hero, playerConfig);
-
-        playerConfig.save();
-        plugin.log(Level.INFO, "Saved hero: " + player.getName());
+    private void saveBinds(Hero hero, Configuration config) {
+        config.removeProperty("binds");
+        Map<Material, String[]> binds = hero.getBinds();
+        for (Material material : binds.keySet()) {
+            String[] bindArgs = binds.get(material);
+            StringBuilder bind = new StringBuilder();
+            for (String arg : bindArgs) {
+                bind.append(arg).append(" ");
+            }
+            config.setProperty("binds." + material.toString(), bind.toString().substring(0, bind.toString().length() - 1));
+        }
     }
 
     private void saveCooldowns(Hero hero, Configuration config) {
@@ -263,63 +324,6 @@ public class HeroManager {
             config.setProperty("itemrecovery." + item.getType().toString(), durability);
         }
     }
-
-    private void saveBinds(Hero hero, Configuration config) {
-        config.removeProperty("binds");
-        Map<Material, String[]> binds = hero.getBinds();
-        for (Material material : binds.keySet()) {
-            String[] bindArgs = binds.get(material);
-            StringBuilder bind = new StringBuilder();
-            for (String arg : bindArgs) {
-                bind.append(arg).append(" ");
-            }
-            config.setProperty("binds." + material.toString(), bind.toString().substring(0, bind.toString().length() - 1));
-        }
-    }
-
-    public Hero createNewHero(Player player) {
-        Hero hero = new Hero(plugin, player, plugin.getClassManager().getDefaultClass(), plugin.getClassManager().getDefaultClass().getMaxHealth());
-        addHero(hero);
-        return hero;
-    }
-
-    public boolean addHero(Hero hero) {
-        return heroes.add(hero);
-    }
-
-    public boolean removeHero(Hero hero) {
-        if (hero != null && hero.hasParty()) {
-            hero.getParty().removeMember(hero);
-        }
-        return heroes.remove(hero);
-    }
-
-    public boolean containsPlayer(Player player) {
-        return getHero(player) != null;
-    }
-
-    public Hero getHero(Player player) {
-        Set<Hero> tmpHeroes = getHeroes();
-        for (Hero hero : tmpHeroes) {
-            if (hero == null || hero.getPlayer() == null) {
-                removeHero(hero); // Seeing as it's null we might as well remove it.
-                continue;
-            }
-            if (player.getName().equalsIgnoreCase(hero.getPlayer().getName())) {
-                return hero;
-            }
-        }
-        // If it gets to this stage then clearly the HeroManager doesn't have it so we create it...
-        return loadHeroFile(player);
-    }
-
-    public Set<Hero> getHeroes() {
-        return new HashSet<Hero>(heroes);
-    }
-
-    public void stopTimers() {
-        plugin.getServer().getScheduler().cancelTasks(plugin);
-    }
 }
 
 class EffectUpdater implements Runnable {
@@ -328,21 +332,24 @@ class EffectUpdater implements Runnable {
     EffectUpdater(HeroManager heroManager) {
         this.heroManager = heroManager;
     }
-
+    
     @Override
     public void run() {
-        Set<Hero> heroes = heroManager.getHeroes();
-        long time = System.currentTimeMillis();
-        for (Hero hero : heroes) {
-            if (hero == null) {
-                continue;
-            }
-            Set<String> effects = hero.getEffects();
-            for (String effect : effects) {
-                long expiry = hero.getEffectExpiry(effect);
-
-                if (time >= expiry && expiry != -1) {
-                    hero.expireEffect(effect);
+        for (Hero hero : heroManager.getHeroes()) {
+            for (Effect effect : hero.getEffects()) {
+                if (effect instanceof Expirable) {
+                    Expirable expirable = (Expirable) effect;
+                    if (expirable.isExpired()) {
+                        hero.removeEffect(effect);
+                        continue;
+                    }
+                }
+                
+                if (effect instanceof Periodic) {
+                    Periodic periodic = (Periodic) effect;
+                    if (periodic.isReady()) {
+                        periodic.tick(hero);
+                    }
                 }
             }
         }

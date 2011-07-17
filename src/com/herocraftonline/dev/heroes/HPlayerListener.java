@@ -28,39 +28,8 @@ public class HPlayerListener extends PlayerListener {
     }
 
     @Override
-    public void onPlayerQuit(PlayerQuitEvent event) {
-        Player player = event.getPlayer();
-        HeroManager heroManager = plugin.getHeroManager();
-        heroManager.saveHeroFile(player);
-        heroManager.removeHero(heroManager.getHero(player));
-    }
-
-    @Override
-    public void onPlayerJoin(PlayerJoinEvent event) {
-        Player player = event.getPlayer();
-        HeroManager heroManager = plugin.getHeroManager();
-        heroManager.loadHeroFile(player);
-        plugin.switchToHNSH(player);
-        this.plugin.getInventoryChecker().checkInventory(player);
-    }
-
-    @Override
     public void onItemHeldChange(PlayerItemHeldEvent event) {
         this.plugin.getInventoryChecker().checkInventory(event.getPlayer());
-    }
-
-    @Override
-    public void onPlayerPickupItem(PlayerPickupItemEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
-        final Player player = event.getPlayer();
-        plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-            @Override
-            public void run() {
-                plugin.getInventoryChecker().checkInventory(player.getName());
-            }
-        });
     }
 
     @Override
@@ -79,6 +48,37 @@ public class HPlayerListener extends PlayerListener {
                 plugin.onCommand(player, null, "skill", args);
             }
         }
+    }
+
+    @Override
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        Player player = event.getPlayer();
+        HeroManager heroManager = plugin.getHeroManager();
+        heroManager.loadHero(player);
+        plugin.switchToHNSH(player);
+        this.plugin.getInventoryChecker().checkInventory(player);
+    }
+
+    @Override
+    public void onPlayerPickupItem(PlayerPickupItemEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
+        final Player player = event.getPlayer();
+        plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+            @Override
+            public void run() {
+                plugin.getInventoryChecker().checkInventory(player.getName());
+            }
+        });
+    }
+
+    @Override
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        Player player = event.getPlayer();
+        HeroManager heroManager = plugin.getHeroManager();
+        heroManager.saveHero(player);
+        heroManager.removeHero(heroManager.getHero(player));
     }
 
     @Override

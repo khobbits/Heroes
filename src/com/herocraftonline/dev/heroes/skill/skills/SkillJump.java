@@ -35,7 +35,7 @@ public class SkillJump extends ActiveSkill {
         Vector v = player.getVelocity().setY(1).add(player.getLocation().getDirection().setY(0).normalize().multiply(multiplier * jumpForwards));
         player.setVelocity(v);
         player.setFallDistance(-8f);
-        notifyNearbyPlayers(player.getLocation(), getUseText(), player.getName(), getName());
+        broadcastExecuteText(hero);
         return true;
     }
 }

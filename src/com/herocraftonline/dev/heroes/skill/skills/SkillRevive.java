@@ -36,6 +36,7 @@ public class SkillRevive extends ActiveSkill {
         deaths = new LinkedHashMap<String, Location>() {
             private static final int MAX_ENTRIES = 50;
 
+            @Override
             protected boolean removeEldestEntry(Map.Entry<String, Location> eldest) {
                 return size() > MAX_ENTRIES;
             }
@@ -59,7 +60,7 @@ public class SkillRevive extends ActiveSkill {
             return false;
         }
 
-        Player targetPlayer = (Player) target;
+        Player targetPlayer = target;
         String targetName = targetPlayer.getName();
         if (!deaths.containsKey(targetName)) {
             Messaging.send(player, "$1 has not died recently.", targetName);
@@ -87,7 +88,7 @@ public class SkillRevive extends ActiveSkill {
         targetPlayer.teleport(playerLoc);
 
         player.getInventory().remove(new ItemStack(Material.SLIME_BALL, slimeballs));
-        notifyNearbyPlayers(player.getLocation(), getUseText(), player.getName(), getName(), targetName);
+        broadcastExecuteText(hero);
         return true;
     }
 

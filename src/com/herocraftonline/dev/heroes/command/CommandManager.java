@@ -26,6 +26,10 @@ public class CommandManager {
         commands = new LinkedHashMap<String, BaseCommand>();
     }
 
+    public void addCommand(BaseCommand command) {
+        commands.put(command.getName().toLowerCase(), command);
+    }
+
     public boolean dispatch(CommandSender sender, Command command, String label, String[] args) {
         String input = label + " ";
         for (String s : args) {
@@ -47,7 +51,7 @@ public class CommandManager {
         }
 
         if (match != null) {
-            if (trimmedArgs == null || (trimmedArgs.length > 0 && trimmedArgs[0].equals("?"))) {
+            if (trimmedArgs == null || trimmedArgs.length > 0 && trimmedArgs[0].equals("?")) {
                 sender.sendMessage("§cCommand:§e " + match.getName());
                 sender.sendMessage("§cDescription:§e " + match.getDescription());
                 sender.sendMessage("§cUsage:§e " + match.getUsage());
@@ -58,7 +62,7 @@ public class CommandManager {
             } else {
                 // If there is no Permission Node we allow the Command, otherwise we check against the Permissions.
                 String permission = match.getPermissionNode();
-                if ((permission.length() == 0) || (hasPermission(sender, permission))) {
+                if (permission.length() == 0 || hasPermission(sender, permission)) {
                     match.execute(sender, trimmedArgs);
                 } else {
                     sender.sendMessage("You do not have permission to use this command.");
@@ -68,20 +72,12 @@ public class CommandManager {
         return true;
     }
 
-    public void addCommand(BaseCommand command) {
-        commands.put(command.getName().toLowerCase(), command);
-    }
-
-    public void removeCommand(BaseCommand command) {
-        commands.remove(command);
+    public BaseCommand getCommand(String name) {
+        return commands.get(name.toLowerCase());
     }
 
     public List<BaseCommand> getCommands() {
         return new ArrayList<BaseCommand>(commands.values());
-    }
-
-    public BaseCommand getCommand(String name) {
-        return commands.get(name.toLowerCase());
     }
 
     public boolean hasPermission(CommandSender sender, String node) {
@@ -104,5 +100,9 @@ public class CommandManager {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public void removeCommand(BaseCommand command) {
+        commands.remove(command);
     }
 }

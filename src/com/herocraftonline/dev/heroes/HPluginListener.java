@@ -21,6 +21,30 @@ public class HPluginListener extends ServerListener {
     }
 
     @Override
+    public void onPluginDisable(PluginDisableEvent event) {
+        Plugin plugin = event.getPlugin();
+        // Check if the name is BukkitContrib.
+        if (plugin.getDescription().getName().equals("BukkitContrib")) {
+            // If BukkitContrib just Disabled then we tell Heroes to stop using BukkitContrib
+            Heroes.useBukkitContrib = false;
+            // Then we swap all the Players NSH to our Custom NSH.
+            final Player[] players = this.plugin.getServer().getOnlinePlayers();
+            for (Player player : players) {
+                this.plugin.switchToHNSH(player);
+            }
+        }
+
+        // Check to see if the plugin thats being disabled is the one we are using
+        if (this.Methods != null && this.Methods.hasMethod()) {
+            Boolean check = this.Methods.checkDisabled(event.getPlugin());
+
+            if (check) {
+                this.plugin.Method = null;
+            }
+        }
+    }
+
+    @Override
     public void onPluginEnable(PluginEnableEvent event) {
         Plugin plugin = event.getPlugin();
 
@@ -44,30 +68,6 @@ public class HPluginListener extends ServerListener {
                 // You might want to make this a public variable inside your MAIN class public Method Method = null;
                 // then reference it through this.plugin.Method so that way you can use it in the rest of your plugin ;)
                 this.plugin.Method = this.Methods.getMethod();
-            }
-        }
-    }
-
-    @Override
-    public void onPluginDisable(PluginDisableEvent event) {
-        Plugin plugin = event.getPlugin();
-        // Check if the name is BukkitContrib.
-        if (plugin.getDescription().getName().equals("BukkitContrib")) {
-            // If BukkitContrib just Disabled then we tell Heroes to stop using BukkitContrib
-            Heroes.useBukkitContrib = false;
-            // Then we swap all the Players NSH to our Custom NSH.
-            final Player[] players = this.plugin.getServer().getOnlinePlayers();
-            for (Player player : players) {
-                this.plugin.switchToHNSH(player);
-            }
-        }
-
-        // Check to see if the plugin thats being disabled is the one we are using
-        if (this.Methods != null && this.Methods.hasMethod()) {
-            Boolean check = this.Methods.checkDisabled(event.getPlugin());
-
-            if (check) {
-                this.plugin.Method = null;
             }
         }
     }

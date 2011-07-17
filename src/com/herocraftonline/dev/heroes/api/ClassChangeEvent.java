@@ -21,16 +21,16 @@ public class ClassChangeEvent extends Event implements Cancellable {
         this.to = to;
     }
 
+    public final HeroClass getFrom() {
+        return from;
+    }
+
     public final Hero getHero() {
         return hero;
     }
 
     public HeroClass getTo() {
         return to;
-    }
-
-    public final HeroClass getFrom() {
-        return from;
     }
 
     @Override

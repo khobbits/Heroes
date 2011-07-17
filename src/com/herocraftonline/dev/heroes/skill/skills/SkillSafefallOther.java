@@ -11,15 +11,20 @@ import org.bukkit.event.entity.EntityListener;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
+import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 
 public class SkillSafefallOther extends TargettedSkill {
 
+    private String applyText;
+    private String expireText;
+
     public SkillSafefallOther(Heroes plugin) {
         super(plugin);
         setName("SafefallOther");
-        setDescription("Skill - Safefall");
+        setDescription("Stops your target from taking fall damage for a short amount of time");
         setUsage("/skill safefallother <target>");
         setMinArgs(0);
         setMaxArgs(1);
@@ -31,8 +36,54 @@ public class SkillSafefallOther extends TargettedSkill {
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty("duration", 5000);
+        node.setProperty("duration", 10000);
+        node.setProperty("apply-text", "%target% has gained safefall!");
+        node.setProperty("expire-text", "%target% has lost safefall!");
         return node;
+    }
+
+    @Override
+    public void init() {
+        super.init();
+        applyText = getSetting(null, "apply-text", "%target% has gained safefall!").replace("%target%", "$1");
+        expireText = getSetting(null, "expire-text", "%target% has lost safefall!").replace("%target%", "$1");
+    }
+
+    @Override
+    public boolean use(Hero hero, LivingEntity target, String[] args) {
+        if (target instanceof Player) {
+            Hero targetHero = plugin.getHeroManager().getHero((Player) target);
+
+            broadcastExecuteText(hero, target);
+            
+            int duration = getSetting(hero.getHeroClass(), "duration", 10000);
+            targetHero.addEffect(new SafefallEffect(this, duration));
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public class SafefallEffect extends ExpirableEffect {
+
+        public SafefallEffect(Skill skill, long duration) {
+            super(skill, "Safefall", duration);
+        }
+
+        @Override
+        public void apply(Hero hero) {
+            super.apply(hero);
+            Player player = hero.getPlayer();
+            broadcast(player.getLocation(), applyText, player.getDisplayName());
+        }
+
+        @Override
+        public void remove(Hero hero) {
+            Player player = hero.getPlayer();
+            broadcast(player.getLocation(), expireText, player.getDisplayName());
+        }
+
     }
 
     public class SkillEntityListener extends EntityListener {
@@ -47,25 +98,10 @@ public class SkillSafefallOther extends TargettedSkill {
             if (defender instanceof Player) {
                 Player player = (Player) defender;
                 Hero hero = plugin.getHeroManager().getHero(player);
-                if (hero.hasEffect(getName())) {
+                if (hero.hasEffect("Safefall")) {
                     event.setCancelled(true);
                 }
             }
         }
-    }
-
-    @Override
-    public boolean use(Hero hero, LivingEntity target, String[] args) {
-        Player player = hero.getPlayer();
-        if (target instanceof Player) {
-            Hero newHero = plugin.getHeroManager().getHero((Player) target);
-            long duration = getSetting(hero.getHeroClass(), "duration", 5000);
-            newHero.applyEffect(getName(), duration);
-            notifyNearbyPlayers(player.getLocation(), getUseText(), player.getName(), getName(), target == player ? "himself" : getEntityName(target));
-            return true;
-        } else {
-            return false;
-        }
-
     }
 }

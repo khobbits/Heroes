@@ -1,16 +1,12 @@
 leveling:
-    power: 1.5
-    maxExperience: 90000
-    maxLevel: 20
-    classSwitchLevel: 20
-    partyBonus: 0.20
-    expLoss: 0.05
-    max-tracked-blocks: 1000
-    block-tracking-duration: 600000
-    resetExpOnClassChange: false
+    power: 1.0
+    maxExperience: 100000
+    maxLevel: 50
+    expLoss: 0.5
+    max-tracked-blocks: 2000
+    block-tracking-duration: 900000
+    resetExpOnClassChange: true
 properties:
     iConomy: false
-    swapCost: 10
-    prefix: 'Heroes:'
-    color: 'RED'
-    swapMasteryCost: false
+    swapcost: 250
+    debug: false

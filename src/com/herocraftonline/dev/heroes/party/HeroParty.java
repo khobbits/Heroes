@@ -21,16 +21,71 @@ public class HeroParty {
         members.add(leader);
     }
 
+    public void addInvite(String player) {
+        invites.add(player);
+
+    }
+
+    public void addMember(Hero hero) {
+        members.add(hero);
+    }
+
+    public void expToggle() {
+        if (exp == true) {
+            exp = false;
+            messageParty("ExpShare is now disabled!");
+        } else {
+            exp = true;
+            messageParty("ExpShare is now enabled!");
+        }
+    }
+
+    public Boolean getExp() {
+        return exp;
+    }
+
+    public int getInviteCount() {
+        return invites.size();
+    }
+
     public Hero getLeader() {
         return leader;
     }
 
-    public void setLeader(Hero leader) {
-        this.leader = leader;
+    public Set<Hero> getMembers() {
+        return new HashSet<Hero>(members);
+    }
+
+    public Boolean getPvp() {
+        return pvp;
+    }
+
+    public boolean isInvited(String player) {
+        return invites.contains(player);
     }
 
     public boolean isPartyMember(Hero hero) {
         return members.contains(hero);
+    }
+
+    public void messageParty(String msg, Object... params) {
+        for (Hero hero : members) {
+            Messaging.send(hero.getPlayer(), msg, params);
+        }
+    }
+
+    public void pvpToggle() {
+        if (pvp == true) {
+            pvp = false;
+            messageParty("PvP is now enabled!");
+        } else {
+            pvp = true;
+            messageParty("PvP is now disabled!");
+        }
+    }
+
+    public void removeInvite(Player player) {
+        invites.remove(player);
     }
 
     public void removeMember(Hero hero) {
@@ -49,67 +104,12 @@ public class HeroParty {
         }
     }
 
-    public void addMember(Hero hero) {
-        members.add(hero);
-    }
-
-    public Set<Hero> getMembers() {
-        return new HashSet<Hero>(members);
-    }
-
-    public void addInvite(String player) {
-        invites.add(player);
-
-    }
-
-    public void removeInvite(Player player) {
-        invites.remove(player);
-    }
-
     public void removeOldestInvite() {
         invites.pop();
     }
 
-    public boolean isInvited(String player) {
-        return invites.contains(player);
-    }
-
-    public int getInviteCount() {
-        return invites.size();
-    }
-
-    public void pvpToggle() {
-        if (pvp == true) {
-            pvp = false;
-            messageParty("PvP is now enabled!");
-        } else {
-            pvp = true;
-            messageParty("PvP is now disabled!");
-        }
-    }
-
-    public void expToggle() {
-        if (exp == true) {
-            exp = false;
-            messageParty("ExpShare is now disabled!");
-        } else {
-            exp = true;
-            messageParty("ExpShare is now enabled!");
-        }
-    }
-
-    public Boolean getPvp() {
-        return pvp;
-    }
-
-    public Boolean getExp() {
-        return exp;
-    }
-
-    public void messageParty(String msg, Object... params) {
-        for (Hero hero : members) {
-            Messaging.send(hero.getPlayer(), msg, params);
-        }
+    public void setLeader(Hero leader) {
+        this.leader = leader;
     }
 
 }

@@ -46,8 +46,7 @@ public class SkillListCommand extends BaseCommand {
         if (args.length != 0) {
             try {
                 page = Integer.parseInt(args[0]) - 1;
-            } catch (NumberFormatException e) {
-            }
+            } catch (NumberFormatException e) {}
         }
 
         Map<Skill, Integer> skills = new HashMap<Skill, Integer>();

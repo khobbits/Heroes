@@ -26,6 +26,16 @@ import com.herocraftonline.dev.heroes.util.Messaging;
  * player is looking at within the configurable maximum distance, if any. The primary method to be overridden by
  * TargettedSkills is {@link #use(Hero, LivingEntity, String[])}, which is called by {@link #use(Hero, String[])} after
  * determining the target.
+ * </br>
+ * </br>
+ * <b>Skill Framework:</b>
+ * <ul>
+ * <li>{@link ActiveSkill}</li>
+ * <ul>
+ * <li>{@link ActiveEffectSkill}</li>
+ * <li>{@link TargettedSkill}</li>
+ * </ul>
+ * <li>{@link PassiveSkill}</li> <li>{@link OutsourcedSkill}</li> </ul>
  * </br></br>
  * See {@link ActiveSkill} for an overview of command triggered skills.
  */
@@ -38,25 +48,14 @@ public abstract class TargettedSkill extends ActiveSkill {
 
     /**
      * When defining your own constructor, be sure to assign the name, description, usage, argument bounds and
-     * identifier fields as defined in {@link BaseCommand}. Remember that each identifier must begin with <i>skill</i>.
+     * identifier fields as defined in {@link com.herocraftonline.dev.heroes.command.BaseCommand}. Remember that each
+     * identifier must begin with <i>skill</i>.
      * 
      * @param plugin
-     *        the active Heroes instance
+     *            the active Heroes instance
      */
     public TargettedSkill(Heroes plugin) {
         super(plugin);
-    }
-
-    /**
-     * Loads and stores the skill's usage text from the configuration. By default, this text is
-     * "%hero% used %skill% on %target!" where %hero%, %skill% and %target% are replaced with the Hero's, skill's and
-     * target's names, respectively.
-     */
-    @Override
-    public void init() {
-        String useText = getSetting(null, SETTING_USETEXT, "%hero% used %skill% on %target%!");
-        useText = useText.replace("%hero%", "$1").replace("%skill%", "$2").replace("%target%", "$3");
-        setUseText(useText);
     }
 
     /**
@@ -75,12 +74,35 @@ public abstract class TargettedSkill extends ActiveSkill {
     }
 
     /**
+     * Loads and stores the skill's usage text from the configuration. By default, this text is
+     * "%hero% used %skill% on %target!" where %hero%, %skill% and %target% are replaced with the Hero's, skill's and
+     * target's names, respectively.
+     */
+    @Override
+    public void init() {
+        String useText = getSetting(null, SETTING_USETEXT, "%hero% used %skill% on %target%!");
+        useText = useText.replace("%hero%", "$1").replace("%skill%", "$2").replace("%target%", "$3");
+        setUseText(useText);
+    }
+
+    /**
+     * The heart of any TargettedSkill, this method defines what actually happens when the skill is used.
+     * 
+     * @param hero
+     *            the {@link Hero} using the skill
+     * @param args
+     *            the arguments provided with the command
+     * @return <code>true</code> if the skill executed properly, <code>false</code> otherwise
+     */
+    public abstract boolean use(Hero hero, LivingEntity target, String[] args);
+
+    /**
      * Handles target acquisition before calling {@link #use(Hero, LivingEntity, String[])}.
      * 
      * @param hero
-     *        the {@link Hero} using the skill
+     *            the {@link Hero} using the skill
      * @param args
-     *        the arguments provided with the command
+     *            the arguments provided with the command
      * @return <code>true</code> if the skill executed properly, <code>false</code> otherwise
      */
     @Override
@@ -115,25 +137,30 @@ public abstract class TargettedSkill extends ActiveSkill {
         }
         return use(hero, target, args);
     }
+    
+    protected void broadcastExecuteText(Hero hero, LivingEntity target) {
+        Player player = hero.getPlayer();
+        broadcast(player.getLocation(), getUseText(), player.getDisplayName(), getName(), target == player ? "himself" : getEntityName(target));
+    }
 
     /**
-     * The heart of any TargettedSkill, this method defines what actually happens when the skill is used.
+     * Returns the pretty name of a <code>LivingEntity</code>.
      * 
-     * @param hero
-     *        the {@link Hero} using the skill
-     * @param args
-     *        the arguments provided with the command
-     * @return <code>true</code> if the skill executed properly, <code>false</code> otherwise
+     * @param entity
+     *            the entity
+     * @return the pretty name of the entity
      */
-    public abstract boolean use(Hero hero, LivingEntity target, String[] args);
+    public static String getEntityName(LivingEntity entity) {
+        return entity instanceof Player ? ((Player) entity).getName() : entity.getClass().getSimpleName().substring(5);
+    }
 
     /**
      * Returns the first LivingEntity in the line of sight of a Player.
      * 
      * @param player
-     *        the player being checked
+     *            the player being checked
      * @param maxDistance
-     *        the maximum distance to search for a target
+     *            the maximum distance to search for a target
      * @return the player's target or null if no target is found
      */
     public static LivingEntity getPlayerTarget(Player player, int maxDistance) {
@@ -162,9 +189,9 @@ public abstract class TargettedSkill extends ActiveSkill {
      * Helper method to check whether a player is in another player's line of sight.
      * 
      * @param a
-     *        the source
+     *            the source
      * @param b
-     *        the target
+     *            the target
      * @return <code>true</code> if <code>b</code> is in <code>a</code>'s line of sight; <code>false</code> otherwise
      */
     public static boolean inLineOfSight(Player a, Player b) {
@@ -188,17 +215,6 @@ public abstract class TargettedSkill extends ActiveSkill {
             }
         }
         return true;
-    }
-
-    /**
-     * Returns the pretty name of a <code>LivingEntity</code>.
-     * 
-     * @param entity
-     *        the entity
-     * @return the pretty name of the entity
-     */
-    public static String getEntityName(LivingEntity entity) {
-        return entity instanceof Player ? ((Player) entity).getName() : entity.getClass().getSimpleName().substring(5);
     }
 
 }

@@ -23,8 +23,6 @@ public class SkillTeleport extends ActiveSkill {
     @Override
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
-        String playerName = player.getName();
-
         if (!(hero.getParty() != null && hero.getParty().getMembers().size() > 0)) {
             Messaging.send(player, "Sorry, you need to be in a party with players!");
             return false;
@@ -41,12 +39,12 @@ public class SkillTeleport extends ActiveSkill {
             return false;
         }
 
-        Location loc1 = targetPlayer.getLocation().add(Math.random() * ((-50 + hero.getLevel()) - (50 - hero.getLevel())), 0, Math.random() * ((-50 + hero.getLevel()) - (50 - hero.getLevel())));
+        Location loc1 = targetPlayer.getLocation().add(Math.random() * (-50 + hero.getLevel() - (50 - hero.getLevel())), 0, Math.random() * (-50 + hero.getLevel() - (50 - hero.getLevel())));
         Double highestBlock = (double) targetPlayer.getWorld().getHighestBlockYAt(loc1);
         loc1.setY(highestBlock);
         player.teleport(loc1);
 
-        notifyNearbyPlayers(player.getLocation(), getUseText(), playerName, getName());
+        broadcastExecuteText(hero);
         return true;
     }
 }

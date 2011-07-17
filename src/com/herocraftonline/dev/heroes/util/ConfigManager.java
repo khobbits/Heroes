@@ -35,6 +35,41 @@ public class ConfigManager {
         this.classConfigFile = new File(plugin.getDataFolder(), "classes.yml");
         this.expConfigFile = new File(plugin.getDataFolder(), "experience.yml");
         this.skillConfigFile = new File(plugin.getDataFolder(), "skills.yml");
+        this.damageConfigFile = new File(plugin.getDataFolder(), "damages.yml");
+    }
+
+    public Properties getProperties() {
+        return properties;
+    }
+
+    public void load() throws Exception {
+        checkForConfig(primaryConfigFile);
+        checkForConfig(classConfigFile);
+        checkForConfig(expConfigFile);
+        checkForConfig(skillConfigFile);
+        checkForConfig(damageConfigFile);
+
+        Configuration primaryConfig = new Configuration(primaryConfigFile);
+        primaryConfig.load();
+        loadLevelConfig(primaryConfig);
+        loadDefaultConfig(primaryConfig);
+        loadProperties(primaryConfig);
+
+        Configuration damageConfig = new Configuration(damageConfigFile);
+        damageConfig.load();
+        plugin.getDamageManager().load(damageConfig);
+
+        Configuration expConfig = new Configuration(expConfigFile);
+        expConfig.load();
+        loadExperience(expConfig);
+
+        Configuration skillConfig = new Configuration(skillConfigFile);
+        skillConfig.load();
+        generateSkills(skillConfig);
+
+        ClassManager classManager = new ClassManager(plugin);
+        classManager.loadClasses(classConfigFile);
+        plugin.setClassManager(classManager);
     }
 
     public void reload() {
@@ -49,29 +84,10 @@ public class ConfigManager {
         plugin.log(Level.INFO, "Reloaded Configuration");
     }
 
-    public void load() throws Exception {
-        checkForConfig(primaryConfigFile);
-        checkForConfig(classConfigFile);
-        checkForConfig(expConfigFile);
-        checkForConfig(skillConfigFile);
-
-        Configuration primaryConfig = new Configuration(primaryConfigFile);
-        primaryConfig.load();
-        loadLevelConfig(primaryConfig);
-        loadDefaultConfig(primaryConfig);
-        loadProperties(primaryConfig);
-
-        Configuration expConfig = new Configuration(expConfigFile);
-        expConfig.load();
-        loadExperience(expConfig);
-
-        Configuration skillConfig = new Configuration(skillConfigFile);
-        skillConfig.load();
-        generateSkills(skillConfig);
-
-        ClassManager classManager = new ClassManager(plugin);
-        classManager.loadClasses(classConfigFile);
-        plugin.setClassManager(classManager);
+    private void addNodeToConfig(Configuration config, ConfigurationNode node, String path) {
+        for (String key : node.getKeys(null)) {
+            config.setProperty(path + "." + key, node.getProperty(key));
+        }
     }
 
     private void checkForConfig(File config) {
@@ -98,32 +114,28 @@ public class ConfigManager {
         }
     }
 
-    private void loadLevelConfig(Configuration config) {
-        String root = "leveling.";
-        properties.power = config.getDouble(root + "power", 1.03);
-        properties.maxExp = config.getInt(root + "maxExperience", 90000);
-        properties.maxLevel = config.getInt(root + "maxLevel", 20);
-        properties.partyBonus = config.getDouble(root + "partyBonus", 0.20);
-        properties.expLoss = config.getDouble(root + "expLoss", 0.05);
-        properties.blockTrackingDuration = config.getInt(root + "block-tracking-duration", 10 * 60 * 1000);
-        properties.maxTrackedBlocks = config.getInt(root + "max-tracked-blocks", 1000);
-        properties.resetExpOnClassChange = config.getBoolean(root + "resetExpOnClassChange", true);
-        properties.swapMasteryCost = config.getBoolean(root + "swapMasteryCost", false);
-        properties.calcExp();
+    private void generateSkills(Configuration config) {
+        for (BaseCommand baseCommand : plugin.getCommandManager().getCommands()) {
+            if (baseCommand instanceof Skill) {
+                Skill skill = (Skill) baseCommand;
+                ConfigurationNode node = config.getNode(skill.getName());
+                if (node == null) {
+                    addNodeToConfig(config, skill.getDefaultConfig(), skill.getName());
+                } else {
+                    ConfigurationNode defaultNode = skill.getDefaultConfig();
+                    mergeNodeToConfig(config, defaultNode, skill.getName());
+                }
+            }
+
+        }
+        config.save();
+        loadSkills(config);
     }
 
     private void loadDefaultConfig(Configuration config) {
         String root = "default.";
         properties.defClass = config.getString(root + "class");
         properties.defLevel = config.getInt(root + "level", 1);
-    }
-
-    private void loadProperties(Configuration config) {
-        String root = "properties.";
-        properties.iConomy = config.getBoolean(root + "iConomy", false);
-        properties.cColor = ChatColor.valueOf(config.getString(root + "color", "WHITE"));
-        properties.swapCost = config.getInt(root + "swapcost", 0);
-        properties.debug = config.getBoolean(root + "debug", false);
     }
 
     private void loadExperience(Configuration config) {
@@ -149,6 +161,20 @@ public class ConfigManager {
         properties.craftingExp = loadMaterialExperience(config, "crafting");
     }
 
+    private void loadLevelConfig(Configuration config) {
+        String root = "leveling.";
+        properties.power = config.getDouble(root + "power", 1.03);
+        properties.maxExp = config.getInt(root + "maxExperience", 90000);
+        properties.maxLevel = config.getInt(root + "maxLevel", 20);
+        properties.partyBonus = config.getDouble(root + "partyBonus", 0.20);
+        properties.expLoss = config.getDouble(root + "expLoss", 0.05);
+        properties.blockTrackingDuration = config.getInt(root + "block-tracking-duration", 10 * 60 * 1000);
+        properties.maxTrackedBlocks = config.getInt(root + "max-tracked-blocks", 1000);
+        properties.resetExpOnClassChange = config.getBoolean(root + "resetExpOnClassChange", true);
+        properties.swapMasteryCost = config.getBoolean(root + "swapMasteryCost", false);
+        properties.calcExp();
+    }
+
     private Map<Material, Double> loadMaterialExperience(ConfigurationNode config, String path) {
         Map<Material, Double> expMap = new HashMap<Material, Double>();
         List<String> keys = config.getKeys(path);
@@ -167,6 +193,15 @@ public class ConfigManager {
         return expMap;
     }
 
+    private void loadProperties(Configuration config) {
+        String root = "properties.";
+        properties.iConomy = config.getBoolean(root + "iConomy", false);
+        properties.cColor = ChatColor.valueOf(config.getString(root + "color", "WHITE"));
+        properties.swapCost = config.getInt(root + "swapcost", 0);
+        properties.debug = config.getBoolean(root + "debug", false);
+        properties.damageSystem = config.getBoolean(root + "useDamageSystem", false);
+    }
+
     private void loadSkills(Configuration config) {
         config.load();
         for (BaseCommand baseCommand : plugin.getCommandManager().getCommands()) {
@@ -174,6 +209,8 @@ public class ConfigManager {
                 Skill skill = (Skill) baseCommand;
                 ConfigurationNode node = config.getNode(skill.getName());
                 if (node != null) {
+                    //System.out.println(skill.getName());
+                    //print(node.getAll(), "  ");
                     skill.setConfig(node);
                 } else {
                     skill.setConfig(Configuration.getEmptyNode());
@@ -183,27 +220,15 @@ public class ConfigManager {
         }
     }
 
-    private void generateSkills(Configuration config) {
-        for (BaseCommand baseCommand : plugin.getCommandManager().getCommands()) {
-            if (baseCommand instanceof Skill) {
-                Skill skill = (Skill) baseCommand;
-                ConfigurationNode node = config.getNode(skill.getName());
-                if (node == null) {
-                    addNodeToConfig(config, skill.getDefaultConfig(), skill.getName());
-                } else {
-                    ConfigurationNode defaultNode = skill.getDefaultConfig();
-                    mergeNodeToConfig(config, defaultNode, skill.getName());
-                }
+    @SuppressWarnings({ "unchecked", "unused" })
+    private void print(Map<String, Object> map, String indent) {
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            if (entry.getValue() instanceof Map) {
+                System.out.println(indent + entry.getKey());
+                print((Map<String, Object>) entry.getValue(), indent + "  ");
+            } else {
+                System.out.println(indent + entry.getKey() + ": " + entry.getValue());
             }
-
-        }
-        config.save();
-        loadSkills(config);
-    }
-
-    private void addNodeToConfig(Configuration config, ConfigurationNode node, String path) {
-        for (String key : node.getKeys(null)) {
-            config.setProperty(path + "." + key, node.getProperty(key));
         }
     }
 
@@ -217,9 +242,5 @@ public class ConfigManager {
                 }
             }
         }
-    }
-
-    public Properties getProperties() {
-        return properties;
     }
 }

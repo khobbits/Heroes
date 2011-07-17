@@ -20,9 +20,8 @@ import com.herocraftonline.dev.heroes.api.ExperienceGainEvent;
 import com.herocraftonline.dev.heroes.api.LevelEvent;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
-import com.herocraftonline.dev.heroes.command.BaseCommand;
+import com.herocraftonline.dev.heroes.effects.Effect;
 import com.herocraftonline.dev.heroes.party.HeroParty;
-import com.herocraftonline.dev.heroes.skill.ActiveEffectSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Properties;
@@ -37,7 +36,7 @@ public class Hero {
     protected int mana = 0;
     protected HeroParty party = null;
     protected boolean verbose = true;
-    protected Map<String, Long> effects = new HashMap<String, Long>();
+    protected Set<Effect> effects = new HashSet<Effect>();
     protected Map<String, Double> experience = new HashMap<String, Double>();
     protected Map<String, Long> cooldowns = new HashMap<String, Long>();
     protected Map<Entity, CreatureType> summons = new HashMap<Entity, CreatureType>();
@@ -46,84 +45,52 @@ public class Hero {
     protected Set<String> suppressedSkills = new HashSet<String>();
     protected double health;
 
-    public Hero(Heroes plugin, Player player, HeroClass heroClass, double health) {
+    public Hero(Heroes plugin, Player player, HeroClass heroClass) {
         this.plugin = plugin;
         this.player = player;
         this.heroClass = heroClass;
-        this.health = health;
+
+        int playerHealth = player.getHealth();
+        this.health = playerHealth / 20.0 * getMaxHealth();;
     }
 
     public void addRecoveryItem(ItemStack item) {
         this.itemRecovery.add(item);
     }
 
-    public void setRecoveryItems(List<ItemStack> items) {
-        this.itemRecovery = items;
-    }
-
-    public List<ItemStack> getRecoveryItems() {
-        return this.itemRecovery;
-    }
-
-    public Player getPlayer() {
-        Player servPlayer = plugin.getServer().getPlayer(player.getName());
-        if (servPlayer != null && player != servPlayer) {
-            player = servPlayer;
-        }
-        return player;
-    }
-
-    public HeroClass getHeroClass() {
-        return heroClass;
-    }
-
-    public boolean isMaster() {
-        return isMaster(heroClass);
-    }
-
-    public boolean isMaster(HeroClass heroClass) {
-        int maxExp = plugin.getConfigManager().getProperties().maxExp;
-        if (getExperience(heroClass) >= maxExp || getExperience(heroClass) - maxExp > 0) {
-            return true;
-        }
-        return false;
-    }
-
-    public int getLevel() {
-        return plugin.getConfigManager().getProperties().getLevel(getExperience());
-    }
-
-    public double getExperience() {
-        return getExperience(heroClass);
-    }
-
-    public double getExperience(HeroClass heroClass) {
-        Double exp = experience.get(heroClass.getName());
-        return exp == null ? 0 : exp;
-    }
-
-    public void setExperience(double experience) {
-        setExperience(heroClass, experience);
-    }
-
-    public void setExperience(HeroClass heroClass, double experience) {
-        this.experience.put(heroClass.getName(), experience);
-    }
-
-    public int getMana() {
-        return mana;
-    }
-
-    public void setHeroClass(HeroClass heroClass) {
-        this.heroClass = heroClass;
-
-        // Check the Players inventory now that they have changed class.
-        this.plugin.getInventoryChecker().checkInventory(getPlayer());
+    public void bind(Material material, String[] skillName) {
+        binds.put(material, skillName);
     }
 
     public void changeHeroClass(HeroClass heroClass) {
         setHeroClass(heroClass);
         binds.clear();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        Hero other = (Hero) obj;
+        if (player == null) {
+            if (other.player != null) {
+                return false;
+            }
+        } else if (!player.getName().equals(other.player.getName())) {
+            return false;
+        }
+        return true;
+    }
+
+    public void gainExp(double expGain, ExperienceType source) {
+        gainExp(expGain, source, true);
     }
 
     public void gainExp(double expGain, ExperienceType source, boolean distributeToParty) {
@@ -141,7 +108,7 @@ public class Hero {
             }
 
             int partySize = inRangeMembers.size();
-            double sharedExpGain = expGain / partySize * (((partySize - 1) * prop.partyBonus) + 1.0);
+            double sharedExpGain = expGain / partySize * ((partySize - 1) * prop.partyBonus + 1.0);
 
             for (Hero partyMember : inRangeMembers) {
                 partyMember.gainExp(sharedExpGain, source, false);
@@ -191,11 +158,13 @@ public class Hero {
                 Messaging.send(player, "$1: Gained $2 Exp", heroClass.getName(), decFormat.format(expGain));
             }
             if (newLevel != currentLevel) {
+                player.setHealth(20);
+                setHealth(getMaxHealth());
                 Messaging.send(player, "You leveled up! (Lvl $1 $2)", String.valueOf(newLevel), heroClass.getName());
                 if (newLevel >= prop.maxLevel) {
                     exp = prop.getExperience(prop.maxLevel);
                     Messaging.broadcast(plugin, "$1 has become a master $2!", player.getName(), heroClass.getName());
-                    plugin.getHeroManager().saveHeroFile(player);
+                    plugin.getHeroManager().saveHero(player);
                 }
             }
         }
@@ -203,81 +172,94 @@ public class Hero {
         setExperience(exp);
     }
 
-    public void gainExp(double expGain, ExperienceType source) {
-        gainExp(expGain, source, true);
-    }
-
-    public void setMana(int mana) {
-        this.mana = mana;
+    public Map<Material, String[]> getBinds() {
+        return binds;
     }
 
     public Map<String, Long> getCooldowns() {
         return cooldowns;
     }
 
+    public Set<Effect> getEffects() {
+        return new HashSet<Effect>(effects);
+    }
+
+    public void addEffect(Effect effect) {
+        effects.add(effect);
+        effect.apply(this);
+    }
+
+    public void removeEffect(Effect effect) {
+        effects.remove(effect);
+        effect.remove(this);
+    }
+
+    public boolean hasEffect(String name) {
+        for (Effect effect : effects) {
+            if (effect.getName().equalsIgnoreCase(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public Effect getEffect(String name) {
+        for (Effect effect : effects) {
+            if (effect.getName().equalsIgnoreCase(name)) {
+                return effect;
+            }
+        }
+        return null;
+    }
+
+    public double getExperience() {
+        return getExperience(heroClass);
+    }
+
+    public double getExperience(HeroClass heroClass) {
+        Double exp = experience.get(heroClass.getName());
+        return exp == null ? 0 : exp;
+    }
+
+    public double getHealth() {
+        return health;
+    }
+
+    public double getMaxHealth() {
+        int level = plugin.getConfigManager().getProperties().getLevel(getExperience());
+        return heroClass.getBaseMaxHealth() + (level - 1) * heroClass.getMaxHealthPerLevel();
+    }
+
+    public HeroClass getHeroClass() {
+        return heroClass;
+    }
+
+    public int getLevel() {
+        return plugin.getConfigManager().getProperties().getLevel(getExperience());
+    }
+
+    public int getMana() {
+        return mana;
+    }
+
+    public HeroParty getParty() {
+        return party;
+    }
+
+    public Player getPlayer() {
+        Player servPlayer = plugin.getServer().getPlayer(player.getName());
+        if (servPlayer != null && player != servPlayer) {
+            player = servPlayer;
+        }
+        return player;
+    }
+
+    public List<ItemStack> getRecoveryItems() {
+        return this.itemRecovery;
+    }
+
     public Map<Entity, CreatureType> getSummons() {
         return summons;
-    }
-
-    public void expireEffect(String effect) {
-        BaseCommand cmd = plugin.getCommandManager().getCommand(effect);
-        if (cmd != null && cmd instanceof ActiveEffectSkill) {
-            ((ActiveEffectSkill) cmd).onExpire(this);
-        }
-        removeEffect(effect);
-    }
-
-    public boolean hasEffect(String effect) {
-        return effects.containsKey(effect.toLowerCase());
-    }
-
-    public void applyEffect(String effect, long duration) {
-        long time = System.currentTimeMillis();
-        effects.put(effect.toLowerCase(), time + duration);
-    }
-
-    public Long removeEffect(String effect) {
-        return effects.remove(effect.toLowerCase());
-    }
-
-    public Long getEffectExpiry(String effect) {
-        return effects.get(effect.toLowerCase());
-    }
-
-    public Set<String> getEffects() {
-        return new HashSet<String>(effects.keySet());
-    }
-
-    public Map<Material, String[]> getBinds() {
-        return binds;
-    }
-
-    public void bind(Material material, String[] skillName) {
-        binds.put(material, skillName);
-    }
-
-    public void unbind(Material material) {
-        binds.remove(material);
-    }
-
-    public boolean isVerbose() {
-        return verbose;
-    }
-
-    public void setVerbose(boolean verbose) {
-        this.verbose = verbose;
-    }
-
-    public void setSuppressed(Skill skill, boolean suppressed) {
-        if (suppressed) {
-            suppressedSkills.add(skill.getName());
-        } else {
-            suppressedSkills.remove(skill.getName());
-        }
-    }
-
-    public boolean isSuppressing(Skill skill) {
-        return suppressedSkills.contains(skill.getName());
     }
 
     public Set<String> getSuppressedSkills() {
@@ -289,65 +271,86 @@ public class Hero {
         return player == null ? 0 : player.getName().hashCode();
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        Hero other = (Hero) obj;
-        if (player == null) {
-            if (other.player != null) {
-                return false;
-            }
-        } else if (!player.getName().equals(other.player.getName())) {
-            return false;
-        }
-        return true;
-    }
-
     public boolean hasParty() {
         return party != null;
     }
 
-    public HeroParty getParty() {
-        return party;
+    public boolean isMaster() {
+        return isMaster(heroClass);
+    }
+
+    public boolean isMaster(HeroClass heroClass) {
+        int maxExp = plugin.getConfigManager().getProperties().maxExp;
+        if (getExperience(heroClass) >= maxExp || getExperience(heroClass) - maxExp > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isSuppressing(Skill skill) {
+        return suppressedSkills.contains(skill.getName());
+    }
+
+    public boolean isVerbose() {
+        return verbose;
+    }
+
+    public void setExperience(double experience) {
+        setExperience(heroClass, experience);
+    }
+
+    public void setExperience(HeroClass heroClass, double experience) {
+        this.experience.put(heroClass.getName(), experience);
+    }
+
+    public void setHeroClass(HeroClass heroClass) {
+        double currentMaxHP = getMaxHealth();
+        this.heroClass = heroClass;
+        double newMaxHP = getMaxHealth();
+        health *= newMaxHP / currentMaxHP;
+        if (health > newMaxHP) {
+            health = newMaxHP;
+        }
+
+        // Check the Players inventory now that they have changed class.
+        this.plugin.getInventoryChecker().checkInventory(getPlayer());
+    }
+
+    public void setMana(int mana) {
+        if (mana > 100) {
+            mana = 100;
+        } else if (mana < 0) {
+            mana = 0;
+        }
+        this.mana = mana;
     }
 
     public void setParty(HeroParty party) {
         this.party = party;
     }
 
-    public void dealDamage(double damage) {
-        if (health - damage > 0) {
-            health = health - damage;
-            updatePlayerDisplay();
+    public void setRecoveryItems(List<ItemStack> items) {
+        this.itemRecovery = items;
+    }
+
+    public void setSuppressed(Skill skill, boolean suppressed) {
+        if (suppressed) {
+            suppressedSkills.add(skill.getName());
         } else {
-            health = 0;
-            updatePlayerDisplay();
+            suppressedSkills.remove(skill.getName());
         }
     }
 
-    public void healHealth(double heal) {
-        if (heal > 0 && health + heal <= heroClass.getMaxHealth()) {
-            health = health + heal;
-            updatePlayerDisplay();
-        } else {
-            health = health + (heroClass.getMaxHealth() - health);
-        }
+    public void setVerbose(boolean verbose) {
+        this.verbose = verbose;
     }
 
-    public double getHealth() {
-        return health;
+    public void unbind(Material material) {
+        binds.remove(material);
     }
 
-    public void updatePlayerDisplay() {
-        player.setHealth((int) Math.round(health / heroClass.getMaxHealth() * 20));
+    public void setHealth(Double health) {
+        this.health = health;
     }
 
 }

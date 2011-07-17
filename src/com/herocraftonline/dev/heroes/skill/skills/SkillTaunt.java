@@ -29,6 +29,7 @@ public class SkillTaunt extends ActiveSkill {
                 ((Monster) n).setTarget(hero.getPlayer());
             }
         }
+        broadcastExecuteText(hero);
         return true;
     }
 

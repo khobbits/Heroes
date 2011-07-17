@@ -7,6 +7,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.CreatureType;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 public class Properties {
@@ -51,8 +53,6 @@ public class Properties {
     public int swapCost;
     public boolean swapMasteryCost;
     public boolean damageSystem;
-    // Damage//
-    public HashMap<Material, Integer> damageValues = new HashMap<Material, Integer>();
 
     /**
      * Generate experience for the level ArrayList<Integer>
@@ -65,6 +65,10 @@ public class Properties {
             levels[i] = (int) (A * Math.pow(i, power + 1));
         }
         levels[maxLevel - 1] = maxExp;
+    }
+
+    public double getExperience(int level) {
+        return levels[level - 1];
     }
 
     /**
@@ -81,8 +85,23 @@ public class Properties {
         }
         return -1;
     }
-
-    public double getExperience(int level) {
-        return levels[level - 1];
+    /**
+     * Converts an entity into its CreatureType
+     * 
+     * @param entity
+     * @return
+     */
+    public static CreatureType getCreatureFromEntity(Entity entity) {
+        CreatureType type = null;
+        try {
+            Class<?>[] interfaces = entity.getClass().getInterfaces();
+            for (Class<?> c : interfaces) {
+                if (LivingEntity.class.isAssignableFrom(c)) {
+                    type = CreatureType.fromName(c.getSimpleName());
+                    break;
+                }
+            }
+        } catch (IllegalArgumentException e) {}
+        return type;
     }
 }

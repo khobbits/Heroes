@@ -48,7 +48,7 @@ public class SkillSummon extends ActiveSkill {
                 return false;
             }
             hero.getSummons().put(spawnedEntity, creatureType);
-            notifyNearbyPlayers(player.getLocation(), getUseText(), player.getName(), getName(), creatureType.toString());
+            broadcastExecuteText(hero);
             Messaging.send(player, "You have succesfully summoned a " + creatureType.toString());
             return true;
         }
@@ -56,6 +56,18 @@ public class SkillSummon extends ActiveSkill {
     }
 
     public class SkillEntityListener extends EntityListener {
+
+        @Override
+        public void onEntityDeath(EntityDeathEvent event) {
+            Entity defender = event.getEntity();
+            Set<Hero> heroes = plugin.getHeroManager().getHeroes();
+            for (Hero hero : heroes) {
+                if (hero.getSummons().containsKey(defender)) {
+                    hero.getSummons().remove(defender);
+                }
+            }
+
+        }
 
         @Override
         public void onEntityTarget(EntityTargetEvent event) {
@@ -69,18 +81,6 @@ public class SkillSummon extends ActiveSkill {
                     }
                 }
             }
-        }
-
-        @Override
-        public void onEntityDeath(EntityDeathEvent event) {
-            Entity defender = event.getEntity();
-            Set<Hero> heroes = plugin.getHeroManager().getHeroes();
-            for (Hero hero : heroes) {
-                if (hero.getSummons().containsKey(defender)) {
-                    hero.getSummons().remove(defender);
-                }
-            }
-
         }
 
     }
