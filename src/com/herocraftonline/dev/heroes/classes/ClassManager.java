@@ -199,9 +199,9 @@ public class ClassManager {
                 }
             }
             
-            Double maxHealth = config.getDouble("classes." + className + ".maxHealth", 20);
+            Double baseMaxHealth = config.getDouble("classes." + className + ".base-max-health", 20);
             if(prop.damageSystem) {
-                newClass.setMaxHealth(maxHealth);
+                newClass.setBaseMaxHealth(baseMaxHealth);
             }
 
             List<String> experienceNames = config.getStringList("classes." + className + ".experience-sources", null);

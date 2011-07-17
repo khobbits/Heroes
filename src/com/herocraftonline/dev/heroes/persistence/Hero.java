@@ -49,10 +49,9 @@ public class Hero {
         this.plugin = plugin;
         this.player = player;
         this.heroClass = heroClass;
-        
+
         int playerHealth = player.getHealth();
-        double maxHealth = heroClass.getMaxHealth();
-        this.health = playerHealth / 20.0 * maxHealth;
+        this.health = playerHealth / 20.0 * getMaxHealth();;
     }
 
     public void addRecoveryItem(ItemStack item) {
@@ -159,6 +158,8 @@ public class Hero {
                 Messaging.send(player, "$1: Gained $2 Exp", heroClass.getName(), decFormat.format(expGain));
             }
             if (newLevel != currentLevel) {
+                player.setHealth(20);
+                setHealth(getMaxHealth());
                 Messaging.send(player, "You leveled up! (Lvl $1 $2)", String.valueOf(newLevel), heroClass.getName());
                 if (newLevel >= prop.maxLevel) {
                     exp = prop.getExperience(prop.maxLevel);
@@ -178,21 +179,21 @@ public class Hero {
     public Map<String, Long> getCooldowns() {
         return cooldowns;
     }
-    
+
     public Set<Effect> getEffects() {
         return new HashSet<Effect>(effects);
     }
-    
+
     public void addEffect(Effect effect) {
         effects.add(effect);
         effect.apply(this);
     }
-    
+
     public void removeEffect(Effect effect) {
         effects.remove(effect);
         effect.remove(this);
     }
-    
+
     public boolean hasEffect(String name) {
         for (Effect effect : effects) {
             if (effect.getName().equalsIgnoreCase(name)) {
@@ -201,7 +202,7 @@ public class Hero {
         }
         return false;
     }
-    
+
     public Effect getEffect(String name) {
         for (Effect effect : effects) {
             if (effect.getName().equalsIgnoreCase(name)) {
@@ -222,6 +223,11 @@ public class Hero {
 
     public double getHealth() {
         return health;
+    }
+
+    public double getMaxHealth() {
+        int level = plugin.getConfigManager().getProperties().getLevel(getExperience());
+        return heroClass.getBaseMaxHealth() + level * heroClass.getMaxHealthPerLevel();
     }
 
     public HeroClass getHeroClass() {
@@ -298,14 +304,13 @@ public class Hero {
     }
 
     public void setHeroClass(HeroClass heroClass) {
-        double currentMaxHP = this.heroClass.getMaxHealth();
-        double newMaxHP = heroClass.getMaxHealth();
+        double currentMaxHP = getMaxHealth();
+        this.heroClass = heroClass;
+        double newMaxHP = getMaxHealth();
         health *= newMaxHP / currentMaxHP;
         if (health > newMaxHP) {
             health = newMaxHP;
         }
-        
-        this.heroClass = heroClass;
 
         // Check the Players inventory now that they have changed class.
         this.plugin.getInventoryChecker().checkInventory(getPlayer());
@@ -343,7 +348,7 @@ public class Hero {
     public void unbind(Material material) {
         binds.remove(material);
     }
-    
+
     public void setHealth(Double health) {
         this.health = health;
     }

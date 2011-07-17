@@ -88,7 +88,7 @@ public class HEntityListener extends EntityListener {
                 }
                 heroDefender.setExperience(exp - expLoss);
                 heroDefender.setMana(0);
-                heroDefender.setHealth(heroDefender.getHeroClass().getMaxHealth());
+                heroDefender.setHealth(heroDefender.getMaxHealth());
                 Messaging.send(heroDefender.getPlayer(), "You have lost " + decFormat.format(expLoss) + " exp for dying.");
             }
         }

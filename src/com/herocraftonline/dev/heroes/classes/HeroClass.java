@@ -23,7 +23,8 @@ public class HeroClass {
     private double expModifier;
     private Map<String, ConfigurationNode> skills;
     private Set<HeroClass> specializations;
-    private double maxHealth;
+    private double baseMaxHealth;
+    private double maxHealthPerLevel;
 
     public HeroClass() {
         name = new String();
@@ -34,7 +35,8 @@ public class HeroClass {
         expModifier = 1.0D;
         specializations = new LinkedHashSet<HeroClass>();
         skills = new LinkedHashMap<String, ConfigurationNode>();
-        maxHealth = 20;
+        baseMaxHealth = 20;
+        maxHealthPerLevel = 0;
     }
 
     public HeroClass(String name) {
@@ -96,8 +98,12 @@ public class HeroClass {
         return this.expModifier;
     }
 
-    public double getMaxHealth() {
-        return maxHealth;
+    public double getMaxHealthPerLevel() {
+        return maxHealthPerLevel;
+    }
+
+    public double getBaseMaxHealth() {
+        return baseMaxHealth;
     }
 
     public String getName() {
@@ -145,8 +151,8 @@ public class HeroClass {
         this.expModifier = modifier;
     }
 
-    public void setMaxHealth(double maxHealth) {
-        this.maxHealth = maxHealth;
+    public void setBaseMaxHealth(double baseMaxHealth) {
+        this.baseMaxHealth = baseMaxHealth;
     }
 
     public void setName(String name) {
