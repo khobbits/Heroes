@@ -90,8 +90,6 @@ public class HeroesDamageListener extends EntityListener {
             }
         }
 
-        plugin.getServer().broadcastMessage("Damage done: " + damage);
-
         Entity entity = event.getEntity();
         if (entity instanceof Player) {
             onPlayerDamage(event, damage);
@@ -107,6 +105,8 @@ public class HeroesDamageListener extends EntityListener {
         hero.setHealth(hero.getHealth() - damage);
         int visualDamage = (int) (player.getHealth() - hero.getHealth() / hero.getHeroClass().getMaxHealth() * 20);
         event.setDamage(visualDamage);
+        
+        plugin.getServer().broadcastMessage("Damage done: " + damage + "  |  " + visualDamage);
 
         if (visualDamage == 0) {
             fakeDamageAnimation(player);
