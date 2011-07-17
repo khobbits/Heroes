@@ -74,7 +74,9 @@ public class HeroesDamageListener extends EntityListener {
         } else if (event instanceof EntityDamageByProjectileEvent) {
             Projectile projectile = ((EntityDamageByProjectileEvent) event).getProjectile();
             ProjectileType type = ProjectileType.valueOf(projectile);
+            plugin.getServer().broadcastMessage("ProjectileType: " + type.name());
             Integer tmpDamage = damageManager.getProjectileDamage(type);
+            plugin.getServer().broadcastMessage("tmpDamage: " + tmpDamage);
             if (tmpDamage != null) {
                 damage = tmpDamage;
             }
