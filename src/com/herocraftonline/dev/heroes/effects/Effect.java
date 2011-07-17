@@ -9,27 +9,37 @@ public class Effect {
 
     private final String name;
     private final Skill skill;
+    private boolean persistent;
 
     public Effect(Skill skill, String name) {
         this.name = name;
         this.skill = skill;
+        this.persistent = false;
     }
 
     public String getName() {
         return name;
     }
-    
+
     public Skill getSkill() {
         return skill;
     }
+
+    public boolean isPersistent() {
+        return persistent;
+    }
     
+    public void setPersistent(boolean persistent) {
+        this.persistent = persistent;
+    }
+
     public void broadcast(Location source, String message, Object... args) {
         skill.broadcast(source, message, args);
     }
 
     public void apply(Hero hero) {}
 
-    public void remove(Hero hero) {} 
+    public void remove(Hero hero) {}
 
     @Override
     public int hashCode() {
@@ -41,18 +51,13 @@ public class Effect {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
         Effect other = (Effect) obj;
         if (name == null) {
-            if (other.name != null)
-                return false;
-        } else if (!name.equals(other.name))
-            return false;
+            if (other.name != null) return false;
+        } else if (!name.equals(other.name)) return false;
         return true;
     }
 

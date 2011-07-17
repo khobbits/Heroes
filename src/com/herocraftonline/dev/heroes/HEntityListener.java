@@ -16,6 +16,7 @@ import org.bukkit.event.entity.EntityListener;
 
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
+import com.herocraftonline.dev.heroes.effects.Effect;
 import com.herocraftonline.dev.heroes.party.HeroParty;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.util.Messaging;
@@ -90,6 +91,13 @@ public class HEntityListener extends EntityListener {
                 heroDefender.setMana(0);
                 heroDefender.setHealth(heroDefender.getMaxHealth());
                 Messaging.send(heroDefender.getPlayer(), "You have lost " + decFormat.format(expLoss) + " exp for dying.");
+            }
+            
+            // Remove any nonpersistent effects
+            for (Effect effect : heroDefender.getEffects()) {
+                if (!effect.isPersistent()) {
+                    heroDefender.removeEffect(effect);
+                }
             }
         }
 
