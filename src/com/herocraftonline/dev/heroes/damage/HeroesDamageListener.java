@@ -30,6 +30,7 @@ public class HeroesDamageListener extends EntityListener {
 
     public Heroes plugin;
     public DamageManager damageManager;
+    private static final boolean DEBUG = true;
 
     public HeroesDamageListener(Heroes plugin, DamageManager damageManager) {
         this.plugin = plugin;
@@ -52,12 +53,12 @@ public class HeroesDamageListener extends EntityListener {
             return;
         }
 
-        // plugin.log(Level.INFO, "Damage Event");
+        if (DEBUG) plugin.log(Level.INFO, "Damaged: " + event.getEntity().getClass().getSimpleName());
 
         DamageCause cause = event.getCause();
         int damage = event.getDamage();
 
-        // plugin.log(Level.INFO, "  Unmodified Event Damage: " + damage);
+        if (DEBUG) plugin.log(Level.INFO, "  Unmodified Event Damage: " + damage);
 
         if (event instanceof EntityDamageByEntityEvent) {
             // plugin.log(Level.INFO, "  EDBE Event");
@@ -77,21 +78,21 @@ public class HeroesDamageListener extends EntityListener {
             } else {
                 Entity attacker = ((EntityDamageByEntityEvent) event).getDamager();
                 if (attacker instanceof HumanEntity) {
-                    // plugin.log(Level.INFO, "    HumanEntity Attacker");
+                    if (DEBUG) plugin.log(Level.INFO, "    HumanEntity Attacker");
                     HumanEntity attackingHuman = (HumanEntity) attacker;
                     Material item = attackingHuman.getItemInHand().getType();
-                    // plugin.log(Level.INFO, "      Item: " + item.name());
+                    if (DEBUG) plugin.log(Level.INFO, "      Item: " + item.name());
                     Integer tmpDamage = damageManager.getItemDamage(item);
-                    // plugin.log(Level.INFO, "      Damage: " + tmpDamage);
+                    if (DEBUG) plugin.log(Level.INFO, "      Damage: " + tmpDamage);
                     if (tmpDamage != null) {
                         damage = tmpDamage;
                     }
                 } else {
                     CreatureType type = Properties.getCreatureFromEntity(attacker);
                     if (type != null) {
-                        // plugin.log(Level.INFO, "    " + type.name() + " Attacker");
+                        if (DEBUG) plugin.log(Level.INFO, "    " + type.name() + " Attacker");
                         Integer tmpDamage = damageManager.getCreatureDamage(type);
-                        // plugin.log(Level.INFO, "      Damage: " + tmpDamage);
+                        if (DEBUG) plugin.log(Level.INFO, "      Damage: " + tmpDamage);
                         if (tmpDamage != null) {
                             damage = tmpDamage;
                         }
@@ -99,9 +100,9 @@ public class HeroesDamageListener extends EntityListener {
                 }
             }
         } else if (cause != DamageCause.CUSTOM) {
-            // plugin.log(Level.INFO, "  Other Damage Cause");
+            if (DEBUG) plugin.log(Level.INFO, "  Other Damage Cause");
             Integer tmpDamage = damageManager.getEnvironmentalDamage(cause);
-            // plugin.log(Level.INFO, "    Damage: " + tmpDamage);
+            if (DEBUG) plugin.log(Level.INFO, "    Damage: " + tmpDamage);
             if (tmpDamage != null) {
                 damage = tmpDamage;
                 if (cause == DamageCause.FALL) {

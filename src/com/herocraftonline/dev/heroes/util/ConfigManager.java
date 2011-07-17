@@ -209,11 +209,25 @@ public class ConfigManager {
                 Skill skill = (Skill) baseCommand;
                 ConfigurationNode node = config.getNode(skill.getName());
                 if (node != null) {
+                    //System.out.println(skill.getName());
+                    //print(node.getAll(), "  ");
                     skill.setConfig(node);
                 } else {
                     skill.setConfig(Configuration.getEmptyNode());
                 }
                 skill.init();
+            }
+        }
+    }
+
+    @SuppressWarnings({ "unchecked", "unused" })
+    private void print(Map<String, Object> map, String indent) {
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            if (entry.getValue() instanceof Map) {
+                System.out.println(indent + entry.getKey());
+                print((Map<String, Object>) entry.getValue(), indent + "  ");
+            } else {
+                System.out.println(indent + entry.getKey() + ": " + entry.getValue());
             }
         }
     }
