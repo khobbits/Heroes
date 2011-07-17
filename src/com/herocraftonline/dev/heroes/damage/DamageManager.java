@@ -49,7 +49,6 @@ public class DamageManager {
     public DamageManager(Heroes plugin) {
         this.plugin = plugin;
         listener = new HeroesDamageListener(plugin, this);
-        registerEvents();
     }
 
     /**

@@ -407,5 +407,7 @@ public class Heroes extends JavaPlugin {
 
         // Inventory Event Listeners
         pluginManager.registerEvent(Type.CUSTOM_EVENT, heroesInventoryListener, Priority.Monitor, this);
+        
+        damageManager.registerEvents();
     }
 }
