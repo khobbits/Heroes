@@ -2,12 +2,15 @@ package com.herocraftonline.dev.heroes.damage;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Egg;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
@@ -16,6 +19,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.util.config.Configuration;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.classes.HeroClass;
 
 public class DamageManager {
 
@@ -39,11 +43,11 @@ public class DamageManager {
 
     private Heroes plugin;
     private HeroesDamageListener listener;
-    private HashMap<Material, Integer> itemDamage;
-    private HashMap<ProjectileType, Integer> projectileDamage;
-    private HashMap<CreatureType, Integer> creatureHealth;
-    private HashMap<CreatureType, Integer> creatureDamage;
-    private HashMap<DamageCause, Integer> environmentalDamage;
+    private Map<Material, Integer> itemDamage;
+    private Map<ProjectileType, Integer> projectileDamage;
+    private Map<CreatureType, Integer> creatureHealth;
+    private Map<CreatureType, Integer> creatureDamage;
+    private Map<DamageCause, Integer> environmentalDamage;
 
     public DamageManager(Heroes plugin) {
         this.plugin = plugin;
@@ -59,12 +63,15 @@ public class DamageManager {
         pluginManager.registerEvent(Type.CREATURE_SPAWN, listener, Priority.Highest, plugin);
     }
 
-    public Integer getItemDamage(Material item) {
-        if (itemDamage.containsKey(item)) {
-            return itemDamage.get(item);
-        } else {
-            return null;
+    public Integer getItemDamage(Material item, HumanEntity entity) {
+        if (entity != null && entity instanceof Player) {
+            HeroClass heroClass = plugin.getHeroManager().getHero((Player) entity).getHeroClass();
+            Integer classDamage = heroClass.getItemDamage(item);
+            if (classDamage != null) {
+                return classDamage;
+            }
         }
+        return itemDamage.get(item);
     }
 
     public Integer getCreatureHealth(CreatureType type) {
@@ -77,27 +84,22 @@ public class DamageManager {
     }
 
     public Integer getCreatureDamage(CreatureType type) {
-        if (creatureDamage.containsKey(type)) {
-            return creatureDamage.get(type);
-        } else {
-            return null;
-        }
+        return creatureDamage.get(type);
     }
 
     public Integer getEnvironmentalDamage(DamageCause cause) {
-        if (environmentalDamage.containsValue(cause)) {
-            return environmentalDamage.get(cause);
-        } else {
-            return null;
-        }
+        return environmentalDamage.get(cause);
     }
 
-    public Integer getProjectileDamage(ProjectileType type) {
-        if (projectileDamage.containsKey(type)) {
-            return projectileDamage.get(type);
-        } else {
-            return null;
+    public Integer getProjectileDamage(ProjectileType type, HumanEntity entity) {
+        if (entity != null && entity instanceof Player) {
+            HeroClass heroClass = plugin.getHeroManager().getHero((Player) entity).getHeroClass();
+            Integer classDamage = heroClass.getProjectileDamage(type);
+            if (classDamage != null) {
+                return classDamage;
+            }
         }
+        return projectileDamage.get(type);
     }
 
     public void load(Configuration config) {

@@ -16,7 +16,7 @@ import org.bukkit.util.config.Configuration;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.classes.ClassManager;
+import com.herocraftonline.dev.heroes.classes.HeroClassManager;
 import com.herocraftonline.dev.heroes.command.BaseCommand;
 import com.herocraftonline.dev.heroes.skill.Skill;
 
@@ -67,9 +67,9 @@ public class ConfigManager {
         skillConfig.load();
         generateSkills(skillConfig);
 
-        ClassManager classManager = new ClassManager(plugin);
-        classManager.loadClasses(classConfigFile);
-        plugin.setClassManager(classManager);
+        HeroClassManager heroClassManager = new HeroClassManager(plugin);
+        heroClassManager.loadClasses(classConfigFile);
+        plugin.setClassManager(heroClassManager);
     }
 
     public void reload() {

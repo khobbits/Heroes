@@ -1,5 +1,6 @@
 package com.herocraftonline.dev.heroes.classes;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -8,24 +9,21 @@ import java.util.Set;
 import org.bukkit.Material;
 import org.bukkit.util.config.ConfigurationNode;
 
+import com.herocraftonline.dev.heroes.damage.DamageManager.ProjectileType;
+
 public class HeroClass {
 
     private String name;
-
     private String description;
-
     private HeroClass parent;
-
-    private Set<String> allowedArmor;
-
-    private Set<String> allowedWeapons;
-
-    private Map<Material, Integer> damageValues;
-
-    private Set<ExperienceType> experienceSources;
-    private double expModifier;
-    private Map<String, ConfigurationNode> skills;
     private Set<HeroClass> specializations;
+    private Set<String> allowedArmor;
+    private Set<String> allowedWeapons;
+    private Set<ExperienceType> experienceSources;
+    private Map<Material, Integer> itemDamage;
+    private Map<ProjectileType, Integer> projectileDamage;
+    private Map<String, ConfigurationNode> skills;
+    private double expModifier;
     private double baseMaxHealth;
     private double maxHealthPerLevel;
 
@@ -34,7 +32,8 @@ public class HeroClass {
         description = new String();
         allowedArmor = new LinkedHashSet<String>();
         allowedWeapons = new LinkedHashSet<String>();
-        damageValues = new LinkedHashMap<Material, Integer>();
+        itemDamage = new HashMap<Material, Integer>();
+        projectileDamage = new HashMap<ProjectileType, Integer>();
         experienceSources = new LinkedHashSet<ExperienceType>();
         expModifier = 1.0D;
         specializations = new LinkedHashSet<HeroClass>();
@@ -59,9 +58,13 @@ public class HeroClass {
     public void addSkill(String name, ConfigurationNode settings) {
         skills.put(name.toLowerCase(), settings);
     }
-
-    public void addDamageValue(Material material, Integer damage) {
-        damageValues.put(material, damage);
+    
+    public void setItemDamage(Material material, int damage) {
+        itemDamage.put(material, damage);
+    }
+    
+    public void setProjectileDamage(ProjectileType type, int damage) {
+        projectileDamage.put(type, damage);
     }
 
     @Override
@@ -126,8 +129,12 @@ public class HeroClass {
         return skills.get(name.toLowerCase());
     }
 
-    public Integer getDamageValue(Material material) {
-        return damageValues.get(material);
+    public Integer getItemDamage(Material material) {
+        return itemDamage.get(material);
+    }
+    
+    public Integer getProjectileDamage(ProjectileType type) {
+        return projectileDamage.get(type);
     }
 
     public Set<HeroClass> getSpecializations() {
@@ -152,7 +159,7 @@ public class HeroClass {
     }
 
     public void removeDamageValue(Material material) {
-        damageValues.remove(material);
+        itemDamage.remove(material);
     }
 
     public void setDescription(String description) {

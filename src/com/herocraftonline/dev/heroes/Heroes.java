@@ -15,7 +15,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.herocraftonline.dev.heroes.classes.ClassManager;
+import com.herocraftonline.dev.heroes.classes.HeroClassManager;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.command.BaseCommand;
 import com.herocraftonline.dev.heroes.command.CommandManager;
@@ -87,7 +87,7 @@ public class Heroes extends JavaPlugin {
     // Various data managers
     private ConfigManager configManager;
     private CommandManager commandManager = new CommandManager();
-    private ClassManager classManager;
+    private HeroClassManager heroClassManager;
     private HeroManager heroManager;
     private PartyManager partyManager;
     private DamageManager damageManager;
@@ -126,8 +126,8 @@ public class Heroes extends JavaPlugin {
         debugLog.log(level, "[Debug] " + msg);
     }
 
-    public ClassManager getClassManager() {
-        return classManager;
+    public HeroClassManager getClassManager() {
+        return heroClassManager;
     }
 
     public CommandManager getCommandManager() {
@@ -264,8 +264,8 @@ public class Heroes extends JavaPlugin {
         debugLog = new DebugLog("Heroes", dataFolder + File.separator + "debug.log");
     }
 
-    public void setClassManager(ClassManager classManager) {
-        this.classManager = classManager;
+    public void setClassManager(HeroClassManager heroClassManager) {
+        this.heroClassManager = heroClassManager;
     }
 
     /**
@@ -303,9 +303,9 @@ public class Heroes extends JavaPlugin {
                         }
                     }
 
-                    if (Heroes.Permissions != null && heroClass != classManager.getDefaultClass()) {
+                    if (Heroes.Permissions != null && heroClass != heroClassManager.getDefaultClass()) {
                         if (!Heroes.Permissions.has(player, "heroes.classes." + heroClass.getName().toLowerCase())) {
-                            hero.setHeroClass(classManager.getDefaultClass());
+                            hero.setHeroClass(heroClassManager.getDefaultClass());
                         }
                     }
                 }
