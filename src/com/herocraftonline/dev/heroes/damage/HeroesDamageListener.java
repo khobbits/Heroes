@@ -6,7 +6,6 @@ import net.minecraft.server.Packet18ArmAnimation;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
-import org.bukkit.entity.Creature;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
@@ -63,9 +62,8 @@ public class HeroesDamageListener extends EntityListener {
                 if (tmpDamage != null) {
                     damage = tmpDamage;
                 }
-            } else if (attacker instanceof Creature) {
-                Creature attackingCreature = (Creature) attacker;
-                CreatureType type = Properties.getCreatureFromEntity(attackingCreature);
+            } else {
+                CreatureType type = Properties.getCreatureFromEntity(attacker);
                 Integer tmpDamage = damageManager.getCreatureDamage(type);
                 if (tmpDamage != null) {
                     damage = tmpDamage;
@@ -87,6 +85,8 @@ public class HeroesDamageListener extends EntityListener {
                 }
             }
         }
+        
+        plugin.getServer().broadcastMessage("Damage done: " + damage);
 
         Entity entity = event.getEntity();
         if (entity instanceof Player) {
