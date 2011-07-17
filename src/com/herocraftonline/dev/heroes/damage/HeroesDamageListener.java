@@ -51,17 +51,18 @@ public class HeroesDamageListener extends EntityListener {
         if (event.isCancelled()) {
             return;
         }
-        
+
         plugin.log(Level.INFO, "Damage Event");
 
         DamageCause cause = event.getCause();
         int damage = event.getDamage();
-        
+
         plugin.log(Level.INFO, "  Unmodified Event Damage: " + damage);
 
         if (event instanceof EntityDamageByEntityEvent) {
             plugin.log(Level.INFO, "  EDBE Event");
             if (event instanceof EntityDamageByProjectileEvent) {
+                /* Commenting this out until bukkit addresses the double event issue
                 plugin.log(Level.INFO, "    EDBP Event");
                 Projectile projectile = ((EntityDamageByProjectileEvent) event).getProjectile();
                 ProjectileType type = ProjectileType.valueOf(projectile);
@@ -70,7 +71,7 @@ public class HeroesDamageListener extends EntityListener {
                 plugin.log(Level.INFO, "      Projectile Damage: " + tmpDamage);
                 if (tmpDamage != null) {
                     damage = tmpDamage;
-                }
+                }*/
             } else {
                 Entity attacker = ((EntityDamageByEntityEvent) event).getDamager();
                 if (attacker instanceof HumanEntity) {
@@ -85,11 +86,13 @@ public class HeroesDamageListener extends EntityListener {
                     }
                 } else {
                     CreatureType type = Properties.getCreatureFromEntity(attacker);
-                    plugin.log(Level.INFO, "    " + type.name() + " Attacker");
-                    Integer tmpDamage = damageManager.getCreatureDamage(type);
-                    plugin.log(Level.INFO, "      Damage: " + tmpDamage);
-                    if (tmpDamage != null) {
-                        damage = tmpDamage;
+                    if (type != null) {
+                        plugin.log(Level.INFO, "    " + type.name() + " Attacker");
+                        Integer tmpDamage = damageManager.getCreatureDamage(type);
+                        plugin.log(Level.INFO, "      Damage: " + tmpDamage);
+                        if (tmpDamage != null) {
+                            damage = tmpDamage;
+                        }
                     }
                 }
             }
