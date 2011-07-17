@@ -85,7 +85,7 @@ public class HeroesDamageListener extends EntityListener {
                 }
             }
         }
-        
+
         plugin.getServer().broadcastMessage("Damage done: " + damage);
 
         Entity entity = event.getEntity();
