@@ -1,11 +1,18 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event.Priority;
+import org.bukkit.event.Event.Type;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntityListener;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.effects.Effect;
 import com.herocraftonline.dev.heroes.effects.Expirable;
 import com.herocraftonline.dev.heroes.effects.Periodic;
 import com.herocraftonline.dev.heroes.effects.PeriodicEffect;
@@ -19,6 +26,8 @@ public class SkillRoot extends TargettedSkill {
     private String applyText;
     private String expireText;
 
+    private Listener rootRemover = new RootRemover();
+
     public SkillRoot(Heroes plugin) {
         super(plugin);
         setName("Root");
@@ -27,6 +36,8 @@ public class SkillRoot extends TargettedSkill {
         setMinArgs(0);
         setMaxArgs(1);
         getIdentifiers().add("skill root");
+
+        registerEvent(Type.ENTITY_DEATH, rootRemover, Priority.Monitor);
     }
 
     @Override
@@ -61,7 +72,7 @@ public class SkillRoot extends TargettedSkill {
         }
 
         broadcastExecuteText(hero, target);
-        
+
         long duration = getSetting(hero.getHeroClass(), "duration", 5000);
         targetHero.addEffect(new RootEffect(this, duration));
         return true;
@@ -93,7 +104,7 @@ public class SkillRoot extends TargettedSkill {
         @Override
         public void remove(Hero hero) {
             super.remove(hero);
-            
+
             Player player = hero.getPlayer();
             broadcast(player.getLocation(), expireText, player.getDisplayName());
         }
@@ -111,5 +122,21 @@ public class SkillRoot extends TargettedSkill {
                 player.teleport(location);
             }
         }
+    }
+
+    public class RootRemover extends EntityListener {
+
+        @Override
+        public void onEntityDeath(EntityDeathEvent event) {
+            Entity entity = event.getEntity();
+            if (entity instanceof Player) {
+                Hero hero = plugin.getHeroManager().getHero((Player) entity);
+                Effect effect = hero.getEffect("Root");
+                if (effect != null) {
+                    hero.removeEffect(effect);
+                }
+            }
+        }
+
     }
 }
