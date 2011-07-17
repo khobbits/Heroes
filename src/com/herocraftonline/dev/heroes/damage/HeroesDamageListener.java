@@ -13,7 +13,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
+//import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageByProjectileEvent;
@@ -22,7 +22,7 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityListener;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.damage.DamageManager.ProjectileType;
+//import com.herocraftonline.dev.heroes.damage.DamageManager.ProjectileType;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.util.Properties;
 
@@ -83,7 +83,15 @@ public class HeroesDamageListener extends EntityListener {
                     Material item = attackingHuman.getItemInHand().getType();
                     if (DEBUG) plugin.log(Level.INFO, "      Item: " + item.name());
                     Integer tmpDamage = damageManager.getItemDamage(item);
+                    if(attacker instanceof Player) {
+                        Player player = (Player) attacker;
+                        Hero hero = plugin.getHeroManager().getHero(player);
+                        if(hero.getHeroClass().getDamageValue(item) != null){
+                            tmpDamage = hero.getHeroClass().getDamageValue(item);
+                        }
+                    }
                     if (DEBUG) plugin.log(Level.INFO, "      Damage: " + tmpDamage);
+
                     if (tmpDamage != null) {
                         damage = tmpDamage;
                     }
@@ -122,7 +130,7 @@ public class HeroesDamageListener extends EntityListener {
     private void onPlayerDamage(EntityDamageEvent event, int damage) {
         Player player = (Player) event.getEntity();
         Hero hero = plugin.getHeroManager().getHero(player);
-
+        
         hero.setHealth(hero.getHealth() - damage);
         int visualDamage = (int) (player.getHealth() - hero.getHealth() / hero.getMaxHealth() * 20);
         event.setDamage(visualDamage);
