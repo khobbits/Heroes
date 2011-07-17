@@ -70,10 +70,8 @@ public class DamageManager {
     public Integer getCreatureHealth(CreatureType type) {
         if (creatureHealth.containsKey(type)) {
             int health = creatureHealth.get(type);
-            System.out.println(health);
             return health > 200 ? 200 : (health < 0 ? 0 : health);
         } else {
-            System.out.println("null");
             return null;
         }
     }

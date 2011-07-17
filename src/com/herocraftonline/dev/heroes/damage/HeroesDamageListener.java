@@ -28,9 +28,10 @@ import com.herocraftonline.dev.heroes.util.Properties;
 
 public class HeroesDamageListener extends EntityListener {
 
-    public Heroes plugin;
-    public DamageManager damageManager;
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
+
+    private Heroes plugin;
+    private DamageManager damageManager;
 
     public HeroesDamageListener(Heroes plugin, DamageManager damageManager) {
         this.plugin = plugin;
@@ -61,20 +62,20 @@ public class HeroesDamageListener extends EntityListener {
         if (DEBUG) plugin.log(Level.INFO, "  Unmodified Event Damage: " + damage);
 
         if (event instanceof EntityDamageByEntityEvent) {
-            // plugin.log(Level.INFO, "  EDBE Event");
+            if (DEBUG) plugin.log(Level.INFO, "  EDBE Event");
             if (event instanceof EntityDamageByProjectileEvent) {
                 /*
-                 * Commenting this out until bukkit addresses the double event issue
-                 * plugin.log(Level.INFO, "    EDBP Event");
+                 * if (DEBUG) plugin.log(Level.INFO, "    EDBP Event");
                  * Projectile projectile = ((EntityDamageByProjectileEvent) event).getProjectile();
                  * ProjectileType type = ProjectileType.valueOf(projectile);
-                 * plugin.log(Level.INFO, "      Projectile Type: " + type.name());
+                 * if (DEBUG) plugin.log(Level.INFO, "      Projectile Type: " + type.name());
                  * Integer tmpDamage = damageManager.getProjectileDamage(type);
-                 * plugin.log(Level.INFO, "      Projectile Damage: " + tmpDamage);
+                 * if (DEBUG) plugin.log(Level.INFO, "      Projectile Damage: " + tmpDamage);
                  * if (tmpDamage != null) {
                  * damage = tmpDamage;
                  * }
                  */
+
             } else {
                 Entity attacker = ((EntityDamageByEntityEvent) event).getDamager();
                 if (attacker instanceof HumanEntity) {
