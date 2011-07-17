@@ -169,8 +169,4 @@ public class DamageManager {
         }
     }
 
-    public static int getVisualDamage(Hero hero, int damage) {
-        return hero.getPlayer().getHealth() - (int) (damage / 20.0 * hero.getHeroClass().getMaxHealth());
-    }
-
 }

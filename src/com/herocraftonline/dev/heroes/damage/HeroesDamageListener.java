@@ -100,9 +100,10 @@ public class HeroesDamageListener extends EntityListener {
 
     private void onPlayerDamage(EntityDamageEvent event, int damage) {
         Player player = (Player) event.getEntity();
-        Hero heroEntity = plugin.getHeroManager().getHero(player);
+        Hero hero = plugin.getHeroManager().getHero(player);
 
-        int visualDamage = DamageManager.getVisualDamage(heroEntity, damage);
+        hero.setHealth(hero.getHealth() - damage);
+        int visualDamage = (int) (player.getHealth() - hero.getHealth() / hero.getHeroClass().getMaxHealth() * 20);
         event.setDamage(visualDamage);
 
         if (visualDamage == 0) {
