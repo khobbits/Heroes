@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 
+import org.bukkit.Material;
 import org.bukkit.util.config.Configuration;
 import org.bukkit.util.config.ConfigurationNode;
 
@@ -154,7 +155,24 @@ public class ClassManager {
 
             plugin.debugLog(Level.INFO, "Allowed Weapons - " + wLimits.toString());
             plugin.debugLog(Level.INFO, "Allowed Armor - " + aLimits.toString());
+            
+            
+            List<String> classDamageValues = config.getKeys("classes." + className + ".damage-values");
+            if(classDamageValues == null) {
+                plugin.log(Level.WARNING, className + " has no damage values section");
+            } else {
+                for(String damageMaterialString : classDamageValues) {
+                    Material damageMaterial =  Material.matchMaterial(damageMaterialString);
+                    if(damageMaterial != null) {
+                        Integer damage = config.getInt("classes." + className + ".damage-values" + damageMaterialString , 2);
+                        newClass.addDamageValue(damageMaterial, damage);
+                    }else {
+                        plugin.log(Level.WARNING, "Invalid material (" + damageMaterial + ") defined for " + className);
+                    }
+                }
+            }
 
+            
             List<String> skillNames = config.getKeys("classes." + className + ".permitted-skills");
             if (skillNames == null) {
                 plugin.log(Level.WARNING, className + " has no permitted-skills section");

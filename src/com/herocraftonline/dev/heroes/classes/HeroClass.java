@@ -5,6 +5,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.bukkit.Material;
 import org.bukkit.util.config.ConfigurationNode;
 
 public class HeroClass {
@@ -19,6 +20,8 @@ public class HeroClass {
 
     private Set<String> allowedWeapons;
 
+    private Map<Material, Integer> damageValues;
+
     private Set<ExperienceType> experienceSources;
     private double expModifier;
     private Map<String, ConfigurationNode> skills;
@@ -31,6 +34,7 @@ public class HeroClass {
         description = new String();
         allowedArmor = new LinkedHashSet<String>();
         allowedWeapons = new LinkedHashSet<String>();
+        damageValues = new LinkedHashMap<Material, Integer>();
         experienceSources = new LinkedHashSet<ExperienceType>();
         expModifier = 1.0D;
         specializations = new LinkedHashSet<HeroClass>();
@@ -54,6 +58,10 @@ public class HeroClass {
 
     public void addSkill(String name, ConfigurationNode settings) {
         skills.put(name.toLowerCase(), settings);
+    }
+
+    public void addDamageValue(Material material, Integer damage) {
+        damageValues.put(material, damage);
     }
 
     @Override
@@ -118,6 +126,10 @@ public class HeroClass {
         return skills.get(name.toLowerCase());
     }
 
+    public Integer getDamageValue(Material material) {
+        return damageValues.get(material);
+    }
+
     public Set<HeroClass> getSpecializations() {
         return specializations;
     }
@@ -137,6 +149,10 @@ public class HeroClass {
 
     public void removeSkill(String name) {
         skills.remove(name.toLowerCase());
+    }
+
+    public void removeDamageValue(Material material) {
+        damageValues.remove(material);
     }
 
     public void setDescription(String description) {
