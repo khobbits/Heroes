@@ -52,7 +52,7 @@ public class Properties {
     public String prefix;
     public int swapCost;
     public boolean swapMasteryCost;
-    public boolean damageSystem;
+    public boolean damageSystem = false;
 
     /**
      * Generate experience for the level ArrayList<Integer>
