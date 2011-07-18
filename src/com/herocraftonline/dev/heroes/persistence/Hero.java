@@ -120,11 +120,6 @@ public class Hero {
         this.health = playerHealth / 20.0 * getMaxHealth();;
     }
 
-    public void syncHealth() {
-        int playerHealth = (int) (health / getMaxHealth() * 20);
-        getPlayer().setHealth(playerHealth);
-    }
-
     public void addRecoveryItem(ItemStack item) {
         this.itemRecovery.add(item);
     }
@@ -137,7 +132,7 @@ public class Hero {
         setHeroClass(heroClass);
         binds.clear();
     }
-
+    /*
     public void damage(int damage) {
         getPlayer();
         System.out.println("Config Damage: " + damage);
@@ -196,7 +191,7 @@ public class Hero {
             craftPlayer.getHandle().netServerHandler.sendPacket(new Packet18ArmAnimation(nmsEntity, (byte) 2));
         }
     }
-
+    */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {

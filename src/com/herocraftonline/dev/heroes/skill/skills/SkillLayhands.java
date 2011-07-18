@@ -26,10 +26,7 @@ public class SkillLayhands extends TargettedSkill {
             Messaging.send(hero.getPlayer(), "You need a target!");
             return false;
         }
-
-        Hero targetHero = plugin.getHeroManager().getHero((Player) target);
-        targetHero.setHealth(targetHero.getMaxHealth());
-        targetHero.syncHealth();
+        target.setHealth(20);
 
         broadcastExecuteText(hero, target);
         return true;
