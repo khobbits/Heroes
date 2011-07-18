@@ -1,5 +1,8 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
+import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.persistence.Hero;
+import com.herocraftonline.dev.heroes.skill.PassiveSkill;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Priority;
@@ -9,10 +12,6 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityListener;
 import org.bukkit.util.config.ConfigurationNode;
-
-import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.persistence.Hero;
-import com.herocraftonline.dev.heroes.skill.PassiveSkill;
 
 public class SkillShield extends PassiveSkill {
 
@@ -48,7 +47,7 @@ public class SkillShield extends PassiveSkill {
                     Player player = (Player) subEvent.getEntity();
                     Hero hero = plugin.getHeroManager().getHero(player);
                     if (hero.hasEffect(getName())) {
-                        double multiplier = 0;
+                        double multiplier = 1;
                         if (player.getItemInHand().getType() == Material.IRON_DOOR) {
                             multiplier = getSetting(hero.getHeroClass(), "iron-door", 0.75);
 

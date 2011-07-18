@@ -12,4 +12,4 @@ properties:
     iConomy: false
     swapcost: 0
     debug: false
-    damageSystem: true
+    useDamageSystem: true

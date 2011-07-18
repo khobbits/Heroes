@@ -1,5 +1,15 @@
 package com.herocraftonline.dev.heroes.util;
 
+import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.classes.HeroClassManager;
+import com.herocraftonline.dev.heroes.command.BaseCommand;
+import com.herocraftonline.dev.heroes.skill.Skill;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.entity.CreatureType;
+import org.bukkit.util.config.Configuration;
+import org.bukkit.util.config.ConfigurationNode;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -9,18 +19,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.entity.CreatureType;
-import org.bukkit.util.config.Configuration;
-import org.bukkit.util.config.ConfigurationNode;
-
-import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.classes.HeroClassManager;
-import com.herocraftonline.dev.heroes.command.BaseCommand;
-import com.herocraftonline.dev.heroes.skill.Skill;
-
 public class ConfigManager {
+
     protected Heroes plugin;
     protected File primaryConfigFile;
     protected File classConfigFile;
@@ -47,7 +47,7 @@ public class ConfigManager {
         checkForConfig(classConfigFile);
         checkForConfig(expConfigFile);
         checkForConfig(skillConfigFile);
-        //checkForConfig(damageConfigFile);
+        checkForConfig(damageConfigFile);
 
         Configuration primaryConfig = new Configuration(primaryConfigFile);
         primaryConfig.load();
@@ -55,9 +55,9 @@ public class ConfigManager {
         loadDefaultConfig(primaryConfig);
         loadProperties(primaryConfig);
 
-        //Configuration damageConfig = new Configuration(damageConfigFile);
-        //damageConfig.load();
-        //plugin.getDamageManager().load(damageConfig);
+        Configuration damageConfig = new Configuration(damageConfigFile);
+        damageConfig.load();
+        plugin.getDamageManager().load(damageConfig);
 
         Configuration expConfig = new Configuration(expConfigFile);
         expConfig.load();
@@ -199,7 +199,7 @@ public class ConfigManager {
         properties.cColor = ChatColor.valueOf(config.getString(root + "color", "WHITE"));
         properties.swapCost = config.getInt(root + "swapcost", 0);
         properties.debug = config.getBoolean(root + "debug", false);
-        //properties.damageSystem = config.getBoolean(root + "useDamageSystem", false);
+        properties.damageSystem = config.getBoolean(root + "useDamageSystem", false);
     }
 
     private void loadSkills(Configuration config) {
@@ -220,7 +220,7 @@ public class ConfigManager {
         }
     }
 
-    @SuppressWarnings({ "unchecked", "unused" })
+    @SuppressWarnings({"unchecked", "unused"})
     private void print(Map<String, Object> map, String indent) {
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             if (entry.getValue() instanceof Map) {
