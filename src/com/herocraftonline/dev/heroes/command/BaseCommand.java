@@ -1,11 +1,10 @@
 package com.herocraftonline.dev.heroes.command;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.herocraftonline.dev.heroes.Heroes;
 import org.bukkit.command.CommandSender;
 
-import com.herocraftonline.dev.heroes.Heroes;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class BaseCommand {
 

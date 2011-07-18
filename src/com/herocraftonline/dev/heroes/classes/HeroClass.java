@@ -1,15 +1,10 @@
 package com.herocraftonline.dev.heroes.classes;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
-
+import com.herocraftonline.dev.heroes.damage.DamageManager.ProjectileType;
 import org.bukkit.Material;
 import org.bukkit.util.config.ConfigurationNode;
 
-import com.herocraftonline.dev.heroes.damage.DamageManager.ProjectileType;
+import java.util.*;
 
 public class HeroClass {
 
@@ -28,8 +23,8 @@ public class HeroClass {
     private double maxHealthPerLevel;
 
     public HeroClass() {
-        name = new String();
-        description = new String();
+        name = "";
+        description = "";
         allowedArmor = new LinkedHashSet<String>();
         allowedWeapons = new LinkedHashSet<String>();
         itemDamage = new HashMap<Material, Integer>();
@@ -58,11 +53,11 @@ public class HeroClass {
     public void addSkill(String name, ConfigurationNode settings) {
         skills.put(name.toLowerCase(), settings);
     }
-    
+
     public void setItemDamage(Material material, int damage) {
         itemDamage.put(material, damage);
     }
-    
+
     public void setProjectileDamage(ProjectileType type, int damage) {
         projectileDamage.put(type, damage);
     }
@@ -132,7 +127,7 @@ public class HeroClass {
     public Integer getItemDamage(Material material) {
         return itemDamage.get(material);
     }
-    
+
     public Integer getProjectileDamage(ProjectileType type) {
         return projectileDamage.get(type);
     }

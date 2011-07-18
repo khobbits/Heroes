@@ -1,5 +1,7 @@
 package com.herocraftonline.dev.heroes.skill;
 
+import com.herocraftonline.dev.heroes.Heroes;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
@@ -11,14 +13,11 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
 
-import com.herocraftonline.dev.heroes.Heroes;
-
 public final class SkillLoader {
 
     public static Skill loadSkill(File file, Heroes plugin) {
         try {
-            JarFile jarFile = null;
-            jarFile = new JarFile(file);
+            JarFile jarFile = new JarFile(file);
             Enumeration<JarEntry> entries = jarFile.entries();
 
             String mainClass = null;
@@ -32,7 +31,7 @@ public final class SkillLoader {
             }
 
             if (mainClass != null) {
-                ClassLoader loader = URLClassLoader.newInstance(new URL[] { file.toURI().toURL() }, plugin.getClass().getClassLoader());
+                ClassLoader loader = URLClassLoader.newInstance(new URL[]{file.toURI().toURL()}, plugin.getClass().getClassLoader());
                 Class<?> clazz = Class.forName(mainClass, true, loader);
                 for (Class<?> subclazz : clazz.getClasses()) {
                     Class.forName(subclazz.getName(), true, loader);

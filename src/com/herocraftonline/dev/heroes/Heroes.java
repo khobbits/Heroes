@@ -1,54 +1,12 @@
 package com.herocraftonline.dev.heroes;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.event.Event.Priority;
-import org.bukkit.event.Event.Type;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.java.JavaPlugin;
-
-import com.herocraftonline.dev.heroes.classes.HeroClassManager;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
+import com.herocraftonline.dev.heroes.classes.HeroClassManager;
 import com.herocraftonline.dev.heroes.command.BaseCommand;
 import com.herocraftonline.dev.heroes.command.CommandManager;
-import com.herocraftonline.dev.heroes.command.commands.AdminClassCommand;
-import com.herocraftonline.dev.heroes.command.commands.AdminExpCommand;
-import com.herocraftonline.dev.heroes.command.commands.ArmorCommand;
-import com.herocraftonline.dev.heroes.command.commands.BindSkillCommand;
-import com.herocraftonline.dev.heroes.command.commands.ChooseCommand;
-import com.herocraftonline.dev.heroes.command.commands.ConfigReloadCommand;
-import com.herocraftonline.dev.heroes.command.commands.HealthCommand;
-import com.herocraftonline.dev.heroes.command.commands.HelpCommand;
-import com.herocraftonline.dev.heroes.command.commands.HeroSaveCommand;
-import com.herocraftonline.dev.heroes.command.commands.LeaderboardCommand;
-import com.herocraftonline.dev.heroes.command.commands.LevelInformationCommand;
-import com.herocraftonline.dev.heroes.command.commands.ManaCommand;
-import com.herocraftonline.dev.heroes.command.commands.PartyAcceptCommand;
-import com.herocraftonline.dev.heroes.command.commands.PartyChatCommand;
-import com.herocraftonline.dev.heroes.command.commands.PartyCreateCommand;
-import com.herocraftonline.dev.heroes.command.commands.PartyInviteCommand;
-import com.herocraftonline.dev.heroes.command.commands.PartyLeaveCommand;
-import com.herocraftonline.dev.heroes.command.commands.PartyModeCommand;
-import com.herocraftonline.dev.heroes.command.commands.PartyWhoCommand;
-import com.herocraftonline.dev.heroes.command.commands.PathsCommand;
-import com.herocraftonline.dev.heroes.command.commands.RecoverItemsCommand;
-import com.herocraftonline.dev.heroes.command.commands.SkillListCommand;
-import com.herocraftonline.dev.heroes.command.commands.SpecsCommand;
-import com.herocraftonline.dev.heroes.command.commands.SuppressCommand;
-import com.herocraftonline.dev.heroes.command.commands.ToolsCommand;
-import com.herocraftonline.dev.heroes.command.commands.VerboseCommand;
-import com.herocraftonline.dev.heroes.command.commands.WhoCommand;
+import com.herocraftonline.dev.heroes.command.commands.*;
 import com.herocraftonline.dev.heroes.damage.DamageManager;
 import com.herocraftonline.dev.heroes.inventory.BukkitContribInventoryListener;
-import com.herocraftonline.dev.heroes.inventory.HeroesInventoryListener;
 import com.herocraftonline.dev.heroes.inventory.InventoryChecker;
 import com.herocraftonline.dev.heroes.party.PartyEntityListener;
 import com.herocraftonline.dev.heroes.party.PartyManager;
@@ -62,10 +20,24 @@ import com.herocraftonline.dev.heroes.util.DebugLog;
 import com.nijiko.permissions.PermissionHandler;
 import com.nijikokun.bukkit.Permissions.Permissions;
 import com.nijikokun.register.payment.Method;
+import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Event.Priority;
+import org.bukkit.event.Event.Type;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Heroes Plugin for Herocraft
- * 
+ *
  * @author Herocraft's Plugin Team
  */
 public class Heroes extends JavaPlugin {
@@ -99,10 +71,6 @@ public class Heroes extends JavaPlugin {
     // Variable for BukkitContrib.
     public static boolean useBukkitContrib = false;
 
-    // Inventory Event listeners for both Heroes and BukkitContrib
-    private final HeroesInventoryListener heroesInventoryListener = new HeroesInventoryListener(this);
-    private BukkitContribInventoryListener bukkitContribInventoryListener;
-
     // Party Listener
     private PartyEntityListener partyEntityListener = new PartyEntityListener(this);
 
@@ -110,12 +78,10 @@ public class Heroes extends JavaPlugin {
     // restrictions.
     private final InventoryChecker inventoryChecker = new InventoryChecker(this);
 
-    
-    
     /**
      * Print messages to the Debug Log, if the servers in Debug Mode then we also wan't to print the messages to the
      * standard Server Console.
-     * 
+     *
      * @param level
      * @param msg
      */
@@ -149,7 +115,7 @@ public class Heroes extends JavaPlugin {
     public PartyManager getPartyManager() {
         return partyManager;
     }
-    
+
     public DamageManager getDamageManager() {
         return damageManager;
     }
@@ -182,7 +148,7 @@ public class Heroes extends JavaPlugin {
     /**
      * Print messages to the server Log as well as to our DebugLog. 'debugLog' is used to seperate Heroes information
      * from the Servers Log Output.
-     * 
+     *
      * @param level
      * @param msg
      */
@@ -273,13 +239,13 @@ public class Heroes extends JavaPlugin {
      */
     public void setupBukkitContrib() {
         Plugin test = this.getServer().getPluginManager().getPlugin("BukkitContrib");
+        BukkitContribInventoryListener bukkitContribInventoryListener;
         if (test != null) {
             Heroes.useBukkitContrib = true;
             bukkitContribInventoryListener = new BukkitContribInventoryListener(this);
             Bukkit.getServer().getPluginManager().registerEvent(Type.CUSTOM_EVENT, bukkitContribInventoryListener, Priority.Monitor, this);
         } else {
             Heroes.useBukkitContrib = false;
-            bukkitContribInventoryListener = null;
         }
     }
 
@@ -405,9 +371,6 @@ public class Heroes extends JavaPlugin {
         pluginManager.registerEvent(Type.CUSTOM_EVENT, new HLevelListener(this), Priority.Monitor, this);
         pluginManager.registerEvent(Type.CUSTOM_EVENT, new HPermissionsListener(this), Priority.Monitor, this);
 
-        // Inventory Event Listeners
-        pluginManager.registerEvent(Type.CUSTOM_EVENT, heroesInventoryListener, Priority.Monitor, this);
-        
         damageManager.registerEvents();
     }
 }

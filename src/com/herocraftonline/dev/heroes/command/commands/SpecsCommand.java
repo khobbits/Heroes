@@ -1,16 +1,16 @@
 package com.herocraftonline.dev.heroes.command.commands;
 
-import java.util.Set;
-
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.command.BaseCommand;
 import com.herocraftonline.dev.heroes.util.Messaging;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import java.util.Set;
 
 public class SpecsCommand extends BaseCommand {
+
     private static final int SPECS_PER_PAGE = 8;
 
     public SpecsCommand(Heroes plugin) {
@@ -34,11 +34,12 @@ public class SpecsCommand extends BaseCommand {
         if (args.length != 0) {
             try {
                 page = Integer.parseInt(args[0]) - 1;
-            } catch (NumberFormatException e) {}
+            } catch (NumberFormatException ignored) {
+            }
         }
 
         Set<HeroClass> childClasses = playerClass.getSpecializations();
-        HeroClass[] specs = childClasses.toArray(new HeroClass[0]);
+        HeroClass[] specs = childClasses.toArray(new HeroClass[childClasses.size()]);
 
         if (specs.length == 0) {
             Messaging.send(sender, "$1 has no specializations.", playerClass.getName());

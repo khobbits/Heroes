@@ -1,12 +1,11 @@
 package com.herocraftonline.dev.heroes.command.commands;
 
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.command.BaseCommand;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.util.Messaging;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class HealthCommand extends BaseCommand {
 
@@ -28,7 +27,7 @@ public class HealthCommand extends BaseCommand {
             Hero hero = plugin.getHeroManager().getHero(player);
             double hp = hero.getHealth();
             double maxHp = hero.getMaxHealth();
-            Messaging.send(player, "Health: $1/$2", (int)hp, (int)maxHp);
+            Messaging.send(player, "Health: $1/$2", (int) hp, (int) maxHp);
         }
     }
 

@@ -1,9 +1,5 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.util.config.ConfigurationNode;
-
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.effects.Expirable;
 import com.herocraftonline.dev.heroes.effects.Periodic;
@@ -12,6 +8,9 @@ import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.util.config.ConfigurationNode;
 
 public class SkillBleed extends TargettedSkill {
 
@@ -62,7 +61,7 @@ public class SkillBleed extends TargettedSkill {
         }
 
         broadcastExecuteText(hero, target);
-        
+
         long duration = getSetting(hero.getHeroClass(), "duration", 10000);
         long period = getSetting(hero.getHeroClass(), "period", 2000);
         int tickDamage = getSetting(hero.getHeroClass(), "tick-damage", 1);
@@ -73,7 +72,7 @@ public class SkillBleed extends TargettedSkill {
     public class BleedEffect extends PeriodicEffect implements Periodic, Expirable {
 
         private final int tickDamage;
-        
+
         public BleedEffect(Skill skill, long duration, long period, int tickDamage) {
             super(skill, "Bleed", period, duration);
             this.tickDamage = tickDamage;
@@ -89,7 +88,7 @@ public class SkillBleed extends TargettedSkill {
         @Override
         public void remove(Hero hero) {
             super.remove(hero);
-            
+
             Player player = hero.getPlayer();
             broadcast(player.getLocation(), expireText, player.getDisplayName());
         }

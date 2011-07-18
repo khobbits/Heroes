@@ -1,9 +1,8 @@
 package com.herocraftonline.dev.heroes.effects;
 
-import org.bukkit.Location;
-
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
+import org.bukkit.Location;
 
 public class Effect {
 
@@ -28,7 +27,7 @@ public class Effect {
     public boolean isPersistent() {
         return persistent;
     }
-    
+
     public void setPersistent(boolean persistent) {
         this.persistent = persistent;
     }

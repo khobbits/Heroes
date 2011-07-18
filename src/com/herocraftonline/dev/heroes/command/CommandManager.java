@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2011 DThielke <dave.thielke@gmail.com>
- * 
+ *
  * This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.
  * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/ or send a letter to
  * Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
@@ -8,15 +8,14 @@
 
 package com.herocraftonline.dev.heroes.command;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-
+import com.herocraftonline.dev.heroes.Heroes;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.herocraftonline.dev.heroes.Heroes;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 public class CommandManager {
 
@@ -86,16 +85,7 @@ public class CommandManager {
         }
         Player player = (Player) sender;
         try {
-            if (player.isOp()) {
-                // If Player is Op we always let them use it.
-                return true;
-            } else if (Heroes.Permissions != null && Heroes.Permissions.safeGetUser(player.getWorld().getName(), player.getName()).hasPermission(node)) {
-                // If Permissions is enabled we check against them.
-                return true;
-            } else {
-                // If the Player doesn't have Permissions and isn't an Op then
-                return false;
-            }
+            return player.isOp() || Heroes.Permissions != null && Heroes.Permissions.safeGetUser(player.getWorld().getName(), player.getName()).hasPermission(node);
         } catch (Exception e) {
             e.printStackTrace();
             return false;

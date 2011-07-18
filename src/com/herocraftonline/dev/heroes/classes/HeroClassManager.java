@@ -1,26 +1,21 @@
 package com.herocraftonline.dev.heroes.classes;
 
+import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.classes.HeroClass.*;
+import com.herocraftonline.dev.heroes.damage.DamageManager.ProjectileType;
+import com.herocraftonline.dev.heroes.skill.OutsourcedSkill;
+import com.herocraftonline.dev.heroes.skill.Skill;
+import com.herocraftonline.dev.heroes.util.Properties;
+import org.bukkit.Material;
+import org.bukkit.util.config.Configuration;
+import org.bukkit.util.config.ConfigurationNode;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
-
-import org.bukkit.Material;
-import org.bukkit.util.config.Configuration;
-import org.bukkit.util.config.ConfigurationNode;
-
-import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.classes.HeroClass.ArmorItems;
-import com.herocraftonline.dev.heroes.classes.HeroClass.ArmorType;
-import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
-import com.herocraftonline.dev.heroes.classes.HeroClass.WeaponItems;
-import com.herocraftonline.dev.heroes.classes.HeroClass.WeaponType;
-import com.herocraftonline.dev.heroes.damage.DamageManager.ProjectileType;
-import com.herocraftonline.dev.heroes.skill.OutsourcedSkill;
-import com.herocraftonline.dev.heroes.skill.Skill;
-import com.herocraftonline.dev.heroes.util.Properties;
 
 public class HeroClassManager {
 
@@ -85,13 +80,13 @@ public class HeroClassManager {
                         try {
                             ArmorType aType = ArmorType.valueOf(a);
                             newClass.addAllowedArmor(aType + "_HELMET");
-                            aLimits.append(" " + aType + "_HELMET");
+                            aLimits.append(" ").append(aType).append("_HELMET");
                             newClass.addAllowedArmor(aType + "_CHESTPLATE");
-                            aLimits.append(" " + aType + "_CHESTPLATE");
+                            aLimits.append(" ").append(aType).append("_CHESTPLATE");
                             newClass.addAllowedArmor(aType + "_LEGGINGS");
-                            aLimits.append(" " + aType + "_LEGGINGS");
+                            aLimits.append(" ").append(aType).append("_LEGGINGS");
                             newClass.addAllowedArmor(aType + "_BOOTS");
-                            aLimits.append(" " + aType + "_BOOTS");
+                            aLimits.append(" ").append(aType).append("_BOOTS");
                         } catch (IllegalArgumentException e) {
                             plugin.log(Level.WARNING, "Invalid armor type (" + a + ") defined for " + className);
                         }
@@ -102,7 +97,7 @@ public class HeroClassManager {
                             ArmorType aType = ArmorType.valueOf(type);
                             ArmorItems aItem = ArmorItems.valueOf(item);
                             newClass.addAllowedArmor(aType + "_" + aItem);
-                            aLimits.append(" " + aType + "_" + aItem);
+                            aLimits.append(" ").append(aType).append("_").append(aItem);
                         } catch (IllegalArgumentException e) {
                             plugin.log(Level.WARNING, "Invalid armor type (" + type + "_" + item + ") defined for " + className);
                         }
@@ -126,15 +121,15 @@ public class HeroClassManager {
                         try {
                             WeaponType wType = WeaponType.valueOf(w);
                             newClass.addAllowedWeapon(wType + "_PICKAXE");
-                            wLimits.append(" " + wType + "_PICKAXE");
+                            wLimits.append(" ").append(wType).append("_PICKAXE");
                             newClass.addAllowedWeapon(wType + "_AXE");
-                            wLimits.append(" " + wType + "_AXE");
+                            wLimits.append(" ").append(wType).append("_AXE");
                             newClass.addAllowedWeapon(wType + "_HOE");
-                            wLimits.append(" " + wType + "_HOE");
+                            wLimits.append(" ").append(wType).append("_HOE");
                             newClass.addAllowedWeapon(wType + "_SPADE");
-                            wLimits.append(" " + wType + "_SPADE");
+                            wLimits.append(" ").append(wType).append("_SPADE");
                             newClass.addAllowedWeapon(wType + "_SWORD");
-                            wLimits.append(" " + wType + "_SWORD");
+                            wLimits.append(" ").append(wType).append("_SWORD");
                         } catch (IllegalArgumentException e) {
                             plugin.log(Level.WARNING, "Invalid weapon type (" + w + ") defined for " + className);
                         }

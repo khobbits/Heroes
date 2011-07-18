@@ -1,26 +1,19 @@
 package com.herocraftonline.dev.heroes.damage;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.classes.HeroClass;
+import com.herocraftonline.dev.heroes.util.Properties;
 import org.bukkit.Material;
-import org.bukkit.entity.Arrow;
-import org.bukkit.entity.CreatureType;
-import org.bukkit.entity.Egg;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.HumanEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Snowball;
+import org.bukkit.entity.*;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.util.config.Configuration;
 
-import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.classes.HeroClass;
-import com.herocraftonline.dev.heroes.util.Properties;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class DamageManager {
 
@@ -60,11 +53,11 @@ public class DamageManager {
      */
     public void registerEvents() {
         Properties prop = plugin.getConfigManager().getProperties();
-        if(prop.damageSystem) {
+        if (prop.damageSystem) {
             PluginManager pluginManager = plugin.getServer().getPluginManager();
             pluginManager.registerEvent(Type.ENTITY_DAMAGE, listener, Priority.Highest, plugin);
-            pluginManager.registerEvent(Type.ENTITY_REGAIN_HEALTH, listener, Priority.Highest, plugin);
-            pluginManager.registerEvent(Type.CREATURE_SPAWN, listener, Priority.Highest, plugin);
+            //pluginManager.registerEvent(Type.ENTITY_REGAIN_HEALTH, listener, Priority.Highest, plugin);
+            //pluginManager.registerEvent(Type.CREATURE_SPAWN, listener, Priority.Highest, plugin);
         }
     }
 
@@ -155,7 +148,6 @@ public class DamageManager {
                     int damage = config.getInt("environmental-damage." + key, 0);
                     environmentalDamage.put(cause, damage);
                 } catch (IllegalArgumentException e) {
-                    continue;
                 }
             }
         }
@@ -169,7 +161,6 @@ public class DamageManager {
                     int damage = config.getInt("projectile-damage." + key, 0);
                     projectileDamage.put(type, damage);
                 } catch (IllegalArgumentException e) {
-                    continue;
                 }
             }
         }

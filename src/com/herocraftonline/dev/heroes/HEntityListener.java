@@ -1,26 +1,20 @@
 package com.herocraftonline.dev.heroes;
 
-import java.text.DecimalFormat;
-import java.util.HashMap;
-import java.util.Set;
-
+import com.herocraftonline.dev.heroes.classes.HeroClass;
+import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
+import com.herocraftonline.dev.heroes.effects.Effect;
+import com.herocraftonline.dev.heroes.persistence.Hero;
+import com.herocraftonline.dev.heroes.util.Messaging;
+import com.herocraftonline.dev.heroes.util.Properties;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageByProjectileEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntityListener;
+import org.bukkit.event.entity.*;
 
-import com.herocraftonline.dev.heroes.classes.HeroClass;
-import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
-import com.herocraftonline.dev.heroes.effects.Effect;
-import com.herocraftonline.dev.heroes.party.HeroParty;
-import com.herocraftonline.dev.heroes.persistence.Hero;
-import com.herocraftonline.dev.heroes.util.Messaging;
-import com.herocraftonline.dev.heroes.util.Properties;
+import java.text.DecimalFormat;
+import java.util.HashMap;
+import java.util.Set;
 
 public class HEntityListener extends EntityListener {
 
@@ -84,7 +78,7 @@ public class HEntityListener extends EntityListener {
                 heroDefender.setHealth(heroDefender.getMaxHealth());
                 Messaging.send(heroDefender.getPlayer(), "You have lost " + decFormat.format(expLoss) + " exp for dying.");
             }
-            
+
             // Remove any nonpersistent effects
             for (Effect effect : heroDefender.getEffects()) {
                 if (!effect.isPersistent()) {
@@ -123,7 +117,8 @@ public class HEntityListener extends EntityListener {
                             break;
                         }
                     }
-                } catch (IllegalArgumentException e) {}
+                } catch (IllegalArgumentException ignored) {
+                }
                 if (type != null) {
                     // If EXP hasn't been assigned for this Entity then we stop here.
                     if (!prop.creatureKillingExp.containsKey(type)) {

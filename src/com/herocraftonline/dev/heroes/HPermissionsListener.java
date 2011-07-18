@@ -1,18 +1,18 @@
 package com.herocraftonline.dev.heroes;
 
-import java.util.List;
-
+import com.herocraftonline.dev.heroes.command.BaseCommand;
+import com.herocraftonline.dev.heroes.persistence.Hero;
+import com.herocraftonline.dev.heroes.skill.OutsourcedSkill;
+import com.nijiko.permissions.StorageReloadEvent;
+import com.nijiko.permissions.WorldConfigLoadEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.CustomEventListener;
 import org.bukkit.event.Event;
 
-import com.herocraftonline.dev.heroes.command.BaseCommand;
-import com.herocraftonline.dev.heroes.persistence.Hero;
-import com.herocraftonline.dev.heroes.skill.OutsourcedSkill;
-import com.nijiko.permissions.StorageReloadEvent;
-import com.nijiko.permissions.WorldConfigLoadEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 public class HPermissionsListener extends CustomEventListener {
 
@@ -48,11 +48,15 @@ public class HPermissionsListener extends CustomEventListener {
 
     /**
      * The following attempts to relearn all skills for the players in a given world.
-     * 
+     *
      * @param world
      */
     private void relearnSkills(World world) {
-        for (Player player : world.getPlayers()) {
+        List<Player> players = new ArrayList<Player>(world.getPlayers());
+        for (Player player : players) {
+            if (player == null) {
+                continue;
+            }
             // Grab Hero.
             Hero hero = this.plugin.getHeroManager().getHero(player);
             // Grab Commands so we can parse them for Skills, seeing as Skills are still set as Commands.

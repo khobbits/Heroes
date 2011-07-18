@@ -1,15 +1,15 @@
 package com.herocraftonline.dev.heroes.command.commands;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import org.bukkit.command.CommandSender;
-
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.command.BaseCommand;
+import org.bukkit.command.CommandSender;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class PathsCommand extends BaseCommand {
+
     private static final int PATHS_PER_PAGE = 8;
 
     public PathsCommand(Heroes plugin) {
@@ -28,7 +28,8 @@ public class PathsCommand extends BaseCommand {
         if (args.length != 0) {
             try {
                 page = Integer.parseInt(args[0]) - 1;
-            } catch (NumberFormatException e) {}
+            } catch (NumberFormatException ignored) {
+            }
         }
 
         Set<HeroClass> classes = plugin.getClassManager().getClasses();
@@ -38,7 +39,7 @@ public class PathsCommand extends BaseCommand {
                 primaryClasses.add(heroClass);
             }
         }
-        HeroClass[] paths = primaryClasses.toArray(new HeroClass[0]);
+        HeroClass[] paths = primaryClasses.toArray(new HeroClass[primaryClasses.size()]);
 
         int numPages = paths.length / PATHS_PER_PAGE;
         if (paths.length % PATHS_PER_PAGE != 0) {

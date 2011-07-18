@@ -1,9 +1,8 @@
 package com.herocraftonline.dev.heroes.util;
 
+import com.herocraftonline.dev.heroes.Heroes;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-
-import com.herocraftonline.dev.heroes.Heroes;
 
 public final class Messaging {
 
