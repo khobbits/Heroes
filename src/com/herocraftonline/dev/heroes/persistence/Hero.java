@@ -11,11 +11,13 @@ import java.util.Set;
 
 import net.minecraft.server.EntityLiving;
 import net.minecraft.server.Packet18ArmAnimation;
+import net.minecraft.server.InventoryPlayer;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
+import org.bukkit.craftbukkit.inventory.CraftInventoryPlayer;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -141,13 +143,14 @@ public class Hero {
         System.out.println("Config Damage: " + damage);
 
         // gotta do something about no damage ticks
-        
+
         PlayerInventory inventory = player.getInventory();
         ItemStack[] armorContents = inventory.getArmorContents();
 
         int missingDurability = 0;
         int maxDurability = 0;
         int baseArmorPoints = 0;
+        boolean wearingArmor = false;
 
         for (ItemStack armor : armorContents) {
             Material armorType = armor.getType();
@@ -156,11 +159,16 @@ public class Hero {
                 missingDurability += armorDurability;
                 maxDurability += armorType.getMaxDurability();
                 baseArmorPoints += armorPoints.get(armorType);
-                armor.setDurability((short) (armorDurability - damage));
+                wearingArmor = true;
             }
         }
-        
-        inventory.setArmorContents(armorContents);
+
+        if (wearingArmor) {
+            InventoryPlayer i = ((CraftPlayer) player).getHandle().inventory;
+            i.c(damage);
+        }
+
+        // inventory.setArmorContents(armorContents);
         player.updateInventory();
 
         System.out.println("    Missing Durability: " + missingDurability);

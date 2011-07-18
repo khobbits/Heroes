@@ -2,7 +2,11 @@ package com.herocraftonline.dev.heroes.damage;
 
 import java.util.logging.Level;
 
+import net.minecraft.server.EntityPlayer;
+import net.minecraft.server.InventoryPlayer;
+
 import org.bukkit.Material;
+import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
@@ -16,6 +20,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityListener;
+import org.bukkit.inventory.ItemStack;
 
 import com.herocraftonline.dev.heroes.Heroes;
 // import com.herocraftonline.dev.heroes.damage.DamageManager.ProjectileType;
@@ -72,6 +77,7 @@ public class HeroesDamageListener extends EntityListener {
 
         if (DEBUG) plugin.log(Level.INFO, "Damaged: " + event.getEntity().getClass().getSimpleName());
 
+        Entity entity = event.getEntity();
         DamageCause cause = event.getCause();
         int damage = event.getDamage();
 
@@ -94,12 +100,27 @@ public class HeroesDamageListener extends EntityListener {
 
             } else {
                 Entity attacker = ((EntityDamageByEntityEvent) event).getDamager();
-                if (attacker instanceof HumanEntity) {
+                if (attacker instanceof Player) {
                     if (DEBUG) plugin.log(Level.INFO, "    HumanEntity Attacker");
-                    HumanEntity attackingHuman = (HumanEntity) attacker;
-                    Material item = attackingHuman.getItemInHand().getType();
-                    if (DEBUG) plugin.log(Level.INFO, "      Item: " + item.name());
-                    Integer tmpDamage = damageManager.getItemDamage(item, attackingHuman);
+                    Player attackingPlayer = (Player) attacker;
+
+                    ItemStack weapon = attackingPlayer.getItemInHand();
+                    Material weaponType = weapon.getType();
+                    if (entity instanceof Player) {
+                        System.out.println("Max durability: " + weaponType.getMaxDurability());
+                        if (weaponType.getMaxDurability() > 0) {
+                            EntityPlayer entityPlayer = ((CraftPlayer) attackingPlayer).getHandle();
+                            if (weaponType.getMaxDurability() + weapon.getDurability() > 0) {
+                                entityPlayer.inventory.getItemInHand().damage(1, entityPlayer);
+                            } else {
+                                entityPlayer.inventory.setItem(entityPlayer.inventory.itemInHandIndex, null);
+                                //attackingPlayer.setItemInHand(null);
+                            }
+                        }
+                    }
+
+                    if (DEBUG) plugin.log(Level.INFO, "      Item: " + weaponType.name());
+                    Integer tmpDamage = damageManager.getItemDamage(weaponType, attackingPlayer);
                     if (DEBUG) plugin.log(Level.INFO, "      Damage: " + tmpDamage);
                     if (tmpDamage != null) {
                         damage = tmpDamage;
@@ -128,7 +149,6 @@ public class HeroesDamageListener extends EntityListener {
             }
         }
 
-        Entity entity = event.getEntity();
         if (entity instanceof Player) {
             plugin.getHeroManager().getHero((Player) entity).damage(damage);
             event.setCancelled(true);
