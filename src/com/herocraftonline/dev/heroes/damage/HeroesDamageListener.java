@@ -2,12 +2,7 @@ package com.herocraftonline.dev.heroes.damage;
 
 import java.util.logging.Level;
 
-import net.minecraft.server.EntityLiving;
-import net.minecraft.server.Packet18ArmAnimation;
-
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
@@ -135,31 +130,10 @@ public class HeroesDamageListener extends EntityListener {
 
         Entity entity = event.getEntity();
         if (entity instanceof Player) {
-            onPlayerDamage(event, damage);
+            plugin.getHeroManager().getHero((Player) entity).damage(damage);
+            event.setCancelled(true);
         } else if (entity instanceof LivingEntity) {
             event.setDamage(damage);
-        }
-    }
-
-    private void onPlayerDamage(EntityDamageEvent event, int damage) {
-        Player player = (Player) event.getEntity();
-        Hero hero = plugin.getHeroManager().getHero(player);
-
-        hero.setHealth(hero.getHealth() - damage);
-        int visualDamage = (int) (player.getHealth() - hero.getHealth() / hero.getMaxHealth() * 20);
-        event.setDamage(visualDamage);
-
-        if (visualDamage == 0) {
-            fakeDamageAnimation(player);
-        }
-
-    }
-
-    private void fakeDamageAnimation(LivingEntity entity) {
-        EntityLiving nmsEntity = ((CraftLivingEntity) entity).getHandle();
-        for (Player player : entity.getWorld().getPlayers()) {
-            CraftPlayer craftPlayer = (CraftPlayer) player;
-            craftPlayer.getHandle().netServerHandler.sendPacket(new Packet18ArmAnimation(nmsEntity, (byte) 2));
         }
     }
 }

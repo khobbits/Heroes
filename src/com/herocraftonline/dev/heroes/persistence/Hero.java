@@ -2,18 +2,25 @@ package com.herocraftonline.dev.heroes.persistence;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import net.minecraft.server.EntityLiving;
+import net.minecraft.server.Packet18ArmAnimation;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.craftbukkit.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.ExperienceGainEvent;
@@ -29,6 +36,63 @@ import com.herocraftonline.dev.heroes.util.Properties;
 public class Hero {
 
     private static final DecimalFormat decFormat = new DecimalFormat("#0.##");
+    private static final Map<Material, Integer> durability;
+    private static final Map<Material, Integer> armorPoints;
+    static {
+        Map<Material, Integer> aMap = new HashMap<Material, Integer>();
+        aMap.put(Material.LEATHER_HELMET, 34);
+        aMap.put(Material.LEATHER_CHESTPLATE, 49);
+        aMap.put(Material.LEATHER_LEGGINGS, 46);
+        aMap.put(Material.LEATHER_BOOTS, 40);
+
+        aMap.put(Material.GOLD_HELMET, 68);
+        aMap.put(Material.GOLD_CHESTPLATE, 96);
+        aMap.put(Material.GOLD_LEGGINGS, 92);
+        aMap.put(Material.GOLD_BOOTS, 80);
+
+        aMap.put(Material.CHAINMAIL_HELMET, 67);
+        aMap.put(Material.CHAINMAIL_CHESTPLATE, 96);
+        aMap.put(Material.CHAINMAIL_LEGGINGS, 92);
+        aMap.put(Material.CHAINMAIL_BOOTS, 79);
+
+        aMap.put(Material.IRON_HELMET, 136);
+        aMap.put(Material.IRON_CHESTPLATE, 192);
+        aMap.put(Material.IRON_LEGGINGS, 184);
+        aMap.put(Material.IRON_BOOTS, 160);
+
+        aMap.put(Material.DIAMOND_HELMET, 272);
+        aMap.put(Material.DIAMOND_CHESTPLATE, 384);
+        aMap.put(Material.DIAMOND_LEGGINGS, 368);
+        aMap.put(Material.DIAMOND_BOOTS, 320);
+        durability = Collections.unmodifiableMap(aMap);
+
+        Map<Material, Integer> bMap = new HashMap<Material, Integer>();
+        bMap.put(Material.LEATHER_HELMET, 3);
+        bMap.put(Material.LEATHER_CHESTPLATE, 8);
+        bMap.put(Material.LEATHER_LEGGINGS, 6);
+        bMap.put(Material.LEATHER_BOOTS, 3);
+
+        bMap.put(Material.GOLD_HELMET, 3);
+        bMap.put(Material.GOLD_CHESTPLATE, 8);
+        bMap.put(Material.GOLD_LEGGINGS, 6);
+        bMap.put(Material.GOLD_BOOTS, 3);
+
+        bMap.put(Material.CHAINMAIL_HELMET, 3);
+        bMap.put(Material.CHAINMAIL_CHESTPLATE, 8);
+        bMap.put(Material.CHAINMAIL_LEGGINGS, 6);
+        bMap.put(Material.CHAINMAIL_BOOTS, 3);
+
+        bMap.put(Material.IRON_HELMET, 3);
+        bMap.put(Material.IRON_CHESTPLATE, 8);
+        bMap.put(Material.IRON_LEGGINGS, 6);
+        bMap.put(Material.IRON_BOOTS, 3);
+
+        bMap.put(Material.DIAMOND_HELMET, 3);
+        bMap.put(Material.DIAMOND_CHESTPLATE, 8);
+        bMap.put(Material.DIAMOND_LEGGINGS, 6);
+        bMap.put(Material.DIAMOND_BOOTS, 3);
+        armorPoints = Collections.unmodifiableMap(bMap);
+    }
 
     protected final Heroes plugin;
     protected Player player;
@@ -70,6 +134,59 @@ public class Hero {
     public void changeHeroClass(HeroClass heroClass) {
         setHeroClass(heroClass);
         binds.clear();
+    }
+
+    public void damage(int damage) {
+        getPlayer();
+        System.out.println("Config Damage: " + damage);
+
+        // gotta do something about no damage ticks
+        
+        PlayerInventory inventory = player.getInventory();
+        ItemStack[] armorContents = inventory.getArmorContents();
+
+        int missingDurability = 0;
+        int maxDurability = 0;
+        int baseArmorPoints = 0;
+
+        for (ItemStack armor : armorContents) {
+            Material armorType = armor.getType();
+            if (armorType != Material.AIR) {
+                short armorDurability = armor.getDurability();
+                missingDurability += armorDurability;
+                maxDurability += armorType.getMaxDurability();
+                baseArmorPoints += armorPoints.get(armorType);
+                armor.setDurability((short) (armorDurability - damage));
+            }
+        }
+        
+        inventory.setArmorContents(armorContents);
+        player.updateInventory();
+
+        System.out.println("    Missing Durability: " + missingDurability);
+        System.out.println("    Max Durability: " + maxDurability);
+        System.out.println("    Base Armor Points: " + baseArmorPoints);
+
+        if (maxDurability == 0) {
+            maxDurability = 1;
+        }
+
+        double armorPoints = (double) baseArmorPoints * (maxDurability + missingDurability) / maxDurability;
+        System.out.println("    Armor Points: " + armorPoints);
+        double damageReduction = 0.04 * armorPoints;
+        System.out.println("    Damage Reduction: " + damageReduction);
+        double reducedDamage = damage * (1 - damageReduction);
+        System.out.println("    Reduced Damage: " + reducedDamage);
+        System.out.println("    Initial Health: " + health);
+        health -= reducedDamage;
+        System.out.println("    Final Health: " + health);
+        syncHealth();
+
+        EntityLiving nmsEntity = ((CraftLivingEntity) player).getHandle();
+        for (Player player : this.player.getWorld().getPlayers()) {
+            CraftPlayer craftPlayer = (CraftPlayer) player;
+            craftPlayer.getHandle().netServerHandler.sendPacket(new Packet18ArmAnimation(nmsEntity, (byte) 2));
+        }
     }
 
     @Override
