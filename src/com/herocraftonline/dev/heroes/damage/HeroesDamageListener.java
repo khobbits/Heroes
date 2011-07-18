@@ -1,39 +1,31 @@
 package com.herocraftonline.dev.heroes.damage;
 
-import java.util.logging.Level;
-
-import net.minecraft.server.EntityLiving;
-import net.minecraft.server.Packet18ArmAnimation;
-
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-//import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageByProjectileEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityListener;
+import org.bukkit.inventory.ItemStack;
 
 import com.herocraftonline.dev.heroes.Heroes;
-//import com.herocraftonline.dev.heroes.damage.DamageManager.ProjectileType;
-import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.util.Properties;
+
+// import org.bukkit.entity.Projectile;
+// import com.herocraftonline.dev.heroes.damage.DamageManager.ProjectileType;
 
 public class HeroesDamageListener extends EntityListener {
 
-    public Heroes plugin;
-    public DamageManager damageManager;
-    private static final boolean DEBUG = true;
+    // private Heroes plugin;
+    private DamageManager damageManager;
 
     public HeroesDamageListener(Heroes plugin, DamageManager damageManager) {
-        this.plugin = plugin;
+        // this.plugin = plugin;
         this.damageManager = damageManager;
     }
 
@@ -47,60 +39,69 @@ public class HeroesDamageListener extends EntityListener {
         }
     }
 
+    // @Override
+    // public void onEntityRegainHealth(EntityRegainHealthEvent event) {
+    // if (event.isCancelled()) {
+    // return;
+    // }
+    //
+    // Entity entity = event.getEntity();
+    // int amount = event.getAmount();
+    //
+    // if (entity instanceof Player) {
+    // Player player = (Player) entity;
+    // Hero hero = plugin.getHeroManager().getHero(player);
+    // double newHeroHealth = hero.getHealth() + amount;
+    // int newHealth = (int) (newHeroHealth / hero.getMaxHealth() * 20);
+    // int newAmount = newHealth - player.getHealth();
+    // hero.setHealth(newHeroHealth);
+    // event.setAmount(newAmount);
+    // }
+    // }
+
     @Override
     public void onEntityDamage(EntityDamageEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
+        if (event.isCancelled()) return;
 
-        if (DEBUG) plugin.log(Level.INFO, "Damaged: " + event.getEntity().getClass().getSimpleName());
-
+        Entity entity = event.getEntity();
         DamageCause cause = event.getCause();
         int damage = event.getDamage();
 
-        if (DEBUG) plugin.log(Level.INFO, "  Unmodified Event Damage: " + damage);
-
         if (event instanceof EntityDamageByEntityEvent) {
-            // plugin.log(Level.INFO, "  EDBE Event");
             if (event instanceof EntityDamageByProjectileEvent) {
-                /*
-                 * Commenting this out until bukkit addresses the double event issue
-                 * plugin.log(Level.INFO, "    EDBP Event");
-                 * Projectile projectile = ((EntityDamageByProjectileEvent) event).getProjectile();
-                 * ProjectileType type = ProjectileType.valueOf(projectile);
-                 * plugin.log(Level.INFO, "      Projectile Type: " + type.name());
-                 * Integer tmpDamage = damageManager.getProjectileDamage(type);
-                 * plugin.log(Level.INFO, "      Projectile Damage: " + tmpDamage);
-                 * if (tmpDamage != null) {
-                 * damage = tmpDamage;
-                 * }
-                 */
+                // Projectile projectile = ((EntityDamageByProjectileEvent) event).getProjectile();
+                // DamageManager.ProjectileType type = DamageManager.ProjectileType.valueOf(projectile);
+                // Integer tmpDamage = damageManager.getProjectileDamage(type, (HumanEntity) projectile.getShooter());
+                // if (tmpDamage != null) {
+                // damage = tmpDamage;
+                // }
             } else {
                 Entity attacker = ((EntityDamageByEntityEvent) event).getDamager();
-                if (attacker instanceof HumanEntity) {
-                    if (DEBUG) plugin.log(Level.INFO, "    HumanEntity Attacker");
-                    HumanEntity attackingHuman = (HumanEntity) attacker;
-                    Material item = attackingHuman.getItemInHand().getType();
-                    if (DEBUG) plugin.log(Level.INFO, "      Item: " + item.name());
-                    Integer tmpDamage = damageManager.getItemDamage(item);
-                    if(attacker instanceof Player) {
-                        Player player = (Player) attacker;
-                        Hero hero = plugin.getHeroManager().getHero(player);
-                        if(hero.getHeroClass().getDamageValue(item) != null){
-                            tmpDamage = hero.getHeroClass().getDamageValue(item);
-                        }
-                    }
-                    if (DEBUG) plugin.log(Level.INFO, "      Damage: " + tmpDamage);
+                if (attacker instanceof Player) {
+                    Player attackingPlayer = (Player) attacker;
+                    ItemStack weapon = attackingPlayer.getItemInHand();
+                    Material weaponType = weapon.getType();
 
+                    // if (entity instanceof Player) {
+                    // if (weaponType.getMaxDurability() > 0) {
+                    // EntityPlayer entityPlayer = ((CraftPlayer) attackingPlayer).getHandle();
+                    // if (weaponType.getMaxDurability() + weapon.getDurability() > 0) {
+                    // entityPlayer.inventory.getItemInHand().damage(1, entityPlayer);
+                    // } else {
+                    // entityPlayer.inventory.setItem(entityPlayer.inventory.itemInHandIndex, null);
+                    // //attackingPlayer.setItemInHand(null);
+                    // }
+                    // }
+                    // }
+
+                    Integer tmpDamage = damageManager.getItemDamage(weaponType, attackingPlayer);
                     if (tmpDamage != null) {
                         damage = tmpDamage;
                     }
                 } else {
                     CreatureType type = Properties.getCreatureFromEntity(attacker);
                     if (type != null) {
-                        if (DEBUG) plugin.log(Level.INFO, "    " + type.name() + " Attacker");
                         Integer tmpDamage = damageManager.getCreatureDamage(type);
-                        if (DEBUG) plugin.log(Level.INFO, "      Damage: " + tmpDamage);
                         if (tmpDamage != null) {
                             damage = tmpDamage;
                         }
@@ -108,9 +109,7 @@ public class HeroesDamageListener extends EntityListener {
                 }
             }
         } else if (cause != DamageCause.CUSTOM) {
-            if (DEBUG) plugin.log(Level.INFO, "  Other Damage Cause");
             Integer tmpDamage = damageManager.getEnvironmentalDamage(cause);
-            if (DEBUG) plugin.log(Level.INFO, "    Damage: " + tmpDamage);
             if (tmpDamage != null) {
                 damage = tmpDamage;
                 if (cause == DamageCause.FALL) {
@@ -119,33 +118,14 @@ public class HeroesDamageListener extends EntityListener {
             }
         }
 
-        Entity entity = event.getEntity();
+        System.out.println(damage);
+
         if (entity instanceof Player) {
-            onPlayerDamage(event, damage);
+            event.setDamage(damage);
+            // plugin.getHeroManager().getHero((Player) entity).damage(damage);
+            // event.setCancelled(true);
         } else if (entity instanceof LivingEntity) {
             event.setDamage(damage);
-        }
-    }
-
-    private void onPlayerDamage(EntityDamageEvent event, int damage) {
-        Player player = (Player) event.getEntity();
-        Hero hero = plugin.getHeroManager().getHero(player);
-        
-        hero.setHealth(hero.getHealth() - damage);
-        int visualDamage = (int) (player.getHealth() - hero.getHealth() / hero.getMaxHealth() * 20);
-        event.setDamage(visualDamage);
-
-        if (visualDamage == 0) {
-            fakeDamageAnimation(player);
-        }
-
-    }
-
-    private void fakeDamageAnimation(LivingEntity entity) {
-        EntityLiving nmsEntity = ((CraftLivingEntity) entity).getHandle();
-        for (Player player : entity.getWorld().getPlayers()) {
-            CraftPlayer craftPlayer = (CraftPlayer) player;
-            craftPlayer.getHandle().netServerHandler.sendPacket(new Packet18ArmAnimation(nmsEntity, (byte) 2));
         }
     }
 }

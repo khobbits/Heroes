@@ -15,8 +15,8 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.herocraftonline.dev.heroes.classes.ClassManager;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
+import com.herocraftonline.dev.heroes.classes.HeroClassManager;
 import com.herocraftonline.dev.heroes.command.BaseCommand;
 import com.herocraftonline.dev.heroes.command.CommandManager;
 import com.herocraftonline.dev.heroes.command.commands.AdminClassCommand;
@@ -25,7 +25,6 @@ import com.herocraftonline.dev.heroes.command.commands.ArmorCommand;
 import com.herocraftonline.dev.heroes.command.commands.BindSkillCommand;
 import com.herocraftonline.dev.heroes.command.commands.ChooseCommand;
 import com.herocraftonline.dev.heroes.command.commands.ConfigReloadCommand;
-import com.herocraftonline.dev.heroes.command.commands.HealthCommand;
 import com.herocraftonline.dev.heroes.command.commands.HelpCommand;
 import com.herocraftonline.dev.heroes.command.commands.HeroSaveCommand;
 import com.herocraftonline.dev.heroes.command.commands.LeaderboardCommand;
@@ -48,7 +47,6 @@ import com.herocraftonline.dev.heroes.command.commands.VerboseCommand;
 import com.herocraftonline.dev.heroes.command.commands.WhoCommand;
 import com.herocraftonline.dev.heroes.damage.DamageManager;
 import com.herocraftonline.dev.heroes.inventory.BukkitContribInventoryListener;
-import com.herocraftonline.dev.heroes.inventory.HeroesInventoryListener;
 import com.herocraftonline.dev.heroes.inventory.InventoryChecker;
 import com.herocraftonline.dev.heroes.party.PartyEntityListener;
 import com.herocraftonline.dev.heroes.party.PartyManager;
@@ -87,7 +85,7 @@ public class Heroes extends JavaPlugin {
     // Various data managers
     private ConfigManager configManager;
     private CommandManager commandManager = new CommandManager();
-    private ClassManager classManager;
+    private HeroClassManager heroClassManager;
     private HeroManager heroManager;
     private PartyManager partyManager;
     private DamageManager damageManager;
@@ -99,10 +97,6 @@ public class Heroes extends JavaPlugin {
     // Variable for BukkitContrib.
     public static boolean useBukkitContrib = false;
 
-    // Inventory Event listeners for both Heroes and BukkitContrib
-    private final HeroesInventoryListener heroesInventoryListener = new HeroesInventoryListener(this);
-    private BukkitContribInventoryListener bukkitContribInventoryListener;
-
     // Party Listener
     private PartyEntityListener partyEntityListener = new PartyEntityListener(this);
 
@@ -110,8 +104,6 @@ public class Heroes extends JavaPlugin {
     // restrictions.
     private final InventoryChecker inventoryChecker = new InventoryChecker(this);
 
-    
-    
     /**
      * Print messages to the Debug Log, if the servers in Debug Mode then we also wan't to print the messages to the
      * standard Server Console.
@@ -126,8 +118,8 @@ public class Heroes extends JavaPlugin {
         debugLog.log(level, "[Debug] " + msg);
     }
 
-    public ClassManager getClassManager() {
-        return classManager;
+    public HeroClassManager getClassManager() {
+        return heroClassManager;
     }
 
     public CommandManager getCommandManager() {
@@ -136,6 +128,10 @@ public class Heroes extends JavaPlugin {
 
     public ConfigManager getConfigManager() {
         return configManager;
+    }
+
+    public DamageManager getDamageManager() {
+        return damageManager;
     }
 
     public HeroManager getHeroManager() {
@@ -148,10 +144,6 @@ public class Heroes extends JavaPlugin {
 
     public PartyManager getPartyManager() {
         return partyManager;
-    }
-    
-    public DamageManager getDamageManager() {
-        return damageManager;
     }
 
     /**
@@ -264,8 +256,8 @@ public class Heroes extends JavaPlugin {
         debugLog = new DebugLog("Heroes", dataFolder + File.separator + "debug.log");
     }
 
-    public void setClassManager(ClassManager classManager) {
-        this.classManager = classManager;
+    public void setClassManager(HeroClassManager heroClassManager) {
+        this.heroClassManager = heroClassManager;
     }
 
     /**
@@ -273,13 +265,13 @@ public class Heroes extends JavaPlugin {
      */
     public void setupBukkitContrib() {
         Plugin test = this.getServer().getPluginManager().getPlugin("BukkitContrib");
+        BukkitContribInventoryListener bukkitContribInventoryListener;
         if (test != null) {
             Heroes.useBukkitContrib = true;
             bukkitContribInventoryListener = new BukkitContribInventoryListener(this);
             Bukkit.getServer().getPluginManager().registerEvent(Type.CUSTOM_EVENT, bukkitContribInventoryListener, Priority.Monitor, this);
         } else {
             Heroes.useBukkitContrib = false;
-            bukkitContribInventoryListener = null;
         }
     }
 
@@ -303,9 +295,9 @@ public class Heroes extends JavaPlugin {
                         }
                     }
 
-                    if (Heroes.Permissions != null && heroClass != classManager.getDefaultClass()) {
+                    if (Heroes.Permissions != null && heroClass != heroClassManager.getDefaultClass()) {
                         if (!Heroes.Permissions.has(player, "heroes.classes." + heroClass.getName().toLowerCase())) {
-                            hero.setHeroClass(classManager.getDefaultClass());
+                            hero.setHeroClass(heroClassManager.getDefaultClass());
                         }
                     }
                 }
@@ -376,7 +368,7 @@ public class Heroes extends JavaPlugin {
         // Page 4
         commandManager.addCommand(new LeaderboardCommand(this));
         commandManager.addCommand(new HeroSaveCommand(this));
-        commandManager.addCommand(new HealthCommand(this));
+        // commandManager.addCommand(new HealthCommand(this));
     }
 
     /**
@@ -405,9 +397,6 @@ public class Heroes extends JavaPlugin {
         pluginManager.registerEvent(Type.CUSTOM_EVENT, new HLevelListener(this), Priority.Monitor, this);
         pluginManager.registerEvent(Type.CUSTOM_EVENT, new HPermissionsListener(this), Priority.Monitor, this);
 
-        // Inventory Event Listeners
-        pluginManager.registerEvent(Type.CUSTOM_EVENT, heroesInventoryListener, Priority.Monitor, this);
-        
         damageManager.registerEvents();
     }
 }

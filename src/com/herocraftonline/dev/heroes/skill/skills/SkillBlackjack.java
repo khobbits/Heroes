@@ -41,7 +41,7 @@ public class SkillBlackjack extends ActiveSkill {
     public SkillBlackjack(Heroes plugin) {
         super(plugin);
         setName("Blackjack");
-        setDescription("Gives your melee attacks a chance to stun");
+        setDescription("Occasionally stuns your opponent");
         setUsage("/skill blackjack");
         setMinArgs(0);
         setMaxArgs(0);
@@ -103,6 +103,62 @@ public class SkillBlackjack extends ActiveSkill {
 
     }
 
+    public class SkillEntityListener extends EntityListener {
+
+        private final Skill skill;
+
+        public SkillEntityListener(Skill skill) {
+            this.skill = skill;
+        }
+
+        @Override
+        public void onEntityDamage(EntityDamageEvent event) {
+            if (event.isCancelled()) return;
+            if (event instanceof EntityDamageByEntityEvent) {
+                EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
+                if (subEvent.getCause() != DamageCause.ENTITY_ATTACK) return;
+
+                Entity attackingEntity = subEvent.getDamager();
+                Entity defendingEntity = subEvent.getEntity();
+
+                if (!(attackingEntity instanceof Player)) return;
+
+                if (!(defendingEntity instanceof Player)) return;
+
+                HeroManager heroManager = plugin.getHeroManager();
+                Hero attackingHero = heroManager.getHero((Player) attackingEntity);
+                Hero defendingHero = heroManager.getHero((Player) defendingEntity);
+
+                if (attackingHero.hasEffect("Stun")) {
+                    event.setCancelled(true);
+                    return;
+                }
+
+                if (!attackingHero.hasEffect("Blackjack")) return;
+
+                HeroClass heroClass = attackingHero.getHeroClass();
+                double chance = getSetting(heroClass, "stun-chance", 0.20);
+                if (random.nextDouble() < chance) {
+                    int duration = getSetting(heroClass, "stun-duration", 5000);
+                    defendingHero.addEffect(new StunEffect(skill, duration));
+                }
+            }
+        }
+
+    }
+
+    public class SkillPlayerListener extends PlayerListener {
+
+        @Override
+        public void onPlayerInteract(PlayerInteractEvent event) {
+            Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
+            if (hero.hasEffect("Stun")) {
+                event.setCancelled(true);
+            }
+        }
+
+    }
+
     public class StunEffect extends PeriodicEffect implements Periodic, Expirable {
 
         private static final long period = 100;
@@ -147,72 +203,6 @@ public class SkillBlackjack extends ActiveSkill {
                 player.teleport(location);
             }
         }
-    }
-
-    public class SkillEntityListener extends EntityListener {
-
-        private final Skill skill;
-
-        public SkillEntityListener(Skill skill) {
-            this.skill = skill;
-        }
-
-        @Override
-        public void onEntityDamage(EntityDamageEvent event) {
-            if (event.isCancelled()) {
-                return;
-            }
-            if (event instanceof EntityDamageByEntityEvent) {
-                EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
-                if (subEvent.getCause() != DamageCause.ENTITY_ATTACK) {
-                    return;
-                }
-
-                Entity attackingEntity = subEvent.getDamager();
-                Entity defendingEntity = subEvent.getEntity();
-
-                if (!(attackingEntity instanceof Player)) {
-                    return;
-                }
-
-                if (!(defendingEntity instanceof Player)) {
-                    return;
-                }
-
-                HeroManager heroManager = plugin.getHeroManager();
-                Hero attackingHero = heroManager.getHero((Player) attackingEntity);
-                Hero defendingHero = heroManager.getHero((Player) defendingEntity);
-
-                if (attackingHero.hasEffect("Stun")) {
-                    event.setCancelled(true);
-                    return;
-                }
-
-                if (!attackingHero.hasEffect("Blackjack")) {
-                    return;
-                }
-
-                HeroClass heroClass = attackingHero.getHeroClass();
-                double chance = getSetting(heroClass, "stun-chance", 0.20);
-                if (random.nextDouble() < chance) {
-                    int duration = getSetting(heroClass, "stun-duration", 5000);
-                    defendingHero.addEffect(new StunEffect(skill, duration));
-                }
-            }
-        }
-
-    }
-
-    public class SkillPlayerListener extends PlayerListener {
-
-        @Override
-        public void onPlayerInteract(PlayerInteractEvent event) {
-            Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
-            if (hero.hasEffect("Stun")) {
-                event.setCancelled(true);
-            }
-        }
-
     }
 
 }

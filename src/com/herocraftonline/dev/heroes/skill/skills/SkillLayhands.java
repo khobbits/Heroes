@@ -1,9 +1,12 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
+import com.herocraftonline.dev.heroes.util.Messaging;
 
 public class SkillLayhands extends TargettedSkill {
 
@@ -19,7 +22,12 @@ public class SkillLayhands extends TargettedSkill {
 
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
+        if (!(target instanceof Player)) {
+            Messaging.send(hero.getPlayer(), "You need a target!");
+            return false;
+        }
         target.setHealth(20);
+
         broadcastExecuteText(hero, target);
         return true;
     }

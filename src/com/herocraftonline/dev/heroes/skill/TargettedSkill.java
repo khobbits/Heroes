@@ -137,7 +137,7 @@ public abstract class TargettedSkill extends ActiveSkill {
         }
         return use(hero, target, args);
     }
-    
+
     protected void broadcastExecuteText(Hero hero, LivingEntity target) {
         Player player = hero.getPlayer();
         broadcast(player.getLocation(), getUseText(), player.getDisplayName(), getName(), target == player ? "himself" : getEntityName(target));
@@ -176,9 +176,7 @@ public abstract class TargettedSkill extends ActiveSkill {
                 int entityZ = entityLocation.getBlockZ();
                 for (Block block : lineOfSight) {
                     Location blockLocation = block.getLocation();
-                    if (entityX == blockLocation.getBlockX() && entityZ == blockLocation.getBlockZ()) {
-                        return (LivingEntity) entity;
-                    }
+                    if (entityX == blockLocation.getBlockX() && entityZ == blockLocation.getBlockZ()) return (LivingEntity) entity;
                 }
             }
         }
@@ -195,24 +193,18 @@ public abstract class TargettedSkill extends ActiveSkill {
      * @return <code>true</code> if <code>b</code> is in <code>a</code>'s line of sight; <code>false</code> otherwise
      */
     public static boolean inLineOfSight(Player a, Player b) {
-        if (a == b) {
-            return true;
-        }
+        if (a == b) return true;
 
         Location aLoc = a.getEyeLocation();
         Location bLoc = b.getEyeLocation();
         int distance = Location.locToBlock(aLoc.toVector().distance(bLoc.toVector())) - 1;
-        if (distance > 120) {
-            return false;
-        }
+        if (distance > 120) return false;
         Vector ab = new Vector(bLoc.getX() - aLoc.getX(), bLoc.getY() - aLoc.getY(), bLoc.getZ() - aLoc.getZ());
         Iterator<Block> iterator = new BlockIterator(a.getWorld(), aLoc.toVector(), ab, 0, distance + 1);
         while (iterator.hasNext()) {
             Block block = iterator.next();
             Material type = block.getType();
-            if (type != Material.AIR && type != Material.WATER) {
-                return false;
-            }
+            if (type != Material.AIR && type != Material.WATER) return false;
         }
         return true;
     }

@@ -105,9 +105,7 @@ public abstract class PassiveSkill extends Skill {
      */
     public void tryApplying(Hero hero) {
         HeroClass heroClass = hero.getHeroClass();
-        if (!heroClass.hasSkill(getName())) {
-            return;
-        }
+        if (!heroClass.hasSkill(getName())) return;
         ConfigurationNode settings = heroClass.getSkillSettings(getName());
         if (settings != null) {
             if (hero.getLevel() >= getSetting(heroClass, SETTING_LEVEL, 1)) {
@@ -125,7 +123,9 @@ public abstract class PassiveSkill extends Skill {
      *            the Hero to apply the effect to
      */
     protected void apply(Hero hero) {
-        hero.addEffect(new Effect(this, getName()));
+        Effect effect = new Effect(this, getName());
+        effect.setPersistent(true);
+        hero.addEffect(effect);
         Player player = hero.getPlayer();
         broadcast(player.getLocation(), applyText, player.getDisplayName(), getName());
     }
@@ -146,6 +146,7 @@ public abstract class PassiveSkill extends Skill {
      * Monitors level and class change events and tries to apply or remove the skill's effect when appropriate.
      */
     public class SkillCustomEventListener extends CustomEventListener {
+
         @Override
         public void onCustomEvent(Event event) {
             if (event instanceof LevelEvent) {

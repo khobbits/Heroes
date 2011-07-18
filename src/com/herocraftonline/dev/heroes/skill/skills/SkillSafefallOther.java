@@ -55,14 +55,13 @@ public class SkillSafefallOther extends TargettedSkill {
             Hero targetHero = plugin.getHeroManager().getHero((Player) target);
 
             broadcastExecuteText(hero, target);
-            
+
             int duration = getSetting(hero.getHeroClass(), "duration", 10000);
             targetHero.addEffect(new SafefallEffect(this, duration));
 
             return true;
-        } else {
+        } else
             return false;
-        }
     }
 
     public class SafefallEffect extends ExpirableEffect {
@@ -90,9 +89,7 @@ public class SkillSafefallOther extends TargettedSkill {
 
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
-            if (event.isCancelled() || event.getCause() != DamageCause.FALL) {
-                return;
-            }
+            if (event.isCancelled() || event.getCause() != DamageCause.FALL) return;
 
             Entity defender = event.getEntity();
             if (defender instanceof Player) {

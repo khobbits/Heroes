@@ -58,11 +58,39 @@ public class SkillSmoke extends ActiveSkill {
     @Override
     public boolean use(Hero hero, String[] args) {
         broadcastExecuteText(hero);
-        
+
         int duration = getSetting(hero.getHeroClass(), "duration", 20000);
         hero.addEffect(new SmokeEffect(this, duration));
 
         return true;
+    }
+
+    public class SkillEntityListener extends EntityListener {
+
+        @Override
+        public void onEntityDamage(EntityDamageEvent event) {
+            if (event.getEntity() instanceof Player) {
+                Player player = (Player) event.getEntity();
+                Hero hero = plugin.getHeroManager().getHero(player);
+                if (hero.hasEffect("Smoke")) {
+                    hero.removeEffect(hero.getEffect("Smoke"));
+                }
+            }
+        }
+    }
+
+    public class SkillPlayerListener extends PlayerListener {
+
+        @Override
+        public void onPlayerInteract(PlayerInteractEvent event) {
+            if (event.getAction() != Action.PHYSICAL) {
+                Player player = event.getPlayer();
+                Hero hero = plugin.getHeroManager().getHero(player);
+                if (hero.hasEffect("Smoke")) {
+                    hero.removeEffect(hero.getEffect("Smoke"));
+                }
+            }
+        }
     }
 
     public class SmokeEffect extends ExpirableEffect {
@@ -102,31 +130,5 @@ public class SkillSmoke extends ActiveSkill {
             broadcast(player.getLocation(), expireText, player.getDisplayName());
         }
 
-    }
-
-    public class SkillEntityListener extends EntityListener {
-        @Override
-        public void onEntityDamage(EntityDamageEvent event) {
-            if (event.getEntity() instanceof Player) {
-                Player player = (Player) event.getEntity();
-                Hero hero = plugin.getHeroManager().getHero(player);
-                if (hero.hasEffect("Smoke")) {
-                    hero.removeEffect(hero.getEffect("Smoke"));
-                }
-            }
-        }
-    }
-
-    public class SkillPlayerListener extends PlayerListener {
-        @Override
-        public void onPlayerInteract(PlayerInteractEvent event) {
-            if (event.getAction() != Action.PHYSICAL) {
-                Player player = event.getPlayer();
-                Hero hero = plugin.getHeroManager().getHero(player);
-                if (hero.hasEffect("Smoke")) {
-                    hero.removeEffect(hero.getEffect("Smoke"));
-                }
-            }
-        }
     }
 }

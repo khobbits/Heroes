@@ -21,6 +21,7 @@ import com.herocraftonline.dev.heroes.persistence.HeroManager;
 import com.herocraftonline.dev.heroes.skill.OutsourcedSkill;
 
 public class HPlayerListener extends PlayerListener {
+
     public final Heroes plugin;
 
     public HPlayerListener(Heroes instance) {
@@ -34,9 +35,7 @@ public class HPlayerListener extends PlayerListener {
 
     @Override
     public void onPlayerInteract(PlayerInteractEvent event) {
-        if (event.useItemInHand() == Result.DENY) {
-            return;
-        }
+        if (event.useItemInHand() == Result.DENY) return;
 
         Player player = event.getPlayer();
         Material material = player.getItemInHand().getType();
@@ -61,11 +60,10 @@ public class HPlayerListener extends PlayerListener {
 
     @Override
     public void onPlayerPickupItem(PlayerPickupItemEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
+        if (event.isCancelled()) return;
         final Player player = event.getPlayer();
         plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+
             @Override
             public void run() {
                 plugin.getInventoryChecker().checkInventory(player.getName());
@@ -83,9 +81,7 @@ public class HPlayerListener extends PlayerListener {
 
     @Override
     public void onPlayerTeleport(PlayerTeleportEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
+        if (event.isCancelled()) return;
 
         Player player = event.getPlayer();
         if (event.getFrom().getWorld() != event.getTo().getWorld()) {

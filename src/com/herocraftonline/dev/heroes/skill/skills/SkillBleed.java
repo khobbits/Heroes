@@ -62,7 +62,7 @@ public class SkillBleed extends TargettedSkill {
         }
 
         broadcastExecuteText(hero, target);
-        
+
         long duration = getSetting(hero.getHeroClass(), "duration", 10000);
         long period = getSetting(hero.getHeroClass(), "period", 2000);
         int tickDamage = getSetting(hero.getHeroClass(), "tick-damage", 1);
@@ -73,7 +73,7 @@ public class SkillBleed extends TargettedSkill {
     public class BleedEffect extends PeriodicEffect implements Periodic, Expirable {
 
         private final int tickDamage;
-        
+
         public BleedEffect(Skill skill, long duration, long period, int tickDamage) {
             super(skill, "Bleed", period, duration);
             this.tickDamage = tickDamage;
@@ -89,7 +89,7 @@ public class SkillBleed extends TargettedSkill {
         @Override
         public void remove(Hero hero) {
             super.remove(hero);
-            
+
             Player player = hero.getPlayer();
             broadcast(player.getLocation(), expireText, player.getDisplayName());
         }

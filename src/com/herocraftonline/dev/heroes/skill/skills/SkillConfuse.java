@@ -65,7 +65,7 @@ public class SkillConfuse extends TargettedSkill {
             Messaging.send(player, "You need a target!");
             return false;
         }
-        
+
         broadcastExecuteText(hero, target);
 
         long duration = getSetting(hero.getHeroClass(), "duration", 10000);

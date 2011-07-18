@@ -1,5 +1,6 @@
 package com.herocraftonline.dev.heroes;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -52,7 +53,11 @@ public class HPermissionsListener extends CustomEventListener {
      * @param world
      */
     private void relearnSkills(World world) {
-        for (Player player : world.getPlayers()) {
+        List<Player> players = new ArrayList<Player>(world.getPlayers());
+        for (Player player : players) {
+            if (player == null) {
+                continue;
+            }
             // Grab Hero.
             Hero hero = this.plugin.getHeroManager().getHero(player);
             // Grab Commands so we can parse them for Skills, seeing as Skills are still set as Commands.

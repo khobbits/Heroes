@@ -11,6 +11,7 @@ import com.herocraftonline.dev.heroes.command.BaseCommand;
 import com.herocraftonline.dev.heroes.util.Messaging;
 
 public class SpecsCommand extends BaseCommand {
+
     private static final int SPECS_PER_PAGE = 8;
 
     public SpecsCommand(Heroes plugin) {
@@ -25,20 +26,18 @@ public class SpecsCommand extends BaseCommand {
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-        if (!(sender instanceof Player)) {
-            return;
-        }
+        if (!(sender instanceof Player)) return;
         HeroClass playerClass = plugin.getHeroManager().getHero((Player) sender).getHeroClass();
 
         int page = 0;
         if (args.length != 0) {
             try {
                 page = Integer.parseInt(args[0]) - 1;
-            } catch (NumberFormatException e) {}
+            } catch (NumberFormatException ignored) {}
         }
 
         Set<HeroClass> childClasses = playerClass.getSpecializations();
-        HeroClass[] specs = childClasses.toArray(new HeroClass[0]);
+        HeroClass[] specs = childClasses.toArray(new HeroClass[childClasses.size()]);
 
         if (specs.length == 0) {
             Messaging.send(sender, "$1 has no specializations.", playerClass.getName());

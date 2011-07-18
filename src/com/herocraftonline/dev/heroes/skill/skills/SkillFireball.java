@@ -12,6 +12,7 @@ import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
 import org.bukkit.event.entity.EntityDamageByProjectileEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityListener;
 import org.bukkit.util.Vector;
 import org.bukkit.util.config.ConfigurationNode;
@@ -68,9 +69,7 @@ public class SkillFireball extends ActiveSkill {
 
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
-            if (event.isCancelled()) {
-                return;
-            }
+            if (event.isCancelled()) return;
             if (event instanceof EntityDamageByProjectileEvent) {
                 EntityDamageByProjectileEvent subEvent = (EntityDamageByProjectileEvent) event;
                 Entity projectile = subEvent.getProjectile();
@@ -83,11 +82,9 @@ public class SkillFireball extends ActiveSkill {
                                 Hero hero = plugin.getHeroManager().getHero((Player) dmger);
                                 HeroClass heroClass = hero.getHeroClass();
                                 // Perform a check to see if any plugin is preventing us from damaging the player.
-                                EntityDamageEvent damageEvent = new EntityDamageEvent(dmger, subEvent.getCause(), getSetting(heroClass, "damage", 4));
+                                EntityDamageEvent damageEvent = new EntityDamageEvent(null, DamageCause.CUSTOM, getSetting(heroClass, "damage", 4));
                                 Bukkit.getServer().getPluginManager().callEvent(damageEvent);
-                                if (damageEvent.isCancelled()) {
-                                    return;
-                                }
+                                if (damageEvent.isCancelled()) return;
                                 // Damage the player and ignite them.
                                 LivingEntity livingEntity = (LivingEntity) entity;
                                 livingEntity.setFireTicks(getSetting(heroClass, "fire-ticks", 100));

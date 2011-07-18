@@ -29,7 +29,6 @@ import com.herocraftonline.dev.heroes.util.Messaging;
  * <ul>
  * <li>{@link ActiveSkill}</li>
  * <ul>
- * <li>{@link ActiveEffectSkill}</li>
  * <li>{@link TargettedSkill}</li>
  * </ul>
  * <li>{@link PassiveSkill}</li> <li>{@link OutsourcedSkill}</li> </ul>
@@ -61,6 +60,37 @@ public abstract class Skill extends BaseCommand {
      */
     public Skill(Heroes plugin) {
         super(plugin);
+    }
+
+    /**
+     * Helper method that broadcasts a message to all players within 30 blocks of the specified source. These messages
+     * can be suppressed by players on an individual basis.
+     * 
+     * @param source
+     *            the <code>Location</code> to measure from
+     * @param message
+     *            the content of the message
+     * @param args
+     *            any text in the message of the format $<i>n</i> where <i>n</i>
+     *            is an integer will be replaced with the <i>n</i>th element of
+     *            this array
+     */
+    public void broadcast(Location source, String message, Object... args) {
+        if (message.isEmpty()) return;
+
+        final Player[] players = plugin.getServer().getOnlinePlayers();
+        for (Player player : players) {
+            Location playerLocation = player.getLocation();
+            Hero hero = plugin.getHeroManager().getHero(player);
+            if (hero.isSuppressing(this)) {
+                continue;
+            }
+            if (source.getWorld().equals(playerLocation.getWorld())) {
+                if (playerLocation.distance(source) < 30) {
+                    Messaging.send(player, message, args);
+                }
+            }
+        }
     }
 
     /**
@@ -100,11 +130,10 @@ public abstract class Skill extends BaseCommand {
      */
     public double getSetting(HeroClass heroClass, String setting, double def) {
         List<String> keys = heroClass == null ? null : heroClass.getSkillSettings(getName()).getKeys(null);
-        if (keys != null && keys.contains(setting)) {
+        if (keys != null && keys.contains(setting))
             return heroClass.getSkillSettings(getName()).getDouble(setting, def);
-        } else {
+        else
             return config.getDouble(setting, def);
-        }
     }
 
     /**
@@ -122,11 +151,10 @@ public abstract class Skill extends BaseCommand {
      */
     public int getSetting(HeroClass heroClass, String setting, int def) {
         List<String> keys = heroClass == null ? null : heroClass.getSkillSettings(getName()).getKeys(null);
-        if (keys != null && keys.contains(setting)) {
+        if (keys != null && keys.contains(setting))
             return heroClass.getSkillSettings(getName()).getInt(setting, def);
-        } else {
+        else
             return config.getInt(setting, def);
-        }
     }
 
     /**
@@ -144,50 +172,16 @@ public abstract class Skill extends BaseCommand {
      */
     public String getSetting(HeroClass heroClass, String setting, String def) {
         List<String> keys = heroClass == null ? null : heroClass.getSkillSettings(getName()).getKeys(null);
-        if (keys != null && keys.contains(setting)) {
+        if (keys != null && keys.contains(setting))
             return heroClass.getSkillSettings(getName()).getString(setting, def);
-        } else {
+        else
             return config.getString(setting, def);
-        }
     }
 
     /**
      * An initialization method called after all configuration data is loaded.
      */
     public abstract void init();
-
-    /**
-     * Helper method that broadcasts a message to all players within 30 blocks of the specified source. These messages
-     * can be suppressed by players on an individual basis.
-     * 
-     * @param source
-     *            the <code>Location</code> to measure from
-     * @param message
-     *            the content of the message
-     * @param args
-     *            any text in the message of the format $<i>n</i> where <i>n</i>
-     *            is an integer will be replaced with the <i>n</i>th element of
-     *            this array
-     */
-    public void broadcast(Location source, String message, Object... args) {
-        if (message.isEmpty()) {
-            return;
-        }
-
-        final Player[] players = plugin.getServer().getOnlinePlayers();
-        for (Player player : players) {
-            Location playerLocation = player.getLocation();
-            Hero hero = plugin.getHeroManager().getHero(player);
-            if (hero.isSuppressing(this)) {
-                continue;
-            }
-            if (source.getWorld().equals(playerLocation.getWorld())) {
-                if (playerLocation.distance(source) < 30) {
-                    Messaging.send(player, message, args);
-                }
-            }
-        }
-    }
 
     /**
      * Sets the configuration containing all settings related to the skill. This should only be used by the skill loader

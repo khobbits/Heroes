@@ -12,6 +12,7 @@ import com.nijikokun.register.payment.Methods;
  * Checks for plugins whenever one is enabled
  */
 public class HPluginListener extends ServerListener {
+
     private Heroes plugin;
     private Methods Methods = null;
 

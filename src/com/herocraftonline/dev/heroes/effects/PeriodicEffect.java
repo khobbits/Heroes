@@ -14,6 +14,11 @@ public class PeriodicEffect extends ExpirableEffect implements Periodic, Expirab
     }
 
     @Override
+    public void apply(Hero hero) {
+        super.apply(hero);
+    }
+
+    @Override
     public long getPeriod() {
         return period;
     }
@@ -24,18 +29,13 @@ public class PeriodicEffect extends ExpirableEffect implements Periodic, Expirab
     }
 
     @Override
-    public void apply(Hero hero) {
-        super.apply(hero);
+    public void remove(Hero hero) {
+
     }
 
     @Override
     public void tick(Hero hero) {
         lastTickTime = System.currentTimeMillis();
-    }
-
-    @Override
-    public void remove(Hero hero) {
-
     }
 
 }

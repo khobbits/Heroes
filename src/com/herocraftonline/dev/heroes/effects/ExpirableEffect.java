@@ -14,6 +14,11 @@ public class ExpirableEffect extends Effect implements Expirable {
     }
 
     @Override
+    public void apply(Hero hero) {
+        applyTime = System.currentTimeMillis();
+    }
+
+    @Override
     public long getDuration() {
         return duration;
     }
@@ -26,11 +31,6 @@ public class ExpirableEffect extends Effect implements Expirable {
     @Override
     public boolean isExpired() {
         return System.currentTimeMillis() >= getExpiry();
-    }
-
-    @Override
-    public void apply(Hero hero) {
-        applyTime = System.currentTimeMillis();
     }
 
     @Override

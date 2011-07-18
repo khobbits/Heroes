@@ -92,9 +92,7 @@ public class OutsourcedSkill extends Skill {
      *            the {@link HeroClass} to check for this skill
      */
     public void tryLearningSkill(Hero hero, HeroClass heroClass) {
-        if (Heroes.Permissions == null) {
-            return;
-        }
+        if (Heroes.Permissions == null) return;
 
         Player player = hero.getPlayer();
         String world = player.getWorld().getName();
@@ -154,6 +152,7 @@ public class OutsourcedSkill extends Skill {
      * Monitors level and class change events and tries to give or remove the skill's permissions when appropriate.
      */
     public class SkillCustomListener extends CustomEventListener {
+
         @Override
         public void onCustomEvent(Event event) {
             if (event instanceof ClassChangeEvent) {

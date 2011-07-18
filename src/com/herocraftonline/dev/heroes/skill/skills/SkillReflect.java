@@ -53,7 +53,7 @@ public class SkillReflect extends ActiveSkill {
     @Override
     public boolean use(Hero hero, String[] args) {
         broadcastExecuteText(hero);
-        
+
         int duration = getSetting(hero.getHeroClass(), "duration", 5000);
         hero.addEffect(new ReflectEffect(this, duration));
 
@@ -85,9 +85,7 @@ public class SkillReflect extends ActiveSkill {
 
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
-            if (event.isCancelled() || !(event instanceof EntityDamageByEntityEvent)) {
-                return;
-            }
+            if (event.isCancelled() || !(event instanceof EntityDamageByEntityEvent)) return;
 
             EntityDamageByEntityEvent edbe = (EntityDamageByEntityEvent) event;
             Entity defender = edbe.getEntity();

@@ -61,7 +61,7 @@ public class SkillRoot extends TargettedSkill {
         }
 
         broadcastExecuteText(hero, target);
-        
+
         long duration = getSetting(hero.getHeroClass(), "duration", 5000);
         targetHero.addEffect(new RootEffect(this, duration));
         return true;
@@ -93,7 +93,7 @@ public class SkillRoot extends TargettedSkill {
         @Override
         public void remove(Hero hero) {
             super.remove(hero);
-            
+
             Player player = hero.getPlayer();
             broadcast(player.getLocation(), expireText, player.getDisplayName());
         }

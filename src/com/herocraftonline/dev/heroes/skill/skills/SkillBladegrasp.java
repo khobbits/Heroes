@@ -56,7 +56,7 @@ public class SkillBladegrasp extends ActiveSkill {
         broadcastExecuteText(hero);
         int duration = getSetting(hero.getHeroClass(), "duration", 5000);
         hero.addEffect(new BladegraspEffect(this, duration));
-        
+
         return true;
     }
 

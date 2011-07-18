@@ -36,17 +36,13 @@ public class SkillDrainsoul extends TargettedSkill {
 
         if (target instanceof Player) {
             Player targetPlayer = (Player) target;
-            if (targetPlayer.getName().equalsIgnoreCase(player.getName())) {
-                return false;
-            }
+            if (targetPlayer.getName().equalsIgnoreCase(player.getName())) return false;
         }
 
         // Throw a dummy damage event to make it obey PvP restricting plugins
         EntityDamageEvent event = new EntityDamageByEntityEvent(player, target, DamageCause.ENTITY_ATTACK, 0);
         plugin.getServer().getPluginManager().callEvent(event);
-        if (event.isCancelled()) {
-            return false;
-        }
+        if (event.isCancelled()) return false;
 
         int absorbAmount = getSetting(hero.getHeroClass(), "absorb-amount", 4);
 

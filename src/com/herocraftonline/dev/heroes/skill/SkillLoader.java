@@ -17,8 +17,7 @@ public final class SkillLoader {
 
     public static Skill loadSkill(File file, Heroes plugin) {
         try {
-            JarFile jarFile = null;
-            jarFile = new JarFile(file);
+            JarFile jarFile = new JarFile(file);
             Enumeration<JarEntry> entries = jarFile.entries();
 
             String mainClass = null;
@@ -40,9 +39,8 @@ public final class SkillLoader {
                 Class<? extends Skill> skillClass = clazz.asSubclass(Skill.class);
                 Constructor<? extends Skill> ctor = skillClass.getConstructor(plugin.getClass());
                 return ctor.newInstance(plugin);
-            } else {
+            } else
                 throw new Exception();
-            }
         } catch (Exception e) {
             plugin.log(Level.INFO, "The skill " + file.getName() + " failed to load");
             e.printStackTrace();

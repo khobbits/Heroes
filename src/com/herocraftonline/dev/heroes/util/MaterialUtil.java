@@ -3,6 +3,7 @@ package com.herocraftonline.dev.heroes.util;
 import org.bukkit.Material;
 
 public class MaterialUtil {
+
     public static String capitalize(String string) {
         char[] chars = string.toLowerCase().toCharArray();
         boolean found = false;

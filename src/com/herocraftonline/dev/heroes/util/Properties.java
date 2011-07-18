@@ -79,12 +79,11 @@ public class Properties {
      */
     public int getLevel(double exp) {
         for (int i = maxLevel - 1; i >= 0; i--) {
-            if (exp >= levels[i]) {
-                return i + 1;
-            }
+            if (exp >= levels[i]) return i + 1;
         }
         return -1;
     }
+
     /**
      * Converts an entity into its CreatureType
      * 

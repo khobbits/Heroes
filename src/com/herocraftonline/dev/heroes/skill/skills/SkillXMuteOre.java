@@ -32,6 +32,7 @@ public class SkillXMuteOre extends ActiveSkill {
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
         Map<String, Object> coalMap = new HashMap<String, Object>() {
+
             private static final long serialVersionUID = -1219378148267575L;
             {
                 put("reagentdata", 0); // Corresponds to coal (not charcoal)
@@ -40,6 +41,7 @@ public class SkillXMuteOre extends ActiveSkill {
             }
         };
         Map<String, Object> ironMap = new HashMap<String, Object>() {
+
             private static final long serialVersionUID = -7888166535021352165L;
             {
                 put("product", "GOLD_ORE");
@@ -47,6 +49,7 @@ public class SkillXMuteOre extends ActiveSkill {
             }
         };
         Map<String, Object> lapisMap = new HashMap<String, Object>() {
+
             private static final long serialVersionUID = 2039299575654763981L;
             {
                 put("reagentdata", 4); // Corresponds to lapis

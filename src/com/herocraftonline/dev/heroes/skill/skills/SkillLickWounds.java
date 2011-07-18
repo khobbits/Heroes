@@ -15,7 +15,7 @@ public class SkillLickWounds extends ActiveSkill {
     public SkillLickWounds(Heroes plugin) {
         super(plugin);
         setName("LickWounds");
-        setDescription("Heals all your wolves which are around you");
+        setDescription("Heals your nearby wolves");
         setUsage("/skill lickwounds");
         setMinArgs(0);
         setMaxArgs(0);

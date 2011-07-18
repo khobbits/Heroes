@@ -50,10 +50,10 @@ public class SkillGills extends ActiveSkill {
     @Override
     public boolean use(Hero hero, String[] args) {
         broadcastExecuteText(hero);
-        
+
         int duration = getSetting(hero.getHeroClass(), "duration", 5000);
         hero.addEffect(new GillsEffect(this, duration));
-        
+
         return true;
     }
 
@@ -82,9 +82,7 @@ public class SkillGills extends ActiveSkill {
 
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
-            if (event.isCancelled() || !(event.getCause() == DamageCause.DROWNING)) {
-                return;
-            }
+            if (event.isCancelled() || !(event.getCause() == DamageCause.DROWNING)) return;
             if (event.getEntity() instanceof Player) {
                 Player player = (Player) event.getEntity();
                 Hero hero = plugin.getHeroManager().getHero(player);

@@ -53,31 +53,11 @@ public class SkillSuperheat extends ActiveSkill {
     @Override
     public boolean use(Hero hero, String[] args) {
         broadcastExecuteText(hero);
-        
+
         int duration = getSetting(hero.getHeroClass(), "duration", 20000);
         hero.addEffect(new SuperheatEffect(this, duration));
 
         return true;
-    }
-
-    public class SuperheatEffect extends ExpirableEffect {
-
-        public SuperheatEffect(Skill skill, long duration) {
-            super(skill, "Superheat", duration);
-        }
-
-        @Override
-        public void apply(Hero hero) {
-            Player player = hero.getPlayer();
-            broadcast(player.getLocation(), applyText, player.getDisplayName());
-        }
-
-        @Override
-        public void remove(Hero hero) {
-            Player player = hero.getPlayer();
-            broadcast(player.getLocation(), expireText, player.getDisplayName());
-        }
-
     }
 
     public class SkillPlayerListener extends BlockListener {
@@ -112,6 +92,26 @@ public class SkillSuperheat extends ActiveSkill {
                 }
             }
         }
+    }
+
+    public class SuperheatEffect extends ExpirableEffect {
+
+        public SuperheatEffect(Skill skill, long duration) {
+            super(skill, "Superheat", duration);
+        }
+
+        @Override
+        public void apply(Hero hero) {
+            Player player = hero.getPlayer();
+            broadcast(player.getLocation(), applyText, player.getDisplayName());
+        }
+
+        @Override
+        public void remove(Hero hero) {
+            Player player = hero.getPlayer();
+            broadcast(player.getLocation(), expireText, player.getDisplayName());
+        }
+
     }
 
 }

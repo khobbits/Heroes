@@ -9,6 +9,7 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.HeroManager;
 
 public class PartyEntityListener extends EntityListener {
+
     public Heroes plugin;
 
     public PartyEntityListener(Heroes plugin) {
@@ -25,9 +26,7 @@ public class PartyEntityListener extends EntityListener {
                 HeroManager heroManager = plugin.getHeroManager();
                 HeroParty attackParty = heroManager.getHero(attacker).getParty();
 
-                if (attackParty == null) {
-                    return;
-                }
+                if (attackParty == null) return;
                 if (attackParty.isPartyMember(heroManager.getHero(defender)) && attackParty.getPvp()) {
                     initialEvent.setCancelled(true);
                 }

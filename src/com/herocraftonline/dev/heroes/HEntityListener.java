@@ -16,7 +16,7 @@ import org.bukkit.event.entity.EntityListener;
 
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
-import com.herocraftonline.dev.heroes.party.HeroParty;
+import com.herocraftonline.dev.heroes.effects.Effect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Properties;
@@ -45,14 +45,6 @@ public class HEntityListener extends EntityListener {
                 } else if (event instanceof EntityDamageByEntityEvent) {
                     EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
                     attacker = subEvent.getDamager();
-                }
-                // Check if the Attacker is in the Defenders Party.
-                if (attacker instanceof Player && defender instanceof Player) {
-                    HeroParty party = plugin.getHeroManager().getHero((Player) attacker).getParty();
-                    HeroParty partyDefend = plugin.getHeroManager().getHero((Player) defender).getParty();
-                    if (party != null && party == partyDefend) {
-                        event.setCancelled(true);
-                    }
                 }
                 // If it's a legitimate attack then we add it to the Kills list.
                 if (attacker != null && attacker instanceof Player) {
@@ -88,8 +80,15 @@ public class HEntityListener extends EntityListener {
                 }
                 heroDefender.setExperience(exp - expLoss);
                 heroDefender.setMana(0);
-                heroDefender.setHealth(heroDefender.getMaxHealth());
+                // heroDefender.setHealth(heroDefender.getMaxHealth());
                 Messaging.send(heroDefender.getPlayer(), "You have lost " + decFormat.format(expLoss) + " exp for dying.");
+            }
+
+            // Remove any nonpersistent effects
+            for (Effect effect : heroDefender.getEffects()) {
+                if (!effect.isPersistent()) {
+                    heroDefender.removeEffect(effect);
+                }
             }
         }
 
@@ -123,12 +122,10 @@ public class HEntityListener extends EntityListener {
                             break;
                         }
                     }
-                } catch (IllegalArgumentException e) {}
+                } catch (IllegalArgumentException ignored) {}
                 if (type != null) {
                     // If EXP hasn't been assigned for this Entity then we stop here.
-                    if (!prop.creatureKillingExp.containsKey(type)) {
-                        return;
-                    }
+                    if (!prop.creatureKillingExp.containsKey(type)) return;
                     addedExp = prop.creatureKillingExp.get(type);
                     experienceType = ExperienceType.KILLING;
                 }
