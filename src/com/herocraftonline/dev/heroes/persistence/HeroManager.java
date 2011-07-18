@@ -103,11 +103,12 @@ public class HeroManager {
             loadRecoveryItems(playerHero, playerConfig);
             loadBinds(playerHero, playerConfig);
             playerHero.mana = playerConfig.getInt("mana", 0);
-            // playerHero.health = playerConfig.getDouble("health", 100);
+            playerHero.health = playerConfig.getDouble("health", playerClass.getBaseMaxHealth());
             playerHero.setVerbose(playerConfig.getBoolean("verbose", true));
             playerHero.suppressedSkills = new HashSet<String>(playerConfig.getStringList("suppressed", null));
 
             addHero(playerHero);
+            playerHero.syncHealth();
 
             performSkillChecks(playerHero);
 
@@ -142,7 +143,7 @@ public class HeroManager {
         playerConfig.setProperty("suppressed", new ArrayList<String>(hero.getSuppressedSkills()));
         playerConfig.setProperty("mana", hero.getMana());
         playerConfig.removeProperty("itemrecovery");
-        // playerConfig.setProperty("health", hero.getHealth());
+        playerConfig.setProperty("health", hero.getHealth());
 
         saveCooldowns(hero, playerConfig);
         saveExperience(hero, playerConfig);

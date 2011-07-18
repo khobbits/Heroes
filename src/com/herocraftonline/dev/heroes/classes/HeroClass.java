@@ -25,8 +25,8 @@ public class HeroClass {
     private Map<String, ConfigurationNode> skills;
     private double expModifier;
 
-    // private double baseMaxHealth;
-    // private double maxHealthPerLevel;
+     private double baseMaxHealth;
+     private double maxHealthPerLevel;
 
     public HeroClass() {
         name = "";
@@ -39,8 +39,8 @@ public class HeroClass {
         expModifier = 1.0D;
         specializations = new LinkedHashSet<HeroClass>();
         skills = new LinkedHashMap<String, ConfigurationNode>();
-        // baseMaxHealth = 20;
-        // maxHealthPerLevel = 0;
+         baseMaxHealth = 20;
+         maxHealthPerLevel = 0;
     }
 
     public HeroClass(String name) {
@@ -100,13 +100,13 @@ public class HeroClass {
         return name;
     }
 
-    // public double getMaxHealthPerLevel() {
-    // return maxHealthPerLevel;
-    // }
-    //
-    // public double getBaseMaxHealth() {
-    // return baseMaxHealth;
-    // }
+     public double getMaxHealthPerLevel() {
+     return maxHealthPerLevel;
+     }
+    
+     public double getBaseMaxHealth() {
+     return baseMaxHealth;
+     }
 
     public HeroClass getParent() {
         return parent == null ? null : parent;
@@ -165,13 +165,13 @@ public class HeroClass {
         this.name = name;
     }
 
-    // public void setBaseMaxHealth(double baseMaxHealth) {
-    // this.baseMaxHealth = baseMaxHealth;
-    // }
-    //
-    // public void setMaxHealthPerLevel(double maxHealthPerLevel) {
-    // this.maxHealthPerLevel = maxHealthPerLevel;
-    // }
+    public void setBaseMaxHealth(double baseMaxHealth) {
+        this.baseMaxHealth = baseMaxHealth;
+    }
+
+    public void setMaxHealthPerLevel(double maxHealthPerLevel) {
+        this.maxHealthPerLevel = maxHealthPerLevel;
+    }
 
     public void setParent(HeroClass parent) {
         this.parent = parent;

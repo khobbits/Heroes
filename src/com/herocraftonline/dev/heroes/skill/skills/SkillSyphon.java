@@ -7,6 +7,7 @@ import org.bukkit.util.config.ConfigurationNode;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
+import com.herocraftonline.dev.heroes.util.Messaging;
 
 public class SkillSyphon extends TargettedSkill {
 
@@ -33,8 +34,14 @@ public class SkillSyphon extends TargettedSkill {
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
+        if (!(target instanceof Player)) {
+            Messaging.send(player, "Your need a target!");
+            return false;
+        }
+        
+        Hero targetHero = plugin.getHeroManager().getHero((Player) target);
 
-        int transferredHealth = getSetting(hero.getHeroClass(), "default-health", 4);
+        double transferredHealth = getSetting(hero.getHeroClass(), "default-health", 4);
         if (args.length == 2) {
             try {
                 transferredHealth = Integer.parseInt(args[1]);
@@ -43,14 +50,15 @@ public class SkillSyphon extends TargettedSkill {
                 return false;
             }
         }
-        int playerHealth = player.getHealth();
-        transferredHealth = playerHealth < transferredHealth ? playerHealth : transferredHealth > maxHealth ? maxHealth : transferredHealth;
-        player.setHealth(playerHealth - transferredHealth);
-        int targetHealth = target.getHealth();
+        double playerHealth = hero.getHealth();
+        double targetHealth = targetHero.getHealth();
+        hero.setHealth(playerHealth - transferredHealth);
+        hero.syncHealth();
+        
         transferredHealth *= getSetting(hero.getHeroClass(), "multiplier", 1d);
-        transferredHealth = maxHealth - targetHealth < transferredHealth ? maxHealth - targetHealth : transferredHealth < 0 ? 0 : transferredHealth;
-        target.setHealth(targetHealth + transferredHealth);
-
+        targetHero.setHealth(targetHealth + transferredHealth);
+        targetHero.syncHealth();
+        
         broadcastExecuteText(hero, target);
         return true;
     }

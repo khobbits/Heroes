@@ -36,10 +36,11 @@ public class SkillBandage extends TargettedSkill {
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
         if (target instanceof Player) {
+            Hero targetHero = plugin.getHeroManager().getHero((Player) target);
             int hpPlus = getSetting(hero.getHeroClass(), "health", 5);
-            int targetHealth = target.getHealth();
+            double targetHealth = targetHero.getHealth();
 
-            if (targetHealth >= 20) {
+            if (targetHealth >= targetHero.getMaxHealth()) {
                 Messaging.send(player, "Target is already fully healed.");
                 return false;
             }
@@ -58,11 +59,10 @@ public class SkillBandage extends TargettedSkill {
             } else {
                 inv.setItemInHand(null);
             }
-
-            if (targetHealth + hpPlus > 20) {
-                hpPlus = 20 - targetHealth;
-            }
-            target.setHealth(target.getHealth() + hpPlus);
+            
+            targetHero.setHealth(targetHealth + hpPlus);
+            targetHero.syncHealth();
+            
             broadcastExecuteText(hero, target);
             return true;
         }

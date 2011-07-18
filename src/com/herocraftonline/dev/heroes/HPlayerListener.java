@@ -12,6 +12,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
 import com.herocraftonline.dev.heroes.classes.HeroClass;
@@ -31,6 +32,13 @@ public class HPlayerListener extends PlayerListener {
     @Override
     public void onItemHeldChange(PlayerItemHeldEvent event) {
         this.plugin.getInventoryChecker().checkInventory(event.getPlayer());
+    }
+    
+    @Override
+    public void onPlayerRespawn(PlayerRespawnEvent event) {
+        Player player = event.getPlayer();
+        Hero hero = plugin.getHeroManager().getHero(player);
+        hero.setHealth(hero.getMaxHealth());
     }
 
     @Override
