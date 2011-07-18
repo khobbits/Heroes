@@ -1,20 +1,5 @@
 package com.herocraftonline.dev.heroes.persistence;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.logging.Level;
-
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.config.Configuration;
-
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.command.BaseCommand;
@@ -24,10 +9,19 @@ import com.herocraftonline.dev.heroes.effects.Periodic;
 import com.herocraftonline.dev.heroes.skill.OutsourcedSkill;
 import com.herocraftonline.dev.heroes.skill.PassiveSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.config.Configuration;
+
+import java.io.File;
+import java.util.*;
+import java.util.logging.Level;
 
 /**
  * Player management
- * 
+ *
  * @author Herocraft's Plugin Team
  */
 public class HeroManager {
@@ -35,8 +29,6 @@ public class HeroManager {
     private Heroes plugin;
     private Set<Hero> heroes;
     private File playerFolder;
-    private Runnable effectTimer;
-    private Runnable manaTimer;
     private final static int effectInterval = 2;
     private final static int manaInterval = 5;
 
@@ -46,10 +38,10 @@ public class HeroManager {
         playerFolder = new File(plugin.getDataFolder(), "players"); // Setup our Player Data Folder
         playerFolder.mkdirs(); // Create the folder if it doesn't exist.
 
-        effectTimer = new EffectUpdater(this);
+        Runnable effectTimer = new EffectUpdater(this);
         plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, effectTimer, 0, effectInterval);
 
-        manaTimer = new ManaUpdater(this);
+        Runnable manaTimer = new ManaUpdater(this);
         plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, manaTimer, 0, manaInterval);
     }
 
@@ -88,8 +80,9 @@ public class HeroManager {
 
     /**
      * Load the given Players Data file.
-     * 
+     *
      * @param player
+     * @return
      */
     public Hero loadHero(Player player) {
         File playerFile = new File(playerFolder, player.getName() + ".yml"); // Setup our Players Data File.
@@ -106,7 +99,7 @@ public class HeroManager {
             loadRecoveryItems(playerHero, playerConfig);
             loadBinds(playerHero, playerConfig);
             playerHero.mana = playerConfig.getInt("mana", 0);
-            playerHero.health = playerConfig.getDouble("health", 100);
+            //            playerHero.health = playerConfig.getDouble("health", 100);
             playerHero.setVerbose(playerConfig.getBoolean("verbose", true));
             playerHero.suppressedSkills = new HashSet<String>(playerConfig.getStringList("suppressed", null));
 
@@ -132,7 +125,7 @@ public class HeroManager {
 
     /**
      * Save the given Players Data to a file.
-     * 
+     *
      * @param player
      */
     public void saveHero(Player player) {
@@ -145,7 +138,7 @@ public class HeroManager {
         playerConfig.setProperty("suppressed", new ArrayList<String>(hero.getSuppressedSkills()));
         playerConfig.setProperty("mana", hero.getMana());
         playerConfig.removeProperty("itemrecovery");
-        playerConfig.setProperty("health", hero.getHealth());
+        //        playerConfig.setProperty("health", hero.getHealth());
 
         saveCooldowns(hero, playerConfig);
         saveExperience(hero, playerConfig);
@@ -248,7 +241,6 @@ public class HeroManager {
                     itemRecovery.add(new ItemStack(type, 1, durability));
                 } catch (IllegalArgumentException e) {
                     this.plugin.debugLog(Level.WARNING, "Either '" + item + "' doesn't exist or the durability is of an incorrect value!");
-                    continue;
                 }
             }
         }
@@ -327,12 +319,13 @@ public class HeroManager {
 }
 
 class EffectUpdater implements Runnable {
+
     private final HeroManager heroManager;
 
     EffectUpdater(HeroManager heroManager) {
         this.heroManager = heroManager;
     }
-    
+
     @Override
     public void run() {
         for (Hero hero : heroManager.getHeroes()) {
@@ -344,7 +337,7 @@ class EffectUpdater implements Runnable {
                         continue;
                     }
                 }
-                
+
                 if (effect instanceof Periodic) {
                     Periodic periodic = (Periodic) effect;
                     if (periodic.isReady()) {
@@ -357,6 +350,7 @@ class EffectUpdater implements Runnable {
 }
 
 class ManaUpdater implements Runnable {
+
     private final HeroManager manager;
     private final long updateInterval = 5000;
     private long lastUpdate = 0;

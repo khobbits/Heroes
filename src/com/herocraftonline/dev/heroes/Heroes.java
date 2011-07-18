@@ -342,7 +342,7 @@ public class Heroes extends JavaPlugin {
         // Page 4
         commandManager.addCommand(new LeaderboardCommand(this));
         commandManager.addCommand(new HeroSaveCommand(this));
-        commandManager.addCommand(new HealthCommand(this));
+        //        commandManager.addCommand(new HealthCommand(this));
     }
 
     /**

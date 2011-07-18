@@ -1,7 +1,6 @@
 package com.herocraftonline.dev.heroes.damage;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.util.Properties;
 import org.bukkit.Material;
 import org.bukkit.entity.CreatureType;
@@ -35,25 +34,25 @@ public class HeroesDamageListener extends EntityListener {
         }
     }
 
-    @Override
-    public void onEntityRegainHealth(EntityRegainHealthEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
-
-        Entity entity = event.getEntity();
-        int amount = event.getAmount();
-
-        if (entity instanceof Player) {
-            Player player = (Player) entity;
-            Hero hero = plugin.getHeroManager().getHero(player);
-            double newHeroHealth = hero.getHealth() + amount;
-            int newHealth = (int) (newHeroHealth / hero.getMaxHealth() * 20);
-            int newAmount = newHealth - player.getHealth();
-            hero.setHealth(newHeroHealth);
-            event.setAmount(newAmount);
-        }
-    }
+    //    @Override
+    //    public void onEntityRegainHealth(EntityRegainHealthEvent event) {
+    //        if (event.isCancelled()) {
+    //            return;
+    //        }
+    //
+    //        Entity entity = event.getEntity();
+    //        int amount = event.getAmount();
+    //
+    //        if (entity instanceof Player) {
+    //            Player player = (Player) entity;
+    //            Hero hero = plugin.getHeroManager().getHero(player);
+    //            double newHeroHealth = hero.getHealth() + amount;
+    //            int newHealth = (int) (newHeroHealth / hero.getMaxHealth() * 20);
+    //            int newAmount = newHealth - player.getHealth();
+    //            hero.setHealth(newHeroHealth);
+    //            event.setAmount(newAmount);
+    //        }
+    //    }
 
     @Override
     public void onEntityDamage(EntityDamageEvent event) {

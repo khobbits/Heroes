@@ -1,29 +1,5 @@
 package com.herocraftonline.dev.heroes.persistence;
 
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import net.minecraft.server.EntityLiving;
-import net.minecraft.server.Packet18ArmAnimation;
-import net.minecraft.server.InventoryPlayer;
-
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.craftbukkit.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.entity.CraftPlayer;
-import org.bukkit.craftbukkit.inventory.CraftInventoryPlayer;
-import org.bukkit.entity.CreatureType;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
-
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.ExperienceGainEvent;
 import com.herocraftonline.dev.heroes.api.LevelEvent;
@@ -34,67 +10,77 @@ import com.herocraftonline.dev.heroes.party.HeroParty;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Properties;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.entity.CreatureType;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
+import java.text.DecimalFormat;
+import java.util.*;
 
 public class Hero {
 
     private static final DecimalFormat decFormat = new DecimalFormat("#0.##");
-    private static final Map<Material, Integer> durability;
-    private static final Map<Material, Integer> armorPoints;
-    static {
-        Map<Material, Integer> aMap = new HashMap<Material, Integer>();
-        aMap.put(Material.LEATHER_HELMET, 34);
-        aMap.put(Material.LEATHER_CHESTPLATE, 49);
-        aMap.put(Material.LEATHER_LEGGINGS, 46);
-        aMap.put(Material.LEATHER_BOOTS, 40);
 
-        aMap.put(Material.GOLD_HELMET, 68);
-        aMap.put(Material.GOLD_CHESTPLATE, 96);
-        aMap.put(Material.GOLD_LEGGINGS, 92);
-        aMap.put(Material.GOLD_BOOTS, 80);
-
-        aMap.put(Material.CHAINMAIL_HELMET, 67);
-        aMap.put(Material.CHAINMAIL_CHESTPLATE, 96);
-        aMap.put(Material.CHAINMAIL_LEGGINGS, 92);
-        aMap.put(Material.CHAINMAIL_BOOTS, 79);
-
-        aMap.put(Material.IRON_HELMET, 136);
-        aMap.put(Material.IRON_CHESTPLATE, 192);
-        aMap.put(Material.IRON_LEGGINGS, 184);
-        aMap.put(Material.IRON_BOOTS, 160);
-
-        aMap.put(Material.DIAMOND_HELMET, 272);
-        aMap.put(Material.DIAMOND_CHESTPLATE, 384);
-        aMap.put(Material.DIAMOND_LEGGINGS, 368);
-        aMap.put(Material.DIAMOND_BOOTS, 320);
-        durability = Collections.unmodifiableMap(aMap);
-
-        Map<Material, Integer> bMap = new HashMap<Material, Integer>();
-        bMap.put(Material.LEATHER_HELMET, 3);
-        bMap.put(Material.LEATHER_CHESTPLATE, 8);
-        bMap.put(Material.LEATHER_LEGGINGS, 6);
-        bMap.put(Material.LEATHER_BOOTS, 3);
-
-        bMap.put(Material.GOLD_HELMET, 3);
-        bMap.put(Material.GOLD_CHESTPLATE, 8);
-        bMap.put(Material.GOLD_LEGGINGS, 6);
-        bMap.put(Material.GOLD_BOOTS, 3);
-
-        bMap.put(Material.CHAINMAIL_HELMET, 3);
-        bMap.put(Material.CHAINMAIL_CHESTPLATE, 8);
-        bMap.put(Material.CHAINMAIL_LEGGINGS, 6);
-        bMap.put(Material.CHAINMAIL_BOOTS, 3);
-
-        bMap.put(Material.IRON_HELMET, 3);
-        bMap.put(Material.IRON_CHESTPLATE, 8);
-        bMap.put(Material.IRON_LEGGINGS, 6);
-        bMap.put(Material.IRON_BOOTS, 3);
-
-        bMap.put(Material.DIAMOND_HELMET, 3);
-        bMap.put(Material.DIAMOND_CHESTPLATE, 8);
-        bMap.put(Material.DIAMOND_LEGGINGS, 6);
-        bMap.put(Material.DIAMOND_BOOTS, 3);
-        armorPoints = Collections.unmodifiableMap(bMap);
-    }
+    //    private static final Map<Material, Integer> durability;
+    //    private static final Map<Material, Integer> armorPoints;
+    //    static {
+    //        Map<Material, Integer> aMap = new HashMap<Material, Integer>();
+    //        aMap.put(Material.LEATHER_HELMET, 34);
+    //        aMap.put(Material.LEATHER_CHESTPLATE, 49);
+    //        aMap.put(Material.LEATHER_LEGGINGS, 46);
+    //        aMap.put(Material.LEATHER_BOOTS, 40);
+    //
+    //        aMap.put(Material.GOLD_HELMET, 68);
+    //        aMap.put(Material.GOLD_CHESTPLATE, 96);
+    //        aMap.put(Material.GOLD_LEGGINGS, 92);
+    //        aMap.put(Material.GOLD_BOOTS, 80);
+    //
+    //        aMap.put(Material.CHAINMAIL_HELMET, 67);
+    //        aMap.put(Material.CHAINMAIL_CHESTPLATE, 96);
+    //        aMap.put(Material.CHAINMAIL_LEGGINGS, 92);
+    //        aMap.put(Material.CHAINMAIL_BOOTS, 79);
+    //
+    //        aMap.put(Material.IRON_HELMET, 136);
+    //        aMap.put(Material.IRON_CHESTPLATE, 192);
+    //        aMap.put(Material.IRON_LEGGINGS, 184);
+    //        aMap.put(Material.IRON_BOOTS, 160);
+    //
+    //        aMap.put(Material.DIAMOND_HELMET, 272);
+    //        aMap.put(Material.DIAMOND_CHESTPLATE, 384);
+    //        aMap.put(Material.DIAMOND_LEGGINGS, 368);
+    //        aMap.put(Material.DIAMOND_BOOTS, 320);
+    //        durability = Collections.unmodifiableMap(aMap);
+    //
+    //        Map<Material, Integer> bMap = new HashMap<Material, Integer>();
+    //        bMap.put(Material.LEATHER_HELMET, 3);
+    //        bMap.put(Material.LEATHER_CHESTPLATE, 8);
+    //        bMap.put(Material.LEATHER_LEGGINGS, 6);
+    //        bMap.put(Material.LEATHER_BOOTS, 3);
+    //
+    //        bMap.put(Material.GOLD_HELMET, 3);
+    //        bMap.put(Material.GOLD_CHESTPLATE, 8);
+    //        bMap.put(Material.GOLD_LEGGINGS, 6);
+    //        bMap.put(Material.GOLD_BOOTS, 3);
+    //
+    //        bMap.put(Material.CHAINMAIL_HELMET, 3);
+    //        bMap.put(Material.CHAINMAIL_CHESTPLATE, 8);
+    //        bMap.put(Material.CHAINMAIL_LEGGINGS, 6);
+    //        bMap.put(Material.CHAINMAIL_BOOTS, 3);
+    //
+    //        bMap.put(Material.IRON_HELMET, 3);
+    //        bMap.put(Material.IRON_CHESTPLATE, 8);
+    //        bMap.put(Material.IRON_LEGGINGS, 6);
+    //        bMap.put(Material.IRON_BOOTS, 3);
+    //
+    //        bMap.put(Material.DIAMOND_HELMET, 3);
+    //        bMap.put(Material.DIAMOND_CHESTPLATE, 8);
+    //        bMap.put(Material.DIAMOND_LEGGINGS, 6);
+    //        bMap.put(Material.DIAMOND_BOOTS, 3);
+    //        armorPoints = Collections.unmodifiableMap(bMap);
+    //    }
 
     protected final Heroes plugin;
     protected Player player;
@@ -109,15 +95,15 @@ public class Hero {
     protected Map<Material, String[]> binds = new HashMap<Material, String[]>();
     protected List<ItemStack> itemRecovery = new ArrayList<ItemStack>();
     protected Set<String> suppressedSkills = new HashSet<String>();
-    protected double health;
+    //    protected double health;
 
     public Hero(Heroes plugin, Player player, HeroClass heroClass) {
         this.plugin = plugin;
         this.player = player;
         this.heroClass = heroClass;
 
-        int playerHealth = player.getHealth();
-        this.health = playerHealth / 20.0 * getMaxHealth();;
+        //        int playerHealth = player.getHealth();
+        //        this.health = playerHealth / 20.0 * getMaxHealth();;
     }
 
     public void addRecoveryItem(ItemStack item) {
@@ -132,6 +118,7 @@ public class Hero {
         setHeroClass(heroClass);
         binds.clear();
     }
+
     /*
     public void damage(int damage) {
         getPlayer();
@@ -284,7 +271,7 @@ public class Hero {
             }
             if (newLevel != currentLevel) {
                 player.setHealth(20);
-                setHealth(getMaxHealth());
+                //                setHealth(getMaxHealth());
                 Messaging.send(player, "You leveled up! (Lvl $1 $2)", String.valueOf(newLevel), heroClass.getName());
                 if (newLevel >= prop.maxLevel) {
                     exp = prop.getExperience(prop.maxLevel);
@@ -346,14 +333,14 @@ public class Hero {
         return exp == null ? 0 : exp;
     }
 
-    public double getHealth() {
-        return health;
-    }
+    //    public double getHealth() {
+    //        return health;
+    //    }
 
-    public double getMaxHealth() {
-        int level = plugin.getConfigManager().getProperties().getLevel(getExperience());
-        return heroClass.getBaseMaxHealth() + (level - 1) * heroClass.getMaxHealthPerLevel();
-    }
+    //    public double getMaxHealth() {
+    //        int level = plugin.getConfigManager().getProperties().getLevel(getExperience());
+    //        return heroClass.getBaseMaxHealth() + (level - 1) * heroClass.getMaxHealthPerLevel();
+    //    }
 
     public HeroClass getHeroClass() {
         return heroClass;
@@ -406,10 +393,7 @@ public class Hero {
 
     public boolean isMaster(HeroClass heroClass) {
         int maxExp = plugin.getConfigManager().getProperties().maxExp;
-        if (getExperience(heroClass) >= maxExp || getExperience(heroClass) - maxExp > 0) {
-            return true;
-        }
-        return false;
+        return getExperience(heroClass) >= maxExp || getExperience(heroClass) - maxExp > 0;
     }
 
     public boolean isSuppressing(Skill skill) {
@@ -429,13 +413,13 @@ public class Hero {
     }
 
     public void setHeroClass(HeroClass heroClass) {
-        double currentMaxHP = getMaxHealth();
+        //        double currentMaxHP = getMaxHealth();
         this.heroClass = heroClass;
-        double newMaxHP = getMaxHealth();
-        health *= newMaxHP / currentMaxHP;
-        if (health > newMaxHP) {
-            health = newMaxHP;
-        }
+        //        double newMaxHP = getMaxHealth();
+        //        health *= newMaxHP / currentMaxHP;
+        //        if (health > newMaxHP) {
+        //            health = newMaxHP;
+        //        }
 
         // Check the Players inventory now that they have changed class.
         this.plugin.getInventoryChecker().checkInventory(getPlayer());
@@ -474,15 +458,15 @@ public class Hero {
         binds.remove(material);
     }
 
-    public void setHealth(Double health) {
-        double maxHealth = getMaxHealth();
-        if (health > maxHealth) {
-            this.health = maxHealth;
-        } else if (health < 0) {
-            this.health = 0;
-        } else {
-            this.health = health;
-        }
-    }
+    //    public void setHealth(Double health) {
+    //        double maxHealth = getMaxHealth();
+    //        if (health > maxHealth) {
+    //            this.health = maxHealth;
+    //        } else if (health < 0) {
+    //            this.health = 0;
+    //        } else {
+    //            this.health = health;
+    //        }
+    //    }
 
 }

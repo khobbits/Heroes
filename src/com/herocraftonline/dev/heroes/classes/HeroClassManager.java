@@ -5,7 +5,6 @@ import com.herocraftonline.dev.heroes.classes.HeroClass.*;
 import com.herocraftonline.dev.heroes.damage.DamageManager.ProjectileType;
 import com.herocraftonline.dev.heroes.skill.OutsourcedSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
-import com.herocraftonline.dev.heroes.util.Properties;
 import org.bukkit.Material;
 import org.bukkit.util.config.Configuration;
 import org.bukkit.util.config.ConfigurationNode;
@@ -50,7 +49,6 @@ public class HeroClassManager {
     }
 
     public void loadClasses(File file) {
-        Properties prop = plugin.getConfigManager().getProperties();
         Configuration config = new Configuration(file);
         config.load();
         List<String> classNames = config.getKeys("classes");
@@ -140,7 +138,7 @@ public class HeroClassManager {
                             WeaponType wType = WeaponType.valueOf(type);
                             WeaponItems wItem = WeaponItems.valueOf(item);
                             newClass.addAllowedWeapon(wType + "_" + wItem);
-                            wLimits.append(" - " + wType + "_" + wItem);
+                            wLimits.append(" - ").append(wType).append("_").append(wItem);
                         } catch (IllegalArgumentException e) {
                             plugin.log(Level.WARNING, "Invalid weapon type (" + type + "_" + item + ") defined for " + className);
                         }
@@ -226,12 +224,12 @@ public class HeroClassManager {
                 }
             }
 
-            Double baseMaxHealth = config.getDouble("classes." + className + ".base-max-health", 20);
-            Double maxHealthPerLevel = config.getDouble("classes." + className + ".max-health-per-level", 0);
-            if (prop.damageSystem) {
-                newClass.setBaseMaxHealth(baseMaxHealth);
-                newClass.setMaxHealthPerLevel(maxHealthPerLevel);
-            }
+            //            Double baseMaxHealth = config.getDouble("classes." + className + ".base-max-health", 20);
+            //            Double maxHealthPerLevel = config.getDouble("classes." + className + ".max-health-per-level", 0);
+            //            if (prop.damageSystem) {
+            //                newClass.setBaseMaxHealth(baseMaxHealth);
+            //                newClass.setMaxHealthPerLevel(maxHealthPerLevel);
+            //            }
 
             List<String> experienceNames = config.getStringList("classes." + className + ".experience-sources", null);
             Set<ExperienceType> experienceSources = new HashSet<ExperienceType>();
