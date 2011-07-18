@@ -148,9 +148,9 @@ public class HeroesDamageListener extends EntityListener {
                 }
             }
         }
-
+        
         if (entity instanceof Player) {
-            plugin.getHeroManager().getHero((Player) entity).damage(damage);
+            //plugin.getHeroManager().getHero((Player) entity).damage(damage);
             event.setCancelled(true);
         } else if (entity instanceof LivingEntity) {
             event.setDamage(damage);
