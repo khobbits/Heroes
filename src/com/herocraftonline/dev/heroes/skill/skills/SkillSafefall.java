@@ -16,7 +16,7 @@ import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
 
 public class SkillSafefall extends ActiveSkill {
-    
+
     private String applyText;
     private String expireText;
 
@@ -31,7 +31,7 @@ public class SkillSafefall extends ActiveSkill {
 
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
     }
-    
+
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
@@ -51,7 +51,7 @@ public class SkillSafefall extends ActiveSkill {
     @Override
     public boolean use(Hero hero, String[] args) {
         broadcastExecuteText(hero);
-        
+
         int duration = getSetting(hero.getHeroClass(), "duration", 20000);
         hero.addEffect(new SafefallEffect(this, duration));
 
@@ -83,9 +83,7 @@ public class SkillSafefall extends ActiveSkill {
 
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
-            if (event.isCancelled() || event.getCause() != DamageCause.FALL) {
-                return;
-            }
+            if (event.isCancelled() || event.getCause() != DamageCause.FALL) return;
 
             Entity defender = event.getEntity();
             if (defender instanceof Player) {

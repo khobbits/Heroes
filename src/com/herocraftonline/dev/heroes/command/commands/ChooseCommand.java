@@ -25,9 +25,7 @@ public class ChooseCommand extends BaseCommand {
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-        if (!(sender instanceof Player)) {
-            return;
-        }
+        if (!(sender instanceof Player)) return;
 
         Player player = (Player) sender;
         Hero hero = plugin.getHeroManager().getHero(player);
@@ -74,9 +72,7 @@ public class ChooseCommand extends BaseCommand {
 
         ClassChangeEvent event = new ClassChangeEvent(hero, currentClass, newClass);
         plugin.getServer().getPluginManager().callEvent(event);
-        if (event.isCancelled()) {
-            return;
-        }
+        if (event.isCancelled()) return;
 
         hero.setHeroClass(newClass);
 

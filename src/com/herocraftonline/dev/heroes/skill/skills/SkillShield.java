@@ -1,8 +1,5 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
-import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.persistence.Hero;
-import com.herocraftonline.dev.heroes.skill.PassiveSkill;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Priority;
@@ -12,6 +9,10 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityListener;
 import org.bukkit.util.config.ConfigurationNode;
+
+import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.persistence.Hero;
+import com.herocraftonline.dev.heroes.skill.PassiveSkill;
 
 public class SkillShield extends PassiveSkill {
 
@@ -38,9 +39,7 @@ public class SkillShield extends PassiveSkill {
 
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
-            if (event.isCancelled() || !(event.getCause() == DamageCause.ENTITY_ATTACK)) {
-                return;
-            }
+            if (event.isCancelled() || !(event.getCause() == DamageCause.ENTITY_ATTACK)) return;
             if (event instanceof EntityDamageByEntityEvent) {
                 EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
                 if (subEvent.getEntity() instanceof Player) {

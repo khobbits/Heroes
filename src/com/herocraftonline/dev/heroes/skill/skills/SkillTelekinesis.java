@@ -41,9 +41,8 @@ public class SkillTelekinesis extends ActiveSkill {
             Button button = (Button) block;
             button.setPowered(!button.isPowered());
             broadcastExecuteText(hero);
-        } else {
+        } else
             return false;
-        }
         return true;
     }
 

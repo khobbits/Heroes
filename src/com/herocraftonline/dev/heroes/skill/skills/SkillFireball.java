@@ -69,9 +69,7 @@ public class SkillFireball extends ActiveSkill {
 
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
-            if (event.isCancelled()) {
-                return;
-            }
+            if (event.isCancelled()) return;
             if (event instanceof EntityDamageByProjectileEvent) {
                 EntityDamageByProjectileEvent subEvent = (EntityDamageByProjectileEvent) event;
                 Entity projectile = subEvent.getProjectile();
@@ -86,9 +84,7 @@ public class SkillFireball extends ActiveSkill {
                                 // Perform a check to see if any plugin is preventing us from damaging the player.
                                 EntityDamageEvent damageEvent = new EntityDamageEvent(null, DamageCause.CUSTOM, getSetting(heroClass, "damage", 4));
                                 Bukkit.getServer().getPluginManager().callEvent(damageEvent);
-                                if (damageEvent.isCancelled()) {
-                                    return;
-                                }
+                                if (damageEvent.isCancelled()) return;
                                 // Damage the player and ignite them.
                                 LivingEntity livingEntity = (LivingEntity) entity;
                                 livingEntity.setFireTicks(getSetting(heroClass, "fire-ticks", 100));

@@ -1,13 +1,14 @@
 package com.herocraftonline.dev.heroes.command.commands;
 
+import java.util.Set;
+
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.command.BaseCommand;
 import com.herocraftonline.dev.heroes.util.Messaging;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
-import java.util.Set;
 
 public class SpecsCommand extends BaseCommand {
 
@@ -25,17 +26,14 @@ public class SpecsCommand extends BaseCommand {
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-        if (!(sender instanceof Player)) {
-            return;
-        }
+        if (!(sender instanceof Player)) return;
         HeroClass playerClass = plugin.getHeroManager().getHero((Player) sender).getHeroClass();
 
         int page = 0;
         if (args.length != 0) {
             try {
                 page = Integer.parseInt(args[0]) - 1;
-            } catch (NumberFormatException ignored) {
-            }
+            } catch (NumberFormatException ignored) {}
         }
 
         Set<HeroClass> childClasses = playerClass.getSpecializations();

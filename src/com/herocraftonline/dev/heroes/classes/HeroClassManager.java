@@ -1,20 +1,25 @@
 package com.herocraftonline.dev.heroes.classes;
 
-import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.classes.HeroClass.*;
-import com.herocraftonline.dev.heroes.damage.DamageManager.ProjectileType;
-import com.herocraftonline.dev.heroes.skill.OutsourcedSkill;
-import com.herocraftonline.dev.heroes.skill.Skill;
-import org.bukkit.Material;
-import org.bukkit.util.config.Configuration;
-import org.bukkit.util.config.ConfigurationNode;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
+
+import org.bukkit.Material;
+import org.bukkit.util.config.Configuration;
+import org.bukkit.util.config.ConfigurationNode;
+
+import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.classes.HeroClass.ArmorItems;
+import com.herocraftonline.dev.heroes.classes.HeroClass.ArmorType;
+import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
+import com.herocraftonline.dev.heroes.classes.HeroClass.WeaponItems;
+import com.herocraftonline.dev.heroes.classes.HeroClass.WeaponType;
+import com.herocraftonline.dev.heroes.damage.DamageManager.ProjectileType;
+import com.herocraftonline.dev.heroes.skill.OutsourcedSkill;
+import com.herocraftonline.dev.heroes.skill.Skill;
 
 public class HeroClassManager {
 
@@ -33,9 +38,7 @@ public class HeroClassManager {
 
     public HeroClass getClass(String name) {
         for (HeroClass c : classes) {
-            if (name.equalsIgnoreCase(c.getName())) {
-                return c;
-            }
+            if (name.equalsIgnoreCase(c.getName())) return c;
         }
         return null;
     }
@@ -224,12 +227,12 @@ public class HeroClassManager {
                 }
             }
 
-            //            Double baseMaxHealth = config.getDouble("classes." + className + ".base-max-health", 20);
-            //            Double maxHealthPerLevel = config.getDouble("classes." + className + ".max-health-per-level", 0);
-            //            if (prop.damageSystem) {
-            //                newClass.setBaseMaxHealth(baseMaxHealth);
-            //                newClass.setMaxHealthPerLevel(maxHealthPerLevel);
-            //            }
+            // Double baseMaxHealth = config.getDouble("classes." + className + ".base-max-health", 20);
+            // Double maxHealthPerLevel = config.getDouble("classes." + className + ".max-health-per-level", 0);
+            // if (prop.damageSystem) {
+            // newClass.setBaseMaxHealth(baseMaxHealth);
+            // newClass.setMaxHealthPerLevel(maxHealthPerLevel);
+            // }
 
             List<String> experienceNames = config.getStringList("classes." + className + ".experience-sources", null);
             Set<ExperienceType> experienceSources = new HashSet<ExperienceType>();

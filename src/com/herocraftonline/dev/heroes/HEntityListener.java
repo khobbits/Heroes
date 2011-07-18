@@ -1,20 +1,25 @@
 package com.herocraftonline.dev.heroes;
 
+import java.text.DecimalFormat;
+import java.util.HashMap;
+import java.util.Set;
+
+import org.bukkit.entity.CreatureType;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageByProjectileEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntityListener;
+
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
 import com.herocraftonline.dev.heroes.effects.Effect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Properties;
-import org.bukkit.entity.CreatureType;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.event.entity.*;
-
-import java.text.DecimalFormat;
-import java.util.HashMap;
-import java.util.Set;
 
 public class HEntityListener extends EntityListener {
 
@@ -75,7 +80,7 @@ public class HEntityListener extends EntityListener {
                 }
                 heroDefender.setExperience(exp - expLoss);
                 heroDefender.setMana(0);
-                //                heroDefender.setHealth(heroDefender.getMaxHealth());
+                // heroDefender.setHealth(heroDefender.getMaxHealth());
                 Messaging.send(heroDefender.getPlayer(), "You have lost " + decFormat.format(expLoss) + " exp for dying.");
             }
 
@@ -117,13 +122,10 @@ public class HEntityListener extends EntityListener {
                             break;
                         }
                     }
-                } catch (IllegalArgumentException ignored) {
-                }
+                } catch (IllegalArgumentException ignored) {}
                 if (type != null) {
                     // If EXP hasn't been assigned for this Entity then we stop here.
-                    if (!prop.creatureKillingExp.containsKey(type)) {
-                        return;
-                    }
+                    if (!prop.creatureKillingExp.containsKey(type)) return;
                     addedExp = prop.creatureKillingExp.get(type);
                     experienceType = ExperienceType.KILLING;
                 }

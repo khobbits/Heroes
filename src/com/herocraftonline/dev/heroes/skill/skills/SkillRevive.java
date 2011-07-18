@@ -19,6 +19,7 @@ import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
 
 public class SkillRevive extends ActiveSkill {
+
     public Map<String, Location> deaths = new LinkedHashMap<String, Location>();
 
     @SuppressWarnings("serial")
@@ -34,6 +35,7 @@ public class SkillRevive extends ActiveSkill {
         registerEvent(Type.ENTITY_DEATH, new SkillPlayerListener(), Priority.Normal);
 
         deaths = new LinkedHashMap<String, Location>() {
+
             private static final int MAX_ENTRIES = 50;
 
             @Override

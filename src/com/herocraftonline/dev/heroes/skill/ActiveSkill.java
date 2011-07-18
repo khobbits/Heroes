@@ -136,11 +136,6 @@ public abstract class ActiveSkill extends Skill {
             }
         }
     }
-    
-    protected void broadcastExecuteText(Hero hero) {
-        Player player = hero.getPlayer();
-        broadcast(player.getLocation(), getUseText(), player.getDisplayName(), getName());
-    }
 
     /**
      * Creates and returns a <code>ConfigurationNode</code> containing the default usage text. When using additional
@@ -203,6 +198,11 @@ public abstract class ActiveSkill extends Skill {
         if (heroClass.getExperienceSources().contains(ExperienceType.SKILL)) {
             hero.gainExp(this.getSetting(heroClass, SETTING_EXP, 0), ExperienceType.SKILL);
         }
+    }
+
+    protected void broadcastExecuteText(Hero hero) {
+        Player player = hero.getPlayer();
+        broadcast(player.getLocation(), getUseText(), player.getDisplayName(), getName());
     }
 
 }

@@ -41,9 +41,7 @@ public class SkillHarmtouch extends TargettedSkill {
         int damage = getSetting(hero.getHeroClass(), "damage", 10);
         EntityDamageByEntityEvent damageEntityEvent = new EntityDamageByEntityEvent(player, target, DamageCause.CUSTOM, damage);
         plugin.getServer().getPluginManager().callEvent(damageEntityEvent);
-        if (damageEntityEvent.isCancelled()) {
-            return false;
-        }
+        if (damageEntityEvent.isCancelled()) return false;
         target.damage(damage, player);
         broadcastExecuteText(hero, target);
         return true;

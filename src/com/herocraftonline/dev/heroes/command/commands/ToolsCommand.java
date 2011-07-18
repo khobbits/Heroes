@@ -1,14 +1,15 @@
 package com.herocraftonline.dev.heroes.command.commands;
 
+import java.util.Set;
+
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.command.BaseCommand;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.util.MaterialUtil;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
-import java.util.Set;
 
 public class ToolsCommand extends BaseCommand {
 
@@ -30,7 +31,7 @@ public class ToolsCommand extends BaseCommand {
             HeroClass heroClass = hero.getHeroClass();
 
             Set<String> allTools = heroClass.getAllowedWeapons();
-            String[] categories = {"Sword", "Spade", "Pickaxe", "Axe", "Hoe"};
+            String[] categories = { "Sword", "Spade", "Pickaxe", "Axe", "Hoe" };
             String[] categorizedTools = new String[categories.length];
 
             for (int i = 0; i < categories.length; i++) {

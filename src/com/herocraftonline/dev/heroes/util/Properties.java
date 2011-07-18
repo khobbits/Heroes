@@ -1,5 +1,8 @@
 package com.herocraftonline.dev.heroes.util;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -7,9 +10,6 @@ import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class Properties {
 
@@ -73,22 +73,20 @@ public class Properties {
 
     /**
      * Convert the given Exp into the correct Level.
-     *
+     * 
      * @param exp
      * @return
      */
     public int getLevel(double exp) {
         for (int i = maxLevel - 1; i >= 0; i--) {
-            if (exp >= levels[i]) {
-                return i + 1;
-            }
+            if (exp >= levels[i]) return i + 1;
         }
         return -1;
     }
 
     /**
      * Converts an entity into its CreatureType
-     *
+     * 
      * @param entity
      * @return
      */
@@ -102,8 +100,7 @@ public class Properties {
                     break;
                 }
             }
-        } catch (IllegalArgumentException e) {
-        }
+        } catch (IllegalArgumentException e) {}
         return type;
     }
 }

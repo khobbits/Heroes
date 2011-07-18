@@ -57,6 +57,7 @@ public class LeaderboardCommand extends BaseCommand {
     static Map sortByValue(Map map) {
         List list = new LinkedList(map.entrySet());
         Collections.sort(list, new Comparator() {
+
             @Override
             public int compare(Object o1, Object o2) {
                 return ((Comparable) ((Map.Entry) o1).getValue()).compareTo(((Map.Entry) o2).getValue());

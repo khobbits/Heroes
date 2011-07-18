@@ -39,9 +39,7 @@ public class SkillLance extends PassiveSkill {
 
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
-            if (event.isCancelled() || !(event.getCause() == DamageCause.ENTITY_ATTACK)) {
-                return;
-            }
+            if (event.isCancelled() || !(event.getCause() == DamageCause.ENTITY_ATTACK)) return;
             if (event instanceof EntityDamageByEntityEvent) {
                 EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
                 if (subEvent.getDamager() instanceof Player) {

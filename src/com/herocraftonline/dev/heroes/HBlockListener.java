@@ -1,10 +1,9 @@
 package com.herocraftonline.dev.heroes;
 
-import com.herocraftonline.dev.heroes.classes.HeroClass;
-import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
-import com.herocraftonline.dev.heroes.persistence.Hero;
-import com.herocraftonline.dev.heroes.util.Messaging;
-import com.herocraftonline.dev.heroes.util.Properties;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -13,9 +12,11 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.BlockPlaceEvent;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
+import com.herocraftonline.dev.heroes.classes.HeroClass;
+import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
+import com.herocraftonline.dev.heroes.persistence.Hero;
+import com.herocraftonline.dev.heroes.util.Messaging;
+import com.herocraftonline.dev.heroes.util.Properties;
 
 public class HBlockListener extends BlockListener {
 
@@ -30,6 +31,7 @@ public class HBlockListener extends BlockListener {
     public void init() {
         final int maxTrackedBlocks = plugin.getConfigManager().getProperties().maxTrackedBlocks;
         placedBlocks = new LinkedHashMap<Location, Long>() {
+
             private final int MAX_ENTRIES = maxTrackedBlocks;
 
             @Override
@@ -41,9 +43,7 @@ public class HBlockListener extends BlockListener {
 
     @Override
     public void onBlockBreak(BlockBreakEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
+        if (event.isCancelled()) return;
 
         Block block = event.getBlock();
         Player player = event.getPlayer();
@@ -85,9 +85,7 @@ public class HBlockListener extends BlockListener {
 
     @Override
     public void onBlockPlace(BlockPlaceEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
+        if (event.isCancelled()) return;
 
         Block block = event.getBlock();
         Material material = block.getType();
@@ -108,9 +106,9 @@ public class HBlockListener extends BlockListener {
 
         if (placedBlocks.containsKey(loc)) {
             long timePlaced = placedBlocks.get(loc);
-            if (timePlaced + blockTrackingDuration > System.currentTimeMillis()) {
+            if (timePlaced + blockTrackingDuration > System.currentTimeMillis())
                 return true;
-            } else {
+            else {
                 placedBlocks.remove(block.getLocation());
                 return false;
             }

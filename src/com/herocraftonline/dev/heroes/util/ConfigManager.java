@@ -1,15 +1,5 @@
 package com.herocraftonline.dev.heroes.util;
 
-import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.classes.HeroClassManager;
-import com.herocraftonline.dev.heroes.command.BaseCommand;
-import com.herocraftonline.dev.heroes.skill.Skill;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.entity.CreatureType;
-import org.bukkit.util.config.Configuration;
-import org.bukkit.util.config.ConfigurationNode;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -18,6 +8,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
+
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.entity.CreatureType;
+import org.bukkit.util.config.Configuration;
+import org.bukkit.util.config.ConfigurationNode;
+
+import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.classes.HeroClassManager;
+import com.herocraftonline.dev.heroes.command.BaseCommand;
+import com.herocraftonline.dev.heroes.skill.Skill;
 
 public class ConfigManager {
 
@@ -209,25 +210,13 @@ public class ConfigManager {
                 Skill skill = (Skill) baseCommand;
                 ConfigurationNode node = config.getNode(skill.getName());
                 if (node != null) {
-                    //System.out.println(skill.getName());
-                    //print(node.getAll(), "  ");
+                    // System.out.println(skill.getName());
+                    // print(node.getAll(), "  ");
                     skill.setConfig(node);
                 } else {
                     skill.setConfig(Configuration.getEmptyNode());
                 }
                 skill.init();
-            }
-        }
-    }
-
-    @SuppressWarnings({"unchecked", "unused"})
-    private void print(Map<String, Object> map, String indent) {
-        for (Map.Entry<String, Object> entry : map.entrySet()) {
-            if (entry.getValue() instanceof Map) {
-                System.out.println(indent + entry.getKey());
-                print((Map<String, Object>) entry.getValue(), indent + "  ");
-            } else {
-                System.out.println(indent + entry.getKey() + ": " + entry.getValue());
             }
         }
     }
@@ -240,6 +229,18 @@ public class ConfigManager {
                 if (value == null) {
                     config.setProperty(path + "." + key, node.getProperty(key));
                 }
+            }
+        }
+    }
+
+    @SuppressWarnings({ "unchecked", "unused" })
+    private void print(Map<String, Object> map, String indent) {
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            if (entry.getValue() instanceof Map) {
+                System.out.println(indent + entry.getKey());
+                print((Map<String, Object>) entry.getValue(), indent + "  ");
+            } else {
+                System.out.println(indent + entry.getKey() + ": " + entry.getValue());
             }
         }
     }

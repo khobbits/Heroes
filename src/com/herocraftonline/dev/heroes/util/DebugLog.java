@@ -45,6 +45,7 @@ public class DebugLog {
     }
 
     private class LogFormatter extends Formatter {
+
         private final SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         @Override

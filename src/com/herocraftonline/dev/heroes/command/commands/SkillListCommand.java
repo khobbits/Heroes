@@ -102,11 +102,10 @@ public class SkillListCommand extends BaseCommand {
             @Override
             public int compare(Map.Entry<Skill, Integer> e1, Map.Entry<Skill, Integer> e2) {
                 int res = e1.getValue().compareTo(e2.getValue());
-                if (res == 0) {
+                if (res == 0)
                     return e1.getKey().getName().compareTo(e2.getKey().getName());
-                } else {
+                else
                     return res;
-                }
             }
         });
 

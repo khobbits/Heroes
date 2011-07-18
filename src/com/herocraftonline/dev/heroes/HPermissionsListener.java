@@ -1,18 +1,19 @@
 package com.herocraftonline.dev.heroes;
 
-import com.herocraftonline.dev.heroes.command.BaseCommand;
-import com.herocraftonline.dev.heroes.persistence.Hero;
-import com.herocraftonline.dev.heroes.skill.OutsourcedSkill;
-import com.nijiko.permissions.StorageReloadEvent;
-import com.nijiko.permissions.WorldConfigLoadEvent;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.CustomEventListener;
 import org.bukkit.event.Event;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.herocraftonline.dev.heroes.command.BaseCommand;
+import com.herocraftonline.dev.heroes.persistence.Hero;
+import com.herocraftonline.dev.heroes.skill.OutsourcedSkill;
+import com.nijiko.permissions.StorageReloadEvent;
+import com.nijiko.permissions.WorldConfigLoadEvent;
 
 public class HPermissionsListener extends CustomEventListener {
 
@@ -48,7 +49,7 @@ public class HPermissionsListener extends CustomEventListener {
 
     /**
      * The following attempts to relearn all skills for the players in a given world.
-     *
+     * 
      * @param world
      */
     private void relearnSkills(World world) {

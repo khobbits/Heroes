@@ -18,6 +18,7 @@ import com.herocraftonline.dev.heroes.command.BaseCommand;
 import com.herocraftonline.dev.heroes.skill.Skill;
 
 public class HelpCommand extends BaseCommand {
+
     private static final int CMDS_PER_PAGE = 8;
 
     public HelpCommand(Heroes plugin) {

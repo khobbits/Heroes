@@ -1,5 +1,20 @@
 package com.herocraftonline.dev.heroes.persistence;
 
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.entity.CreatureType;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.ExperienceGainEvent;
 import com.herocraftonline.dev.heroes.api.LevelEvent;
@@ -10,77 +25,68 @@ import com.herocraftonline.dev.heroes.party.HeroParty;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Properties;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.entity.CreatureType;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-
-import java.text.DecimalFormat;
-import java.util.*;
 
 public class Hero {
 
     private static final DecimalFormat decFormat = new DecimalFormat("#0.##");
 
-    //    private static final Map<Material, Integer> durability;
-    //    private static final Map<Material, Integer> armorPoints;
-    //    static {
-    //        Map<Material, Integer> aMap = new HashMap<Material, Integer>();
-    //        aMap.put(Material.LEATHER_HELMET, 34);
-    //        aMap.put(Material.LEATHER_CHESTPLATE, 49);
-    //        aMap.put(Material.LEATHER_LEGGINGS, 46);
-    //        aMap.put(Material.LEATHER_BOOTS, 40);
+    // private static final Map<Material, Integer> durability;
+    // private static final Map<Material, Integer> armorPoints;
+    // static {
+    // Map<Material, Integer> aMap = new HashMap<Material, Integer>();
+    // aMap.put(Material.LEATHER_HELMET, 34);
+    // aMap.put(Material.LEATHER_CHESTPLATE, 49);
+    // aMap.put(Material.LEATHER_LEGGINGS, 46);
+    // aMap.put(Material.LEATHER_BOOTS, 40);
     //
-    //        aMap.put(Material.GOLD_HELMET, 68);
-    //        aMap.put(Material.GOLD_CHESTPLATE, 96);
-    //        aMap.put(Material.GOLD_LEGGINGS, 92);
-    //        aMap.put(Material.GOLD_BOOTS, 80);
+    // aMap.put(Material.GOLD_HELMET, 68);
+    // aMap.put(Material.GOLD_CHESTPLATE, 96);
+    // aMap.put(Material.GOLD_LEGGINGS, 92);
+    // aMap.put(Material.GOLD_BOOTS, 80);
     //
-    //        aMap.put(Material.CHAINMAIL_HELMET, 67);
-    //        aMap.put(Material.CHAINMAIL_CHESTPLATE, 96);
-    //        aMap.put(Material.CHAINMAIL_LEGGINGS, 92);
-    //        aMap.put(Material.CHAINMAIL_BOOTS, 79);
+    // aMap.put(Material.CHAINMAIL_HELMET, 67);
+    // aMap.put(Material.CHAINMAIL_CHESTPLATE, 96);
+    // aMap.put(Material.CHAINMAIL_LEGGINGS, 92);
+    // aMap.put(Material.CHAINMAIL_BOOTS, 79);
     //
-    //        aMap.put(Material.IRON_HELMET, 136);
-    //        aMap.put(Material.IRON_CHESTPLATE, 192);
-    //        aMap.put(Material.IRON_LEGGINGS, 184);
-    //        aMap.put(Material.IRON_BOOTS, 160);
+    // aMap.put(Material.IRON_HELMET, 136);
+    // aMap.put(Material.IRON_CHESTPLATE, 192);
+    // aMap.put(Material.IRON_LEGGINGS, 184);
+    // aMap.put(Material.IRON_BOOTS, 160);
     //
-    //        aMap.put(Material.DIAMOND_HELMET, 272);
-    //        aMap.put(Material.DIAMOND_CHESTPLATE, 384);
-    //        aMap.put(Material.DIAMOND_LEGGINGS, 368);
-    //        aMap.put(Material.DIAMOND_BOOTS, 320);
-    //        durability = Collections.unmodifiableMap(aMap);
+    // aMap.put(Material.DIAMOND_HELMET, 272);
+    // aMap.put(Material.DIAMOND_CHESTPLATE, 384);
+    // aMap.put(Material.DIAMOND_LEGGINGS, 368);
+    // aMap.put(Material.DIAMOND_BOOTS, 320);
+    // durability = Collections.unmodifiableMap(aMap);
     //
-    //        Map<Material, Integer> bMap = new HashMap<Material, Integer>();
-    //        bMap.put(Material.LEATHER_HELMET, 3);
-    //        bMap.put(Material.LEATHER_CHESTPLATE, 8);
-    //        bMap.put(Material.LEATHER_LEGGINGS, 6);
-    //        bMap.put(Material.LEATHER_BOOTS, 3);
+    // Map<Material, Integer> bMap = new HashMap<Material, Integer>();
+    // bMap.put(Material.LEATHER_HELMET, 3);
+    // bMap.put(Material.LEATHER_CHESTPLATE, 8);
+    // bMap.put(Material.LEATHER_LEGGINGS, 6);
+    // bMap.put(Material.LEATHER_BOOTS, 3);
     //
-    //        bMap.put(Material.GOLD_HELMET, 3);
-    //        bMap.put(Material.GOLD_CHESTPLATE, 8);
-    //        bMap.put(Material.GOLD_LEGGINGS, 6);
-    //        bMap.put(Material.GOLD_BOOTS, 3);
+    // bMap.put(Material.GOLD_HELMET, 3);
+    // bMap.put(Material.GOLD_CHESTPLATE, 8);
+    // bMap.put(Material.GOLD_LEGGINGS, 6);
+    // bMap.put(Material.GOLD_BOOTS, 3);
     //
-    //        bMap.put(Material.CHAINMAIL_HELMET, 3);
-    //        bMap.put(Material.CHAINMAIL_CHESTPLATE, 8);
-    //        bMap.put(Material.CHAINMAIL_LEGGINGS, 6);
-    //        bMap.put(Material.CHAINMAIL_BOOTS, 3);
+    // bMap.put(Material.CHAINMAIL_HELMET, 3);
+    // bMap.put(Material.CHAINMAIL_CHESTPLATE, 8);
+    // bMap.put(Material.CHAINMAIL_LEGGINGS, 6);
+    // bMap.put(Material.CHAINMAIL_BOOTS, 3);
     //
-    //        bMap.put(Material.IRON_HELMET, 3);
-    //        bMap.put(Material.IRON_CHESTPLATE, 8);
-    //        bMap.put(Material.IRON_LEGGINGS, 6);
-    //        bMap.put(Material.IRON_BOOTS, 3);
+    // bMap.put(Material.IRON_HELMET, 3);
+    // bMap.put(Material.IRON_CHESTPLATE, 8);
+    // bMap.put(Material.IRON_LEGGINGS, 6);
+    // bMap.put(Material.IRON_BOOTS, 3);
     //
-    //        bMap.put(Material.DIAMOND_HELMET, 3);
-    //        bMap.put(Material.DIAMOND_CHESTPLATE, 8);
-    //        bMap.put(Material.DIAMOND_LEGGINGS, 6);
-    //        bMap.put(Material.DIAMOND_BOOTS, 3);
-    //        armorPoints = Collections.unmodifiableMap(bMap);
-    //    }
+    // bMap.put(Material.DIAMOND_HELMET, 3);
+    // bMap.put(Material.DIAMOND_CHESTPLATE, 8);
+    // bMap.put(Material.DIAMOND_LEGGINGS, 6);
+    // bMap.put(Material.DIAMOND_BOOTS, 3);
+    // armorPoints = Collections.unmodifiableMap(bMap);
+    // }
 
     protected final Heroes plugin;
     protected Player player;
@@ -95,15 +101,21 @@ public class Hero {
     protected Map<Material, String[]> binds = new HashMap<Material, String[]>();
     protected List<ItemStack> itemRecovery = new ArrayList<ItemStack>();
     protected Set<String> suppressedSkills = new HashSet<String>();
-    //    protected double health;
+
+    // protected double health;
 
     public Hero(Heroes plugin, Player player, HeroClass heroClass) {
         this.plugin = plugin;
         this.player = player;
         this.heroClass = heroClass;
 
-        //        int playerHealth = player.getHealth();
-        //        this.health = playerHealth / 20.0 * getMaxHealth();;
+        // int playerHealth = player.getHealth();
+        // this.health = playerHealth / 20.0 * getMaxHealth();;
+    }
+
+    public void addEffect(Effect effect) {
+        effects.add(effect);
+        effect.apply(this);
     }
 
     public void addRecoveryItem(ItemStack item) {
@@ -120,84 +132,74 @@ public class Hero {
     }
 
     /*
-    public void damage(int damage) {
-        getPlayer();
-        System.out.println("Config Damage: " + damage);
-
-        // gotta do something about no damage ticks
-
-        PlayerInventory inventory = player.getInventory();
-        ItemStack[] armorContents = inventory.getArmorContents();
-
-        int missingDurability = 0;
-        int maxDurability = 0;
-        int baseArmorPoints = 0;
-        boolean wearingArmor = false;
-
-        for (ItemStack armor : armorContents) {
-            Material armorType = armor.getType();
-            if (armorType != Material.AIR) {
-                short armorDurability = armor.getDurability();
-                missingDurability += armorDurability;
-                maxDurability += armorType.getMaxDurability();
-                baseArmorPoints += armorPoints.get(armorType);
-                wearingArmor = true;
-            }
-        }
-
-        if (wearingArmor) {
-            InventoryPlayer i = ((CraftPlayer) player).getHandle().inventory;
-            i.c(damage);
-        }
-
-        // inventory.setArmorContents(armorContents);
-        player.updateInventory();
-
-        System.out.println("    Missing Durability: " + missingDurability);
-        System.out.println("    Max Durability: " + maxDurability);
-        System.out.println("    Base Armor Points: " + baseArmorPoints);
-
-        if (maxDurability == 0) {
-            maxDurability = 1;
-        }
-
-        double armorPoints = (double) baseArmorPoints * (maxDurability + missingDurability) / maxDurability;
-        System.out.println("    Armor Points: " + armorPoints);
-        double damageReduction = 0.04 * armorPoints;
-        System.out.println("    Damage Reduction: " + damageReduction);
-        double reducedDamage = damage * (1 - damageReduction);
-        System.out.println("    Reduced Damage: " + reducedDamage);
-        System.out.println("    Initial Health: " + health);
-        health -= reducedDamage;
-        System.out.println("    Final Health: " + health);
-        syncHealth();
-
-        EntityLiving nmsEntity = ((CraftLivingEntity) player).getHandle();
-        for (Player player : this.player.getWorld().getPlayers()) {
-            CraftPlayer craftPlayer = (CraftPlayer) player;
-            craftPlayer.getHandle().netServerHandler.sendPacket(new Packet18ArmAnimation(nmsEntity, (byte) 2));
-        }
-    }
-    */
+     * public void damage(int damage) {
+     * getPlayer();
+     * System.out.println("Config Damage: " + damage);
+     * 
+     * // gotta do something about no damage ticks
+     * 
+     * PlayerInventory inventory = player.getInventory();
+     * ItemStack[] armorContents = inventory.getArmorContents();
+     * 
+     * int missingDurability = 0;
+     * int maxDurability = 0;
+     * int baseArmorPoints = 0;
+     * boolean wearingArmor = false;
+     * 
+     * for (ItemStack armor : armorContents) {
+     * Material armorType = armor.getType();
+     * if (armorType != Material.AIR) {
+     * short armorDurability = armor.getDurability();
+     * missingDurability += armorDurability;
+     * maxDurability += armorType.getMaxDurability();
+     * baseArmorPoints += armorPoints.get(armorType);
+     * wearingArmor = true;
+     * }
+     * }
+     * 
+     * if (wearingArmor) {
+     * InventoryPlayer i = ((CraftPlayer) player).getHandle().inventory;
+     * i.c(damage);
+     * }
+     * 
+     * // inventory.setArmorContents(armorContents);
+     * player.updateInventory();
+     * 
+     * System.out.println("    Missing Durability: " + missingDurability);
+     * System.out.println("    Max Durability: " + maxDurability);
+     * System.out.println("    Base Armor Points: " + baseArmorPoints);
+     * 
+     * if (maxDurability == 0) {
+     * maxDurability = 1;
+     * }
+     * 
+     * double armorPoints = (double) baseArmorPoints * (maxDurability + missingDurability) / maxDurability;
+     * System.out.println("    Armor Points: " + armorPoints);
+     * double damageReduction = 0.04 * armorPoints;
+     * System.out.println("    Damage Reduction: " + damageReduction);
+     * double reducedDamage = damage * (1 - damageReduction);
+     * System.out.println("    Reduced Damage: " + reducedDamage);
+     * System.out.println("    Initial Health: " + health);
+     * health -= reducedDamage;
+     * System.out.println("    Final Health: " + health);
+     * syncHealth();
+     * 
+     * EntityLiving nmsEntity = ((CraftLivingEntity) player).getHandle();
+     * for (Player player : this.player.getWorld().getPlayers()) {
+     * CraftPlayer craftPlayer = (CraftPlayer) player;
+     * craftPlayer.getHandle().netServerHandler.sendPacket(new Packet18ArmAnimation(nmsEntity, (byte) 2));
+     * }
+     * }
+     */
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
         Hero other = (Hero) obj;
         if (player == null) {
-            if (other.player != null) {
-                return false;
-            }
-        } else if (!player.getName().equals(other.player.getName())) {
-            return false;
-        }
+            if (other.player != null) return false;
+        } else if (!player.getName().equals(other.player.getName())) return false;
         return true;
     }
 
@@ -271,7 +273,7 @@ public class Hero {
             }
             if (newLevel != currentLevel) {
                 player.setHealth(20);
-                //                setHealth(getMaxHealth());
+                // setHealth(getMaxHealth());
                 Messaging.send(player, "You leveled up! (Lvl $1 $2)", String.valueOf(newLevel), heroClass.getName());
                 if (newLevel >= prop.maxLevel) {
                     exp = prop.getExperience(prop.maxLevel);
@@ -292,36 +294,15 @@ public class Hero {
         return cooldowns;
     }
 
-    public Set<Effect> getEffects() {
-        return new HashSet<Effect>(effects);
-    }
-
-    public void addEffect(Effect effect) {
-        effects.add(effect);
-        effect.apply(this);
-    }
-
-    public void removeEffect(Effect effect) {
-        effects.remove(effect);
-        effect.remove(this);
-    }
-
-    public boolean hasEffect(String name) {
-        for (Effect effect : effects) {
-            if (effect.getName().equalsIgnoreCase(name)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public Effect getEffect(String name) {
         for (Effect effect : effects) {
-            if (effect.getName().equalsIgnoreCase(name)) {
-                return effect;
-            }
+            if (effect.getName().equalsIgnoreCase(name)) return effect;
         }
         return null;
+    }
+
+    public Set<Effect> getEffects() {
+        return new HashSet<Effect>(effects);
     }
 
     public double getExperience() {
@@ -333,15 +314,6 @@ public class Hero {
         return exp == null ? 0 : exp;
     }
 
-    //    public double getHealth() {
-    //        return health;
-    //    }
-
-    //    public double getMaxHealth() {
-    //        int level = plugin.getConfigManager().getProperties().getLevel(getExperience());
-    //        return heroClass.getBaseMaxHealth() + (level - 1) * heroClass.getMaxHealthPerLevel();
-    //    }
-
     public HeroClass getHeroClass() {
         return heroClass;
     }
@@ -349,6 +321,15 @@ public class Hero {
     public int getLevel() {
         return plugin.getConfigManager().getProperties().getLevel(getExperience());
     }
+
+    // public double getHealth() {
+    // return health;
+    // }
+
+    // public double getMaxHealth() {
+    // int level = plugin.getConfigManager().getProperties().getLevel(getExperience());
+    // return heroClass.getBaseMaxHealth() + (level - 1) * heroClass.getMaxHealthPerLevel();
+    // }
 
     public int getMana() {
         return mana;
@@ -378,6 +359,13 @@ public class Hero {
         return new HashSet<String>(suppressedSkills);
     }
 
+    public boolean hasEffect(String name) {
+        for (Effect effect : effects) {
+            if (effect.getName().equalsIgnoreCase(name)) return true;
+        }
+        return false;
+    }
+
     @Override
     public int hashCode() {
         return player == null ? 0 : player.getName().hashCode();
@@ -404,6 +392,11 @@ public class Hero {
         return verbose;
     }
 
+    public void removeEffect(Effect effect) {
+        effects.remove(effect);
+        effect.remove(this);
+    }
+
     public void setExperience(double experience) {
         setExperience(heroClass, experience);
     }
@@ -413,13 +406,13 @@ public class Hero {
     }
 
     public void setHeroClass(HeroClass heroClass) {
-        //        double currentMaxHP = getMaxHealth();
+        // double currentMaxHP = getMaxHealth();
         this.heroClass = heroClass;
-        //        double newMaxHP = getMaxHealth();
-        //        health *= newMaxHP / currentMaxHP;
-        //        if (health > newMaxHP) {
-        //            health = newMaxHP;
-        //        }
+        // double newMaxHP = getMaxHealth();
+        // health *= newMaxHP / currentMaxHP;
+        // if (health > newMaxHP) {
+        // health = newMaxHP;
+        // }
 
         // Check the Players inventory now that they have changed class.
         this.plugin.getInventoryChecker().checkInventory(getPlayer());
@@ -458,15 +451,15 @@ public class Hero {
         binds.remove(material);
     }
 
-    //    public void setHealth(Double health) {
-    //        double maxHealth = getMaxHealth();
-    //        if (health > maxHealth) {
-    //            this.health = maxHealth;
-    //        } else if (health < 0) {
-    //            this.health = 0;
-    //        } else {
-    //            this.health = health;
-    //        }
-    //    }
+    // public void setHealth(Double health) {
+    // double maxHealth = getMaxHealth();
+    // if (health > maxHealth) {
+    // this.health = maxHealth;
+    // } else if (health < 0) {
+    // this.health = 0;
+    // } else {
+    // this.health = health;
+    // }
+    // }
 
 }

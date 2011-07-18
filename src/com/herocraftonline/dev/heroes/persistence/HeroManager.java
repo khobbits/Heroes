@@ -1,5 +1,20 @@
 package com.herocraftonline.dev.heroes.persistence;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.logging.Level;
+
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.config.Configuration;
+
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.command.BaseCommand;
@@ -9,19 +24,10 @@ import com.herocraftonline.dev.heroes.effects.Periodic;
 import com.herocraftonline.dev.heroes.skill.OutsourcedSkill;
 import com.herocraftonline.dev.heroes.skill.PassiveSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.config.Configuration;
-
-import java.io.File;
-import java.util.*;
-import java.util.logging.Level;
 
 /**
  * Player management
- *
+ * 
  * @author Herocraft's Plugin Team
  */
 public class HeroManager {
@@ -66,9 +72,7 @@ public class HeroManager {
                 removeHero(hero); // Seeing as it's null we might as well remove it.
                 continue;
             }
-            if (player.getName().equalsIgnoreCase(hero.getPlayer().getName())) {
-                return hero;
-            }
+            if (player.getName().equalsIgnoreCase(hero.getPlayer().getName())) return hero;
         }
         // If it gets to this stage then clearly the HeroManager doesn't have it so we create it...
         return loadHero(player);
@@ -80,7 +84,7 @@ public class HeroManager {
 
     /**
      * Load the given Players Data file.
-     *
+     * 
      * @param player
      * @return
      */
@@ -99,7 +103,7 @@ public class HeroManager {
             loadRecoveryItems(playerHero, playerConfig);
             loadBinds(playerHero, playerConfig);
             playerHero.mana = playerConfig.getInt("mana", 0);
-            //            playerHero.health = playerConfig.getDouble("health", 100);
+            // playerHero.health = playerConfig.getDouble("health", 100);
             playerHero.setVerbose(playerConfig.getBoolean("verbose", true));
             playerHero.suppressedSkills = new HashSet<String>(playerConfig.getStringList("suppressed", null));
 
@@ -125,7 +129,7 @@ public class HeroManager {
 
     /**
      * Save the given Players Data to a file.
-     *
+     * 
      * @param player
      */
     public void saveHero(Player player) {
@@ -138,7 +142,7 @@ public class HeroManager {
         playerConfig.setProperty("suppressed", new ArrayList<String>(hero.getSuppressedSkills()));
         playerConfig.setProperty("mana", hero.getMana());
         playerConfig.removeProperty("itemrecovery");
-        //        playerConfig.setProperty("health", hero.getHealth());
+        // playerConfig.setProperty("health", hero.getHealth());
 
         saveCooldowns(hero, playerConfig);
         saveExperience(hero, playerConfig);
@@ -208,9 +212,7 @@ public class HeroManager {
     }
 
     private void loadExperience(Hero hero, Configuration config) {
-        if (hero == null || hero.getClass() == null || config == null) {
-            return;
-        }
+        if (hero == null || hero.getClass() == null || config == null) return;
 
         String root = "experience";
         List<String> expList = config.getKeys(root);
@@ -300,9 +302,7 @@ public class HeroManager {
     }
 
     private void saveExperience(Hero hero, Configuration config) {
-        if (hero == null || hero.getClass() == null || config == null) {
-            return;
-        }
+        if (hero == null || hero.getClass() == null || config == null) return;
 
         String root = "experience";
         for (Map.Entry<String, Double> entry : hero.experience.entrySet()) {
@@ -362,9 +362,7 @@ class ManaUpdater implements Runnable {
     @Override
     public void run() {
         long time = System.currentTimeMillis();
-        if (time < lastUpdate + updateInterval) {
-            return;
-        }
+        if (time < lastUpdate + updateInterval) return;
         lastUpdate = time;
 
         Set<Hero> heroes = manager.getHeroes();

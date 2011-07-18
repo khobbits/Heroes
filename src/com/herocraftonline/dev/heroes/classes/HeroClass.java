@@ -1,10 +1,15 @@
 package com.herocraftonline.dev.heroes.classes;
 
-import com.herocraftonline.dev.heroes.damage.DamageManager.ProjectileType;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
+
 import org.bukkit.Material;
 import org.bukkit.util.config.ConfigurationNode;
 
-import java.util.*;
+import com.herocraftonline.dev.heroes.damage.DamageManager.ProjectileType;
 
 public class HeroClass {
 
@@ -19,8 +24,9 @@ public class HeroClass {
     private Map<ProjectileType, Integer> projectileDamage;
     private Map<String, ConfigurationNode> skills;
     private double expModifier;
-    //    private double baseMaxHealth;
-    //    private double maxHealthPerLevel;
+
+    // private double baseMaxHealth;
+    // private double maxHealthPerLevel;
 
     public HeroClass() {
         name = "";
@@ -33,8 +39,8 @@ public class HeroClass {
         expModifier = 1.0D;
         specializations = new LinkedHashSet<HeroClass>();
         skills = new LinkedHashMap<String, ConfigurationNode>();
-        //        baseMaxHealth = 20;
-        //        maxHealthPerLevel = 0;
+        // baseMaxHealth = 20;
+        // maxHealthPerLevel = 0;
     }
 
     public HeroClass(String name) {
@@ -54,33 +60,15 @@ public class HeroClass {
         skills.put(name.toLowerCase(), settings);
     }
 
-    public void setItemDamage(Material material, int damage) {
-        itemDamage.put(material, damage);
-    }
-
-    public void setProjectileDamage(ProjectileType type, int damage) {
-        projectileDamage.put(type, damage);
-    }
-
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
         HeroClass other = (HeroClass) obj;
         if (name == null) {
-            if (other.name != null) {
-                return false;
-            }
-        } else if (!name.equals(other.name)) {
-            return false;
-        }
+            if (other.name != null) return false;
+        } else if (!name.equals(other.name)) return false;
         return true;
     }
 
@@ -104,32 +92,32 @@ public class HeroClass {
         return this.expModifier;
     }
 
-    //    public double getMaxHealthPerLevel() {
-    //        return maxHealthPerLevel;
-    //    }
-    //
-    //    public double getBaseMaxHealth() {
-    //        return baseMaxHealth;
-    //    }
+    public Integer getItemDamage(Material material) {
+        return itemDamage.get(material);
+    }
 
     public String getName() {
         return name;
     }
 
+    // public double getMaxHealthPerLevel() {
+    // return maxHealthPerLevel;
+    // }
+    //
+    // public double getBaseMaxHealth() {
+    // return baseMaxHealth;
+    // }
+
     public HeroClass getParent() {
         return parent == null ? null : parent;
     }
 
-    public ConfigurationNode getSkillSettings(String name) {
-        return skills.get(name.toLowerCase());
-    }
-
-    public Integer getItemDamage(Material material) {
-        return itemDamage.get(material);
-    }
-
     public Integer getProjectileDamage(ProjectileType type) {
         return projectileDamage.get(type);
+    }
+
+    public ConfigurationNode getSkillSettings(String name) {
+        return skills.get(name.toLowerCase());
     }
 
     public Set<HeroClass> getSpecializations() {
@@ -149,12 +137,12 @@ public class HeroClass {
         return parent == null;
     }
 
-    public void removeSkill(String name) {
-        skills.remove(name.toLowerCase());
-    }
-
     public void removeDamageValue(Material material) {
         itemDamage.remove(material);
+    }
+
+    public void removeSkill(String name) {
+        skills.remove(name.toLowerCase());
     }
 
     public void setDescription(String description) {
@@ -169,20 +157,28 @@ public class HeroClass {
         this.expModifier = modifier;
     }
 
-    //    public void setBaseMaxHealth(double baseMaxHealth) {
-    //        this.baseMaxHealth = baseMaxHealth;
-    //    }
-    //
-    //    public void setMaxHealthPerLevel(double maxHealthPerLevel) {
-    //        this.maxHealthPerLevel = maxHealthPerLevel;
-    //    }
+    public void setItemDamage(Material material, int damage) {
+        itemDamage.put(material, damage);
+    }
 
     public void setName(String name) {
         this.name = name;
     }
 
+    // public void setBaseMaxHealth(double baseMaxHealth) {
+    // this.baseMaxHealth = baseMaxHealth;
+    // }
+    //
+    // public void setMaxHealthPerLevel(double maxHealthPerLevel) {
+    // this.maxHealthPerLevel = maxHealthPerLevel;
+    // }
+
     public void setParent(HeroClass parent) {
         this.parent = parent;
+    }
+
+    public void setProjectileDamage(ProjectileType type, int damage) {
+        projectileDamage.put(type, damage);
     }
 
     public void setSpecializations(Set<HeroClass> specializations) {

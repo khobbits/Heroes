@@ -1,8 +1,9 @@
 package com.herocraftonline.dev.heroes.effects;
 
+import org.bukkit.Location;
+
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
-import org.bukkit.Location;
 
 public class Effect {
 
@@ -16,36 +17,10 @@ public class Effect {
         this.persistent = false;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public Skill getSkill() {
-        return skill;
-    }
-
-    public boolean isPersistent() {
-        return persistent;
-    }
-
-    public void setPersistent(boolean persistent) {
-        this.persistent = persistent;
-    }
+    public void apply(Hero hero) {}
 
     public void broadcast(Location source, String message, Object... args) {
         skill.broadcast(source, message, args);
-    }
-
-    public void apply(Hero hero) {}
-
-    public void remove(Hero hero) {}
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((name == null) ? 0 : name.hashCode());
-        return result;
     }
 
     @Override
@@ -58,6 +33,32 @@ public class Effect {
             if (other.name != null) return false;
         } else if (!name.equals(other.name)) return false;
         return true;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Skill getSkill() {
+        return skill;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + (name == null ? 0 : name.hashCode());
+        return result;
+    }
+
+    public boolean isPersistent() {
+        return persistent;
+    }
+
+    public void remove(Hero hero) {}
+
+    public void setPersistent(boolean persistent) {
+        this.persistent = persistent;
     }
 
 }

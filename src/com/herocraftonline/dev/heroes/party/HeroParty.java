@@ -10,6 +10,7 @@ import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.util.Messaging;
 
 public class HeroParty {
+
     private Hero leader;
     private Set<Hero> members = new HashSet<Hero>();
     private Boolean pvp = true;

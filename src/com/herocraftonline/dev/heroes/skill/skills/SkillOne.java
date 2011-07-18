@@ -16,7 +16,7 @@ import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
 
 public class SkillOne extends ActiveSkill {
-    
+
     private String applyText;
     private String expireText;
 
@@ -31,7 +31,7 @@ public class SkillOne extends ActiveSkill {
 
         registerEvent(Type.PLAYER_MOVE, new SkillPlayerListener(), Priority.Normal);
     }
-    
+
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
@@ -52,7 +52,7 @@ public class SkillOne extends ActiveSkill {
     @Override
     public boolean use(Hero hero, String[] args) {
         broadcastExecuteText(hero);
-        
+
         int duration = getSetting(hero.getHeroClass(), "duration", 5000);
         hero.addEffect(new OneEffect(this, duration));
 
