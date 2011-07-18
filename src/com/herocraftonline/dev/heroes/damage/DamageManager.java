@@ -20,6 +20,7 @@ import org.bukkit.util.config.Configuration;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
+import com.herocraftonline.dev.heroes.util.Properties;
 
 public class DamageManager {
 
@@ -58,10 +59,13 @@ public class DamageManager {
      * Register the events for the damage system
      */
     public void registerEvents() {
-        PluginManager pluginManager = plugin.getServer().getPluginManager();
-        pluginManager.registerEvent(Type.ENTITY_DAMAGE, listener, Priority.Highest, plugin);
-        pluginManager.registerEvent(Type.ENTITY_REGAIN_HEALTH, listener, Priority.Highest, plugin);
-        pluginManager.registerEvent(Type.CREATURE_SPAWN, listener, Priority.Highest, plugin);
+        Properties prop = plugin.getConfigManager().getProperties();
+        if(prop.damageSystem) {
+            PluginManager pluginManager = plugin.getServer().getPluginManager();
+            pluginManager.registerEvent(Type.ENTITY_DAMAGE, listener, Priority.Highest, plugin);
+            pluginManager.registerEvent(Type.ENTITY_REGAIN_HEALTH, listener, Priority.Highest, plugin);
+            pluginManager.registerEvent(Type.CREATURE_SPAWN, listener, Priority.Highest, plugin);
+        }
     }
 
     public Integer getItemDamage(Material item, HumanEntity entity) {
