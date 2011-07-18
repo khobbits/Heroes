@@ -47,7 +47,7 @@ public class ConfigManager {
         checkForConfig(classConfigFile);
         checkForConfig(expConfigFile);
         checkForConfig(skillConfigFile);
-        checkForConfig(damageConfigFile);
+        //checkForConfig(damageConfigFile);
 
         Configuration primaryConfig = new Configuration(primaryConfigFile);
         primaryConfig.load();
@@ -55,9 +55,9 @@ public class ConfigManager {
         loadDefaultConfig(primaryConfig);
         loadProperties(primaryConfig);
 
-        Configuration damageConfig = new Configuration(damageConfigFile);
-        damageConfig.load();
-        plugin.getDamageManager().load(damageConfig);
+        //Configuration damageConfig = new Configuration(damageConfigFile);
+        //damageConfig.load();
+        //plugin.getDamageManager().load(damageConfig);
 
         Configuration expConfig = new Configuration(expConfigFile);
         expConfig.load();
@@ -199,7 +199,7 @@ public class ConfigManager {
         properties.cColor = ChatColor.valueOf(config.getString(root + "color", "WHITE"));
         properties.swapCost = config.getInt(root + "swapcost", 0);
         properties.debug = config.getBoolean(root + "debug", false);
-        properties.damageSystem = config.getBoolean(root + "useDamageSystem", false);
+        //properties.damageSystem = config.getBoolean(root + "useDamageSystem", false);
     }
 
     private void loadSkills(Configuration config) {
