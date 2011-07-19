@@ -1,8 +1,10 @@
 package com.herocraftonline.dev.heroes.damage;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
@@ -32,12 +34,25 @@ public class DamageManager {
     private Map<CreatureType, Integer> creatureHealth;
     private Map<CreatureType, Integer> creatureDamage;
     private Map<DamageCause, Integer> environmentalDamage;
-
+    private Set<Entity> spellTargets = new HashSet<Entity>();
+    
     public DamageManager(Heroes plugin) {
         this.plugin = plugin;
         listener = new HeroesDamageListener(plugin, this);
     }
 
+    public Set<Entity> getSpellTargets() {
+        return spellTargets;
+    }
+    
+    public void removeSpellTarget(Entity o) {
+        spellTargets.remove(o);
+    }
+
+    public void addSpellTarget(Entity o) {
+        spellTargets.add(o);
+    }
+    
     public Integer getCreatureDamage(CreatureType type) {
         return creatureDamage.get(type);
     }

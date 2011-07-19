@@ -133,45 +133,48 @@ public class HeroesDamageListener extends EntityListener {
         DamageCause cause = event.getCause();
         int damage = event.getDamage();
         if (damage == 0) return;
-
-        if (event instanceof EntityDamageByEntityEvent) {
-            if (event instanceof EntityDamageByProjectileEvent) {
-                // Projectile projectile = ((EntityDamageByProjectileEvent) event).getProjectile();
-                // DamageManager.ProjectileType type = DamageManager.ProjectileType.valueOf(projectile);
-                // Integer tmpDamage = damageManager.getProjectileDamage(type, (HumanEntity) projectile.getShooter());
-                // if (tmpDamage != null) {
-                // damage = tmpDamage;
-                // }
-            } else {
-                Entity attacker = ((EntityDamageByEntityEvent) event).getDamager();
-                if (attacker instanceof Player) {
-                    Player attackingPlayer = (Player) attacker;
-                    ItemStack weapon = attackingPlayer.getItemInHand();
-                    Material weaponType = weapon.getType();
-
-                    Integer tmpDamage = damageManager.getItemDamage(weaponType, attackingPlayer);
-                    if (tmpDamage != null) {
-                        damage = tmpDamage;
-                    }
+        if(damageManager.getSpellTargets().contains(entity)) { // Start of skill -> listener communication
+            damageManager.getSpellTargets().remove(entity);
+        }else {
+            if (event instanceof EntityDamageByEntityEvent) {
+                if (event instanceof EntityDamageByProjectileEvent) {
+                    // Projectile projectile = ((EntityDamageByProjectileEvent) event).getProjectile();
+                    // DamageManager.ProjectileType type = DamageManager.ProjectileType.valueOf(projectile);
+                    // Integer tmpDamage = damageManager.getProjectileDamage(type, (HumanEntity) projectile.getShooter());
+                    // if (tmpDamage != null) {
+                    // damage = tmpDamage;
+                    // }
                 } else {
-                    CreatureType type = Properties.getCreatureFromEntity(attacker);
-                    if (type != null) {
-                        Integer tmpDamage = damageManager.getCreatureDamage(type);
+                    Entity attacker = ((EntityDamageByEntityEvent) event).getDamager();
+                    if (attacker instanceof Player) {
+                        Player attackingPlayer = (Player) attacker;
+                        ItemStack weapon = attackingPlayer.getItemInHand();
+                        Material weaponType = weapon.getType();
+
+                        Integer tmpDamage = damageManager.getItemDamage(weaponType, attackingPlayer);
                         if (tmpDamage != null) {
                             damage = tmpDamage;
                         }
+                    } else {
+                        CreatureType type = Properties.getCreatureFromEntity(attacker);
+                        if (type != null) {
+                            Integer tmpDamage = damageManager.getCreatureDamage(type);
+                            if (tmpDamage != null) {
+                                damage = tmpDamage;
+                            }
+                        }
+                    }
+                }
+            } else if (cause != DamageCause.CUSTOM) {
+                Integer tmpDamage = damageManager.getEnvironmentalDamage(cause);
+                if (tmpDamage != null) {
+                    damage = tmpDamage;
+                    if (cause == DamageCause.FALL) {
+                        damage += damage / 3 * (event.getDamage() - 3);
                     }
                 }
             }
-        } else if (cause != DamageCause.CUSTOM) {
-            Integer tmpDamage = damageManager.getEnvironmentalDamage(cause);
-            if (tmpDamage != null) {
-                damage = tmpDamage;
-                if (cause == DamageCause.FALL) {
-                    damage += damage / 3 * (event.getDamage() - 3);
-                }
-            }
-        }
+        } // End of skill -> listener communication
 
         if (entity instanceof Player) {
             Player player = (Player) entity;
