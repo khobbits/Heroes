@@ -61,6 +61,8 @@ public class HeroManager {
 
     public Hero createNewHero(Player player) {
         Hero hero = new Hero(plugin, player, plugin.getClassManager().getDefaultClass());
+        hero.setHealth(hero.getMaxHealth());
+        hero.syncHealth();
         addHero(hero);
         return hero;
     }
@@ -105,7 +107,7 @@ public class HeroManager {
             playerHero.setHealth(playerConfig.getDouble("health", playerClass.getBaseMaxHealth()));
             playerHero.setVerbose(playerConfig.getBoolean("verbose", true));
             playerHero.suppressedSkills = new HashSet<String>(playerConfig.getStringList("suppressed", null));
-
+            
             addHero(playerHero);
             playerHero.syncHealth();
 
