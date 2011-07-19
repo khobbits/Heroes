@@ -10,11 +10,11 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 
-public class SkillGroupHeal extends ActiveSkill {
+public class SkillGroupheal extends ActiveSkill {
 
-    public SkillGroupHeal(Heroes plugin) {
+    public SkillGroupheal(Heroes plugin) {
         super(plugin);
-        setName("GroupHeal");
+        setName("Groupheal");
         setDescription("Heals all players around you");
         setUsage("/skill groupheal");
         setMinArgs(0);
