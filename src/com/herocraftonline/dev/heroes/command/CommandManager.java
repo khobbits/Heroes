@@ -81,7 +81,8 @@ public class CommandManager {
     }
 
     public boolean hasPermission(CommandSender sender, String node) {
-        if (!(sender instanceof Player)) return true;
+        if (!(sender instanceof Player))
+            return true;
         Player player = (Player) sender;
         try {
             return player.isOp() || Heroes.Permissions != null && Heroes.Permissions.safeGetUser(player.getWorld().getName(), player.getName()).hasPermission(node);

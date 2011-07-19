@@ -74,13 +74,18 @@ public class Hero {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null) return false;
-        if (getClass() != obj.getClass()) return false;
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
         Hero other = (Hero) obj;
         if (player == null) {
-            if (other.player != null) return false;
-        } else if (!player.getName().equals(other.player.getName())) return false;
+            if (other.player != null)
+                return false;
+        } else if (!player.getName().equals(other.player.getName()))
+            return false;
         return true;
     }
 
@@ -177,7 +182,8 @@ public class Hero {
 
     public Effect getEffect(String name) {
         for (Effect effect : effects) {
-            if (effect.getName().equalsIgnoreCase(name)) return effect;
+            if (effect.getName().equalsIgnoreCase(name))
+                return effect;
         }
         return null;
     }
@@ -242,7 +248,8 @@ public class Hero {
 
     public boolean hasEffect(String name) {
         for (Effect effect : effects) {
-            if (effect.getName().equalsIgnoreCase(name)) return true;
+            if (effect.getName().equalsIgnoreCase(name))
+                return true;
         }
         return false;
     }

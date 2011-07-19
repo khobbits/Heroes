@@ -127,15 +127,17 @@ public class HeroesDamageListener extends EntityListener {
 
     @Override
     public void onEntityDamage(EntityDamageEvent event) {
-        if (event.isCancelled()) return;
+        if (event.isCancelled())
+            return;
 
         Entity entity = event.getEntity();
         DamageCause cause = event.getCause();
         int damage = event.getDamage();
-        if (damage == 0) return;
-        if(damageManager.getSpellTargets().contains(entity)) { // Start of skill -> listener communication
+        if (damage == 0)
+            return;
+        if (damageManager.getSpellTargets().contains(entity)) { // Start of skill -> listener communication
             damageManager.getSpellTargets().remove(entity);
-        }else {
+        } else {
             if (event instanceof EntityDamageByEntityEvent) {
                 if (event instanceof EntityDamageByProjectileEvent) {
                     // Projectile projectile = ((EntityDamageByProjectileEvent) event).getProjectile();

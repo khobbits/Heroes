@@ -43,7 +43,8 @@ public class HBlockListener extends BlockListener {
 
     @Override
     public void onBlockBreak(BlockBreakEvent event) {
-        if (event.isCancelled()) return;
+        if (event.isCancelled())
+            return;
 
         Block block = event.getBlock();
         Player player = event.getPlayer();
@@ -85,7 +86,8 @@ public class HBlockListener extends BlockListener {
 
     @Override
     public void onBlockPlace(BlockPlaceEvent event) {
-        if (event.isCancelled()) return;
+        if (event.isCancelled())
+            return;
 
         Block block = event.getBlock();
         Material material = block.getType();

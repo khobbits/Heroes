@@ -26,7 +26,8 @@ public class PartyModeCommand extends BaseCommand {
         if (sender instanceof Player) {
             Player player = (Player) sender;
             Hero hero = plugin.getHeroManager().getHero(player);
-            if (hero.getParty() == null) return;
+            if (hero.getParty() == null)
+                return;
             HeroParty heroParty = hero.getParty();
             if (heroParty.getLeader() == player) {
                 if (args[0].equalsIgnoreCase("pvp")) {

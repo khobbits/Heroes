@@ -37,11 +37,13 @@ public class SkillBolt extends TargettedSkill {
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
 
-        if (target.equals(player)) return false;
+        if (target.equals(player))
+            return false;
 
         EntityDamageByEntityEvent damageEntityEvent = new EntityDamageByEntityEvent(player, target, DamageCause.CUSTOM, 0);
         plugin.getServer().getPluginManager().callEvent(damageEntityEvent);
-        if (damageEntityEvent.isCancelled()) return false;
+        if (damageEntityEvent.isCancelled())
+            return false;
 
         int range = getSetting(hero.getHeroClass(), "range", 10);
         List<Entity> entityList = target.getNearbyEntities(range, range, range);

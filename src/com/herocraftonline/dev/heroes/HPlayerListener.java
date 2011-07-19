@@ -33,7 +33,7 @@ public class HPlayerListener extends PlayerListener {
     public void onItemHeldChange(PlayerItemHeldEvent event) {
         this.plugin.getInventoryChecker().checkInventory(event.getPlayer());
     }
-    
+
     @Override
     public void onPlayerRespawn(PlayerRespawnEvent event) {
         Player player = event.getPlayer();
@@ -43,7 +43,8 @@ public class HPlayerListener extends PlayerListener {
 
     @Override
     public void onPlayerInteract(PlayerInteractEvent event) {
-        if (event.useItemInHand() == Result.DENY) return;
+        if (event.useItemInHand() == Result.DENY)
+            return;
 
         Player player = event.getPlayer();
         Material material = player.getItemInHand().getType();
@@ -68,7 +69,8 @@ public class HPlayerListener extends PlayerListener {
 
     @Override
     public void onPlayerPickupItem(PlayerPickupItemEvent event) {
-        if (event.isCancelled()) return;
+        if (event.isCancelled())
+            return;
         final Player player = event.getPlayer();
         plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 
@@ -89,7 +91,8 @@ public class HPlayerListener extends PlayerListener {
 
     @Override
     public void onPlayerTeleport(PlayerTeleportEvent event) {
-        if (event.isCancelled()) return;
+        if (event.isCancelled())
+            return;
 
         Player player = event.getPlayer();
         if (event.getFrom().getWorld() != event.getTo().getWorld()) {

@@ -17,7 +17,8 @@ public class Effect {
         this.persistent = false;
     }
 
-    public void apply(Hero hero) {}
+    public void apply(Hero hero) {
+    }
 
     public void broadcast(Location source, String message, Object... args) {
         skill.broadcast(source, message, args);
@@ -25,13 +26,18 @@ public class Effect {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null) return false;
-        if (getClass() != obj.getClass()) return false;
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
         Effect other = (Effect) obj;
         if (name == null) {
-            if (other.name != null) return false;
-        } else if (!name.equals(other.name)) return false;
+            if (other.name != null)
+                return false;
+        } else if (!name.equals(other.name))
+            return false;
         return true;
     }
 
@@ -55,7 +61,8 @@ public class Effect {
         return persistent;
     }
 
-    public void remove(Hero hero) {}
+    public void remove(Hero hero) {
+    }
 
     public void setPersistent(boolean persistent) {
         this.persistent = persistent;

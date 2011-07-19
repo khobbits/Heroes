@@ -29,9 +29,11 @@ public class SkillManaburn extends TargettedSkill {
 
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
-        if (!(target instanceof Player)) return false;
+        if (!(target instanceof Player))
+            return false;
         Hero tHero = plugin.getHeroManager().getHero((Player) target);
-        if (tHero == null) return false;
+        if (tHero == null)
+            return false;
         int transferamount = getSetting(hero.getHeroClass(), "transfer-amount", 20);
         if (tHero.getMana() > transferamount) {
             if (hero.getMana() + transferamount > 100) {

@@ -27,13 +27,18 @@ public abstract class BaseCommand {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null) return false;
-        if (obj.getClass() == this.getClass()) return false;
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (obj.getClass() == this.getClass())
+            return false;
         BaseCommand other = (BaseCommand) obj;
         if (name == null) {
-            if (other.name != null) return false;
-        } else if (!name.equals(other.name)) return false;
+            if (other.name != null)
+                return false;
+        } else if (!name.equals(other.name))
+            return false;
         return true;
     }
 
@@ -129,7 +134,8 @@ public abstract class BaseCommand {
                 args = new String[0];
             }
             int l = args.length;
-            if (l >= minArgs && l <= maxArgs) return args;
+            if (l >= minArgs && l <= maxArgs)
+                return args;
         }
         return null;
     }

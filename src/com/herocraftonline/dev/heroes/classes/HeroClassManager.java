@@ -38,7 +38,8 @@ public class HeroClassManager {
 
     public HeroClass getClass(String name) {
         for (HeroClass c : classes) {
-            if (name.equalsIgnoreCase(c.getName())) return c;
+            if (name.equalsIgnoreCase(c.getName()))
+                return c;
         }
         return null;
     }

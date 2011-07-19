@@ -23,7 +23,8 @@ public class SkillCharge extends TargettedSkill {
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         if (target instanceof Player) {
             Player p = (Player) target;
-            if (p == hero.getPlayer()) return false;
+            if (p == hero.getPlayer())
+                return false;
         }
         hero.getPlayer().teleport(target.getLocation());
         broadcastExecuteText(hero, target);

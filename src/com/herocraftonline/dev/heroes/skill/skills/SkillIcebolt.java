@@ -63,7 +63,8 @@ public class SkillIcebolt extends ActiveSkill {
 
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
-            if (event.isCancelled()) return;
+            if (event.isCancelled())
+                return;
             if (event instanceof EntityDamageByProjectileEvent) {
                 EntityDamageByProjectileEvent subEvent = (EntityDamageByProjectileEvent) event;
                 Entity projectile = subEvent.getProjectile();
@@ -73,7 +74,8 @@ public class SkillIcebolt extends ActiveSkill {
                         // Damage Event //
                         EntityDamageEvent damageEvent = new EntityDamageEvent(event.getEntity(), DamageCause.ENTITY_ATTACK, 0);
                         Bukkit.getServer().getPluginManager().callEvent(damageEvent);
-                        if (damageEvent.isCancelled()) return;
+                        if (damageEvent.isCancelled())
+                            return;
                         LivingEntity lEntity = (LivingEntity) event.getEntity();
                         event.getEntity().setFireTicks(0);
                         lEntity.damage(3);

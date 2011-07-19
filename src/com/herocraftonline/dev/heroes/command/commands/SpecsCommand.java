@@ -26,14 +26,16 @@ public class SpecsCommand extends BaseCommand {
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-        if (!(sender instanceof Player)) return;
+        if (!(sender instanceof Player))
+            return;
         HeroClass playerClass = plugin.getHeroManager().getHero((Player) sender).getHeroClass();
 
         int page = 0;
         if (args.length != 0) {
             try {
                 page = Integer.parseInt(args[0]) - 1;
-            } catch (NumberFormatException ignored) {}
+            } catch (NumberFormatException ignored) {
+            }
         }
 
         Set<HeroClass> childClasses = playerClass.getSpecializations();

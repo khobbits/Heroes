@@ -1,5 +1,6 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.config.ConfigurationNode;
@@ -101,6 +102,7 @@ public class SkillBleed extends TargettedSkill {
             super.tick(hero);
 
             Player player = hero.getPlayer();
+            plugin.getDamageManager().addSpellTarget((Entity) applier);
             player.damage(tickDamage, applier);
         }
     }

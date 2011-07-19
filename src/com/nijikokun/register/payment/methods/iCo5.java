@@ -12,50 +12,41 @@ import com.nijikokun.register.payment.Method;
 public class iCo5 implements Method {
     private iConomy iConomy;
 
-
     public iConomy getPlugin() {
         return this.iConomy;
     }
-
 
     public String getName() {
         return "iConomy";
     }
 
-
     public String getVersion() {
         return "5";
     }
-
 
     @SuppressWarnings("static-access")
     public String format(double amount) {
         return this.iConomy.format(amount);
     }
 
-
     public boolean hasBanks() {
         return Constants.Banking;
     }
 
     @SuppressWarnings("static-access")
-
     public boolean hasBank(String bank) {
         return (!hasBanks()) ? false : this.iConomy.Banks.exists(bank);
     }
-
 
     @SuppressWarnings("static-access")
     public boolean hasAccount(String name) {
         return this.iConomy.hasAccount(name);
     }
 
-
     @SuppressWarnings("static-access")
     public boolean hasBankAccount(String bank, String name) {
         return (!hasBank(bank)) ? false : this.iConomy.getBank(bank).hasAccount(name);
     }
-
 
     @SuppressWarnings("static-access")
     public MethodAccount getAccount(String name) {

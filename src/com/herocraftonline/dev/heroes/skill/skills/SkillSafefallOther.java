@@ -89,7 +89,8 @@ public class SkillSafefallOther extends TargettedSkill {
 
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
-            if (event.isCancelled() || event.getCause() != DamageCause.FALL) return;
+            if (event.isCancelled() || event.getCause() != DamageCause.FALL)
+                return;
 
             Entity defender = event.getEntity();
             if (defender instanceof Player) {

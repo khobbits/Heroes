@@ -85,7 +85,8 @@ public class SkillManaShield extends ActiveSkill {
 
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
-            if (event.isCancelled()) return;
+            if (event.isCancelled())
+                return;
 
             Entity defender = event.getEntity();
             if (defender instanceof Player) {

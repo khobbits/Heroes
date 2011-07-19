@@ -56,7 +56,8 @@ public class SkillPiggify extends TargettedSkill {
         // Throw a dummy damage event to make it obey PvP restricting plugins
         EntityDamageEvent event = new EntityDamageByEntityEvent(player, target, DamageCause.ENTITY_ATTACK, 0);
         plugin.getServer().getPluginManager().callEvent(event);
-        if (event.isCancelled()) return false;
+        if (event.isCancelled())
+            return false;
 
         CreatureType type = CreatureType.PIG;
         if (target.getLocation().getBlock().getType() == Material.WATER) {

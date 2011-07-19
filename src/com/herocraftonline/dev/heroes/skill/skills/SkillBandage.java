@@ -59,10 +59,10 @@ public class SkillBandage extends TargettedSkill {
             } else {
                 inv.setItemInHand(null);
             }
-            
+
             targetHero.setHealth(targetHealth + hpPlus);
             targetHero.syncHealth();
-            
+
             broadcastExecuteText(hero, target);
             return true;
         }

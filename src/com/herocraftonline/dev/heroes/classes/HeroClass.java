@@ -25,8 +25,8 @@ public class HeroClass {
     private Map<String, ConfigurationNode> skills;
     private double expModifier;
 
-     private double baseMaxHealth;
-     private double maxHealthPerLevel;
+    private double baseMaxHealth;
+    private double maxHealthPerLevel;
 
     public HeroClass() {
         name = "";
@@ -39,8 +39,8 @@ public class HeroClass {
         expModifier = 1.0D;
         specializations = new LinkedHashSet<HeroClass>();
         skills = new LinkedHashMap<String, ConfigurationNode>();
-         baseMaxHealth = 20;
-         maxHealthPerLevel = 0;
+        baseMaxHealth = 20;
+        maxHealthPerLevel = 0;
     }
 
     public HeroClass(String name) {
@@ -62,13 +62,18 @@ public class HeroClass {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null) return false;
-        if (getClass() != obj.getClass()) return false;
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
         HeroClass other = (HeroClass) obj;
         if (name == null) {
-            if (other.name != null) return false;
-        } else if (!name.equals(other.name)) return false;
+            if (other.name != null)
+                return false;
+        } else if (!name.equals(other.name))
+            return false;
         return true;
     }
 
@@ -100,13 +105,13 @@ public class HeroClass {
         return name;
     }
 
-     public double getMaxHealthPerLevel() {
-     return maxHealthPerLevel;
-     }
-    
-     public double getBaseMaxHealth() {
-     return baseMaxHealth;
-     }
+    public double getMaxHealthPerLevel() {
+        return maxHealthPerLevel;
+    }
+
+    public double getBaseMaxHealth() {
+        return baseMaxHealth;
+    }
 
     public HeroClass getParent() {
         return parent == null ? null : parent;

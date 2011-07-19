@@ -35,7 +35,7 @@ public class DamageManager {
     private Map<CreatureType, Integer> creatureDamage;
     private Map<DamageCause, Integer> environmentalDamage;
     private Set<Entity> spellTargets = new HashSet<Entity>();
-    
+
     public DamageManager(Heroes plugin) {
         this.plugin = plugin;
         listener = new HeroesDamageListener(plugin, this);
@@ -44,7 +44,7 @@ public class DamageManager {
     public Set<Entity> getSpellTargets() {
         return spellTargets;
     }
-    
+
     public void removeSpellTarget(Entity o) {
         spellTargets.remove(o);
     }
@@ -52,7 +52,7 @@ public class DamageManager {
     public void addSpellTarget(Entity o) {
         spellTargets.add(o);
     }
-    
+
     public Integer getCreatureDamage(CreatureType type) {
         return creatureDamage.get(type);
     }
@@ -73,7 +73,8 @@ public class DamageManager {
         if (entity != null && entity instanceof Player) {
             HeroClass heroClass = plugin.getHeroManager().getHero((Player) entity).getHeroClass();
             Integer classDamage = heroClass.getItemDamage(item);
-            if (classDamage != null) return classDamage;
+            if (classDamage != null)
+                return classDamage;
         }
         return itemDamage.get(item);
     }
@@ -82,7 +83,8 @@ public class DamageManager {
         if (entity != null && entity instanceof Player) {
             HeroClass heroClass = plugin.getHeroManager().getHero((Player) entity).getHeroClass();
             Integer classDamage = heroClass.getProjectileDamage(type);
-            if (classDamage != null) return classDamage;
+            if (classDamage != null)
+                return classDamage;
         }
         return projectileDamage.get(type);
     }
@@ -134,7 +136,8 @@ public class DamageManager {
                     DamageCause cause = DamageCause.valueOf(key.toUpperCase());
                     int damage = config.getInt("environmental-damage." + key, 0);
                     environmentalDamage.put(cause, damage);
-                } catch (IllegalArgumentException e) {}
+                } catch (IllegalArgumentException e) {
+                }
             }
         }
 
@@ -146,7 +149,8 @@ public class DamageManager {
                     ProjectileType type = ProjectileType.valueOf(key.toUpperCase());
                     int damage = config.getInt("projectile-damage." + key, 0);
                     projectileDamage.put(type, damage);
-                } catch (IllegalArgumentException e) {}
+                } catch (IllegalArgumentException e) {
+                }
             }
         }
     }

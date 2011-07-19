@@ -7,7 +7,6 @@ import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Snowball;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
@@ -70,7 +69,8 @@ public class SkillFireball extends ActiveSkill {
 
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
-            if (event.isCancelled()) return;
+            if (event.isCancelled())
+                return;
             if (event instanceof EntityDamageByProjectileEvent) {
                 EntityDamageByProjectileEvent subEvent = (EntityDamageByProjectileEvent) event;
                 Entity projectile = subEvent.getProjectile();
@@ -85,7 +85,8 @@ public class SkillFireball extends ActiveSkill {
                                 // Perform a check to see if any plugin is preventing us from damaging the player.
                                 EntityDamageEvent damageEvent = new EntityDamageEvent(dmger, DamageCause.CUSTOM, 0);
                                 Bukkit.getServer().getPluginManager().callEvent(damageEvent);
-                                if (damageEvent.isCancelled()) return;
+                                if (damageEvent.isCancelled())
+                                    return;
                                 // Damage the player and ignite them.
                                 LivingEntity livingEntity = (LivingEntity) entity;
                                 livingEntity.setFireTicks(getSetting(heroClass, "fire-ticks", 100));
@@ -104,7 +105,8 @@ public class SkillFireball extends ActiveSkill {
                                 //
                                 // The only reasonable way I see around this is a damage method that lets us specify the
                                 // DamageCause of the event produced (or just one that is always CUSTOM).
-                                livingEntity.damage(getSetting(heroClass, "damage", 4));
+                                plugin.getDamageManager().addSpellTarget((Entity) entity);
+                                livingEntity.damage(getSetting(heroClass, "damage", 4), dmger);
 
                             }
                         }

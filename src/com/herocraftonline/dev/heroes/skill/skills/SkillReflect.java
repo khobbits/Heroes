@@ -85,7 +85,8 @@ public class SkillReflect extends ActiveSkill {
 
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
-            if (event.isCancelled() || !(event instanceof EntityDamageByEntityEvent)) return;
+            if (event.isCancelled() || !(event instanceof EntityDamageByEntityEvent))
+                return;
 
             EntityDamageByEntityEvent edbe = (EntityDamageByEntityEvent) event;
             Entity defender = edbe.getEntity();
@@ -103,6 +104,7 @@ public class SkillReflect extends ActiveSkill {
                     }
                     LivingEntity attEntity = (LivingEntity) attacker;
                     int damage = (int) (event.getDamage() * getSetting(hero.getHeroClass(), "reflected-amount", 0.5));
+                    plugin.getDamageManager().addSpellTarget((Entity) attacker);
                     attEntity.damage(damage, defender);
                 }
             }

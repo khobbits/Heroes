@@ -25,7 +25,8 @@ public class PartyLeaveCommand extends BaseCommand {
         if (sender instanceof Player) {
             Player player = (Player) sender;
             Hero hero = plugin.getHeroManager().getHero(player);
-            if (hero.getParty() == null) return;
+            if (hero.getParty() == null)
+                return;
             HeroParty heroParty = hero.getParty();
             heroParty.messageParty("$1 has left the party", player.getName());
             heroParty.removeMember(hero);

@@ -73,7 +73,8 @@ public class HeroManager {
                 removeHero(hero); // Seeing as it's null we might as well remove it.
                 continue;
             }
-            if (player.getName().equalsIgnoreCase(hero.getPlayer().getName())) return hero;
+            if (player.getName().equalsIgnoreCase(hero.getPlayer().getName()))
+                return hero;
         }
         // If it gets to this stage then clearly the HeroManager doesn't have it so we create it...
         return loadHero(player);
@@ -107,7 +108,7 @@ public class HeroManager {
             playerHero.setHealth(playerConfig.getDouble("health", playerClass.getBaseMaxHealth()));
             playerHero.setVerbose(playerConfig.getBoolean("verbose", true));
             playerHero.suppressedSkills = new HashSet<String>(playerConfig.getStringList("suppressed", null));
-            
+
             addHero(playerHero);
             playerHero.syncHealth();
 
@@ -214,7 +215,8 @@ public class HeroManager {
     }
 
     private void loadExperience(Hero hero, Configuration config) {
-        if (hero == null || hero.getClass() == null || config == null) return;
+        if (hero == null || hero.getClass() == null || config == null)
+            return;
 
         String root = "experience";
         List<String> expList = config.getKeys(root);
@@ -304,7 +306,8 @@ public class HeroManager {
     }
 
     private void saveExperience(Hero hero, Configuration config) {
-        if (hero == null || hero.getClass() == null || config == null) return;
+        if (hero == null || hero.getClass() == null || config == null)
+            return;
 
         String root = "experience";
         for (Map.Entry<String, Double> entry : hero.experience.entrySet()) {
@@ -364,7 +367,8 @@ class ManaUpdater implements Runnable {
     @Override
     public void run() {
         long time = System.currentTimeMillis();
-        if (time < lastUpdate + updateInterval) return;
+        if (time < lastUpdate + updateInterval)
+            return;
         lastUpdate = time;
 
         Set<Hero> heroes = manager.getHeroes();

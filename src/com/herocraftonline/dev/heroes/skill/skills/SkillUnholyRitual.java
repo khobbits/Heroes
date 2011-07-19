@@ -1,5 +1,6 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Skeleton;
@@ -29,7 +30,8 @@ public class SkillUnholyRitual extends TargettedSkill {
             Messaging.send(player, "You need a target!");
             return false;
         }
-        target.damage(target.getHealth());
+        plugin.getDamageManager().addSpellTarget((Entity) target);
+        target.damage(target.getHealth(), player);
         hero.setMana(hero.getMana() + 20);
         broadcastExecuteText(hero, target);
         return true;
