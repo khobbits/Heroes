@@ -69,6 +69,8 @@ public class SkillFirearrow extends ActiveSkill {
                                 // Damage the player and ignite them.
                                 LivingEntity livingEntity = (LivingEntity) entity;
                                 livingEntity.setFireTicks(getSetting(heroClass, "fire-ticks", 100));
+                                
+                                // See problem in SkillFireball.
                                 livingEntity.damage(getSetting(heroClass, "damage", 4), ((Projectile)projectile).getShooter());
                             }
                         }

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
@@ -34,15 +35,23 @@ public class SkillPulse extends ActiveSkill {
 
     @Override
     public boolean use(Hero hero, String[] args) {
+        Player player = hero.getPlayer();
         List<Entity> entities = hero.getPlayer().getNearbyEntities(5, 5, 5);
-        for (Entity n : entities) {
-
-            Player pN = (Player) n;
+        for (Entity entity : entities) {
+            if (!(entity instanceof LivingEntity)) {
+                continue;
+            }
+            LivingEntity target = (LivingEntity) entity;
+            if (target.equals(player)) {
+                continue;
+            }
             int damage = getSetting(hero.getHeroClass(), "damage", 1);
-            EntityDamageEvent damageEvent = new EntityDamageEvent(hero.getPlayer(), DamageCause.CUSTOM, damage);
+            EntityDamageEvent damageEvent = new EntityDamageEvent(player, DamageCause.CUSTOM, 0);
             Bukkit.getServer().getPluginManager().callEvent(damageEvent);
             if (damageEvent.isCancelled()) return false;
-            pN.damage(damage);
+            
+            // See problem in SkillFireball.
+            target.damage(damage);
         }
         broadcastExecuteText(hero);
         return true;

@@ -89,7 +89,23 @@ public class SkillFireball extends ActiveSkill {
                                 // Damage the player and ignite them.
                                 LivingEntity livingEntity = (LivingEntity) entity;
                                 livingEntity.setFireTicks(getSetting(heroClass, "fire-ticks", 100));
-                                livingEntity.damage(getSetting(heroClass, "damage", 4), ((Projectile)projectile).getShooter());
+
+                                // PROBLEM! To get the following statement to work, I need to specify the damaging
+                                // player. However, because the DamageCause is necessarily ENTITY_ATTACK, we have no way
+                                // of distinguishing this damage from melee damage. Therefore, the damage system changes
+                                // the event damage based on what the damaging player is holding.
+                                //
+                                // The other options are:
+                                // 1) Don't include the entity. In this case the damage is applied, but no event is
+                                // thrown and the damage doesn't stick (our system reverts it).
+                                // 2) Set the event damage rather than damage the entity. In this case the damage is
+                                // doubled because two events are thrown. Even if this worked, we would end up having
+                                // the same problem in as in (1) once we can modify projectile damage.
+                                //
+                                // The only reasonable way I see around this is a damage method that lets us specify the
+                                // DamageCause of the event produced (or just one that is always CUSTOM).
+                                livingEntity.damage(getSetting(heroClass, "damage", 4));
+
                             }
                         }
                     }
