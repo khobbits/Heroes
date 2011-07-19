@@ -47,7 +47,6 @@ public class ConfigManager {
         checkForConfig(primaryConfigFile);
         checkForConfig(classConfigFile);
         checkForConfig(expConfigFile);
-        checkForConfig(skillConfigFile);
         checkForConfig(damageConfigFile);
 
         Configuration primaryConfig = new Configuration(primaryConfigFile);
