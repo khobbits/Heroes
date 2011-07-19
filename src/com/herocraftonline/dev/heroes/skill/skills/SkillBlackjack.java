@@ -76,7 +76,7 @@ public class SkillBlackjack extends ActiveSkill {
     @Override
     public boolean use(Hero hero, String[] args) {
         broadcastExecuteText(hero);
-        int duration = getSetting(hero.getHeroClass(), "duration", 5000);
+        int duration = getSetting(hero.getHeroClass(), "duration", 20000);
         hero.addEffect(new BlackjackEffect(this, duration));
 
         return true;

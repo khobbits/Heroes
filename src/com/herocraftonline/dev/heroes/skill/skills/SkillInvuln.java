@@ -50,8 +50,7 @@ public class SkillInvuln extends ActiveSkill {
     @Override
     public boolean use(Hero hero, String[] args) {
         broadcastExecuteText(hero);
-
-        int duration = getSetting(hero.getHeroClass(), "duration", 5000);
+        int duration = getSetting(hero.getHeroClass(), "duration", 10000);
         hero.addEffect(new InvulnerabilityEffect(this, duration));
 
         return true;
@@ -60,11 +59,12 @@ public class SkillInvuln extends ActiveSkill {
     public class InvulnerabilityEffect extends ExpirableEffect {
 
         public InvulnerabilityEffect(Skill skill, long duration) {
-            super(skill, "Invulnerability", duration);
+            super(skill, "Invuln", duration);
         }
 
         @Override
         public void apply(Hero hero) {
+            super.apply(hero);
             Player player = hero.getPlayer();
             broadcast(player.getLocation(), applyText, player.getDisplayName());
         }
@@ -87,7 +87,7 @@ public class SkillInvuln extends ActiveSkill {
             if (defender instanceof Player) {
                 Player player = (Player) defender;
                 Hero hero = plugin.getHeroManager().getHero(player);
-                if (hero.hasEffect(getName())) {
+                if (hero.hasEffect("Invuln")) {
                     event.setCancelled(true);
                 }
             }
