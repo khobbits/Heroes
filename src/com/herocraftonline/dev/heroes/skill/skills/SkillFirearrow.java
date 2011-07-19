@@ -4,6 +4,7 @@ import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
 import org.bukkit.event.entity.EntityDamageByProjectileEvent;
@@ -68,7 +69,7 @@ public class SkillFirearrow extends ActiveSkill {
                                 // Damage the player and ignite them.
                                 LivingEntity livingEntity = (LivingEntity) entity;
                                 livingEntity.setFireTicks(getSetting(heroClass, "fire-ticks", 100));
-                                livingEntity.damage(getSetting(heroClass, "damage", 4));
+                                livingEntity.damage(getSetting(heroClass, "damage", 4), ((Projectile)projectile).getShooter());
                             }
                         }
                     }

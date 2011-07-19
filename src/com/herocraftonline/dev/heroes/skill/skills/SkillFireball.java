@@ -7,6 +7,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Snowball;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
@@ -33,7 +34,7 @@ public class SkillFireball extends ActiveSkill {
         setMaxArgs(0);
         getIdentifiers().add("skill fireball");
 
-        registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Monitor);
+        registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
     }
 
     @Override
@@ -88,7 +89,7 @@ public class SkillFireball extends ActiveSkill {
                                 // Damage the player and ignite them.
                                 LivingEntity livingEntity = (LivingEntity) entity;
                                 livingEntity.setFireTicks(getSetting(heroClass, "fire-ticks", 100));
-                                livingEntity.damage(getSetting(heroClass, "damage", 4));
+                                livingEntity.damage(getSetting(heroClass, "damage", 4), ((Projectile)projectile).getShooter());
                             }
                         }
                     }
