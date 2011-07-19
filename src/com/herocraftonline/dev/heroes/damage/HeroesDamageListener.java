@@ -3,6 +3,8 @@ package com.herocraftonline.dev.heroes.damage;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+
 import org.bukkit.Material;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Entity;
@@ -187,6 +189,7 @@ public class HeroesDamageListener extends EntityListener {
             double iHeroHP = hero.getHealth();
             double fHeroHP = iHeroHP - damage;
             int fPlayerHP = (int) (fHeroHP / hero.getMaxHealth() * 20);
+            plugin.log(Level.INFO, "Damage: " + iHeroHP + " -> " + fHeroHP + "   |   " + player.getHealth() + " -> " + fPlayerHP);
 
             hero.setHealth(fHeroHP);
             player.setHealth(fPlayerHP + damage);
