@@ -11,8 +11,6 @@ import com.herocraftonline.dev.heroes.util.Messaging;
 
 public class SkillSyphon extends TargettedSkill {
 
-    private final static int maxHealth = 20;
-
     public SkillSyphon(Heroes plugin) {
         super(plugin);
         setName("Syphon");
@@ -38,7 +36,7 @@ public class SkillSyphon extends TargettedSkill {
             Messaging.send(player, "Your need a target!");
             return false;
         }
-        
+
         Hero targetHero = plugin.getHeroManager().getHero((Player) target);
 
         double transferredHealth = getSetting(hero.getHeroClass(), "default-health", 4);
@@ -54,11 +52,11 @@ public class SkillSyphon extends TargettedSkill {
         double targetHealth = targetHero.getHealth();
         hero.setHealth(playerHealth - transferredHealth);
         hero.syncHealth();
-        
+
         transferredHealth *= getSetting(hero.getHeroClass(), "multiplier", 1d);
         targetHero.setHealth(targetHealth + transferredHealth);
         targetHero.syncHealth();
-        
+
         broadcastExecuteText(hero, target);
         return true;
     }

@@ -212,7 +212,10 @@ public class Heroes extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        log(Level.INFO, "version " + getDescription().getVersion() + " is enabled!");
+        configManager = new ConfigManager(this);
+        heroManager = new HeroManager(this);
+        partyManager = new PartyManager(this);
+        damageManager = new DamageManager(this);
 
         // Check for BukkitContrib
         setupBukkitContrib();
@@ -234,6 +237,10 @@ public class Heroes extends JavaPlugin {
 
         final Player[] players = getServer().getOnlinePlayers();
         for (Player player : players) {
+            if (heroManager.containsPlayer(player)) {
+                continue;
+            }
+            System.out.println(player.getDisplayName());
             switchToHNSH(player);
             heroManager.loadHero(player);
             getInventoryChecker().checkInventory(player);
@@ -245,15 +252,12 @@ public class Heroes extends JavaPlugin {
         registerCommands();
         // Perform the Permissions check.
         setupPermissions();
+        log(Level.INFO, "version " + getDescription().getVersion() + " is enabled!");
     }
 
     @Override
     public void onLoad() {
         dataFolder.mkdirs(); // Create the Heroes Plugin Directory.
-        configManager = new ConfigManager(this);
-        heroManager = new HeroManager(this);
-        partyManager = new PartyManager(this);
-        damageManager = new DamageManager(this);
         debugLog = new DebugLog("Heroes", dataFolder + File.separator + "debug.log");
     }
 

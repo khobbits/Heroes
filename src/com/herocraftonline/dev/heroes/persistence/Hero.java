@@ -2,27 +2,18 @@ package com.herocraftonline.dev.heroes.persistence;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import net.minecraft.server.EntityLiving;
-import net.minecraft.server.InventoryPlayer;
-import net.minecraft.server.Packet18ArmAnimation;
-
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
-
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.ExperienceGainEvent;
 import com.herocraftonline.dev.heroes.api.LevelEvent;
@@ -60,7 +51,7 @@ public class Hero {
     }
 
     public void syncHealth() {
-        getPlayer().setHealth((int) (health / getMaxHealth()));
+        getPlayer().setHealth((int) (health / getMaxHealth() * 20));
     }
 
     public void addEffect(Effect effect) {

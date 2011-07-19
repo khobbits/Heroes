@@ -10,11 +10,11 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 
-public class SkillGroupheal extends ActiveSkill {
+public class SkillGroupHeal extends ActiveSkill {
 
-    public SkillGroupheal(Heroes plugin) {
+    public SkillGroupHeal(Heroes plugin) {
         super(plugin);
-        setName("Groupheal");
+        setName("GroupHeal");
         setDescription("Heals all players around you");
         setUsage("/skill groupheal");
         setMinArgs(0);
@@ -32,11 +32,12 @@ public class SkillGroupheal extends ActiveSkill {
     @Override
     public boolean use(Hero hero, String[] args) {
         List<Entity> entities = hero.getPlayer().getNearbyEntities(5, 5, 5);
-        for (Entity n : entities) {
-            if (n instanceof Player) {
-                Player pN = (Player) n;
+        for (Entity entity : entities) {
+            if (entity instanceof Player) {
+                Hero target = plugin.getHeroManager().getHero((Player) entity);
                 int healamount = getSetting(hero.getHeroClass(), "heal-amount", 2);
-                pN.setHealth(pN.getHealth() + healamount);
+                target.setHealth(target.getHealth() + healamount);
+                target.syncHealth();
             }
         }
         broadcastExecuteText(hero);

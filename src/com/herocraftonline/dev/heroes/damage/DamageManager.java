@@ -144,8 +144,8 @@ public class DamageManager {
         if (prop.damageSystem) {
             PluginManager pluginManager = plugin.getServer().getPluginManager();
             pluginManager.registerEvent(Type.ENTITY_DAMAGE, listener, Priority.Highest, plugin);
-            // pluginManager.registerEvent(Type.ENTITY_REGAIN_HEALTH, listener, Priority.Highest, plugin);
-            // pluginManager.registerEvent(Type.CREATURE_SPAWN, listener, Priority.Highest, plugin);
+            pluginManager.registerEvent(Type.ENTITY_REGAIN_HEALTH, listener, Priority.Highest, plugin);
+            pluginManager.registerEvent(Type.CREATURE_SPAWN, listener, Priority.Highest, plugin);
         }
     }
 
