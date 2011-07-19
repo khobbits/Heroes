@@ -32,7 +32,7 @@ public class SkillSyphon extends TargettedSkill {
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
-        if (!(target instanceof Player)) {
+        if (!(target instanceof Player) || target == player) {
             Messaging.send(player, "Your need a target!");
             return false;
         }

@@ -38,15 +38,17 @@ public class SkillBlaze extends ActiveSkill {
         int range = getSetting(hero.getHeroClass(), "range", 5);
         List<Entity> entities = hero.getPlayer().getNearbyEntities(range, range, range);
         int fireTicks = getSetting(hero.getHeroClass(), "fire-length", 3000);
-        for (Entity n : entities) {
-            LivingEntity pN = (LivingEntity) n;
+        for (Entity entity : entities) {
+            if (!(entity instanceof LivingEntity)) {
+                continue;
+            }
+            LivingEntity livingEntity = (LivingEntity) entity;
             EntityDamageEvent damageEvent = new EntityDamageEvent(hero.getPlayer(), DamageCause.ENTITY_ATTACK, 0);
             Bukkit.getServer().getPluginManager().callEvent(damageEvent);
             if (damageEvent.isCancelled()) return false;
-            pN.setFireTicks(fireTicks);
+            livingEntity.setFireTicks(fireTicks);
         }
         broadcastExecuteText(hero);
         return true;
     }
-
 }

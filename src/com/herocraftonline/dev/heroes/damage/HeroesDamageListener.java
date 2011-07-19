@@ -130,6 +130,7 @@ public class HeroesDamageListener extends EntityListener {
         Entity entity = event.getEntity();
         DamageCause cause = event.getCause();
         int damage = event.getDamage();
+        if (damage == 0) return;
 
         if (event instanceof EntityDamageByEntityEvent) {
             if (event instanceof EntityDamageByProjectileEvent) {

@@ -82,7 +82,7 @@ public class SkillFireball extends ActiveSkill {
                                 Hero hero = plugin.getHeroManager().getHero((Player) dmger);
                                 HeroClass heroClass = hero.getHeroClass();
                                 // Perform a check to see if any plugin is preventing us from damaging the player.
-                                EntityDamageEvent damageEvent = new EntityDamageEvent(null, DamageCause.CUSTOM, getSetting(heroClass, "damage", 4));
+                                EntityDamageEvent damageEvent = new EntityDamageEvent(dmger, DamageCause.CUSTOM, 0);
                                 Bukkit.getServer().getPluginManager().callEvent(damageEvent);
                                 if (damageEvent.isCancelled()) return;
                                 // Damage the player and ignite them.
