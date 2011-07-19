@@ -189,7 +189,9 @@ public class HeroesDamageListener extends EntityListener {
             double iHeroHP = hero.getHealth();
             double fHeroHP = iHeroHP - damage;
             int fPlayerHP = (int) (fHeroHP / hero.getMaxHealth() * 20);
-            plugin.log(Level.INFO, "Damage: " + iHeroHP + " -> " + fHeroHP + "   |   " + player.getHealth() + " -> " + fPlayerHP);
+            if (plugin.getConfigManager().getProperties().debug) {
+                plugin.debugLog(Level.INFO, "Damage: " + iHeroHP + " -> " + fHeroHP + "   |   " + player.getHealth() + " -> " + fPlayerHP);
+            }
 
             hero.setHealth(fHeroHP);
             player.setHealth(fPlayerHP + damage);
