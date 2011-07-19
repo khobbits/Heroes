@@ -240,7 +240,6 @@ public class Heroes extends JavaPlugin {
             if (heroManager.containsPlayer(player)) {
                 continue;
             }
-            System.out.println(player.getDisplayName());
             switchToHNSH(player);
             heroManager.loadHero(player);
             getInventoryChecker().checkInventory(player);
