@@ -275,7 +275,9 @@ public class Hero {
 
     public void removeEffect(Effect effect) {
         effects.remove(effect);
-        effect.remove(this);
+        if (effect != null) {
+            effect.remove(this);
+        }
     }
 
     public void setExperience(double experience) {
