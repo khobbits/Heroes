@@ -1,9 +1,9 @@
-monsterHealth:
-    Creeper:
-    Zombie:
-monsterDamages:
+creature-health:
+    Creeper: 5
+    Zombie: 10
+creature-damage:
     Zombie: 5
-playerDamages:
+item-damage:
     Air: 3
-enviromentalDamages:
+environmental-damage:
     Fall_Damage: 5

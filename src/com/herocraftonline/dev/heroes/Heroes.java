@@ -21,10 +21,12 @@ import com.herocraftonline.dev.heroes.command.BaseCommand;
 import com.herocraftonline.dev.heroes.command.CommandManager;
 import com.herocraftonline.dev.heroes.command.commands.AdminClassCommand;
 import com.herocraftonline.dev.heroes.command.commands.AdminExpCommand;
+import com.herocraftonline.dev.heroes.command.commands.AdminHealthCommand;
 import com.herocraftonline.dev.heroes.command.commands.ArmorCommand;
 import com.herocraftonline.dev.heroes.command.commands.BindSkillCommand;
 import com.herocraftonline.dev.heroes.command.commands.ChooseCommand;
 import com.herocraftonline.dev.heroes.command.commands.ConfigReloadCommand;
+import com.herocraftonline.dev.heroes.command.commands.HealthCommand;
 import com.herocraftonline.dev.heroes.command.commands.HelpCommand;
 import com.herocraftonline.dev.heroes.command.commands.HeroSaveCommand;
 import com.herocraftonline.dev.heroes.command.commands.LeaderboardCommand;
@@ -211,7 +213,10 @@ public class Heroes extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        log(Level.INFO, "version " + getDescription().getVersion() + " is enabled!");
+        configManager = new ConfigManager(this);
+        heroManager = new HeroManager(this);
+        partyManager = new PartyManager(this);
+        damageManager = new DamageManager(this);
 
         // Check for BukkitContrib
         setupBukkitContrib();
@@ -233,6 +238,9 @@ public class Heroes extends JavaPlugin {
 
         final Player[] players = getServer().getOnlinePlayers();
         for (Player player : players) {
+            if (heroManager.containsPlayer(player)) {
+                continue;
+            }
             switchToHNSH(player);
             heroManager.loadHero(player);
             getInventoryChecker().checkInventory(player);
@@ -244,15 +252,12 @@ public class Heroes extends JavaPlugin {
         registerCommands();
         // Perform the Permissions check.
         setupPermissions();
+        log(Level.INFO, "version " + getDescription().getVersion() + " is enabled!");
     }
 
     @Override
     public void onLoad() {
         dataFolder.mkdirs(); // Create the Heroes Plugin Directory.
-        configManager = new ConfigManager(this);
-        heroManager = new HeroManager(this);
-        partyManager = new PartyManager(this);
-        damageManager = new DamageManager(this);
         debugLog = new DebugLog("Heroes", dataFolder + File.separator + "debug.log");
     }
 
@@ -368,7 +373,8 @@ public class Heroes extends JavaPlugin {
         // Page 4
         commandManager.addCommand(new LeaderboardCommand(this));
         commandManager.addCommand(new HeroSaveCommand(this));
-        // commandManager.addCommand(new HealthCommand(this));
+        commandManager.addCommand(new HealthCommand(this));
+        commandManager.addCommand(new AdminHealthCommand(this));
     }
 
     /**
@@ -382,6 +388,7 @@ public class Heroes extends JavaPlugin {
         pluginManager.registerEvent(Type.PLAYER_ITEM_HELD, playerListener, Priority.Monitor, this);
         pluginManager.registerEvent(Type.PLAYER_PICKUP_ITEM, playerListener, Priority.Monitor, this);
         pluginManager.registerEvent(Type.PLAYER_TELEPORT, playerListener, Priority.Monitor, this);
+        pluginManager.registerEvent(Type.PLAYER_RESPAWN, playerListener, Priority.Monitor, this);
 
         pluginManager.registerEvent(Type.ENTITY_DAMAGE, partyEntityListener, Priority.Highest, this);
         pluginManager.registerEvent(Type.ENTITY_DAMAGE, entityListener, Priority.Monitor, this);

@@ -26,7 +26,9 @@ public class SkillLayhands extends TargettedSkill {
             Messaging.send(hero.getPlayer(), "You need a target!");
             return false;
         }
-        target.setHealth(20);
+        
+        hero.setHealth(hero.getMaxHealth());
+        hero.syncHealth();
 
         broadcastExecuteText(hero, target);
         return true;

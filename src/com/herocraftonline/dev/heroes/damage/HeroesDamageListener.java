@@ -1,5 +1,8 @@
 package com.herocraftonline.dev.heroes.damage;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import org.bukkit.Material;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Entity;
@@ -11,9 +14,12 @@ import org.bukkit.event.entity.EntityDamageByProjectileEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityListener;
+import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.util.Properties;
 
 // import org.bukkit.entity.Projectile;
@@ -21,11 +27,41 @@ import com.herocraftonline.dev.heroes.util.Properties;
 
 public class HeroesDamageListener extends EntityListener {
 
-    // private Heroes plugin;
+    private Heroes plugin;
     private DamageManager damageManager;
 
+    private static final Map<Material, Integer> armorPoints;
+    static {
+        Map<Material, Integer> aMap = new HashMap<Material, Integer>();
+        aMap.put(Material.LEATHER_HELMET, 3);
+        aMap.put(Material.LEATHER_CHESTPLATE, 8);
+        aMap.put(Material.LEATHER_LEGGINGS, 6);
+        aMap.put(Material.LEATHER_BOOTS, 3);
+
+        aMap.put(Material.GOLD_HELMET, 3);
+        aMap.put(Material.GOLD_CHESTPLATE, 8);
+        aMap.put(Material.GOLD_LEGGINGS, 6);
+        aMap.put(Material.GOLD_BOOTS, 3);
+
+        aMap.put(Material.CHAINMAIL_HELMET, 3);
+        aMap.put(Material.CHAINMAIL_CHESTPLATE, 8);
+        aMap.put(Material.CHAINMAIL_LEGGINGS, 6);
+        aMap.put(Material.CHAINMAIL_BOOTS, 3);
+
+        aMap.put(Material.IRON_HELMET, 3);
+        aMap.put(Material.IRON_CHESTPLATE, 8);
+        aMap.put(Material.IRON_LEGGINGS, 6);
+        aMap.put(Material.IRON_BOOTS, 3);
+
+        aMap.put(Material.DIAMOND_HELMET, 3);
+        aMap.put(Material.DIAMOND_CHESTPLATE, 8);
+        aMap.put(Material.DIAMOND_LEGGINGS, 6);
+        aMap.put(Material.DIAMOND_BOOTS, 3);
+        armorPoints = Collections.unmodifiableMap(aMap);
+    }
+
     public HeroesDamageListener(Heroes plugin, DamageManager damageManager) {
-        // this.plugin = plugin;
+        this.plugin = plugin;
         this.damageManager = damageManager;
     }
 
@@ -39,25 +75,53 @@ public class HeroesDamageListener extends EntityListener {
         }
     }
 
-    // @Override
-    // public void onEntityRegainHealth(EntityRegainHealthEvent event) {
-    // if (event.isCancelled()) {
-    // return;
-    // }
-    //
-    // Entity entity = event.getEntity();
-    // int amount = event.getAmount();
-    //
-    // if (entity instanceof Player) {
-    // Player player = (Player) entity;
-    // Hero hero = plugin.getHeroManager().getHero(player);
-    // double newHeroHealth = hero.getHealth() + amount;
-    // int newHealth = (int) (newHeroHealth / hero.getMaxHealth() * 20);
-    // int newAmount = newHealth - player.getHealth();
-    // hero.setHealth(newHeroHealth);
-    // event.setAmount(newAmount);
-    // }
-    // }
+    @Override
+    public void onEntityRegainHealth(EntityRegainHealthEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
+
+        Entity entity = event.getEntity();
+        int amount = event.getAmount();
+
+        if (entity instanceof Player) {
+            Player player = (Player) entity;
+            Hero hero = plugin.getHeroManager().getHero(player);
+            double newHeroHealth = hero.getHealth() + amount;
+            int newHealth = (int) (newHeroHealth / hero.getMaxHealth() * 20);
+            int newAmount = newHealth - player.getHealth();
+            hero.setHealth(newHeroHealth);
+            event.setAmount(newAmount);
+        }
+    }
+
+    private int calculateArmorReduction(PlayerInventory inventory, int damage) {
+        ItemStack[] armorContents = inventory.getArmorContents();
+
+        int missingDurability = 0;
+        int maxDurability = 0;
+        int baseArmorPoints = 0;
+        boolean hasArmor = false;
+
+        for (ItemStack armor : armorContents) {
+            Material armorType = armor.getType();
+            if (armorType != Material.AIR) {
+                short armorDurability = armor.getDurability();
+                missingDurability += armorDurability;
+                maxDurability += armorType.getMaxDurability();
+                baseArmorPoints += armorPoints.get(armorType);
+                hasArmor = true;
+            }
+        }
+
+        if (!hasArmor) {
+            return 0;
+        }
+
+        double armorPoints = (double) baseArmorPoints * (maxDurability - missingDurability) / maxDurability;
+        double damageReduction = 0.04 * armorPoints;
+        return (int) (damageReduction * damage);
+    }
 
     @Override
     public void onEntityDamage(EntityDamageEvent event) {
@@ -66,6 +130,7 @@ public class HeroesDamageListener extends EntityListener {
         Entity entity = event.getEntity();
         DamageCause cause = event.getCause();
         int damage = event.getDamage();
+        if (damage == 0) return;
 
         if (event instanceof EntityDamageByEntityEvent) {
             if (event instanceof EntityDamageByProjectileEvent) {
@@ -81,18 +146,6 @@ public class HeroesDamageListener extends EntityListener {
                     Player attackingPlayer = (Player) attacker;
                     ItemStack weapon = attackingPlayer.getItemInHand();
                     Material weaponType = weapon.getType();
-
-                    // if (entity instanceof Player) {
-                    // if (weaponType.getMaxDurability() > 0) {
-                    // EntityPlayer entityPlayer = ((CraftPlayer) attackingPlayer).getHandle();
-                    // if (weaponType.getMaxDurability() + weapon.getDurability() > 0) {
-                    // entityPlayer.inventory.getItemInHand().damage(1, entityPlayer);
-                    // } else {
-                    // entityPlayer.inventory.setItem(entityPlayer.inventory.itemInHandIndex, null);
-                    // //attackingPlayer.setItemInHand(null);
-                    // }
-                    // }
-                    // }
 
                     Integer tmpDamage = damageManager.getItemDamage(weaponType, attackingPlayer);
                     if (tmpDamage != null) {
@@ -118,12 +171,26 @@ public class HeroesDamageListener extends EntityListener {
             }
         }
 
-        System.out.println(damage);
-
         if (entity instanceof Player) {
-            event.setDamage(damage);
-            // plugin.getHeroManager().getHero((Player) entity).damage(damage);
-            // event.setCancelled(true);
+            Player player = (Player) entity;
+            if ((float) player.getNoDamageTicks() > (float) player.getMaximumNoDamageTicks() / 2.0f) {
+                return;
+            }
+
+            Hero hero = plugin.getHeroManager().getHero(player);
+            int damageReduction = calculateArmorReduction(player.getInventory(), damage);
+            damage -= damageReduction;
+            if (damage < 0) {
+                damage = 0;
+            }
+
+            double iHeroHP = hero.getHealth();
+            double fHeroHP = iHeroHP - damage;
+            int fPlayerHP = (int) (fHeroHP / hero.getMaxHealth() * 20);
+
+            hero.setHealth(fHeroHP);
+            player.setHealth(fPlayerHP + damage);
+            event.setDamage(damage + damageReduction);
         } else if (entity instanceof LivingEntity) {
             event.setDamage(damage);
         }

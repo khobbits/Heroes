@@ -227,12 +227,10 @@ public class HeroClassManager {
                 }
             }
 
-            // Double baseMaxHealth = config.getDouble("classes." + className + ".base-max-health", 20);
-            // Double maxHealthPerLevel = config.getDouble("classes." + className + ".max-health-per-level", 0);
-            // if (prop.damageSystem) {
-            // newClass.setBaseMaxHealth(baseMaxHealth);
-            // newClass.setMaxHealthPerLevel(maxHealthPerLevel);
-            // }
+            Double baseMaxHealth = config.getDouble("classes." + className + ".base-max-health", 20);
+            Double maxHealthPerLevel = config.getDouble("classes." + className + ".max-health-per-level", 0);
+            newClass.setBaseMaxHealth(baseMaxHealth);
+            newClass.setMaxHealthPerLevel(maxHealthPerLevel);
 
             List<String> experienceNames = config.getStringList("classes." + className + ".experience-sources", null);
             Set<ExperienceType> experienceSources = new HashSet<ExperienceType>();
