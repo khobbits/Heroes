@@ -43,5 +43,4 @@ public class SkillGroupHeal extends ActiveSkill {
         broadcastExecuteText(hero);
         return true;
     }
-
 }
