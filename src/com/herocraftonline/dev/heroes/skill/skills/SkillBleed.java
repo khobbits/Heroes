@@ -66,17 +66,19 @@ public class SkillBleed extends TargettedSkill {
         long duration = getSetting(hero.getHeroClass(), "duration", 10000);
         long period = getSetting(hero.getHeroClass(), "period", 2000);
         int tickDamage = getSetting(hero.getHeroClass(), "tick-damage", 1);
-        targetHero.addEffect(new BleedEffect(this, duration, period, tickDamage));
+        targetHero.addEffect(new BleedEffect(this, duration, period, tickDamage, player));
         return true;
     }
 
     public class BleedEffect extends PeriodicEffect implements Periodic, Expirable {
 
+        private final Player applier;
         private final int tickDamage;
 
-        public BleedEffect(Skill skill, long duration, long period, int tickDamage) {
+        public BleedEffect(Skill skill, long duration, long period, int tickDamage, Player applier) {
             super(skill, "Bleed", period, duration);
             this.tickDamage = tickDamage;
+            this.applier = applier;
         }
 
         @Override
@@ -99,7 +101,7 @@ public class SkillBleed extends TargettedSkill {
             super.tick(hero);
 
             Player player = hero.getPlayer();
-            player.damage(tickDamage);
+            player.damage(tickDamage, applier);
         }
     }
 }
