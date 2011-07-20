@@ -165,7 +165,7 @@ public class Heroes extends JavaPlugin {
                         log(Level.INFO, "Collecting and loading skills");
                         added = true;
                     }
-                    skNo.add(skill.getName());
+                    skNo.add(skill.getName() + " - " + skill.getDescription());
                     debugLog.log(Level.INFO, "Skill " + skill.getName() + " Loaded");
                 }
             }
