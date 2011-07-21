@@ -34,6 +34,10 @@ public class HEntityListener extends EntityListener {
 
     @Override
     public void onEntityDamage(EntityDamageEvent event) {
+        if (event.isCancelled() || event.getDamage() == 0) {
+            return;
+        }
+
         Entity defender = event.getEntity();
         if (defender instanceof LivingEntity) {
             if (((LivingEntity) defender).getHealth() - event.getDamage() <= 0) {
@@ -121,12 +125,10 @@ public class HEntityListener extends EntityListener {
                             break;
                         }
                     }
-                } catch (IllegalArgumentException ignored) {
-                }
+                } catch (IllegalArgumentException ignored) {}
                 if (type != null) {
                     // If EXP hasn't been assigned for this Entity then we stop here.
-                    if (!prop.creatureKillingExp.containsKey(type))
-                        return;
+                    if (!prop.creatureKillingExp.containsKey(type)) return;
                     addedExp = prop.creatureKillingExp.get(type);
                     experienceType = ExperienceType.KILLING;
                 }

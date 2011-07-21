@@ -1,15 +1,16 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
 import org.bukkit.event.entity.EntityDamageByProjectileEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityListener;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
@@ -54,8 +55,7 @@ public class SkillFirearrow extends ActiveSkill {
 
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
-            if (event.isCancelled())
-                return;
+            if (event.isCancelled()) return;
             if (event instanceof EntityDamageByProjectileEvent) {
                 EntityDamageByProjectileEvent subEvent = (EntityDamageByProjectileEvent) event;
                 Entity projectile = subEvent.getProjectile();
@@ -67,12 +67,18 @@ public class SkillFirearrow extends ActiveSkill {
                             if (dmger instanceof Player) {
                                 Hero hero = plugin.getHeroManager().getHero((Player) dmger);
                                 HeroClass heroClass = hero.getHeroClass();
+                                // Perform a check to see if any plugin is preventing us from damaging the player.
+                                EntityDamageEvent damageEvent = new EntityDamageEvent(dmger, DamageCause.CUSTOM, 0);
+                                Bukkit.getServer().getPluginManager().callEvent(damageEvent);
+                                if (damageEvent.isCancelled()) return;
                                 // Damage the player and ignite them.
                                 LivingEntity livingEntity = (LivingEntity) entity;
-                                livingEntity.setFireTicks(getSetting(heroClass, "fire-ticks", 100));
+                                // livingEntity.setFireTicks(getSetting(heroClass, "fire-ticks", 100));
 
-                                // See problem in SkillFireball.
-                                livingEntity.damage(getSetting(heroClass, "damage", 4), ((Projectile) projectile).getShooter());
+                                plugin.getDamageManager().addSpellTarget((Entity) entity);
+                                int damage = getSetting(heroClass, "damage", 4);
+                                System.out.println("SFB   damage: " + damage + "   entity: " + entity);
+                                livingEntity.damage(damage, dmger);
                             }
                         }
                     }
