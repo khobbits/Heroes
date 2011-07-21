@@ -116,16 +116,7 @@ public class HEntityListener extends EntityListener {
             // If the Player killed a Monster/Animal then we check to see if they can earn EXP from KILLING.
             if (defender instanceof LivingEntity && !(defender instanceof Player) && expSources.contains(ExperienceType.KILLING)) {
                 // Get the dying entity's CreatureType
-                CreatureType type = null;
-                try {
-                    Class<?>[] interfaces = defender.getClass().getInterfaces();
-                    for (Class<?> c : interfaces) {
-                        if (LivingEntity.class.isAssignableFrom(c)) {
-                            type = CreatureType.fromName(c.getSimpleName());
-                            break;
-                        }
-                    }
-                } catch (IllegalArgumentException ignored) {}
+                CreatureType type = Properties.getCreatureFromEntity(defender);
                 if (type != null) {
                     // If EXP hasn't been assigned for this Entity then we stop here.
                     if (!prop.creatureKillingExp.containsKey(type)) return;
