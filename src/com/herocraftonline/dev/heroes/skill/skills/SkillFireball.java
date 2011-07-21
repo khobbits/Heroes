@@ -77,7 +77,6 @@ public class SkillFireball extends ActiveSkill {
 
                                 plugin.getDamageManager().addSpellTarget((Entity) entity);
                                 int damage = getSetting(heroClass, "damage", 4);
-                                System.out.println("SFB   damage: " + damage + "   entity: " + entity);
                                 livingEntity.damage(damage, dmger);
                             }
                         }

@@ -34,7 +34,7 @@ public class HEntityListener extends EntityListener {
 
     @Override
     public void onEntityDamage(EntityDamageEvent event) {
-        if (event.isCancelled() || event.getDamage() == 0) {
+        if (event.isCancelled()) {
             return;
         }
 
