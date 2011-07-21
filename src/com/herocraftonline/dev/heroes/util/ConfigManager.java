@@ -232,14 +232,14 @@ public class ConfigManager {
         }
     }
 
-    @SuppressWarnings({ "unchecked", "unused" })
-    private void print(Map<String, Object> map, String indent) {
+    @SuppressWarnings({ "unchecked" })
+    public void print(Map<String, Object> map, String indent) {
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             if (entry.getValue() instanceof Map) {
-                System.out.println(indent + entry.getKey());
+                plugin.debugLog(Level.INFO, indent + entry.getKey());
                 print((Map<String, Object>) entry.getValue(), indent + "  ");
             } else {
-                System.out.println(indent + entry.getKey() + ": " + entry.getValue());
+                plugin.debugLog(Level.INFO, indent + entry.getKey() + ": " + entry.getValue());
             }
         }
     }

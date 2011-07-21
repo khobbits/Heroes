@@ -38,8 +38,7 @@ public class HeroClassManager {
 
     public HeroClass getClass(String name) {
         for (HeroClass c : classes) {
-            if (name.equalsIgnoreCase(c.getName()))
-                return c;
+            if (name.equalsIgnoreCase(c.getName())) return c;
         }
         return null;
     }
@@ -61,7 +60,9 @@ public class HeroClassManager {
             return;
         }
         for (String className : classNames) {
-            HeroClass newClass = new HeroClass(className.substring(0, 1).toUpperCase() + className.substring(1).toLowerCase());
+            HeroClass newClass = new HeroClass(className);
+            // HeroClass newClass = new HeroClass(className.substring(0, 1).toUpperCase() +
+            // className.substring(1).toLowerCase());
 
             newClass.setDescription(config.getString("classes." + className + ".description", ""));
             newClass.setExpModifier(config.getDouble("classes." + className + ".expmodifier", 1.0D));
@@ -263,9 +264,16 @@ public class HeroClassManager {
             }
         }
 
+        if (plugin.getConfigManager().getProperties().debug) {
+            plugin.getConfigManager().print(config.getAll(), "");
+        }
+
         for (HeroClass unlinkedClass : classes) {
             String className = unlinkedClass.getName();
             String parentName = config.getString("classes." + className + ".parent");
+            if (plugin.getConfigManager().getProperties().debug) {
+                plugin.debugLog(Level.INFO, "classes." + className + ".parent: " + parentName);
+            }
             if (parentName != null && (!parentName.isEmpty() || parentName.equals("null"))) {
                 HeroClass parent = getClass(parentName);
                 if (parent != null) {
