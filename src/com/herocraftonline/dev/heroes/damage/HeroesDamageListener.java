@@ -127,7 +127,7 @@ public class HeroesDamageListener extends EntityListener {
 
     @Override
     public void onEntityDamage(EntityDamageEvent event) {
-        //System.out.println("HDL   cancelled: " + event.isCancelled() + "   damage: " + event.getDamage() + "   entity: " + event.getEntity());
+        //System.out.println("HDL   cancelled: " + event.isCancelled() + "   damage: " + event.getDamage() + "   entity: " + event.getEntity() + "   type: " + event.getClass().getSimpleName());
 
         if (event.isCancelled()) return;
 

@@ -51,6 +51,7 @@ public class SkillDrainsoul extends TargettedSkill {
         hero.setHealth(hero.getHealth() + (double) absorbAmount);
         hero.syncHealth();
         plugin.getDamageManager().addSpellTarget((Entity) target);
+        System.out.println(absorbAmount);
         target.damage(absorbAmount, player);
 
         broadcastExecuteText(hero, target);

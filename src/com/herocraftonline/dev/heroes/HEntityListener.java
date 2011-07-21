@@ -1,7 +1,6 @@
 package com.herocraftonline.dev.heroes;
 
 import java.text.DecimalFormat;
-import java.util.HashMap;
 import java.util.Set;
 
 import org.bukkit.entity.CreatureType;
@@ -9,7 +8,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageByProjectileEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityListener;
@@ -26,46 +24,22 @@ public class HEntityListener extends EntityListener {
     private static final DecimalFormat decFormat = new DecimalFormat("#0.##");
 
     private final Heroes plugin;
-    private HashMap<Integer, Player> kills = new HashMap<Integer, Player>();
 
     public HEntityListener(Heroes plugin) {
         this.plugin = plugin;
     }
 
     @Override
-    public void onEntityDamage(EntityDamageEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
-
-        Entity defender = event.getEntity();
-        if (defender instanceof LivingEntity) {
-            if (((LivingEntity) defender).getHealth() - event.getDamage() <= 0) {
-                // Grab the Attacker regardless of the Event.
-                Entity attacker = null;
-                if (event instanceof EntityDamageByProjectileEvent) {
-                    EntityDamageByProjectileEvent subEvent = (EntityDamageByProjectileEvent) event;
-                    attacker = subEvent.getDamager();
-                } else if (event instanceof EntityDamageByEntityEvent) {
-                    EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
-                    attacker = subEvent.getDamager();
-                }
-                // If it's a legitimate attack then we add it to the Kills list.
-                if (attacker != null && attacker instanceof Player) {
-                    kills.put(defender.getEntityId(), (Player) attacker);
-                } else {
-                    kills.remove(defender.getEntityId());
-                }
-            }
-        }
-
-    }
-
-    @Override
     public void onEntityDeath(EntityDeathEvent event) {
         Entity defender = event.getEntity();
-        Player attacker = kills.get(defender.getEntityId());
-        kills.remove(defender.getEntityId());
+        Player attacker = null;
+        EntityDamageEvent lastDamage = defender.getLastDamageCause();
+        if (lastDamage instanceof EntityDamageByEntityEvent) {
+            Entity damager = ((EntityDamageByEntityEvent) lastDamage).getDamager();
+            if (damager instanceof Player) {
+                attacker = (Player) damager;
+            }
+        }
 
         Properties prop = plugin.getConfigManager().getProperties();
         if (defender instanceof Player) {
