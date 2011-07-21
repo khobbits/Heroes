@@ -26,7 +26,8 @@ public class HLevelListener extends CustomEventListener {
             LevelEvent subEvent = (LevelEvent) event;
             Hero hero = subEvent.getHero();
             HeroClass heroClass = hero.getHeroClass();
-
+            hero.syncHealth();
+            
             int level = subEvent.getTo();
             List<BaseCommand> sortCommands = plugin.getCommandManager().getCommands();
             for (BaseCommand command : sortCommands) {
