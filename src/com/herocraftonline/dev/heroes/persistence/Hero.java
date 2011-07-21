@@ -158,8 +158,8 @@ public class Hero {
                 Messaging.send(player, "$1: Gained $2 Exp", heroClass.getName(), decFormat.format(expGain));
             }
             if (newLevel != currentLevel) {
-                player.setHealth(20);
-                // setHealth(getMaxHealth());
+                setHealth(getMaxHealth());
+                syncHealth();
                 Messaging.send(player, "You leveled up! (Lvl $1 $2)", String.valueOf(newLevel), heroClass.getName());
                 if (newLevel >= prop.maxLevel) {
                     exp = prop.getExperience(prop.maxLevel);
