@@ -26,19 +26,21 @@ public class PartyModeCommand extends BaseCommand {
         if (sender instanceof Player) {
             Player player = (Player) sender;
             Hero hero = plugin.getHeroManager().getHero(player);
-            if (hero.getParty() == null)
+
+            if (hero.getParty() == null) {
+                Messaging.send(player, "You are not in a party.");
                 return;
+            }
+
             HeroParty heroParty = hero.getParty();
-            if (heroParty.getLeader() == player) {
+            if (heroParty.getLeader().equals(hero)) {
                 if (args[0].equalsIgnoreCase("pvp")) {
                     heroParty.pvpToggle();
                 } else if (args[0].equalsIgnoreCase("exp")) {
                     heroParty.expToggle();
                 }
-
             } else {
                 Messaging.send(player, "Sorry, you need to be the leader to do that");
-
             }
         }
     }
