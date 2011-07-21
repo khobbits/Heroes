@@ -29,7 +29,7 @@ public class SkillFireball extends ActiveSkill {
         setMaxArgs(0);
         getIdentifiers().add("skill fireball");
 
-        registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Monitor);
+        registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
     }
 
     @Override
@@ -73,11 +73,11 @@ public class SkillFireball extends ActiveSkill {
                                 if (damageEvent.isCancelled()) return;
                                 // Damage the player and ignite them.
                                 LivingEntity livingEntity = (LivingEntity) entity;
-                                // livingEntity.setFireTicks(getSetting(heroClass, "fire-ticks", 100));
+                                livingEntity.setFireTicks(getSetting(heroClass, "fire-ticks", 100));
 
                                 plugin.getDamageManager().addSpellTarget((Entity) entity);
                                 int damage = getSetting(heroClass, "damage", 4);
-                                livingEntity.damage(damage, dmger);
+                                event.setDamage(damage);
                             }
                         }
                     }
