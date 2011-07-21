@@ -61,6 +61,7 @@ public class HeroManager {
 
     public Hero createNewHero(Player player) {
         Hero hero = new Hero(plugin, player, plugin.getClassManager().getDefaultClass());
+        hero.setMana(100);
         hero.setHealth(hero.getMaxHealth());
         hero.syncHealth();
         addHero(hero);
