@@ -25,8 +25,7 @@ public class ChooseCommand extends BaseCommand {
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-        if (!(sender instanceof Player))
-            return;
+        if (!(sender instanceof Player)) return;
 
         Player player = (Player) sender;
         Hero hero = plugin.getHeroManager().getHero(player);
@@ -62,19 +61,20 @@ public class ChooseCommand extends BaseCommand {
         int cost = currentClass == plugin.getClassManager().getDefaultClass() ? 0 : prop.swapCost;
 
         if (prop.iConomy && this.plugin.Method != null && cost > 0) {
-            if (!this.plugin.Method.getAccount(player.getName()).hasEnough(cost)) {
-                // You have insufficient funds, you require $1 to change your class to the $2. -- Make the text
-                // customiseable.
-                Messaging.send(hero.getPlayer(), "You're unable to meet the offering of $1 to become $2.", this.plugin.Method.format(cost), newClass.getName());
+            if (!plugin.getConfigManager().getProperties().swapMasteryCost && !hero.isMaster(newClass)) {
+                if (!this.plugin.Method.getAccount(player.getName()).hasEnough(cost)) {
+                    // You have insufficient funds, you require $1 to change your class to the $2. -- Make the text
+                    // customiseable.
+                    Messaging.send(hero.getPlayer(), "You're unable to meet the offering of $1 to become $2.", this.plugin.Method.format(cost), newClass.getName());
 
-                return;
+                    return;
+                }
             }
         }
 
         ClassChangeEvent event = new ClassChangeEvent(hero, currentClass, newClass);
         plugin.getServer().getPluginManager().callEvent(event);
-        if (event.isCancelled())
-            return;
+        if (event.isCancelled()) return;
 
         hero.setHeroClass(newClass);
 
