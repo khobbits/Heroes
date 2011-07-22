@@ -264,16 +264,12 @@ public class HeroClassManager {
             }
         }
 
-        if (plugin.getConfigManager().getProperties().debug) {
-            plugin.getConfigManager().print(config.getAll(), "");
-        }
+        plugin.getConfigManager().print(config.getAll(), "");
 
         for (HeroClass unlinkedClass : classes) {
             String className = unlinkedClass.getName();
             String parentName = config.getString("classes." + className + ".parent");
-            if (plugin.getConfigManager().getProperties().debug) {
-                plugin.debugLog(Level.INFO, "classes." + className + ".parent: " + parentName);
-            }
+            plugin.debugLog(Level.INFO, "classes." + className + ".parent: " + parentName);
             if (parentName != null && (!parentName.isEmpty() || parentName.equals("null"))) {
                 HeroClass parent = getClass(parentName);
                 if (parent != null) {
