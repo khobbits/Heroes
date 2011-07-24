@@ -48,6 +48,7 @@ public class ConfigManager {
         checkForConfig(classConfigFile);
         checkForConfig(expConfigFile);
         checkForConfig(damageConfigFile);
+        checkForConfig(new File(plugin.getDataFolder(), "font.png"));
 
         Configuration primaryConfig = new Configuration(primaryConfigFile);
         primaryConfig.load();
@@ -55,6 +56,7 @@ public class ConfigManager {
         loadDefaultConfig(primaryConfig);
         loadProperties(primaryConfig);
         loadMapConfig(primaryConfig);
+        primaryConfig.save();
 
         Configuration damageConfig = new Configuration(damageConfigFile);
         damageConfig.load();
