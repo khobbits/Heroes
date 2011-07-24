@@ -1,7 +1,6 @@
 package com.herocraftonline.dev.heroes.ui;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import sun.plugin2.main.server.Plugin;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
