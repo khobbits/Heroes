@@ -126,14 +126,18 @@ public class HeroManager {
 
     public boolean removeHero(Hero hero) {
         if (hero != null && hero.hasParty()) {
-            hero.getParty().removeMember(hero);
+            HeroParty party = hero.getParty();
+            party.removeMember(hero);
+            if (party.getMembers().size() == 0) {
+                this.plugin.getPartyManager().removeParty(party);
+            }
         }
         return heroes.remove(hero);
     }
 
     /**
      * Save the given Players Data to a file.
-     * 
+     *
      * @param player
      */
     public void saveHero(Player player) {
