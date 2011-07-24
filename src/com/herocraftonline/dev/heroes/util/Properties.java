@@ -54,6 +54,10 @@ public class Properties {
     public boolean swapMasteryCost;
     public boolean damageSystem;
 
+    // Map Stuffs
+    public boolean mapUI;
+    public byte mapID;
+
     /**
      * Generate experience for the level ArrayList<Integer>
      */
@@ -73,7 +77,7 @@ public class Properties {
 
     /**
      * Convert the given Exp into the correct Level.
-     * 
+     *
      * @param exp
      * @return
      */
@@ -87,7 +91,7 @@ public class Properties {
 
     /**
      * Converts an entity into its CreatureType
-     * 
+     *
      * @param entity
      * @return
      */

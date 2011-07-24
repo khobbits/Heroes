@@ -16,6 +16,7 @@ public class HeroParty {
     private Boolean pvp = true;
     private Boolean exp = true;
     private LinkedList<String> invites = new LinkedList<String>();
+    private boolean updateMapDisplay = true;
 
     public HeroParty(Hero leader) {
         this.leader = leader;
@@ -90,6 +91,7 @@ public class HeroParty {
     }
 
     public void removeMember(Hero hero) {
+        setUpdateMapDisplay(true);
         members.remove(hero);
         hero.setParty(null);
         if (members.size() == 1) {
@@ -111,6 +113,14 @@ public class HeroParty {
 
     public void setLeader(Hero leader) {
         this.leader = leader;
+    }
+
+    public boolean updateMapDisplay() {
+        return updateMapDisplay;
+    }
+
+    public void setUpdateMapDisplay(boolean updateMapDisplay) {
+        this.updateMapDisplay = updateMapDisplay;
     }
 
 }

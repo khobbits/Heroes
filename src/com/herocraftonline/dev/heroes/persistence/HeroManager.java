@@ -1,6 +1,7 @@
 package com.herocraftonline.dev.heroes.persistence;
 
 import java.io.File;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -9,6 +10,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 
+import com.herocraftonline.dev.heroes.party.HeroParty;
+import com.herocraftonline.dev.heroes.party.PartyManager;
+import com.herocraftonline.dev.heroes.ui.MapAPI;
+import com.herocraftonline.dev.heroes.ui.MapInfo;
+import com.herocraftonline.dev.heroes.ui.TextRenderer;
+import com.herocraftonline.dev.heroes.ui.TextRenderer.CharacterSprite;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -27,7 +35,7 @@ import com.herocraftonline.dev.heroes.util.Messaging;
 
 /**
  * Player management
- * 
+ *
  * @author Herocraft's Plugin Team
  */
 public class HeroManager {
@@ -37,6 +45,7 @@ public class HeroManager {
     private File playerFolder;
     private final static int effectInterval = 2;
     private final static int manaInterval = 5;
+    private final static int partyUpdateInterval = 5;
 
     public HeroManager(Heroes plugin) {
         this.plugin = plugin;
@@ -49,6 +58,9 @@ public class HeroManager {
 
         Runnable manaTimer = new ManaUpdater(this);
         plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, manaTimer, 0, manaInterval);
+
+        Runnable partyUpdater = new PartyUpdater(this, plugin, plugin.getPartyManager());
+        plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, partyUpdater, 0, partyUpdateInterval);
     }
 
     public boolean addHero(Hero hero) {
@@ -87,7 +99,7 @@ public class HeroManager {
 
     /**
      * Load the given Players Data file.
-     * 
+     *
      * @param player
      * @return
      */
@@ -336,7 +348,6 @@ class EffectUpdater implements Runnable {
         this.heroManager = heroManager;
     }
 
-    @Override
     public void run() {
         for (Hero hero : heroManager.getHeroes()) {
             for (Effect effect : hero.getEffects()) {
@@ -369,11 +380,11 @@ class ManaUpdater implements Runnable {
         this.manager = manager;
     }
 
-    @Override
     public void run() {
         long time = System.currentTimeMillis();
-        if (time < lastUpdate + updateInterval)
+        if (time < lastUpdate + updateInterval) {
             return;
+        }
         lastUpdate = time;
 
         Set<Hero> heroes = manager.getHeroes();
@@ -388,5 +399,141 @@ class ManaUpdater implements Runnable {
                 Messaging.send(hero.getPlayer(), ChatColor.BLUE + "MANA " + Messaging.createManaBar(hero.getMana()));
             }
         }
+    }
+}
+
+class PartyUpdater implements Runnable {
+
+    private final HeroManager manager;
+    private final Heroes plugin;
+    private final PartyManager partyManager;
+
+    PartyUpdater(HeroManager manager, Heroes plugin, PartyManager partyManager) {
+        this.manager = manager;
+        this.plugin = plugin;
+        this.partyManager = partyManager;
+    }
+
+    public void run() {
+        if (!this.plugin.getConfigManager().getProperties().mapUI) return;
+
+        //System.out.print("Size - " + partyManager.getParties().size() + " Tick - " + Bukkit.getServer().getWorlds().get(0).getTime());
+
+        if (partyManager.getParties().size() == 0) return;
+
+        for (HeroParty party : partyManager.getParties()) {
+            if (party.updateMapDisplay()) {
+                party.setUpdateMapDisplay(false);
+                Player[] players = new Player[party.getMembers().size()];
+                int count = 0;
+                for (Hero heroes : party.getMembers()) {
+                    players[count] = heroes.getPlayer();
+                    count++;
+                }
+                updateMapView(players);
+            }
+        }
+    }
+
+
+    private void updateMapView(Player[] players) {
+        MapAPI mapAPI = new MapAPI();
+        short mapId = this.plugin.getConfigManager().getProperties().mapID;
+
+        TextRenderer text = new TextRenderer();
+        CharacterSprite sword = CharacterSprite.make(
+                "      XX",
+                "     XXX",
+                "    XXX ",
+                "X  XXX  ",
+                " XXXX   ",
+                "  XX    ",
+                " X X    ",
+                "X   X   ");
+        CharacterSprite crown = CharacterSprite.make(
+                "        ",
+                "        ",
+                "XX XX XX",
+                "X XXXX X",
+                "XX XX XX",
+                " XXXXXX ",
+                " XXXXXX ",
+                "        "
+        );
+        CharacterSprite shield = CharacterSprite.make(
+                "   XX   ",
+                "X  XX  X",
+                "XXXXXXXX",
+                "XXXXXXXX",
+                "XXXXXXXX",
+                " XXXXXX ",
+                "  XXXX  ",
+                "   XX   "
+        );
+        CharacterSprite heal = CharacterSprite.make(
+                "        ",
+                "  XXX   ",
+                "  XXX   ",
+                "XXXXXXX ",
+                "XXXXXXX ",
+                "XXXXXXX ",
+                "  XXX   ",
+                "  XXX   "
+        );
+        CharacterSprite bow = CharacterSprite.make(
+                "XXXX   X",
+                "X  XX X ",
+                " X   X  ",
+                "  X X X ",
+                "   X  XX",
+                "  X X  X",
+                "XX   X X",
+                " X    XX"
+        );
+        text.setChar('\u0001', crown);
+        text.setChar('\u0002', sword);
+        text.setChar('\u0003', shield);
+        text.setChar('\u0004', heal);
+        text.setChar('\u0005', bow);
+
+        MapInfo info = mapAPI.loadMap(Bukkit.getServer().getWorlds().get(0), mapId);
+        mapAPI.getWorldMap(Bukkit.getServer().getWorlds().get(0), mapId).map = (byte) 9;
+
+        info.setData(new byte[128 * 128]);
+
+        String map = "§22;Party Members -\n";
+
+        for (int i = 0; i < players.length; i++) {
+            Hero hero = this.manager.getHero(players[i]);
+            if (hero.getParty().getLeader().equals(hero)) {
+                map += "§42;\u0001";
+            } else {
+                map += "§27;\u0002";
+            }
+            map += " §12;" + players[i].getName() + "\n" + createHealthBar(hero.getHealth(), hero.getMaxHealth()) + "\n";
+        }
+
+        text.fancyRender(info, 10, 3, map);
+
+        for (int i = 0; i < players.length; i++) {
+            mapAPI.sendMap(players[i], mapId, info.getData());
+        }
+    }
+
+    private static String createHealthBar(double health, double maxHealth) {
+        String manaBar = com.herocraftonline.dev.heroes.ui.MapColor.DARK_RED + "[" + com.herocraftonline.dev.heroes.ui.MapColor.DARK_GREEN;
+        int bars = 40;
+        int progress = (int) (health / maxHealth * bars);
+        for (int i = 0; i < progress; i++) {
+            manaBar += "|";
+        }
+        manaBar += com.herocraftonline.dev.heroes.ui.MapColor.DARK_GRAY;
+        for (int i = 0; i < bars - progress; i++) {
+            manaBar += "|";
+        }
+        manaBar += com.herocraftonline.dev.heroes.ui.MapColor.RED + "]";
+        double percent = (health / maxHealth * 100);
+        DecimalFormat df = new DecimalFormat("#.##");
+        return manaBar + " - " + com.herocraftonline.dev.heroes.ui.MapColor.GREEN + df.format(percent) + "%";
     }
 }

@@ -23,4 +23,8 @@ public class PartyManager {
         parties.remove(party);
     }
 
+    public Set<HeroParty> getParties() {
+        return this.parties;
+    }
+
 }

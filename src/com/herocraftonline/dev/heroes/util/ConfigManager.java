@@ -54,6 +54,7 @@ public class ConfigManager {
         loadLevelConfig(primaryConfig);
         loadDefaultConfig(primaryConfig);
         loadProperties(primaryConfig);
+        loadMapConfig(primaryConfig);
 
         Configuration damageConfig = new Configuration(damageConfigFile);
         damageConfig.load();
@@ -200,6 +201,12 @@ public class ConfigManager {
         properties.swapCost = config.getInt(root + "swapcost", 0);
         properties.debug = config.getBoolean(root + "debug", false);
         properties.damageSystem = config.getBoolean(root + "useDamageSystem", false);
+    }
+
+    private void loadMapConfig(Configuration config) {
+        String root = "mappartyui.";
+        properties.mapUI = config.getBoolean(root + "enabled", false);
+        properties.mapID = (byte) config.getInt(root + "id", 0);
     }
 
     private void loadSkills(Configuration config) {

@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.herocraftonline.dev.heroes.ui.MapAPI;
+import com.herocraftonline.dev.heroes.ui.MapInfo;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -65,7 +67,7 @@ import com.nijikokun.register.payment.Method;
 
 /**
  * Heroes Plugin for Herocraft
- * 
+ *
  * @author Herocraft's Plugin Team
  */
 public class Heroes extends JavaPlugin {
@@ -83,6 +85,7 @@ public class Heroes extends JavaPlugin {
     private final HPluginListener pluginListener = new HPluginListener(this);
     private final HEntityListener entityListener = new HEntityListener(this);
     private final HBlockListener blockListener = new HBlockListener(this);
+    private final HPartyListener partyListener = new HPartyListener(this);
 
     // Various data managers
     private ConfigManager configManager;
@@ -109,7 +112,7 @@ public class Heroes extends JavaPlugin {
     /**
      * Print messages to the Debug Log, if the servers in Debug Mode then we also wan't to print the messages to the
      * standard Server Console.
-     * 
+     *
      * @param level
      * @param msg
      */
@@ -176,7 +179,7 @@ public class Heroes extends JavaPlugin {
     /**
      * Print messages to the server Log as well as to our DebugLog. 'debugLog' is used to seperate Heroes information
      * from the Servers Log Output.
-     * 
+     *
      * @param level
      * @param msg
      */
@@ -196,7 +199,6 @@ public class Heroes extends JavaPlugin {
     /**
      * What to do during the Disabling of Heroes -- Likely save data and close connections.
      */
-    @Override
     public void onDisable() {
         heroManager.stopTimers();
         final Player[] players = getServer().getOnlinePlayers();
@@ -211,11 +213,10 @@ public class Heroes extends JavaPlugin {
         debugLog.close();
     }
 
-    @Override
     public void onEnable() {
         configManager = new ConfigManager(this);
-        heroManager = new HeroManager(this);
         partyManager = new PartyManager(this);
+        heroManager = new HeroManager(this);
         damageManager = new DamageManager(this);
 
         // Check for BukkitContrib
@@ -253,6 +254,17 @@ public class Heroes extends JavaPlugin {
         // Perform the Permissions check.
         setupPermissions();
         log(Level.INFO, "version " + getDescription().getVersion() + " is enabled!");
+
+        // Clear Data from the Party Map
+        if (getConfigManager().getProperties().mapUI) {
+            MapAPI mapAPI = new MapAPI();
+            short mapId = this.getConfigManager().getProperties().mapID;
+
+            MapInfo info = mapAPI.loadMap(Bukkit.getServer().getWorlds().get(0), mapId);
+            info.setData(new byte[128 * 128]);
+            info.setDimension((byte) 9);
+            mapAPI.saveMap(Bukkit.getServer().getWorlds().get(0), mapId, info);
+        }
     }
 
     @Override
@@ -402,6 +414,10 @@ public class Heroes extends JavaPlugin {
 
         pluginManager.registerEvent(Type.CUSTOM_EVENT, new HLevelListener(this), Priority.Monitor, this);
         pluginManager.registerEvent(Type.CUSTOM_EVENT, new HPermissionsListener(this), Priority.Monitor, this);
+
+        // Map Party UI
+        pluginManager.registerEvent(Type.ENTITY_DAMAGE, partyListener, Priority.Monitor, this);
+        pluginManager.registerEvent(Type.ENTITY_REGAIN_HEALTH, partyListener, Priority.Monitor, this);
 
         damageManager.registerEvents();
     }

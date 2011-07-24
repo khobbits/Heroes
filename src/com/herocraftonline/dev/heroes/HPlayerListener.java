@@ -2,6 +2,7 @@ package com.herocraftonline.dev.heroes;
 
 import java.util.List;
 
+import com.herocraftonline.dev.heroes.party.HeroParty;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Result;
@@ -69,16 +70,26 @@ public class HPlayerListener extends PlayerListener {
 
     @Override
     public void onPlayerPickupItem(PlayerPickupItemEvent event) {
-        if (event.isCancelled())
+        if (event.isCancelled()){
             return;
+        }
+
         final Player player = event.getPlayer();
         plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-
-            @Override
             public void run() {
                 plugin.getInventoryChecker().checkInventory(player.getName());
             }
         });
+
+        Hero hero = this.plugin.getHeroManager().getHero(player);
+
+        if (!hero.hasParty()) {
+            return;
+        }
+        HeroParty party = hero.getParty();
+        if (!party.updateMapDisplay() && event.getItem().getItemStack().getType().toString().equalsIgnoreCase("MAP")) {
+            party.setUpdateMapDisplay(true);
+        }
     }
 
     @Override
