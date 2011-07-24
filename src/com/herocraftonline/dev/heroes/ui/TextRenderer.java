@@ -1,5 +1,8 @@
 package com.herocraftonline.dev.heroes.ui;
 
+import com.herocraftonline.dev.heroes.Heroes;
+import sun.plugin2.main.server.Plugin;
+
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -18,9 +21,9 @@ public final class TextRenderer {
      * Initialize the TextRenderer using font.png from the current working directory.
      * It should be a copy of font/default.png from the Minecraft client jar.
      */
-    public TextRenderer() {
+    public TextRenderer(Heroes plugin) {
         try {
-            BufferedImage image = ImageIO.read(getClass().getResourceAsStream("/defaults/font.png"));
+            BufferedImage image = ImageIO.read(new File(plugin.getDataFolder(), "font.png"));
             //BufferedImage image = ImageIO.read(new File("font.png"));
 
             for (int row = 0; row < 16; ++row) {

@@ -209,6 +209,7 @@ public class ConfigManager {
         String root = "mappartyui.";
         properties.mapUI = config.getBoolean(root + "enabled", false);
         properties.mapID = (byte) config.getInt(root + "id", 0);
+        properties.mapPacketInterval = config.getInt(root + "packetinterval", 20);
     }
 
     private void loadSkills(Configuration config) {

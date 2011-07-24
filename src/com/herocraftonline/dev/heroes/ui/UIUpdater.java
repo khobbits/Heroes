@@ -9,15 +9,18 @@ public class UIUpdater extends Thread {
     private EntityPlayer player;
     private byte[] bytes;
     private byte mapid;
+    private final int interval;
 
-    public UIUpdater(EntityPlayer player, byte[] bytes, byte mapid) {
+    public UIUpdater(EntityPlayer player, byte[] bytes, byte mapid, int interval) {
         this.player = player;
         this.bytes = bytes;
         this.mapid = mapid;
+        this.interval = interval;
     }
 
     public void run() {
-        for (int i = 0; i < 128; i++) {
+        //for (int i = 0; i < 128; i++) {
+        for (int i = 127; 0 <= i; --i) {
             byte[] abyte = new byte[131];
             abyte[1] = (byte) i;
             for (int j = 0; j < 128; j++) {
@@ -27,7 +30,7 @@ public class UIUpdater extends Thread {
             if (packet != null) {
                 player.netServerHandler.sendPacket(packet);
                 try {
-                    sleep(20);
+                    sleep(interval);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

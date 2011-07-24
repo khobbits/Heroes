@@ -26,7 +26,7 @@ public final class MapAPI {
         //entity.netServerHandler.sendPacket(packet);
     }
 
-    public void sendMap(Player player, short mapId, byte[] data) {
+    public void sendMap(Player player, short mapId, byte[] data, int interval) {
         /*for (int col = 0; col < 128; ++col) {
             byte[] raw = new byte[131];
             raw[0] = 0;
@@ -40,7 +40,7 @@ public final class MapAPI {
             sendRawData(player, mapId, raw);
         }*/
 
-        UIUpdater updater = new UIUpdater(((CraftPlayer) player).getHandle(), data, (byte) mapId);
+        UIUpdater updater = new UIUpdater(((CraftPlayer) player).getHandle(), data, (byte) mapId, interval);
         updater.start();
     }
 

@@ -440,7 +440,7 @@ class PartyUpdater implements Runnable {
         MapAPI mapAPI = new MapAPI();
         short mapId = this.plugin.getConfigManager().getProperties().mapID;
 
-        TextRenderer text = new TextRenderer();
+        TextRenderer text = new TextRenderer(this.plugin);
         CharacterSprite sword = CharacterSprite.make(
                 "      XX",
                 "     XXX",
@@ -516,7 +516,7 @@ class PartyUpdater implements Runnable {
         text.fancyRender(info, 10, 3, map);
 
         for (int i = 0; i < players.length; i++) {
-            mapAPI.sendMap(players[i], mapId, info.getData());
+            mapAPI.sendMap(players[i], mapId, info.getData(), this.plugin.getConfigManager().getProperties().mapPacketInterval);
         }
     }
 

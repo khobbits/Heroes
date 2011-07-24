@@ -57,6 +57,7 @@ public class Properties {
     // Map Stuffs
     public boolean mapUI;
     public byte mapID;
+    public int mapPacketInterval;
 
     /**
      * Generate experience for the level ArrayList<Integer>
