@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.herocraftonline.dev.heroes.command.commands.PartyUICommand;
 import com.herocraftonline.dev.heroes.ui.MapAPI;
 import com.herocraftonline.dev.heroes.ui.MapInfo;
 import org.bukkit.Bukkit;
@@ -375,18 +376,19 @@ public class Heroes extends JavaPlugin {
         // Page 3
         commandManager.addCommand(new PartyLeaveCommand(this));
         commandManager.addCommand(new PartyModeCommand(this));
+        commandManager.addCommand(new PartyUICommand(this));
         commandManager.addCommand(new PartyChatCommand(this));
         commandManager.addCommand(new RecoverItemsCommand(this));
         commandManager.addCommand(new ConfigReloadCommand(this));
         commandManager.addCommand(new HelpCommand(this));
         commandManager.addCommand(new AdminExpCommand(this));
-        commandManager.addCommand(new AdminClassCommand(this));
 
         // Page 4
+        commandManager.addCommand(new AdminClassCommand(this));
+        commandManager.addCommand(new AdminHealthCommand(this));
+        commandManager.addCommand(new HealthCommand(this));
         commandManager.addCommand(new LeaderboardCommand(this));
         commandManager.addCommand(new HeroSaveCommand(this));
-        commandManager.addCommand(new HealthCommand(this));
-        commandManager.addCommand(new AdminHealthCommand(this));
     }
 
     /**
