@@ -6,4 +6,5 @@ creature-damage:
 item-damage:
     Air: 3
 environmental-damage:
-    Fall_Damage: 5
+    Fall: 3
+    Lava: 4
