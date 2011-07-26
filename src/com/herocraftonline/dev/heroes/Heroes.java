@@ -1,14 +1,18 @@
 package com.herocraftonline.dev.heroes;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.herocraftonline.dev.heroes.command.commands.PartyUICommand;
+import com.herocraftonline.dev.heroes.ui.ColorMap;
 import com.herocraftonline.dev.heroes.ui.MapAPI;
 import com.herocraftonline.dev.heroes.ui.MapInfo;
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -65,6 +69,8 @@ import com.herocraftonline.dev.heroes.util.DebugLog;
 import com.nijiko.permissions.PermissionHandler;
 import com.nijikokun.bukkit.Permissions.Permissions;
 import com.nijikokun.register.payment.Method;
+
+import javax.imageio.ImageIO;
 
 /**
  * Heroes Plugin for Herocraft
@@ -256,15 +262,24 @@ public class Heroes extends JavaPlugin {
         setupPermissions();
         log(Level.INFO, "version " + getDescription().getVersion() + " is enabled!");
 
-        // Clear Data from the Party Map
+        // Set the Party UI map to a nice splash screen.
         if (getConfigManager().getProperties().mapUI) {
             MapAPI mapAPI = new MapAPI();
-            short mapId = this.getConfigManager().getProperties().mapID;
+            short mapId = 0;
 
-            MapInfo info = mapAPI.loadMap(Bukkit.getServer().getWorlds().get(0), mapId);
-            info.setData(new byte[128 * 128]);
+            BufferedImage image = null;
+            try {
+                image = ImageIO.read(new File(this.getDataFolder(), "heroes.png"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            byte[] pixels = ColorMap.imageToBytes(image);
+
+            World world = this.getServer().getWorlds().get(0);
+            MapInfo info = mapAPI.loadMap(world, mapId);
             info.setDimension((byte) 9);
-            mapAPI.saveMap(Bukkit.getServer().getWorlds().get(0), mapId, info);
+            info.setData(pixels);
+            mapAPI.saveMap(world, mapId, info);
         }
     }
 

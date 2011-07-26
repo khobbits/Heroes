@@ -2,6 +2,8 @@ package com.herocraftonline.dev.heroes.command.commands;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.command.BaseCommand;
+import com.herocraftonline.dev.heroes.persistence.Hero;
+import com.herocraftonline.dev.heroes.util.Messaging;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -26,29 +28,31 @@ public class PartyUICommand extends BaseCommand {
             return;
         }
 
-        Player player = (Player) sender;
-
         if (!this.plugin.getConfigManager().getProperties().mapUI) {
-            player.sendMessage("Map UI is not enabled so this command has been disabled.");
+            Messaging.send(sender, "Map UI is not enabled so this command has been disabled.");
             return;
         }
 
-        int slot = player.getInventory().firstEmpty();
-        byte mapID = this.plugin.getConfigManager().getProperties().mapID;
+        Player player = (Player) sender;
+        ItemStack itemInHand = player.getItemInHand();
 
-        if (slot == -1) {
-            player.sendMessage("You have no space in your Inventory for the Party UI Map.");
+        if (itemInHand != null && itemInHand.getType() != Material.MAP) {
+            Messaging.send(sender, "You need to have a Map equipped in your hand to turn it into the Party UI.");
             return;
         }
 
-        for (ItemStack item : player.getInventory().getContents()) {
-            if (item == null) continue;
-            if (item.getType() == Material.MAP && item.getDurability() == mapID) {
-                player.sendMessage("You already have a Map in your inventory which is linked to the Party UI.");
-                return;
-            }
+        if (itemInHand.getDurability() == this.plugin.getConfigManager().getProperties().mapID) {
+            Messaging.send(sender, "This Map is already linked to the Party UI!");
+            return;
         }
 
-        player.getInventory().setItem(slot, new ItemStack(Material.MAP, 1, mapID));
+        itemInHand.setDurability(this.plugin.getConfigManager().getProperties().mapID);
+
+        Messaging.send(sender, "Your map has been converted to the Party UI");
+
+        Hero hero = this.plugin.getHeroManager().getHero(player);
+        if (hero.getParty() != null) {
+            hero.getParty().setUpdateMapDisplay(true);
+        }
     }
 }
