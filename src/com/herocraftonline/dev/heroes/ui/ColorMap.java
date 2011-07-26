@@ -69,8 +69,7 @@ public final class ColorMap {
         int[] pixels = new int[128 * 128];
 
         try {
-            PixelGrabber grabber = new PixelGrabber(image, 0, 0, image.getWidth(),
-                image.getHeight(), pixels, 0, image.getWidth());
+            PixelGrabber grabber = new PixelGrabber(image, 0, 0, image.getWidth(),image.getHeight(), pixels, 0, image.getWidth());
             grabber.grabPixels(0);
         }
         catch (InterruptedException ex) {

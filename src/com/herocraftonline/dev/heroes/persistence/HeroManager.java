@@ -467,7 +467,17 @@ class PartyUpdater implements Runnable {
             } else {
                 map += "§27;\u0002";
             }
-            map += " §12;" + players[i].getName() + "\n" + createHealthBar(hero.getHealth(), hero.getMaxHealth()) + "\n";
+            boolean damage = plugin.getConfigManager().getProperties().damageSystem;
+            double currentHP;
+            double maxHP;
+            if (damage) {
+                currentHP = hero.getHealth();
+                maxHP = hero.getMaxHealth();
+            } else {
+                currentHP = hero.getPlayer().getHealth();
+                maxHP = 20;
+            }
+            map += " §12;" + players[i].getName() + "\n" + createHealthBar(currentHP, maxHP) + "\n";
         }
 
         text.fancyRender(info, 10, 3, map);

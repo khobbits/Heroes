@@ -49,6 +49,7 @@ public class ConfigManager {
         checkForConfig(expConfigFile);
         checkForConfig(damageConfigFile);
         checkForConfig(new File(plugin.getDataFolder(), "font.png"));
+        checkForConfig(new File(plugin.getDataFolder(), "heroes.png"));
 
         Configuration primaryConfig = new Configuration(primaryConfigFile);
         primaryConfig.load();
