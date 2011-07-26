@@ -1,11 +1,8 @@
 package com.herocraftonline.dev.heroes.ui;
 
-import net.minecraft.server.EntityPlayer;
 import net.minecraft.server.ItemStack;
 import net.minecraft.server.Item;
-import net.minecraft.server.Packet;
 import net.minecraft.server.WorldMap;
-import net.minecraft.server.Packet131;
 
 import org.bukkit.Material;
 import org.bukkit.World;

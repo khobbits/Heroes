@@ -35,7 +35,7 @@ import com.herocraftonline.dev.heroes.util.Messaging;
 
 /**
  * Player management
- *
+ * 
  * @author Herocraft's Plugin Team
  */
 public class HeroManager {
@@ -86,8 +86,7 @@ public class HeroManager {
                 removeHero(hero); // Seeing as it's null we might as well remove it.
                 continue;
             }
-            if (player.getName().equalsIgnoreCase(hero.getPlayer().getName()))
-                return hero;
+            if (player.getName().equalsIgnoreCase(hero.getPlayer().getName())) return hero;
         }
         // If it gets to this stage then clearly the HeroManager doesn't have it so we create it...
         return loadHero(player);
@@ -99,7 +98,7 @@ public class HeroManager {
 
     /**
      * Load the given Players Data file.
-     *
+     * 
      * @param player
      * @return
      */
@@ -111,6 +110,10 @@ public class HeroManager {
             playerConfig.load(); // Load the Config File
 
             HeroClass playerClass = loadClass(player, playerConfig);
+            if (playerClass == null) {
+                plugin.log(Level.INFO, "Invalid class found for " + player.getName() + ". Resetting player.");
+                return createNewHero(player);
+            }
             Hero playerHero = new Hero(plugin, player, playerClass);
 
             loadCooldowns(playerHero, playerConfig);
@@ -149,7 +152,7 @@ public class HeroManager {
 
     /**
      * Save the given Players Data to a file.
-     *
+     * 
      * @param player
      */
     public void saveHero(Player player) {
@@ -232,8 +235,7 @@ public class HeroManager {
     }
 
     private void loadExperience(Hero hero, Configuration config) {
-        if (hero == null || hero.getClass() == null || config == null)
-            return;
+        if (hero == null || hero.getClass() == null || config == null) return;
 
         String root = "experience";
         List<String> expList = config.getKeys(root);
@@ -323,8 +325,7 @@ public class HeroManager {
     }
 
     private void saveExperience(Hero hero, Configuration config) {
-        if (hero == null || hero.getClass() == null || config == null)
-            return;
+        if (hero == null || hero.getClass() == null || config == null) return;
 
         String root = "experience";
         for (Map.Entry<String, Double> entry : hero.experience.entrySet()) {
@@ -417,7 +418,8 @@ class PartyUpdater implements Runnable {
     public void run() {
         if (!this.plugin.getConfigManager().getProperties().mapUI) return;
 
-        //System.out.print("Size - " + partyManager.getParties().size() + " Tick - " + Bukkit.getServer().getWorlds().get(0).getTime());
+        // System.out.print("Size - " + partyManager.getParties().size() + " Tick - " +
+        // Bukkit.getServer().getWorlds().get(0).getTime());
 
         if (partyManager.getParties().size() == 0) return;
 
@@ -435,61 +437,16 @@ class PartyUpdater implements Runnable {
         }
     }
 
-
     private void updateMapView(Player[] players) {
         MapAPI mapAPI = new MapAPI();
         short mapId = this.plugin.getConfigManager().getProperties().mapID;
 
         TextRenderer text = new TextRenderer(this.plugin);
-        CharacterSprite sword = CharacterSprite.make(
-                "      XX",
-                "     XXX",
-                "    XXX ",
-                "X  XXX  ",
-                " XXXX   ",
-                "  XX    ",
-                " X X    ",
-                "X   X   ");
-        CharacterSprite crown = CharacterSprite.make(
-                "        ",
-                "        ",
-                "XX XX XX",
-                "X XXXX X",
-                "XX XX XX",
-                " XXXXXX ",
-                " XXXXXX ",
-                "        "
-        );
-        CharacterSprite shield = CharacterSprite.make(
-                "   XX   ",
-                "X  XX  X",
-                "XXXXXXXX",
-                "XXXXXXXX",
-                "XXXXXXXX",
-                " XXXXXX ",
-                "  XXXX  ",
-                "   XX   "
-        );
-        CharacterSprite heal = CharacterSprite.make(
-                "        ",
-                "  XXX   ",
-                "  XXX   ",
-                "XXXXXXX ",
-                "XXXXXXX ",
-                "XXXXXXX ",
-                "  XXX   ",
-                "  XXX   "
-        );
-        CharacterSprite bow = CharacterSprite.make(
-                "XXXX   X",
-                "X  XX X ",
-                " X   X  ",
-                "  X X X ",
-                "   X  XX",
-                "  X X  X",
-                "XX   X X",
-                " X    XX"
-        );
+        CharacterSprite sword = CharacterSprite.make("      XX", "     XXX", "    XXX ", "X  XXX  ", " XXXX   ", "  XX    ", " X X    ", "X   X   ");
+        CharacterSprite crown = CharacterSprite.make("        ", "        ", "XX XX XX", "X XXXX X", "XX XX XX", " XXXXXX ", " XXXXXX ", "        ");
+        CharacterSprite shield = CharacterSprite.make("   XX   ", "X  XX  X", "XXXXXXXX", "XXXXXXXX", "XXXXXXXX", " XXXXXX ", "  XXXX  ", "   XX   ");
+        CharacterSprite heal = CharacterSprite.make("        ", "  XXX   ", "  XXX   ", "XXXXXXX ", "XXXXXXX ", "XXXXXXX ", "  XXX   ", "  XXX   ");
+        CharacterSprite bow = CharacterSprite.make("XXXX   X", "X  XX X ", " X   X  ", "  X X X ", "   X  XX", "  X X  X", "XX   X X", " X    XX");
         text.setChar('\u0001', crown);
         text.setChar('\u0002', sword);
         text.setChar('\u0003', shield);

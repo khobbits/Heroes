@@ -75,7 +75,7 @@ public class HeroClassManager {
 
             List<String> armor = config.getStringList("classes." + className + ".permitted-armor", defaultType);
             if (armor == null) {
-                plugin.log(Level.WARNING, className + " has no permitted-armor section");
+                plugin.debugLog(Level.WARNING, className + " has no permitted-armor section");
             } else {
                 for (String a : armor) {
                     // If it's a generic type like 'DIAMOND' or 'LEATHER' we add all the possible entries.
@@ -110,7 +110,7 @@ public class HeroClassManager {
 
             List<String> weapon = config.getStringList("classes." + className + ".permitted-weapon", defaultType);
             if (armor == null) {
-                plugin.log(Level.WARNING, className + " has no permitted-weapon section");
+                plugin.debugLog(Level.WARNING, className + " has no permitted-weapon section");
             } else {
                 for (String w : weapon) {
                     // A BOW has no ItemType so we just add it straight away.
@@ -157,7 +157,7 @@ public class HeroClassManager {
 
             List<String> itemDamages = config.getKeys("classes." + className + ".item-damage");
             if (itemDamages == null) {
-                plugin.log(Level.WARNING, className + " has no item damage section");
+                plugin.debugLog(Level.WARNING, className + " has no item damage section");
             } else {
                 for (String materialName : itemDamages) {
                     Material material = Material.matchMaterial(materialName);
@@ -172,7 +172,7 @@ public class HeroClassManager {
 
             List<String> projectileDamages = config.getKeys("classes." + className + ".projectile-damage");
             if (projectileDamages == null) {
-                plugin.log(Level.WARNING, className + " has no projectile damage section");
+                plugin.debugLog(Level.WARNING, className + " has no projectile damage section");
             } else {
                 for (String projectileName : projectileDamages) {
                     try {
@@ -187,7 +187,7 @@ public class HeroClassManager {
 
             List<String> skillNames = config.getKeys("classes." + className + ".permitted-skills");
             if (skillNames == null) {
-                plugin.log(Level.WARNING, className + " has no permitted-skills section");
+                plugin.debugLog(Level.WARNING, className + " has no permitted-skills section");
             } else {
                 for (String skillName : skillNames) {
                     try {
@@ -237,7 +237,7 @@ public class HeroClassManager {
             List<String> experienceNames = config.getStringList("classes." + className + ".experience-sources", null);
             Set<ExperienceType> experienceSources = new HashSet<ExperienceType>();
             if (experienceNames == null) {
-                plugin.log(Level.WARNING, className + " has no experience-sources section");
+                plugin.debugLog(Level.WARNING, className + " has no experience-sources section");
             } else {
                 for (String experience : experienceNames) {
                     try {
