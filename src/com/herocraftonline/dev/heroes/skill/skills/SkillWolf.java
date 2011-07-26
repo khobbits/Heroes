@@ -17,13 +17,11 @@ public class SkillWolf extends ActiveSkill {
     public HashMap<Player, Integer> wolves = new HashMap<Player, Integer>();
 
     public SkillWolf(Heroes plugin) {
-        super(plugin);
-        setName("Wolf");
+        super(plugin, "Wolf");
         setDescription("Summons and tames a wolf to your side");
         setUsage("/skill wolf");
-        setMinArgs(0);
-        setMaxArgs(0);
-        getIdentifiers().add("skill wolf");
+        setArgumentRange(0, 0);
+        setIdentifiers(new String[] { "skill wolf" });
     }
 
     @Override

@@ -16,13 +16,11 @@ import com.herocraftonline.dev.heroes.util.Messaging;
 public class SkillDrainsoul extends TargettedSkill {
 
     public SkillDrainsoul(Heroes plugin) {
-        super(plugin);
-        setName("Drainsoul");
+        super(plugin, "Drainsoul");
         setDescription("Absorb health from target");
         setUsage("/skill drainsoul <target>");
-        setMinArgs(0);
-        setMaxArgs(1);
-        getIdentifiers().add("skill drainsoul");
+        setArgumentRange(0, 1);
+        setIdentifiers(new String[] { "skill drainsoul" });
     }
 
     @Override
@@ -43,14 +41,14 @@ public class SkillDrainsoul extends TargettedSkill {
 
         // Throw a dummy damage event to make it obey PvP restricting plugins
         EntityDamageEvent event = new EntityDamageByEntityEvent(player, target, DamageCause.CUSTOM, 0);
-        plugin.getServer().getPluginManager().callEvent(event);
+        getPlugin().getServer().getPluginManager().callEvent(event);
         if (event.isCancelled()) return false;
 
         int absorbAmount = getSetting(hero.getHeroClass(), "absorb-amount", 4);
 
         hero.setHealth(hero.getHealth() + (double) absorbAmount);
         hero.syncHealth();
-        plugin.getDamageManager().addSpellTarget((Entity) target);
+        getPlugin().getDamageManager().addSpellTarget((Entity) target);
         target.damage(absorbAmount, player);
 
         broadcastExecuteText(hero, target);

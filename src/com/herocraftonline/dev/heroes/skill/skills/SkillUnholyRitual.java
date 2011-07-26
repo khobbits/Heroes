@@ -14,13 +14,11 @@ import com.herocraftonline.dev.heroes.util.Messaging;
 public class SkillUnholyRitual extends TargettedSkill {
 
     public SkillUnholyRitual(Heroes plugin) {
-        super(plugin);
-        setName("UnholyRitual");
+        super(plugin, "UnholyRitual");
         setDescription("Target Zombie or Skeleton is sacrificed, necromancer receives mana");
         setUsage("/skill unholyritual [target]");
-        setMinArgs(0);
-        setMaxArgs(1);
-        getIdentifiers().add("skill unholyritual");
+        setArgumentRange(0, 1);
+        setIdentifiers(new String[] { "skill unholyritual" });
     }
 
     @Override
@@ -30,7 +28,7 @@ public class SkillUnholyRitual extends TargettedSkill {
             Messaging.send(player, "You need a target!");
             return false;
         }
-        plugin.getDamageManager().addSpellTarget((Entity) target);
+        getPlugin().getDamageManager().addSpellTarget((Entity) target);
         target.damage(target.getHealth(), player);
         hero.setMana(hero.getMana() + 20);
         broadcastExecuteText(hero, target);

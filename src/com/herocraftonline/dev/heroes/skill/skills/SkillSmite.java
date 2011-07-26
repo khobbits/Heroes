@@ -15,13 +15,11 @@ import com.herocraftonline.dev.heroes.util.Messaging;
 public class SkillSmite extends TargettedSkill {
 
     public SkillSmite(Heroes plugin) {
-        super(plugin);
-        setName("Smite");
+        super(plugin, "Smite");
         setDescription("Uses smite on a player");
         setUsage("/skill smite");
-        setMinArgs(0);
-        setMaxArgs(0);
-        getIdentifiers().add("skill smite");
+        setArgumentRange(0, 0);
+        setIdentifiers(new String[] { "skill smite" });
     }
 
     @Override
@@ -41,10 +39,10 @@ public class SkillSmite extends TargettedSkill {
 
         int damage = getSetting(hero.getHeroClass(), "damage", 10);
         EntityDamageByEntityEvent damageEntityEvent = new EntityDamageByEntityEvent(player, target, DamageCause.CUSTOM, damage);
-        plugin.getServer().getPluginManager().callEvent(damageEntityEvent);
+        getPlugin().getServer().getPluginManager().callEvent(damageEntityEvent);
         if (damageEntityEvent.isCancelled())
             return false;
-        plugin.getDamageManager().addSpellTarget((Entity) target);
+        getPlugin().getDamageManager().addSpellTarget((Entity) target);
         target.damage(damage, player);
         broadcastExecuteText(hero, target);
         return true;

@@ -7,30 +7,29 @@ import org.bukkit.command.CommandSender;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
-import com.herocraftonline.dev.heroes.command.BaseCommand;
+import com.herocraftonline.dev.heroes.command.BasicCommand;
 
-public class PathsCommand extends BaseCommand {
+public class PathsCommand extends BasicCommand {
 
     private static final int PATHS_PER_PAGE = 8;
+    private final Heroes plugin;
 
     public PathsCommand(Heroes plugin) {
-        super(plugin);
-        setName("Paths");
+        super("Paths");
+        this.plugin = plugin;
         setDescription("Lists all paths available to you");
         setUsage("/hero paths [page#]");
-        setMinArgs(0);
-        setMaxArgs(1);
-        getIdentifiers().add("hero paths");
+        setArgumentRange(0, 1);
+        setIdentifiers(new String[] { "hero paths" });
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args) {
+    public boolean execute(CommandSender sender, String identifier, String[] args) {
         int page = 0;
         if (args.length != 0) {
             try {
                 page = Integer.parseInt(args[0]) - 1;
-            } catch (NumberFormatException ignored) {
-            }
+            } catch (NumberFormatException ignored) {}
         }
 
         Set<HeroClass> classes = plugin.getClassManager().getClasses();
@@ -66,7 +65,8 @@ public class PathsCommand extends BaseCommand {
             }
         }
 
-        sender.sendMessage("§cTo choose a path, type '/hero choose <path>'");
+        sender.sendMessage("§cTo choose a path, type §f/hero choose <path>");
+        return true;
     }
 
 }

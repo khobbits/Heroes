@@ -22,13 +22,11 @@ public class SkillAbsorb extends ActiveSkill {
     private String expireText;
 
     public SkillAbsorb(Heroes plugin) {
-        super(plugin);
-        setName("Absorb");
+        super(plugin, "Absorb");
         setDescription("Converts all damage into mana");
         setUsage("/skill absorb");
-        setMinArgs(0);
-        setMaxArgs(0);
-        getIdentifiers().add("skill absorb");
+        setArgumentRange(0, 0);
+        setIdentifiers(new String[] { "skill absorb" });
 
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
     }
@@ -86,7 +84,7 @@ public class SkillAbsorb extends ActiveSkill {
             Entity defender = event.getEntity();
             if (defender instanceof Player) {
                 Player player = (Player) defender;
-                Hero hero = plugin.getHeroManager().getHero(player);
+                Hero hero = getPlugin().getHeroManager().getHero(player);
                 if (hero.hasEffect("Absorb")) {
                     int absorbAmount = getSetting(hero.getHeroClass(), "mana-amount", 20);
                     event.setDamage((int) (event.getDamage() * 0.50));

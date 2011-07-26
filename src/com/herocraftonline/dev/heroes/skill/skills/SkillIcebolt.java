@@ -27,13 +27,11 @@ public class SkillIcebolt extends ActiveSkill {
     private HashSet<Snowball> snowballs = new HashSet<Snowball>();
 
     public SkillIcebolt(Heroes plugin) {
-        super(plugin);
-        setName("Icebolt");
+        super(plugin, "Icebolt");
         setDescription("Fires a snowball that hurts the player and if they're on fire, puts them out");
         setUsage("/skill icebolt");
-        setMinArgs(0);
-        setMaxArgs(0);
-        getIdentifiers().add("skill icebolt");
+        setArgumentRange(0, 0);
+        setIdentifiers(new String[] { "skill icebolt" });
 
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
     }

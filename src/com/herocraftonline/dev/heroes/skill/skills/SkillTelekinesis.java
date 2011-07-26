@@ -16,13 +16,11 @@ import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 public class SkillTelekinesis extends ActiveSkill {
 
     public SkillTelekinesis(Heroes plugin) {
-        super(plugin);
-        setName("Telekinesis");
+        super(plugin, "Telekinesis");
         setDescription("Activate levers, buttons and other interactable objects from afar!");
         setUsage("/skill telekinesis");
-        setMinArgs(0);
-        setMaxArgs(0);
-        getIdentifiers().add("skill telekinesis");
+        setArgumentRange(0, 0);
+        setIdentifiers(new String[] { "skill telekinesis" });
     }
 
     @Override

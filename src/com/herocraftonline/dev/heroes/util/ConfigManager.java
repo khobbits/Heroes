@@ -17,7 +17,7 @@ import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClassManager;
-import com.herocraftonline.dev.heroes.command.BaseCommand;
+import com.herocraftonline.dev.heroes.command.Command;
 import com.herocraftonline.dev.heroes.skill.Skill;
 
 public class ConfigManager {
@@ -119,7 +119,7 @@ public class ConfigManager {
     }
 
     private void generateSkills(Configuration config) {
-        for (BaseCommand baseCommand : plugin.getCommandManager().getCommands()) {
+        for (Command baseCommand : plugin.getCommandHandler().getCommands()) {
             if (baseCommand instanceof Skill) {
                 Skill skill = (Skill) baseCommand;
                 ConfigurationNode node = config.getNode(skill.getName());
@@ -215,7 +215,7 @@ public class ConfigManager {
 
     private void loadSkills(Configuration config) {
         config.load();
-        for (BaseCommand baseCommand : plugin.getCommandManager().getCommands()) {
+        for (Command baseCommand : plugin.getCommandHandler().getCommands()) {
             if (baseCommand instanceof Skill) {
                 Skill skill = (Skill) baseCommand;
                 ConfigurationNode node = config.getNode(skill.getName());

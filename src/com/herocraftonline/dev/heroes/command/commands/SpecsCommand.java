@@ -7,35 +7,34 @@ import org.bukkit.entity.Player;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
-import com.herocraftonline.dev.heroes.command.BaseCommand;
+import com.herocraftonline.dev.heroes.command.BasicCommand;
 import com.herocraftonline.dev.heroes.util.Messaging;
 
-public class SpecsCommand extends BaseCommand {
+public class SpecsCommand extends BasicCommand {
 
     private static final int SPECS_PER_PAGE = 8;
+    private final Heroes plugin;
 
     public SpecsCommand(Heroes plugin) {
-        super(plugin);
-        setName("Specializations");
+        super("Specializations");
+        this.plugin = plugin;
         setDescription("Lists all specializations available to your path");
         setUsage("/hero specs [page#]");
-        setMinArgs(0);
-        setMaxArgs(1);
-        getIdentifiers().add("hero specs");
+        setArgumentRange(0, 1);
+        setIdentifiers(new String[] { "hero specs" });
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args) {
-        if (!(sender instanceof Player))
-            return;
+    public boolean execute(CommandSender sender, String identifier, String[] args) {
+        if (!(sender instanceof Player)) return false;
+        
         HeroClass playerClass = plugin.getHeroManager().getHero((Player) sender).getHeroClass();
 
         int page = 0;
         if (args.length != 0) {
             try {
                 page = Integer.parseInt(args[0]) - 1;
-            } catch (NumberFormatException ignored) {
-            }
+            } catch (NumberFormatException ignored) {}
         }
 
         Set<HeroClass> childClasses = playerClass.getSpecializations();
@@ -43,7 +42,7 @@ public class SpecsCommand extends BaseCommand {
 
         if (specs.length == 0) {
             Messaging.send(sender, "$1 has no specializations.", playerClass.getName());
-            return;
+            return false;
         }
 
         int numPages = specs.length / SPECS_PER_PAGE;
@@ -70,7 +69,8 @@ public class SpecsCommand extends BaseCommand {
             }
         }
 
-        sender.sendMessage("§cTo choose a specialization, type '/hero choose <spec>'");
+        sender.sendMessage("§cTo choose a specialization, type §f/hero choose <spec>");
+        return true;
     }
 
 }

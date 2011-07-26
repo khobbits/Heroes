@@ -20,13 +20,11 @@ public class SkillRoot extends TargettedSkill {
     private String expireText;
 
     public SkillRoot(Heroes plugin) {
-        super(plugin);
-        setName("Root");
+        super(plugin, "Root");
         setDescription("Roots your target in place");
         setUsage("/skill root <target>");
-        setMinArgs(0);
-        setMaxArgs(1);
-        getIdentifiers().add("skill root");
+        setArgumentRange(0, 1);
+        setIdentifiers(new String[] { "skill root" });
     }
 
     @Override
@@ -54,7 +52,7 @@ public class SkillRoot extends TargettedSkill {
         }
 
         Player targetPlayer = (Player) target;
-        Hero targetHero = plugin.getHeroManager().getHero(targetPlayer);
+        Hero targetHero = getPlugin().getHeroManager().getHero(targetPlayer);
         if (targetHero.equals(hero)) {
             Messaging.send(player, "You need a target!");
             return false;

@@ -21,13 +21,11 @@ public class SkillFlameshield extends ActiveSkill {
     private String expireText;
 
     public SkillFlameshield(Heroes plugin) {
-        super(plugin);
-        setName("Flameshield");
+        super(plugin, "Flameshield");
         setDescription("Fire can't hurt you!");
         setUsage("/skill flameshield");
-        setMinArgs(0);
-        setMaxArgs(0);
-        getIdentifiers().add("skill flameshield");
+        setArgumentRange(0, 0);
+        setIdentifiers(new String[] { "skill flameshield" });
 
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
     }
@@ -89,7 +87,7 @@ public class SkillFlameshield extends ActiveSkill {
             Entity defender = event.getEntity();
             if (defender instanceof Player) {
                 Player player = (Player) defender;
-                Hero hero = plugin.getHeroManager().getHero(player);
+                Hero hero = getPlugin().getHeroManager().getHero(player);
                 if (hero.hasEffect(getName())) {
                     event.setCancelled(true);
                 }

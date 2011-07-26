@@ -12,13 +12,11 @@ import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 public class SkillDispel extends TargettedSkill {
 
     public SkillDispel(Heroes plugin) {
-        super(plugin);
-        setName("Dispel");
+        super(plugin, "Dispel");
         setDescription("Removes all effects from your target");
         setUsage("/skill dispel");
-        setMinArgs(0);
-        setMaxArgs(1);
-        getIdentifiers().add("skill dispel");
+        setArgumentRange(0, 1);
+        setIdentifiers(new String[] { "skill dispel" });
     }
 
     @Override
@@ -27,7 +25,7 @@ public class SkillDispel extends TargettedSkill {
             return false;
 
         Player targetPlayer = (Player) target;
-        Hero targetHero = plugin.getHeroManager().getHero(targetPlayer);
+        Hero targetHero = getPlugin().getHeroManager().getHero(targetPlayer);
         for (Effect effect : targetHero.getEffects()) {
             if (effect instanceof Expirable) {
                 targetHero.removeEffect(effect);

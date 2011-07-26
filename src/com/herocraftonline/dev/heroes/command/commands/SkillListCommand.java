@@ -13,31 +13,29 @@ import org.bukkit.entity.Player;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
-import com.herocraftonline.dev.heroes.command.BaseCommand;
+import com.herocraftonline.dev.heroes.command.BasicCommand;
+import com.herocraftonline.dev.heroes.command.Command;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
 
-public class SkillListCommand extends BaseCommand {
+public class SkillListCommand extends BasicCommand {
 
     private static final int SKILLS_PER_PAGE = 8;
+    private final Heroes plugin;
 
     public SkillListCommand(Heroes plugin) {
-        super(plugin);
-        setName("List Skills");
+        super("List Skills");
+        this.plugin = plugin;
         setDescription("Displays a list of your class skills");
         setUsage("/skills [page#]");
-        setMinArgs(0);
-        setMaxArgs(1);
-        getIdentifiers().add("skills");
-        getIdentifiers().add("hero skills");
+        setArgumentRange(0, 1);
+        setIdentifiers(new String[] { "skills", "hero skills" });
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args) {
-        if (!(sender instanceof Player)) {
-            sender.sendMessage("You must be a player to use this command.");
-            return;
-        }
+    public boolean execute(CommandSender sender, String identifier, String[] args) {
+        if (!(sender instanceof Player)) return false;
+
         Player player = (Player) sender;
         Hero hero = plugin.getHeroManager().getHero(player);
         HeroClass heroClass = hero.getHeroClass();
@@ -46,13 +44,12 @@ public class SkillListCommand extends BaseCommand {
         if (args.length != 0) {
             try {
                 page = Integer.parseInt(args[0]) - 1;
-            } catch (NumberFormatException e) {
-            }
+            } catch (NumberFormatException e) {}
         }
 
         Map<Skill, Integer> skills = new HashMap<Skill, Integer>();
         // Filter out Skills from the command list.
-        for (BaseCommand command : plugin.getCommandManager().getCommands()) {
+        for (Command command : plugin.getCommandHandler().getCommands()) {
             if (command instanceof Skill) {
                 Skill skill = (Skill) command;
                 if (heroClass.hasSkill(skill.getName()) && !skills.containsKey(skill)) {
@@ -95,18 +92,19 @@ public class SkillListCommand extends BaseCommand {
         }
 
         sender.sendMessage(ChatColor.RED + "To use a skill, type " + ChatColor.WHITE + "/skill <name>" + ChatColor.RED + ". For info use " + ChatColor.WHITE + "/skill <name> ?");
+        return true;
     }
 
     private static SortedSet<Entry<Skill, Integer>> entriesSortedByValues(Map<Skill, Integer> map) {
         SortedSet<Entry<Skill, Integer>> sortedEntries = new TreeSet<Map.Entry<Skill, Integer>>(new Comparator<Map.Entry<Skill, Integer>>() {
-
             @Override
             public int compare(Map.Entry<Skill, Integer> e1, Map.Entry<Skill, Integer> e2) {
                 int res = e1.getValue().compareTo(e2.getValue());
-                if (res == 0)
+                if (res == 0) {
                     return e1.getKey().getName().compareTo(e2.getKey().getName());
-                else
+                } else {
                     return res;
+                }
             }
         });
 

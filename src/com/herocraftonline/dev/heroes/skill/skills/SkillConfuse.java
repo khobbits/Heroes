@@ -24,13 +24,11 @@ public class SkillConfuse extends TargettedSkill {
     private String expireText;
 
     public SkillConfuse(Heroes plugin) {
-        super(plugin);
-        setName("Confuse");
+        super(plugin, "Confuse");
         setDescription("Confuses your target");
         setUsage("/skill confuse <target>");
-        setMinArgs(0);
-        setMaxArgs(1);
-        getIdentifiers().add("skill confuse");
+        setArgumentRange(0, 1);
+        setIdentifiers(new String[] { "skill confuse" });
     }
 
     @Override
@@ -60,7 +58,7 @@ public class SkillConfuse extends TargettedSkill {
         }
 
         Player targetPlayer = (Player) target;
-        Hero targetHero = plugin.getHeroManager().getHero(targetPlayer);
+        Hero targetHero = getPlugin().getHeroManager().getHero(targetPlayer);
         if (targetHero.equals(hero)) {
             Messaging.send(player, "You need a target!");
             return false;

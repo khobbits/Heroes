@@ -11,13 +11,11 @@ import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 public class SkillBlink extends ActiveSkill {
 
     public SkillBlink(Heroes plugin) {
-        super(plugin);
-        setName("Blink");
+        super(plugin, "Blink");
         setDescription("Teleports you 4-5 blocks");
         setUsage("/skill blink");
-        setMinArgs(0);
-        setMaxArgs(0);
-        getIdentifiers().add("skill blink");
+        setArgumentRange(0, 0);
+        setIdentifiers(new String[] { "skill blink" });
     }
 
     @Override

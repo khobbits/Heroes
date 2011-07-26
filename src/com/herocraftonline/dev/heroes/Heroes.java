@@ -13,7 +13,6 @@ import com.herocraftonline.dev.heroes.ui.MapAPI;
 import com.herocraftonline.dev.heroes.ui.MapInfo;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Priority;
@@ -24,8 +23,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.classes.HeroClassManager;
-import com.herocraftonline.dev.heroes.command.BaseCommand;
-import com.herocraftonline.dev.heroes.command.CommandManager;
+import com.herocraftonline.dev.heroes.command.Command;
+import com.herocraftonline.dev.heroes.command.CommandHandler;
 import com.herocraftonline.dev.heroes.command.commands.AdminClassCommand;
 import com.herocraftonline.dev.heroes.command.commands.AdminExpCommand;
 import com.herocraftonline.dev.heroes.command.commands.AdminHealthCommand;
@@ -41,7 +40,6 @@ import com.herocraftonline.dev.heroes.command.commands.LevelInformationCommand;
 import com.herocraftonline.dev.heroes.command.commands.ManaCommand;
 import com.herocraftonline.dev.heroes.command.commands.PartyAcceptCommand;
 import com.herocraftonline.dev.heroes.command.commands.PartyChatCommand;
-import com.herocraftonline.dev.heroes.command.commands.PartyCreateCommand;
 import com.herocraftonline.dev.heroes.command.commands.PartyInviteCommand;
 import com.herocraftonline.dev.heroes.command.commands.PartyLeaveCommand;
 import com.herocraftonline.dev.heroes.command.commands.PartyModeCommand;
@@ -96,7 +94,7 @@ public class Heroes extends JavaPlugin {
 
     // Various data managers
     private ConfigManager configManager;
-    private CommandManager commandManager = new CommandManager();
+    private CommandHandler commandHandler = new CommandHandler();
     private HeroClassManager heroClassManager;
     private HeroManager heroManager;
     private PartyManager partyManager;
@@ -134,8 +132,8 @@ public class Heroes extends JavaPlugin {
         return heroClassManager;
     }
 
-    public CommandManager getCommandManager() {
-        return commandManager;
+    public CommandHandler getCommandHandler() {
+        return commandHandler;
     }
 
     public ConfigManager getConfigManager() {
@@ -170,7 +168,7 @@ public class Heroes extends JavaPlugin {
             if (f.contains(".jar")) {
                 Skill skill = SkillLoader.loadSkill(new File(dir, f), this);
                 if (skill != null) {
-                    commandManager.addCommand(skill);
+                    commandHandler.addCommand(skill);
                     if (!added) {
                         log(Level.INFO, "Collecting and loading skills");
                         added = true;
@@ -199,8 +197,8 @@ public class Heroes extends JavaPlugin {
      * Handle Heroes Commands, in this case we send them straight to the commandManager.
      */
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        return commandManager.dispatch(sender, command, label, args);
+    public boolean onCommand(CommandSender sender, org.bukkit.command.Command command, String label, String[] args) {
+        return commandHandler.dispatch(sender, label, args);
     }
 
     /**
@@ -322,7 +320,7 @@ public class Heroes extends JavaPlugin {
                     Hero hero = heroManager.getHero(player);
                     HeroClass heroClass = hero.getHeroClass();
 
-                    for (BaseCommand cmd : commandManager.getCommands()) {
+                    for (Command cmd : commandHandler.getCommands()) {
                         if (cmd instanceof OutsourcedSkill) {
                             ((OutsourcedSkill) cmd).tryLearningSkill(hero);
                         }
@@ -369,41 +367,40 @@ public class Heroes extends JavaPlugin {
      */
     private void registerCommands() {
         // Page 1
-        commandManager.addCommand(new PathsCommand(this));
-        commandManager.addCommand(new SpecsCommand(this));
-        commandManager.addCommand(new ChooseCommand(this));
-        commandManager.addCommand(new LevelInformationCommand(this));
-        commandManager.addCommand(new SkillListCommand(this));
-        commandManager.addCommand(new BindSkillCommand(this));
-        commandManager.addCommand(new ArmorCommand(this));
-        commandManager.addCommand(new ToolsCommand(this));
+        commandHandler.addCommand(new PathsCommand(this));
+        commandHandler.addCommand(new SpecsCommand(this));
+        commandHandler.addCommand(new ChooseCommand(this));
+        commandHandler.addCommand(new LevelInformationCommand(this));
+        commandHandler.addCommand(new SkillListCommand(this));
+        commandHandler.addCommand(new BindSkillCommand(this));
+        commandHandler.addCommand(new ArmorCommand(this));
+        commandHandler.addCommand(new ToolsCommand(this));
 
         // Page 2
-        commandManager.addCommand(new ManaCommand(this));
-        commandManager.addCommand(new VerboseCommand(this));
-        commandManager.addCommand(new SuppressCommand(this));
-        commandManager.addCommand(new WhoCommand(this));
-        commandManager.addCommand(new PartyAcceptCommand(this));
-        commandManager.addCommand(new PartyCreateCommand(this));
-        commandManager.addCommand(new PartyInviteCommand(this));
-        commandManager.addCommand(new PartyWhoCommand(this));
+        commandHandler.addCommand(new ManaCommand(this));
+        commandHandler.addCommand(new VerboseCommand(this));
+        commandHandler.addCommand(new SuppressCommand(this));
+        commandHandler.addCommand(new WhoCommand(this));
+        commandHandler.addCommand(new PartyAcceptCommand(this));
+        commandHandler.addCommand(new PartyInviteCommand(this));
+        commandHandler.addCommand(new PartyWhoCommand(this));
+        commandHandler.addCommand(new PartyLeaveCommand(this));
 
         // Page 3
-        commandManager.addCommand(new PartyLeaveCommand(this));
-        commandManager.addCommand(new PartyModeCommand(this));
-        commandManager.addCommand(new PartyUICommand(this));
-        commandManager.addCommand(new PartyChatCommand(this));
-        commandManager.addCommand(new RecoverItemsCommand(this));
-        commandManager.addCommand(new ConfigReloadCommand(this));
-        commandManager.addCommand(new HelpCommand(this));
-        commandManager.addCommand(new AdminExpCommand(this));
+        commandHandler.addCommand(new PartyModeCommand(this));
+        commandHandler.addCommand(new PartyUICommand(this));
+        commandHandler.addCommand(new PartyChatCommand(this));
+        commandHandler.addCommand(new RecoverItemsCommand(this));
+        commandHandler.addCommand(new ConfigReloadCommand(this));
+        commandHandler.addCommand(new HelpCommand(this));
+        commandHandler.addCommand(new AdminExpCommand(this));
+        commandHandler.addCommand(new AdminClassCommand(this));
 
         // Page 4
-        commandManager.addCommand(new AdminClassCommand(this));
-        commandManager.addCommand(new AdminHealthCommand(this));
-        commandManager.addCommand(new HealthCommand(this));
-        commandManager.addCommand(new LeaderboardCommand(this));
-        commandManager.addCommand(new HeroSaveCommand(this));
+        commandHandler.addCommand(new AdminHealthCommand(this));
+        commandHandler.addCommand(new HealthCommand(this));
+        commandHandler.addCommand(new LeaderboardCommand(this));
+        commandHandler.addCommand(new HeroSaveCommand(this));
     }
 
     /**

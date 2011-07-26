@@ -27,14 +27,12 @@ public class SkillSmoke extends ActiveSkill {
     private String expireText;
 
     public SkillSmoke(Heroes plugin) {
-        super(plugin);
-        setName("Smoke");
+        super(plugin, "Smoke");
         setDescription("You completely disappear from view");
         setUsage("/skill smoke");
-        setMinArgs(0);
-        setMaxArgs(0);
-        getIdentifiers().add("skill smoke");
-        getNotes().add("Note: Taking damage removes the effect");
+        setArgumentRange(0, 0);
+        setIdentifiers(new String[] { "skill smoke" });
+        setNotes(new String[] { "Note: Taking damage removes the effect" });
 
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
     }
@@ -71,7 +69,7 @@ public class SkillSmoke extends ActiveSkill {
         public void onEntityDamage(EntityDamageEvent event) {
             if (event.getEntity() instanceof Player) {
                 Player player = (Player) event.getEntity();
-                Hero hero = plugin.getHeroManager().getHero(player);
+                Hero hero = getPlugin().getHeroManager().getHero(player);
                 if (hero.hasEffect("Smoke")) {
                     hero.removeEffect(hero.getEffect("Smoke"));
                 }
@@ -85,7 +83,7 @@ public class SkillSmoke extends ActiveSkill {
         public void onPlayerInteract(PlayerInteractEvent event) {
             if (event.getAction() != Action.PHYSICAL) {
                 Player player = event.getPlayer();
-                Hero hero = plugin.getHeroManager().getHero(player);
+                Hero hero = getPlugin().getHeroManager().getHero(player);
                 if (hero.hasEffect("Smoke")) {
                     hero.removeEffect(hero.getEffect("Smoke"));
                 }
@@ -105,7 +103,7 @@ public class SkillSmoke extends ActiveSkill {
             Player player = hero.getPlayer();
             CraftPlayer craftPlayer = (CraftPlayer) hero.getPlayer();
             // Tell all the logged in Clients to Destroy the Entity - Appears Invisible.
-            final Player[] players = plugin.getServer().getOnlinePlayers();
+            final Player[] players = getPlugin().getServer().getOnlinePlayers();
             for (Player onlinePlayer : players) {
                 CraftPlayer hostilePlayer = (CraftPlayer) onlinePlayer;
                 hostilePlayer.getHandle().netServerHandler.sendPacket(new Packet29DestroyEntity(craftPlayer.getEntityId()));
@@ -118,7 +116,7 @@ public class SkillSmoke extends ActiveSkill {
         public void remove(Hero hero) {
             Player player = hero.getPlayer();
             EntityHuman entity = ((CraftPlayer) player).getHandle();
-            final Player[] players = plugin.getServer().getOnlinePlayers();
+            final Player[] players = getPlugin().getServer().getOnlinePlayers();
             for (Player onlinePlayer : players) {
                 if (onlinePlayer.equals(player)) {
                     continue;

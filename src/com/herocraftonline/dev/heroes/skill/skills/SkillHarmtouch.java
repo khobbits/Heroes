@@ -15,13 +15,11 @@ import com.herocraftonline.dev.heroes.util.Messaging;
 public class SkillHarmtouch extends TargettedSkill {
 
     public SkillHarmtouch(Heroes plugin) {
-        super(plugin);
-        setName("Harmtouch");
+        super(plugin, "Harmtouch");
         setDescription("Deals direct damage to the target");
         setUsage("/skill harmtouch [target]");
-        setMinArgs(0);
-        setMaxArgs(1);
-        getIdentifiers().add("skill harmtouch");
+        setArgumentRange(0, 1);
+        setIdentifiers(new String[] { "skill harmtouch" });
     }
 
     @Override
@@ -41,10 +39,10 @@ public class SkillHarmtouch extends TargettedSkill {
 
         int damage = getSetting(hero.getHeroClass(), "damage", 10);
         EntityDamageByEntityEvent damageEntityEvent = new EntityDamageByEntityEvent(player, target, DamageCause.CUSTOM, damage);
-        plugin.getServer().getPluginManager().callEvent(damageEntityEvent);
+        getPlugin().getServer().getPluginManager().callEvent(damageEntityEvent);
         if (damageEntityEvent.isCancelled())
             return false;
-        plugin.getDamageManager().addSpellTarget((Entity) target);
+        getPlugin().getDamageManager().addSpellTarget((Entity) target);
         target.damage(damage, player);
         broadcastExecuteText(hero, target);
         return true;

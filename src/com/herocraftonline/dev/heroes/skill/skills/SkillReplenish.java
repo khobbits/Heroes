@@ -8,13 +8,11 @@ import com.herocraftonline.dev.heroes.util.Messaging;
 public class SkillReplenish extends ActiveSkill {
 
     public SkillReplenish(Heroes plugin) {
-        super(plugin);
-        setName("Replenish");
+        super(plugin, "Replenish");
         setDescription("Brings your mana back to full");
         setUsage("/skill replenish");
-        setMinArgs(0);
-        setMaxArgs(0);
-        getIdentifiers().add("skill replenish");
+        setArgumentRange(0, 0);
+        setIdentifiers(new String[] { "skill replenish" });
     }
 
     @Override

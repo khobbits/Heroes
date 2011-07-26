@@ -21,13 +21,11 @@ public class SkillSafefall extends ActiveSkill {
     private String expireText;
 
     public SkillSafefall(Heroes plugin) {
-        super(plugin);
-        setName("Safefall");
+        super(plugin, "Safefall");
         setDescription("Stops you from taking fall damage for a short amount of time");
         setUsage("/skill safefall");
-        setMinArgs(0);
-        setMaxArgs(0);
-        getIdentifiers().add("skill safefall");
+        setArgumentRange(0, 0);
+        setIdentifiers(new String[] { "skill safefall" });
 
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
     }
@@ -89,7 +87,7 @@ public class SkillSafefall extends ActiveSkill {
             Entity defender = event.getEntity();
             if (defender instanceof Player) {
                 Player player = (Player) defender;
-                Hero hero = plugin.getHeroManager().getHero(player);
+                Hero hero = getPlugin().getHeroManager().getHero(player);
                 if (hero.hasEffect("Safefall")) {
                     event.setCancelled(true);
                 }

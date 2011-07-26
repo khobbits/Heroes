@@ -14,13 +14,11 @@ import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 public class SkillSummonArrow extends ActiveSkill {
 
     public SkillSummonArrow(Heroes plugin) {
-        super(plugin);
-        setName("SummonArrow");
+        super(plugin, "SummonArrow");
         setDescription("Summons you some arrows!");
         setUsage("/skill summonarrow");
-        setMinArgs(0);
-        setMaxArgs(0);
-        getIdentifiers().add("skill summonarrow");
+        setArgumentRange(0, 0);
+        setIdentifiers(new String[] { "skill summonarrow" });
     }
 
     @Override

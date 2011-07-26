@@ -11,13 +11,11 @@ import com.herocraftonline.dev.heroes.util.Messaging;
 public class SkillTeleport extends ActiveSkill {
 
     public SkillTeleport(Heroes plugin) {
-        super(plugin);
-        setName("Teleport");
+        super(plugin, "Teleport");
         setDescription("Teleports you to (roughly) to your party member!");
         setUsage("/skill teleport <player>");
-        setMinArgs(1);
-        setMaxArgs(1);
-        getIdentifiers().add("skill teleport");
+        setArgumentRange(1, 1);
+        setIdentifiers(new String[] { "skill teleport" });
     }
 
     @Override
@@ -28,13 +26,13 @@ public class SkillTeleport extends ActiveSkill {
             return false;
         }
 
-        Player targetPlayer = plugin.getServer().getPlayer(args[0]);
+        Player targetPlayer = getPlugin().getServer().getPlayer(args[0]);
         if (targetPlayer == null) {
             Messaging.send(player, "Sorry, that player doesn't exist!");
             return false;
         }
 
-        if (!hero.getParty().isPartyMember(plugin.getHeroManager().getHero(targetPlayer))) {
+        if (!hero.getParty().isPartyMember(getPlugin().getHeroManager().getHero(targetPlayer))) {
             Messaging.send(player, "Sorry, that player isn't in your party!");
             return false;
         }

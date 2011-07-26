@@ -11,13 +11,11 @@ import com.herocraftonline.dev.heroes.util.Messaging;
 public class SkillLayhands extends TargettedSkill {
 
     public SkillLayhands(Heroes plugin) {
-        super(plugin);
-        setName("Layhands");
+        super(plugin, "Layhands");
         setDescription("Heals the target to full");
         setUsage("/skill layhands [target]");
-        setMinArgs(0);
-        setMaxArgs(1);
-        getIdentifiers().add("skill layhands");
+        setArgumentRange(0, 1);
+        setIdentifiers(new String[] { "skill layhands" });
     }
 
     @Override
@@ -27,7 +25,7 @@ public class SkillLayhands extends TargettedSkill {
             return false;
         }
 
-        Hero targetHero = plugin.getHeroManager().getHero((Player) target);
+        Hero targetHero = getPlugin().getHeroManager().getHero((Player) target);
 
         targetHero.setHealth(targetHero.getMaxHealth());
         targetHero.syncHealth();

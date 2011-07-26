@@ -17,13 +17,11 @@ import com.herocraftonline.dev.heroes.util.Messaging;
 public class SkillPort extends ActiveSkill {
 
     public SkillPort(Heroes plugin) {
-        super(plugin);
-        setName("Port");
+        super(plugin, "Port");
         setDescription("Teleports you and your nearby party to the set location!");
         setUsage("/skill port <location>");
-        setMinArgs(1);
-        setMaxArgs(1);
-        getIdentifiers().add("skill port");
+        setArgumentRange(1, 1);
+        setIdentifiers(new String[] { "skill port" });
     }
 
     @Override
@@ -63,8 +61,8 @@ public class SkillPort extends ActiveSkill {
             for (Entity n : surrounding) {
                 if (n instanceof Player) {
                     Player playerN = (Player) n;
-                    if (plugin.getHeroManager().getHero(playerN).getParty() != null) {
-                        if (plugin.getHeroManager().getHero(playerN).getParty().isPartyMember(hero)) {
+                    if (getPlugin().getHeroManager().getHero(playerN).getParty() != null) {
+                        if (getPlugin().getHeroManager().getHero(playerN).getParty().isPartyMember(hero)) {
                             playerN.teleport(new Location(hero.getPlayer().getWorld(), Double.parseDouble(splitArg[0]), Double.parseDouble(splitArg[1]), Double.parseDouble(splitArg[2])));
                         }
                     }

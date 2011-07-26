@@ -15,13 +15,11 @@ import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 public class SkillHellgate extends ActiveSkill {
 
     public SkillHellgate(Heroes plugin) {
-        super(plugin);
-        setName("Hellgate");
+        super(plugin, "Hellgate");
         setDescription("Teleports you and your nearby party to or from the nether - 5 bones");
         setUsage("/skill hellgate");
-        setMinArgs(0);
-        setMaxArgs(0);
-        getIdentifiers().add("skill hellgate");
+        setArgumentRange(0, 0);
+        setIdentifiers(new String[] { "skill hellgate" });
     }
 
     @Override
@@ -32,9 +30,9 @@ public class SkillHellgate extends ActiveSkill {
         for (Entity n : entityList) {
             if (n instanceof Player) {
                 Player nPlayer = (Player) n;
-                Hero nHero = plugin.getHeroManager().getHero(nPlayer);
+                Hero nHero = getPlugin().getHeroManager().getHero(nPlayer);
                 if (nHero.getParty() == hero.getParty()) {
-                    List<World> worlds = plugin.getServer().getWorlds();
+                    List<World> worlds = getPlugin().getServer().getWorlds();
                     for (World w : worlds) {
                         if (w.getEnvironment() == Environment.NETHER) {
                             nPlayer.teleport(new Location(w, nPlayer.getLocation().getX(), nPlayer.getLocation().getY(), nPlayer.getLocation().getZ()));

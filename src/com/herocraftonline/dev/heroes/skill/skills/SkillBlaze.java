@@ -16,13 +16,11 @@ import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 public class SkillBlaze extends ActiveSkill {
 
     public SkillBlaze(Heroes plugin) {
-        super(plugin);
-        setName("Blaze");
+        super(plugin, "Blaze");
         setDescription("Sets everyone around you on fire");
         setUsage("/skill blaze");
-        setMinArgs(0);
-        setMaxArgs(0);
-        getIdentifiers().add("skill blaze");
+        setArgumentRange(0, 0);
+        setIdentifiers(new String[] { "skill blaze" });
     }
 
     @Override

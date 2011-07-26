@@ -11,13 +11,11 @@ import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 public class SkillManaburn extends TargettedSkill {
 
     public SkillManaburn(Heroes plugin) {
-        super(plugin);
-        setName("Manaburn");
+        super(plugin, "Manaburn");
         setDescription("Burns the targets mana");
         setUsage("/skill manaburn");
-        setMinArgs(0);
-        setMaxArgs(1);
-        getIdentifiers().add("skill manaburn");
+        setArgumentRange(0, 1);
+        setIdentifiers(new String[] { "skill manaburn" });
     }
 
     @Override
@@ -31,7 +29,7 @@ public class SkillManaburn extends TargettedSkill {
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         if (!(target instanceof Player))
             return false;
-        Hero tHero = plugin.getHeroManager().getHero((Player) target);
+        Hero tHero = getPlugin().getHeroManager().getHero((Player) target);
         if (tHero == null)
             return false;
         int transferamount = getSetting(hero.getHeroClass(), "transfer-amount", 20);

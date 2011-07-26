@@ -22,13 +22,11 @@ public class SkillSafefallOther extends TargettedSkill {
     private String expireText;
 
     public SkillSafefallOther(Heroes plugin) {
-        super(plugin);
-        setName("SafefallOther");
+        super(plugin, "SafefallOther");
         setDescription("Stops your target from taking fall damage for a short amount of time");
         setUsage("/skill safefallother <target>");
-        setMinArgs(0);
-        setMaxArgs(1);
-        getIdentifiers().add("skill safefallother");
+        setArgumentRange(0, 1);
+        setIdentifiers(new String[] { "skill safefallother" });
 
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
     }
@@ -52,7 +50,7 @@ public class SkillSafefallOther extends TargettedSkill {
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         if (target instanceof Player) {
-            Hero targetHero = plugin.getHeroManager().getHero((Player) target);
+            Hero targetHero = getPlugin().getHeroManager().getHero((Player) target);
 
             broadcastExecuteText(hero, target);
 
@@ -95,7 +93,7 @@ public class SkillSafefallOther extends TargettedSkill {
             Entity defender = event.getEntity();
             if (defender instanceof Player) {
                 Player player = (Player) defender;
-                Hero hero = plugin.getHeroManager().getHero(player);
+                Hero hero = getPlugin().getHeroManager().getHero(player);
                 if (hero.hasEffect("Safefall")) {
                     event.setCancelled(true);
                 }

@@ -16,13 +16,11 @@ import com.herocraftonline.dev.heroes.util.Messaging;
 public class SkillBarrage extends ActiveSkill {
 
     public SkillBarrage(Heroes plugin) {
-        super(plugin);
-        setName("Barrage");
+        super(plugin, "Barrage");
         setDescription("Fire a Barrage of Arrows around you.");
         setUsage("/skill barrage");
-        setMinArgs(0);
-        setMaxArgs(0);
-        getIdentifiers().add("skill barrage");
+        setArgumentRange(0, 0);
+        setIdentifiers(new String[] { "skill barrage" });
     }
 
     @SuppressWarnings("deprecation")

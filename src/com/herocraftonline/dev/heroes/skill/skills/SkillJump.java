@@ -11,13 +11,11 @@ public class SkillJump extends ActiveSkill {
 
     // TODO: Register this command in Heroes
     public SkillJump(Heroes plugin) {
-        super(plugin);
-        setName("Jump");
+        super(plugin, "Jump");
         setDescription("Launches you into the air");
         setUsage("/skill jump");
-        setMinArgs(0);
-        setMaxArgs(0);
-        getIdentifiers().add("skill jump");
+        setArgumentRange(0, 0);
+        setIdentifiers(new String[] { "skill jump" });
     }
 
     @Override

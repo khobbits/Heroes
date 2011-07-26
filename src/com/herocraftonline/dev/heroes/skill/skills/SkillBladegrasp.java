@@ -22,13 +22,11 @@ public class SkillBladegrasp extends ActiveSkill {
     private String parryText;
 
     public SkillBladegrasp(Heroes plugin) {
-        super(plugin);
-        setName("Bladegrasp");
+        super(plugin, "Bladegrasp");
         setDescription("Blocks incoming melee damage");
         setUsage("/skill bladegrasp");
-        setMinArgs(0);
-        setMaxArgs(0);
-        getIdentifiers().add("skill bladegrasp");
+        setArgumentRange(0, 0);
+        setIdentifiers(new String[] { "skill bladegrasp" });
 
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
     }
@@ -88,7 +86,7 @@ public class SkillBladegrasp extends ActiveSkill {
             Entity defender = event.getEntity();
             if (defender instanceof Player) {
                 Player player = (Player) defender;
-                Hero hero = plugin.getHeroManager().getHero(player);
+                Hero hero = getPlugin().getHeroManager().getHero(player);
                 if (hero.hasEffect(getName())) {
                     if (event.getCause() == DamageCause.ENTITY_ATTACK || event.getCause() == DamageCause.ENTITY_EXPLOSION) {
                         event.setCancelled(true);

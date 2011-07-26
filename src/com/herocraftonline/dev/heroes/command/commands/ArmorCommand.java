@@ -7,57 +7,60 @@ import org.bukkit.entity.Player;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
-import com.herocraftonline.dev.heroes.command.BaseCommand;
+import com.herocraftonline.dev.heroes.command.BasicCommand;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.util.MaterialUtil;
 
-public class ArmorCommand extends BaseCommand {
+public class ArmorCommand extends BasicCommand {
+
+    private final Heroes plugin;
 
     public ArmorCommand(Heroes plugin) {
-        super(plugin);
-        setName("Armor");
+        super("Armor");
+        this.plugin = plugin;
         setDescription("Displays armor available for your class");
         setUsage("/hero armor");
-        setMinArgs(0);
-        setMaxArgs(0);
-        getIdentifiers().add("hero armor");
+        setArgumentRange(0, 0);
+        setIdentifiers(new String[] { "hero armor" });
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args) {
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
-            Hero hero = plugin.getHeroManager().getHero(player);
-            HeroClass heroClass = hero.getHeroClass();
+    public boolean execute(CommandSender sender, String identifier, String[] args) {
+        if (!(sender instanceof Player)) return false;
 
-            Set<String> allArmors = heroClass.getAllowedArmor();
-            String[] categories = { "Helmet", "Chestplate", "Leggings", "Boots" };
-            String[] categorizedArmors = new String[categories.length];
+        Player player = (Player) sender;
+        Hero hero = plugin.getHeroManager().getHero(player);
+        HeroClass heroClass = hero.getHeroClass();
 
+        Set<String> allArmors = heroClass.getAllowedArmor();
+        String[] categories = { "Helmet", "Chestplate", "Leggings", "Boots" };
+        String[] categorizedArmors = new String[categories.length];
+
+        for (int i = 0; i < categories.length; i++) {
+            categorizedArmors[i] = "";
+        }
+
+        for (String armor : allArmors) {
             for (int i = 0; i < categories.length; i++) {
-                categorizedArmors[i] = "";
-            }
-
-            for (String armor : allArmors) {
-                for (int i = 0; i < categories.length; i++) {
-                    if (armor.endsWith(categories[i].toUpperCase())) {
-                        categorizedArmors[i] += MaterialUtil.getFriendlyName(armor).split(" ")[0] + ", ";
-                        break;
-                    }
+                if (armor.endsWith(categories[i].toUpperCase())) {
+                    categorizedArmors[i] += MaterialUtil.getFriendlyName(armor).split(" ")[0] + ", ";
+                    break;
                 }
-            }
-
-            for (int i = 0; i < categories.length; i++) {
-                if (!categorizedArmors[i].isEmpty()) {
-                    categorizedArmors[i] = categorizedArmors[i].substring(0, categorizedArmors[i].length() - 2);
-                }
-            }
-
-            sender.sendMessage("§c--------[ §fAllowed Armor§c ]--------");
-            for (int i = 0; i < categories.length; i++) {
-                player.sendMessage("  §a" + categories[i] + ": §f" + categorizedArmors[i]);
             }
         }
+
+        for (int i = 0; i < categories.length; i++) {
+            if (!categorizedArmors[i].isEmpty()) {
+                categorizedArmors[i] = categorizedArmors[i].substring(0, categorizedArmors[i].length() - 2);
+            }
+        }
+
+        sender.sendMessage("§c--------[ §fAllowed Armor§c ]--------");
+        for (int i = 0; i < categories.length; i++) {
+            player.sendMessage("  §a" + categories[i] + ": §f" + categorizedArmors[i]);
+        }
+        
+        return true;
     }
 
 }

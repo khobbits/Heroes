@@ -17,13 +17,11 @@ import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 public class SkillBolt extends TargettedSkill {
 
     public SkillBolt(Heroes plugin) {
-        super(plugin);
-        setName("Bolt");
+        super(plugin, "Bolt");
         setDescription("Calls a bolt of thunder down on the target");
         setUsage("/skill bolt [target]");
-        setMinArgs(0);
-        setMaxArgs(1);
-        getIdentifiers().add("skill bolt");
+        setArgumentRange(0, 1);
+        setIdentifiers(new String[] { "skill bolt" });
     }
 
     @Override
@@ -41,7 +39,7 @@ public class SkillBolt extends TargettedSkill {
             return false;
 
         EntityDamageByEntityEvent damageEntityEvent = new EntityDamageByEntityEvent(player, target, DamageCause.CUSTOM, 0);
-        plugin.getServer().getPluginManager().callEvent(damageEntityEvent);
+        getPlugin().getServer().getPluginManager().callEvent(damageEntityEvent);
         if (damageEntityEvent.isCancelled())
             return false;
 
@@ -52,7 +50,7 @@ public class SkillBolt extends TargettedSkill {
                 if (entity != player) {
                     // Throw a dummy damage event to make it obey PvP restricting plugins
                     EntityDamageEvent event = new EntityDamageByEntityEvent(player, target, DamageCause.ENTITY_ATTACK, 0);
-                    plugin.getServer().getPluginManager().callEvent(event);
+                    getPlugin().getServer().getPluginManager().callEvent(event);
                     if (!event.isCancelled()) {
                         target.getWorld().strikeLightning(entity.getLocation());
                     }

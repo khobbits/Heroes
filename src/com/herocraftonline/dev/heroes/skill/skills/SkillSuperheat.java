@@ -23,13 +23,11 @@ public class SkillSuperheat extends ActiveSkill {
     private String expireText;
 
     public SkillSuperheat(Heroes plugin) {
-        super(plugin);
-        setName("Superheat");
+        super(plugin, "Superheat");
         setDescription("Your pickaxe becomes superheated");
         setUsage("/skill superheat");
-        setMinArgs(0);
-        setMaxArgs(0);
-        getIdentifiers().add("skill superheat");
+        setArgumentRange(0, 0);
+        setIdentifiers(new String[] { "skill superheat" });
 
         registerEvent(Type.BLOCK_BREAK, playerListener, Priority.Normal);
     }
@@ -66,7 +64,7 @@ public class SkillSuperheat extends ActiveSkill {
         public void onBlockBreak(BlockBreakEvent event) {
             Block block = event.getBlock();
             Player player = event.getPlayer();
-            Hero hero = plugin.getHeroManager().getHero(player);
+            Hero hero = getPlugin().getHeroManager().getHero(player);
             if (hero.hasEffect("Superheat")) {
                 switch (block.getType()) {
                     case IRON_ORE:

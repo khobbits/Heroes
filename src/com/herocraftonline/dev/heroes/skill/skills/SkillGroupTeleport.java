@@ -9,13 +9,11 @@ import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 public class SkillGroupTeleport extends ActiveSkill {
 
     public SkillGroupTeleport(Heroes plugin) {
-        super(plugin);
-        setName("GroupTeleport");
+        super(plugin, "GroupTeleport");
         setDescription("Summons your group to your location");
         setUsage("/skill groupteleport");
-        setMinArgs(0);
-        setMaxArgs(0);
-        getIdentifiers().add("skill groupteleport");
+        setArgumentRange(0, 0);
+        setIdentifiers(new String[] { "skill groupteleport" });
     }
 
     @Override

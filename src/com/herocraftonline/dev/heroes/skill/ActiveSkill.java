@@ -17,7 +17,8 @@ import com.herocraftonline.dev.heroes.util.Messaging;
 /**
  * A skill that performs an action in direct response to a user command. All skill identifiers <i>must</i>
  * begin with <i>skill</i>, e.g. "skill fireball", in order to be recognized. ActiveSkills define four default settings:
- * mana, cooldown, experience and usage text. Mana is deducted and a cooldown is activated when the {@link #use(Hero, String[]) use} method returns <code>true</code>. The {@link #execute(CommandSender, String[])
+ * mana, cooldown, experience and usage text. Mana is deducted and a cooldown is activated when the
+ * {@link #use(Hero, String[]) use} method returns <code>true</code>. The {@link #execute(CommandSender, String[])
  * execute} automatically handles class, level, mana and cooldown checks on a player attempting to use a skill and
  * should not be overridden. If all of these checks pass, the <code>use</code> method is called, which should contain
  * the heart of the skill's behavior that is unique to each skill.
@@ -63,75 +64,80 @@ public abstract class ActiveSkill extends Skill {
      * identifier must begin with <i>skill</i>.
      * 
      * @param plugin
-     *        the active Heroes instance
+     *            the active Heroes instance
      */
-    public ActiveSkill(Heroes plugin) {
-        super(plugin);
+    public ActiveSkill(Heroes plugin, String name) {
+        super(plugin, name);
     }
 
     /**
      * Called whenever a command with an identifier registered to this skill is used. This implementation performs all
      * necessary class, level, mana and cooldown checks. This method should <i>not</i> be overridden unless you really
-     * know what you're doing. If all checks pass, this method calls {@link #use(Hero, String[]) use}. If <code>use</code> returns <code>true</code>, this method automatically deducts mana, awards experience and sets a
+     * know what you're doing. If all checks pass, this method calls {@link #use(Hero, String[]) use}. If
+     * <code>use</code> returns <code>true</code>, this method automatically deducts mana, awards experience and sets a
      * cooldown.
      * 
      * @param sender
-     *        the <code>CommandSender</code> issuing the command
+     *            the <code>CommandSender</code> issuing the command
      * @param args
-     *        the arguments provided with the command
+     *            the arguments provided with the command
      */
     @Override
-    public void execute(CommandSender sender, String[] args) {
-        if (sender instanceof Player) {
-            String name = this.getName();
-            Player player = (Player) sender;
-            Hero hero = plugin.getHeroManager().getHero(player);
-            if (hero == null) {
-                Messaging.send(player, "You are not a hero.");
-                return;
+    public boolean execute(CommandSender sender, String identifier, String[] args) {
+        if (!(sender instanceof Player)) return false;
+
+        String name = this.getName();
+        Player player = (Player) sender;
+        Hero hero = getPlugin().getHeroManager().getHero(player);
+        if (hero == null) {
+            Messaging.send(player, "You are not a hero.");
+            return false;
+        }
+        HeroClass heroClass = hero.getHeroClass();
+        if (!heroClass.hasSkill(name) && !heroClass.hasSkill("*")) {
+            Messaging.send(player, "$1s cannot use $2.", heroClass.getName(), name);
+            return false;
+        }
+        int level = getSetting(heroClass, SETTING_LEVEL, 1);
+        if (hero.getLevel() < level) {
+            Messaging.send(player, "You must be level $1 to use $2.", String.valueOf(level), name);
+            return false;
+        }
+        int manaCost = getSetting(heroClass, SETTING_MANA, 0);
+        if (manaCost > hero.getMana()) {
+            Messaging.send(player, "Not enough mana!");
+            return false;
+        }
+        Map<String, Long> cooldowns = hero.getCooldowns();
+        long time = System.currentTimeMillis();
+        int cooldown = getSetting(heroClass, SETTING_COOLDOWN, 0);
+        if (cooldown > 0) {
+            Long expiry = cooldowns.get(name);
+            if (expiry != null) {
+                if (time < expiry) {
+                    long remaining = expiry - time;
+                    Messaging.send(hero.getPlayer(), "Sorry, $1 still has $2 seconds left on cooldown!", name, remaining / 1000);
+                    return false;
+                }
             }
-            HeroClass heroClass = hero.getHeroClass();
-            if (!heroClass.hasSkill(name) && !heroClass.hasSkill("*")) {
-                Messaging.send(player, "$1s cannot use $2.", heroClass.getName(), name);
-                return;
-            }
-            int level = getSetting(heroClass, SETTING_LEVEL, 1);
-            if (hero.getLevel() < level) {
-                Messaging.send(player, "You must be level $1 to use $2.", String.valueOf(level), name);
-                return;
-            }
-            int manaCost = getSetting(heroClass, SETTING_MANA, 0);
-            if (manaCost > hero.getMana()) {
-                Messaging.send(player, "Not enough mana!");
-                return;
-            }
-            Map<String, Long> cooldowns = hero.getCooldowns();
-            long time = System.currentTimeMillis();
-            int cooldown = getSetting(heroClass, SETTING_COOLDOWN, 0);
+        }
+        if (use(hero, args)) {
             if (cooldown > 0) {
-                Long expiry = cooldowns.get(name);
-                if (expiry != null) {
-                    if (time < expiry) {
-                        long remaining = expiry - time;
-                        Messaging.send(hero.getPlayer(), "Sorry, $1 still has $2 seconds left on cooldown!", name, remaining / 1000);
-                        return;
-                    }
-                }
+                cooldowns.put(name, time + cooldown);
             }
-            if (use(hero, args)) {
-                if (cooldown > 0) {
-                    cooldowns.put(name, time + cooldown);
-                }
 
-                if (this.awardExpOnCast) {
-                    this.awardExp(hero);
-                }
-
-                hero.setMana(hero.getMana() - manaCost);
-                if (hero.isVerbose() && manaCost > 0) {
-                    Messaging.send(hero.getPlayer(), ChatColor.BLUE + "MANA " + Messaging.createManaBar(hero.getMana()));
-                }
+            if (this.awardExpOnCast) {
+                this.awardExp(hero);
             }
+
+            hero.setMana(hero.getMana() - manaCost);
+            if (hero.isVerbose() && manaCost > 0) {
+                Messaging.send(hero.getPlayer(), ChatColor.BLUE + "MANA " + Messaging.createManaBar(hero.getMana()));
+            }
+
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -149,7 +155,8 @@ public abstract class ActiveSkill extends Skill {
     }
 
     /**
-     * Returns the text to be displayed when the skill is successfully used. This text is pulled from the {@link #SETTING_USETEXT} entry in the skill's configuration during initialization.
+     * Returns the text to be displayed when the skill is successfully used. This text is pulled from the
+     * {@link #SETTING_USETEXT} entry in the skill's configuration during initialization.
      * 
      * @return the usage text
      */
@@ -172,19 +179,20 @@ public abstract class ActiveSkill extends Skill {
      * Changes the stored usage text. This can be used to override the message found in the skill's configuration.
      * 
      * @param useText
-     *        the new usage text
+     *            the new usage text
      */
     public void setUseText(String useText) {
         this.useText = useText;
     }
 
     /**
-     * The heart of any ActiveSkill, this method defines what actually happens when the skill is used. See {@link #execute(CommandSender, String[]) execute} for a brief explanation of the execution process.
+     * The heart of any ActiveSkill, this method defines what actually happens when the skill is used. See
+     * {@link #execute(CommandSender, String[]) execute} for a brief explanation of the execution process.
      * 
      * @param hero
-     *        the {@link Hero} using the skill
+     *            the {@link Hero} using the skill
      * @param args
-     *        the arguments provided with the command
+     *            the arguments provided with the command
      * @return <code>true</code> if the skill executed properly, <code>false</code> otherwise
      */
     public abstract boolean use(Hero hero, String[] args);

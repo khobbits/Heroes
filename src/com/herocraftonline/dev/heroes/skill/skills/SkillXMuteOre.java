@@ -19,13 +19,11 @@ import com.herocraftonline.dev.heroes.util.Messaging;
 public class SkillXMuteOre extends ActiveSkill {
 
     public SkillXMuteOre(Heroes plugin) {
-        super(plugin);
-        setName("XMuteOre");
+        super(plugin, "XMuteOre");
         setDescription("Transmutes ores into more valuable ones");
         setUsage("/skill xmuteore");
-        setMinArgs(0);
-        setMaxArgs(0);
-        getIdentifiers().add("skill xmuteore");
+        setArgumentRange(0, 0);
+        setIdentifiers(new String[] { "skill xmuteore" });
     }
 
     @Override

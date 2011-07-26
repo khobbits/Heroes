@@ -21,13 +21,11 @@ public class SkillOne extends ActiveSkill {
     private String expireText;
 
     public SkillOne(Heroes plugin) {
-        super(plugin);
-        setName("One");
+        super(plugin, "One");
         setDescription("Provides a short burst of speed");
         setUsage("/skill one");
-        setMinArgs(0);
-        setMaxArgs(0);
-        getIdentifiers().add("skill one");
+        setArgumentRange(0, 0);
+        setIdentifiers(new String[] { "skill one" });
 
         registerEvent(Type.PLAYER_MOVE, new SkillPlayerListener(), Priority.Normal);
     }
@@ -85,7 +83,7 @@ public class SkillOne extends ActiveSkill {
         @Override
         public void onPlayerMove(PlayerMoveEvent event) {
             Player player = event.getPlayer();
-            Hero hero = plugin.getHeroManager().getHero(player);
+            Hero hero = getPlugin().getHeroManager().getHero(player);
 
             if (hero.hasEffect("One")) {
                 double speed = getSetting(hero.getHeroClass(), "speed", 0.7);
