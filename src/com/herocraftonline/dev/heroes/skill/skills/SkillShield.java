@@ -17,11 +17,9 @@ import com.herocraftonline.dev.heroes.skill.PassiveSkill;
 public class SkillShield extends PassiveSkill {
 
     public SkillShield(Heroes plugin) {
-        super(plugin);
-        setName("Shield");
+        super(plugin, "Shield");
         setDescription("Your shield absorbs damage!");
-        setMinArgs(0);
-        setMaxArgs(0);
+        setArgumentRange(0, 0);
 
         registerEvent(Type.ENTITY_DAMAGE, new SkillPlayerListener(), Priority.High);
     }
@@ -45,7 +43,7 @@ public class SkillShield extends PassiveSkill {
                 EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
                 if (subEvent.getEntity() instanceof Player) {
                     Player player = (Player) subEvent.getEntity();
-                    Hero hero = plugin.getHeroManager().getHero(player);
+                    Hero hero = getPlugin().getHeroManager().getHero(player);
                     if (hero.hasEffect(getName())) {
                         double multiplier = 1;
                         if (player.getItemInHand().getType() == Material.IRON_DOOR) {

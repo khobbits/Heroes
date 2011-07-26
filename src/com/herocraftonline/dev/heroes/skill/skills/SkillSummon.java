@@ -21,13 +21,11 @@ import com.herocraftonline.dev.heroes.util.Messaging;
 public class SkillSummon extends ActiveSkill {
 
     public SkillSummon(Heroes plugin) {
-        super(plugin);
-        setName("Summon");
+        super(plugin, "Summon");
         setDescription("Summons a creature to fight by your side");
         setUsage("/skill summon <creature>");
-        setMinArgs(1);
-        setMaxArgs(1);
-        getIdentifiers().add("skill summon");
+        setArgumentRange(1, 1);
+        setIdentifiers(new String[] { "skill summon" });
     }
 
     @Override
@@ -60,7 +58,7 @@ public class SkillSummon extends ActiveSkill {
         @Override
         public void onEntityDeath(EntityDeathEvent event) {
             Entity defender = event.getEntity();
-            Set<Hero> heroes = plugin.getHeroManager().getHeroes();
+            Set<Hero> heroes = getPlugin().getHeroManager().getHeroes();
             for (Hero hero : heroes) {
                 if (hero.getSummons().containsKey(defender)) {
                     hero.getSummons().remove(defender);
@@ -72,7 +70,7 @@ public class SkillSummon extends ActiveSkill {
         @Override
         public void onEntityTarget(EntityTargetEvent event) {
             if (event.getTarget() instanceof Player) {
-                Set<Hero> heroes = plugin.getHeroManager().getHeroes();
+                Set<Hero> heroes = getPlugin().getHeroManager().getHeroes();
                 for (Hero hero : heroes) {
                     if (hero.getSummons().containsKey(event.getEntity())) {
                         if (hero.getPlayer() == event.getTarget()) {

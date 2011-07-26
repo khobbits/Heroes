@@ -15,13 +15,11 @@ import com.herocraftonline.dev.heroes.util.Messaging;
 public class SkillBandage extends TargettedSkill {
 
     public SkillBandage(Heroes plugin) {
-        super(plugin);
-        setName("Bandage");
+        super(plugin, "Bandage");
         setDescription("Bandages the target");
         setUsage("/skill bandage <target>");
-        setMinArgs(0);
-        setMaxArgs(1);
-        getIdentifiers().add("skill bandage");
+        setArgumentRange(0, 1);
+        setIdentifiers(new String[] { "skill bandage" });
     }
 
     @Override
@@ -36,7 +34,7 @@ public class SkillBandage extends TargettedSkill {
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
         if (target instanceof Player) {
-            Hero targetHero = plugin.getHeroManager().getHero((Player) target);
+            Hero targetHero = getPlugin().getHeroManager().getHero((Player) target);
             int hpPlus = getSetting(hero.getHeroClass(), "health", 5);
             double targetHealth = targetHero.getHealth();
 

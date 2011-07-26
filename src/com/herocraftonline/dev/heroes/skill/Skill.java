@@ -13,7 +13,7 @@ import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
-import com.herocraftonline.dev.heroes.command.BaseCommand;
+import com.herocraftonline.dev.heroes.command.BasicCommand;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.util.Messaging;
 
@@ -33,13 +33,14 @@ import com.herocraftonline.dev.heroes.util.Messaging;
  * <li>{@link PassiveSkill}</li> <li>{@link OutsourcedSkill}</li> </ul>
  * <b>Note:</b> All skill identifiers <i>must</i> begin with <i>skill</i>, e.g. "skill fireball".
  */
-public abstract class Skill extends BaseCommand {
+public abstract class Skill extends BasicCommand {
 
     /**
      * Identifier used to store level requirement setting
      */
     public static final String SETTING_LEVEL = "level";
 
+    private final Heroes plugin;
     private ConfigurationNode config;
 
     /**
@@ -57,8 +58,13 @@ public abstract class Skill extends BaseCommand {
      * @param plugin
      *        the active Heroes instance
      */
-    public Skill(Heroes plugin) {
-        super(plugin);
+    public Skill(Heroes plugin, String name) {
+        super(name);
+        this.plugin = plugin;
+    }
+    
+    public final Heroes getPlugin() {
+        return plugin;
     }
 
     /**
@@ -103,7 +109,7 @@ public abstract class Skill extends BaseCommand {
      *        the arguments provided with the command
      */
     @Override
-    public abstract void execute(CommandSender sender, String[] args);
+    public abstract boolean execute(CommandSender sender, String identifier, String[] args);
 
     /**
      * Creates and returns a <code>ConfigurationNode</code> containing all the default data for the skill. By default,
@@ -203,6 +209,11 @@ public abstract class Skill extends BaseCommand {
      */
     protected void registerEvent(Type type, Listener listener, Priority priority) {
         plugin.getServer().getPluginManager().registerEvent(type, listener, priority, plugin);
+    }
+   
+    @Override
+    public boolean isShownOnHelpMenu() {
+        return false;
     }
 
 }

@@ -22,13 +22,11 @@ public class SkillReflect extends ActiveSkill {
     private String expireText;
 
     public SkillReflect(Heroes plugin) {
-        super(plugin);
-        setName("Reflect");
+        super(plugin, "Reflect");
         setDescription("Reflects all the damage done to you back to your target");
         setUsage("/skill reflect");
-        setMinArgs(0);
-        setMaxArgs(0);
-        getIdentifiers().add("skill reflect");
+        setArgumentRange(0, 0);
+        setIdentifiers(new String[] { "skill reflect" });
 
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
     }
@@ -93,18 +91,18 @@ public class SkillReflect extends ActiveSkill {
             Entity attacker = edbe.getDamager();
             if (attacker instanceof LivingEntity && defender instanceof Player) {
                 Player defPlayer = (Player) defender;
-                Hero hero = plugin.getHeroManager().getHero(defPlayer);
+                Hero hero = getPlugin().getHeroManager().getHero(defPlayer);
                 if (hero.hasEffect("Reflect")) {
                     if (attacker instanceof Player) {
                         Player attPlayer = (Player) attacker;
-                        if (plugin.getHeroManager().getHero(attPlayer).hasEffect(getName())) {
+                        if (getPlugin().getHeroManager().getHero(attPlayer).hasEffect(getName())) {
                             event.setCancelled(true);
                             return;
                         }
                     }
                     LivingEntity attEntity = (LivingEntity) attacker;
                     int damage = (int) (event.getDamage() * getSetting(hero.getHeroClass(), "reflected-amount", 0.5));
-                    plugin.getDamageManager().addSpellTarget((Entity) attacker);
+                    getPlugin().getDamageManager().addSpellTarget((Entity) attacker);
                     attEntity.damage(damage, defender);
                 }
             }

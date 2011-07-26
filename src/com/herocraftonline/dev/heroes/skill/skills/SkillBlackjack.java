@@ -39,13 +39,11 @@ public class SkillBlackjack extends ActiveSkill {
     private Random random = new Random();
 
     public SkillBlackjack(Heroes plugin) {
-        super(plugin);
-        setName("Blackjack");
+        super(plugin, "Blackjack");
         setDescription("Occasionally stuns your opponent");
         setUsage("/skill blackjack");
-        setMinArgs(0);
-        setMaxArgs(0);
-        getIdentifiers().add("skill blackjack");
+        setArgumentRange(0, 0);
+        setIdentifiers(new String[] { "skill blackjack" });
 
         registerEvent(Type.ENTITY_DAMAGE, entityListener, Priority.Normal);
         registerEvent(Type.PLAYER_INTERACT, playerListener, Priority.Normal);
@@ -129,7 +127,7 @@ public class SkillBlackjack extends ActiveSkill {
                 if (!(defendingEntity instanceof Player))
                     return;
 
-                HeroManager heroManager = plugin.getHeroManager();
+                HeroManager heroManager = getPlugin().getHeroManager();
                 Hero attackingHero = heroManager.getHero((Player) attackingEntity);
                 Hero defendingHero = heroManager.getHero((Player) defendingEntity);
 
@@ -156,7 +154,7 @@ public class SkillBlackjack extends ActiveSkill {
 
         @Override
         public void onPlayerInteract(PlayerInteractEvent event) {
-            Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
+            Hero hero = getPlugin().getHeroManager().getHero(event.getPlayer());
             if (hero.hasEffect("Stun")) {
                 event.setCancelled(true);
             }

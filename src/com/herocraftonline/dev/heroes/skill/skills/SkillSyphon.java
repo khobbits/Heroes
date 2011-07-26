@@ -12,13 +12,11 @@ import com.herocraftonline.dev.heroes.util.Messaging;
 public class SkillSyphon extends TargettedSkill {
 
     public SkillSyphon(Heroes plugin) {
-        super(plugin);
-        setName("Syphon");
+        super(plugin, "Syphon");
         setDescription("Gives your health to the target");
         setUsage("/skill syphon [target] [health]");
-        setMinArgs(0);
-        setMaxArgs(2);
-        getIdentifiers().add("skill syphon");
+        setArgumentRange(0, 2);
+        setIdentifiers(new String[] { "skill syphon" });
     }
 
     @Override
@@ -37,7 +35,7 @@ public class SkillSyphon extends TargettedSkill {
             return false;
         }
 
-        Hero targetHero = plugin.getHeroManager().getHero((Player) target);
+        Hero targetHero = getPlugin().getHeroManager().getHero((Player) target);
 
         double transferredHealth = getSetting(hero.getHeroClass(), "default-health", 4);
         if (args.length == 2) {

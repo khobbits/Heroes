@@ -191,7 +191,7 @@ public class HeroClassManager {
             } else {
                 for (String skillName : skillNames) {
                     try {
-                        Skill skill = (Skill) plugin.getCommandManager().getCommand(skillName);
+                        Skill skill = (Skill) plugin.getCommandHandler().getCommand(skillName);
                         if (skill == null) {
                             plugin.log(Level.WARNING, "Skill " + skillName + " defined for " + className + " not found.");
                             continue;
@@ -222,7 +222,7 @@ public class HeroClassManager {
                         String usage = config.getString("classes." + className + ".permission-skills." + skill + ".usage", "");
                         String[] permissions = config.getStringList("classes." + className + ".permission-skills." + skill + ".permissions", null).toArray(new String[0]);
                         OutsourcedSkill oSkill = new OutsourcedSkill(plugin, skill, permissions, usage);
-                        plugin.getCommandManager().addCommand(oSkill);
+                        plugin.getCommandHandler().addCommand(oSkill);
                     } catch (IllegalArgumentException e) {
                         plugin.log(Level.WARNING, "Invalid permission skill (" + skill + ") defined for " + className + ". Skipping this skill.");
                     }

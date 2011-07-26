@@ -12,13 +12,11 @@ import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 public class SkillTaunt extends ActiveSkill {
 
     public SkillTaunt(Heroes plugin) {
-        super(plugin);
-        setName("Taunt");
+        super(plugin, "Taunt");
         setDescription("Taunts enemies around you");
         setUsage("/skill taunt");
-        setMinArgs(0);
-        setMaxArgs(0);
-        getIdentifiers().add("skill taunt");
+        setArgumentRange(0, 0);
+        setIdentifiers(new String[] { "skill taunt" });
     }
 
     @Override

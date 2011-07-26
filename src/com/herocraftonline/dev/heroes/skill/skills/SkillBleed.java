@@ -20,13 +20,11 @@ public class SkillBleed extends TargettedSkill {
     private String expireText;
 
     public SkillBleed(Heroes plugin) {
-        super(plugin);
-        setName("Bleed");
+        super(plugin, "Bleed");
         setDescription("Causes your target to bleed");
         setUsage("/skill bleed <target>");
-        setMinArgs(0);
-        setMaxArgs(1);
-        getIdentifiers().add("skill bleed");
+        setArgumentRange(0, 1);
+        setIdentifiers(new String[] { "skill bleed" });
     }
 
     @Override
@@ -56,7 +54,7 @@ public class SkillBleed extends TargettedSkill {
         }
 
         Player targetPlayer = (Player) target;
-        Hero targetHero = plugin.getHeroManager().getHero(targetPlayer);
+        Hero targetHero = getPlugin().getHeroManager().getHero(targetPlayer);
         if (targetHero.equals(hero)) {
             Messaging.send(player, "You need a target!");
             return false;
@@ -102,7 +100,7 @@ public class SkillBleed extends TargettedSkill {
             super.tick(hero);
 
             Player player = hero.getPlayer();
-            plugin.getDamageManager().addSpellTarget((Entity) applier);
+            getPlugin().getDamageManager().addSpellTarget((Entity) applier);
             player.damage(tickDamage, applier);
         }
     }

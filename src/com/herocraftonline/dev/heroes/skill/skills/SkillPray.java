@@ -12,13 +12,11 @@ import com.herocraftonline.dev.heroes.util.Messaging;
 public class SkillPray extends TargettedSkill {
 
     public SkillPray(Heroes plugin) {
-        super(plugin);
-        setName("Pray");
+        super(plugin, "Pray");
         setDescription("Heals the target");
         setUsage("/skill pray <target>");
-        setMinArgs(0);
-        setMaxArgs(1);
-        getIdentifiers().add("skill pray");
+        setArgumentRange(0, 1);
+        setIdentifiers(new String[] { "skill pray" });
     }
 
     @Override
@@ -33,7 +31,7 @@ public class SkillPray extends TargettedSkill {
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
         if (target instanceof Player) {
-            Hero targetHero = plugin.getHeroManager().getHero((Player) target);
+            Hero targetHero = getPlugin().getHeroManager().getHero((Player) target);
             int hpPlus = getSetting(hero.getHeroClass(), "health", 10);
             double targetHealth = targetHero.getHealth();
 

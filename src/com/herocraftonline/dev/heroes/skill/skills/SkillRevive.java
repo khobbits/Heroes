@@ -24,13 +24,11 @@ public class SkillRevive extends ActiveSkill {
 
     @SuppressWarnings("serial")
     public SkillRevive(Heroes plugin) {
-        super(plugin);
-        setName("Revive");
+        super(plugin, "Revive");
         setDescription("Teleports the target to their place of death");
         setUsage("/skill revive [target]");
-        setMinArgs(1);
-        setMaxArgs(1);
-        getIdentifiers().add("skill revive");
+        setArgumentRange(1, 1);
+        setIdentifiers(new String[] { "skill revive" });
 
         registerEvent(Type.ENTITY_DEATH, new SkillPlayerListener(), Priority.Normal);
 
@@ -55,7 +53,7 @@ public class SkillRevive extends ActiveSkill {
     @Override
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
-        Player target = plugin.getServer().getPlayer(args[0]);
+        Player target = getPlugin().getServer().getPlayer(args[0]);
 
         if (target == null) {
             player.sendMessage("Player not found.");

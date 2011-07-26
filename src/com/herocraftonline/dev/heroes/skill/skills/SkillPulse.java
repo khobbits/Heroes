@@ -17,13 +17,11 @@ import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 public class SkillPulse extends ActiveSkill {
 
     public SkillPulse(Heroes plugin) {
-        super(plugin);
-        setName("Pulse");
+        super(plugin, "Pulse");
         setDescription("Damages everyone around you");
         setUsage("/skill pulse");
-        setMinArgs(0);
-        setMaxArgs(0);
-        getIdentifiers().add("skill pulse");
+        setArgumentRange(0, 0);
+        setIdentifiers(new String[] { "skill pulse" });
     }
 
     @Override
@@ -52,7 +50,7 @@ public class SkillPulse extends ActiveSkill {
                 return false;
 
             // See problem in SkillFireball.
-            plugin.getDamageManager().addSpellTarget((Entity) target);
+            getPlugin().getDamageManager().addSpellTarget((Entity) target);
             target.damage(damage, player);
         }
         broadcastExecuteText(hero);

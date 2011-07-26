@@ -13,13 +13,11 @@ import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 public class SkillLickWounds extends ActiveSkill {
 
     public SkillLickWounds(Heroes plugin) {
-        super(plugin);
-        setName("LickWounds");
+        super(plugin, "LickWounds");
         setDescription("Heals your nearby wolves");
         setUsage("/skill lickwounds");
-        setMinArgs(0);
-        setMaxArgs(0);
-        getIdentifiers().add("skill lickwounds");
+        setArgumentRange(0, 0);
+        setIdentifiers(new String[] { "skill lickwounds" });
     }
 
     @Override

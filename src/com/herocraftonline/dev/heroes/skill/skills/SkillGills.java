@@ -20,13 +20,11 @@ public class SkillGills extends ActiveSkill {
     private String expireText;
 
     public SkillGills(Heroes plugin) {
-        super(plugin);
-        setName("Gills");
+        super(plugin, "Gills");
         setDescription("Negate drowning damage");
         setUsage("/skill gills");
-        setMinArgs(0);
-        setMaxArgs(0);
-        getIdentifiers().add("skill gills");
+        setArgumentRange(0, 0);
+        setIdentifiers(new String[] { "skill gills" });
 
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
     }
@@ -86,7 +84,7 @@ public class SkillGills extends ActiveSkill {
                 return;
             if (event.getEntity() instanceof Player) {
                 Player player = (Player) event.getEntity();
-                Hero hero = plugin.getHeroManager().getHero(player);
+                Hero hero = getPlugin().getHeroManager().getHero(player);
                 if (hero.hasEffect("Gills")) {
                     event.setCancelled(true);
                 }

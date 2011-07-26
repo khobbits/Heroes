@@ -12,13 +12,11 @@ import com.herocraftonline.dev.heroes.util.Messaging;
 public class SkillBattery extends TargettedSkill {
 
     public SkillBattery(Heroes plugin) {
-        super(plugin);
-        setName("Battery");
+        super(plugin, "Battery");
         setDescription("Gives your target mana");
         setUsage("/skill battery");
-        setMinArgs(0);
-        setMaxArgs(1);
-        getIdentifiers().add("skill battery");
+        setArgumentRange(0, 1);
+        setIdentifiers(new String[] { "skill battery" });
     }
 
     @Override
@@ -34,7 +32,7 @@ public class SkillBattery extends TargettedSkill {
         if (!(target instanceof Player))
             return false;
 
-        Hero tHero = plugin.getHeroManager().getHero((Player) target);
+        Hero tHero = getPlugin().getHeroManager().getHero((Player) target);
         if (tHero == null)
             return false;
 

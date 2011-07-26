@@ -27,13 +27,11 @@ public class SkillPiggify extends TargettedSkill {
     private List<Entity> creatures = Collections.synchronizedList(new LinkedList<Entity>());
 
     public SkillPiggify(Heroes plugin) {
-        super(plugin);
-        setName("Piggify");
+        super(plugin, "Piggify");
         setDescription("Forces your target to ride a pig");
         setUsage("/skill piggify [target]");
-        setMinArgs(0);
-        setMaxArgs(1);
-        getIdentifiers().add("skill piggify");
+        setArgumentRange(0, 1);
+        setIdentifiers(new String[] { "skill piggify" });
 
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
     }
@@ -55,7 +53,7 @@ public class SkillPiggify extends TargettedSkill {
 
         // Throw a dummy damage event to make it obey PvP restricting plugins
         EntityDamageEvent event = new EntityDamageByEntityEvent(player, target, DamageCause.ENTITY_ATTACK, 0);
-        plugin.getServer().getPluginManager().callEvent(event);
+        getPlugin().getServer().getPluginManager().callEvent(event);
         if (event.isCancelled())
             return false;
 
@@ -67,7 +65,7 @@ public class SkillPiggify extends TargettedSkill {
         Entity creature = target.getWorld().spawnCreature(target.getLocation(), type);
         creature.setPassenger(target);
         creatures.add(creature);
-        plugin.getServer().getScheduler().scheduleAsyncDelayedTask(plugin, new Runnable() {
+        getPlugin().getServer().getScheduler().scheduleAsyncDelayedTask(getPlugin(), new Runnable() {
 
             @Override
             public void run() {

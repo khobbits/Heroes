@@ -25,7 +25,7 @@ import org.bukkit.util.config.Configuration;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
-import com.herocraftonline.dev.heroes.command.BaseCommand;
+import com.herocraftonline.dev.heroes.command.Command;
 import com.herocraftonline.dev.heroes.effects.Effect;
 import com.herocraftonline.dev.heroes.effects.Expirable;
 import com.herocraftonline.dev.heroes.effects.Periodic;
@@ -275,9 +275,9 @@ public class HeroManager {
     private void performSkillChecks(Hero hero) {
         HeroClass playerClass = hero.getHeroClass();
 
-        List<BaseCommand> commands = plugin.getCommandManager().getCommands();
+        List<Command> commands = plugin.getCommandHandler().getCommands();
         if (Heroes.Permissions != null) {
-            for (BaseCommand cmd : commands) {
+            for (Command cmd : commands) {
                 if (cmd instanceof OutsourcedSkill) {
                     OutsourcedSkill skill = (OutsourcedSkill) cmd;
                     if (playerClass.hasSkill(skill.getName())) {
@@ -287,7 +287,7 @@ public class HeroManager {
             }
         }
 
-        for (BaseCommand cmd : commands) {
+        for (Command cmd : commands) {
             if (cmd instanceof PassiveSkill) {
                 PassiveSkill skill = (PassiveSkill) cmd;
                 if (playerClass.hasSkill(skill.getName())) {

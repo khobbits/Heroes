@@ -11,12 +11,10 @@ import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 public class SkillForcepush extends TargettedSkill {
 
     public SkillForcepush(Heroes plugin) {
-        super(plugin);
-        setName("Forcepush");
+        super(plugin, "Forcepush");
         setDescription("Forces your target backwards");
-        setMinArgs(0);
-        setMaxArgs(1);
-        getIdentifiers().add("skill forcepush");
+        setArgumentRange(0, 1);
+        setIdentifiers(new String[] { "skill forcepush" });
     }
 
     @Override

@@ -27,13 +27,11 @@ import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 public class SkillExplosiveFireball extends ActiveSkill {
 
     public SkillExplosiveFireball(Heroes plugin) {
-        super(plugin);
-        setName("ExplosiveFireball");
+        super(plugin, "ExplosiveFireball");
         setDescription("Shoots an explosive ball of fire");
         setUsage("/skill fireball");
-        setMinArgs(0);
-        setMaxArgs(0);
-        getIdentifiers().add("skill explosivefireball");
+        setArgumentRange(0, 0);
+        setIdentifiers(new String[] { "skill explosivefireball" });
 
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
     }
@@ -111,9 +109,9 @@ public class SkillExplosiveFireball extends ActiveSkill {
                     if (fireball.getShooter() instanceof Player) {
                         Entity entity = event.getEntity();
                         Player shooter = (Player) fireball.getShooter();
-                        Hero hero = plugin.getHeroManager().getHero(shooter);
+                        Hero hero = getPlugin().getHeroManager().getHero(shooter);
                         HeroClass heroClass = hero.getHeroClass();
-                        plugin.getDamageManager().addSpellTarget(entity);
+                        getPlugin().getDamageManager().addSpellTarget(entity);
                         entity.setFireTicks(getSetting(heroClass, "fire-ticks", 100));
                         event.setDamage(getSetting(heroClass, "damage", 4));
                     }

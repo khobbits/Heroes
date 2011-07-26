@@ -10,13 +10,11 @@ import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 public class SkillCharge extends TargettedSkill {
 
     public SkillCharge(Heroes plugin) {
-        super(plugin);
-        setName("Charge");
+        super(plugin, "Charge");
         setDescription("Charges towards your target");
         setUsage("/skill charge");
-        setMinArgs(0);
-        setMaxArgs(1);
-        getIdentifiers().add("skill charge");
+        setArgumentRange(0, 1);
+        setIdentifiers(new String[] { "skill charge" });
     }
 
     @Override

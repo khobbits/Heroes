@@ -14,40 +14,38 @@ import java.util.List;
 import org.bukkit.command.CommandSender;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.command.BaseCommand;
-import com.herocraftonline.dev.heroes.skill.Skill;
+import com.herocraftonline.dev.heroes.command.BasicCommand;
+import com.herocraftonline.dev.heroes.command.Command;
 
-public class HelpCommand extends BaseCommand {
+public class HelpCommand extends BasicCommand {
 
     private static final int CMDS_PER_PAGE = 8;
+    private final Heroes plugin;
 
     public HelpCommand(Heroes plugin) {
-        super(plugin);
-        setName("Help");
+        super("Help");
+        this.plugin = plugin;
         setDescription("Displays the help menu");
         setUsage("/hero help [page#]");
-        setMinArgs(0);
-        setMaxArgs(1);
-        getIdentifiers().add("hero");
-        getIdentifiers().add("hero help");
+        setArgumentRange(0, 1);
+        setIdentifiers(new String[] { "hero", "hero help" });
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args) {
+    public boolean execute(CommandSender sender, String identifier, String[] args) {
         int page = 0;
         if (args.length != 0) {
             try {
                 page = Integer.parseInt(args[0]) - 1;
-            } catch (NumberFormatException e) {
-            }
+            } catch (NumberFormatException e) {}
         }
 
-        List<BaseCommand> sortCommands = plugin.getCommandManager().getCommands();
-        List<BaseCommand> commands = new ArrayList<BaseCommand>();
+        List<Command> sortCommands = plugin.getCommandHandler().getCommands();
+        List<Command> commands = new ArrayList<Command>();
 
         // Filter out Skills from the command list.
-        for (BaseCommand command : sortCommands) {
-            if (!(command instanceof Skill)) {
+        for (Command command : sortCommands) {
+            if (command.isShownOnHelpMenu()) {
                 commands.add(command);
             }
         }
@@ -67,11 +65,12 @@ public class HelpCommand extends BaseCommand {
             end = commands.size();
         }
         for (int c = start; c < end; c++) {
-            BaseCommand cmd = commands.get(c);
+            Command cmd = commands.get(c);
             sender.sendMessage("  §a" + cmd.getUsage());
         }
 
-        sender.sendMessage("§cFor more info on a particular command, type '/<command> ?'");
+        sender.sendMessage("§cFor more info on a particular command, type §f/<command> ?");
+        return true;
     }
 
 }

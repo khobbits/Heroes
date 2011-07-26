@@ -22,13 +22,11 @@ public class SkillManaShield extends ActiveSkill {
     private String expireText;
 
     public SkillManaShield(Heroes plugin) {
-        super(plugin);
-        setName("ManaShield");
+        super(plugin, "ManaShield");
         setDescription("Uses your mana as a shield");
         setUsage("/skill manashield");
-        setMinArgs(0);
-        setMaxArgs(0);
-        getIdentifiers().add("skill manashield");
+        setArgumentRange(0, 0);
+        setIdentifiers(new String[] { "skill manashield" });
 
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
     }
@@ -91,7 +89,7 @@ public class SkillManaShield extends ActiveSkill {
             Entity defender = event.getEntity();
             if (defender instanceof Player) {
                 Player player = (Player) defender;
-                Hero hero = plugin.getHeroManager().getHero(player);
+                Hero hero = getPlugin().getHeroManager().getHero(player);
                 if (hero.hasEffect(getName())) {
                     int absorbamount = getSetting(hero.getHeroClass(), "mana-amount", 20);
                     event.setDamage(event.getDamage() / 2);

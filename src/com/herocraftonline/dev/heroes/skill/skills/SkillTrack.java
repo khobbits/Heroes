@@ -17,13 +17,11 @@ public class SkillTrack extends ActiveSkill {
     private static final Random random = new Random();
 
     public SkillTrack(Heroes plugin) {
-        super(plugin);
-        setName("Track");
+        super(plugin, "Track");
         setDescription("Locates a player");
         setUsage("/skill track <player>");
-        setMinArgs(1);
-        setMaxArgs(1);
-        getIdentifiers().add("skill track");
+        setArgumentRange(1, 1);
+        setIdentifiers(new String[] { "skill track" });
     }
 
     @Override
@@ -37,13 +35,13 @@ public class SkillTrack extends ActiveSkill {
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
 
-        Player target = plugin.getServer().getPlayer(args[0]);
+        Player target = getPlugin().getServer().getPlayer(args[0]);
         if (target == null) {
             Messaging.send(player, "Target not found.");
             return false;
         }
 
-        HeroClass heroClass = plugin.getHeroManager().getHero(player).getHeroClass();
+        HeroClass heroClass = getPlugin().getHeroManager().getHero(player).getHeroClass();
 
         Location location = target.getLocation();
         int randomness = getSetting(heroClass, "randomness", 50);

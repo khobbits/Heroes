@@ -21,13 +21,11 @@ import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 public class SkillFireball extends ActiveSkill {
 
     public SkillFireball(Heroes plugin) {
-        super(plugin);
-        setName("Fireball");
+        super(plugin, "Fireball");
         setDescription("Shoots a dangerous ball of fire");
         setUsage("/skill fireball");
-        setMinArgs(0);
-        setMaxArgs(0);
-        getIdentifiers().add("skill fireball");
+        setArgumentRange(0, 0);
+        setIdentifiers(new String[] { "skill fireball" });
 
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
     }
@@ -65,7 +63,7 @@ public class SkillFireball extends ActiveSkill {
                         if (entity instanceof LivingEntity) {
                             Entity dmger = subEvent.getDamager();
                             if (dmger instanceof Player) {
-                                Hero hero = plugin.getHeroManager().getHero((Player) dmger);
+                                Hero hero = getPlugin().getHeroManager().getHero((Player) dmger);
                                 HeroClass heroClass = hero.getHeroClass();
                                 // Perform a check to see if any plugin is preventing us from damaging the player.
                                 EntityDamageEvent damageEvent = new EntityDamageEvent(dmger, DamageCause.CUSTOM, 0);
@@ -75,7 +73,7 @@ public class SkillFireball extends ActiveSkill {
                                 LivingEntity livingEntity = (LivingEntity) entity;
                                 livingEntity.setFireTicks(getSetting(heroClass, "fire-ticks", 100));
 
-                                plugin.getDamageManager().addSpellTarget((Entity) entity);
+                                getPlugin().getDamageManager().addSpellTarget((Entity) entity);
                                 int damage = getSetting(heroClass, "damage", 4);
                                 event.setDamage(damage);
                             }

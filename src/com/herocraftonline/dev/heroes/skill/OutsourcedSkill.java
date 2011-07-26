@@ -49,11 +49,9 @@ public class OutsourcedSkill extends Skill {
      *        the usage text defined in the classes.yml config
      */
     public OutsourcedSkill(Heroes plugin, String name, String[] permissions, String usage) {
-        super(plugin);
-        setName(name);
+        super(plugin, name);
         setUsage(usage);
-        setMinArgs(0);
-        setMaxArgs(0);
+        setArgumentRange(0, 0);
         setDescription(usage);
         this.permissions = permissions;
         registerEvent(Type.CUSTOM_EVENT, new SkillCustomListener(), Priority.Normal);
@@ -63,7 +61,8 @@ public class OutsourcedSkill extends Skill {
      * Serves no purpose for an outsourced skill.
      */
     @Override
-    public void execute(CommandSender sender, String[] args) {
+    public boolean execute(CommandSender sender, String identifier, String[] args) {
+        return true;
     }
 
     /**

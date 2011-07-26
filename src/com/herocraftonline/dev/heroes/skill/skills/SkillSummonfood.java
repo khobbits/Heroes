@@ -14,13 +14,11 @@ import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 public class SkillSummonfood extends ActiveSkill {
 
     public SkillSummonfood(Heroes plugin) {
-        super(plugin);
-        setName("Summonfood");
+        super(plugin, "Summonfood");
         setDescription("Summons you food!");
         setUsage("/skill summonfood");
-        setMinArgs(0);
-        setMaxArgs(0);
-        getIdentifiers().add("skill summonfood");
+        setArgumentRange(0, 0);
+        setIdentifiers(new String[] { "skill summonfood" });
     }
 
     @Override

@@ -20,13 +20,11 @@ public class SkillInvuln extends ActiveSkill {
     private String expireText;
 
     public SkillInvuln(Heroes plugin) {
-        super(plugin);
-        setName("Invuln");
+        super(plugin, "Invuln");
         setDescription("Grants total damage immunity");
         setUsage("/skill invuln");
-        setMinArgs(0);
-        setMaxArgs(0);
-        getIdentifiers().add("skill invuln");
+        setArgumentRange(0, 0);
+        setIdentifiers(new String[] { "skill invuln" });
 
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
     }
@@ -87,7 +85,7 @@ public class SkillInvuln extends ActiveSkill {
             Entity defender = event.getEntity();
             if (defender instanceof Player) {
                 Player player = (Player) defender;
-                Hero hero = plugin.getHeroManager().getHero(player);
+                Hero hero = getPlugin().getHeroManager().getHero(player);
                 if (hero.hasEffect("Invuln")) {
                     event.setCancelled(true);
                 }

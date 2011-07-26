@@ -1,7 +1,7 @@
 package com.herocraftonline.dev.heroes.command.commands;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.command.BaseCommand;
+import com.herocraftonline.dev.heroes.command.BasicCommand;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import org.bukkit.Material;
@@ -9,28 +9,25 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-public class PartyUICommand extends BaseCommand {
+public class PartyUICommand extends BasicCommand {
+    private final Heroes plugin;
 
     public PartyUICommand(Heroes plugin) {
-        super(plugin);
-        setName("Party Map UI");
+        super("Party Map UI");
+        this.plugin = plugin;
         setDescription("Gives the Player a Map linked to the Party UI.");
         setUsage("/party ui");
-        setMinArgs(0);
-        setMaxArgs(0);
-        getIdentifiers().add("party ui");
+        setArgumentRange(0, 0);
+        setIdentifiers(new String[] { "party ui" });
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args) {
-        if (!(sender instanceof Player)) {
-            sender.sendMessage("This command needs to be run from a Player");
-            return;
-        }
+    public boolean execute(CommandSender sender, String identifier, String[] args) {
+        if (!(sender instanceof Player)) return false;
 
         if (!this.plugin.getConfigManager().getProperties().mapUI) {
             Messaging.send(sender, "Map UI is not enabled so this command has been disabled.");
-            return;
+            return false;
         }
 
         Player player = (Player) sender;
@@ -38,12 +35,12 @@ public class PartyUICommand extends BaseCommand {
 
         if (itemInHand != null && itemInHand.getType() != Material.MAP) {
             Messaging.send(sender, "You need to have a Map equipped in your hand to turn it into the Party UI.");
-            return;
+            return false;
         }
 
         if (itemInHand.getDurability() == this.plugin.getConfigManager().getProperties().mapID) {
             Messaging.send(sender, "This Map is already linked to the Party UI!");
-            return;
+            return false;
         }
 
         itemInHand.setDurability(this.plugin.getConfigManager().getProperties().mapID);
@@ -54,5 +51,7 @@ public class PartyUICommand extends BaseCommand {
         if (hero.getParty() != null) {
             hero.getParty().setUpdateMapDisplay(true);
         }
+
+        return true;
     }
 }

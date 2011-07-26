@@ -1,74 +1,54 @@
 package com.herocraftonline.dev.heroes.command.commands;
 
-import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeMap;
 
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.command.BaseCommand;
+import com.herocraftonline.dev.heroes.command.BasicCommand;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.util.Messaging;
 
-public class LeaderboardCommand extends BaseCommand {
+public class LeaderboardCommand extends BasicCommand {
+    private final Heroes plugin;
 
     public LeaderboardCommand(Heroes plugin) {
-        super(plugin);
-        setName("Leaderboard");
+        super("Leaderboard");
+        this.plugin = plugin;
         setDescription("Displays Hero rankings");
         setUsage("/hero leaderboard");
-        setMinArgs(0);
-        setMaxArgs(0);
-        getIdentifiers().add("hero leaderboard");
-        setPermissionNode("heroes.leaderboard");
+        setArgumentRange(0, 0);
+        setIdentifiers(new String[] { "hero leaderboard" });
+        setPermission("heroes.leaderboard");
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public void execute(CommandSender sender, String[] args) {
+    public boolean execute(CommandSender sender, String identifier, String[] args) {
         Set<Hero> heroes = plugin.getHeroManager().getHeroes();
-        HashMap<Hero, Double> heroValues = new HashMap<Hero, Double>();
-        int i = 0;
-        for (Hero hero : heroes) {
-            if (hero == null) {
-                continue;
-            }
-            heroValues.put(hero, hero.getExperience());
-        }
-        heroValues = (HashMap<Hero, Double>) sortByValue(heroValues);
-        for (Hero hero : heroValues.keySet()) {
-            i++;
-            if (i >= heroValues.size() - 5) {
-                Player player = hero.getPlayer();
-                Messaging.send(sender, "$1 - $2", player.getName(), String.valueOf((int) hero.getExperience()));
-            }
-        }
-    }
-
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    static Map sortByValue(Map map) {
-        List list = new LinkedList(map.entrySet());
-        Collections.sort(list, new Comparator() {
-
+        Map<Hero, Double> leaderboard = new TreeMap<Hero, Double>(new Comparator<Hero>() {
             @Override
-            public int compare(Object o1, Object o2) {
-                return ((Comparable) ((Map.Entry) o1).getValue()).compareTo(((Map.Entry) o2).getValue());
+            public int compare(Hero h1, Hero h2) {
+                return (int) (h1.getExperience() - h2.getExperience());
             }
         });
 
-        Map result = new LinkedHashMap();
-        for (Iterator it = list.iterator(); it.hasNext();) {
-            Map.Entry entry = (Map.Entry) it.next();
-            result.put(entry.getKey(), entry.getValue());
+        for (Hero hero : heroes) {
+            if (hero != null) {
+                leaderboard.put(hero, hero.getExperience());
+            }
         }
-        return result;
+
+        Iterator<Entry<Hero, Double>> iter = leaderboard.entrySet().iterator();
+        for (int i = 0; i < 5 && iter.hasNext(); i++) {
+            Entry<Hero, Double> entry = iter.next();
+            Messaging.send(sender, "$1 - $2", entry.getKey().getPlayer().getName(), entry.getValue());
+        }
+
+        return true;
     }
 }
