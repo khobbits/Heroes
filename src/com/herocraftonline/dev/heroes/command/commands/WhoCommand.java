@@ -6,6 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.command.BaseCommand;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.util.Messaging;
@@ -17,7 +18,7 @@ public class WhoCommand extends BaseCommand {
         super(plugin);
         setName("Who");
         setDescription("Checks the players level and other information");
-        setUsage("/hero who <player>");
+        setUsage("/hero who <player|class>");
         setMinArgs(1);
         setMaxArgs(1);
         getIdentifiers().add("hero who");
@@ -26,23 +27,25 @@ public class WhoCommand extends BaseCommand {
     @Override
     public void execute(CommandSender sender, String[] args) {
         if (sender instanceof Player) {
-            if (plugin.getServer().getPlayer(args[0]) != null) {
+            Player searchedPlayer = plugin.getServer().getPlayer(args[0]);
+            HeroClass searchedClass = plugin.getClassManager().getClass(args[0]);
+            if (searchedPlayer != null) {
                 Properties prop = this.plugin.getConfigManager().getProperties();
-                Player ePlayer = plugin.getServer().getPlayer(args[0]);
-                Hero hero = plugin.getHeroManager().getHero(ePlayer);
+                Hero hero = plugin.getHeroManager().getHero(searchedPlayer);
                 int level = prop.getLevel(hero.getExperience());
 
-                sender.sendMessage("§c-----[ " + "§f" + ePlayer.getName() + "§c ]-----");
+                sender.sendMessage("§c-----[ " + "§f" + searchedPlayer.getName() + "§c ]-----");
                 sender.sendMessage("  §aClass : " + hero.getHeroClass().getName());
                 sender.sendMessage("  §aLevel : " + level);
-            } else if (plugin.getClassManager().getClass(args[0]) != null) {
+            } else if (searchedClass != null) {
                 Properties prop = this.plugin.getConfigManager().getProperties();
                 Set<Hero> heroes = plugin.getHeroManager().getHeroes();
+                sender.sendMessage("§c-----[ " + "§f" + searchedClass.getName() + "§c ]-----");
                 for (Hero hero : heroes) {
                     if (hero == null) {
                         continue;
                     }
-                    if (hero.getHeroClass() == plugin.getClassManager().getClass(args[0])) {
+                    if (hero.getHeroClass().equals(searchedClass)) {
                         int level = prop.getLevel(hero.getExperience());
                         sender.sendMessage("  §aName : " + hero.getPlayer().getName() + "  §aLevel : " + level);
                     }
