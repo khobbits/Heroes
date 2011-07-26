@@ -265,7 +265,7 @@ public class Heroes extends JavaPlugin {
         // Set the Party UI map to a nice splash screen.
         if (getConfigManager().getProperties().mapUI) {
             MapAPI mapAPI = new MapAPI();
-            short mapId = 0;
+            short mapId = getConfigManager().getProperties().mapID;
 
             BufferedImage image = null;
             try {
