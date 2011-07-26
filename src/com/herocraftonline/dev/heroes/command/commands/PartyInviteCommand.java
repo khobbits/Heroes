@@ -30,19 +30,20 @@ public class PartyInviteCommand extends BasicCommand {
         Player player = (Player) sender;
         Player target = plugin.getServer().getPlayer(args[0]);
         Hero hero = plugin.getHeroManager().getHero(player);
-        HeroParty party = hero.getParty();
 
         if (target == null) {
             Messaging.send(player, "Player not found.");
             return false;
         }
-        
+
         if (hero.getParty() == null) {
             HeroParty newParty = new HeroParty(hero);
             plugin.getPartyManager().addParty(newParty);
             hero.setParty(newParty);
             Messaging.send(player, "Your party has been created");
         }
+
+        HeroParty party = hero.getParty();
 
         if (!party.getLeader().equals(hero)) {
             Messaging.send(player, "You are not leader of this party.");
