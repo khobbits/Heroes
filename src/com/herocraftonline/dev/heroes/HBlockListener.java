@@ -27,11 +27,10 @@ public class HBlockListener extends BlockListener {
         this.plugin = plugin;
     }
 
-    @SuppressWarnings("serial")
     public void init() {
         final int maxTrackedBlocks = plugin.getConfigManager().getProperties().maxTrackedBlocks;
         placedBlocks = new LinkedHashMap<Location, Long>() {
-
+            private static final long serialVersionUID = 2623620773233514414L;
             private final int MAX_ENTRIES = maxTrackedBlocks;
 
             @Override

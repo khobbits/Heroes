@@ -18,7 +18,7 @@ public class PartyInviteCommand extends BasicCommand {
         super("Party Invite");
         this.plugin = plugin;
         setDescription("Invites a player to your party");
-        setUsage("/party invite");
+        setUsage("/party invite §9<player>");
         setArgumentRange(1, 1);
         setIdentifiers(new String[] { "party invite" });
     }

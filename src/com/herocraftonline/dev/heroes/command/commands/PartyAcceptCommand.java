@@ -15,7 +15,7 @@ public class PartyAcceptCommand extends BasicCommand {
         super("Party Accept");
         this.plugin = plugin;
         setDescription("Accept a party invite");
-        setUsage("/party accept <player>");
+        setUsage("/party accept §9<player>");
         setArgumentRange(1, 1);
         setIdentifiers(new String[] { "party accept" });
     }

@@ -18,7 +18,7 @@ public class PartyChatCommand extends BasicCommand {
         super("Party Chat");
         this.plugin = plugin;
         setDescription("Sends messages to your party");
-        setUsage("/party <msg> OR /p <msg>");
+        setUsage("/party §9<msg> OR /p §9<msg>");
         setArgumentRange(1, 1000);
         setIdentifiers(new String[] { "pc", "p", "party" });
     }

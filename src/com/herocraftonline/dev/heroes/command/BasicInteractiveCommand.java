@@ -16,80 +16,79 @@ public abstract class BasicInteractiveCommand extends BasicCommand implements In
         super(name);
     }
 
-    public void setStates(InteractiveCommandState[] states) {
-        this.states = states;
-        
-        int minArgs = Integer.MAX_VALUE;
-        int maxArgs = Integer.MIN_VALUE;
-        for (InteractiveCommandState state : states) {
-            if (state.getMinArguments() < minArgs) {
-                minArgs = state.getMinArguments();
-            }
+    public final void setStates(InteractiveCommandState[] states) {
+        if (states.length == 0) {
+            throw new IllegalArgumentException("An interactive command must have at least one state.");
+        }
 
-            if (state.getMaxArguments() > maxArgs) {
-                maxArgs = state.getMaxArguments();
-            }
-        }
-        this.setArgumentRange(minArgs, maxArgs);
-        
-        String[] identifiers = new String[states.length + 1];
-        for (int i = 0; i < states.length; i++) {
-            identifiers[i] = states[i].getIdentifier();
-        }
-        identifiers[states.length] = this.getCancellationIdentifier();
-        this.setIdentifiers(identifiers);
+        this.states = states;
+        super.setArgumentRange(states[0].getMinArguments(), states[0].getMaxArguments());
     }
+    
+    @Override
+    public final void cancelInteraction(CommandSender executor) {
+        userStates.remove(executor);
+        onCommandCancelled(executor);
+    }
+    
+    @Override
+    public final void setArgumentRange(int min, int max) {}
 
     @Override
-    public boolean isInProgress(CommandSender executor) {
+    public final void setIdentifiers(String[] identifiers) {}
+
+    @Override
+    public final boolean isInProgress(CommandSender executor) {
         return userStates.containsKey(executor);
     }
 
     @Override
-    public boolean isIdentifier(CommandSender executor, String input) {
-        if (input.equalsIgnoreCase(this.getCancellationIdentifier())) {
-            return true;
-        }
-
-        for (String identifier : getIdentifiers()) {
-            if (input.equalsIgnoreCase(identifier)) {
-                for (InteractiveCommandState state : states) {
-                    if (state.isIdentifier(input)) {
-                        if (state == states[0] || userStates.containsKey(executor)) {
-                            return true;
-                        }
-                    }
-                }
-            }
-        }
-
-        return false;
-    }
-
-    @Override
-    public boolean execute(CommandSender executor, String identifier, String[] args) {
-        if (states.length == 0) {
-            return true;
-        }
-
+    public final boolean isIdentifier(CommandSender executor, String input) {
         int stateIndex = 0;
         if (userStates.containsKey(executor)) {
             stateIndex = userStates.get(executor);
-            if (this.getCancellationIdentifier().equals(identifier)) {
-                Messaging.send(executor, "Exiting command.");
-                userStates.remove(executor);
+        }
+
+        if (stateIndex > 0) {
+            if (this.getCancelIdentifier().equalsIgnoreCase(input)) {
                 return true;
             }
         }
 
         InteractiveCommandState state = states[stateIndex];
-        if (!state.isIdentifier(identifier)) {
-            return true;
-        } else if (args.length < state.getMinArguments() || args.length > state.getMaxArguments() || !state.execute(executor, identifier, args)) {
-            if (stateIndex == 0) {
-                Messaging.send(executor, "Invalid input.");
-            } else {
-                Messaging.send(executor, "Invalid input - try again or type $1 to start over.", "/" + this.getCancellationIdentifier());
+        return state.isIdentifier(input);
+    }
+    
+    @Override
+    public final boolean isInteractive() {
+        return true;
+    }
+
+    @Override
+    public final boolean execute(CommandSender executor, String identifier, String[] args) {
+        if (states.length == 0) {
+            throw new IllegalArgumentException("An interactive command must have at least one state.");
+        }
+
+        int stateIndex = 0;
+        if (userStates.containsKey(executor)) {
+            stateIndex = userStates.get(executor);
+        }
+
+        InteractiveCommandState state = states[stateIndex];
+
+        if (stateIndex > 0) {
+            if (this.getCancelIdentifier().equalsIgnoreCase(identifier)) {
+                Messaging.send(executor, "Exiting command.");
+                userStates.remove(executor);
+                onCommandCancelled(executor);
+                return true;
+            }
+        }
+
+        if (args.length < state.getMinArguments() || args.length > state.getMaxArguments() || !state.execute(executor, identifier, args)) {
+            if (stateIndex > 0) {
+                Messaging.send(executor, "Invalid input - try again or type $1 to exit.", "/" + this.getCancelIdentifier());
             }
         } else {
             stateIndex++;

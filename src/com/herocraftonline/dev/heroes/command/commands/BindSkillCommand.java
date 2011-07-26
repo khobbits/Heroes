@@ -19,7 +19,7 @@ public class BindSkillCommand extends BasicCommand {
         super("BindSkill");
         this.plugin = plugin;
         setDescription("Binds a skill with an item");
-        setUsage("/bind <skill> [args]");
+        setUsage("/bind §9<skill> §8[args]");
         setArgumentRange(0, 1000);
         setIdentifiers(new String[] { "bind" });
     }

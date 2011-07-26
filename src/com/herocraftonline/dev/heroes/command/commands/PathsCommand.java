@@ -18,7 +18,7 @@ public class PathsCommand extends BasicCommand {
         super("Paths");
         this.plugin = plugin;
         setDescription("Lists all paths available to you");
-        setUsage("/hero paths [page#]");
+        setUsage("/hero paths §8[page#]");
         setArgumentRange(0, 1);
         setIdentifiers(new String[] { "hero paths" });
     }

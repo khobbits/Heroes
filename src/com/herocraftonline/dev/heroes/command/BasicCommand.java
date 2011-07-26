@@ -56,10 +56,18 @@ public abstract class BasicCommand implements Command {
     public boolean isInProgress(CommandSender executor) {
         return false;
     }
+    
+    @Override
+    public void cancelInteraction(CommandSender executor) {}
 
     @Override
     public boolean isShownOnHelpMenu() {
         return true;
+    }
+    
+    @Override
+    public boolean isInteractive() {
+        return false;
     }
 
     public void setDescription(String description) {

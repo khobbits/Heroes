@@ -43,3 +43,9 @@ commands:
     aliases: ['p','pc']
     description: Chat with Heroes party members
     usage: /<command> <message>
+  confirm:
+    description: Confirms a command
+    usage: /<command>
+  cancel:
+    description: Cancels a command
+    usage: /<command>

@@ -97,6 +97,12 @@ public class HPlayerListener extends PlayerListener {
         HeroManager heroManager = plugin.getHeroManager();
         heroManager.saveHero(player);
         heroManager.removeHero(heroManager.getHero(player));
+        
+        for (Command command : plugin.getCommandHandler().getCommands()) {
+            if (command.isInteractive()) {
+                command.cancelInteraction(player);
+            }
+        }
     }
 
     @Override

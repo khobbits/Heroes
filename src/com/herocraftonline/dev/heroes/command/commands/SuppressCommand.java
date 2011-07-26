@@ -19,7 +19,7 @@ public class SuppressCommand extends BasicCommand {
         super("Suppress");
         this.plugin = plugin;
         setDescription("Toggles the suppression of skill messages");
-        setUsage("/hero stfu <skill>");
+        setUsage("/hero stfu §9<skill>");
         setArgumentRange(1, 1);
         setIdentifiers(new String[] { "hero stfu", "hero suppress" });
     }

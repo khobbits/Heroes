@@ -19,7 +19,7 @@ public class WhoCommand extends BasicCommand {
         super("Who");
         this.plugin = plugin;
         setDescription("Checks the players level and other information");
-        setUsage("/hero who <player|class>");
+        setUsage("/hero who §9<player|class>");
         setArgumentRange(1, 1);
         setIdentifiers(new String[] { "hero who" });
     }

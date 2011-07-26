@@ -19,7 +19,7 @@ public class SpecsCommand extends BasicCommand {
         super("Specializations");
         this.plugin = plugin;
         setDescription("Lists all specializations available to your path");
-        setUsage("/hero specs [page#]");
+        setUsage("/hero specs §8[page#]");
         setArgumentRange(0, 1);
         setIdentifiers(new String[] { "hero specs" });
     }

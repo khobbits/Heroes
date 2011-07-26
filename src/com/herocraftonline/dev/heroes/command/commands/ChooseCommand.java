@@ -1,102 +1,159 @@
 package com.herocraftonline.dev.heroes.command.commands;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.ClassChangeEvent;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
-import com.herocraftonline.dev.heroes.command.BasicCommand;
+import com.herocraftonline.dev.heroes.command.BasicInteractiveCommand;
+import com.herocraftonline.dev.heroes.command.BasicInteractiveCommandState;
+import com.herocraftonline.dev.heroes.command.InteractiveCommandState;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Properties;
 
-public class ChooseCommand extends BasicCommand {
+public class ChooseCommand extends BasicInteractiveCommand {
 
     private final Heroes plugin;
+    private Map<Player, HeroClass> pendingClassSelections = new HashMap<Player, HeroClass>();
 
     public ChooseCommand(Heroes plugin) {
         super("Choose Class");
         this.plugin = plugin;
+        this.setStates(new InteractiveCommandState[] { new StateA(), new StateB() });
         setDescription("Selects a new path or specialization");
         setUsage("/hero choose §9<type>");
-        setArgumentRange(1, 1);
-        setIdentifiers(new String[] { "hero choose" });
     }
 
     @Override
-    public boolean execute(CommandSender sender, String identifier, String[] args) {
-        if (!(sender instanceof Player)) return false;
+    public String getCancelIdentifier() {
+        return "cancel";
+    }
 
-        Player player = (Player) sender;
-        Hero hero = plugin.getHeroManager().getHero(player);
-        HeroClass currentClass = hero.getHeroClass();
-        HeroClass newClass = plugin.getClassManager().getClass(args[0]);
-        Properties prop = plugin.getConfigManager().getProperties();
+    class StateA extends BasicInteractiveCommandState {
 
-        if (newClass == null) {
-            Messaging.send(player, "Class not found.");
-            return false;
+        public StateA() {
+            super("hero choose");
+            this.setArgumentRange(1, 1);
         }
 
-        if (newClass == currentClass) {
-            Messaging.send(player, "You are already set as this Class.");
-            return false;
-        }
+        @Override
+        public boolean execute(CommandSender executor, String identifier, String[] args) {
+            if (!(executor instanceof Player)) return false;
 
-        if (!newClass.isPrimary()) {
-            HeroClass parentClass = newClass.getParent();
-            if (!hero.isMaster(parentClass)) {
-                Messaging.send(player, "You must master $1 before specializing!", parentClass.getName());
+            Player player = (Player) executor;
+            Hero hero = plugin.getHeroManager().getHero(player);
+            HeroClass currentClass = hero.getHeroClass();
+            HeroClass newClass = plugin.getClassManager().getClass(args[0]);
+            Properties prop = plugin.getConfigManager().getProperties();
+
+            if (newClass == null) {
+                Messaging.send(player, "Class not found.");
                 return false;
             }
-        }
 
-        if (Heroes.Permissions != null && newClass != plugin.getClassManager().getDefaultClass()) {
-            if (!Heroes.Permissions.has(player, "heroes.classes." + newClass.getName().toLowerCase())) {
-                Messaging.send(player, "You don't have permission for $1.", newClass.getName());
+            if (newClass == currentClass) {
+                Messaging.send(player, "You are already set as this Class.");
                 return false;
             }
-        }
 
-        int cost = currentClass == plugin.getClassManager().getDefaultClass() ? 0 : prop.swapCost;
-
-        if (prop.iConomy && this.plugin.Method != null && cost > 0) {
-            if (!plugin.getConfigManager().getProperties().swapMasteryCost && !hero.isMaster(newClass)) {
-                if (!this.plugin.Method.getAccount(player.getName()).hasEnough(cost)) {
-                    // You have insufficient funds, you require $1 to change your class to the $2. -- Make the text
-                    // customiseable.
-                    Messaging.send(hero.getPlayer(), "You're unable to meet the offering of $1 to become $2.", this.plugin.Method.format(cost), newClass.getName());
-
+            if (!newClass.isPrimary()) {
+                HeroClass parentClass = newClass.getParent();
+                if (!hero.isMaster(parentClass)) {
+                    Messaging.send(player, "You must master $1 before specializing!", parentClass.getName());
                     return false;
                 }
             }
-        }
 
-        ClassChangeEvent event = new ClassChangeEvent(hero, currentClass, newClass);
-        plugin.getServer().getPluginManager().callEvent(event);
-        if (event.isCancelled()) return false;
-
-        hero.setHeroClass(newClass);
-
-        if (prop.resetExpOnClassChange) {
-            if (!hero.isMaster(currentClass)) {
-                hero.setExperience(currentClass, 0);
+            if (Heroes.Permissions != null && newClass != plugin.getClassManager().getDefaultClass()) {
+                if (!Heroes.Permissions.has(player, "heroes.classes." + newClass.getName().toLowerCase())) {
+                    Messaging.send(player, "You don't have permission for $1.", newClass.getName());
+                    return false;
+                }
             }
-        }
 
-        if (prop.iConomy && this.plugin.Method != null && cost > 0) {
-            if (!plugin.getConfigManager().getProperties().swapMasteryCost && !hero.isMaster(newClass)) {
-                this.plugin.Method.getAccount(player.getName()).subtract(cost);
-                // You have been charged $1 to swap to the $2. -- Make the text customiseable.
-                Messaging.send(hero.getPlayer(), "The Gods are pleased with your offering of $1", this.plugin.Method.format(cost));
+            int cost = currentClass == plugin.getClassManager().getDefaultClass() ? 0 : prop.swapCost;
+            boolean costApplied = false;
+            if (prop.iConomy && plugin.Method != null && cost > 0) {
+                if (!plugin.getConfigManager().getProperties().swapMasteryCost && !hero.isMaster(newClass)) {
+                    costApplied = true;
+                    if (!plugin.Method.getAccount(player.getName()).hasEnough(cost)) {
+                        Messaging.send(hero.getPlayer(), "You're unable to meet the offering of $1 to become $2.", plugin.Method.format(cost), newClass.getName());
+                        return false;
+                    }
+                }
             }
+
+            Messaging.send(executor, "You have chosen...");
+            Messaging.send(executor, "$1: $2", newClass.getName(), newClass.getDescription().toLowerCase());
+            String skills = newClass.getSkillNames().toString();
+            skills = skills.substring(1, skills.length() - 1);
+            Messaging.send(executor, "$1: $2", "Skills", skills);
+            if (costApplied) {
+                Messaging.send(executor, "$1: $2", "Fee", plugin.Method.format(cost));
+            }
+            Messaging.send(executor, "Please §8/confirm §7 or §8/cancel §7this selection.");
+
+            pendingClassSelections.put(player, newClass);
+            return true;
         }
 
-        hero.getBinds().clear();
+    }
 
-        Messaging.send(player, "Welcome to the path of the $1!", newClass.getName());
-        return true;
+    class StateB extends BasicInteractiveCommandState {
+
+        public StateB() {
+            super("confirm");
+            this.setArgumentRange(0, 0);
+        }
+
+        @Override
+        public boolean execute(CommandSender executor, String identifier, String[] args) {
+            if (!(executor instanceof Player)) return false;
+
+            Player player = (Player) executor;
+            Hero hero = plugin.getHeroManager().getHero(player);
+            HeroClass currentClass = hero.getHeroClass();
+            HeroClass newClass = pendingClassSelections.get(player);
+            Properties prop = plugin.getConfigManager().getProperties();
+
+            ClassChangeEvent event = new ClassChangeEvent(hero, currentClass, newClass);
+            plugin.getServer().getPluginManager().callEvent(event);
+            if (event.isCancelled()) return false;
+
+            hero.setHeroClass(newClass);
+
+            if (prop.resetExpOnClassChange) {
+                if (!hero.isMaster(currentClass)) {
+                    hero.setExperience(currentClass, 0);
+                }
+            }
+
+            int cost = currentClass == plugin.getClassManager().getDefaultClass() ? 0 : prop.swapCost;
+
+            if (prop.iConomy && plugin.Method != null && cost > 0) {
+                if (!plugin.getConfigManager().getProperties().swapMasteryCost && !hero.isMaster(newClass)) {
+                    plugin.Method.getAccount(player.getName()).subtract(cost);
+                    Messaging.send(hero.getPlayer(), "The Gods are pleased with your offering of $1.", plugin.Method.format(cost));
+                }
+            }
+
+            hero.getBinds().clear();
+
+            Messaging.send(player, "Welcome to the path of the $1!", newClass.getName());
+            return true;
+        }
+
+    }
+
+    @Override
+    public void onCommandCancelled(CommandSender executor) {
+        if (!(executor instanceof Player)) return;
+        pendingClassSelections.remove((Player) executor);
     }
 
 }

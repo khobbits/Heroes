@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.bukkit.Material;
 import org.bukkit.util.config.ConfigurationNode;
@@ -58,6 +59,10 @@ public class HeroClass {
 
     public void addSkill(String name, ConfigurationNode settings) {
         skills.put(name.toLowerCase(), settings);
+    }
+    
+    public Set<String> getSkillNames() {
+        return new TreeSet<String>(skills.keySet());
     }
 
     @Override
