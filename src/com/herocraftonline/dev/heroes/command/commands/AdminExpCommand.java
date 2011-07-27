@@ -11,7 +11,7 @@ import com.herocraftonline.dev.heroes.util.Messaging;
 public class AdminExpCommand extends BasicCommand {
 
     private final Heroes plugin;
-    
+
     public AdminExpCommand(Heroes plugin) {
         super("AdminExpCommand");
         this.plugin = plugin;
@@ -31,7 +31,14 @@ public class AdminExpCommand extends BasicCommand {
             Messaging.send(sender, "Failed to find a matching Player for '$1'.", args[0]);
             return false;
         }
-        hero.setExperience(Integer.parseInt(args[1]));
-        return true;
+        try {
+            hero.setExperience(Integer.parseInt(args[1]));
+            Messaging.send(sender, "Experience changed.");
+            return true;
+        } catch (NumberFormatException e) {
+            Messaging.send(sender, "Invalid experience value.");
+            return false;
+        }
+
     }
 }

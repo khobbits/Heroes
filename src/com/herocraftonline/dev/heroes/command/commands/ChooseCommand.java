@@ -79,7 +79,7 @@ public class ChooseCommand extends BasicInteractiveCommand {
             int cost = currentClass == plugin.getClassManager().getDefaultClass() ? 0 : prop.swapCost;
             boolean costApplied = false;
             if (prop.iConomy && plugin.Method != null && cost > 0) {
-                if (!plugin.getConfigManager().getProperties().swapMasteryCost && !hero.isMaster(newClass)) {
+                if (!hero.isMaster(newClass) || prop.swapMasteryCost) {
                     costApplied = true;
                     if (!plugin.Method.getAccount(player.getName()).hasEnough(cost)) {
                         Messaging.send(hero.getPlayer(), "You're unable to meet the offering of $1 to become $2.", plugin.Method.format(cost), newClass.getName());
@@ -136,7 +136,7 @@ public class ChooseCommand extends BasicInteractiveCommand {
             int cost = currentClass == plugin.getClassManager().getDefaultClass() ? 0 : prop.swapCost;
 
             if (prop.iConomy && plugin.Method != null && cost > 0) {
-                if (!plugin.getConfigManager().getProperties().swapMasteryCost && !hero.isMaster(newClass)) {
+                if (!hero.isMaster(newClass) || prop.swapMasteryCost) {
                     plugin.Method.getAccount(player.getName()).subtract(cost);
                     Messaging.send(hero.getPlayer(), "The Gods are pleased with your offering of $1.", plugin.Method.format(cost));
                 }

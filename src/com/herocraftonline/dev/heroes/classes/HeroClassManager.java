@@ -56,7 +56,7 @@ public class HeroClassManager {
         config.load();
         List<String> classNames = config.getKeys("classes");
         if (classNames == null) {
-            plugin.log(Level.WARNING, "You have no classes defined in your setup!");
+            Heroes.log(Level.WARNING, "You have no classes defined in your setup!");
             return;
         }
         for (String className : classNames) {
@@ -91,7 +91,7 @@ public class HeroClassManager {
                             newClass.addAllowedArmor(aType + "_BOOTS");
                             aLimits.append(" ").append(aType).append("_BOOTS");
                         } catch (IllegalArgumentException e) {
-                            plugin.log(Level.WARNING, "Invalid armor type (" + a + ") defined for " + className);
+                            Heroes.log(Level.WARNING, "Invalid armor type (" + a + ") defined for " + className);
                         }
                     } else {
                         String type = a.substring(0, a.indexOf("_"));
@@ -102,7 +102,7 @@ public class HeroClassManager {
                             newClass.addAllowedArmor(aType + "_" + aItem);
                             aLimits.append(" ").append(aType).append("_").append(aItem);
                         } catch (IllegalArgumentException e) {
-                            plugin.log(Level.WARNING, "Invalid armor type (" + type + "_" + item + ") defined for " + className);
+                            Heroes.log(Level.WARNING, "Invalid armor type (" + type + "_" + item + ") defined for " + className);
                         }
                     }
                 }
@@ -134,7 +134,7 @@ public class HeroClassManager {
                             newClass.addAllowedWeapon(wType + "_SWORD");
                             wLimits.append(" ").append(wType).append("_SWORD");
                         } catch (IllegalArgumentException e) {
-                            plugin.log(Level.WARNING, "Invalid weapon type (" + w + ") defined for " + className);
+                            Heroes.log(Level.WARNING, "Invalid weapon type (" + w + ") defined for " + className);
                         }
                     } else {
                         String type = w.substring(0, w.indexOf("_"));
@@ -145,7 +145,7 @@ public class HeroClassManager {
                             newClass.addAllowedWeapon(wType + "_" + wItem);
                             wLimits.append(" - ").append(wType).append("_").append(wItem);
                         } catch (IllegalArgumentException e) {
-                            plugin.log(Level.WARNING, "Invalid weapon type (" + type + "_" + item + ") defined for " + className);
+                            Heroes.log(Level.WARNING, "Invalid weapon type (" + type + "_" + item + ") defined for " + className);
                         }
                     }
 
@@ -165,7 +165,7 @@ public class HeroClassManager {
                         int damage = config.getInt("classes." + className + ".item-damage." + materialName, 0);
                         newClass.setItemDamage(material, damage);
                     } else {
-                        plugin.log(Level.WARNING, "Invalid material (" + material + ") defined for " + className);
+                        Heroes.log(Level.WARNING, "Invalid material (" + material + ") defined for " + className);
                     }
                 }
             }
@@ -180,7 +180,7 @@ public class HeroClassManager {
                         int damage = config.getInt("classes." + className + ".projectile-damage." + projectileName, 0);
                         newClass.setProjectileDamage(type, damage);
                     } catch (IllegalArgumentException e) {
-                        plugin.log(Level.WARNING, "Invalid projectile type (" + projectileName + ") defined for " + className);
+                        Heroes.log(Level.WARNING, "Invalid projectile type (" + projectileName + ") defined for " + className);
                     }
                 }
             }
@@ -193,7 +193,7 @@ public class HeroClassManager {
                     try {
                         Skill skill = (Skill) plugin.getCommandHandler().getCommand(skillName);
                         if (skill == null) {
-                            plugin.log(Level.WARNING, "Skill " + skillName + " defined for " + className + " not found.");
+                            Heroes.log(Level.WARNING, "Skill " + skillName + " defined for " + className + " not found.");
                             continue;
                         }
 
@@ -206,7 +206,7 @@ public class HeroClassManager {
                         }
                         newClass.addSkill(skillName, skillSettings);
                     } catch (IllegalArgumentException e) {
-                        plugin.log(Level.WARNING, "Invalid skill (" + skillName + ") defined for " + className + ". Skipping this skill.");
+                        Heroes.log(Level.WARNING, "Invalid skill (" + skillName + ") defined for " + className + ". Skipping this skill.");
                     }
                 }
             }
@@ -224,7 +224,7 @@ public class HeroClassManager {
                         OutsourcedSkill oSkill = new OutsourcedSkill(plugin, skill, permissions, usage);
                         plugin.getCommandHandler().addCommand(oSkill);
                     } catch (IllegalArgumentException e) {
-                        plugin.log(Level.WARNING, "Invalid permission skill (" + skill + ") defined for " + className + ". Skipping this skill.");
+                        Heroes.log(Level.WARNING, "Invalid permission skill (" + skill + ") defined for " + className + ". Skipping this skill.");
                     }
                 }
             }
@@ -243,10 +243,10 @@ public class HeroClassManager {
                     try {
                         boolean added = experienceSources.add(ExperienceType.valueOf(experience));
                         if (!added) {
-                            plugin.log(Level.WARNING, "Duplicate experience source (" + experience + ") defined for " + className + ".");
+                            Heroes.log(Level.WARNING, "Duplicate experience source (" + experience + ") defined for " + className + ".");
                         }
                     } catch (IllegalArgumentException e) {
-                        plugin.log(Level.WARNING, "Invalid experience source (" + experience + ") defined for " + className + ". Skipping this source.");
+                        Heroes.log(Level.WARNING, "Invalid experience source (" + experience + ") defined for " + className + ". Skipping this source.");
                     }
                 }
             }
@@ -254,11 +254,11 @@ public class HeroClassManager {
 
             boolean added = addClass(newClass);
             if (!added) {
-                plugin.log(Level.WARNING, "Duplicate class (" + className + ") found. Skipping this class.");
+                Heroes.log(Level.WARNING, "Duplicate class (" + className + ") found. Skipping this class.");
             } else {
-                plugin.log(Level.INFO, "Loaded class: " + className);
+                Heroes.log(Level.INFO, "Loaded class: " + className);
                 if (config.getBoolean("classes." + className + ".default", false)) {
-                    plugin.log(Level.INFO, "Default class found: " + className);
+                    Heroes.log(Level.INFO, "Default class found: " + className);
                     defaultClass = newClass;
                 }
             }
@@ -276,13 +276,13 @@ public class HeroClassManager {
                     parent.getSpecializations().add(unlinkedClass);
                     unlinkedClass.setParent(parent);
                 } else {
-                    plugin.log(Level.WARNING, "Cannot assign " + className + " a parent class as " + parentName + " does not exist.");
+                    Heroes.log(Level.WARNING, "Cannot assign " + className + " a parent class as " + parentName + " does not exist.");
                 }
             }
         }
 
         if (defaultClass == null) {
-            plugin.log(Level.SEVERE, "You are missing a default class, this will cause A LOT of issues!");
+            Heroes.log(Level.SEVERE, "You are missing a default class, this will cause A LOT of issues!");
         }
 
         // Save the Configuration setup to file, we do this so that any defaults values loaded are saved to file.

@@ -81,11 +81,11 @@ public class ConfigManager {
             load();
         } catch (Exception e) {
             e.printStackTrace();
-            plugin.log(Level.SEVERE, "Critical error encountered while loading. Disabling...");
+            Heroes.log(Level.SEVERE, "Critical error encountered while loading. Disabling...");
             plugin.getServer().getPluginManager().disablePlugin(plugin);
             return;
         }
-        plugin.log(Level.INFO, "Reloaded Configuration");
+        Heroes.log(Level.INFO, "Reloaded Configuration");
     }
 
     private void addNodeToConfig(Configuration config, ConfigurationNode node, String path) {
@@ -97,7 +97,7 @@ public class ConfigManager {
     private void checkForConfig(File config) {
         if (!config.exists()) {
             try {
-                plugin.log(Level.WARNING, "File " + config.getName() + " not found - generating defaults.");
+                Heroes.log(Level.WARNING, "File " + config.getName() + " not found - generating defaults.");
                 config.getParentFile().mkdir();
                 config.createNewFile();
                 OutputStream output = new FileOutputStream(config, false);
@@ -155,7 +155,7 @@ public class ConfigManager {
                         properties.creatureKillingExp.put(type, exp);
                     }
                 } catch (IllegalArgumentException e) {
-                    plugin.log(Level.WARNING, "Invalid creature type (" + item + ") found in experience.yml.");
+                    Heroes.log(Level.WARNING, "Invalid creature type (" + item + ") found in experience.yml.");
                 }
             }
         }
@@ -190,7 +190,7 @@ public class ConfigManager {
                 if (type != null) {
                     expMap.put(type, exp);
                 } else {
-                    plugin.log(Level.WARNING, "Invalid material type (" + item + ") found in experience.yml.");
+                    Heroes.log(Level.WARNING, "Invalid material type (" + item + ") found in experience.yml.");
                 }
             }
         }

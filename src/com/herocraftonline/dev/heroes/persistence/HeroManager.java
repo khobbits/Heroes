@@ -111,7 +111,7 @@ public class HeroManager {
 
             HeroClass playerClass = loadClass(player, playerConfig);
             if (playerClass == null) {
-                plugin.log(Level.INFO, "Invalid class found for " + player.getName() + ". Resetting player.");
+                Heroes.log(Level.INFO, "Invalid class found for " + player.getName() + ". Resetting player.");
                 return createNewHero(player);
             }
             Hero playerHero = new Hero(plugin, player, playerClass);
@@ -130,11 +130,11 @@ public class HeroManager {
 
             performSkillChecks(playerHero);
 
-            plugin.log(Level.INFO, "Loaded hero: " + player.getName());
+            Heroes.log(Level.INFO, "Loaded hero: " + player.getName());
             return playerHero;
         } else {
             // Create a New Hero with the Default Setup.
-            plugin.log(Level.INFO, "Created hero: " + player.getName());
+            Heroes.log(Level.INFO, "Created hero: " + player.getName());
             return createNewHero(player);
         }
     }
@@ -173,7 +173,7 @@ public class HeroManager {
         saveBinds(hero, playerConfig);
 
         playerConfig.save();
-        plugin.log(Level.INFO, "Saved hero: " + player.getName());
+        Heroes.log(Level.INFO, "Saved hero: " + player.getName());
     }
 
     public void stopTimers() {

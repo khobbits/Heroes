@@ -42,7 +42,7 @@ public final class SkillLoader {
             } else
                 throw new Exception();
         } catch (Exception e) {
-            plugin.log(Level.INFO, "The skill " + file.getName() + " failed to load");
+            Heroes.log(Level.INFO, "The skill " + file.getName() + " failed to load");
             e.printStackTrace();
             return null;
         }

@@ -188,7 +188,7 @@ public class Heroes extends JavaPlugin {
      * @param level
      * @param msg
      */
-    public void log(Level level, String msg) {
+    public static void log(Level level, String msg) {
         log.log(level, "[Heroes] " + msg);
         debugLog.log(level, "[Heroes] " + msg);
     }
