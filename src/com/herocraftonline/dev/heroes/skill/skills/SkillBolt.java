@@ -49,7 +49,7 @@ public class SkillBolt extends TargettedSkill {
             if (entity instanceof LivingEntity) {
                 if (entity != player) {
                     // Throw a dummy damage event to make it obey PvP restricting plugins
-                    EntityDamageEvent event = new EntityDamageByEntityEvent(player, target, DamageCause.ENTITY_ATTACK, 0);
+                    EntityDamageEvent event = new EntityDamageByEntityEvent(player, target, DamageCause.CUSTOM, 0);
                     getPlugin().getServer().getPluginManager().callEvent(event);
                     if (!event.isCancelled()) {
                         target.getWorld().strikeLightning(entity.getLocation());
