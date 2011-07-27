@@ -62,6 +62,7 @@ import com.herocraftonline.dev.heroes.persistence.HeroManager;
 import com.herocraftonline.dev.heroes.skill.OutsourcedSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.SkillLoader;
+import com.herocraftonline.dev.heroes.util.BedHealThread;
 import com.herocraftonline.dev.heroes.util.ConfigManager;
 import com.herocraftonline.dev.heroes.util.DebugLog;
 import com.nijiko.permissions.PermissionHandler;
@@ -91,6 +92,8 @@ public class Heroes extends JavaPlugin {
     private final HEntityListener entityListener = new HEntityListener(this);
     private final HBlockListener blockListener = new HBlockListener(this);
     private final HPartyListener partyListener = new HPartyListener(this);
+    
+    protected BedHealThread bedHealThread = new BedHealThread(this);
 
     // Various data managers
     private ConfigManager configManager;
@@ -211,7 +214,15 @@ public class Heroes extends JavaPlugin {
             heroManager.saveHero(player);
             switchToBNSH(player);
         }
-
+        this.getConfigManager().getProperties().bedHealers.clear();
+        if (this.bedHealThread.isAlive()) {
+        	this.bedHealThread.notify();
+        	try {
+				this.bedHealThread.join();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+        }
         this.Method = null; // When it Enables again it performs the checks anyways.
         Heroes.Permissions = null; // When it Enables again it performs the checks anyways.
         log.info(getDescription().getName() + " version " + getDescription().getVersion() + " is disabled!");
@@ -415,6 +426,8 @@ public class Heroes extends JavaPlugin {
         pluginManager.registerEvent(Type.PLAYER_PICKUP_ITEM, playerListener, Priority.Monitor, this);
         pluginManager.registerEvent(Type.PLAYER_TELEPORT, playerListener, Priority.Monitor, this);
         pluginManager.registerEvent(Type.PLAYER_RESPAWN, playerListener, Priority.Monitor, this);
+        pluginManager.registerEvent(Type.PLAYER_BED_ENTER, playerListener, Priority.Monitor, this);
+        pluginManager.registerEvent(Type.PLAYER_BED_LEAVE, playerListener, Priority.Monitor, this);
 
         pluginManager.registerEvent(Type.ENTITY_DAMAGE, partyEntityListener, Priority.Highest, this);
         pluginManager.registerEvent(Type.ENTITY_DEATH, entityListener, Priority.Monitor, this);

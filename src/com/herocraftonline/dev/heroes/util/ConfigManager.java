@@ -56,6 +56,7 @@ public class ConfigManager {
         loadLevelConfig(primaryConfig);
         loadDefaultConfig(primaryConfig);
         loadProperties(primaryConfig);
+        loadBedConfig(primaryConfig);
         loadMapConfig(primaryConfig);
         primaryConfig.save();
 
@@ -206,6 +207,13 @@ public class ConfigManager {
         properties.damageSystem = config.getBoolean(root + "useDamageSystem", false);
     }
 
+    private void loadBedConfig(Configuration config) {
+    	String root = "bed.";
+        properties.bedHeal = config.getBoolean(root + "bedHeal", true);
+    	properties.healInterval = config.getInt(root + "healInterval", 30);
+    	properties.healPercent = config.getInt(root + "healPercent", 5);
+    }
+    
     private void loadMapConfig(Configuration config) {
         String root = "mappartyui.";
         properties.mapUI = config.getBoolean(root + "enabled", false);

@@ -3,6 +3,7 @@ package com.herocraftonline.dev.heroes.persistence;
 import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -49,7 +50,7 @@ public class HeroManager {
 
     public HeroManager(Heroes plugin) {
         this.plugin = plugin;
-        this.heroes = new HashSet<Hero>();
+        this.heroes = Collections.synchronizedSet(new HashSet<Hero>());
         playerFolder = new File(plugin.getDataFolder(), "players"); // Setup our Player Data Folder
         playerFolder.mkdirs(); // Create the folder if it doesn't exist.
 

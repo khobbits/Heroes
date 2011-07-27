@@ -7,6 +7,8 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Result;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerBedEnterEvent;
+import org.bukkit.event.player.PlayerBedLeaveEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -97,7 +99,7 @@ public class HPlayerListener extends PlayerListener {
         HeroManager heroManager = plugin.getHeroManager();
         heroManager.saveHero(player);
         heroManager.removeHero(heroManager.getHero(player));
-        
+        plugin.getConfigManager().getProperties().bedHealers.remove(player);
         for (Command command : plugin.getCommandHandler().getCommands()) {
             if (command.isInteractive()) {
                 command.cancelInteraction(player);
@@ -126,4 +128,25 @@ public class HPlayerListener extends PlayerListener {
         }
 
     }
+
+	@Override
+	public void onPlayerBedEnter(PlayerBedEnterEvent event) {
+		if (event.isCancelled() || !plugin.getConfigManager().getProperties().bedHeal)
+			return;
+		
+		//This player is now in bed so add them to the bedHealers Set
+		plugin.getConfigManager().getProperties().bedHealers.add(event.getPlayer());
+		if (!plugin.bedHealThread.isAlive())
+			plugin.bedHealThread.start();
+	}
+
+	@Override
+	public void onPlayerBedLeave(PlayerBedLeaveEvent event) {
+		if (!plugin.getConfigManager().getProperties().bedHeal)
+			return;
+		
+		//This player is no longer in bed so remove them from the bedHealer set
+		plugin.getConfigManager().getProperties().bedHealers.remove(event.getPlayer());
+	}
+    
 }
