@@ -97,9 +97,9 @@ public class HPlayerListener extends PlayerListener {
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
         HeroManager heroManager = plugin.getHeroManager();
+        heroManager.removeBedHealer(heroManager.getHero(player));
         heroManager.saveHero(player);
         heroManager.removeHero(heroManager.getHero(player));
-        plugin.getConfigManager().getProperties().bedHealers.remove(player);
         for (Command command : plugin.getCommandHandler().getCommands()) {
             if (command.isInteractive()) {
                 command.cancelInteraction(player);
@@ -134,8 +134,9 @@ public class HPlayerListener extends PlayerListener {
 		if (event.isCancelled() || !plugin.getConfigManager().getProperties().bedHeal)
 			return;
 		
+		HeroManager heroManager = plugin.getHeroManager();
 		//This player is now in bed so add them to the bedHealers Set
-		plugin.getConfigManager().getProperties().bedHealers.add(event.getPlayer());
+		heroManager.addBedHealer(heroManager.getHero(event.getPlayer()));
 		if (!plugin.bedHealThread.isAlive())
 			plugin.bedHealThread.start();
 	}
@@ -145,8 +146,9 @@ public class HPlayerListener extends PlayerListener {
 		if (!plugin.getConfigManager().getProperties().bedHeal)
 			return;
 		
+		HeroManager heroManager = plugin.getHeroManager();
 		//This player is no longer in bed so remove them from the bedHealer set
-		plugin.getConfigManager().getProperties().bedHealers.remove(event.getPlayer());
+		heroManager.removeBedHealer(heroManager.getHero(event.getPlayer()));
 	}
     
 }
