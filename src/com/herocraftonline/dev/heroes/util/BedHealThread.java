@@ -1,25 +1,29 @@
 package com.herocraftonline.dev.heroes.util;
 
 import java.util.Iterator;
-
-import org.bukkit.entity.Player;
+import java.util.Set;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
+import com.herocraftonline.dev.heroes.persistence.HeroManager;
 
 public class BedHealThread extends Thread {
 	
 	private Heroes plugin;
-	Properties props;
+	private Properties props;
+	private HeroManager heroManager;
+	private Set<Hero> bedHealers;
 
 	public BedHealThread(Heroes plugin) {
 		this.plugin = plugin;
 		props = plugin.getConfigManager().getProperties();
-		
+		heroManager = plugin.getHeroManager();
+		bedHealers = heroManager.getBedHealers();
 	}
 	
 	public void run() {
-		while(!props.bedHealers.isEmpty()) {
+		boolean isEmpty = false;
+		while(!isEmpty) {
 			try {
 				this.wait(props.healInterval * 1000);
 			} catch (InterruptedException e) {
@@ -27,10 +31,10 @@ public class BedHealThread extends Thread {
 				break;
 			}
 			
-			synchronized(props.bedHealers) {
-				Iterator<Player> iter = props.bedHealers.iterator();
+			synchronized(bedHealers) {
+				Iterator<Hero> iter = bedHealers.iterator();
 				while (iter.hasNext()) {
-					Hero hero = plugin.getHeroManager().getHero(iter.next());
+					Hero hero = iter.next();
 					double newHealth = hero.getHealth() + (hero.getMaxHealth() * props.healPercent / 100);
 					if (newHealth >= hero.getMaxHealth()) {
 						newHealth = hero.getMaxHealth();
@@ -38,6 +42,7 @@ public class BedHealThread extends Thread {
 					}
 					plugin.getServer().getScheduler().callSyncMethod(plugin, hero.bedHeal(newHealth));
 				}
+				isEmpty = bedHealers.isEmpty();
 			}
 		}
 	}

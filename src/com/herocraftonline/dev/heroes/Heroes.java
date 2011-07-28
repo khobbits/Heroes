@@ -214,7 +214,7 @@ public class Heroes extends JavaPlugin {
             heroManager.saveHero(player);
             switchToBNSH(player);
         }
-        this.getConfigManager().getProperties().bedHealers.clear();
+        this.heroManager.clearBedHealers();
         if (this.bedHealThread.isAlive()) {
         	this.bedHealThread.notify();
         	try {

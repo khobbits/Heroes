@@ -43,6 +43,7 @@ public class HeroManager {
 
 	private Heroes plugin;
 	private Set<Hero> heroes;
+    private Set<Hero> bedHealers;
 	private File playerFolder;
 	private final static int effectInterval = 2;
 	private final static int manaInterval = 5;
@@ -50,7 +51,8 @@ public class HeroManager {
 
 	public HeroManager(Heroes plugin) {
 		this.plugin = plugin;
-		this.heroes = Collections.synchronizedSet(new HashSet<Hero>());
+		this.heroes = new HashSet<Hero>();
+		this.bedHealers = Collections.synchronizedSet(new HashSet<Hero>());
 		playerFolder = new File(plugin.getDataFolder(), "players"); // Setup our Player Data Folder
 		playerFolder.mkdirs(); // Create the folder if it doesn't exist.
 
@@ -65,9 +67,7 @@ public class HeroManager {
 	}
 
 	public boolean addHero(Hero hero) {
-		synchronized(heroes) {
-			return heroes.add(hero);
-		}
+		return heroes.add(hero);
 	}
 
 	public boolean containsPlayer(Player player) {
@@ -96,9 +96,7 @@ public class HeroManager {
 	}
 
 	public Set<Hero> getHeroes() {
-		synchronized(heroes) {
 			return new HashSet<Hero>(heroes);
-		}
 	}
 
 	/**
@@ -153,9 +151,7 @@ public class HeroManager {
 			}
 		}
 		
-		synchronized(heroes) {
-			return heroes.remove(hero);
-		}
+		return heroes.remove(hero);
 	}
 
 	/**
@@ -186,6 +182,39 @@ public class HeroManager {
 
 	public void stopTimers() {
 		plugin.getServer().getScheduler().cancelTasks(plugin);
+	}
+	
+	/**
+	 * Removes a hero from the set of heroes currently in bed
+	 * @param hero
+	 */
+	public void removeBedHealer(Hero hero) {
+		synchronized(bedHealers) {
+			bedHealers.remove(hero);
+		}
+	}
+	
+	/**
+	 * Flushes the bed healer Set of all records
+	 */
+	public void clearBedHealers() {
+		synchronized(bedHealers) {
+			bedHealers.clear();
+		}
+	}
+	
+	/**
+	 * Adds a hero to the set of heroes currently in bed
+	 * @param hero
+	 */
+	public void addBedHealer(Hero hero) {
+		synchronized(bedHealers) {
+			bedHealers.add(hero);
+		}
+	}
+	
+	public Set<Hero> getBedHealers() {
+		return bedHealers;
 	}
 
 	private void loadBinds(Hero hero, Configuration config) {
