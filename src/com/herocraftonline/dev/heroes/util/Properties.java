@@ -1,7 +1,10 @@
 package com.herocraftonline.dev.heroes.util;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -53,7 +56,13 @@ public class Properties {
     public int swapCost;
     public boolean swapMasteryCost;
     public boolean damageSystem;
-
+    
+    //Bed Stuffs
+    public boolean bedHeal;
+    public int healInterval;
+    public int healPercent;
+    public Set<Player> bedHealers = Collections.synchronizedSet(new HashSet<Player>());
+    
     // Map Stuffs
     public boolean mapUI;
     public byte mapID;

@@ -13,3 +13,7 @@ properties:
     swapcost: 0
     debug: false
     useDamageSystem: true
+bed:
+    bedHeal: true
+    healInterval: 30
+    healPercent: 5
