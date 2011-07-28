@@ -93,7 +93,7 @@ public class Heroes extends JavaPlugin {
     private final HBlockListener blockListener = new HBlockListener(this);
     private final HPartyListener partyListener = new HPartyListener(this);
     
-    protected BedHealThread bedHealThread = new BedHealThread(this);
+    protected BedHealThread bedHealThread;
 
     // Various data managers
     private ConfigManager configManager;
@@ -290,6 +290,9 @@ public class Heroes extends JavaPlugin {
             info.setData(pixels);
             mapAPI.saveMap(world, mapId, info);
         }
+        
+        //Setup the Bed Healing Thread so it's ready to be started
+        bedHealThread = new BedHealThread(this);
     }
 
     @Override
