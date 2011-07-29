@@ -20,7 +20,7 @@ public class ToolsCommand extends BasicCommand {
         setDescription("Displays tools available for your class");
         setUsage("/hero tools");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "hero tools" });
+        setIdentifiers(new String[]{"hero tools"});
     }
 
     @Override
@@ -32,7 +32,7 @@ public class ToolsCommand extends BasicCommand {
         HeroClass heroClass = hero.getHeroClass();
 
         Set<String> allTools = heroClass.getAllowedWeapons();
-        String[] categories = { "Sword", "Spade", "Pickaxe", "Axe", "Hoe" };
+        String[] categories = {"Sword", "Spade", "Pickaxe", "Axe", "Hoe"};
         String[] categorizedTools = new String[categories.length];
 
         for (int i = 0; i < categories.length; i++) {

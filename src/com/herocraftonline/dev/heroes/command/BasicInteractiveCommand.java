@@ -24,18 +24,20 @@ public abstract class BasicInteractiveCommand extends BasicCommand implements In
         this.states = states;
         super.setArgumentRange(states[0].getMinArguments(), states[0].getMaxArguments());
     }
-    
+
     @Override
     public final void cancelInteraction(CommandSender executor) {
         userStates.remove(executor);
         onCommandCancelled(executor);
     }
-    
-    @Override
-    public final void setArgumentRange(int min, int max) {}
 
     @Override
-    public final void setIdentifiers(String[] identifiers) {}
+    public final void setArgumentRange(int min, int max) {
+    }
+
+    @Override
+    public final void setIdentifiers(String[] identifiers) {
+    }
 
     @Override
     public final boolean isInProgress(CommandSender executor) {
@@ -58,7 +60,7 @@ public abstract class BasicInteractiveCommand extends BasicCommand implements In
         InteractiveCommandState state = states[stateIndex];
         return state.isIdentifier(input);
     }
-    
+
     @Override
     public final boolean isInteractive() {
         return true;

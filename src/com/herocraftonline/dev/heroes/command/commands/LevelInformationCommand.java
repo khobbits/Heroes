@@ -19,7 +19,7 @@ public class LevelInformationCommand extends BasicCommand {
         setDescription("Displays hero information");
         setUsage("/hero level");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "hero level", "level", "lvl" });
+        setIdentifiers(new String[]{"hero level", "level", "lvl"});
     }
 
     @Override
@@ -44,7 +44,7 @@ public class LevelInformationCommand extends BasicCommand {
             sender.sendMessage(ChatColor.YELLOW + "  MASTERED!");
         }
         sender.sendMessage(ChatColor.BLUE + "  MANA " + Messaging.createManaBar(hero.getMana()));
-        
+
         return true;
     }
 

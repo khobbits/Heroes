@@ -16,7 +16,7 @@ public class SkillTaunt extends ActiveSkill {
         setDescription("Taunts enemies around you");
         setUsage("/skill taunt");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "skill taunt" });
+        setIdentifiers(new String[]{"skill taunt"});
     }
 
     @Override

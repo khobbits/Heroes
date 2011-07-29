@@ -20,7 +20,7 @@ public class PartyChatCommand extends BasicCommand {
         setDescription("Sends messages to your party");
         setUsage("/party §9<msg> OR /p §9<msg>");
         setArgumentRange(1, 1000);
-        setIdentifiers(new String[] { "pc", "p", "party" });
+        setIdentifiers(new String[]{"pc", "p", "party"});
     }
 
     @Override

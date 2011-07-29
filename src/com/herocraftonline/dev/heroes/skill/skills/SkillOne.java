@@ -25,7 +25,7 @@ public class SkillOne extends ActiveSkill {
         setDescription("Provides a short burst of speed");
         setUsage("/skill one");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "skill one" });
+        setIdentifiers(new String[]{"skill one"});
 
         registerEvent(Type.PLAYER_MOVE, new SkillPlayerListener(), Priority.Normal);
     }

@@ -18,7 +18,7 @@ public class AdminExpCommand extends BasicCommand {
         setDescription("Changes a users exp");
         setUsage("/hero admin exp §9<player> <exp>");
         setArgumentRange(2, 2);
-        setIdentifiers(new String[] { "hero admin exp" });
+        setIdentifiers(new String[]{"hero admin exp"});
         setPermission("heroes.admin.exp");
     }
 

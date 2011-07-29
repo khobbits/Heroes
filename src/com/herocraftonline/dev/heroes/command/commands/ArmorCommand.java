@@ -21,7 +21,7 @@ public class ArmorCommand extends BasicCommand {
         setDescription("Displays armor available for your class");
         setUsage("/hero armor");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "hero armor" });
+        setIdentifiers(new String[]{"hero armor"});
     }
 
     @Override
@@ -33,7 +33,7 @@ public class ArmorCommand extends BasicCommand {
         HeroClass heroClass = hero.getHeroClass();
 
         Set<String> allArmors = heroClass.getAllowedArmor();
-        String[] categories = { "Helmet", "Chestplate", "Leggings", "Boots" };
+        String[] categories = {"Helmet", "Chestplate", "Leggings", "Boots"};
         String[] categorizedArmors = new String[categories.length];
 
         for (int i = 0; i < categories.length; i++) {
@@ -59,7 +59,7 @@ public class ArmorCommand extends BasicCommand {
         for (int i = 0; i < categories.length; i++) {
             player.sendMessage("  §a" + categories[i] + ": §f" + categorizedArmors[i]);
         }
-        
+
         return true;
     }
 

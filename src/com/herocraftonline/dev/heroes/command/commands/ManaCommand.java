@@ -17,7 +17,7 @@ public class ManaCommand extends BasicCommand {
         setDescription("Displays your current mana");
         setUsage("/level");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "mana" });
+        setIdentifiers(new String[]{"mana"});
     }
 
     @Override

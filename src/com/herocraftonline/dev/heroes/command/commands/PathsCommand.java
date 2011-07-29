@@ -20,7 +20,7 @@ public class PathsCommand extends BasicCommand {
         setDescription("Lists all paths available to you");
         setUsage("/hero paths §8[page#]");
         setArgumentRange(0, 1);
-        setIdentifiers(new String[] { "hero paths" });
+        setIdentifiers(new String[]{"hero paths"});
     }
 
     @Override
@@ -29,7 +29,8 @@ public class PathsCommand extends BasicCommand {
         if (args.length != 0) {
             try {
                 page = Integer.parseInt(args[0]) - 1;
-            } catch (NumberFormatException ignored) {}
+            } catch (NumberFormatException ignored) {
+            }
         }
 
         Set<HeroClass> classes = plugin.getClassManager().getClasses();

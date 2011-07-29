@@ -22,7 +22,7 @@ public class RecoverItemsCommand extends BasicCommand {
         setDescription("Recover removed items");
         setUsage("/hero recover");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "hero recover" });
+        setIdentifiers(new String[]{"hero recover"});
     }
 
     @Override

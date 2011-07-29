@@ -17,7 +17,7 @@ public class VerboseCommand extends BasicCommand {
         setDescription("Toggles display of mana and exp gains");
         setUsage("/hero verbose");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "hero verbose" });
+        setIdentifiers(new String[]{"hero verbose"});
     }
 
     @Override

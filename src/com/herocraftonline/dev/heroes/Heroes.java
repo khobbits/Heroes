@@ -91,7 +91,7 @@ public class Heroes extends JavaPlugin {
     private final HEntityListener entityListener = new HEntityListener(this);
     private final HBlockListener blockListener = new HBlockListener(this);
     private final HPartyListener partyListener = new HPartyListener(this);
-    
+
 
     // Various data managers
     private ConfigManager configManager;

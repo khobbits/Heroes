@@ -16,7 +16,7 @@ public class SkillPray extends TargettedSkill {
         setDescription("Heals the target");
         setUsage("/skill pray <target>");
         setArgumentRange(0, 1);
-        setIdentifiers(new String[] { "skill pray" });
+        setIdentifiers(new String[]{"skill pray"});
     }
 
     @Override

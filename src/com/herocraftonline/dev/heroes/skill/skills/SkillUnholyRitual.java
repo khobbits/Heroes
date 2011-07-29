@@ -18,7 +18,7 @@ public class SkillUnholyRitual extends TargettedSkill {
         setDescription("Target Zombie or Skeleton is sacrificed, necromancer receives mana");
         setUsage("/skill unholyritual [target]");
         setArgumentRange(0, 1);
-        setIdentifiers(new String[] { "skill unholyritual" });
+        setIdentifiers(new String[]{"skill unholyritual"});
     }
 
     @Override

@@ -53,9 +53,8 @@ public abstract class PassiveSkill extends Skill {
      * Typical skill constructor, except that it automatically sets the usage text to <i>Passive Skill</i>, which should
      * not be changed for normal use. There should be no identifiers defined as a passive skill is not meant to be
      * executed.
-     * 
-     * @param plugin
-     *            the active Heroes instance
+     *
+     * @param plugin the active Heroes instance
      */
     public PassiveSkill(Heroes plugin, String name) {
         super(plugin, name);
@@ -75,7 +74,7 @@ public abstract class PassiveSkill extends Skill {
     /**
      * Creates and returns a <code>ConfigurationNode</code> containing the default apply and unapply texts. When using
      * additional configuration settings in your skills, be sure to override this method to define them with defaults.
-     * 
+     *
      * @return a default configuration
      */
     @Override
@@ -101,9 +100,8 @@ public abstract class PassiveSkill extends Skill {
 
     /**
      * Attempts to apply this skill's effect to the provided {@link Hero} if the it is the correct class and level.
-     * 
-     * @param hero
-     *            the Hero to try applying the effect to
+     *
+     * @param hero the Hero to try applying the effect to
      */
     public void tryApplying(Hero hero) {
         HeroClass heroClass = hero.getHeroClass();
@@ -120,9 +118,8 @@ public abstract class PassiveSkill extends Skill {
 
     /**
      * Applies the effect to the provided {@link Hero}.
-     * 
-     * @param hero
-     *            the Hero to apply the effect to
+     *
+     * @param hero the Hero to apply the effect to
      */
     protected void apply(Hero hero) {
         Effect effect = new Effect(this, getName());
@@ -134,9 +131,8 @@ public abstract class PassiveSkill extends Skill {
 
     /**
      * Removes the effect from the provided {@link Hero}.
-     * 
-     * @param hero
-     *            the Hero to remove the effect from
+     *
+     * @param hero the Hero to remove the effect from
      */
     protected void unapply(Hero hero) {
         if (hero.hasEffect(getName())) {

@@ -20,7 +20,7 @@ public class SkillDrainsoul extends TargettedSkill {
         setDescription("Absorb health from target");
         setUsage("/skill drainsoul <target>");
         setArgumentRange(0, 1);
-        setIdentifiers(new String[] { "skill drainsoul" });
+        setIdentifiers(new String[]{"skill drainsoul"});
     }
 
     @Override

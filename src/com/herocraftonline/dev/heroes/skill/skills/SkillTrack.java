@@ -21,7 +21,7 @@ public class SkillTrack extends ActiveSkill {
         setDescription("Locates a player");
         setUsage("/skill track <player>");
         setArgumentRange(1, 1);
-        setIdentifiers(new String[] { "skill track" });
+        setIdentifiers(new String[]{"skill track"});
     }
 
     @Override

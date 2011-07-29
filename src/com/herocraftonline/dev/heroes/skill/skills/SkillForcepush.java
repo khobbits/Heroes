@@ -14,7 +14,7 @@ public class SkillForcepush extends TargettedSkill {
         super(plugin, "Forcepush");
         setDescription("Forces your target backwards");
         setArgumentRange(0, 1);
-        setIdentifiers(new String[] { "skill forcepush" });
+        setIdentifiers(new String[]{"skill forcepush"});
     }
 
     @Override

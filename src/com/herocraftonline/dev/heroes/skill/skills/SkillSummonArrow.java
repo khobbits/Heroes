@@ -18,7 +18,7 @@ public class SkillSummonArrow extends ActiveSkill {
         setDescription("Summons you some arrows!");
         setUsage("/skill summonarrow");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "skill summonarrow" });
+        setIdentifiers(new String[]{"skill summonarrow"});
     }
 
     @Override

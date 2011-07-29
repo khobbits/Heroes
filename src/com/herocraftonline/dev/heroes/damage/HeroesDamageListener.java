@@ -33,6 +33,7 @@ public class HeroesDamageListener extends EntityListener {
     private DamageManager damageManager;
 
     private static final Map<Material, Integer> armorPoints;
+
     static {
         Map<Material, Integer> aMap = new HashMap<Material, Integer>();
         aMap.put(Material.LEATHER_HELMET, 3);

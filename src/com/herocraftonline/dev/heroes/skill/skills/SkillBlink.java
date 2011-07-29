@@ -15,7 +15,7 @@ public class SkillBlink extends ActiveSkill {
         setDescription("Teleports you 4-5 blocks");
         setUsage("/skill blink");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "skill blink" });
+        setIdentifiers(new String[]{"skill blink"});
     }
 
     @Override

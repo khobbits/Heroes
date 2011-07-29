@@ -17,7 +17,7 @@ public class HealthCommand extends BasicCommand {
         setDescription("Displays your health");
         setUsage("/hp");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "health", "hp" });
+        setIdentifiers(new String[]{"health", "hp"});
     }
 
     @Override

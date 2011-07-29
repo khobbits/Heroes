@@ -25,7 +25,7 @@ public class SkillFirearrow extends ActiveSkill {
         setDescription("Shoots a burning arrow");
         setUsage("/skill firearrow");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "skill firearrow" });
+        setIdentifiers(new String[]{"skill firearrow"});
 
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
     }

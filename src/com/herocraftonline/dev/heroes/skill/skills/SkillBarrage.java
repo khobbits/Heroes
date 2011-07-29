@@ -20,7 +20,7 @@ public class SkillBarrage extends ActiveSkill {
         setDescription("Fire a Barrage of Arrows around you.");
         setUsage("/skill barrage");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "skill barrage" });
+        setIdentifiers(new String[]{"skill barrage"});
     }
 
     @SuppressWarnings("deprecation")

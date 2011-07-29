@@ -17,14 +17,6 @@ public class Properties {
     // Debug Mode //
     public boolean debug;
 
-    // Persistence //
-    public String host;
-    public String port;
-    public String database;
-    public String username;
-    public String password;
-    public String method;
-
     // Leveling//
     public double power;
     public int maxExp;
@@ -44,9 +36,11 @@ public class Properties {
 
     public Map<String, String> skillInfo = new HashMap<String, String>();
     public Map<Player, Location> playerDeaths = new HashMap<Player, Location>();
+
     // Default//
     public String defClass;
     public int defLevel;
+
     // Properties//
     public boolean iConomy;
     public ChatColor cColor;
@@ -54,12 +48,12 @@ public class Properties {
     public int swapCost;
     public boolean swapMasteryCost;
     public boolean damageSystem;
-    
+
     //Bed Stuffs
     public boolean bedHeal;
     public int healInterval;
     public int healPercent;
-    
+
     // Map Stuffs
     public boolean mapUI;
     public byte mapID;

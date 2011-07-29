@@ -23,7 +23,7 @@ public class SkillXMuteOre extends ActiveSkill {
         setDescription("Transmutes ores into more valuable ones");
         setUsage("/skill xmuteore");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "skill xmuteore" });
+        setIdentifiers(new String[]{"skill xmuteore"});
     }
 
     @Override
@@ -32,6 +32,7 @@ public class SkillXMuteOre extends ActiveSkill {
         Map<String, Object> coalMap = new HashMap<String, Object>() {
 
             private static final long serialVersionUID = -1219378148267575L;
+
             {
                 put("reagentdata", 0); // Corresponds to coal (not charcoal)
                 put("product", "IRON_ORE");
@@ -41,6 +42,7 @@ public class SkillXMuteOre extends ActiveSkill {
         Map<String, Object> ironMap = new HashMap<String, Object>() {
 
             private static final long serialVersionUID = -7888166535021352165L;
+
             {
                 put("product", "GOLD_ORE");
                 put("count", 32);
@@ -49,6 +51,7 @@ public class SkillXMuteOre extends ActiveSkill {
         Map<String, Object> lapisMap = new HashMap<String, Object>() {
 
             private static final long serialVersionUID = 2039299575654763981L;
+
             {
                 put("reagentdata", 4); // Corresponds to lapis
                 put("product", "DIAMOND");

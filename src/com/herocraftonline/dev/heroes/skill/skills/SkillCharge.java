@@ -14,7 +14,7 @@ public class SkillCharge extends TargettedSkill {
         setDescription("Charges towards your target");
         setUsage("/skill charge");
         setArgumentRange(0, 1);
-        setIdentifiers(new String[] { "skill charge" });
+        setIdentifiers(new String[]{"skill charge"});
     }
 
     @Override

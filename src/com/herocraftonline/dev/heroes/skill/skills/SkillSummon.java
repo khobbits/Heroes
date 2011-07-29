@@ -25,7 +25,7 @@ public class SkillSummon extends ActiveSkill {
         setDescription("Summons a creature to fight by your side");
         setUsage("/skill summon <creature>");
         setArgumentRange(1, 1);
-        setIdentifiers(new String[] { "skill summon" });
+        setIdentifiers(new String[]{"skill summon"});
     }
 
     @Override

@@ -17,7 +17,7 @@ public class HeroSaveCommand extends BasicCommand {
         setDescription("Saves your hero file");
         setUsage("/hero save");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "hero save" });
+        setIdentifiers(new String[]{"hero save"});
     }
 
     @Override
@@ -26,7 +26,7 @@ public class HeroSaveCommand extends BasicCommand {
 
         Player player = (Player) sender;
         plugin.getHeroManager().saveHero(player);
-        
+
         Messaging.send(player, "Your hero has been saved sucessfully!");
         return true;
     }

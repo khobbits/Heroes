@@ -16,7 +16,7 @@ public class SkillDispel extends TargettedSkill {
         setDescription("Removes all effects from your target");
         setUsage("/skill dispel");
         setArgumentRange(0, 1);
-        setIdentifiers(new String[] { "skill dispel" });
+        setIdentifiers(new String[]{"skill dispel"});
     }
 
     @Override

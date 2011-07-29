@@ -5,11 +5,11 @@ public abstract class BasicInteractiveCommandState implements InteractiveCommand
     private String identifier;
     private int minArguments = 0;
     private int maxArguments = 0;
-    
+
     public BasicInteractiveCommandState(String identifier) {
         this.identifier = identifier;
     }
-    
+
     @Override
     public int getMinArguments() {
         return minArguments;
@@ -19,7 +19,7 @@ public abstract class BasicInteractiveCommandState implements InteractiveCommand
     public int getMaxArguments() {
         return maxArguments;
     }
-    
+
     public void setArgumentRange(int min, int max) {
         this.minArguments = min;
         this.maxArguments = max;

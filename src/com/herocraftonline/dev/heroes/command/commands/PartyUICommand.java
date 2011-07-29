@@ -18,7 +18,7 @@ public class PartyUICommand extends BasicCommand {
         setDescription("Gives the Player a Map linked to the Party UI.");
         setUsage("/party ui");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "party ui" });
+        setIdentifiers(new String[]{"party ui"});
     }
 
     @Override

@@ -15,7 +15,8 @@ import org.bukkit.entity.Player;
  */
 public final class MapAPI {
 
-    public MapAPI() {}
+    public MapAPI() {
+    }
 
     public void sendRawData(Player player, short mapId, byte[] data) {
         //Packet packet = new Packet131((short) Material.MAP.getId(), mapId, data);

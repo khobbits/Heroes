@@ -61,7 +61,7 @@ public class HeroClass {
     public void addSkill(String name, ConfigurationNode settings) {
         skills.put(name.toLowerCase(), settings);
     }
-    
+
     public Set<String> getSkillNames() {
         return new TreeSet<String>(skills.keySet());
     }

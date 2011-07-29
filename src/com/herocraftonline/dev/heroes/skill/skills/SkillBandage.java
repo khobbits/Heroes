@@ -19,7 +19,7 @@ public class SkillBandage extends TargettedSkill {
         setDescription("Bandages the target");
         setUsage("/skill bandage <target>");
         setArgumentRange(0, 1);
-        setIdentifiers(new String[] { "skill bandage" });
+        setIdentifiers(new String[]{"skill bandage"});
     }
 
     @Override

@@ -24,7 +24,7 @@ public class SkillBleed extends TargettedSkill {
         setDescription("Causes your target to bleed");
         setUsage("/skill bleed <target>");
         setArgumentRange(0, 1);
-        setIdentifiers(new String[] { "skill bleed" });
+        setIdentifiers(new String[]{"skill bleed"});
     }
 
     @Override

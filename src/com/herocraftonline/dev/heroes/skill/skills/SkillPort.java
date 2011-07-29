@@ -21,7 +21,7 @@ public class SkillPort extends ActiveSkill {
         setDescription("Teleports you and your nearby party to the set location!");
         setUsage("/skill port <location>");
         setArgumentRange(1, 1);
-        setIdentifiers(new String[] { "skill port" });
+        setIdentifiers(new String[]{"skill port"});
     }
 
     @Override

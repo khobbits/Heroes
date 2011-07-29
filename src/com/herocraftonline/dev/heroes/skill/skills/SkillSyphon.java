@@ -16,7 +16,7 @@ public class SkillSyphon extends TargettedSkill {
         setDescription("Gives your health to the target");
         setUsage("/skill syphon [target] [health]");
         setArgumentRange(0, 2);
-        setIdentifiers(new String[] { "skill syphon" });
+        setIdentifiers(new String[]{"skill syphon"});
     }
 
     @Override

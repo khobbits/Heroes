@@ -17,7 +17,7 @@ public class PartyLeaveCommand extends BasicCommand {
         setDescription("Leaves your party");
         setUsage("/party leave");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "party leave" });
+        setIdentifiers(new String[]{"party leave"});
     }
 
     @Override

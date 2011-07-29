@@ -19,7 +19,7 @@ public class SkillHarmtouch extends TargettedSkill {
         setDescription("Deals direct damage to the target");
         setUsage("/skill harmtouch [target]");
         setArgumentRange(0, 1);
-        setIdentifiers(new String[] { "skill harmtouch" });
+        setIdentifiers(new String[]{"skill harmtouch"});
     }
 
     @Override

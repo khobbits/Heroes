@@ -208,12 +208,12 @@ public class ConfigManager {
     }
 
     private void loadBedConfig(Configuration config) {
-    	String root = "bed.";
+        String root = "bed.";
         properties.bedHeal = config.getBoolean(root + "bedHeal", true);
-    	properties.healInterval = config.getInt(root + "healInterval", 30);
-    	properties.healPercent = config.getInt(root + "healPercent", 5);
+        properties.healInterval = config.getInt(root + "healInterval", 30);
+        properties.healPercent = config.getInt(root + "healPercent", 5);
     }
-    
+
     private void loadMapConfig(Configuration config) {
         String root = "mappartyui.";
         properties.mapUI = config.getBoolean(root + "enabled", false);
@@ -251,7 +251,7 @@ public class ConfigManager {
         }
     }
 
-    @SuppressWarnings({ "unchecked" })
+    @SuppressWarnings({"unchecked"})
     public void print(Map<String, Object> map, String indent) {
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             if (entry.getValue() instanceof Map) {

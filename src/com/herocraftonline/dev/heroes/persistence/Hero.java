@@ -352,10 +352,10 @@ public class Hero {
             this.health = health;
         }
     }
-    
+
     public Callable<?> bedHeal(double newHealth) {
-    	setHealth(newHealth);
-    	syncHealth();
-		return null;
+        setHealth(newHealth);
+        syncHealth();
+        return null;
     }
 }

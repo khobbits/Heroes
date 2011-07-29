@@ -21,7 +21,7 @@ public class WhoCommand extends BasicCommand {
         setDescription("Checks the players level and other information");
         setUsage("/hero who §9<player|class>");
         setArgumentRange(1, 1);
-        setIdentifiers(new String[] { "hero who" });
+        setIdentifiers(new String[]{"hero who"});
     }
 
     @Override

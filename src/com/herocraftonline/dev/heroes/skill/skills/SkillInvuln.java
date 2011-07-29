@@ -24,7 +24,7 @@ public class SkillInvuln extends ActiveSkill {
         setDescription("Grants total damage immunity");
         setUsage("/skill invuln");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "skill invuln" });
+        setIdentifiers(new String[]{"skill invuln"});
 
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
     }

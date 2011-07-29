@@ -18,7 +18,7 @@ public class SkillSummonfood extends ActiveSkill {
         setDescription("Summons you food!");
         setUsage("/skill summonfood");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "skill summonfood" });
+        setIdentifiers(new String[]{"skill summonfood"});
     }
 
     @Override

@@ -17,7 +17,7 @@ public class PartyAcceptCommand extends BasicCommand {
         setDescription("Accept a party invite");
         setUsage("/party accept §9<player>");
         setArgumentRange(1, 1);
-        setIdentifiers(new String[] { "party accept" });
+        setIdentifiers(new String[]{"party accept"});
     }
 
     @Override

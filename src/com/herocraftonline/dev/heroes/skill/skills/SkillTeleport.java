@@ -15,7 +15,7 @@ public class SkillTeleport extends ActiveSkill {
         setDescription("Teleports you to (roughly) to your party member!");
         setUsage("/skill teleport <player>");
         setArgumentRange(1, 1);
-        setIdentifiers(new String[] { "skill teleport" });
+        setIdentifiers(new String[]{"skill teleport"});
     }
 
     @Override

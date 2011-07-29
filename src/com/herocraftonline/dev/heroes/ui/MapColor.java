@@ -6,14 +6,14 @@ import java.util.Map;
 
 public enum MapColor {
 
-    ICE(112,112,180, 20),
+    ICE(112, 112, 180, 20),
     DARK_GRAY(79, 79, 79, 44),
     DARK_RED(180, 0, 0, 16),
-    RED(220,0,0,19),
-    BLUE(55,55,220,51),
+    RED(220, 0, 0, 19),
+    BLUE(55, 55, 220, 51),
     DARK_BLUE(45, 45, 180, 48),
-    GREEN(0,124,0, 30),
-    DARK_GREEN(0,87,0, 28);
+    GREEN(0, 124, 0, 30),
+    DARK_GREEN(0, 87, 0, 28);
 
     private final int red;
     private final int green;
@@ -66,8 +66,8 @@ public enum MapColor {
 
     public static MapColor getByRGB(final int red, final int green, final int blue) {
         for (MapColor color : MapColor.values()) {
-            if(red == color.getRed() && green == color.getGreen() && blue == color.getBlue()) {
-                    return color;
+            if (red == color.getRed() && green == color.getGreen() && blue == color.getBlue()) {
+                return color;
             }
         }
         return null;
@@ -75,8 +75,8 @@ public enum MapColor {
 
     public static MapColor getByColor(final Color c) {
         for (MapColor color : MapColor.values()) {
-            if(c.getRed() == color.getRed() && c.getRed() == color.getGreen() && c.getBlue() == color.getBlue()) {
-                    return color;
+            if (c.getRed() == color.getRed() && c.getRed() == color.getGreen() && c.getBlue() == color.getBlue()) {
+                return color;
             }
         }
         return null;
