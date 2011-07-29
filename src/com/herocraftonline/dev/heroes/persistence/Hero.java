@@ -363,6 +363,7 @@ public class Hero {
     public Callable<?> bedHeal(double newHealth) {
         setHealth(newHealth);
         syncHealth();
+        player.sendMessage(Messaging.createFullHealthBar((int) health, (int) getMaxHealth()));
         return null;
     }
 }

@@ -24,6 +24,24 @@ public final class Messaging {
         manaBar += ChatColor.RED + "]";
         return manaBar + " - " + ChatColor.BLUE + mana + "%";
     }
+    
+    public static String createFullHealthBar(int health, int d) {
+        return "§aHealth: §f" + health + "/" + d + createHealthBar(health, d);
+    }
+    
+    public static String createHealthBar(int health, int maxHealth) {
+        String healthBar = ChatColor.RED + "[" + ChatColor.GREEN;
+        int progress = (int) (health / maxHealth * 50);
+        for (int i = 0; i < progress; i++) {
+            healthBar += "|";
+        }
+        healthBar += ChatColor.DARK_RED;
+        for (int i = 0; i < 50 - progress; i++) {
+            healthBar += "|";
+        }
+        healthBar += ChatColor.RED + "]";
+        return healthBar + " - " + ChatColor.GREEN + (health/maxHealth) + "%";
+    }
 
     public static void send(CommandSender player, String msg, Object... params) {
         player.sendMessage(parameterizeMessage(msg, params));
