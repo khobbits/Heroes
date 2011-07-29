@@ -27,9 +27,11 @@ import com.herocraftonline.dev.heroes.skill.OutsourcedSkill;
 public class HPlayerListener extends PlayerListener {
 
     public final Heroes plugin;
+    private HeroManager heroManager;
 
     public HPlayerListener(Heroes instance) {
         plugin = instance;
+        heroManager = plugin.getHeroManager();
     }
 
     @Override
@@ -40,7 +42,7 @@ public class HPlayerListener extends PlayerListener {
     @Override
     public void onPlayerRespawn(PlayerRespawnEvent event) {
         Player player = event.getPlayer();
-        Hero hero = plugin.getHeroManager().getHero(player);
+        Hero hero = heroManager.getHero(player);
         hero.setHealth(hero.getMaxHealth());
     }
 
@@ -50,7 +52,7 @@ public class HPlayerListener extends PlayerListener {
 
         Player player = event.getPlayer();
         Material material = player.getItemInHand().getType();
-        Hero hero = plugin.getHeroManager().getHero(player);
+        Hero hero = heroManager.getHero(player);
         if (hero.getBinds().containsKey(material)) {
             if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 event.setCancelled(false);
@@ -63,7 +65,6 @@ public class HPlayerListener extends PlayerListener {
     @Override
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        HeroManager heroManager = plugin.getHeroManager();
         heroManager.loadHero(player);
         plugin.switchToHNSH(player);
         this.plugin.getInventoryChecker().checkInventory(player);
@@ -82,7 +83,7 @@ public class HPlayerListener extends PlayerListener {
             }
         });
 
-        Hero hero = this.plugin.getHeroManager().getHero(player);
+        Hero hero = heroManager.getHero(player);
 
         if (!hero.hasParty()) {
             return;
@@ -96,7 +97,6 @@ public class HPlayerListener extends PlayerListener {
     @Override
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        HeroManager heroManager = plugin.getHeroManager();
         heroManager.removeBedHealer(heroManager.getHero(player));
         heroManager.saveHero(player);
         heroManager.removeHero(heroManager.getHero(player));
@@ -113,7 +113,7 @@ public class HPlayerListener extends PlayerListener {
 
         Player player = event.getPlayer();
         if (event.getFrom().getWorld() != event.getTo().getWorld()) {
-            Hero hero = plugin.getHeroManager().getHero(player);
+            Hero hero = heroManager.getHero(player);
             HeroClass heroClass = hero.getHeroClass();
 
             List<Command> commands = plugin.getCommandHandler().getCommands();
@@ -137,8 +137,8 @@ public class HPlayerListener extends PlayerListener {
 		HeroManager heroManager = plugin.getHeroManager();
 		//This player is now in bed so add them to the bedHealers Set
 		heroManager.addBedHealer(heroManager.getHero(event.getPlayer()));
-		if (!plugin.bedHealThread.isAlive())
-			plugin.bedHealThread.start();
+		if (!heroManager.isBedHealThreadAlive())
+			heroManager.startBedHealThread();
 	}
 
 	@Override
@@ -146,7 +146,6 @@ public class HPlayerListener extends PlayerListener {
 		if (!plugin.getConfigManager().getProperties().bedHeal)
 			return;
 		
-		HeroManager heroManager = plugin.getHeroManager();
 		//This player is no longer in bed so remove them from the bedHealer set
 		heroManager.removeBedHealer(heroManager.getHero(event.getPlayer()));
 	}

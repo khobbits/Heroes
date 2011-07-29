@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -33,6 +34,7 @@ import com.herocraftonline.dev.heroes.effects.Periodic;
 import com.herocraftonline.dev.heroes.skill.OutsourcedSkill;
 import com.herocraftonline.dev.heroes.skill.PassiveSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
+import com.herocraftonline.dev.heroes.util.Properties;
 
 /**
  * Player management
@@ -43,11 +45,12 @@ public class HeroManager {
 
 	private Heroes plugin;
 	private Set<Hero> heroes;
-    private Set<Hero> bedHealers;
+	private Set<Hero> bedHealers;
 	private File playerFolder;
 	private final static int effectInterval = 2;
 	private final static int manaInterval = 5;
 	private final static int partyUpdateInterval = 5;
+	private BedHealThread bedHealThread;
 
 	public HeroManager(Heroes plugin) {
 		this.plugin = plugin;
@@ -96,7 +99,7 @@ public class HeroManager {
 	}
 
 	public Set<Hero> getHeroes() {
-			return new HashSet<Hero>(heroes);
+		return new HashSet<Hero>(heroes);
 	}
 
 	/**
@@ -150,7 +153,7 @@ public class HeroManager {
 				this.plugin.getPartyManager().removeParty(party);
 			}
 		}
-		
+
 		return heroes.remove(hero);
 	}
 
@@ -182,39 +185,6 @@ public class HeroManager {
 
 	public void stopTimers() {
 		plugin.getServer().getScheduler().cancelTasks(plugin);
-	}
-	
-	/**
-	 * Removes a hero from the set of heroes currently in bed
-	 * @param hero
-	 */
-	public void removeBedHealer(Hero hero) {
-		synchronized(bedHealers) {
-			bedHealers.remove(hero);
-		}
-	}
-	
-	/**
-	 * Flushes the bed healer Set of all records
-	 */
-	public void clearBedHealers() {
-		synchronized(bedHealers) {
-			bedHealers.clear();
-		}
-	}
-	
-	/**
-	 * Adds a hero to the set of heroes currently in bed
-	 * @param hero
-	 */
-	public void addBedHealer(Hero hero) {
-		synchronized(bedHealers) {
-			bedHealers.add(hero);
-		}
-	}
-	
-	public Set<Hero> getBedHealers() {
-		return bedHealers;
 	}
 
 	private void loadBinds(Hero hero, Configuration config) {
@@ -374,6 +344,70 @@ public class HeroManager {
 		for (ItemStack item : hero.getRecoveryItems()) {
 			String durability = Short.toString(item.getDurability());
 			config.setProperty("itemrecovery." + item.getType().toString(), durability);
+		}
+	}
+
+	/**
+	 * Removes a hero from the set of heroes currently in bed
+	 * @param hero
+	 */
+	public void removeBedHealer(Hero hero) {
+		synchronized(bedHealers) {
+			bedHealers.remove(hero);
+		}
+	}
+
+	/**
+	 * Flushes the bed healer Set of all records
+	 */
+	public void clearBedHealers() {
+		synchronized(bedHealers) {
+			bedHealers.clear();
+		}
+	}
+
+	/**
+	 * Adds a hero to the set of heroes currently in bed
+	 * @param hero
+	 */
+	public void addBedHealer(Hero hero) {
+		synchronized(bedHealers) {
+			bedHealers.add(hero);
+		}
+	}
+	/**
+	 * Gets the full set of Heroes currently healing in beds
+	 * 
+	 * @return
+	 */
+	public Set<Hero> getBedHealers() {
+		return bedHealers;
+	}
+
+	/**
+	 * Starts an instance of the BedHealThread
+	 */
+	public void startBedHealThread() {
+		bedHealThread = new BedHealThread(plugin);
+		bedHealThread.start();
+	}
+
+	/**
+	 * tests if the BedHealThread is still alive
+	 * @return
+	 */
+	public boolean isBedHealThreadAlive() {
+		return bedHealThread.isAlive();
+	}
+	public void shutdownBedHealThread() {
+		synchronized(bedHealers) {
+			this.bedHealers.clear();
+		}
+		bedHealThread.notify();
+		try {
+			bedHealThread.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
 	}
 }
@@ -539,5 +573,48 @@ class PartyUpdater implements Runnable {
 		double percent = (health / maxHealth * 100);
 		DecimalFormat df = new DecimalFormat("#.##");
 		return manaBar + " - " + com.herocraftonline.dev.heroes.ui.MapColor.GREEN + df.format(percent) + "%";
+	}
+}
+
+class BedHealThread extends Thread {
+
+	private Heroes plugin;
+	private Properties props;
+	private HeroManager heroManager;
+	private Set<Hero> bedHealers;
+
+	public BedHealThread(Heroes plugin) {
+		this.plugin = plugin;
+		props = plugin.getConfigManager().getProperties();
+		heroManager = plugin.getHeroManager();
+		bedHealers = heroManager.getBedHealers();
+	}
+
+	public void run() {
+		boolean isEmpty = false;
+		while(!isEmpty) {
+			synchronized(this) {
+				try {
+					wait(props.healInterval * 1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+					break;
+				}
+			}
+
+			synchronized(bedHealers) {
+				Iterator<Hero> iter = bedHealers.iterator();
+				while (iter.hasNext()) {
+					Hero hero = iter.next();
+					double newHealth = hero.getHealth() + (hero.getMaxHealth() * props.healPercent / 100);
+					if (newHealth >= hero.getMaxHealth()) {
+						newHealth = hero.getMaxHealth();
+						iter.remove();
+					}
+					plugin.getServer().getScheduler().callSyncMethod(plugin, hero.bedHeal(newHealth));
+				}
+				isEmpty = bedHealers.isEmpty();
+			}
+		}
 	}
 }

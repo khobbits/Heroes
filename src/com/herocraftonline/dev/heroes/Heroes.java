@@ -62,7 +62,6 @@ import com.herocraftonline.dev.heroes.persistence.HeroManager;
 import com.herocraftonline.dev.heroes.skill.OutsourcedSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.SkillLoader;
-import com.herocraftonline.dev.heroes.util.BedHealThread;
 import com.herocraftonline.dev.heroes.util.ConfigManager;
 import com.herocraftonline.dev.heroes.util.DebugLog;
 import com.nijiko.permissions.PermissionHandler;
@@ -93,7 +92,6 @@ public class Heroes extends JavaPlugin {
     private final HBlockListener blockListener = new HBlockListener(this);
     private final HPartyListener partyListener = new HPartyListener(this);
     
-    protected BedHealThread bedHealThread;
 
     // Various data managers
     private ConfigManager configManager;
@@ -214,17 +212,7 @@ public class Heroes extends JavaPlugin {
             heroManager.saveHero(player);
             switchToBNSH(player);
         }
-        this.heroManager.clearBedHealers();
-        if (this.bedHealThread.isAlive()) {
-        	synchronized(bedHealThread) {
-        		this.bedHealThread.notify();
-        		try {
-        			this.bedHealThread.join();
-        		} catch (InterruptedException e) {
-        			e.printStackTrace();
-        		}
-        	}
-        }
+        this.heroManager.shutdownBedHealThread(); //Clears the list of heroes in beds and shuts down the thread
         this.Method = null; // When it Enables again it performs the checks anyways.
         Heroes.Permissions = null; // When it Enables again it performs the checks anyways.
         log.info(getDescription().getName() + " version " + getDescription().getVersion() + " is disabled!");
@@ -292,9 +280,6 @@ public class Heroes extends JavaPlugin {
             info.setData(pixels);
             mapAPI.saveMap(world, mapId, info);
         }
-        
-        //Setup the Bed Healing Thread so it's ready to be started
-        bedHealThread = new BedHealThread(this);
     }
 
     @Override

@@ -355,6 +355,7 @@ public class Hero {
     
     public Callable<?> bedHeal(double newHealth) {
     	setHealth(newHealth);
+    	syncHealth();
 		return null;
     }
 }
