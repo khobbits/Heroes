@@ -50,7 +50,7 @@ public class HeroManager {
 	private final static int effectInterval = 2;
 	private final static int manaInterval = 5;
 	private final static int partyUpdateInterval = 5;
-	private BedHealThread bedHealThread;
+	private BedHealThread bedHealThread = null;
 
 	public HeroManager(Heroes plugin) {
 		this.plugin = plugin;
@@ -397,9 +397,14 @@ public class HeroManager {
 	 * @return
 	 */
 	public boolean isBedHealThreadAlive() {
-		return bedHealThread.isAlive();
+		if (bedHealThread == null)
+			return false;
+		else
+			return bedHealThread.isAlive();
 	}
 	public void shutdownBedHealThread() {
+		if (!isBedHealThreadAlive())
+			return;
 		synchronized(bedHealers) {
 			this.bedHealers.clear();
 		}
