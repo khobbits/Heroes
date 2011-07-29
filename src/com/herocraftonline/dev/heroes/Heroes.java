@@ -113,7 +113,7 @@ public class Heroes extends JavaPlugin {
 
     // Inventory Checker Class -- This class has the methods to check a players inventory and
     // restrictions.
-    private final InventoryChecker inventoryChecker = new InventoryChecker(this);
+    private InventoryChecker inventoryChecker;
 
     /**
      * Print messages to the Debug Log, if the servers in Debug Mode then we also wan't to print the messages to the
@@ -224,7 +224,7 @@ public class Heroes extends JavaPlugin {
         partyManager = new PartyManager(this);
         heroManager = new HeroManager(this);
         damageManager = new DamageManager(this);
-
+        inventoryChecker = new InventoryChecker(this);
         // Check for BukkitContrib
         setupBukkitContrib();
 
