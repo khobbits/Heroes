@@ -26,7 +26,7 @@ public final class Messaging {
     }
     
     public static String createFullHealthBar(double health, double maxHealth) {
-        return "§aHealth: §f" + (int) health + "/" + (int) maxHealth + " " + createHealthBar(health, maxHealth);
+        return "§aHP: §f" + (int) health + "/" + (int) maxHealth + " " + createHealthBar(health, maxHealth);
     }
     
     public static String createHealthBar(double health, double maxHealth) {

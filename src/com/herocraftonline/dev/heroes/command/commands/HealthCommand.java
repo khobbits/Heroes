@@ -28,8 +28,8 @@ public class HealthCommand extends BasicCommand {
         Hero hero = plugin.getHeroManager().getHero(player);
         double hp = hero.getHealth();
         double maxHp = hero.getMaxHealth();
-
-        Messaging.send(player, "Health: $1/$2", (int) hp, (int) maxHp);
+        
+        player.sendMessage(Messaging.createFullHealthBar(hp, maxHp));
         return true;
     }
 }
