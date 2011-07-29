@@ -71,8 +71,9 @@ public class Methods {
     }
 
     public boolean setMethod(Plugin method) {
-        if (hasMethod())
+        if (hasMethod()) {
             return true;
+        }
         if (self) {
             self = false;
             return false;
@@ -84,15 +85,18 @@ public class Methods {
         PluginManager manager = method.getServer().getPluginManager();
 
         for (String name : this.getDependencies()) {
-            if (hasMethod())
+            if (hasMethod()) {
                 break;
-            if (method.getDescription().getName().equals(name))
+            }
+            if (method.getDescription().getName().equals(name)) {
                 plugin = method;
-            else
+            } else {
                 plugin = manager.getPlugin(name);
+            }
 
-            if (plugin == null)
+            if (plugin == null) {
                 continue;
+            }
 
             if (!plugin.isEnabled()) {
                 this.self = true;
@@ -100,12 +104,13 @@ public class Methods {
             }
 
             Method current = this.createMethod(plugin);
-            if (current == null)
+            if (current == null) {
                 continue;
+            }
 
-            if (this.preferred.isEmpty())
+            if (this.preferred.isEmpty()) {
                 this.Method = current;
-            else {
+            } else {
                 this.Attachables.add(current);
             }
         }
@@ -116,20 +121,23 @@ public class Methods {
                     match = true;
                 } else {
                     for (Method attached : this.Attachables) {
-                        if (attached == null)
+                        if (attached == null) {
                             continue;
+                        }
 
                         if (hasMethod()) {
                             match = true;
                             break;
                         }
 
-                        if (this.preferred.isEmpty())
+                        if (this.preferred.isEmpty()) {
                             this.Method = attached;
+                        }
 
                         if (count == 0) {
-                            if (this.preferred.equalsIgnoreCase(attached.getName()))
+                            if (this.preferred.equalsIgnoreCase(attached.getName())) {
                                 this.Method = attached;
+                            }
                         } else {
                             this.Method = attached;
                         }
@@ -148,10 +156,12 @@ public class Methods {
     }
 
     public boolean checkDisabled(Plugin method) {
-        if (!hasMethod())
+        if (!hasMethod()) {
             return true;
-        if (Method.isCompatible(method))
+        }
+        if (Method.isCompatible(method)) {
             Method = null;
+        }
         return (Method == null);
     }
 }

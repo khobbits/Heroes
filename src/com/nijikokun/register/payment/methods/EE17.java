@@ -45,8 +45,9 @@ public class EE17 implements Method {
     }
 
     public MethodAccount getAccount(String name) {
-        if (!hasAccount(name))
+        if (!hasAccount(name)) {
             return null;
+        }
         return new EEcoAccount(name);
     }
 

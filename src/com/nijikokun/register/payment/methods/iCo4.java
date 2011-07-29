@@ -76,36 +76,41 @@ public class iCo4 implements Method {
         }
 
         public boolean set(double amount) {
-            if (this.account == null)
+            if (this.account == null) {
                 return false;
+            }
             this.account.setBalance(amount);
             return true;
         }
 
         public boolean add(double amount) {
-            if (this.account == null)
+            if (this.account == null) {
                 return false;
+            }
             this.account.add(amount);
             return true;
         }
 
         public boolean subtract(double amount) {
-            if (this.account == null)
+            if (this.account == null) {
                 return false;
+            }
             this.account.subtract(amount);
             return true;
         }
 
         public boolean multiply(double amount) {
-            if (this.account == null)
+            if (this.account == null) {
                 return false;
+            }
             this.account.multiply(amount);
             return true;
         }
 
         public boolean divide(double amount) {
-            if (this.account == null)
+            if (this.account == null) {
                 return false;
+            }
             this.account.divide(amount);
             return true;
         }
@@ -127,8 +132,9 @@ public class iCo4 implements Method {
         }
 
         public boolean remove() {
-            if (this.account == null)
+            if (this.account == null) {
                 return false;
+            }
             this.account.remove();
             return true;
         }

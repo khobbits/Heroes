@@ -27,8 +27,9 @@ public class BOSE implements Method {
     @Override
     public String format(double amount) {
         String currency = this.BOSEconomy.getMoneyNamePlural();
-        if (amount == 1)
+        if (amount == 1) {
             currency = this.BOSEconomy.getMoneyName();
+        }
         return amount + " " + currency;
     }
 
@@ -54,8 +55,9 @@ public class BOSE implements Method {
 
     @Override
     public MethodAccount getAccount(String name) {
-        if (!hasAccount(name))
+        if (!hasAccount(name)) {
             return null;
+        }
         return new BOSEAccount(name, this.BOSEconomy);
     }
 

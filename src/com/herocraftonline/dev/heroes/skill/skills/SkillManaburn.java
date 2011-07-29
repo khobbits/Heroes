@@ -27,11 +27,13 @@ public class SkillManaburn extends TargettedSkill {
 
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
-        if (!(target instanceof Player))
+        if (!(target instanceof Player)) {
             return false;
+        }
         Hero tHero = getPlugin().getHeroManager().getHero((Player) target);
-        if (tHero == null)
+        if (tHero == null) {
             return false;
+        }
         int transferamount = getSetting(hero.getHeroClass(), "transfer-amount", 20);
         if (tHero.getMana() > transferamount) {
             if (hero.getMana() + transferamount > 100) {
@@ -40,8 +42,9 @@ public class SkillManaburn extends TargettedSkill {
             tHero.setMana(tHero.getMana() - transferamount);
             broadcastExecuteText(hero, target);
             return true;
-        } else
+        } else {
             return false;
+        }
     }
 
 }

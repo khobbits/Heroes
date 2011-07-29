@@ -401,15 +401,17 @@ public class HeroManager {
      * @return
      */
     public boolean isBedHealThreadAlive() {
-        if (bedHealThread == null)
+        if (bedHealThread == null) {
             return false;
-        else
+        } else {
             return bedHealThread.isAlive();
+        }
     }
 
     public void shutdownBedHealThread() {
-        if (!isBedHealThreadAlive())
+        if (!isBedHealThreadAlive()) {
             return;
+        }
         synchronized (bedHealers) {
             this.bedHealers.clear();
         }

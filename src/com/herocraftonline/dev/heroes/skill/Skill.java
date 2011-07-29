@@ -77,8 +77,9 @@ public abstract class Skill extends BasicCommand {
      *                this array
      */
     public void broadcast(Location source, String message, Object... args) {
-        if (message.isEmpty())
+        if (message.isEmpty()) {
             return;
+        }
 
         final Player[] players = plugin.getServer().getOnlinePlayers();
         for (Player player : players) {
@@ -126,10 +127,11 @@ public abstract class Skill extends BasicCommand {
      */
     public double getSetting(HeroClass heroClass, String setting, double def) {
         List<String> keys = heroClass == null ? null : heroClass.getSkillSettings(getName()).getKeys(null);
-        if (keys != null && keys.contains(setting))
+        if (keys != null && keys.contains(setting)) {
             return heroClass.getSkillSettings(getName()).getDouble(setting, def);
-        else
+        } else {
             return config.getDouble(setting, def);
+        }
     }
 
     /**
@@ -143,10 +145,11 @@ public abstract class Skill extends BasicCommand {
      */
     public int getSetting(HeroClass heroClass, String setting, int def) {
         List<String> keys = heroClass == null ? null : heroClass.getSkillSettings(getName()).getKeys(null);
-        if (keys != null && keys.contains(setting))
+        if (keys != null && keys.contains(setting)) {
             return heroClass.getSkillSettings(getName()).getInt(setting, def);
-        else
+        } else {
             return config.getInt(setting, def);
+        }
     }
 
     /**
@@ -160,10 +163,11 @@ public abstract class Skill extends BasicCommand {
      */
     public String getSetting(HeroClass heroClass, String setting, String def) {
         List<String> keys = heroClass == null ? null : heroClass.getSkillSettings(getName()).getKeys(null);
-        if (keys != null && keys.contains(setting))
+        if (keys != null && keys.contains(setting)) {
             return heroClass.getSkillSettings(getName()).getString(setting, def);
-        else
+        } else {
             return config.getString(setting, def);
+        }
     }
 
     /**

@@ -48,8 +48,9 @@ public class SkillManaFreeze extends TargettedSkill {
             int duration = getSetting(hero.getHeroClass(), "duration", 5000);
             targetHero.addEffect(new ManaFreezeEffect(this, duration));
             return true;
-        } else
+        } else {
             return false;
+        }
     }
 
     public class ManaFreezeEffect extends ExpirableEffect {

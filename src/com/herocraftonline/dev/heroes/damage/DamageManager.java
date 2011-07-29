@@ -61,8 +61,9 @@ public class DamageManager {
         if (creatureHealth.containsKey(type)) {
             int health = creatureHealth.get(type);
             return health > 200 ? 200 : health < 0 ? 0 : health;
-        } else
+        } else {
             return null;
+        }
     }
 
     public Integer getEnvironmentalDamage(DamageCause cause) {
@@ -73,8 +74,9 @@ public class DamageManager {
         if (entity != null && entity instanceof Player) {
             HeroClass heroClass = plugin.getHeroManager().getHero((Player) entity).getHeroClass();
             Integer classDamage = heroClass.getItemDamage(item);
-            if (classDamage != null)
+            if (classDamage != null) {
                 return classDamage;
+            }
         }
         return itemDamage.get(item);
     }
@@ -83,8 +85,9 @@ public class DamageManager {
         if (entity != null && entity instanceof Player) {
             HeroClass heroClass = plugin.getHeroManager().getHero((Player) entity).getHeroClass();
             Integer classDamage = heroClass.getProjectileDamage(type);
-            if (classDamage != null)
+            if (classDamage != null) {
                 return classDamage;
+            }
         }
         return projectileDamage.get(type);
     }
@@ -174,14 +177,15 @@ public class DamageManager {
         EGG;
 
         public static ProjectileType valueOf(Entity entity) {
-            if (entity instanceof Arrow)
+            if (entity instanceof Arrow) {
                 return ARROW;
-            else if (entity instanceof Snowball)
+            } else if (entity instanceof Snowball) {
                 return SNOWBALL;
-            else if (entity instanceof Egg)
+            } else if (entity instanceof Egg) {
                 return EGG;
-            else
+            } else {
                 throw new IllegalArgumentException(entity.getClass().getSimpleName() + " is not a projectile.");
+            }
         }
     }
 

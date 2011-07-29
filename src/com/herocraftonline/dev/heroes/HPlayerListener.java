@@ -130,20 +130,23 @@ public class HPlayerListener extends PlayerListener {
 
     @Override
     public void onPlayerBedEnter(PlayerBedEnterEvent event) {
-        if (event.isCancelled() || !plugin.getConfigManager().getProperties().bedHeal)
+        if (event.isCancelled() || !plugin.getConfigManager().getProperties().bedHeal) {
             return;
+        }
 
         HeroManager heroManager = plugin.getHeroManager();
         //This player is now in bed so add them to the bedHealers Set
         heroManager.addBedHealer(heroManager.getHero(event.getPlayer()));
-        if (!heroManager.isBedHealThreadAlive())
+        if (!heroManager.isBedHealThreadAlive()) {
             heroManager.startBedHealThread();
+        }
     }
 
     @Override
     public void onPlayerBedLeave(PlayerBedLeaveEvent event) {
-        if (!plugin.getConfigManager().getProperties().bedHeal)
+        if (!plugin.getConfigManager().getProperties().bedHeal) {
             return;
+        }
 
         //This player is no longer in bed so remove them from the bedHealer set
         plugin.getHeroManager().removeBedHealer(plugin.getHeroManager().getHero(event.getPlayer()));

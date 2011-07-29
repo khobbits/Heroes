@@ -42,8 +42,9 @@ public class HBlockListener extends BlockListener {
 
     @Override
     public void onBlockBreak(BlockBreakEvent event) {
-        if (event.isCancelled())
+        if (event.isCancelled()) {
             return;
+        }
 
         Block block = event.getBlock();
         Player player = event.getPlayer();
@@ -85,8 +86,9 @@ public class HBlockListener extends BlockListener {
 
     @Override
     public void onBlockPlace(BlockPlaceEvent event) {
-        if (event.isCancelled())
+        if (event.isCancelled()) {
             return;
+        }
 
         Block block = event.getBlock();
         Material material = block.getType();
@@ -107,9 +109,9 @@ public class HBlockListener extends BlockListener {
 
         if (placedBlocks.containsKey(loc)) {
             long timePlaced = placedBlocks.get(loc);
-            if (timePlaced + blockTrackingDuration > System.currentTimeMillis())
+            if (timePlaced + blockTrackingDuration > System.currentTimeMillis()) {
                 return true;
-            else {
+            } else {
                 placedBlocks.remove(block.getLocation());
                 return false;
             }

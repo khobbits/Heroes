@@ -39,8 +39,9 @@ public final class SkillLoader {
                 Class<? extends Skill> skillClass = clazz.asSubclass(Skill.class);
                 Constructor<? extends Skill> ctor = skillClass.getConstructor(plugin.getClass());
                 return ctor.newInstance(plugin);
-            } else
+            } else {
                 throw new Exception();
+            }
         } catch (Exception e) {
             Heroes.log(Level.INFO, "The skill " + file.getName() + " failed to load");
             e.printStackTrace();

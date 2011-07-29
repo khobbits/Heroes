@@ -21,8 +21,9 @@ public class SkillForcepush extends TargettedSkill {
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
         if (target instanceof Player) {
-            if ((Player) target == player)
+            if ((Player) target == player) {
                 return false;
+            }
         }
         float pitch = player.getEyeLocation().getPitch();
 

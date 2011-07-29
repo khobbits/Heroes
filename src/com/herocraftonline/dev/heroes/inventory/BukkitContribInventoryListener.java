@@ -30,8 +30,9 @@ public class BukkitContribInventoryListener extends InventoryListener {
         ItemStack item = event.getCursor();
 
         // Skip the checks if the cursor has no REAL Item in hand.
-        if (item == null || item.getType() == null || item.getType() == Material.AIR)
+        if (item == null || item.getType() == null || item.getType() == Material.AIR) {
             return;
+        }
 
         // Grab the Player involved in the Event.
         final Player player = event.getPlayer();
@@ -54,8 +55,9 @@ public class BukkitContribInventoryListener extends InventoryListener {
             // Perform Weapon Check.
             String itemString = item.getType().toString();
             // If it doesn't contain a '_' and it isn't a Bow then it definitely isn't a Weapon.
-            if (!itemString.contains("_") && !itemString.equalsIgnoreCase("BOW"))
+            if (!itemString.contains("_") && !itemString.equalsIgnoreCase("BOW")) {
                 return;
+            }
             // Perform a check to see if what we have is a Weapon.
             if (!itemString.equalsIgnoreCase("BOW")) {
                 try {
@@ -82,14 +84,17 @@ public class BukkitContribInventoryListener extends InventoryListener {
 
     @Override
     public void onInventoryCraft(InventoryCraftEvent event) {
-        if (event.getResult() == null)
+        if (event.getResult() == null) {
             return;
-        if (event.getPlayer().getInventory().firstEmpty() == -1)
+        }
+        if (event.getPlayer().getInventory().firstEmpty() == -1) {
             return;
+        }
 
         ItemStack result = event.getResult();
-        if (event.getCursor() != null)
+        if (event.getCursor() != null) {
             return;
+        }
         if (plugin.getConfigManager().getProperties().craftingExp.containsKey(result.getType())) {
             Player player = event.getPlayer();
             Hero hero = plugin.getHeroManager().getHero(player);

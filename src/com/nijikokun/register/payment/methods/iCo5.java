@@ -84,36 +84,41 @@ public class iCo5 implements Method {
         }
 
         public boolean set(double amount) {
-            if (this.holdings == null)
+            if (this.holdings == null) {
                 return false;
+            }
             this.holdings.set(amount);
             return true;
         }
 
         public boolean add(double amount) {
-            if (this.holdings == null)
+            if (this.holdings == null) {
                 return false;
+            }
             this.holdings.add(amount);
             return true;
         }
 
         public boolean subtract(double amount) {
-            if (this.holdings == null)
+            if (this.holdings == null) {
                 return false;
+            }
             this.holdings.subtract(amount);
             return true;
         }
 
         public boolean multiply(double amount) {
-            if (this.holdings == null)
+            if (this.holdings == null) {
                 return false;
+            }
             this.holdings.multiply(amount);
             return true;
         }
 
         public boolean divide(double amount) {
-            if (this.holdings == null)
+            if (this.holdings == null) {
                 return false;
+            }
             this.holdings.divide(amount);
             return true;
         }
@@ -135,8 +140,9 @@ public class iCo5 implements Method {
         }
 
         public boolean remove() {
-            if (this.account == null)
+            if (this.account == null) {
                 return false;
+            }
             this.account.remove();
             return true;
         }
@@ -168,36 +174,41 @@ public class iCo5 implements Method {
         }
 
         public boolean set(double amount) {
-            if (this.holdings == null)
+            if (this.holdings == null) {
                 return false;
+            }
             this.holdings.set(amount);
             return true;
         }
 
         public boolean add(double amount) {
-            if (this.holdings == null)
+            if (this.holdings == null) {
                 return false;
+            }
             this.holdings.add(amount);
             return true;
         }
 
         public boolean subtract(double amount) {
-            if (this.holdings == null)
+            if (this.holdings == null) {
                 return false;
+            }
             this.holdings.subtract(amount);
             return true;
         }
 
         public boolean multiply(double amount) {
-            if (this.holdings == null)
+            if (this.holdings == null) {
                 return false;
+            }
             this.holdings.multiply(amount);
             return true;
         }
 
         public boolean divide(double amount) {
-            if (this.holdings == null)
+            if (this.holdings == null) {
                 return false;
+            }
             this.holdings.divide(amount);
             return true;
         }
@@ -219,8 +230,9 @@ public class iCo5 implements Method {
         }
 
         public boolean remove() {
-            if (this.account == null)
+            if (this.account == null) {
                 return false;
+            }
             this.account.remove();
             return true;
         }

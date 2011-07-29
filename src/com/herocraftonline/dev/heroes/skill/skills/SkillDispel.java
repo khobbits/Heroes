@@ -21,8 +21,9 @@ public class SkillDispel extends TargettedSkill {
 
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
-        if (!(target instanceof Player))
+        if (!(target instanceof Player)) {
             return false;
+        }
 
         Player targetPlayer = (Player) target;
         Hero targetHero = getPlugin().getHeroManager().getHero(targetPlayer);
