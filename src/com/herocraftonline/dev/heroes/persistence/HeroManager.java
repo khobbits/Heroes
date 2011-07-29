@@ -407,11 +407,13 @@ public class HeroManager {
             return;
         }
         this.bedHealers.clear();
-        bedHealThread.notify();
-        try {
-            bedHealThread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        synchronized(bedHealThread) {
+            bedHealThread.notify();
+            try {
+                bedHealThread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
@@ -597,11 +599,13 @@ class BedHealThread extends Thread {
     public void run() {
         boolean isEmpty = false;
         while (!isEmpty) {
-            try {
-                wait(props.healInterval * 1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-                break;
+            synchronized(this) {
+                try {
+                    wait(props.healInterval * 1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                    break;
+                }
             }
 
             Iterator<Hero> iter = bedHealers.keySet().iterator();
@@ -615,7 +619,6 @@ class BedHealThread extends Thread {
                 plugin.getServer().getScheduler().callSyncMethod(plugin, hero.bedHeal(newHealth));
             }
             isEmpty = bedHealers.isEmpty();
-
         }
     }
 }
