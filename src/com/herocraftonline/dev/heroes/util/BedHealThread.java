@@ -8,7 +8,7 @@ import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.persistence.HeroManager;
 
 public class BedHealThread extends Thread {
-	
+
 	private Heroes plugin;
 	private Properties props;
 	private HeroManager heroManager;
@@ -20,17 +20,19 @@ public class BedHealThread extends Thread {
 		heroManager = plugin.getHeroManager();
 		bedHealers = heroManager.getBedHealers();
 	}
-	
+
 	public void run() {
 		boolean isEmpty = false;
 		while(!isEmpty) {
-			try {
-				this.wait(props.healInterval * 1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-				break;
+			synchronized(this) {
+				try {
+					wait(props.healInterval * 1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+					break;
+				}
 			}
-			
+
 			synchronized(bedHealers) {
 				Iterator<Hero> iter = bedHealers.iterator();
 				while (iter.hasNext()) {

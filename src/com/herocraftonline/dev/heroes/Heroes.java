@@ -216,12 +216,14 @@ public class Heroes extends JavaPlugin {
         }
         this.heroManager.clearBedHealers();
         if (this.bedHealThread.isAlive()) {
-        	this.bedHealThread.notify();
-        	try {
-				this.bedHealThread.join();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+        	synchronized(bedHealThread) {
+        		this.bedHealThread.notify();
+        		try {
+        			this.bedHealThread.join();
+        		} catch (InterruptedException e) {
+        			e.printStackTrace();
+        		}
+        	}
         }
         this.Method = null; // When it Enables again it performs the checks anyways.
         Heroes.Permissions = null; // When it Enables again it performs the checks anyways.
