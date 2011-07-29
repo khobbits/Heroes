@@ -15,9 +15,11 @@ import com.herocraftonline.dev.heroes.util.Messaging;
 public class InventoryChecker {
 
     private Heroes plugin;
+    private boolean allowHats = false;
 
     public InventoryChecker(Heroes plugin) {
         this.plugin = plugin;
+        this.allowHats = plugin.getConfigManager().getProperties().allowHats;
     }
 
     public void checkInventory(Player p) {
@@ -27,7 +29,7 @@ public class InventoryChecker {
         int removedCount = 0;
         int count = 0;
         String item;
-        if (inv.getHelmet() != null && inv.getHelmet().getTypeId() != 0) {
+        if (inv.getHelmet() != null && inv.getHelmet().getTypeId() != 0 && !allowHats) {
             item = inv.getHelmet().getType().toString();
             if (!hc.getAllowedArmor().contains(item)) {
                 if (moveItem(p, -1, inv.getHelmet())) {
@@ -119,8 +121,9 @@ public class InventoryChecker {
     public int firstEmpty(Player p) {
         ItemStack[] inventory = p.getInventory().getContents();
         for (int i = 9; i < inventory.length; i++) {
-            if (inventory[i] == null)
+            if (inventory[i] == null) {
                 return i;
+            }
         }
         return -1;
     }

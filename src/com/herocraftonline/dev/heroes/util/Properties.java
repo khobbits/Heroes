@@ -59,6 +59,9 @@ public class Properties {
     public byte mapID;
     public int mapPacketInterval;
 
+    // Stupid Hats...
+    public boolean allowHats;
+
     /**
      * Generate experience for the level ArrayList<Integer>
      */
