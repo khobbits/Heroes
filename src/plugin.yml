@@ -4,7 +4,7 @@ version: 1.1.2
 website: http://www.herocraftonline.com
 authors: [DThielke, Rigby, RightLegRed, Kainzo]
 description: Experience, leveling and class system for Minecraft developed by the Herocraft coding team.
-softdepend: [Permissions, BukkitContrib, BOSEconomy, Essentials, iConomy]
+softdepend: [Permissions, BukkitContrib, BOSEconomy, iConomy]
 commands:
   heroes:
     aliases: ['hero']
