@@ -136,7 +136,7 @@ public class Hero {
 
         // add the experience
         exp += expGain;
-
+        
         // call event
         ExperienceGainEvent expEvent;
         if (newLevel == currentLevel) {
@@ -158,12 +158,16 @@ public class Hero {
         // add the updated experience
         exp += expGain;
 
+        //Track if the Hero leveled for persisting
+        boolean leveledUp = false;
+        
         // notify the user
         if (expGain != 0) {
             if (verbose) {
                 Messaging.send(player, "$1: Gained $2 Exp", heroClass.getName(), decFormat.format(expGain));
             }
             if (newLevel != currentLevel) {
+                leveledUp = true;
                 setHealth(getMaxHealth());
                 syncHealth();
                 Messaging.send(player, "You leveled up! (Lvl $1 $2)", String.valueOf(newLevel), heroClass.getName());
@@ -172,12 +176,13 @@ public class Hero {
                     Messaging.broadcast(plugin, "$1 has become a master $2!", player.getName(), heroClass.getName());
                     plugin.getHeroManager().saveHero(player);
                 }
-                //Save the hero file when the Hero levels to prevent rollback issues on server crashes
-                plugin.getHeroManager().saveHero(getPlayer());
             }
         }
 
         setExperience(exp);
+        //Save the hero file when the Hero levels to prevent rollback issues
+        if (leveledUp)
+            plugin.getHeroManager().saveHero(getPlayer());
     }
 
     public Map<Material, String[]> getBinds() {
