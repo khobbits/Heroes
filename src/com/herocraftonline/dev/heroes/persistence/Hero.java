@@ -172,6 +172,8 @@ public class Hero {
                     Messaging.broadcast(plugin, "$1 has become a master $2!", player.getName(), heroClass.getName());
                     plugin.getHeroManager().saveHero(player);
                 }
+                //Save the hero file when the Hero levels to prevent rollback issues on server crashes
+                plugin.getHeroManager().saveHero(getPlayer());
             }
         }
 
