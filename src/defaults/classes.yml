@@ -8,9 +8,19 @@ classes:
         permitted-weapon:
         - WOOD
         permitted-skills:
-        experience-sources: []
-        expmodifier: 0
+        experience-sources:
+        - KILLING
         permission-skills:
+            Example:
+                level: 1
+                usage: This is an EXAMPLE!
+                permissions:
+                - plugin.example.node.here
+        base-max-health: 20
+        max-health-per-level: 0.1
+        expmodifier: 1.0
+        item-damage:
+            air: 1
     Warrior:
         default: false
         summon-max: 0
@@ -50,9 +60,6 @@ classes:
         summon-max: 0
         description: Divine Knight
         permitted-armor:
-        - LEATHER
-        - DIAMOND_CHESTPLATE
-        - DIAMOND_LEGGINGS
         - IRON
         - CHAINMAIL
         - GOLD
@@ -78,10 +85,6 @@ classes:
                 level: 1
                 mana: 20
                 cooldown: 3000
-            Fireball:
-                level: 1
-                mana: 5
-                cooldown: 2000
             Dispel:
                 level: 1
                 mana: 5
