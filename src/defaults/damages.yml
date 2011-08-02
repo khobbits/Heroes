@@ -1,10 +1,10 @@
 creature-health:
-    Creeper: 5
+    Creeper: 10
     Zombie: 10
 creature-damage:
-    Zombie: 5
+    Zombie: 4
 item-damage:
-    Air: 3
+    Air: 2
 environmental-damage:
     Fall: 3
-    Lava: 4
+    Fire: 4
