@@ -16,15 +16,16 @@ public class SkillUnholyRitual extends TargettedSkill {
     public SkillUnholyRitual(Heroes plugin) {
         super(plugin, "UnholyRitual");
         setDescription("Target Zombie or Skeleton is sacrificed, necromancer receives mana");
-        setUsage("/skill unholyritual [target]");
-        setArgumentRange(0, 1);
+        setUsage("/skill unholyritual");
+        setArgumentRange(0, 0);
         setIdentifiers(new String[]{"skill unholyritual"});
     }
 
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
-        if (!(target instanceof Zombie) || !(target instanceof Skeleton) || (Player) target != player) {
+        
+        if (!(target instanceof Zombie) || !(target instanceof Skeleton) || (Player) target == player) {
             Messaging.send(player, "You need a target!");
             return false;
         }
