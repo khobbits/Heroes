@@ -73,6 +73,7 @@ classes:
                 level: 10
                 mana: 100
                 cooldown: 30000
+                exp: 5
             Invuln:
                 level: 40
                 mana: 100
@@ -131,6 +132,7 @@ classes:
                 level: 1
                 mana: 5
                 cooldown: 2000
+                exp: 1
             Manaburn:
                 level: 1
                 mana: 50
