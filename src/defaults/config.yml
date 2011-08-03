@@ -1,19 +1,19 @@
 leveling:
-    power: 1.0
-    maxExperience: 100000
-    maxLevel: 50
-    expLoss: 0.5
-    max-tracked-blocks: 2000
-    block-tracking-duration: 900000
-    resetExpOnClassChange: true
-    swapMasteryCost: false
-    partyBonus: 0.20
+    power: 1.0 #set this to adjust the EXP curve (higher numbers equal longer ending levels)
+    maxExperience: 100000 #be cautious on changing this after it has been set)
+    maxLevel: 50 #max level to master/change from PARENT to Child)
+    expLoss: 0.10 #exp loss on death, is taken from current LEVEL not ALL exp.
+    max-tracked-blocks: 2000 #max blocks to track for no-exp
+    block-tracking-duration: 900000 #duration to track for no-exp
+    resetExpOnClassChange: true #will reset the exp if the player switches without mastering
+    swapMasteryCost: false #will allow for users to change back to their mastered class freely
+    partyBonus: 0.20 #cumulative bonus for each player after the first in a party
 properties:
-    iConomy: false
-    swapcost: 0
-    debug: false
-    useDamageSystem: true
+    iConomy: false #use of the cost system
+    swapcost: 0 #cost to swap
+    debug: false #use this at your own risk
+    useDamageSystem: true #toggles the damage system
 bed:
-    bedHeal: true
-    healInterval: 30
-    healPercent: 5
+    bedHeal: true #Do you want players to heal in beds? NOTE - useDamageSystem must be true
+    healInterval: 30 #the seconds it takes to heal the healPercent
+    healPercent: 5 #the amount of damage to heal.
