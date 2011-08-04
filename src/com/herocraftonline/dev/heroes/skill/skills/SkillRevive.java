@@ -87,7 +87,8 @@ public class SkillRevive extends ActiveSkill {
         
         Hero targetHero = getPlugin().getHeroManager().getHero(targetPlayer);
         if (!hero.hasParty() || !hero.getParty().isPartyMember(targetHero)) {
-            Messaging.send(player, "The person needs to be in your party to do that!"); 
+            Messaging.send(player, "The person needs to be in your party to do that!");
+            return false;
         }
 
         targetPlayer.teleport(playerLoc);
