@@ -84,6 +84,11 @@ public class SkillRevive extends ActiveSkill {
             Messaging.send(player, "You don't have enough slimeballs (" + slimeballs + ")");
             return false;
         }
+        
+        Hero targetHero = getPlugin().getHeroManager().getHero(targetPlayer);
+        if (!hero.hasParty() || !hero.getParty().isPartyMember(targetHero)) {
+            Messaging.send(player, "The person needs to be in your party to do that!"); 
+        }
 
         targetPlayer.teleport(playerLoc);
 
