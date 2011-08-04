@@ -132,6 +132,7 @@ public class HeroesDamageListener extends EntityListener {
         // "   entity: " + event.getEntity() + "   type: " + event.getClass().getSimpleName());
 
         if (event.isCancelled()) return;
+        
 
         Entity entity = event.getEntity();
         DamageCause cause = event.getCause();
@@ -186,7 +187,9 @@ public class HeroesDamageListener extends EntityListener {
             if ((float) player.getNoDamageTicks() > (float) player.getMaximumNoDamageTicks() / 2.0f) {
                 return;
             }
-
+            if(player.isDead()) {
+                return;
+            }
             Hero hero = plugin.getHeroManager().getHero(player);
             int damageReduction = calculateArmorReduction(player.getInventory(), damage);
             damage -= damageReduction;
