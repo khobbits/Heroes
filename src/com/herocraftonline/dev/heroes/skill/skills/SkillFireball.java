@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageByProjectileEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
@@ -65,12 +66,12 @@ public class SkillFireball extends ActiveSkill {
                             if (dmger instanceof Player) {
                                 Hero hero = getPlugin().getHeroManager().getHero((Player) dmger);
                                 HeroClass heroClass = hero.getHeroClass();
+                                LivingEntity livingEntity = (LivingEntity) entity;
                                 // Perform a check to see if any plugin is preventing us from damaging the player.
-                                EntityDamageEvent damageEvent = new EntityDamageEvent(dmger, DamageCause.CUSTOM, 0);
+                                EntityDamageByEntityEvent damageEvent = new EntityDamageByEntityEvent(dmger, livingEntity, DamageCause.ENTITY_ATTACK, 0);
                                 Bukkit.getServer().getPluginManager().callEvent(damageEvent);
                                 if (damageEvent.isCancelled()) return;
                                 // Damage the player and ignite them.
-                                LivingEntity livingEntity = (LivingEntity) entity;
                                 livingEntity.setFireTicks(getSetting(heroClass, "fire-ticks", 100));
 
                                 getPlugin().getDamageManager().addSpellTarget((Entity) entity);
