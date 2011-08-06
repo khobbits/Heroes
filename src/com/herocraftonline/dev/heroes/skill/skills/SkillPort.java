@@ -34,6 +34,16 @@ public class SkillPort extends ActiveSkill {
     @Override
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
+        
+        if(args[0].equalsIgnoreCase("list")) {
+            for(String n : getConfig().getKeys()) {
+                String retrievedNode = getSetting(hero.getHeroClass(), n, null);
+                if(retrievedNode.split(":").length == 4) {
+                    Messaging.send(player, "$1 - $2", n, retrievedNode);
+                }
+            }
+            return false;
+        }
         if (getSetting(hero.getHeroClass(), args[0].toLowerCase(), null) != null) {
             String[] splitArg = getSetting(hero.getHeroClass(), args[0].toLowerCase(), null).split(":");
             int levelRequirement = Integer.parseInt(splitArg[3]);

@@ -116,6 +116,10 @@ public abstract class Skill extends BasicCommand {
         return Configuration.getEmptyNode();
     }
 
+    public ConfigurationNode getConfig() {
+        return config;
+    }
+
     /**
      * Retrieves a <code>double</code> value from the skill's configuration. Data from the provided <code>HeroClass</code> will be preferred over the skill's own data, if found. If the setting is found in neither
      * of these sources, the default value is returned.
