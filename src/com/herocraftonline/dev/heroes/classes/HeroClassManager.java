@@ -102,7 +102,11 @@ public class HeroClassManager {
                             newClass.addAllowedArmor(aType + "_" + aItem);
                             aLimits.append(" ").append(aType).append("_").append(aItem);
                         } catch (IllegalArgumentException e) {
-                            Heroes.log(Level.WARNING, "Invalid armor type (" + type + "_" + item + ") defined for " + className);
+                            if(a == "*") {
+                                newClass.addAllowedArmor("*"); 
+                            }else {
+                                Heroes.log(Level.WARNING, "Invalid armor type (" + type + "_" + item + ") defined for " + className);
+                            }
                         }
                     }
                 }
@@ -145,7 +149,11 @@ public class HeroClassManager {
                             newClass.addAllowedWeapon(wType + "_" + wItem);
                             wLimits.append(" - ").append(wType).append("_").append(wItem);
                         } catch (IllegalArgumentException e) {
-                            Heroes.log(Level.WARNING, "Invalid weapon type (" + type + "_" + item + ") defined for " + className);
+                            if(w == "*") {
+                                newClass.addAllowedArmor("*"); 
+                            }else {
+                                Heroes.log(Level.WARNING, "Invalid weapon type (" + type + "_" + item + ") defined for " + className);
+                            }
                         }
                     }
 

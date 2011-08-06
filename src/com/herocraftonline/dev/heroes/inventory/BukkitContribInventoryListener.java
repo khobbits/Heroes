@@ -38,41 +38,47 @@ public class BukkitContribInventoryListener extends InventoryListener {
         final Player player = event.getPlayer();
         // Grab the Players HeroClass.
         HeroClass clazz = plugin.getHeroManager().getHero(player).getHeroClass();
-
-        // Check if the Slot is an Armor Slot.
-        if (event.getSlotType() == InventorySlotType.ARMOR) {
-            // Perform Armor Check.
-            String itemString = item.getType().toString();
-            if (!clazz.getAllowedArmor().contains(itemString)) {
-                Messaging.send(player, "You are not trained to use a $1.", MaterialUtil.getFriendlyName(itemString));
-                event.setCancelled(true);
-                return;
-            }
-        }
-
-        // Check if the Slot is a Weapon Slot.
-        if (event.getSlotType() == InventorySlotType.QUICKBAR) {
-            // Perform Weapon Check.
-            String itemString = item.getType().toString();
-            // If it doesn't contain a '_' and it isn't a Bow then it definitely isn't a Weapon.
-            if (!itemString.contains("_") && !itemString.equalsIgnoreCase("BOW")) {
-                return;
-            }
-            // Perform a check to see if what we have is a Weapon.
-            if (!itemString.equalsIgnoreCase("BOW")) {
-                try {
-                    // Get the value of the item.
-                    HeroClass.WeaponItems.valueOf(itemString.substring(itemString.indexOf("_") + 1, itemString.length()));
-                } catch (IllegalArgumentException e1) {
-                    // If it isn't a Weapon then we exit out here.
+        
+        // Allowing "*" to be added so we can allow all armor types
+        if(!clazz.getAllowedArmor().contains("*")) {
+            // Check if the Slot is an Armor Slot.
+            if (event.getSlotType() == InventorySlotType.ARMOR) {
+                // Perform Armor Check.
+                String itemString = item.getType().toString();
+                if (!clazz.getAllowedArmor().contains(itemString)) {
+                    Messaging.send(player, "You are not trained to use a $1.", MaterialUtil.getFriendlyName(itemString));
+                    event.setCancelled(true);
                     return;
                 }
             }
-            // Check if the Players HeroClass allows this WEAPON to be equipped.
-            if (!clazz.getAllowedWeapons().contains(itemString)) {
-                Messaging.send(player, "You are not trained to use a $1.", MaterialUtil.getFriendlyName(itemString));
-                event.setCancelled(true);
-                return;
+        }
+        
+        // Allowing "*" to be added so we can allow all weapons
+        if(!clazz.getAllowedWeapons().contains("*")) {
+            // Check if the Slot is a Weapon Slot.
+            if (event.getSlotType() == InventorySlotType.QUICKBAR) {
+                // Perform Weapon Check.
+                String itemString = item.getType().toString();
+                // If it doesn't contain a '_' and it isn't a Bow then it definitely isn't a Weapon.
+                if (!itemString.contains("_") && !itemString.equalsIgnoreCase("BOW")) {
+                    return;
+                }
+                // Perform a check to see if what we have is a Weapon.
+                if (!itemString.equalsIgnoreCase("BOW")) {
+                    try {
+                        // Get the value of the item.
+                        HeroClass.WeaponItems.valueOf(itemString.substring(itemString.indexOf("_") + 1, itemString.length()));
+                    } catch (IllegalArgumentException e1) {
+                        // If it isn't a Weapon then we exit out here.
+                        return;
+                    }
+                }
+                // Check if the Players HeroClass allows this WEAPON to be equipped.
+                if (!clazz.getAllowedWeapons().contains(itemString)) {
+                    Messaging.send(player, "You are not trained to use a $1.", MaterialUtil.getFriendlyName(itemString));
+                    event.setCancelled(true);
+                    return;
+                }
             }
         }
     }
