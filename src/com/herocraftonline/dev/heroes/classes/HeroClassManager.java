@@ -150,7 +150,7 @@ public class HeroClassManager {
                             wLimits.append(" - ").append(wType).append("_").append(wItem);
                         } catch (IllegalArgumentException e) {
                             if(w == "*") {
-                                newClass.addAllowedArmor("*"); 
+                                newClass.addAllowedWeapon("*"); 
                             }else {
                                 Heroes.log(Level.WARNING, "Invalid weapon type (" + type + "_" + item + ") defined for " + className);
                             }
