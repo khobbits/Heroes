@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
-import org.bukkit.event.entity.EntityDamageByProjectileEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityListener;
@@ -64,14 +64,15 @@ public class SkillIcebolt extends ActiveSkill {
             if (event.isCancelled()) {
                 return;
             }
-            if (event instanceof EntityDamageByProjectileEvent) {
-                EntityDamageByProjectileEvent subEvent = (EntityDamageByProjectileEvent) event;
-                Entity projectile = subEvent.getProjectile();
+            if (event instanceof EntityDamageByEntityEvent) {
+                EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
+                Entity projectile = subEvent.getDamager();
                 if (projectile instanceof Snowball) {
                     if (snowballs.contains(projectile)) {
                         snowballs.remove(projectile);
                         // Damage Event //
-                        EntityDamageEvent damageEvent = new EntityDamageEvent(event.getEntity(), DamageCause.ENTITY_ATTACK, 0);
+                        LivingEntity dmger = ((Snowball) subEvent.getDamager()).getShooter();
+                        EntityDamageByEntityEvent damageEvent = new EntityDamageByEntityEvent(dmger, event.getEntity(), DamageCause.ENTITY_ATTACK, 0);
                         Bukkit.getServer().getPluginManager().callEvent(damageEvent);
                         if (damageEvent.isCancelled()) {
                             return;
