@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Entity;
@@ -132,7 +133,6 @@ public class HeroesDamageListener extends EntityListener {
         // "   entity: " + event.getEntity() + "   type: " + event.getClass().getSimpleName());
 
         if (event.isCancelled()) return;
-        
 
         Entity entity = event.getEntity();
         DamageCause cause = event.getCause();
@@ -152,7 +152,7 @@ public class HeroesDamageListener extends EntityListener {
                     if (tmpDamage != null) {
                         damage = tmpDamage;
                     }
-                } else if (attacker instanceof LivingEntity ) {
+                } else if (attacker instanceof LivingEntity) {
                     CreatureType type = Properties.getCreatureFromEntity(attacker);
                     if (type != null) {
                         Integer tmpDamage = damageManager.getCreatureDamage(type);
@@ -160,7 +160,7 @@ public class HeroesDamageListener extends EntityListener {
                             damage = tmpDamage;
                         }
                     }
-                } else if (attacker instanceof Projectile ) {
+                } else if (attacker instanceof Projectile) {
                     Projectile projectile = (Projectile) attacker;
                     CreatureType type = Properties.getCreatureFromEntity(projectile.getShooter());
                     if (type != null) {
@@ -186,10 +186,10 @@ public class HeroesDamageListener extends EntityListener {
             if ((float) player.getNoDamageTicks() > (float) player.getMaximumNoDamageTicks() / 2.0f) {
                 return;
             }
-            if(player.isDead()) {
+            if (player.isDead()) {
                 return;
             }
-            Hero hero = plugin.getHeroManager().getHero(player);
+            final Hero hero = plugin.getHeroManager().getHero(player);
             int damageReduction = calculateArmorReduction(player.getInventory(), damage);
             damage -= damageReduction;
             if (damage < 0) {
@@ -197,18 +197,31 @@ public class HeroesDamageListener extends EntityListener {
             }
 
             double iHeroHP = hero.getHealth();
-            double fHeroHP = iHeroHP - damage;   
-            //Never set HP less than 0
-            if (fHeroHP < 0)
-                fHeroHP = 0;
-            
-            //Round up to get the number of remaining Hearts
+            double fHeroHP = iHeroHP - damage;
+            // Never set HP less than 0
+            if (fHeroHP < 0) fHeroHP = 0;
+
+            // Round up to get the number of remaining Hearts
             int fPlayerHP = (int) Math.ceil(fHeroHP / hero.getMaxHealth() * 20);
             plugin.debugLog(Level.INFO, "Damage: " + iHeroHP + " -> " + fHeroHP + "   |   " + player.getHealth() + " -> " + fPlayerHP);
-            
+
             hero.setHealth(fHeroHP);
-            player.setHealth(fPlayerHP + damage);
-            event.setDamage(damage + damageReduction);
+            
+            // Make sure health syncs on the next tick
+            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+                @Override
+                public void run() {
+                    hero.syncHealth();
+                }
+            }, 1);
+            
+            // If final HP is 0, make sure we kill the player
+            if (fHeroHP == 0) {
+                event.setDamage(200);
+            } else {
+                player.setHealth(fPlayerHP + damage);
+                event.setDamage(damage + damageReduction);
+            }
         } else if (entity instanceof LivingEntity) {
             event.setDamage(damage);
         }
