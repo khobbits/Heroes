@@ -129,9 +129,6 @@ public class HeroesDamageListener extends EntityListener {
 
     @Override
     public void onEntityDamage(EntityDamageEvent event) {
-        // System.out.println("HDL   cancelled: " + event.isCancelled() + "   damage: " + event.getDamage() +
-        // "   entity: " + event.getEntity() + "   type: " + event.getClass().getSimpleName());
-
         if (event.isCancelled()) return;
 
         Entity entity = event.getEntity();
@@ -155,9 +152,14 @@ public class HeroesDamageListener extends EntityListener {
                 } else if (attacker instanceof LivingEntity) {
                     CreatureType type = Properties.getCreatureFromEntity(attacker);
                     if (type != null) {
-                        Integer tmpDamage = damageManager.getCreatureDamage(type);
-                        if (tmpDamage != null) {
-                            damage = tmpDamage;
+                        if (type == CreatureType.CREEPER && cause == DamageCause.ENTITY_ATTACK) {
+                            // Ghetto fix for creepers throwing two damage events
+                            damage = 0;
+                        } else {
+                            Integer tmpDamage = damageManager.getCreatureDamage(type);
+                            if (tmpDamage != null) {
+                                damage = tmpDamage;
+                            }
                         }
                     }
                 } else if (attacker instanceof Projectile) {
@@ -180,6 +182,7 @@ public class HeroesDamageListener extends EntityListener {
                 }
             }
         } // End of skill -> listener communication
+        if (damage == 0) return;
 
         if (entity instanceof Player) {
             Player player = (Player) entity;
@@ -203,18 +206,18 @@ public class HeroesDamageListener extends EntityListener {
 
             // Round up to get the number of remaining Hearts
             int fPlayerHP = (int) Math.ceil(fHeroHP / hero.getMaxHealth() * 20);
-            plugin.debugLog(Level.INFO, "Damage: " + iHeroHP + " -> " + fHeroHP + "   |   " + player.getHealth() + " -> " + fPlayerHP);
+            plugin.debugLog(Level.INFO, "Damage done to " + player.getName() + " by " + cause + ": " + iHeroHP + " -> " + fHeroHP + "   |   " + player.getHealth() + " -> " + fPlayerHP);
 
             hero.setHealth(fHeroHP);
-            
+
             // If final HP is 0, make sure we kill the player
             if (fHeroHP == 0) {
                 event.setDamage(200);
             } else {
                 player.setHealth(fPlayerHP + damage);
                 event.setDamage(damage + damageReduction);
-                
-             // Make sure health syncs on the next tick
+
+                // Make sure health syncs on the next tick
                 Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
                     @Override
                     public void run() {
