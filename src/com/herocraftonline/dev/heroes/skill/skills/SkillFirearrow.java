@@ -7,7 +7,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
-import org.bukkit.event.entity.EntityDamageByProjectileEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityListener;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
@@ -54,14 +54,14 @@ public class SkillFirearrow extends ActiveSkill {
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
             if (event.isCancelled()) return;
-            if (event instanceof EntityDamageByProjectileEvent) {
-                EntityDamageByProjectileEvent subEvent = (EntityDamageByProjectileEvent) event;
-                Entity projectile = subEvent.getProjectile();
+            if (event instanceof EntityDamageByEntityEvent) {
+                EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
+                Entity projectile = subEvent.getDamager();
                 if (projectile instanceof Arrow) {
                     if (projectile.getFireTicks() > 0) {
                         Entity entity = subEvent.getEntity();
                         if (entity instanceof LivingEntity) {
-                            Entity dmger = subEvent.getDamager();
+                            Entity dmger = ((Arrow) subEvent.getDamager()).getShooter();
                             if (dmger instanceof Player) {
                                 Hero hero = getPlugin().getHeroManager().getHero((Player) dmger);
                                 HeroClass heroClass = hero.getHeroClass();

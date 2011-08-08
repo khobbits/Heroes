@@ -8,7 +8,6 @@ import org.bukkit.entity.Snowball;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageByProjectileEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityListener;
@@ -55,20 +54,20 @@ public class SkillFireball extends ActiveSkill {
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
             if (event.isCancelled()) return;
-            if (event instanceof EntityDamageByProjectileEvent) {
-                EntityDamageByProjectileEvent subEvent = (EntityDamageByProjectileEvent) event;
-                Entity projectile = subEvent.getProjectile();
+            if (event instanceof EntityDamageByEntityEvent) {
+                EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
+                Entity projectile = subEvent.getDamager();
                 if (projectile instanceof Snowball) {
                     if (projectile.getFireTicks() > 0) {
                         Entity entity = subEvent.getEntity();
                         if (entity instanceof LivingEntity) {
-                            Entity dmger = subEvent.getDamager();
+                            Entity dmger = ((Snowball) subEvent.getDamager()).getShooter();
                             if (dmger instanceof Player) {
                                 Hero hero = getPlugin().getHeroManager().getHero((Player) dmger);
                                 HeroClass heroClass = hero.getHeroClass();
                                 LivingEntity livingEntity = (LivingEntity) entity;
                                 // Perform a check to see if any plugin is preventing us from damaging the player.
-                                EntityDamageByEntityEvent damageEvent = new EntityDamageByEntityEvent(dmger, livingEntity, DamageCause.ENTITY_ATTACK, 0);
+                                EntityDamageByEntityEvent damageEvent = new EntityDamageByEntityEvent(dmger, entity, DamageCause.ENTITY_ATTACK, 0);
                                 Bukkit.getServer().getPluginManager().callEvent(damageEvent);
                                 if (damageEvent.isCancelled()) return;
                                 // Damage the player and ignite them.
