@@ -82,7 +82,7 @@ public class InventoryChecker {
                 }
             }
 
-            if (!hc.getAllowedWeapons().contains(itemType)) {
+            if (!hc.getAllowedWeapons().contains(itemType) && !hc.getAllowedWeapons().contains("*")) {
                 if (moveItem(p, i, itemStack)) {
                     removedCount++;
                 }
