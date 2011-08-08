@@ -3,11 +3,11 @@ package com.herocraftonline.dev.heroes.inventory;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.spout.event.inventory.InventoryClickEvent;
-import org.spout.event.inventory.InventoryCloseEvent;
-import org.spout.event.inventory.InventoryCraftEvent;
-import org.spout.event.inventory.InventoryListener;
-import org.spout.event.inventory.InventorySlotType;
+import org.bukkitcontrib.event.inventory.InventoryClickEvent;
+import org.bukkitcontrib.event.inventory.InventoryCloseEvent;
+import org.bukkitcontrib.event.inventory.InventoryCraftEvent;
+import org.bukkitcontrib.event.inventory.InventoryListener;
+import org.bukkitcontrib.event.inventory.InventorySlotType;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
@@ -16,11 +16,11 @@ import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.util.MaterialUtil;
 import com.herocraftonline.dev.heroes.util.Messaging;
 
-public class SpoutInventoryListener extends InventoryListener {
+public class BukkitContribInventoryListener extends InventoryListener {
 
     private Heroes plugin;
 
-    public SpoutInventoryListener(Heroes heroes) {
+    public BukkitContribInventoryListener(Heroes heroes) {
         plugin = heroes;
     }
 
