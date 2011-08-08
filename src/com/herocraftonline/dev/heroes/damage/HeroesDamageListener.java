@@ -10,9 +10,9 @@ import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageByProjectileEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityListener;
@@ -142,32 +142,31 @@ public class HeroesDamageListener extends EntityListener {
             damageManager.getSpellTargets().remove(entity);
         } else {
             if (event instanceof EntityDamageByEntityEvent) {
-                if (event instanceof EntityDamageByProjectileEvent) {
-                    // Projectile projectile = ((EntityDamageByProjectileEvent) event).getProjectile();
-                    // DamageManager.ProjectileType type = DamageManager.ProjectileType.valueOf(projectile);
-                    // Integer tmpDamage = damageManager.getProjectileDamage(type, (HumanEntity)
-                    // projectile.getShooter());
-                    // if (tmpDamage != null) {
-                    // damage = tmpDamage;
-                    // }
-                } else {
-                    Entity attacker = ((EntityDamageByEntityEvent) event).getDamager();
-                    if (attacker instanceof Player) {
-                        Player attackingPlayer = (Player) attacker;
-                        ItemStack weapon = attackingPlayer.getItemInHand();
-                        Material weaponType = weapon.getType();
+                Entity attacker = ((EntityDamageByEntityEvent) event).getDamager();
+                if (attacker instanceof Player) {
+                    Player attackingPlayer = (Player) attacker;
+                    ItemStack weapon = attackingPlayer.getItemInHand();
+                    Material weaponType = weapon.getType();
 
-                        Integer tmpDamage = damageManager.getItemDamage(weaponType, attackingPlayer);
+                    Integer tmpDamage = damageManager.getItemDamage(weaponType, attackingPlayer);
+                    if (tmpDamage != null) {
+                        damage = tmpDamage;
+                    }
+                } else if (attacker instanceof LivingEntity ) {
+                    CreatureType type = Properties.getCreatureFromEntity(attacker);
+                    if (type != null) {
+                        Integer tmpDamage = damageManager.getCreatureDamage(type);
                         if (tmpDamage != null) {
                             damage = tmpDamage;
                         }
-                    } else {
-                        CreatureType type = Properties.getCreatureFromEntity(attacker);
-                        if (type != null) {
-                            Integer tmpDamage = damageManager.getCreatureDamage(type);
-                            if (tmpDamage != null) {
-                                damage = tmpDamage;
-                            }
+                    }
+                } else if (attacker instanceof Projectile ) {
+                    Projectile projectile = (Projectile) attacker;
+                    CreatureType type = Properties.getCreatureFromEntity(projectile.getShooter());
+                    if (type != null) {
+                        Integer tmpDamage = damageManager.getCreatureDamage(type);
+                        if (tmpDamage != null) {
+                            damage = tmpDamage;
                         }
                     }
                 }
