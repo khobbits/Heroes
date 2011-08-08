@@ -207,20 +207,20 @@ public class HeroesDamageListener extends EntityListener {
 
             hero.setHealth(fHeroHP);
             
-            // Make sure health syncs on the next tick
-            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-                @Override
-                public void run() {
-                    hero.syncHealth();
-                }
-            }, 1);
-            
             // If final HP is 0, make sure we kill the player
             if (fHeroHP == 0) {
                 event.setDamage(200);
             } else {
                 player.setHealth(fPlayerHP + damage);
                 event.setDamage(damage + damageReduction);
+                
+             // Make sure health syncs on the next tick
+                Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+                    @Override
+                    public void run() {
+                        hero.syncHealth();
+                    }
+                }, 1);
             }
         } else if (entity instanceof LivingEntity) {
             event.setDamage(damage);
