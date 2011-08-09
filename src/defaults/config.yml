@@ -17,3 +17,10 @@ bed:
     bedHeal: true #Do you want players to heal in beds? NOTE - useDamageSystem must be true
     healInterval: 30 #the seconds it takes to heal the healPercent
     healPercent: 5 #the amount of damage to heal.
+default:
+    level: 1 #Level to use HATS!
+    allowhatsplugin: false
+mappartyui:
+    id: 1 #Map ID number, 0 or 1 is desired
+    enabled: true
+    packetinterval: 20 #Rate of packets
