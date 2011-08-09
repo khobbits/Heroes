@@ -3,8 +3,8 @@ main: com.herocraftonline.dev.heroes.Heroes
 version: 1.1.4
 website: http://www.herocraftonline.com
 authors: [DThielke, Rigby, RightLegRed, Kainzo]
-description: Experience, leveling and class system for Minecraft developed by the Herocraft coding team.
-softdepend: [Permissions, BukkitContrib, BOSEconomy, iConomy]
+description: Experience, leveling, skills and class system for Minecraft developed by Herocraft Development.
+softdepend: [Permissions, Spout, BOSEconomy, iConomy]
 commands:
   heroes:
     aliases: ['hero']
@@ -33,6 +33,7 @@ commands:
     description: Binds a skill to an item
     usage: /<command> <skill> 
   mana:
+    aliases: [mp]
     description: Displays the hero's current mana
     usage: /<command>
   health:
