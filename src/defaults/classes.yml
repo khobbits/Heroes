@@ -4,9 +4,9 @@ classes:
         summon-max: 0
         description: The vagrant, starter PATH
         permitted-armor:
-        - LEATHER
+        - '*'
         permitted-weapon:
-        - WOOD
+        - '*'
         permitted-skills:
         experience-sources:
         - KILLING
