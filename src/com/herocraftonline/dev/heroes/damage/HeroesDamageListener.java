@@ -130,6 +130,12 @@ public class HeroesDamageListener extends EntityListener {
     @Override
     public void onEntityDamage(EntityDamageEvent event) {
         if (event.isCancelled()) return;
+        //Ignore /kill events
+        if (event instanceof EntityDamageByEntityEvent) {
+            EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
+            if (subEvent.getDamager().equals(event.getEntity()) && event.getDamage() == 1000)
+                return;
+        }
 
         Entity entity = event.getEntity();
         DamageCause cause = event.getCause();
