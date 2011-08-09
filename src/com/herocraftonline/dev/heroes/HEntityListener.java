@@ -40,7 +40,7 @@ public class HEntityListener extends EntityListener {
                 attacker = (Player) damager;
             }
         }
-
+        
         Properties prop = plugin.getConfigManager().getProperties();
         if (defender instanceof Player) {
             // Incur 5% experience loss to dying player
@@ -82,9 +82,12 @@ public class HEntityListener extends EntityListener {
 
             // If the Player killed another Player we check to see if they can earn EXP from PVP.
             if (defender instanceof Player && expSources.contains(ExperienceType.PVP)) {
-                prop.playerDeaths.put((Player) defender, defender.getLocation());
-                addedExp = prop.playerKillingExp;
-                experienceType = ExperienceType.PVP;
+                //Don't award XP for Players killing themselves
+                if (!(defender.equals(attacker))) {
+                    prop.playerDeaths.put((Player) defender, defender.getLocation());
+                    addedExp = prop.playerKillingExp;
+                    experienceType = ExperienceType.PVP;
+                }
             }
 
             // If the Player killed a Monster/Animal then we check to see if they can earn EXP from KILLING.
