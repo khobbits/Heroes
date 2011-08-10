@@ -21,7 +21,7 @@ public class SkillShield extends PassiveSkill {
         setDescription("Your shield absorbs damage!");
         setArgumentRange(0, 0);
 
-        registerEvent(Type.ENTITY_DAMAGE, new SkillPlayerListener(), Priority.High);
+        registerEvent(Type.ENTITY_DAMAGE, new SkillPlayerListener(), Priority.Highest);
     }
 
     @Override
