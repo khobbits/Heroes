@@ -1,10 +1,6 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
-import java.util.List;
-
 import org.bukkit.Location;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
