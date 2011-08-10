@@ -1,5 +1,7 @@
 package com.herocraftonline.dev.heroes.party;
 
+import java.util.logging.Level;
+
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -37,6 +39,7 @@ public class PartyEntityListener extends EntityListener {
                 HeroParty party = plugin.getHeroManager().getHero(defender).getParty();
                 if (party == null) return;
                 if (party.isPartyMember(plugin.getHeroManager().getHero(attacker))) {
+                    plugin.debugLog(Level.INFO, "Party damage done to: " + defender.getName() + " by: " + attacker.getName() + " has been cancelled.");
                     initialEvent.setCancelled(true);
                 }
             }
