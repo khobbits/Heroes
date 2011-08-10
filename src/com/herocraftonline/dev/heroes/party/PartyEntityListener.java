@@ -1,12 +1,12 @@
 package com.herocraftonline.dev.heroes.party;
 
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityListener;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.persistence.HeroManager;
 
 public class PartyEntityListener extends EntityListener {
 
@@ -18,18 +18,25 @@ public class PartyEntityListener extends EntityListener {
 
     @Override
     public void onEntityDamage(EntityDamageEvent initialEvent) {
+        if (initialEvent.isCancelled()) return;
+        
         if (initialEvent instanceof EntityDamageByEntityEvent) {
             EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) initialEvent;
-            if (subEvent.getEntity() instanceof Player && subEvent.getDamager() instanceof Player) {
-                Player attacker = (Player) subEvent.getDamager();
+            if (subEvent.getEntity() instanceof Player) {
                 Player defender = (Player) subEvent.getEntity();
-                HeroManager heroManager = plugin.getHeroManager();
-                HeroParty attackParty = heroManager.getHero(attacker).getParty();
-
-                if (attackParty == null) {
-                    return;
+                Player attacker = null;
+                if (subEvent.getDamager() instanceof Player) {
+                    attacker = (Player) subEvent.getDamager();
+                } else if (subEvent.getDamager() instanceof Projectile) {
+                    Projectile projectile = (Projectile) subEvent.getDamager();
+                    if (projectile.getShooter() instanceof Player) {
+                        attacker = (Player) projectile.getShooter();
+                    }
                 }
-                if (attackParty.isPartyMember(heroManager.getHero(defender)) && attackParty.getPvp()) {
+                if (attacker == null) return;
+                HeroParty party = plugin.getHeroManager().getHero(defender).getParty();
+                if (party == null) return;
+                if (party.isPartyMember(plugin.getHeroManager().getHero(attacker))) {
                     initialEvent.setCancelled(true);
                 }
             }

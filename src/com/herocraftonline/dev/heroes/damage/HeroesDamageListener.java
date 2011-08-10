@@ -147,14 +147,8 @@ public class HeroesDamageListener extends EntityListener {
             if (event instanceof EntityDamageByEntityEvent) {
                 Entity attacker = ((EntityDamageByEntityEvent) event).getDamager();
                 if (attacker instanceof Player) {
-                    Player attackingPlayer = (Player) attacker;
-                    ItemStack weapon = attackingPlayer.getItemInHand();
-                    Material weaponType = weapon.getType();
-
-                    Integer tmpDamage = damageManager.getItemDamage(weaponType, attackingPlayer);
-                    if (tmpDamage != null) {
-                        damage = tmpDamage;
-                    }
+                    //Get the damage this player should deal for the weapon they are using
+                    damage = getPlayerDamage((Player) attacker, damage);
                 } else if (attacker instanceof LivingEntity) {
                     CreatureType type = Properties.getCreatureFromEntity(attacker);
                     if (type != null) {
@@ -170,11 +164,16 @@ public class HeroesDamageListener extends EntityListener {
                     }
                 } else if (attacker instanceof Projectile) {
                     Projectile projectile = (Projectile) attacker;
-                    CreatureType type = Properties.getCreatureFromEntity(projectile.getShooter());
-                    if (type != null) {
-                        Integer tmpDamage = damageManager.getCreatureDamage(type);
-                        if (tmpDamage != null) {
-                            damage = tmpDamage;
+                    if (projectile.getShooter() instanceof Player) {
+                        //Allow alteration of player damage
+                        damage = getPlayerDamage((Player) projectile.getShooter(), damage);
+                    } else {
+                        CreatureType type = Properties.getCreatureFromEntity(projectile.getShooter());
+                        if (type != null) {
+                            Integer tmpDamage = damageManager.getCreatureDamage(type);
+                            if (tmpDamage != null) {
+                                damage = tmpDamage;
+                            }
                         }
                     }
                 }
@@ -234,5 +233,13 @@ public class HeroesDamageListener extends EntityListener {
         } else if (entity instanceof LivingEntity) {
             event.setDamage(damage);
         }
+    }
+
+    private int getPlayerDamage(Player attacker, int damage) {
+        ItemStack weapon = attacker.getItemInHand();
+        Material weaponType = weapon.getType();
+
+        Integer tmpDamage = damageManager.getItemDamage(weaponType, attacker);
+        return (tmpDamage == null) ? damage : tmpDamage;
     }
 }
