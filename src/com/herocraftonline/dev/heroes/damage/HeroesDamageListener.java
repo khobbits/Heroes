@@ -138,6 +138,7 @@ public class HeroesDamageListener extends EntityListener {
         }
 
         Entity entity = event.getEntity();
+        Entity attacker = null;
         DamageCause cause = event.getCause();
         int damage = event.getDamage();
         if (damage == 0) return;
@@ -145,7 +146,7 @@ public class HeroesDamageListener extends EntityListener {
             damageManager.getSpellTargets().remove(entity);
         } else {
             if (event instanceof EntityDamageByEntityEvent) {
-                Entity attacker = ((EntityDamageByEntityEvent) event).getDamager();
+                attacker = ((EntityDamageByEntityEvent) event).getDamager();
                 if (attacker instanceof Player) {
                     //Get the damage this player should deal for the weapon they are using
                     damage = getPlayerDamage((Player) attacker, damage);
@@ -165,9 +166,11 @@ public class HeroesDamageListener extends EntityListener {
                 } else if (attacker instanceof Projectile) {
                     Projectile projectile = (Projectile) attacker;
                     if (projectile.getShooter() instanceof Player) {
+                        attacker = projectile.getShooter();
                         //Allow alteration of player damage
                         damage = getPlayerDamage((Player) projectile.getShooter(), damage);
                     } else {
+                        attacker = projectile.getShooter();
                         CreatureType type = Properties.getCreatureFromEntity(projectile.getShooter());
                         if (type != null) {
                             Integer tmpDamage = damageManager.getCreatureDamage(type);
@@ -198,6 +201,15 @@ public class HeroesDamageListener extends EntityListener {
                 return;
             }
             final Hero hero = plugin.getHeroManager().getHero(player);
+            //Party damage test
+            if (attacker instanceof Player) {
+                if (hero.getParty() != null) {
+                    if (hero.getParty().isPartyMember(plugin.getHeroManager().getHero((Player) attacker))) {
+                        event.setCancelled(true);
+                        return;
+                    }
+                }
+            }
             int damageReduction = calculateArmorReduction(player.getInventory(), damage);
             damage -= damageReduction;
             if (damage < 0) {
