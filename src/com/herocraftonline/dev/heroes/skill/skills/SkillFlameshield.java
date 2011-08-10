@@ -81,7 +81,7 @@ public class SkillFlameshield extends ActiveSkill {
 
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
-            if (event.isCancelled() && event.getCause() != DamageCause.FIRE && event.getCause() != DamageCause.LAVA) {
+            if (event.isCancelled() || (event.getCause() != DamageCause.FIRE && event.getCause() != DamageCause.LAVA)) {
                 return;
             }
 
