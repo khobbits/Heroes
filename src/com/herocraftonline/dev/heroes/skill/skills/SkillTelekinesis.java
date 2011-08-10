@@ -32,11 +32,11 @@ public class SkillTelekinesis extends ActiveSkill {
         List<Block> lineOfSight = player.getLineOfSight(transparent, 15);
         Block block = lineOfSight.get(lineOfSight.size() - 1);
         if (block.getType() == Material.LEVER) {
-            Lever lever = (Lever) block;
+            Lever lever = (Lever) block.getState().getData();
             lever.setPowered(!lever.isPowered());
             broadcastExecuteText(hero);
         } else if (block.getType() == Material.STONE_BUTTON) {
-            Button button = (Button) block;
+            Button button = (Button) block.getState().getData();
             button.setPowered(!button.isPowered());
             broadcastExecuteText(hero);
         } else {
