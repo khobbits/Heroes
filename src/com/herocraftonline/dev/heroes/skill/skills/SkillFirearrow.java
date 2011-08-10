@@ -66,7 +66,7 @@ public class SkillFirearrow extends ActiveSkill {
                                 Hero hero = getPlugin().getHeroManager().getHero((Player) dmger);
                                 HeroClass heroClass = hero.getHeroClass();
                                 // Perform a check to see if any plugin is preventing us from damaging the player.
-                                EntityDamageEvent damageEvent = new EntityDamageEvent(dmger, DamageCause.CUSTOM, 0);
+                                EntityDamageByEntityEvent damageEvent = new EntityDamageByEntityEvent(dmger, entity, DamageCause.ENTITY_ATTACK, 0);
                                 Bukkit.getServer().getPluginManager().callEvent(damageEvent);
                                 if (damageEvent.isCancelled()) return;
                                 // Damage the player and ignite them.
