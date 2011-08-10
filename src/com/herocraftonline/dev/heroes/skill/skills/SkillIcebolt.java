@@ -17,8 +17,10 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityListener;
 import org.bukkit.util.Vector;
+import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 
@@ -35,7 +37,14 @@ public class SkillIcebolt extends ActiveSkill {
 
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
     }
-
+    
+    @Override
+    public ConfigurationNode getDefaultConfig() {
+        ConfigurationNode node = super.getDefaultConfig();
+        node.setProperty("damage", 3);
+        return node;
+    }
+    
     @Override
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
@@ -61,9 +70,7 @@ public class SkillIcebolt extends ActiveSkill {
 
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
-            if (event.isCancelled()) {
-                return;
-            }
+            if (event.isCancelled()) return;
             if (event instanceof EntityDamageByEntityEvent) {
                 EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
                 Entity projectile = subEvent.getDamager();
@@ -72,14 +79,16 @@ public class SkillIcebolt extends ActiveSkill {
                         snowballs.remove(projectile);
                         // Damage Event //
                         LivingEntity dmger = ((Snowball) subEvent.getDamager()).getShooter();
+                        Hero hero = getPlugin().getHeroManager().getHero((Player) dmger);
+                        HeroClass heroClass = hero.getHeroClass();
                         EntityDamageByEntityEvent damageEvent = new EntityDamageByEntityEvent(dmger, event.getEntity(), DamageCause.ENTITY_ATTACK, 0);
                         Bukkit.getServer().getPluginManager().callEvent(damageEvent);
                         if (damageEvent.isCancelled()) {
                             return;
                         }
-                        LivingEntity lEntity = (LivingEntity) event.getEntity();
                         event.getEntity().setFireTicks(0);
-                        lEntity.damage(3);
+                        int damage = getSetting(heroClass, "damage", 3);
+                        event.setDamage(damage);
                     }
                 }
             }
