@@ -55,7 +55,6 @@ import com.herocraftonline.dev.heroes.command.commands.WhoCommand;
 import com.herocraftonline.dev.heroes.damage.DamageManager;
 import com.herocraftonline.dev.heroes.inventory.BukkitContribInventoryListener;
 import com.herocraftonline.dev.heroes.inventory.InventoryChecker;
-import com.herocraftonline.dev.heroes.party.PartyEntityListener;
 import com.herocraftonline.dev.heroes.party.PartyManager;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.persistence.HeroManager;
@@ -107,9 +106,6 @@ public class Heroes extends JavaPlugin {
 
     // Variable for BukkitContrib.
     public static boolean useBukkitContrib = false;
-
-    // Party Listener
-    private PartyEntityListener partyEntityListener = new PartyEntityListener(this);
 
     // Inventory Checker Class -- This class has the methods to check a players inventory and
     // restrictions.
@@ -419,7 +415,6 @@ public class Heroes extends JavaPlugin {
         pluginManager.registerEvent(Type.PLAYER_BED_ENTER, playerListener, Priority.Monitor, this);
         pluginManager.registerEvent(Type.PLAYER_BED_LEAVE, playerListener, Priority.Monitor, this);
 
-        pluginManager.registerEvent(Type.ENTITY_DAMAGE, partyEntityListener, Priority.Highest, this);
         pluginManager.registerEvent(Type.ENTITY_DEATH, entityListener, Priority.Monitor, this);
         pluginManager.registerEvent(Type.ENTITY_TARGET, entityListener, Priority.Normal, this);
 
@@ -433,7 +428,7 @@ public class Heroes extends JavaPlugin {
         pluginManager.registerEvent(Type.CUSTOM_EVENT, new HPermissionsListener(this), Priority.Monitor, this);
 
         // Map Party UI
-        pluginManager.registerEvent(Type.ENTITY_DAMAGE, partyListener, Priority.Low, this);
+        pluginManager.registerEvent(Type.ENTITY_DAMAGE, partyListener, Priority.Monitor, this);
         pluginManager.registerEvent(Type.ENTITY_REGAIN_HEALTH, partyListener, Priority.Monitor, this);
 
         damageManager.registerEvents();
