@@ -7,6 +7,7 @@ import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -38,6 +39,11 @@ public class HEntityListener extends EntityListener {
             Entity damager = ((EntityDamageByEntityEvent) lastDamage).getDamager();
             if (damager instanceof Player) {
                 attacker = (Player) damager;
+            } else if (damager instanceof Projectile) {
+                Projectile projectile = (Projectile) damager;
+                if (projectile.getShooter() instanceof Player) {
+                    attacker = (Player) projectile.getShooter();
+                }
             }
         }
         
