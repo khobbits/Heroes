@@ -2,6 +2,21 @@ package com.herocraftonline.dev.heroes.util;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Chicken;
+import org.bukkit.entity.Cow;
+import org.bukkit.entity.Creature;
+import org.bukkit.entity.Creeper;
+import org.bukkit.entity.Ghast;
+import org.bukkit.entity.Giant;
+import org.bukkit.entity.Pig;
+import org.bukkit.entity.PigZombie;
+import org.bukkit.entity.Sheep;
+import org.bukkit.entity.Skeleton;
+import org.bukkit.entity.Slime;
+import org.bukkit.entity.Spider;
+import org.bukkit.entity.Squid;
+import org.bukkit.entity.Wolf;
+import org.bukkit.entity.Zombie;
 
 import com.herocraftonline.dev.heroes.Heroes;
 
@@ -57,4 +72,36 @@ public final class Messaging {
         return msg;
     }
 
+    public static String getCreatureName(Creature creature) {
+        if (creature instanceof Cow)
+            return "Cow";
+        else if (creature instanceof Chicken)
+            return "Chicken";
+        else if (creature instanceof Creeper)
+            return "Creeper";
+        else if (creature instanceof Ghast)
+            return "Ghast";
+        else if (creature instanceof Giant)
+            return "Giant";
+        else if (creature instanceof Pig)
+            return "Pig";
+        else if (creature instanceof PigZombie)
+            return "Pig Zombie";
+        else if (creature instanceof Sheep)
+            return "Sheep";
+        else if (creature instanceof Skeleton)
+            return "Skeleton";
+        else if (creature instanceof Slime)
+            return "Slime";
+        else if (creature instanceof Spider)
+            return "Spider";
+        else if (creature instanceof Squid)
+            return "Squid";
+        else if (creature instanceof Wolf)
+            return "Wolf";
+        else if (creature instanceof Zombie)
+            return "Zombie";
+        else
+            return null;
+    }
 }
