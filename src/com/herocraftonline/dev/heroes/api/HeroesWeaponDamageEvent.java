@@ -15,10 +15,10 @@ public class HeroesWeaponDamageEvent extends Event {
     
     public HeroesWeaponDamageEvent(int damage, EntityDamageByEntityEvent event) {
         super("HeroesWeaponDamageEvent");
-        this.setDamage(damage);
-        this.setDamager(event.getDamager());
-        this.setEntity(event.getEntity());
-        this.setCause(event.getCause());  
+        this.damage = damage;
+        this.damager = event.getDamager();
+        this.entity = event.getEntity();
+        this.cause = event.getCause();  
     }
 
     public void setDamage(int damage) {
