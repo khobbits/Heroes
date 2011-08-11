@@ -51,7 +51,7 @@ public class SkillBackstab extends PassiveSkill {
                     else if (subEvent.getEntity() instanceof Creature)
                         name = "a " + Messaging.getCreatureName((Creature) subEvent.getEntity()).toLowerCase();
                         
-                    broadcast(player.getLocation(), player + " backstabbed " + name, player.getDisplayName());
+                    broadcast(player.getLocation(), player.getName() + " backstabbed " + name, player.getDisplayName());
                 }
             }
         }
