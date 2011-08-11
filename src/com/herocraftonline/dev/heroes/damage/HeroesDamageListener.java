@@ -22,6 +22,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.api.HeroesWeaponDamageEvent;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.util.Properties;
 
@@ -155,6 +156,7 @@ public class HeroesDamageListener extends EntityListener {
                         if (type == CreatureType.CREEPER && cause == DamageCause.ENTITY_ATTACK) {
                             // Ghetto fix for creepers throwing two damage events
                             damage = 0;
+                            return;
                         } else {
                             Integer tmpDamage = damageManager.getCreatureDamage(type);
                             if (tmpDamage != null) {
@@ -179,6 +181,11 @@ public class HeroesDamageListener extends EntityListener {
                         }
                     }
                 }
+                //Call the custom event to allow skills to adjust weapon damage
+                HeroesWeaponDamageEvent weaponDamageEvent = new HeroesWeaponDamageEvent(damage, (EntityDamageByEntityEvent) event);
+                plugin.getServer().getPluginManager().callEvent(weaponDamageEvent);
+                damage = weaponDamageEvent.getDamage();
+                
             } else if (cause != DamageCause.CUSTOM) {
                 Integer tmpDamage = damageManager.getEnvironmentalDamage(cause);
                 if (tmpDamage != null) {

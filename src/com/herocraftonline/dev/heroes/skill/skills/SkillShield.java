@@ -1,20 +1,16 @@
-/*
-//TODO: Will not work until HeroesDamageListener is re-worked to allow skills to alter damage from within the damage listener (not through the damage event in bukkit)
-//TODO: See line 227 of HeroesDamageListener.java
-
 package com.herocraftonline.dev.heroes.skill.skills;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.CustomEventListener;
+import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.event.entity.EntityListener;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.api.HeroesWeaponDamageEvent;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.PassiveSkill;
 
@@ -25,7 +21,7 @@ public class SkillShield extends PassiveSkill {
         setDescription("Your shield absorbs damage!");
         setArgumentRange(0, 0);
 
-        registerEvent(Type.ENTITY_DAMAGE, new SkillPlayerListener(), Priority.Highest);
+        registerEvent(Type.CUSTOM_EVENT, new CustomListener(), Priority.Highest);
     }
 
     @Override
@@ -37,15 +33,18 @@ public class SkillShield extends PassiveSkill {
         return node;
     }
 
-    public class SkillPlayerListener extends EntityListener {
+    public class CustomListener extends CustomEventListener {
 
         @Override
-        public void onEntityDamage(EntityDamageEvent event) {
-            if (event.isCancelled() || event.getCause() != DamageCause.ENTITY_ATTACK || event.getDamage() == 0 || !(event instanceof EntityDamageByEntityEvent)) {
+        public void onCustomEvent(Event event) {
+            if (!(event instanceof HeroesWeaponDamageEvent)) return;
+            
+            HeroesWeaponDamageEvent subEvent = (HeroesWeaponDamageEvent) event;
+            if (subEvent.getCause() != DamageCause.ENTITY_ATTACK || subEvent.getDamage() == 0 ) {
                 return;
             }
-            if (event.getEntity() instanceof Player) {
-                Player player = (Player) event.getEntity();
+            if (subEvent.getEntity() instanceof Player) {
+                Player player = (Player) subEvent.getEntity();
                 Hero hero = getPlugin().getHeroManager().getHero(player);
                 if (hero.hasEffect(getName())) {
                     double multiplier = 1;
@@ -56,10 +55,9 @@ public class SkillShield extends PassiveSkill {
                     } else if (player.getItemInHand().getType() == Material.TRAP_DOOR) {
                         multiplier = getSetting(hero.getHeroClass(), "trapdoor", 0.60);
                     }
-                    event.setDamage((int) (event.getDamage() * multiplier));
+                    subEvent.setDamage((int) (subEvent.getDamage() * multiplier));
                 }
             }
         }
     }
 }
-*/

@@ -1,21 +1,16 @@
-/*
-//TODO: Will not work until HeroesDamageListener is re-worked to allow skills to alter damage from within the damage listener (not through the damage event in bukkit)
-//TODO: See line 227 of HeroesDamageListener.java
-
-
 package com.herocraftonline.dev.heroes.skill.skills;
 
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
+import org.bukkit.event.CustomEventListener;
+import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityListener;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.api.HeroesWeaponDamageEvent;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.PassiveSkill;
 
@@ -25,43 +20,44 @@ public class SkillProwess extends PassiveSkill {
         super(plugin, "Prowess");
         setDescription("You are more lethal with regular attacks!");
         setArgumentRange(0, 0);
-        
-        registerEvent(Type.ENTITY_DAMAGE, new SkillPlayerListener(), Priority.Highest);
+
+        registerEvent(Type.ENTITY_DAMAGE, new CustomListener(), Priority.Normal);
     }
-    
+
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
         node.setProperty("attack-bonus", 1.25);
         return node;
     }
-    
-    public class SkillPlayerListener extends EntityListener {
+
+    public class CustomListener extends CustomEventListener {
 
         @Override
-        public void onEntityDamage(EntityDamageEvent event) {
-            if (event.isCancelled() || !(event.getCause() == DamageCause.ENTITY_ATTACK)) {
+        public void onCustomEvent(Event event) {
+            if (!(event instanceof HeroesWeaponDamageEvent)) return;
+            HeroesWeaponDamageEvent subEvent = (HeroesWeaponDamageEvent) event;
+
+            if ( !(subEvent.getCause() == DamageCause.ENTITY_ATTACK)) {
                 return;
             }
-            if (event instanceof EntityDamageByEntityEvent) {
-                EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
-                if (subEvent.getDamager() instanceof Player) {
-                    Player player = (Player) subEvent.getDamager();
+
+            if (subEvent.getDamager() instanceof Player) {
+                Player player = (Player) subEvent.getDamager();
+                Hero hero = getPlugin().getHeroManager().getHero(player);
+                if (hero.hasEffect(getName())) {
+                    subEvent.setDamage((int) (subEvent.getDamage() * getSetting(hero.getHeroClass(), "attack-bonus", 1.25)));
+                }
+            } else if (subEvent.getDamager() instanceof Projectile) {
+                if (((Projectile) subEvent.getDamager()).getShooter() instanceof Player) {
+                    Player player = (Player) ((Projectile)subEvent.getDamager()).getShooter();
                     Hero hero = getPlugin().getHeroManager().getHero(player);
                     if (hero.hasEffect(getName())) {
                         subEvent.setDamage((int) (subEvent.getDamage() * getSetting(hero.getHeroClass(), "attack-bonus", 1.25)));
-                    }
-                } else if (subEvent.getDamager() instanceof Projectile) {
-                    if (((Projectile) subEvent.getDamager()).getShooter() instanceof Player) {
-                        Player player = (Player) ((Projectile)subEvent.getDamager()).getShooter();
-                        Hero hero = getPlugin().getHeroManager().getHero(player);
-                        if (hero.hasEffect(getName())) {
-                            subEvent.setDamage((int) (subEvent.getDamage() * getSetting(hero.getHeroClass(), "attack-bonus", 1.25)));
-                        }
                     }
                 }
             }
         }
     }
 }
-*/
+    
