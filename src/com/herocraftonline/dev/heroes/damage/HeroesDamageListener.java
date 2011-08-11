@@ -143,7 +143,7 @@ public class HeroesDamageListener extends EntityListener {
         int damage = event.getDamage();
         if (damageManager.getSpellTargets().contains(entity)) { // Start of skill -> listener communication
             damageManager.getSpellTargets().remove(entity);
-        } else {
+        } else if (damage != 0 ){
             if (event instanceof EntityDamageByEntityEvent) {
                 attacker = ((EntityDamageByEntityEvent) event).getDamager();
                 if (attacker instanceof Player) {
@@ -206,6 +206,7 @@ public class HeroesDamageListener extends EntityListener {
                     }
                 }
             }
+            if (damage == 0) return;
             int damageReduction = calculateArmorReduction(player.getInventory(), damage);
             damage -= damageReduction;
             if (damage < 0) {
