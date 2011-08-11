@@ -141,7 +141,6 @@ public class HeroesDamageListener extends EntityListener {
         Entity attacker = null;
         DamageCause cause = event.getCause();
         int damage = event.getDamage();
-        if (damage == 0) return;
         if (damageManager.getSpellTargets().contains(entity)) { // Start of skill -> listener communication
             damageManager.getSpellTargets().remove(entity);
         } else {
@@ -190,7 +189,6 @@ public class HeroesDamageListener extends EntityListener {
                 }
             }
         } // End of skill -> listener communication
-        if (damage == 0) return;
 
         if (entity instanceof Player) {
             Player player = (Player) entity;
