@@ -194,10 +194,8 @@ public class HeroesDamageListener extends EntityListener {
 
         if (entity instanceof Player) {
             Player player = (Player) entity;
-            if ((float) player.getNoDamageTicks() > (float) player.getMaximumNoDamageTicks() / 2.0f) {
-                return;
-            }
-            if (player.isDead()) {
+            if ((float) player.getNoDamageTicks() > (float) player.getMaximumNoDamageTicks() / 2.0f || player.isDead() || player.getHealth() <= 0) {
+                event.setCancelled(true);
                 return;
             }
             final Hero hero = plugin.getHeroManager().getHero(player);
