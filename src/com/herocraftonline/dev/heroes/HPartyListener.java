@@ -16,7 +16,7 @@ public class HPartyListener extends EntityListener {
     }
 
     public void onEntityDamage(EntityDamageEvent event) {
-        if (!(event.getEntity() instanceof Player)) {
+        if (!(event.getEntity() instanceof Player) || event.isCancelled()) {
             return;
         }
 
