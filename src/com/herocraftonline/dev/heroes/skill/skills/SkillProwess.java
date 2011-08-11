@@ -1,3 +1,8 @@
+/*
+//TODO: Will not work until HeroesDamageListener is re-worked to allow skills to alter damage from within the damage listener (not through the damage event in bukkit)
+//TODO: See line 227 of HeroesDamageListener.java
+
+
 package com.herocraftonline.dev.heroes.skill.skills;
 
 import org.bukkit.entity.Player;
@@ -59,3 +64,4 @@ public class SkillProwess extends PassiveSkill {
         }
     }
 }
+*/

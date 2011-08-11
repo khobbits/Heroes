@@ -223,6 +223,7 @@ public class HeroesDamageListener extends EntityListener {
             int fPlayerHP = (int) Math.ceil(fHeroHP / hero.getMaxHealth() * 20);
             plugin.debugLog(Level.INFO, "Damage done to " + player.getName() + " by " + cause + ": " + iHeroHP + " -> " + fHeroHP + "   |   " + player.getHealth() + " -> " + fPlayerHP);
 
+            //TODO: Doing this completely Breaks any form of damage modification from passive/active skills 
             hero.setHealth(fHeroHP);
 
             // If final HP is 0, make sure we kill the player
