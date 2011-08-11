@@ -37,26 +37,22 @@ public class SkillShield extends PassiveSkill {
 
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
-            if (event.isCancelled() || !(event.getCause() == DamageCause.ENTITY_ATTACK)) {
+            if (event.isCancelled() || event.getCause() != DamageCause.ENTITY_ATTACK || event.getDamage() == 0 || !(event instanceof EntityDamageByEntityEvent)) {
                 return;
             }
-            if (event instanceof EntityDamageByEntityEvent) {
-                EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
-                if (subEvent.getEntity() instanceof Player) {
-                    Player player = (Player) subEvent.getEntity();
-                    Hero hero = getPlugin().getHeroManager().getHero(player);
-                    if (hero.hasEffect(getName())) {
-                        double multiplier = 1;
-                        if (player.getItemInHand().getType() == Material.IRON_DOOR) {
-                            multiplier = getSetting(hero.getHeroClass(), "iron-door", 0.75);
-
-                        } else if (player.getItemInHand().getType() == Material.WOODEN_DOOR) {
-                            multiplier = getSetting(hero.getHeroClass(), "wooden-door", 0.85);
-                        } else if (player.getItemInHand().getType() == Material.TRAP_DOOR) {
-                            multiplier = getSetting(hero.getHeroClass(), "trapdoor", 0.60);
-                        }
-                        subEvent.setDamage((int) (subEvent.getDamage() * multiplier));
+            if (event.getEntity() instanceof Player) {
+                Player player = (Player) event.getEntity();
+                Hero hero = getPlugin().getHeroManager().getHero(player);
+                if (hero.hasEffect(getName())) {
+                    double multiplier = 1;
+                    if (player.getItemInHand().getType() == Material.IRON_DOOR) {
+                        multiplier = getSetting(hero.getHeroClass(), "iron-door", 0.75);
+                    } else if (player.getItemInHand().getType() == Material.WOODEN_DOOR) {
+                        multiplier = getSetting(hero.getHeroClass(), "wooden-door", 0.85);
+                    } else if (player.getItemInHand().getType() == Material.TRAP_DOOR) {
+                        multiplier = getSetting(hero.getHeroClass(), "trapdoor", 0.60);
                     }
+                    event.setDamage((int) (event.getDamage() * multiplier));
                 }
             }
         }
