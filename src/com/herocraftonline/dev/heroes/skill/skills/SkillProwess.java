@@ -21,7 +21,7 @@ public class SkillProwess extends PassiveSkill {
         setDescription("You are more lethal with regular attacks!");
         setArgumentRange(0, 0);
 
-        registerEvent(Type.ENTITY_DAMAGE, new CustomListener(), Priority.Normal);
+        registerEvent(Type.CUSTOM_EVENT, new CustomListener(), Priority.Normal);
     }
 
     @Override
