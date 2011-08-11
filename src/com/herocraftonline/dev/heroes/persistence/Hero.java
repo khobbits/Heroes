@@ -108,6 +108,9 @@ public class Hero {
             Set<Hero> partyMembers = party.getMembers();
             Set<Hero> inRangeMembers = new HashSet<Hero>();
             for (Hero partyMember : partyMembers) {
+                if (!location.getWorld().equals(partyMember.getPlayer().getLocation().getWorld()))
+                    continue;
+                
                 if (location.distance(partyMember.getPlayer().getLocation()) <= 50) {
                     inRangeMembers.add(partyMember);
                 }
