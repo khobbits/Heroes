@@ -11,9 +11,9 @@ import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 import com.nijiko.coelho.iConomy.util.Messaging;
 
-public class Antidote extends TargettedSkill {
+public class SkillAntidote extends TargettedSkill {
 
-    public Antidote(Heroes plugin) {
+    public SkillAntidote(Heroes plugin) {
         super(plugin, "Antidote");
         setDescription("Cures your target of poisons");
         setUsage("/skill antidote [target]");
