@@ -10,6 +10,7 @@ import org.bukkit.event.entity.EntityListener;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.effects.Dispellable;
 import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
@@ -58,7 +59,7 @@ public class SkillManaShield extends ActiveSkill {
         return true;
     }
 
-    public class ManaShieldEffect extends ExpirableEffect {
+    public class ManaShieldEffect extends ExpirableEffect implements Dispellable {
 
         public ManaShieldEffect(Skill skill, long duration) {
             super(skill, "ManaShield", duration);

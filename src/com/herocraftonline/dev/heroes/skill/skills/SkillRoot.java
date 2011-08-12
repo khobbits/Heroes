@@ -6,8 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.effects.Expirable;
-import com.herocraftonline.dev.heroes.effects.Periodic;
+import com.herocraftonline.dev.heroes.effects.Dispellable;
 import com.herocraftonline.dev.heroes.effects.PeriodicEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
@@ -65,7 +64,7 @@ public class SkillRoot extends TargettedSkill {
         return true;
     }
 
-    public class RootEffect extends PeriodicEffect implements Periodic, Expirable {
+    public class RootEffect extends PeriodicEffect implements Dispellable {
 
         private static final long period = 100;
 

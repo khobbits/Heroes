@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.effects.Dispellable;
 import com.herocraftonline.dev.heroes.effects.PeriodicEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
@@ -57,7 +58,7 @@ public class SkillBoltstorm extends ActiveSkill {
         expireText = getSetting(null, "expire-text", "%hero%'s boltstorm has subsided!").replace("%hero%", "$1");
     }
     
-    public class BoltStormEffect extends PeriodicEffect {
+    public class BoltStormEffect extends PeriodicEffect implements Dispellable {
 
         public BoltStormEffect(Skill skill, long period, long duration) {
             super(skill, "Boltstorm", period, duration);

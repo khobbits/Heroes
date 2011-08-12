@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.effects.Dispellable;
 import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
@@ -53,7 +54,7 @@ public class SkillManaFreeze extends TargettedSkill {
         }
     }
 
-    public class ManaFreezeEffect extends ExpirableEffect {
+    public class ManaFreezeEffect extends ExpirableEffect implements Dispellable {
 
         public ManaFreezeEffect(Skill skill, long duration) {
             super(skill, "ManaFreeze", duration);

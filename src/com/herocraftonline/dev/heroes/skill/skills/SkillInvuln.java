@@ -9,6 +9,7 @@ import org.bukkit.event.entity.EntityListener;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.effects.Dispellable;
 import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
@@ -54,7 +55,7 @@ public class SkillInvuln extends ActiveSkill {
         return true;
     }
 
-    public class InvulnerabilityEffect extends ExpirableEffect {
+    public class InvulnerabilityEffect extends ExpirableEffect implements Dispellable {
 
         public InvulnerabilityEffect(Skill skill, long duration) {
             super(skill, "Invuln", duration);

@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.effects.Dispellable;
 import com.herocraftonline.dev.heroes.effects.PeriodicEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
@@ -52,7 +53,7 @@ public class SkillIcyAura extends ActiveSkill{
         return true;
     }
     
-    public class IcyAuraEffect extends PeriodicEffect {
+    public class IcyAuraEffect extends PeriodicEffect implements Dispellable {
 
         //TODO: Icy aura effect needs work
         public IcyAuraEffect(SkillIcyAura skill, long duration, long period, int tickDamage, Player applier) {

@@ -10,6 +10,7 @@ import org.bukkit.event.entity.EntityListener;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.effects.Dispellable;
 import com.herocraftonline.dev.heroes.effects.Effect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
@@ -54,7 +55,7 @@ public class SkillAbsorb extends ActiveSkill {
         return true;
     }
 
-    public class AbsorbEffect extends Effect {
+    public class AbsorbEffect extends Effect implements Dispellable {
 
         public AbsorbEffect(Skill skill) {
             super(skill, "Absorb");

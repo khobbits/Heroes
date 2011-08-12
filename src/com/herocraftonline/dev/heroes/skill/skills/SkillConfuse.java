@@ -8,8 +8,7 @@ import org.bukkit.util.Vector;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.effects.Expirable;
-import com.herocraftonline.dev.heroes.effects.Periodic;
+import com.herocraftonline.dev.heroes.effects.Dispellable;
 import com.herocraftonline.dev.heroes.effects.PeriodicEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
@@ -73,7 +72,7 @@ public class SkillConfuse extends TargettedSkill {
         return true;
     }
 
-    public class ConfuseEffect extends PeriodicEffect implements Periodic, Expirable {
+    public class ConfuseEffect extends PeriodicEffect implements Dispellable {
 
         private final float maxDrift;
 
