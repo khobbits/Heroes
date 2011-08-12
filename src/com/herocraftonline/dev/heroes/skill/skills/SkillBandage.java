@@ -60,7 +60,11 @@ public class SkillBandage extends TargettedSkill {
 
             targetHero.setHealth(targetHealth + hpPlus);
             targetHero.syncHealth();
-
+            
+            //Bandage cures Bleeding!
+            if (targetHero.hasEffect("Bleed")) {
+                targetHero.removeEffect(targetHero.getEffect("Bleed"));
+            }
             broadcastExecuteText(hero, target);
             return true;
         }
