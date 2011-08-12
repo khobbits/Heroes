@@ -17,7 +17,7 @@ public class SkillIcyAura extends ActiveSkill{
     private String applyText;
     private String expireText;
     
-    public SkillIcyAura(Heroes plugin, String name) {
+    public SkillIcyAura(Heroes plugin) {
         super(plugin, "IcyAura");
         setDescription("Triggers an icyaura around you.");
         setUsage("/skill icyaura");

@@ -32,9 +32,6 @@ public class SkillSneak extends ActiveSkill {
         setIdentifiers(new String[]{"skill stealth"});
 
         registerEvent(Type.PLAYER_TOGGLE_SNEAK, new SneakListener(), Priority.Highest);
-        if (getSetting(null, "damage-cancels", true) || getSetting(null, "attacking-cancels", true)) {
-            registerEvent(Type.ENTITY_DAMAGE, new SneakDamageListener(), Priority.Monitor);
-        }
     }
 
     @Override
@@ -56,6 +53,9 @@ public class SkillSneak extends ActiveSkill {
         expireText = getSetting(null, "expire-text", "%hero% reappeard!").replace("%hero%", "$1");
         damageCancels = getSetting(null, "damage-cancels", true);
         attackCancels = getSetting(null, "attacking-cancels", true);
+        if (damageCancels || attackCancels) {
+            registerEvent(Type.ENTITY_DAMAGE, new SneakDamageListener(), Priority.Monitor);
+        }
     }
 
     @Override
