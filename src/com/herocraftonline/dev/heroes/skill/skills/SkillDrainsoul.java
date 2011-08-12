@@ -34,7 +34,7 @@ public class SkillDrainsoul extends TargettedSkill {
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
 
-        if (target.equals(hero.getPlayer())) {
+        if (target.equals(player)) {
             Messaging.send(player, "You need a target!");
             return false;
         }
