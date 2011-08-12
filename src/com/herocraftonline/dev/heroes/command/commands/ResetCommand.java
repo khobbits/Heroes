@@ -73,15 +73,20 @@ public class ResetCommand extends BasicInteractiveCommand {
 
             Player player = (Player) executor;
             Hero hero = plugin.getHeroManager().getHero(player);
-            HeroClass currentClass = hero.getHeroClass();
             HeroClass defaultClass = plugin.getClassManager().getDefaultClass();
-
-            hero.setHeroClass(defaultClass);
-            hero.setExperience(currentClass, 0);
             
-
+            //Reset Everything
+            hero.clearEffects();
+            hero.clearExperience();
+            hero.getCooldowns().clear();
+            hero.clearSummons(); 
             hero.getBinds().clear();
+            
+            hero.setHeroClass(defaultClass); //Set the hero to the default class
+            hero.syncHealth(); //re-sync health just in-case the display isn't 100% accurate
+
             Messaging.send(player, "Welcome to the path of the $1!", defaultClass.getName());
+            plugin.getHeroManager().saveHero(player);
             return true;
         }
 

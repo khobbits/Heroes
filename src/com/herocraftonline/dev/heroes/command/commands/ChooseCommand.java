@@ -124,7 +124,8 @@ public class ChooseCommand extends BasicInteractiveCommand {
             ClassChangeEvent event = new ClassChangeEvent(hero, currentClass, newClass);
             plugin.getServer().getPluginManager().callEvent(event);
             if (event.isCancelled()) return false;
-
+            
+            hero.clearEffects(); // clear any leftover/passive effects
             hero.setHeroClass(newClass);
 
             if (prop.resetExpOnClassChange) {

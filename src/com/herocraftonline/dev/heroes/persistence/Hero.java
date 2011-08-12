@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.Callable;
 
@@ -259,6 +260,12 @@ public class Hero {
         return summons;
     }
 
+    public void clearSummons() {
+        for (Entity entity : summons.keySet()) {
+            entity.remove();
+        }
+        summons.clear();
+    }
     public Set<String> getSuppressedSkills() {
         return new HashSet<String>(suppressedSkills);
     }
@@ -298,6 +305,12 @@ public class Hero {
         return verbose;
     }
 
+    public void clearEffects() {
+        for (Effect effect : effects) {
+            removeEffect(effect);
+        }
+    }
+    
     public void removeEffect(Effect effect) {
         effects.remove(effect);
         if (effect != null) {
@@ -313,6 +326,12 @@ public class Hero {
         this.experience.put(heroClass.getName(), experience);
     }
 
+    public void clearExperience() {
+        for (Entry<String, Double> entry : experience.entrySet()) {
+            entry.setValue(0.0);
+        }
+    }
+    
     public void setHeroClass(HeroClass heroClass) {
         double currentMaxHP = getMaxHealth();
         this.heroClass = heroClass;
