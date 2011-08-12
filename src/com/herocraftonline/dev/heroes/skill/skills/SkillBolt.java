@@ -1,18 +1,15 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
-import java.util.List;
-
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
+import com.nijiko.coelho.iConomy.util.Messaging;
 
 public class SkillBolt extends TargettedSkill {
 
@@ -28,6 +25,7 @@ public class SkillBolt extends TargettedSkill {
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
         node.setProperty("range", 10);
+        node.setProperty("damage", 4);
         return node;
     }
 
@@ -35,31 +33,25 @@ public class SkillBolt extends TargettedSkill {
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
 
-        if (target.equals(player)) {
+        if (target.equals(player))  return false;
+
+        
+        int rangeSquared = getSetting(hero.getHeroClass(), "range", 10)^2;
+        if (target.getLocation().distanceSquared(player.getLocation()) > rangeSquared) {
+            Messaging.send(player, "The target is not in range!");
             return false;
         }
-
+        
+        //PvP test
         EntityDamageByEntityEvent damageEntityEvent = new EntityDamageByEntityEvent(player, target, DamageCause.CUSTOM, 0);
         getPlugin().getServer().getPluginManager().callEvent(damageEntityEvent);
         if (damageEntityEvent.isCancelled()) {
             return false;
         }
-
-        int range = getSetting(hero.getHeroClass(), "range", 10);
-        List<Entity> entityList = target.getNearbyEntities(range, range, range);
-        for (Entity entity : entityList) {
-            if (entity instanceof LivingEntity) {
-                if (entity != player) {
-                    // Throw a dummy damage event to make it obey PvP restricting plugins
-                    EntityDamageEvent event = new EntityDamageByEntityEvent(player, entity, DamageCause.CUSTOM, 0);
-                    getPlugin().getServer().getPluginManager().callEvent(event);
-                    if (!event.isCancelled()) {
-                        target.getWorld().strikeLightning(entity.getLocation());
-                    }
-                }
-            }
-        }
-        target.getWorld().strikeLightning(target.getLocation());
+        
+        getPlugin().getDamageManager().addSpellTarget(target);
+        target.damage(getSetting(hero.getHeroClass(), "damage", 4), target);
+        target.getWorld().strikeLightningEffect(target.getLocation());
 
         broadcastExecuteText(hero, target);
         return true;
