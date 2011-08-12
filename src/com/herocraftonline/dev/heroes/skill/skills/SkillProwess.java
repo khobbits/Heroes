@@ -38,22 +38,24 @@ public class SkillProwess extends PassiveSkill {
             if (!(event instanceof HeroesWeaponDamageEvent)) return;
             HeroesWeaponDamageEvent subEvent = (HeroesWeaponDamageEvent) event;
 
-            if ( !(subEvent.getCause() == DamageCause.ENTITY_ATTACK)) {
-                return;
-            }
-
+            if (subEvent.getCause() != DamageCause.ENTITY_ATTACK)  return;
+            
             if (subEvent.getDamager() instanceof Player) {
                 Player player = (Player) subEvent.getDamager();
                 Hero hero = getPlugin().getHeroManager().getHero(player);
+                double damageBonus = getSetting(hero.getHeroClass(), "attack-bonus", 1.25);
+                
                 if (hero.hasEffect(getName())) {
-                    subEvent.setDamage((int) (subEvent.getDamage() * getSetting(hero.getHeroClass(), "attack-bonus", 1.25)));
+                    subEvent.setDamage((int) (subEvent.getDamage() * damageBonus));
                 }
             } else if (subEvent.getDamager() instanceof Projectile) {
                 if (((Projectile) subEvent.getDamager()).getShooter() instanceof Player) {
                     Player player = (Player) ((Projectile)subEvent.getDamager()).getShooter();
                     Hero hero = getPlugin().getHeroManager().getHero(player);
+                    double damageBonus = getSetting(hero.getHeroClass(), "attack-bonus", 1.25);
+                    
                     if (hero.hasEffect(getName())) {
-                        subEvent.setDamage((int) (subEvent.getDamage() * getSetting(hero.getHeroClass(), "attack-bonus", 1.25)));
+                        subEvent.setDamage((int) (subEvent.getDamage() * damageBonus));
                     }
                 }
             }
