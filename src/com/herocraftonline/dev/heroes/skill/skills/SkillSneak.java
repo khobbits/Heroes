@@ -20,7 +20,6 @@ import com.herocraftonline.dev.heroes.util.Messaging;
 
 public class SkillSneak extends ActiveSkill {
 
-    private String expireText;
     private boolean damageCancels;
     private boolean attackCancels;
 
@@ -38,7 +37,6 @@ public class SkillSneak extends ActiveSkill {
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
         node.setProperty("duration", 600000); // 10 minutes in milliseconds
-        node.setProperty("expire-text", "%hero% appeared from the shadows!");
         node.setProperty("damage-cancels", true);
         node.setProperty("atacking-cancels", true);
         node.setProperty("refresh-interval", 5000); // in milliseconds
@@ -48,7 +46,6 @@ public class SkillSneak extends ActiveSkill {
     @Override
     public void init() {
         super.init();
-        expireText = getSetting(null, "expire-text", "%hero% appeared from the shadows!").replace("%hero%", "$1");
         damageCancels = getSetting(null, "damage-cancels", true);
         attackCancels = getSetting(null, "attacking-cancels", true);
         if (damageCancels || attackCancels) {
@@ -88,7 +85,7 @@ public class SkillSneak extends ActiveSkill {
         public void remove(Hero hero) {
             Player player = hero.getPlayer();
             player.setSneaking(false);
-            broadcast(player.getLocation(), expireText, player.getDisplayName());
+            Messaging.send(player, "You are no longer sneaking!");
         }
 
         @Override
