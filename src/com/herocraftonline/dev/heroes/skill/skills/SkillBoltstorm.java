@@ -86,6 +86,13 @@ public class SkillBoltstorm extends ActiveSkill {
             
             List<LivingEntity> targets = new ArrayList<LivingEntity>();
             for (Entity entity: player.getNearbyEntities(range, range, range)) {
+                if (hero.getParty() != null && entity instanceof Player) { //Party check
+                    Hero targetHero = getPlugin().getHeroManager().getHero((Player) entity);
+                    if (hero.getParty().isPartyMember(targetHero))
+                        continue;
+                } else if (entity.equals(player)) {
+                    continue;
+                }
                 if (entity instanceof LivingEntity)
                     targets.add((LivingEntity) entity);
             }
