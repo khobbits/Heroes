@@ -175,6 +175,24 @@ public abstract class Skill extends BasicCommand {
     }
 
     /**
+     * Retrieves a <code>Boolean</code> value from the skill's configuration. Data from the provided <code>HeroClass</code> will be preferred over the skill's own data, if found. If the setting is found in neither
+     * of these sources, the default value is returned.
+     *
+     * @param heroClass the class to search for skill data
+     * @param setting   the name of the data entry to retrieve
+     * @param def       the default value to be used if no entry is found
+     * @return the stored setting
+     */
+    public boolean getSetting(HeroClass heroClass, String setting, boolean def) {
+        List<String> keys = heroClass == null ? null : heroClass.getSkillSettings(getName()).getKeys(null);
+        if (keys != null && keys.contains(setting)) {
+            return heroClass.getSkillSettings(getName()).getBoolean(setting, def);
+        } else {
+            return config.getBoolean(setting, def);
+        }
+    }
+    
+    /**
      * An initialization method called after all configuration data is loaded.
      */
     public abstract void init();
