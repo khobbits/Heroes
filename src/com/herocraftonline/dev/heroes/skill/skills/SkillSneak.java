@@ -1,8 +1,10 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityListener;
 import org.bukkit.event.player.PlayerListener;
@@ -16,19 +18,21 @@ import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
 
 public class SkillSneak extends ActiveSkill {
-    
+
     private String applyText;
     private String expireText;
-    
+    private boolean damageCancels;
+    private boolean attackCancels;
+
     public SkillSneak(Heroes plugin) {
         super(plugin, "Sneak");
         setDescription("You crouch into the shadows");
         setUsage("/skill stealth");
         setArgumentRange(0, 0);
         setIdentifiers(new String[]{"skill stealth"});
-        
+
         registerEvent(Type.PLAYER_TOGGLE_SNEAK, new SneakListener(), Priority.Highest);
-        if (getSetting(null, "damage-cancels", true) == true) {
+        if (getSetting(null, "damage-cancels", true) || getSetting(null, "attacking-cancels", true)) {
             registerEvent(Type.ENTITY_DAMAGE, new SneakDamageListener(), Priority.Monitor);
         }
     }
@@ -40,18 +44,20 @@ public class SkillSneak extends ActiveSkill {
         node.setProperty("apply-text", "%hero% faded into the shadows!");
         node.setProperty("expire-text", "%hero% reappeared!");
         node.setProperty("damage-cancels", true);
+        node.setProperty("atacking-cancels", true);
         node.setProperty("refresh-interval", 5000); // in milliseconds
         return node;
     }
-    
+
     @Override
     public void init() {
         super.init();
         applyText = getSetting(null, "apply-text", "%hero% faded into the shadows!").replace("%hero%", "$1");
         expireText = getSetting(null, "expire-text", "%hero% reappeard!").replace("%hero%", "$1");
-        
+        damageCancels = getSetting(null, "damage-cancels", true);
+        attackCancels = getSetting(null, "attacking-cancels", true);
     }
-    
+
     @Override
     public boolean use(Hero hero, String[] args) {
         broadcastExecuteText(hero);
@@ -62,7 +68,7 @@ public class SkillSneak extends ActiveSkill {
 
         return true;
     }
-    
+
     public class SneakEffect extends PeriodicEffect {
 
         public SneakEffect(Skill skill, long period, long duration) {
@@ -83,7 +89,7 @@ public class SkillSneak extends ActiveSkill {
             player.setSneaking(false);
             broadcast(player.getLocation(), expireText, player.getDisplayName());
         }
-        
+
         @Override
         public void tick(Hero hero) {
             super.tick(hero);
@@ -91,9 +97,9 @@ public class SkillSneak extends ActiveSkill {
             hero.getPlayer().setSneaking(true);
         }
     }
-    
+
     public class SneakListener extends PlayerListener {
-        
+
         @Override
         public void onPlayerToggleSneak(PlayerToggleSneakEvent event) {
             Hero hero = getPlugin().getHeroManager().getHero(event.getPlayer());
@@ -103,13 +109,27 @@ public class SkillSneak extends ActiveSkill {
             }
         }
     }
-    
+
     public class SneakDamageListener extends EntityListener {
-        
+
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
-            if (event.isCancelled() || !(event.getEntity() instanceof Player)) return;
-            Player player = (Player) event.getEntity();
+            if (event.isCancelled()) return;
+            Player player = null;
+            if (damageCancels && event.getEntity() instanceof Player) {
+                player = (Player) event.getEntity();
+            } else if (attackCancels && event instanceof EntityDamageByEntityEvent) {
+                EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
+                if (subEvent.getDamager() instanceof Player) {
+                    player = (Player) subEvent.getDamager();
+                } else if (subEvent.getDamager() instanceof Projectile) {
+                    if (((Projectile) subEvent.getDamager()).getShooter() instanceof Player) {
+                        player = (Player) ((Projectile) subEvent.getDamager()).getShooter();
+                    }
+                }
+            }
+            if (player == null) return;
+            
             Hero hero = getPlugin().getHeroManager().getHero(player);
             if (hero.hasEffect("Sneak")) {
                 player.setSneaking(false);

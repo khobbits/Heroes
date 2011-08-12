@@ -28,6 +28,7 @@ public class SkillBackstab extends PassiveSkill {
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
         node.setProperty("attack-bonus", 1.5);
+        node.setProperty("sneak-bonus", 2.0); // Alternative bonus if player is sneaking when doing the backstab
         return node;
     }
 
@@ -36,21 +37,25 @@ public class SkillBackstab extends PassiveSkill {
         @Override
         public void onCustomEvent(Event event) {
             if (!(event instanceof HeroesWeaponDamageEvent)) return;
-            
+
             HeroesWeaponDamageEvent subEvent = (HeroesWeaponDamageEvent) event;
             if (subEvent.getDamager() instanceof Player) {
                 Player player = (Player) subEvent.getDamager();
                 Hero hero = getPlugin().getHeroManager().getHero(player);
                 if (hero.hasEffect(getName())) {
                     if (subEvent.getEntity().getLocation().getDirection().dot(player.getLocation().getDirection()) <= 0) return;
-                    
-                    subEvent.setDamage((int) (subEvent.getDamage() * getSetting(hero.getHeroClass(), "attack-bonus", 1.5)));
+
+                    if (hero.hasEffect("Sneak")) {
+                        subEvent.setDamage((int) (subEvent.getDamage() * getSetting(hero.getHeroClass(), "sneak-bonus", 2.0)));
+                    } else {
+                        subEvent.setDamage((int) (subEvent.getDamage() * getSetting(hero.getHeroClass(), "attack-bonus", 1.5)));
+                    }
                     String name = "";
                     if (subEvent.getEntity() instanceof Player)
                         name = ((Player) subEvent.getEntity()).getName();
                     else if (subEvent.getEntity() instanceof Creature)
                         name = "a " + Messaging.getCreatureName((Creature) subEvent.getEntity()).toLowerCase();
-                        
+
                     broadcast(player.getLocation(), player.getName() + " backstabbed " + name, player.getDisplayName());
                 }
             }
