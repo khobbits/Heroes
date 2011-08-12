@@ -18,7 +18,7 @@ public class SkillBolt extends TargettedSkill {
 
     public SkillBolt(Heroes plugin) {
         super(plugin, "Bolt");
-        setDescription("Calls a bolt of thunder down on the target");
+        setDescription("Calls a bolt of lightning down on the target");
         setUsage("/skill bolt [target]");
         setArgumentRange(0, 1);
         setIdentifiers(new String[]{"skill bolt"});

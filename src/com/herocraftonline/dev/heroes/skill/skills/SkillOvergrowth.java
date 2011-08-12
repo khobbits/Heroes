@@ -6,8 +6,9 @@ import org.bukkit.util.config.ConfigurationNode;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
+import com.herocraftonline.dev.heroes.util.Messaging;
+
 import java.util.Random;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.TreeType;
 import org.bukkit.block.Block;
@@ -60,7 +61,7 @@ public class SkillOvergrowth extends ActiveSkill {
             player.getWorld().generateTree(targetBlock.getLocation(), tType);
             return true;
         } else {
-            player.sendMessage(ChatColor.YELLOW + "Target is not a sapling!");
+            Messaging.send(player, "Target is not a sapling!");
             return false;
         }
     }
