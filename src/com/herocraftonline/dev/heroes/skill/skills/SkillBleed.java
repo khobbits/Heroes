@@ -1,14 +1,11 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.effects.Expirable;
-import com.herocraftonline.dev.heroes.effects.Periodic;
-import com.herocraftonline.dev.heroes.effects.PeriodicEffect;
+import com.herocraftonline.dev.heroes.effects.BleedEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
@@ -65,19 +62,15 @@ public class SkillBleed extends TargettedSkill {
         long duration = getSetting(hero.getHeroClass(), "duration", 10000);
         long period = getSetting(hero.getHeroClass(), "period", 2000);
         int tickDamage = getSetting(hero.getHeroClass(), "tick-damage", 1);
-        targetHero.addEffect(new BleedEffect(this, duration, period, tickDamage, player));
+        targetHero.addEffect(new BleedSkillEffect(this, "Bleed", duration, period, tickDamage, player));
         return true;
     }
 
-    public class BleedEffect extends PeriodicEffect implements Periodic, Expirable {
+    public class BleedSkillEffect extends BleedEffect {
 
-        private final Player applier;
-        private final int tickDamage;
 
-        public BleedEffect(Skill skill, long duration, long period, int tickDamage, Player applier) {
-            super(skill, "Bleed", period, duration);
-            this.tickDamage = tickDamage;
-            this.applier = applier;
+        public BleedSkillEffect(Skill skill, String name, long duration, long period, int tickDamage, Player applier) {
+            super(skill, "Bleed", period, duration, tickDamage, applier);
         }
 
         @Override
@@ -93,15 +86,6 @@ public class SkillBleed extends TargettedSkill {
 
             Player player = hero.getPlayer();
             broadcast(player.getLocation(), expireText, player.getDisplayName());
-        }
-
-        @Override
-        public void tick(Hero hero) {
-            super.tick(hero);
-
-            Player player = hero.getPlayer();
-            getPlugin().getDamageManager().addSpellTarget((Entity) applier);
-            player.damage(tickDamage, applier);
         }
     }
 }

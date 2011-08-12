@@ -8,6 +8,8 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.effects.BleedEffect;
+import com.herocraftonline.dev.heroes.effects.Effect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
@@ -62,9 +64,10 @@ public class SkillBandage extends TargettedSkill {
             targetHero.syncHealth();
             
             //Bandage cures Bleeding!
-            if (targetHero.hasEffect("Bleed")) {
-                targetHero.removeEffect(targetHero.getEffect("Bleed"));
+            for (Effect effect : targetHero.getEffects()) {
+                if (effect instanceof BleedEffect) targetHero.removeEffect(effect);
             }
+
             broadcastExecuteText(hero, target);
             return true;
         }
