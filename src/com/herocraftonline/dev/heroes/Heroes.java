@@ -46,6 +46,7 @@ import com.herocraftonline.dev.heroes.command.commands.PartyModeCommand;
 import com.herocraftonline.dev.heroes.command.commands.PartyWhoCommand;
 import com.herocraftonline.dev.heroes.command.commands.PathsCommand;
 import com.herocraftonline.dev.heroes.command.commands.RecoverItemsCommand;
+import com.herocraftonline.dev.heroes.command.commands.ResetCommand;
 import com.herocraftonline.dev.heroes.command.commands.SkillListCommand;
 import com.herocraftonline.dev.heroes.command.commands.SpecsCommand;
 import com.herocraftonline.dev.heroes.command.commands.SuppressCommand;
@@ -398,6 +399,7 @@ public class Heroes extends JavaPlugin {
         commandHandler.addCommand(new HealthCommand(this));
         commandHandler.addCommand(new LeaderboardCommand(this));
         commandHandler.addCommand(new HeroSaveCommand(this));
+        commandHandler.addCommand(new ResetCommand(this));
     }
 
     /**
