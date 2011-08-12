@@ -46,12 +46,14 @@ public class SkillBolt extends TargettedSkill {
         EntityDamageByEntityEvent damageEntityEvent = new EntityDamageByEntityEvent(player, target, DamageCause.CUSTOM, 0);
         getPlugin().getServer().getPluginManager().callEvent(damageEntityEvent);
         if (damageEntityEvent.isCancelled()) {
+            Messaging.send("Invalid target!");
             return false;
         }
         
         getPlugin().getDamageManager().addSpellTarget(target);
-        target.damage(getSetting(hero.getHeroClass(), "damage", 4), target);
         target.getWorld().strikeLightningEffect(target.getLocation());
+        target.damage(getSetting(hero.getHeroClass(), "damage", 4), player);
+        
 
         broadcastExecuteText(hero, target);
         return true;

@@ -99,11 +99,14 @@ public class SkillBoltstorm extends ActiveSkill {
                     targets.add((LivingEntity) entity);
             }
             if (targets.isEmpty()) return;
+            
             int damage = getSetting(hero.getHeroClass(), "damage", 4);
             LivingEntity target = targets.get(rand.nextInt(targets.size()));
             getPlugin().getDamageManager().addSpellTarget(target);
-            target.damage(damage, player);
+            
             target.getWorld().strikeLightningEffect(target.getLocation());
+            target.damage(damage, player);
+            
         }
     }
 }
