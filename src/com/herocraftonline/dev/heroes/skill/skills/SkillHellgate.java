@@ -38,7 +38,7 @@ public class SkillHellgate extends ActiveSkill {
         Player player = hero.getPlayer();
 
         String defaultWorld = getSetting(hero.getHeroClass(), "default-return", "world");
-        String hellWorld = getSetting(hero.getHeroClass(), "hell-world", "world");
+        String hellWorld = getSetting(hero.getHeroClass(), "hell-world", "world_nether");
         World world = null;
         Location teleportLocation = null;
 
