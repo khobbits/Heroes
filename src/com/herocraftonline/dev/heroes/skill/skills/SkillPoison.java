@@ -53,12 +53,18 @@ public class SkillPoison extends TargettedSkill {
         }
         
         Hero targetHero = getPlugin().getHeroManager().getHero((Player) target);
-        
+        //Party check
+        if (hero.getParty() != null) {
+            if (hero.getParty().isPartyMember(targetHero)) {
+                Messaging.send(player, "You need a target!");
+                return false;
+            }
+        }
         broadcastExecuteText(hero, target);
         long duration = getSetting(hero.getHeroClass(), "duration", 10000);
         long period = getSetting(hero.getHeroClass(), "period", 2000);
         int tickDamage = getSetting(hero.getHeroClass(), "tick-damage", 1);
-        targetHero.addEffect(new PoisonSkillEffect(this, "Bleed", duration, period, tickDamage, player));
+        targetHero.addEffect(new PoisonSkillEffect(this, "Poison", duration, period, tickDamage, player));
         return false;
     }
     

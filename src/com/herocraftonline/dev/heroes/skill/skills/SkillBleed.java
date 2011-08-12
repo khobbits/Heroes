@@ -56,7 +56,13 @@ public class SkillBleed extends TargettedSkill {
             Messaging.send(player, "You need a target!");
             return false;
         }
-
+        //Party check
+        if (hero.getParty() != null) {
+            if (hero.getParty().isPartyMember(targetHero)) {
+                Messaging.send(player, "You need a target!");
+                return false;
+            }
+        }
         broadcastExecuteText(hero, target);
 
         long duration = getSetting(hero.getHeroClass(), "duration", 10000);
