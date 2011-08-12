@@ -58,11 +58,16 @@ public class SkillSneak extends ActiveSkill {
 
     @Override
     public boolean use(Hero hero, String[] args) {
-        Messaging.send(hero.getPlayer(), "You are now sneaking");
-        
-        int duration = getSetting(hero.getHeroClass(), "duration", 600000);
-        int period = getSetting(hero.getHeroClass(), "refresh-interval", 5000);
-        hero.addEffect(new SneakEffect(this, period, duration));
+        if (hero.hasEffect("Sneak")) {
+            hero.removeEffect(hero.getEffect("Sneak"));
+        } else {
+            Messaging.send(hero.getPlayer(), "You are now sneaking");
+
+            int duration = getSetting(hero.getHeroClass(), "duration", 600000);
+            int period = getSetting(hero.getHeroClass(), "refresh-interval", 5000);
+            hero.addEffect(new SneakEffect(this, period, duration));
+
+        }
         return true;
     }
 
@@ -125,7 +130,7 @@ public class SkillSneak extends ActiveSkill {
                 }
             }
             if (player == null) return;
-            
+
             Hero hero = getPlugin().getHeroManager().getHero(player);
             if (hero.hasEffect("Sneak")) {
                 player.setSneaking(false);
