@@ -53,7 +53,7 @@ import com.herocraftonline.dev.heroes.command.commands.ToolsCommand;
 import com.herocraftonline.dev.heroes.command.commands.VerboseCommand;
 import com.herocraftonline.dev.heroes.command.commands.WhoCommand;
 import com.herocraftonline.dev.heroes.damage.DamageManager;
-import com.herocraftonline.dev.heroes.inventory.BukkitContribInventoryListener;
+import com.herocraftonline.dev.heroes.inventory.SpoutInventoryListener;
 import com.herocraftonline.dev.heroes.inventory.InventoryChecker;
 import com.herocraftonline.dev.heroes.party.PartyManager;
 import com.herocraftonline.dev.heroes.persistence.Hero;
@@ -105,7 +105,7 @@ public class Heroes extends JavaPlugin {
     public Method Method = null;
 
     // Variable for BukkitContrib.
-    public static boolean useBukkitContrib = false;
+    public static boolean useSpout = false;
 
     // Inventory Checker Class -- This class has the methods to check a players inventory and
     // restrictions.
@@ -222,7 +222,7 @@ public class Heroes extends JavaPlugin {
         damageManager = new DamageManager(this);
         inventoryChecker = new InventoryChecker(this);
         // Check for BukkitContrib
-        setupBukkitContrib();
+        setupSpout();
 
         // Skills Loader
         loadSkills();
@@ -291,15 +291,15 @@ public class Heroes extends JavaPlugin {
     /**
      * Check to see if BukkitContrib is enabled on the server, if so inform Heroes to use BukkitContrib instead.
      */
-    public void setupBukkitContrib() {
-        Plugin test = this.getServer().getPluginManager().getPlugin("BukkitContrib");
-        BukkitContribInventoryListener bukkitContribInventoryListener;
+    public void setupSpout() {
+        Plugin test = this.getServer().getPluginManager().getPlugin("Spout");
+        SpoutInventoryListener spoutInventoryListener;
         if (test != null) {
-            Heroes.useBukkitContrib = true;
-            bukkitContribInventoryListener = new BukkitContribInventoryListener(this);
-            Bukkit.getServer().getPluginManager().registerEvent(Type.CUSTOM_EVENT, bukkitContribInventoryListener, Priority.Monitor, this);
+            Heroes.useSpout = true;
+            spoutInventoryListener = new SpoutInventoryListener(this);
+            Bukkit.getServer().getPluginManager().registerEvent(Type.CUSTOM_EVENT, spoutInventoryListener, Priority.Monitor, this);
         } else {
-            Heroes.useBukkitContrib = false;
+            Heroes.useSpout = false;
         }
     }
 
@@ -334,7 +334,7 @@ public class Heroes extends JavaPlugin {
     }
 
     public void switchToBNSH(Player player) {
-        if (!Heroes.useBukkitContrib) {
+        if (!Heroes.useSpout) {
             // Swap NSH to Bukkit NSH.
         }
         // CraftPlayer craftPlayer = (CraftPlayer) player;
@@ -347,7 +347,7 @@ public class Heroes extends JavaPlugin {
     }
 
     public void switchToHNSH(Player player) {
-        if (!Heroes.useBukkitContrib) {
+        if (!Heroes.useSpout) {
             // Swap NSH to Heroes NSH.
         }
         // CraftPlayer craftPlayer = (CraftPlayer) player;

@@ -27,7 +27,7 @@ public class HPluginListener extends ServerListener {
         // Check if the name is BukkitContrib.
         if (plugin.getDescription().getName().equals("BukkitContrib")) {
             // If BukkitContrib just Disabled then we tell Heroes to stop using BukkitContrib
-            Heroes.useBukkitContrib = false;
+            Heroes.useSpout = false;
             // Then we swap all the Players NSH to our Custom NSH.
             final Player[] players = this.plugin.getServer().getOnlinePlayers();
             for (Player player : players) {
@@ -60,7 +60,7 @@ public class HPluginListener extends ServerListener {
 
         // Check if the name is BukkitContrib.
         if (plugin.getDescription().getName().equals("BukkitContrib")) {
-            this.plugin.setupBukkitContrib();
+            this.plugin.setupSpout();
         }
 
         // Check to see if we need a payment method
