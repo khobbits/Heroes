@@ -90,7 +90,8 @@ public class SkillBoltstorm extends ActiveSkill {
                     Hero targetHero = getPlugin().getHeroManager().getHero((Player) entity);
                     if (hero.getParty().isPartyMember(targetHero))
                         continue;
-                } else if (entity.equals(player)) {
+                } 
+                if (entity.equals(player)) { // never target the caster
                     continue;
                 }
                 if (entity instanceof LivingEntity)
