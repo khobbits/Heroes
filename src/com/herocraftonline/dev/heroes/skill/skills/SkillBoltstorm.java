@@ -26,7 +26,7 @@ public class SkillBoltstorm extends ActiveSkill {
         setDescription("Calls bolts of lightning down upon nearby enemies.");
         setUsage("/skill boltstorm");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[]{"skill megabolt"});
+        setIdentifiers(new String[]{"skill boltstorm"});
         rand = new Random();
     }
     

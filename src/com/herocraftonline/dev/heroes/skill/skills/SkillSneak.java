@@ -16,10 +16,10 @@ import com.herocraftonline.dev.heroes.effects.PeriodicEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
+import com.herocraftonline.dev.heroes.util.Messaging;
 
 public class SkillSneak extends ActiveSkill {
 
-    private String applyText;
     private String expireText;
     private boolean damageCancels;
     private boolean attackCancels;
@@ -29,7 +29,7 @@ public class SkillSneak extends ActiveSkill {
         setDescription("You crouch into the shadows");
         setUsage("/skill stealth");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[]{"skill stealth"});
+        setIdentifiers(new String[]{"skill sneak"});
 
         registerEvent(Type.PLAYER_TOGGLE_SNEAK, new SneakListener(), Priority.Highest);
     }
@@ -38,8 +38,7 @@ public class SkillSneak extends ActiveSkill {
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
         node.setProperty("duration", 600000); // 10 minutes in milliseconds
-        node.setProperty("apply-text", "%hero% faded into the shadows!");
-        node.setProperty("expire-text", "%hero% reappeared!");
+        node.setProperty("expire-text", "%hero% appeared from the shadows!");
         node.setProperty("damage-cancels", true);
         node.setProperty("atacking-cancels", true);
         node.setProperty("refresh-interval", 5000); // in milliseconds
@@ -49,8 +48,7 @@ public class SkillSneak extends ActiveSkill {
     @Override
     public void init() {
         super.init();
-        applyText = getSetting(null, "apply-text", "%hero% faded into the shadows!").replace("%hero%", "$1");
-        expireText = getSetting(null, "expire-text", "%hero% reappeard!").replace("%hero%", "$1");
+        expireText = getSetting(null, "expire-text", "%hero% appeared from the shadows!").replace("%hero%", "$1");
         damageCancels = getSetting(null, "damage-cancels", true);
         attackCancels = getSetting(null, "attacking-cancels", true);
         if (damageCancels || attackCancels) {
@@ -60,12 +58,11 @@ public class SkillSneak extends ActiveSkill {
 
     @Override
     public boolean use(Hero hero, String[] args) {
-        broadcastExecuteText(hero);
-
+        Messaging.send(hero.getPlayer(), getUseText());
+        
         int duration = getSetting(hero.getHeroClass(), "duration", 600000);
         int period = getSetting(hero.getHeroClass(), "refresh-interval", 5000);
         hero.addEffect(new SneakEffect(this, period, duration));
-
         return true;
     }
 
@@ -80,7 +77,6 @@ public class SkillSneak extends ActiveSkill {
             super.apply(hero);
             Player player = hero.getPlayer();
             player.setSneaking(true);
-            broadcast(player.getLocation(), applyText, player.getDisplayName());
         }
 
         @Override
