@@ -70,8 +70,15 @@ public class ResetCommand extends BasicInteractiveCommand {
         @Override
         public boolean execute(CommandSender executor, String identifier, String[] args) {
             if (!(executor instanceof Player)) return false;
-
             Player player = (Player) executor;
+            
+            if (Heroes.Permissions != null ) {
+                if (!Heroes.Permissions.has(player, "heroes.reset")) {
+                    Messaging.send(player, "You don't have permission to reset your hero");
+                    return false;
+                }
+            }
+            
             Hero hero = plugin.getHeroManager().getHero(player);
             HeroClass defaultClass = plugin.getClassManager().getDefaultClass();
             
