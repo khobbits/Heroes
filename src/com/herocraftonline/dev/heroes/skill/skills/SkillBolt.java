@@ -9,7 +9,7 @@ import org.bukkit.util.config.ConfigurationNode;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
-import com.nijiko.coelho.iConomy.util.Messaging;
+import com.herocraftonline.dev.heroes.util.Messaging;
 
 public class SkillBolt extends TargettedSkill {
 
@@ -46,7 +46,7 @@ public class SkillBolt extends TargettedSkill {
         EntityDamageByEntityEvent damageEntityEvent = new EntityDamageByEntityEvent(player, target, DamageCause.CUSTOM, 0);
         getPlugin().getServer().getPluginManager().callEvent(damageEntityEvent);
         if (damageEntityEvent.isCancelled()) {
-            Messaging.send("Invalid target!");
+            Messaging.send(player, "Invalid target!");
             return false;
         }
         
