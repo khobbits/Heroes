@@ -1,8 +1,18 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event.Priority;
+import org.bukkit.event.Event.Type;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockListener;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
@@ -11,55 +21,64 @@ import com.herocraftonline.dev.heroes.effects.PeriodicEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 
-public class SkillIcyAura extends ActiveSkill{
+public class SkillIcyAura extends ActiveSkill {
 
     private String applyText;
     private String expireText;
+    private static Map<Hero, Map<Location, Material>> changedBlocks = new HashMap<Hero, Map<Location, Material>>();
     
     public SkillIcyAura(Heroes plugin) {
         super(plugin, "IcyAura");
-        setDescription("Triggers an icyaura around you.");
+        setDescription("Triggers an aura of ice around you.");
         setUsage("/skill icyaura");
         setArgumentRange(0, 0);
         setIdentifiers(new String[]{"skill icyaura"});
+        
+        registerEvent(Type.BLOCK_BREAK, new IcyAuraBlockListener(), Priority.Highest);
     }
-    
+
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
         node.setProperty("duration", 10000);
         node.setProperty("period", 2000);
         node.setProperty("tick-damage", 1);
-        node.setProperty("apply-text", "%target% is bleeding!");
-        node.setProperty("expire-text", "%target% has stopped bleeding!");
+        node.setProperty("range", 10);
+        node.setProperty("apply-text", "%target% iis emitting ice!");
+        node.setProperty("expire-text", "%target% has stopped emitting ice!");
         return node;
     }
-    
+
     @Override
     public void init() {
         super.init(); 
         applyText = getSetting(null, "apply-text", "%target% is emitting ice!").replace("%target%", "$1");
-        expireText = getSetting(null, "expire-text", "%target% has emitting ice!").replace("%target%", "$1");
+        expireText = getSetting(null, "expire-text", "%target% has stopped emitting ice!").replace("%target%", "$1");
     }
 
     @Override
     public boolean use(Hero hero, String[] args) {
         broadcastExecuteText(hero);
-        
+
         long duration = getSetting(hero.getHeroClass(), "duration", 10000);
         long period = getSetting(hero.getHeroClass(), "period", 2000);
         int tickDamage = getSetting(hero.getHeroClass(), "tick-damage", 1);
-        hero.addEffect(new IcyAuraEffect(this, duration, period, tickDamage, hero.getPlayer()));
+        int range = getSetting(hero.getHeroClass(), "range", 10);
+        hero.addEffect(new IcyAuraEffect(this, duration, period, tickDamage, range));
         return true;
     }
-    
+
     public class IcyAuraEffect extends PeriodicEffect implements Dispellable {
 
-        //TODO: Icy aura effect needs work
-        public IcyAuraEffect(SkillIcyAura skill, long duration, long period, int tickDamage, Player applier) {
-            super(skill, "Bleed", period, duration);
-        }
+        private final int tickDamage;
+        private final int range;
 
+
+        public IcyAuraEffect(SkillIcyAura skill, long duration, long period, int tickDamage, int range) {
+            super(skill, "IcyAura", period, duration);
+            this.tickDamage = tickDamage;
+            this.range = range;
+        }
 
         @Override
         public void apply(Hero hero) {
@@ -71,8 +90,13 @@ public class SkillIcyAura extends ActiveSkill{
         @Override
         public void remove(Hero hero) {
             super.remove(hero);
-
             Player player = hero.getPlayer();
+            for(Entry<Location, Material> entry : changedBlocks.get(hero).entrySet()) {
+                entry.getKey().getBlock().setType(entry.getValue());
+            }
+            //CleanUp
+            changedBlocks.get(hero).clear();
+            changedBlocks.remove(hero);
             broadcast(player.getLocation(), expireText, player.getDisplayName());
         }
 
@@ -81,12 +105,46 @@ public class SkillIcyAura extends ActiveSkill{
             super.tick(hero);
 
             Player player = hero.getPlayer();
-            Location loc = player.getLocation();
+            Location loc = player.getLocation().clone();
             loc.setY(loc.getY() - 1);
-            if(player.getWorld().getBlockAt(loc).getType() == Material.ICE) {
-                player.getWorld().getBlockAt(loc).setType(Material.ICE);
+            changeBlock(loc, hero);
+            
+            for (Entity entity : player.getNearbyEntities(range, range, range)) {
+                if (entity instanceof LivingEntity) {
+                    LivingEntity lEntity = (LivingEntity) entity;
+                    getPlugin().getDamageManager().addSpellTarget(lEntity);
+                    lEntity.damage(tickDamage, player);
+                    loc = lEntity.getLocation().clone();
+                    loc.setY(loc.getY() - 1);
+                    changeBlock(loc, hero);
+                }
+            }
+
+        }
+
+        private void changeBlock(Location loc, Hero hero) {
+            Map<Location, Material> heroChangedBlocks = changedBlocks.get(hero);
+            if (heroChangedBlocks == null) {
+                changedBlocks.put(hero, new HashMap<Location, Material>());
+            }
+            if (loc.getBlock().getType() != Material.ICE) {
+                changedBlocks.get(hero).put(loc, loc.getBlock().getType());
+                loc.getBlock().setType(Material.ICE);
             }
         }
     }
-
+    
+    public class IcyAuraBlockListener extends BlockListener {
+        
+        @Override
+        public void onBlockBreak(BlockBreakEvent event) {
+            if (event.isCancelled()) return;
+            
+            //Check out mappings to see if this block was a changed block, if so lets deny breaking it.
+            for(Map<Location, Material> blockMap : changedBlocks.values()) 
+                for (Location loc : blockMap.keySet()) 
+                    if (event.getBlock().getLocation().equals(loc)) 
+                        event.setCancelled(true);
+        }
+    }
 }
