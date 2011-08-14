@@ -44,16 +44,16 @@ public class SkillIcyAura extends ActiveSkill {
         node.setProperty("period", 2000);
         node.setProperty("tick-damage", 1);
         node.setProperty("range", 10);
-        node.setProperty("apply-text", "%target% iis emitting ice!");
-        node.setProperty("expire-text", "%target% has stopped emitting ice!");
+        node.setProperty("apply-text", "%hero% is emitting ice!");
+        node.setProperty("expire-text", "%hero% has stopped emitting ice!");
         return node;
     }
 
     @Override
     public void init() {
         super.init(); 
-        applyText = getSetting(null, "apply-text", "%target% is emitting ice!").replace("%target%", "$1");
-        expireText = getSetting(null, "expire-text", "%target% has stopped emitting ice!").replace("%target%", "$1");
+        applyText = getSetting(null, "apply-text", "%hero% is emitting ice!").replace("%hero%", "$1");
+        expireText = getSetting(null, "expire-text", "%hero% has stopped emitting ice!").replace("%hero%", "$1");
     }
 
     @Override
