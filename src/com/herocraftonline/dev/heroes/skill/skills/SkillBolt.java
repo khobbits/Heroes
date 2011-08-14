@@ -46,7 +46,7 @@ public class SkillBolt extends TargettedSkill {
         EntityDamageByEntityEvent damageEntityEvent = new EntityDamageByEntityEvent(player, target, DamageCause.CUSTOM, 0);
         getPlugin().getServer().getPluginManager().callEvent(damageEntityEvent);
         if (damageEntityEvent.isCancelled()) {
-            Messaging.send("Invalid target!");
+            Messaging.send(player, "Invalid target!");
             return false;
         }
         
