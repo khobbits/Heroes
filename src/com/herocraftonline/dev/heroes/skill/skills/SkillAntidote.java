@@ -9,7 +9,7 @@ import com.herocraftonline.dev.heroes.effects.Effect;
 import com.herocraftonline.dev.heroes.effects.PoisonEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
-import com.nijiko.coelho.iConomy.util.Messaging;
+import com.herocraftonline.dev.heroes.util.Messaging;
 
 public class SkillAntidote extends TargettedSkill {
 
