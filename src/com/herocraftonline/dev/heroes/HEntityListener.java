@@ -3,6 +3,7 @@ package com.herocraftonline.dev.heroes;
 import java.text.DecimalFormat;
 import java.util.Set;
 
+import org.bukkit.entity.Creature;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -109,6 +110,10 @@ public class HEntityListener extends EntityListener {
             }
             if (experienceType != null && addedExp > 0) {
                 hero.gainExp(addedExp, experienceType);
+            }
+            //Make sure to remove any effects this creature may have had from the creatureEffect map
+            if (defender instanceof Creature) {
+                plugin.getHeroManager().clearCreatureEffects((Creature) defender);
             }
         }
     }

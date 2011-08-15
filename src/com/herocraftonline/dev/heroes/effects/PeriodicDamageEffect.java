@@ -1,5 +1,6 @@
 package com.herocraftonline.dev.heroes.effects;
 
+import org.bukkit.entity.Creature;
 import org.bukkit.entity.Player;
 
 import com.herocraftonline.dev.heroes.persistence.Hero;
@@ -22,6 +23,13 @@ public class PeriodicDamageEffect extends PeriodicEffect {
         Player player = hero.getPlayer();
         getSkill().getPlugin().getDamageManager().addSpellTarget(player);
         player.damage(tickDamage, applier);
+    }
+    
+    @Override
+    public void tick(Creature creature) {
+        super.tick(creature);
+        getSkill().getPlugin().getDamageManager().addSpellTarget(creature);
+        creature.damage(tickDamage, applier);
     }
 
     public void setTickDamage(int tickDamage) {

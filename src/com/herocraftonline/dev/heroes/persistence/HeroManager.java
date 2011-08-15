@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
@@ -21,6 +22,7 @@ import com.herocraftonline.dev.heroes.ui.TextRenderer.CharacterSprite;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.entity.Creature;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.config.Configuration;
@@ -46,6 +48,7 @@ public class HeroManager {
     private Heroes plugin;
     private Set<Hero> heroes;
     private Map<Hero, Boolean> bedHealers;
+    protected Map<Creature, Set<Effect>> creatureEffects;
     private File playerFolder;
     private final static int effectInterval = 2;
     private final static int manaInterval = 5;
@@ -56,6 +59,7 @@ public class HeroManager {
         this.plugin = plugin;
         this.heroes = new HashSet<Hero>();
         this.bedHealers = new ConcurrentHashMap<Hero, Boolean>();
+        this.creatureEffects = new HashMap<Creature, Set<Effect>>();
         playerFolder = new File(plugin.getDataFolder(), "players"); // Setup our Player Data Folder
         playerFolder.mkdirs(); // Create the folder if it doesn't exist.
 
@@ -346,7 +350,7 @@ public class HeroManager {
             config.setProperty("itemrecovery." + item.getType().toString(), durability);
         }
     }
-    
+
     /**
      * Removes a hero from the set of heroes currently in bed
      *
@@ -416,6 +420,55 @@ public class HeroManager {
             }
         }
     }
+
+    /**
+     * Adds a new effect to the specific creature
+     * 
+     * @param creature
+     * @param effect
+     */
+    public void addCreatureEffect(Creature creature, Effect effect) {
+        Set<Effect> cEffects = creatureEffects.get(creature);
+        if (cEffects == null) {
+            cEffects = new HashSet<Effect>();
+        }
+        cEffects.add(effect);
+    }
+
+    /**
+     * Removes an effect from a creature
+     * 
+     * @param creature
+     * @param effect
+     */
+    public void removeCreatureEffect(Creature creature, Effect effect) {
+        Set<Effect> cEffects = creatureEffects.get(creature);
+        if (cEffects != null) {
+            cEffects.remove(effect);
+            if (cEffects.isEmpty()) {
+                clearCreatureEffects(creature);
+            }
+        }
+    }
+
+    /**
+     * Clears all effects from the creature
+     * 
+     * @param creature
+     */
+    public void clearCreatureEffects(Creature creature) {
+        creatureEffects.remove(creature);
+    }
+
+    /**
+     * Gets a set view of all effects currently applied to the specified creature
+     * 
+     * @param creature
+     * @return
+     */
+    public Set<Effect> getCreatureEffects(Creature creature) {
+        return creatureEffects.get(creature);
+    }
 }
 
 class EffectUpdater implements Runnable {
@@ -441,6 +494,23 @@ class EffectUpdater implements Runnable {
                     Periodic periodic = (Periodic) effect;
                     if (periodic.isReady()) {
                         periodic.tick(hero);
+                    }
+                }
+            }
+        }
+        for (Entry<Creature, Set<Effect>> cEntry : heroManager.creatureEffects.entrySet()) {
+            for (Effect effect : cEntry.getValue()) {
+                if (effect instanceof Expirable) {
+                    Expirable expirable = (Expirable) effect;
+                    if (expirable.isExpired()) {
+                        heroManager.removeCreatureEffect(cEntry.getKey(), effect);
+                        continue;
+                    }
+                }
+                if (effect instanceof Periodic) {
+                    Periodic periodic = (Periodic) effect;
+                    if (periodic.isReady()) {
+                        periodic.tick(cEntry.getKey());
                     }
                 }
             }
