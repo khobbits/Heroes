@@ -11,7 +11,7 @@ import com.herocraftonline.dev.heroes.util.Messaging;
 
 public class PartyInviteCommand extends BasicCommand {
 
-    private static final int MAX_PARTY_SIZE = 10;
+    private static final int MAX_PARTY_SIZE = 6;
     private final Heroes plugin;
 
     public PartyInviteCommand(Heroes plugin) {
