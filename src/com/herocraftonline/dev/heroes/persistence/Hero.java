@@ -374,11 +374,11 @@ public class Hero {
         }
     }
     
-    protected ConfigurationNode getSkillSettings(Skill skill) {
+    public ConfigurationNode getSkillSettings(Skill skill) {
         return skillSettings.getNode(skill.getName().toLowerCase());
     }
     
-    protected void setSkillSetting(Skill skill, String node, Object val) {
+    public void setSkillSetting(Skill skill, String node, Object val) {
         skillSettings.setProperty(skill.getName().toLowerCase() + "." + node, val);
     }
     
