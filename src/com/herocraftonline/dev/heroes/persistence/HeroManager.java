@@ -135,6 +135,9 @@ public class HeroManager {
             playerHero.setVerbose(playerConfig.getBoolean("verbose", true));
             playerHero.suppressedSkills = new HashSet<String>(playerConfig.getStringList("suppressed", null));
             playerHero.skillSettings = playerConfig.getNode("skill-settings");
+            if (playerHero.skillSettings == null) {
+                playerHero.skillSettings = Configuration.getEmptyNode();
+            }
             addHero(playerHero);
             playerHero.syncHealth();
 
