@@ -102,6 +102,7 @@ public class Properties {
      */
     public static CreatureType getCreatureFromEntity(Entity entity) {
         CreatureType type = null;
+        if (entity == null) return type;
         try {
             Class<?>[] interfaces = entity.getClass().getInterfaces();
             for (Class<?> c : interfaces) {
