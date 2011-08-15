@@ -29,12 +29,11 @@ public class ConfigReloadCommand extends BasicCommand {
             Messaging.send(sender, "Insufficient permission.");
             return false;
         }
-        try {
-            plugin.getConfigManager().reload();
+
+        if (plugin.getConfigManager().reload()) {
             Messaging.send(sender, "Configs reloaded.");
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+
         return true;
     }
 

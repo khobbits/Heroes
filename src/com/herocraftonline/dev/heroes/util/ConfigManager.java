@@ -78,7 +78,7 @@ public class ConfigManager {
         plugin.setClassManager(heroClassManager);
     }
 
-    public void reload() {
+    public boolean reload() {
         try {
             final Player[] players = plugin.getServer().getOnlinePlayers();
             for (Player player : players) {
@@ -89,9 +89,10 @@ public class ConfigManager {
             e.printStackTrace();
             Heroes.log(Level.SEVERE, "Critical error encountered while loading. Disabling...");
             plugin.getServer().getPluginManager().disablePlugin(plugin);
-            return;
+            return false;
         }
         Heroes.log(Level.INFO, "Reloaded Configuration");
+        return true;
     }
 
     private void addNodeToConfig(Configuration config, ConfigurationNode node, String path) {
