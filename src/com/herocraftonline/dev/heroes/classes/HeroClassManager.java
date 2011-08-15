@@ -202,7 +202,7 @@ public class HeroClassManager {
                 skillNames.addAll(config.getKeys("classes." + className + ".permitted-skills"));
                 boolean allSkills = false;
                 for (String skillName : skillNames) {
-                    if (skillName.equals('*') || skillName.toLowerCase().equals("all")) {
+                    if (skillName.equals("*") || skillName.toLowerCase().equals("all")) {
                         allSkills = true;
                         continue;
                     }
