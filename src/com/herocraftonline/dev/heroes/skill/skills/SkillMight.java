@@ -24,6 +24,8 @@ public class SkillMight extends ActiveSkill {
         super(plugin, "Might");
         setDescription("You increase your party's damage with weapons!");
         setArgumentRange(0, 0);
+        setUsage("/skill might");
+        setIdentifiers(new String[]{"skill might"});
 
         registerEvent(Type.CUSTOM_EVENT, new CustomListener(), Priority.Normal);
     }
