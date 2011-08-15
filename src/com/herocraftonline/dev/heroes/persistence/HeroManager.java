@@ -180,7 +180,11 @@ public class HeroManager {
         playerConfig.setProperty("mana", hero.getMana());
         playerConfig.removeProperty("itemrecovery");
         playerConfig.setProperty("health", hero.getHealth());
-        playerConfig.setProperty("skill-settings", hero.skillSettings.getAll());
+        if (hero.skillSettings != null) {
+            if (hero.skillSettings.getAll() != null) {
+                playerConfig.setProperty("skill-settings", hero.skillSettings.getAll());
+            }
+        }
         saveCooldowns(hero, playerConfig);
         saveExperience(hero, playerConfig);
         saveRecoveryItems(hero, playerConfig);
