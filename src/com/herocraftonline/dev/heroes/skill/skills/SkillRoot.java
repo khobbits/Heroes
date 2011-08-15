@@ -105,6 +105,8 @@ public class SkillRoot extends TargettedSkill {
                 location.setX(x);
                 location.setY(y);
                 location.setZ(z);
+                location.setYaw(player.getLocation().getYaw());
+                location.setPitch(player.getLocation().getPitch());
                 player.teleport(location);
             }
         }
