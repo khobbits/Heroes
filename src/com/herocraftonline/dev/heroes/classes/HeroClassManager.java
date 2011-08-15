@@ -17,6 +17,7 @@ import com.herocraftonline.dev.heroes.classes.HeroClass.ArmorType;
 import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
 import com.herocraftonline.dev.heroes.classes.HeroClass.WeaponItems;
 import com.herocraftonline.dev.heroes.classes.HeroClass.WeaponType;
+import com.herocraftonline.dev.heroes.command.Command;
 import com.herocraftonline.dev.heroes.damage.DamageManager.ProjectileType;
 import com.herocraftonline.dev.heroes.skill.OutsourcedSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
@@ -102,9 +103,9 @@ public class HeroClassManager {
                             newClass.addAllowedArmor(aType + "_" + aItem);
                             aLimits.append(" ").append(aType).append("_").append(aItem);
                         } catch (IllegalArgumentException e) {
-                            if(a == "*") {
+                            if(a.equals("*")) {
                                 newClass.addAllowedArmor("*"); 
-                            }else {
+                            } else {
                                 Heroes.log(Level.WARNING, "Invalid armor type (" + type + "_" + item + ") defined for " + className);
                             }
                         }
@@ -149,9 +150,9 @@ public class HeroClassManager {
                             newClass.addAllowedWeapon(wType + "_" + wItem);
                             wLimits.append(" - ").append(wType).append("_").append(wItem);
                         } catch (IllegalArgumentException e) {
-                            if(w == "*") {
+                            if(w.equals("*")) {
                                 newClass.addAllowedWeapon("*"); 
-                            }else {
+                            } else {
                                 Heroes.log(Level.WARNING, "Invalid weapon type (" + type + "_" + item + ") defined for " + className);
                             }
                         }
@@ -193,11 +194,17 @@ public class HeroClassManager {
                 }
             }
 
-            List<String> skillNames = config.getKeys("classes." + className + ".permitted-skills");
-            if (skillNames == null) {
+            
+            if (config.getKeys("classes." + className + ".permitted-skills") == null) {
                 plugin.debugLog(Level.WARNING, className + " has no permitted-skills section");
             } else {
+                Set<String> skillNames = new HashSet<String>();
+                skillNames.addAll(config.getKeys("classes." + className + ".permitted-skills"));
+                boolean allSkills = false;
                 for (String skillName : skillNames) {
+                    if (skillName.equals('*') || skillName.toLowerCase().equals("all")) {
+                        allSkills = true;
+                    }
                     try {
                         Skill skill = (Skill) plugin.getCommandHandler().getCommand(skillName);
                         if (skill == null) {
@@ -215,6 +222,22 @@ public class HeroClassManager {
                         newClass.addSkill(skillName, skillSettings);
                     } catch (IllegalArgumentException e) {
                         Heroes.log(Level.WARNING, "Invalid skill (" + skillName + ") defined for " + className + ". Skipping this skill.");
+                    }
+                }
+                if (allSkills) {
+                    for (Command command : plugin.getCommandHandler().getCommands()) {
+                        if (command instanceof Skill) {
+                            Skill skill = (Skill) command;
+                            if (skillNames.contains(skill.getName())) continue;
+                            ConfigurationNode skillSettings = Configuration.getEmptyNode();
+                            List<String> settings = config.getKeys("classes." + className + ".permitted-skills." + skill.getName());
+                            if (settings != null) {
+                                for (String key : settings) {
+                                    skillSettings.setProperty(key, config.getProperty("classes." + className + ".permitted-skills." + skill.getName() + "." + key));
+                                }
+                            }
+                            newClass.addSkill(skill.getName(), skillSettings);
+                        }
                     }
                 }
             }
