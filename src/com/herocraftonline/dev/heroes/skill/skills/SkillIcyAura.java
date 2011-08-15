@@ -61,7 +61,7 @@ public class SkillIcyAura extends ActiveSkill {
         broadcastExecuteText(hero);
 
         long duration = getSetting(hero.getHeroClass(), "duration", 10000);
-        long period = getSetting(hero.getHeroClass(), "period", 2000);
+        long period = getSetting(hero.getHeroClass(), "period", 500);
         int tickDamage = getSetting(hero.getHeroClass(), "tick-damage", 1);
         int range = getSetting(hero.getHeroClass(), "range", 10);
         hero.addEffect(new IcyAuraEffect(this, duration, period, tickDamage, range));

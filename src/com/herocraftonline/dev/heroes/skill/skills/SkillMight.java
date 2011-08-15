@@ -16,6 +16,7 @@ import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
+import com.nijiko.coelho.iConomy.util.Messaging;
 
 public class SkillMight extends ActiveSkill {
 
@@ -79,11 +80,15 @@ public class SkillMight extends ActiveSkill {
         @Override
         public void apply(Hero hero) {
             super.apply(hero);
+            Player player = hero.getPlayer();
+            Messaging.send(player, "Your muscles bulge with power!");
         }
 
         @Override
         public void remove(Hero hero) {
-            super.remove(hero);   
+            super.remove(hero);
+            Player player = hero.getPlayer();
+            Messaging.send(player, "Your muscles shrink back to their normal size!");
         }
         
         public double getDamageBonus() {
