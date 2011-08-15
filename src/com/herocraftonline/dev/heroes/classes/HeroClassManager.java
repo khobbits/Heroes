@@ -204,6 +204,7 @@ public class HeroClassManager {
                 for (String skillName : skillNames) {
                     if (skillName.equals('*') || skillName.toLowerCase().equals("all")) {
                         allSkills = true;
+                        continue;
                     }
                     try {
                         Skill skill = (Skill) plugin.getCommandHandler().getCommand(skillName);
