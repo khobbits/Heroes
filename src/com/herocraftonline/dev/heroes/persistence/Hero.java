@@ -16,6 +16,8 @@ import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.config.ConfigurationNode;
+
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.ExperienceGainEvent;
 import com.herocraftonline.dev.heroes.api.LevelEvent;
@@ -44,6 +46,7 @@ public class Hero {
     protected Map<Material, String[]> binds = new HashMap<Material, String[]>();
     protected List<ItemStack> itemRecovery = new ArrayList<ItemStack>();
     protected Set<String> suppressedSkills = new HashSet<String>();
+    protected ConfigurationNode skillSettings = null;
     protected double health;
 
     public Hero(Heroes plugin, Player player, HeroClass heroClass) {
@@ -266,6 +269,7 @@ public class Hero {
         }
         summons.clear();
     }
+    
     public Set<String> getSuppressedSkills() {
         return new HashSet<String>(suppressedSkills);
     }
@@ -369,7 +373,15 @@ public class Hero {
             suppressedSkills.remove(skill.getName());
         }
     }
-
+    
+    protected ConfigurationNode getSkillSettings(Skill skill) {
+        return skillSettings.getNode(skill.getName().toLowerCase());
+    }
+    
+    protected void setSkillSetting(Skill skill, String node, Object val) {
+        skillSettings.setProperty(skill.getName().toLowerCase() + "." + node, val);
+    }
+    
     public void setVerbose(boolean verbose) {
         this.verbose = verbose;
     }

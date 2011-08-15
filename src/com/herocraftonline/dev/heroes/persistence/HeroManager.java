@@ -130,7 +130,7 @@ public class HeroManager {
             playerHero.setHealth(playerConfig.getDouble("health", playerClass.getBaseMaxHealth()));
             playerHero.setVerbose(playerConfig.getBoolean("verbose", true));
             playerHero.suppressedSkills = new HashSet<String>(playerConfig.getStringList("suppressed", null));
-
+            playerHero.skillSettings = playerConfig.getNode("skill-settings");
             addHero(playerHero);
             playerHero.syncHealth();
 
@@ -173,7 +173,7 @@ public class HeroManager {
         playerConfig.setProperty("mana", hero.getMana());
         playerConfig.removeProperty("itemrecovery");
         playerConfig.setProperty("health", hero.getHealth());
-
+        playerConfig.setProperty("skill-settings", hero.skillSettings.getAll());
         saveCooldowns(hero, playerConfig);
         saveExperience(hero, playerConfig);
         saveRecoveryItems(hero, playerConfig);
@@ -346,7 +346,7 @@ public class HeroManager {
             config.setProperty("itemrecovery." + item.getType().toString(), durability);
         }
     }
-
+    
     /**
      * Removes a hero from the set of heroes currently in bed
      *
