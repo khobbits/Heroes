@@ -48,6 +48,12 @@ public class SkillWeb extends TargettedSkill {
     }
     
     @Override
+    public void init() {
+        super.init();
+        applyText = getSetting(null, "apply-text", "%hero% conjured a web at %target%'s feet!");
+    }
+    
+    @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
 
