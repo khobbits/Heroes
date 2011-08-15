@@ -444,9 +444,11 @@ public class HeroManager {
     public void removeCreatureEffect(Creature creature, Effect effect) {
         Set<Effect> cEffects = creatureEffects.get(creature);
         if (cEffects != null) {
+            effect.remove(creature);
             cEffects.remove(effect);
+            //If the creature has no effects left
             if (cEffects.isEmpty()) {
-                clearCreatureEffects(creature);
+                creatureEffects.remove(creature);
             }
         }
     }
@@ -457,7 +459,28 @@ public class HeroManager {
      * @param creature
      */
     public void clearCreatureEffects(Creature creature) {
-        creatureEffects.remove(creature);
+        if (creatureEffects.containsKey(creature)) {
+            for(Effect effect : creatureEffects.get(creature)) {
+                removeCreatureEffect(creature, effect);
+            }
+        }
+    }
+
+    /**
+     * Checks if a creature has the effect
+     * 
+     * @param creature
+     * @param effect
+     * @return
+     */
+    public boolean creatureHasEffect(Creature creature, String name) {
+        if (!creatureEffects.containsKey(creature)) return false;
+        for (Effect effect : creatureEffects.get(creature)) {
+            if (effect.getName().equalsIgnoreCase(name)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
