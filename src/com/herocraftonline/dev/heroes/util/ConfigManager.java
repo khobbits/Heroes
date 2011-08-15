@@ -12,6 +12,7 @@ import java.util.logging.Level;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.CreatureType;
+import org.bukkit.entity.Player;
 import org.bukkit.util.config.Configuration;
 import org.bukkit.util.config.ConfigurationNode;
 
@@ -79,6 +80,10 @@ public class ConfigManager {
 
     public void reload() {
         try {
+            final Player[] players = plugin.getServer().getOnlinePlayers();
+            for (Player player : players) {
+                plugin.getHeroManager().saveHero(player);
+            }
             load();
         } catch (Exception e) {
             e.printStackTrace();
