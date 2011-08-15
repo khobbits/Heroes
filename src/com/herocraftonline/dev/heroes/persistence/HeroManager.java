@@ -433,6 +433,7 @@ public class HeroManager {
             cEffects = new HashSet<Effect>();
         }
         cEffects.add(effect);
+        effect.apply(creature);
     }
 
     /**

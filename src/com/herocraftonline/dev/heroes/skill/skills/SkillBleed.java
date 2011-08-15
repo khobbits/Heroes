@@ -1,5 +1,6 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
+import org.bukkit.entity.Creature;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.config.ConfigurationNode;
@@ -45,22 +46,24 @@ public class SkillBleed extends TargettedSkill {
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
-        if (!(target instanceof Player)) {
+        if (!(target instanceof Player) && !(target instanceof Creature)) {
             Messaging.send(player, "You need a target!");
             return false;
         }
-
-        Player targetPlayer = (Player) target;
-        Hero targetHero = getPlugin().getHeroManager().getHero(targetPlayer);
-        if (targetHero.equals(hero)) {
-            Messaging.send(player, "You need a target!");
-            return false;
-        }
-        //Party check
-        if (hero.getParty() != null) {
-            if (hero.getParty().isPartyMember(targetHero)) {
+        Hero targetHero = null;
+        if (target instanceof Player) {
+            Player targetPlayer = (Player) target;
+            targetHero = getPlugin().getHeroManager().getHero(targetPlayer);
+            if (targetHero.equals(hero)) {
                 Messaging.send(player, "You need a target!");
                 return false;
+            }
+            //Party check
+            if (hero.getParty() != null) {
+                if (hero.getParty().isPartyMember(targetHero)) {
+                    Messaging.send(player, "You need a target!");
+                    return false;
+                }
             }
         }
         broadcastExecuteText(hero, target);
@@ -68,7 +71,15 @@ public class SkillBleed extends TargettedSkill {
         long duration = getSetting(hero.getHeroClass(), "duration", 10000);
         long period = getSetting(hero.getHeroClass(), "period", 2000);
         int tickDamage = getSetting(hero.getHeroClass(), "tick-damage", 1);
-        targetHero.addEffect(new BleedSkillEffect(this, "Bleed", duration, period, tickDamage, player));
+        BleedSkillEffect bEffect = new BleedSkillEffect(this, "Bleed", duration, period, tickDamage, player);
+        
+        if (targetHero != null) {
+            targetHero.addEffect(bEffect);
+        } else if (target instanceof Creature) {
+            Creature creature = (Creature) target;
+            getPlugin().getHeroManager().addCreatureEffect(creature, bEffect);
+            
+        }
         return true;
     }
 
@@ -87,11 +98,22 @@ public class SkillBleed extends TargettedSkill {
         }
 
         @Override
+        public void apply(Creature creature) {
+            super.apply(creature);
+        }
+        
+        @Override
         public void remove(Hero hero) {
             super.remove(hero);
 
             Player player = hero.getPlayer();
             broadcast(player.getLocation(), expireText, player.getDisplayName());
+        }
+        
+        @Override
+        public void remove(Creature creature) {
+            super.remove(creature);
+            broadcast(creature.getLocation(), expireText, Messaging.getCreatureName(creature).toLowerCase());
         }
     }
 }
