@@ -54,11 +54,12 @@ public class SkillRecall extends ActiveSkill {
                 getPlugin().getHeroManager().saveHero(player);
                 return true;
             }
-        }
+        } 
         //Try to teleport back to the location
         World world = validateLocation(skillSetting, player);
         if (world == null) return false;
         double[] xyzyp = getStoredData(skillSetting);
+        broadcastExecuteText(hero);
         player.teleport(new Location(world, xyzyp[0], xyzyp[1], xyzyp[2], (float) xyzyp[3], (float) xyzyp[4]));
         return true;
     }
