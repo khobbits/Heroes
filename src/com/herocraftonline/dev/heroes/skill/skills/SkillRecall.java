@@ -39,7 +39,7 @@ public class SkillRecall extends ActiveSkill {
             } else {
                 //Save a new mark
                 Location loc = player.getLocation();
-                hero.setSkillSetting(this, "world", loc.getWorld());
+                hero.setSkillSetting(this, "world", loc.getWorld().getName());
                 hero.setSkillSetting(this, "x", loc.getX());
                 hero.setSkillSetting(this, "y", loc.getY());
                 hero.setSkillSetting(this, "z", loc.getZ());
@@ -78,7 +78,7 @@ public class SkillRecall extends ActiveSkill {
         }
         
         //Make sure the world setting isn't null - this lets us know the player has a location saved
-        if (skillSetting.getString("world") == null || skillSetting.getString("world").equals("")) {
+        if (skillSetting.getString("world") == null || skillSetting.getString("world").isEmpty()) {
             Messaging.send(player, "You do not have a recall location marked.");
             return null;
         }
