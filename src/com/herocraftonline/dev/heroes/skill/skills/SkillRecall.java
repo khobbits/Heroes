@@ -3,7 +3,6 @@ package com.herocraftonline.dev.heroes.skill.skills;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.bukkit.util.config.Configuration;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
@@ -39,18 +38,16 @@ public class SkillRecall extends ActiveSkill {
                 return true;
             } else {
                 //Save a new mark
-                ConfigurationNode node = Configuration.getEmptyNode();
-                
                 Location loc = player.getLocation();
-                node.setProperty("world", loc.getWorld());
-                node.setProperty("x", loc.getX());
-                node.setProperty("y", loc.getY());
-                node.setProperty("z", loc.getZ());
-                node.setProperty("yaw", loc.getYaw());
-                node.setProperty("pitch", loc.getPitch());
-                skillSetting = node;
+                hero.setSkillSetting(this, "world", loc.getWorld());
+                hero.setSkillSetting(this, "x", loc.getX());
+                hero.setSkillSetting(this, "y", loc.getY());
+                hero.setSkillSetting(this, "z", loc.getZ());
+                hero.setSkillSetting(this, "yaw", loc.getYaw());
+                hero.setSkillSetting(this, "pitch", loc.getPitch());
                 Object[] obj = new Object[] {loc.getWorld().getName(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()};
                 Messaging.send(player, "You have marked a new location on $1 at: $2, $3, $4", obj);
+                
                 getPlugin().getHeroManager().saveHero(player);
                 return true;
             }
