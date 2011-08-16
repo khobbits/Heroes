@@ -17,6 +17,7 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
+import com.herocraftonline.dev.heroes.skill.Skill;
 
 public class SkillFireball extends ActiveSkill {
 
@@ -27,7 +28,7 @@ public class SkillFireball extends ActiveSkill {
         setArgumentRange(0, 0);
         setIdentifiers(new String[]{"skill fireball"});
 
-        registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
+        registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(this), Priority.Normal);
     }
 
     @Override
@@ -51,6 +52,12 @@ public class SkillFireball extends ActiveSkill {
 
     public class SkillEntityListener extends EntityListener {
 
+        private final Skill skill;
+        
+        public SkillEntityListener(Skill skill) {
+            this.skill = skill;
+        }
+        
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
             if (event.isCancelled()) return;
@@ -73,7 +80,7 @@ public class SkillFireball extends ActiveSkill {
                                 // Damage the player and ignite them.
                                 livingEntity.setFireTicks(getSetting(heroClass, "fire-ticks", 100));
 
-                                getPlugin().getDamageManager().addSpellTarget((Entity) entity);
+                                getPlugin().getDamageManager().addSpellTarget((Entity) entity, hero, skill);
                                 int damage = getSetting(heroClass, "damage", 4);
                                 event.setDamage(damage);
                             }

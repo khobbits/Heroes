@@ -29,7 +29,7 @@ public class SkillUnholyRitual extends TargettedSkill {
             Messaging.send(player, "You need a target!");
             return false;
         }
-        getPlugin().getDamageManager().addSpellTarget((Entity) target);
+        getPlugin().getDamageManager().addSpellTarget((Entity) target, hero, this);
         target.damage(target.getHealth(), player);
         hero.setMana(hero.getMana() + 20);
         broadcastExecuteText(hero, target);

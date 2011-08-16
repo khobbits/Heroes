@@ -42,7 +42,7 @@ public class SkillBolt extends TargettedSkill {
             return false;
         }
         
-        getPlugin().getDamageManager().addSpellTarget(target);
+        getPlugin().getDamageManager().addSpellTarget(target, hero, this);
         target.getWorld().strikeLightningEffect(target.getLocation());
         target.damage(getSetting(hero.getHeroClass(), "damage", 4), player);
         

@@ -23,6 +23,7 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
+import com.herocraftonline.dev.heroes.skill.Skill;
 
 public class SkillExplosiveFireball extends ActiveSkill {
 
@@ -33,7 +34,7 @@ public class SkillExplosiveFireball extends ActiveSkill {
         setArgumentRange(0, 0);
         setIdentifiers(new String[]{"skill explosivefireball"});
 
-        registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
+        registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(this), Priority.Normal);
     }
 
     @Override
@@ -97,6 +98,12 @@ public class SkillExplosiveFireball extends ActiveSkill {
 
     public class SkillEntityListener extends EntityListener {
 
+        private final Skill skill;
+        
+        public SkillEntityListener(Skill skill) {
+            this.skill = skill;
+        }
+        
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
             if (event.isCancelled()) return;
@@ -111,9 +118,10 @@ public class SkillExplosiveFireball extends ActiveSkill {
                         Player shooter = (Player) fireball.getShooter();
                         Hero hero = getPlugin().getHeroManager().getHero(shooter);
                         HeroClass heroClass = hero.getHeroClass();
-                        getPlugin().getDamageManager().addSpellTarget(entity);
+                        int damage = getSetting(heroClass, "damage", 4);
+                        getPlugin().getDamageManager().addSpellTarget(entity, hero, skill);
                         entity.setFireTicks(getSetting(heroClass, "fire-ticks", 100));
-                        event.setDamage(getSetting(heroClass, "damage", 4));
+                        event.setDamage(damage);
                     }
                 }
             }

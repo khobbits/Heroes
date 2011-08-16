@@ -102,7 +102,7 @@ public class SkillBoltstorm extends ActiveSkill {
             
             int damage = getSetting(hero.getHeroClass(), "damage", 4);
             LivingEntity target = targets.get(rand.nextInt(targets.size()));
-            getPlugin().getDamageManager().addSpellTarget(target);
+            getPlugin().getDamageManager().addSpellTarget(target, hero, getSkill());
             
             target.getWorld().strikeLightningEffect(target.getLocation());
             target.damage(damage, player);

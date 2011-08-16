@@ -9,7 +9,7 @@ import org.bukkit.event.Event.Type;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.api.HeroesWeaponDamageEvent;
+import com.herocraftonline.dev.heroes.api.WeaponDamageEvent;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.PassiveSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
@@ -36,9 +36,9 @@ public class SkillBackstab extends PassiveSkill {
 
         @Override
         public void onCustomEvent(Event event) {
-            if (!(event instanceof HeroesWeaponDamageEvent)) return;
+            if (!(event instanceof WeaponDamageEvent)) return;
 
-            HeroesWeaponDamageEvent subEvent = (HeroesWeaponDamageEvent) event;
+            WeaponDamageEvent subEvent = (WeaponDamageEvent) event;
             if (subEvent.getDamager() instanceof Player) {
                 Player player = (Player) subEvent.getDamager();
                 Hero hero = getPlugin().getHeroManager().getHero(player);

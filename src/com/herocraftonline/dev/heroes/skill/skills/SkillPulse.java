@@ -51,7 +51,7 @@ public class SkillPulse extends ActiveSkill {
             }
 
             // See problem in SkillFireball.
-            getPlugin().getDamageManager().addSpellTarget((Entity) target);
+            getPlugin().getDamageManager().addSpellTarget((Entity) target, hero, this);
             target.damage(damage, player);
         }
         broadcastExecuteText(hero);

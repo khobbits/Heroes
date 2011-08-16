@@ -112,7 +112,7 @@ public class SkillIcyAura extends ActiveSkill {
             for (Entity entity : player.getNearbyEntities(range, range, range)) {
                 if (entity instanceof LivingEntity) {
                     LivingEntity lEntity = (LivingEntity) entity;
-                    getPlugin().getDamageManager().addSpellTarget(lEntity);
+                    getPlugin().getDamageManager().addSpellTarget(lEntity, hero, getSkill());
                     lEntity.damage(tickDamage, player);
                     loc = lEntity.getLocation().clone();
                     loc.setY(loc.getY() - 1);

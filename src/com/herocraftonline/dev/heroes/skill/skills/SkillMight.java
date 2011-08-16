@@ -10,7 +10,7 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.api.HeroesWeaponDamageEvent;
+import com.herocraftonline.dev.heroes.api.WeaponDamageEvent;
 import com.herocraftonline.dev.heroes.effects.Dispellable;
 import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
@@ -103,8 +103,8 @@ public class SkillMight extends ActiveSkill {
 
         @Override
         public void onCustomEvent(Event event) {
-            if (!(event instanceof HeroesWeaponDamageEvent)) return;
-            HeroesWeaponDamageEvent subEvent = (HeroesWeaponDamageEvent) event;
+            if (!(event instanceof WeaponDamageEvent)) return;
+            WeaponDamageEvent subEvent = (WeaponDamageEvent) event;
 
             if (subEvent.getCause() != DamageCause.ENTITY_ATTACK)  return;
 

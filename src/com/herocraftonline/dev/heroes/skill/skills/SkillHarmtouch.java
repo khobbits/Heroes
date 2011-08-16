@@ -43,7 +43,7 @@ public class SkillHarmtouch extends TargettedSkill {
         if (damageEntityEvent.isCancelled()) {
             return false;
         }
-        getPlugin().getDamageManager().addSpellTarget((Entity) target);
+        getPlugin().getDamageManager().addSpellTarget((Entity) target, hero, this);
         target.damage(damage, player);
         broadcastExecuteText(hero, target);
         return true;

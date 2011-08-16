@@ -10,7 +10,7 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.api.HeroesWeaponDamageEvent;
+import com.herocraftonline.dev.heroes.api.WeaponDamageEvent;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.PassiveSkill;
 
@@ -37,9 +37,9 @@ public class SkillShield extends PassiveSkill {
 
         @Override
         public void onCustomEvent(Event event) {
-            if (!(event instanceof HeroesWeaponDamageEvent)) return;
+            if (!(event instanceof WeaponDamageEvent)) return;
             
-            HeroesWeaponDamageEvent subEvent = (HeroesWeaponDamageEvent) event;
+            WeaponDamageEvent subEvent = (WeaponDamageEvent) event;
             if (subEvent.getCause() != DamageCause.ENTITY_ATTACK || subEvent.getDamage() == 0 ) {
                 return;
             }

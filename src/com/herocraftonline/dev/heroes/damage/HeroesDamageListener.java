@@ -22,8 +22,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.api.HeroesWeaponDamageEvent;
+import com.herocraftonline.dev.heroes.api.SkillDamageEvent;
+import com.herocraftonline.dev.heroes.api.WeaponDamageEvent;
 import com.herocraftonline.dev.heroes.persistence.Hero;
+import com.herocraftonline.dev.heroes.skill.SkillUseInfo;
 import com.herocraftonline.dev.heroes.util.Properties;
 
 // import org.bukkit.entity.Projectile;
@@ -136,8 +138,17 @@ public class HeroesDamageListener extends EntityListener {
         Entity attacker = null;
         DamageCause cause = event.getCause();
         int damage = event.getDamage();
-        if (damageManager.getSpellTargets().contains(entity)) { // Start of skill -> listener communication
-            damageManager.getSpellTargets().remove(entity);
+        if (damageManager.getSpellTargets().containsKey(entity)) { // Start of skill -> listener communication
+            SkillUseInfo skillInfo = damageManager.getSpellTargets().remove(entity); 
+            if (event instanceof EntityDamageByEntityEvent) {
+                SkillDamageEvent spellDamageEvent = new SkillDamageEvent(damage, entity, skillInfo);
+                plugin.getServer().getPluginManager().callEvent(spellDamageEvent);
+                if (spellDamageEvent.isCancelled()) {
+                    event.setCancelled(true);
+                    return;
+                }
+                damage = spellDamageEvent.getDamage();
+            }
         } else if (damage != 0 ){
             if (event instanceof EntityDamageByEntityEvent) {
                 attacker = ((EntityDamageByEntityEvent) event).getDamager();
@@ -176,8 +187,12 @@ public class HeroesDamageListener extends EntityListener {
                     }
                 }
                 //Call the custom event to allow skills to adjust weapon damage
-                HeroesWeaponDamageEvent weaponDamageEvent = new HeroesWeaponDamageEvent(damage, (EntityDamageByEntityEvent) event);
+                WeaponDamageEvent weaponDamageEvent = new WeaponDamageEvent(damage, (EntityDamageByEntityEvent) event);
                 plugin.getServer().getPluginManager().callEvent(weaponDamageEvent);
+                if (weaponDamageEvent.isCancelled()) {
+                    event.setCancelled(true);
+                    return;
+                }
                 damage = weaponDamageEvent.getDamage();
                 
             } else if (cause != DamageCause.CUSTOM) {

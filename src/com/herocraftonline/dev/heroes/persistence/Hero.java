@@ -19,7 +19,7 @@ import org.bukkit.inventory.ItemStack;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.ExperienceGainEvent;
-import com.herocraftonline.dev.heroes.api.LevelEvent;
+import com.herocraftonline.dev.heroes.api.HeroLevelEvent;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
 import com.herocraftonline.dev.heroes.effects.Effect;
@@ -148,7 +148,7 @@ public class Hero {
         if (newLevel == currentLevel) {
             expEvent = new ExperienceGainEvent(this, expGain, source);
         } else {
-            expEvent = new LevelEvent(this, expGain, currentLevel, newLevel, source);
+            expEvent = new HeroLevelEvent(this, expGain, currentLevel, newLevel, source);
         }
         plugin.getServer().getPluginManager().callEvent(expEvent);
         if (expEvent.isCancelled()) {

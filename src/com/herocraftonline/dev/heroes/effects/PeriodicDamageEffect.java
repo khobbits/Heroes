@@ -10,25 +10,27 @@ public class PeriodicDamageEffect extends PeriodicEffect {
 
     private int tickDamage;
     private final Player applier;
+    private final Hero applyHero;
     
     public PeriodicDamageEffect(Skill skill, String name, long period, long duration, int tickDamage, Player applier) {
         super(skill, name, period, duration);
         this.tickDamage = tickDamage;
         this.applier = applier;
+        this.applyHero = getSkill().getPlugin().getHeroManager().getHero(applier);
     }
 
     @Override
     public void tick(Hero hero) {
         super.tick(hero);
         Player player = hero.getPlayer();
-        getSkill().getPlugin().getDamageManager().addSpellTarget(player);
+        getSkill().getPlugin().getDamageManager().addSpellTarget(player, applyHero, getSkill());
         player.damage(tickDamage, applier);
     }
     
     @Override
     public void tick(Creature creature) {
         super.tick(creature);
-        getSkill().getPlugin().getDamageManager().addSpellTarget(creature);
+        getSkill().getPlugin().getDamageManager().addSpellTarget(creature, applyHero, getSkill());
         creature.damage(tickDamage, applier);
     }
 

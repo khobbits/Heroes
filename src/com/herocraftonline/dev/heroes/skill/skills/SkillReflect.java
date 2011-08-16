@@ -29,7 +29,7 @@ public class SkillReflect extends ActiveSkill {
         setArgumentRange(0, 0);
         setIdentifiers(new String[]{"skill reflect"});
 
-        registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
+        registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(this), Priority.Normal);
     }
 
     @Override
@@ -82,6 +82,12 @@ public class SkillReflect extends ActiveSkill {
 
     public class SkillEntityListener extends EntityListener {
 
+        private final Skill skill;
+        
+        public SkillEntityListener(Skill skill) {
+            this.skill = skill;
+        }
+        
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
             if (event.isCancelled() || !(event instanceof EntityDamageByEntityEvent)) {
@@ -104,7 +110,7 @@ public class SkillReflect extends ActiveSkill {
                     }
                     LivingEntity attEntity = (LivingEntity) attacker;
                     int damage = (int) (event.getDamage() * getSetting(hero.getHeroClass(), "reflected-amount", 0.5));
-                    getPlugin().getDamageManager().addSpellTarget((Entity) attacker);
+                    getPlugin().getDamageManager().addSpellTarget((Entity) attacker, hero, skill);
                     attEntity.damage(damage, defender);
                 }
             }

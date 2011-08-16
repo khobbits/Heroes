@@ -11,7 +11,7 @@ import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.ClassChangeEvent;
-import com.herocraftonline.dev.heroes.api.LevelEvent;
+import com.herocraftonline.dev.heroes.api.HeroLevelEvent;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.effects.Effect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
@@ -149,8 +149,8 @@ public abstract class PassiveSkill extends Skill {
 
         @Override
         public void onCustomEvent(Event event) {
-            if (event instanceof LevelEvent) {
-                LevelEvent subEvent = (LevelEvent) event;
+            if (event instanceof HeroLevelEvent) {
+                HeroLevelEvent subEvent = (HeroLevelEvent) event;
                 if (!subEvent.isCancelled()) {
                     tryApplying(subEvent.getHero());
                 }
