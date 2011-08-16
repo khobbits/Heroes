@@ -16,8 +16,6 @@ import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.config.Configuration;
-import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.ExperienceGainEvent;
@@ -47,7 +45,7 @@ public class Hero {
     protected Map<Material, String[]> binds = new HashMap<Material, String[]>();
     protected List<ItemStack> itemRecovery = new ArrayList<ItemStack>();
     protected Set<String> suppressedSkills = new HashSet<String>();
-    protected ConfigurationNode skillSettings = Configuration.getEmptyNode();
+    protected Map<String, Map<String, String>> skillSettings = new HashMap<String, Map<String, String>>();
     protected double health;
 
     public Hero(Heroes plugin, Player player, HeroClass heroClass) {
@@ -375,16 +373,25 @@ public class Hero {
         }
     }
     
-    public ConfigurationNode getSkillSettings(Skill skill) {
+    public Map<String, String> getSkillSettings(Skill skill) {
         if (skill == null || !heroClass.hasSkill(skill.getName())) {
             return null;
         }
         
-        return skillSettings.getNode(skill.getName().toLowerCase());
+        return skillSettings.get(skill.getName().toLowerCase());
     }
     
     public void setSkillSetting(Skill skill, String node, Object val) {
-        skillSettings.setProperty(skill.getName().toLowerCase() + "." + node, val);
+        setSkillSetting(skill.getName(), node, val);
+    }
+    
+    public void setSkillSetting(String skillName, String node, Object val) {
+        Map<String, String> settings = skillSettings.get(skillName.toLowerCase());
+        if (settings == null) {
+            settings = new HashMap<String, String>();
+            skillSettings.put(skillName.toLowerCase(), settings);
+        }
+        settings.put(node, val.toString());
     }
     
     public void setVerbose(boolean verbose) {

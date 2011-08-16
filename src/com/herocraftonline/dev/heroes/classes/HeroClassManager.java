@@ -79,6 +79,10 @@ public class HeroClassManager {
                 plugin.debugLog(Level.WARNING, className + " has no permitted-armor section");
             } else {
                 for (String a : armor) {
+                    if (a.equals("*") || a.equals("ALL")) {
+                        newClass.addAllowedArmor("*"); 
+                        continue;
+                    }
                     // If it's a generic type like 'DIAMOND' or 'LEATHER' we add all the possible entries.
                     if (!a.contains("_")) {
                         try {
@@ -103,11 +107,7 @@ public class HeroClassManager {
                             newClass.addAllowedArmor(aType + "_" + aItem);
                             aLimits.append(" ").append(aType).append("_").append(aItem);
                         } catch (IllegalArgumentException e) {
-                            if(a.equals("*")) {
-                                newClass.addAllowedArmor("*"); 
-                            } else {
-                                Heroes.log(Level.WARNING, "Invalid armor type (" + type + "_" + item + ") defined for " + className);
-                            }
+                            Heroes.log(Level.WARNING, "Invalid armor type (" + type + "_" + item + ") defined for " + className);
                         }
                     }
                 }
@@ -118,6 +118,10 @@ public class HeroClassManager {
                 plugin.debugLog(Level.WARNING, className + " has no permitted-weapon section");
             } else {
                 for (String w : weapon) {
+                    if(w.equals("*") || w.equals("ALL")) {
+                        newClass.addAllowedWeapon("*"); 
+                        continue;
+                    }
                     // A BOW has no ItemType so we just add it straight away.
                     if (w.equalsIgnoreCase("BOW")) {
                         newClass.addAllowedWeapon("BOW");
@@ -139,6 +143,7 @@ public class HeroClassManager {
                             newClass.addAllowedWeapon(wType + "_SWORD");
                             wLimits.append(" ").append(wType).append("_SWORD");
                         } catch (IllegalArgumentException e) {
+
                             Heroes.log(Level.WARNING, "Invalid weapon type (" + w + ") defined for " + className);
                         }
                     } else {
@@ -150,14 +155,9 @@ public class HeroClassManager {
                             newClass.addAllowedWeapon(wType + "_" + wItem);
                             wLimits.append(" - ").append(wType).append("_").append(wItem);
                         } catch (IllegalArgumentException e) {
-                            if(w.equals("*")) {
-                                newClass.addAllowedWeapon("*"); 
-                            } else {
-                                Heroes.log(Level.WARNING, "Invalid weapon type (" + type + "_" + item + ") defined for " + className);
-                            }
+                            Heroes.log(Level.WARNING, "Invalid weapon type (" + type + "_" + item + ") defined for " + className);
                         }
                     }
-
                 }
             }
 
@@ -194,7 +194,7 @@ public class HeroClassManager {
                 }
             }
 
-            
+
             if (config.getKeys("classes." + className + ".permitted-skills") == null) {
                 plugin.debugLog(Level.WARNING, className + " has no permitted-skills section");
             } else {
@@ -227,7 +227,7 @@ public class HeroClassManager {
                 }
                 if (allSkills) {
                     for (Command command : plugin.getCommandHandler().getCommands()) {
-                        if (command instanceof Skill) {
+                        try {
                             Skill skill = (Skill) command;
                             if (skillNames.contains(skill.getName())) continue;
                             ConfigurationNode skillSettings = Configuration.getEmptyNode();
@@ -238,6 +238,8 @@ public class HeroClassManager {
                                 }
                             }
                             newClass.addSkill(skill.getName(), skillSettings);
+                        } catch (IllegalArgumentException e) {
+                            continue;
                         }
                     }
                 }

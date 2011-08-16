@@ -130,14 +130,11 @@ public class HeroManager {
             loadExperience(playerHero, playerConfig);
             loadRecoveryItems(playerHero, playerConfig);
             loadBinds(playerHero, playerConfig);
+            loadSkillSettings(playerHero, playerConfig);
             playerHero.setMana(playerConfig.getInt("mana", 0));
             playerHero.setHealth(playerConfig.getDouble("health", playerClass.getBaseMaxHealth()));
             playerHero.setVerbose(playerConfig.getBoolean("verbose", true));
             playerHero.suppressedSkills = new HashSet<String>(playerConfig.getStringList("suppressed", null));
-            playerHero.skillSettings = playerConfig.getNode("skill-settings");
-            if (playerHero.skillSettings == null) {
-                playerHero.skillSettings = Configuration.getEmptyNode();
-            }
             addHero(playerHero);
             playerHero.syncHealth();
 
@@ -180,11 +177,8 @@ public class HeroManager {
         playerConfig.setProperty("mana", hero.getMana());
         playerConfig.removeProperty("itemrecovery");
         playerConfig.setProperty("health", hero.getHealth());
-        if (hero.skillSettings != null) {
-            if (hero.skillSettings.getAll() != null) {
-                playerConfig.setProperty("skill-settings", hero.skillSettings.getAll());
-            }
-        }
+
+        saveSkillSettings(hero, playerConfig);
         saveCooldowns(hero, playerConfig);
         saveExperience(hero, playerConfig);
         saveRecoveryItems(hero, playerConfig);
@@ -232,6 +226,20 @@ public class HeroManager {
             playerClass = plugin.getClassManager().getDefaultClass();
         }
         return playerClass;
+    }
+
+    private void loadSkillSettings(Hero hero, Configuration config) {
+        String path = "skill-settings";
+
+        if (config.getKeys(path) != null) {
+            for (String skill : config.getKeys(path)) {
+                if (config.getNode(path).getKeys(skill) != null) {
+                    for (String node : config.getNode(path).getKeys(skill)) {
+                        hero.setSkillSetting(skill, node, config.getNode(path).getNode(skill).getString(node));
+                    }
+                }
+            }
+        }
     }
 
     private void loadCooldowns(Hero hero, Configuration config) {
@@ -326,6 +334,16 @@ public class HeroManager {
             }
             config.setProperty("binds." + material.toString(), bind.toString().substring(0, bind.toString().length() - 1));
         }
+    }
+
+    private void saveSkillSettings(Hero hero, Configuration config) {
+        String path = "skill-settings";
+        for (Entry<String, Map<String, String>> entry : hero.skillSettings.entrySet()) {
+            for(Entry<String, String> node : entry.getValue().entrySet()) {
+                config.setProperty(path + "." + entry.getKey() + "." + node.getKey(), node.getValue());
+            }
+        }
+
     }
 
     private void saveCooldowns(Hero hero, Configuration config) {

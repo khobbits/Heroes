@@ -24,7 +24,6 @@ public class SkillBolt extends TargettedSkill {
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty("range", 10);
         node.setProperty("damage", 4);
         return node;
     }
@@ -34,13 +33,6 @@ public class SkillBolt extends TargettedSkill {
         Player player = hero.getPlayer();
 
         if (target.equals(player))  return false;
-
-        
-        int rangeSquared = getSetting(hero.getHeroClass(), "range", 10)^2;
-        if (target.getLocation().distanceSquared(player.getLocation()) > rangeSquared) {
-            Messaging.send(player, "The target is not in range!");
-            return false;
-        }
         
         //PvP test
         EntityDamageByEntityEvent damageEntityEvent = new EntityDamageByEntityEvent(player, target, DamageCause.CUSTOM, 0);
