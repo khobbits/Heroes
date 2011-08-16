@@ -16,19 +16,19 @@ import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
 
-public class SkillOne extends ActiveSkill {
+public class SkillSpeed extends ActiveSkill {
 
     private String applyText;
     private String expireText;
 
-    public SkillOne(Heroes plugin) {
-        super(plugin, "One");
+    public SkillSpeed(Heroes plugin) {
+        super(plugin, "Speed");
         setDescription("Provides a short burst of speed");
-        setUsage("/skill one");
+        setUsage("/skill speed");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[]{"skill one"});
+        setIdentifiers(new String[]{"skill speed"});
 
-        registerEvent(Type.PLAYER_MOVE, new SkillPlayerListener(), Priority.Normal);
+        registerEvent(Type.PLAYER_MOVE, new SkillPlayerListener(), Priority.Monitor);
     }
 
     @Override
@@ -83,6 +83,8 @@ public class SkillOne extends ActiveSkill {
 
         @Override
         public void onPlayerMove(PlayerMoveEvent event) {
+            if (event.isCancelled()) return;
+            
             Player player = event.getPlayer();
             Hero hero = getPlugin().getHeroManager().getHero(player);
 
