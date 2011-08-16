@@ -14,7 +14,6 @@ import com.herocraftonline.dev.heroes.util.Messaging;
 
 public class SkillPoison extends TargettedSkill {
 
-    private String applyText;
     private String expireText;
 
     public SkillPoison(Heroes plugin) {
@@ -28,11 +27,9 @@ public class SkillPoison extends TargettedSkill {
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty("damage", 1);
         node.setProperty("duration", 10000); //in milliseconds
         node.setProperty("period", 2000); //in milliseconds
         node.setProperty("tick-damage", 1);
-        node.setProperty("apply-text", "%target% is poisoned!");
         node.setProperty("expire-text", "%target% has recovered from the poison!");
         return node;
     }
@@ -40,7 +37,6 @@ public class SkillPoison extends TargettedSkill {
     @Override
     public void init() {
         super.init();
-        applyText = getSetting(null, "apply-text", "%target% is poisoned!").replace("%target%", "$1");
         expireText = getSetting(null, "expire-text", "%target% has recovered from the poison!").replace("%target%", "$1");
     }
 
@@ -92,8 +88,6 @@ public class SkillPoison extends TargettedSkill {
         @Override
         public void apply(Hero hero) {
             super.apply(hero);
-            Player player = hero.getPlayer();
-            broadcast(player.getLocation(), applyText, player.getDisplayName());
         }
 
         @Override

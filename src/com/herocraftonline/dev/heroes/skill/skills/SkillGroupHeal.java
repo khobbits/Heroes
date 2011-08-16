@@ -37,6 +37,7 @@ public class SkillGroupHeal extends ActiveSkill {
             Location heroLoc = hero.getPlayer().getLocation();
             //Heal party members near the caster
             for (Hero partyHero : hero.getParty().getMembers()) {
+                if (!hero.getPlayer().getWorld().equals(partyHero.getPlayer().getWorld())) continue;
                 if (hero.getPlayer().getLocation().distanceSquared(heroLoc) <= radiusSquared) {
                     partyHero.setHealth(partyHero.getHealth() + healAmount);
                     partyHero.syncHealth();

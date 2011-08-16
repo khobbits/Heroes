@@ -114,7 +114,7 @@ public class Hero {
                 if (!location.getWorld().equals(partyMember.getPlayer().getLocation().getWorld()))
                     continue;
                 
-                if (location.distance(partyMember.getPlayer().getLocation()) <= 50) {
+                if (location.distanceSquared(partyMember.getPlayer().getLocation()) <= 2500) {
                     inRangeMembers.add(partyMember);
                 }
             }

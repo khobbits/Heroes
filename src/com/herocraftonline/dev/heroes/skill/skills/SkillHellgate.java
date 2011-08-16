@@ -75,6 +75,8 @@ public class SkillHellgate extends ActiveSkill {
             int rangeSquared = getSetting(hero.getHeroClass(), "range", 10)^2;
             for (Hero targetHero : hero.getParty().getMembers()) {
                 Player target = targetHero.getPlayer();
+                if (target.equals(player)) continue;
+                if (!player.getWorld().equals(target.getWorld())) continue;
                 if (player.getLocation().distanceSquared(target.getLocation()) > rangeSquared) continue;
 
                 if (targetHero.hasEffect("Hellgate")) {
