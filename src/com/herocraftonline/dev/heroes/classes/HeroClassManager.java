@@ -194,7 +194,6 @@ public class HeroClassManager {
                 }
             }
 
-
             if (config.getKeys("classes." + className + ".permitted-skills") == null) {
                 plugin.debugLog(Level.WARNING, className + " has no permitted-skills section");
             } else {
@@ -248,6 +247,8 @@ public class HeroClassManager {
             List<String> permissionSkillNames = config.getKeys("classes." + className + ".permission-skills");
             if (permissionSkillNames != null) {
                 for (String skill : permissionSkillNames) {
+                    //Ignore Overlapping Skill names that are already loaded as permitted-skills
+                    if (plugin.getCommandHandler().getCommand(skill) != null) continue;
                     try {
                         ConfigurationNode skillSettings = Configuration.getEmptyNode();
                         skillSettings.setProperty("level", config.getInt("classes." + className + ".permission-skills." + skill + ".level", 1));
