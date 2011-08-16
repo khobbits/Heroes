@@ -21,6 +21,11 @@ public class PeriodicEffect extends ExpirableEffect implements Periodic, Expirab
     }
 
     @Override
+    public void apply(Creature creature) {
+        super.apply(creature);
+    }
+    
+    @Override
     public long getPeriod() {
         return period;
     }
