@@ -38,26 +38,26 @@ public class SkillMight extends ActiveSkill {
         node.setProperty("duration", 600000); //in Milliseconds - 10 minutes
         return node;
     }
-    
+
     @Override
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
         int duration = getSetting(hero.getHeroClass(), "duration", 600000);
         double damageBonus = getSetting(hero.getHeroClass(), "damage-bonus", 1.25);
-        
+
         MightEffect mEffect = new MightEffect(this, duration, damageBonus);
-        if (hero.hasEffect("Might")) {
-            if (((MightEffect) hero.getEffect("Might")).getDamageBonus() > mEffect.getDamageBonus()) {
-                return false;
-            }   
-        }
-        hero.addEffect(mEffect);
-        
-        if (hero.getParty() != null) {
+        if (hero.getParty() == null) {
+            if (hero.hasEffect("Might")) {
+                if (((MightEffect) hero.getEffect("Might")).getDamageBonus() > mEffect.getDamageBonus()) {
+                    Messaging.send(player, "You have a more powerful effect already!");
+                }   
+            }
+            hero.addEffect(mEffect);
+        } else {
             int rangeSquared = getSetting(hero.getHeroClass(), "range", 10)^2;
             for (Hero pHero : hero.getParty().getMembers()) {
                 if (pHero.getPlayer().getLocation().distanceSquared(player.getLocation()) > rangeSquared) continue;
-                if (hero.hasEffect("Might")) {
+                if (pHero.hasEffect("Might")) {
                     if (((MightEffect) pHero.getEffect("Might")).getDamageBonus() > mEffect.getDamageBonus()) {
                         continue;
                     }   
@@ -65,15 +65,15 @@ public class SkillMight extends ActiveSkill {
                 pHero.addEffect(mEffect);
             }
         }
-        
+
         broadcastExecuteText(hero);
         return true;
     }
-    
+
     public class MightEffect extends ExpirableEffect implements Dispellable {
 
         private final double damageBonus;
-        
+
         public MightEffect(Skill skill, long duration, double damageBonus) {
             super(skill, "Might", duration);
             this.damageBonus = damageBonus;
@@ -90,14 +90,14 @@ public class SkillMight extends ActiveSkill {
         public void remove(Hero hero) {
             super.remove(hero);
             Player player = hero.getPlayer();
-            Messaging.send(player, "Your muscles shrink back to their normal size!");
+            Messaging.send(player, "You feel strength leave your body!");
         }
-        
+
         public double getDamageBonus() {
             return damageBonus;
         }
     }
-    
+
     public class CustomListener extends CustomEventListener {
 
         @Override
@@ -106,7 +106,7 @@ public class SkillMight extends ActiveSkill {
             HeroesWeaponDamageEvent subEvent = (HeroesWeaponDamageEvent) event;
 
             if (subEvent.getCause() != DamageCause.ENTITY_ATTACK)  return;
-            
+
             if (subEvent.getDamager() instanceof Player) {
                 Player player = (Player) subEvent.getDamager();
                 Hero hero = getPlugin().getHeroManager().getHero(player);
@@ -119,7 +119,7 @@ public class SkillMight extends ActiveSkill {
                 if (((Projectile) subEvent.getDamager()).getShooter() instanceof Player) {
                     Player player = (Player) ((Projectile)subEvent.getDamager()).getShooter();
                     Hero hero = getPlugin().getHeroManager().getHero(player);
-                    
+
                     if (hero.hasEffect("Might")) {
                         double damageBonus = ((MightEffect) hero.getEffect("Might")).getDamageBonus();
                         subEvent.setDamage((int) (subEvent.getDamage() * damageBonus));
@@ -129,4 +129,3 @@ public class SkillMight extends ActiveSkill {
         }
     }
 }
-    

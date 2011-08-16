@@ -64,6 +64,13 @@ public class SkillWeb extends TargettedSkill {
         String name = "";
         
         if (target instanceof Player) {
+            //Party check before allowing the cast
+            if (hero.getParty() != null) {
+                if (hero.getParty().isPartyMember(getPlugin().getHeroManager().getHero((Player) target))) {
+                    Messaging.send(player, "You need a target!");
+                    return false;
+                }
+            }
             name = ((Player) target).getDisplayName();
         } else if (target instanceof Creature) {
             name = Messaging.getCreatureName((Creature) target).toLowerCase();
