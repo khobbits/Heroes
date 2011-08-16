@@ -438,6 +438,7 @@ public class HeroManager {
         Set<Effect> cEffects = creatureEffects.get(creature);
         if (cEffects == null) {
             cEffects = new HashSet<Effect>();
+            creatureEffects.put(creature, cEffects);
         }
         cEffects.add(effect);
         effect.apply(creature);

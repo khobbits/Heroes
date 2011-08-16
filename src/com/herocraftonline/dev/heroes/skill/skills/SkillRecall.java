@@ -35,7 +35,7 @@ public class SkillRecall extends ActiveSkill {
                 World world = validateLocation(skillSetting, player);
                 if ( world == null) return false;
                 double[] xyzyp = getStoredData(skillSetting);
-                Messaging.send(player, "Your recall is currently marked on $1 at: $2, $3, $4", new Object[] {world.getName(), xyzyp[0], xyzyp[1], xyzyp[2]});
+                Messaging.send(player, "Your recall is currently marked on $1 at: $2, $3, $4", new Object[] {world.getName(), (int) xyzyp[0], (int) xyzyp[1], (int) xyzyp[2]});
                 return true;
             } else {
                 //Save a new mark
@@ -49,7 +49,7 @@ public class SkillRecall extends ActiveSkill {
                 node.setProperty("yaw", loc.getYaw());
                 node.setProperty("pitch", loc.getPitch());
                 skillSetting = node;
-                Object[] obj = new Object[] {loc.getWorld(), loc.getX(), loc.getY(), loc.getZ()};
+                Object[] obj = new Object[] {loc.getWorld().getName(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()};
                 Messaging.send(player, "You have marked a new location on $1 at: $2, $3, $4", obj);
                 getPlugin().getHeroManager().saveHero(player);
                 return true;
