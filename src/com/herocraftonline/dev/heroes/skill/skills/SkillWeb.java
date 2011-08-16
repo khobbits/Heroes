@@ -50,7 +50,7 @@ public class SkillWeb extends TargettedSkill {
     @Override
     public void init() {
         super.init();
-        applyText = getSetting(null, "apply-text", "%hero% conjured a web at %target%'s feet!");
+        applyText = getSetting(null, "apply-text", "%hero% conjured a web at %target%'s feet!").replace("%hero%", "$1").replace("%target", "$2");
     }
     
     @Override
