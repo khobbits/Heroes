@@ -46,7 +46,7 @@ public class HeroesEventListener extends CustomEventListener {
      * 
      * @param event
      */
-    public void onHeroesSkillDamage(SkillDamageEvent event) {
+    public void onSkillDamage(SkillDamageEvent event) {
         
     }
     
@@ -62,7 +62,7 @@ public class HeroesEventListener extends CustomEventListener {
         } else if (event instanceof HeroLevelEvent) {
             onHeroLevel((HeroLevelEvent) event);
         } else if (event instanceof SkillDamageEvent) {
-            onHeroesSkillDamage((SkillDamageEvent) event);
+            onSkillDamage((SkillDamageEvent) event);
         }
     }
 }

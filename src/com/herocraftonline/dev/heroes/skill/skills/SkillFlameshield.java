@@ -10,6 +10,8 @@ import org.bukkit.event.entity.EntityListener;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.api.HeroesEventListener;
+import com.herocraftonline.dev.heroes.api.SkillDamageEvent;
 import com.herocraftonline.dev.heroes.effects.Dispellable;
 import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
@@ -29,6 +31,7 @@ public class SkillFlameshield extends ActiveSkill {
         setIdentifiers(new String[]{"skill flameshield"});
 
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
+        registerEvent(Type.CUSTOM_EVENT, new HeroesSkillListener(), Priority.Highest);
     }
 
     @Override
@@ -95,6 +98,18 @@ public class SkillFlameshield extends ActiveSkill {
                 if (hero.hasEffect(getName())) {
                     event.setCancelled(true);
                 }
+            }
+        }
+    }
+    
+    public class HeroesSkillListener extends HeroesEventListener {
+        
+        @Override
+        public void onSkillDamage(SkillDamageEvent event) {
+            if (event.isCancelled()) return;
+            //Cancel any Skill Damage that is generated from Fire Skills
+            if (event.getSkill().getName().toLowerCase().contains("fire") || event.getSkill().getName().toLowerCase().contains("flame")) {
+                event.setCancelled(true);
             }
         }
     }

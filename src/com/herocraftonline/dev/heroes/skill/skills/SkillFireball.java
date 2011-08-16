@@ -89,7 +89,5 @@ public class SkillFireball extends ActiveSkill {
                 }
             }
         }
-
     }
-
 }
