@@ -19,7 +19,7 @@ public class HeroesEventListener extends CustomEventListener {
      * 
      * @param event
      */
-    public void onHeroesWeaponDamage(WeaponDamageEvent event) {
+    public void onWeaponDamage(WeaponDamageEvent event) {
         
     }
     
@@ -58,7 +58,7 @@ public class HeroesEventListener extends CustomEventListener {
         } else if (event instanceof ExperienceGainEvent) {
             onExperienceGain((ExperienceGainEvent) event);
         } else if (event instanceof WeaponDamageEvent) {
-            onHeroesWeaponDamage((WeaponDamageEvent) event);
+            onWeaponDamage((WeaponDamageEvent) event);
         } else if (event instanceof HeroLevelEvent) {
             onHeroLevel((HeroLevelEvent) event);
         } else if (event instanceof SkillDamageEvent) {
