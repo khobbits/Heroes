@@ -13,6 +13,7 @@ public class SkillForcepush extends TargettedSkill {
     public SkillForcepush(Heroes plugin) {
         super(plugin, "Forcepush");
         setDescription("Forces your target backwards");
+        setUsage("/skill forcepush <target>");
         setArgumentRange(0, 1);
         setIdentifiers(new String[]{"skill forcepush"});
     }
