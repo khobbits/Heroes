@@ -8,6 +8,7 @@ classes:
         permitted-weapon:
         - '*'
         permitted-skills:
+            ALL:
         experience-sources:
         - KILLING
         permission-skills:
