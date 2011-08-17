@@ -4,6 +4,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.api.HeroLeavePartyEvent;
 import com.herocraftonline.dev.heroes.command.BasicCommand;
 import com.herocraftonline.dev.heroes.party.HeroParty;
 import com.herocraftonline.dev.heroes.persistence.Hero;
@@ -28,6 +29,10 @@ public class PartyLeaveCommand extends BasicCommand {
         Hero hero = plugin.getHeroManager().getHero(player);
         if (hero.getParty() == null) return false;
         HeroParty heroParty = hero.getParty();
+        //Call the HeroLeavePartyEvent
+        HeroLeavePartyEvent event = new HeroLeavePartyEvent(hero, heroParty);
+        plugin.getServer().getPluginManager().callEvent(event);
+        
         heroParty.messageParty("$1 has left the party", player.getName());
         heroParty.removeMember(hero);
         if (heroParty.getMembers().size() == 0) {

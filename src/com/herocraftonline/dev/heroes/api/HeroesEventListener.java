@@ -59,6 +59,24 @@ public class HeroesEventListener extends CustomEventListener {
         
     }
     
+    /**
+     * Called when a hero is joining a group
+     * 
+     * @param event
+     */
+    public void onHeroJoinParty(HeroJoinPartyEvent event) {
+        
+    }
+    
+    /**
+     * Called when a hero is leaving a party
+     * 
+     * @param event
+     */
+    public void onHeroLeaveParty(HeroLeavePartyEvent event) {
+        
+    }
+    
     @Override
     public void onCustomEvent(Event event) {
         
@@ -74,6 +92,10 @@ public class HeroesEventListener extends CustomEventListener {
             onSkillDamage((SkillDamageEvent) event);
         } else if (event instanceof SkillUseEvent) {
             onSkillUse((SkillUseEvent) event);
+        } else if (event instanceof HeroJoinPartyEvent) {
+            onHeroJoinParty((HeroJoinPartyEvent) event);
+        } else if (event instanceof HeroLeavePartyEvent) {
+            onHeroLeaveParty((HeroLeavePartyEvent) event);
         }
     }
 }

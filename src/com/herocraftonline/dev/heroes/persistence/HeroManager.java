@@ -742,12 +742,8 @@ class BedHealThread extends Thread {
             Iterator<Hero> iter = bedHealers.keySet().iterator();
             while (iter.hasNext()) {
                 Hero hero = iter.next();
-                double newHealth = hero.getHealth() + (hero.getMaxHealth() * props.healPercent / 100);
-                if (newHealth >= hero.getMaxHealth()) {
-                    newHealth = hero.getMaxHealth();
-                    iter.remove();
-                }
-                plugin.getServer().getScheduler().callSyncMethod(plugin, hero.bedHeal(newHealth));
+                double healAmount = hero.getMaxHealth() * props.healPercent / 100;
+                plugin.getServer().getScheduler().callSyncMethod(plugin, hero.bedHeal((int) healAmount, plugin));
             }
             isEmpty = bedHealers.isEmpty();
         }

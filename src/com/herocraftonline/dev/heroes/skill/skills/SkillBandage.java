@@ -3,6 +3,8 @@ package com.herocraftonline.dev.heroes.skill.skills;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityRegainHealthEvent;
+import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.util.config.ConfigurationNode;
@@ -52,14 +54,21 @@ public class SkillBandage extends TargettedSkill {
                 Messaging.send(player, "You need paper to perform this.");
                 return false;
             }
-
+            EntityRegainHealthEvent erhEvent = new EntityRegainHealthEvent(target, hpPlus, RegainReason.CUSTOM);
+            getPlugin().getServer().getPluginManager().callEvent(erhEvent);
+            if (erhEvent.isCancelled()) {
+                Messaging.send(player, "You can't heal right now!");
+                return false;
+            }
+            hpPlus = erhEvent.getAmount();
             int amount = inHand.getAmount();
             if (amount > 1) {
                 inHand.setAmount(amount - 1);
             } else {
                 inv.setItemInHand(null);
             }
-
+            
+            
             targetHero.setHealth(targetHealth + hpPlus);
             targetHero.syncHealth();
             

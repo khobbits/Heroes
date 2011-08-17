@@ -4,6 +4,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.api.HeroJoinPartyEvent;
 import com.herocraftonline.dev.heroes.command.BasicCommand;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.util.Messaging;
@@ -34,6 +35,11 @@ public class PartyAcceptCommand extends BasicCommand {
                 return false;
             }
             if (newHero.getParty() != null && newHero.getParty().isInvited(player.getName())) {
+                //Generate an event before adding them to the party
+                HeroJoinPartyEvent event = new HeroJoinPartyEvent(hero, newHero.getParty());
+                plugin.getServer().getPluginManager().callEvent(event);
+                if (event.isCancelled()) return false;
+                
                 hero.setParty(newHero.getParty());
                 newHero.getParty().addMember(hero);
                 hero.getParty().messageParty("$1 has joined the party", player.getName());
