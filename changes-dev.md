@@ -35,6 +35,8 @@ Skills:
         - Added missing usage info
     IcyAura
         - Now limited to not change 'sensitive' blocks such as chests/doors
+    Invuln
+        - Now purges the caster of any harmful effects when cast
     Poison
         - Fixed bug where duration and period values were being swapped for the poison effect
     Port

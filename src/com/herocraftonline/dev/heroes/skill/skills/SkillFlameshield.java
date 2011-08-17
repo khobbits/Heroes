@@ -1,5 +1,6 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
+import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Priority;
@@ -18,11 +19,13 @@ import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
+import com.herocraftonline.dev.heroes.util.Messaging;
 
 public class SkillFlameshield extends ActiveSkill {
 
     private String applyText;
     private String expireText;
+    private String skillBlockText;
 
     public SkillFlameshield(Heroes plugin) {
         super(plugin, "Flameshield");
@@ -41,6 +44,7 @@ public class SkillFlameshield extends ActiveSkill {
         node.setProperty("duration", 5000);
         node.setProperty("apply-text", "%hero% conjured a shield of flames!");
         node.setProperty("expire-text", "%hero% lost his shield of flames!");
+        node.setProperty("skill-block-text", "%name%'s flameshield has blocked %hero%'s %skill%.");
         return node;
     }
 
@@ -49,6 +53,7 @@ public class SkillFlameshield extends ActiveSkill {
         super.init();
         applyText = getSetting(null, "apply-text", "%hero% conjured a shield of flames!").replace("%hero%", "$1");
         expireText = getSetting(null, "expire-text", "%hero% lost his shield of flames!").replace("%hero%", "$1");
+        skillBlockText = getSetting(null, "skill-block-text", "%name%'s flameshield has blocked %hero%'s %skill%.").replace("%name%", "$1").replace("%hero%", "$2").replace("%hero%", "$3");
     }
 
     @Override
@@ -108,9 +113,25 @@ public class SkillFlameshield extends ActiveSkill {
         @Override
         public void onSkillDamage(SkillDamageEvent event) {
             if (event.isCancelled()) return;
-            //Cancel any Skill Damage that is generated from Fire Skills
-            if (event.getSkill().getName().toLowerCase().contains("fire") || event.getSkill().getName().toLowerCase().contains("flame")) {
-                event.setCancelled(true);
+            if (!event.getSkill().getName().toLowerCase().contains("fire") && !event.getSkill().getName().toLowerCase().contains("flame")) return;
+            
+            if (event.getEntity() instanceof Player) {
+                Player player = (Player) event.getEntity();
+                Hero hero = getPlugin().getHeroManager().getHero(player);
+                if (hero.hasEffect("Flameshield")) {
+                    String name = event.getDamager().getPlayer().getName();
+                    String skillName = event.getSkill().getName().toLowerCase();
+                    broadcast(event.getEntity().getLocation(), skillBlockText, new Object[] {player.getName(), name, skillName});
+                    event.setCancelled(true);
+                }
+            } else if (event.getEntity() instanceof Creature) {
+                Creature creature = (Creature) event.getEntity();
+                if (getPlugin().getHeroManager().creatureHasEffect(creature, "Flameshield")) {
+                    String name = event.getDamager().getPlayer().getName();
+                    String skillName = event.getSkill().getName().toLowerCase();
+                    broadcast(event.getEntity().getLocation(), skillBlockText, new Object[] {Messaging.getCreatureName(creature), name, skillName});
+                    event.setCancelled(true);
+                }
             }
         }
     }

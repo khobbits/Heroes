@@ -1,7 +1,7 @@
 package com.herocraftonline.dev.heroes.effects;
 
 /**
- * Represents a Beneficial effect
+ * Represents a Beneficial skill/effect
  *
  */
 public interface Beneficial {

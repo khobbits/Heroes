@@ -11,7 +11,9 @@ import org.bukkit.util.config.ConfigurationNode;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.effects.Beneficial;
 import com.herocraftonline.dev.heroes.effects.Dispellable;
+import com.herocraftonline.dev.heroes.effects.Effect;
 import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
+import com.herocraftonline.dev.heroes.effects.Harmful;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
@@ -51,8 +53,13 @@ public class SkillInvuln extends ActiveSkill {
     public boolean use(Hero hero, String[] args) {
         broadcastExecuteText(hero);
         int duration = getSetting(hero.getHeroClass(), "duration", 10000);
+        //Remove any harmful effects on the caster
+        for (Effect effect : hero.getEffects()) {
+            if (effect instanceof Harmful) {
+                hero.removeEffect(effect);
+            }
+        }
         hero.addEffect(new InvulnerabilityEffect(this, duration));
-
         return true;
     }
 
