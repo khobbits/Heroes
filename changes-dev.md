@@ -22,6 +22,8 @@ Skills:
     Backstab
         - Only messages affected players instead of broadcasting the backstab event
         - Added chances! You can now set a standard chance for a player to be effected by backstab, and a chance while they are sneaking.
+    Bolt
+        - Fixed Range check
     Curse - (NEW!)
         - Curses a player/creature giving them a chance to miss each of there physical attacks
     Dispel
@@ -49,6 +51,8 @@ Skills:
         - Skeletons will no longer target the player, or party members
         - Skeletons can be 'banished' by being Dispelled!
         - Duration added so the 'summon' does not last forever.
+    Smoke
+        - now plays a Smoke effect when used.
     Summon
         - Renamed to Skeleton
     Web
