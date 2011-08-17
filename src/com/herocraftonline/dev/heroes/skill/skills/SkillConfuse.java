@@ -9,6 +9,7 @@ import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.effects.Dispellable;
+import com.herocraftonline.dev.heroes.effects.Harmful;
 import com.herocraftonline.dev.heroes.effects.PeriodicEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
@@ -72,7 +73,7 @@ public class SkillConfuse extends TargettedSkill {
         return true;
     }
 
-    public class ConfuseEffect extends PeriodicEffect implements Dispellable {
+    public class ConfuseEffect extends PeriodicEffect implements Dispellable, Harmful {
 
         private final float maxDrift;
 

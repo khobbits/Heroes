@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.effects.Harmful;
 import com.herocraftonline.dev.heroes.effects.PoisonEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
@@ -79,7 +80,7 @@ public class SkillPoison extends TargettedSkill {
         return true;
     }
 
-    public class PoisonSkillEffect extends PoisonEffect {
+    public class PoisonSkillEffect extends PoisonEffect implements Harmful {
 
         public PoisonSkillEffect(Skill skill, String name, long period, long duration, int tickDamage, Player applier) {
             super(skill, name, period, duration, tickDamage, applier);

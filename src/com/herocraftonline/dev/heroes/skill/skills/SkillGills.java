@@ -9,6 +9,7 @@ import org.bukkit.event.entity.EntityListener;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.effects.Beneficial;
 import com.herocraftonline.dev.heroes.effects.Dispellable;
 import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
@@ -56,7 +57,7 @@ public class SkillGills extends ActiveSkill {
         return true;
     }
 
-    public class GillsEffect extends ExpirableEffect implements Dispellable {
+    public class GillsEffect extends ExpirableEffect implements Dispellable, Beneficial {
 
         public GillsEffect(Skill skill, long duration) {
             super(skill, "Gills", duration);

@@ -19,6 +19,7 @@ import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.effects.Dispellable;
+import com.herocraftonline.dev.heroes.effects.Harmful;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
@@ -80,7 +81,7 @@ public class SkillPiggify extends TargettedSkill {
         return true;
     }
 
-    public class SkillEntityListener extends EntityListener implements Dispellable {
+    public class SkillEntityListener extends EntityListener implements Dispellable, Harmful {
 
         @Override
         public void onEntityDamage(EntityDamageEvent event) {

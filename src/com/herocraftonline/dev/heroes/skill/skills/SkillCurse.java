@@ -16,6 +16,7 @@ import com.herocraftonline.dev.heroes.api.WeaponDamageEvent;
 import com.herocraftonline.dev.heroes.effects.Dispellable;
 import com.herocraftonline.dev.heroes.effects.Effect;
 import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
+import com.herocraftonline.dev.heroes.effects.Harmful;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
@@ -52,7 +53,7 @@ public class SkillCurse extends TargettedSkill {
     @Override
     public void init() {
         super.init();
-        missText = getSetting(null, "miss-text", "%target% misses an attack!");
+        missText = getSetting(null, "miss-text", "%target% misses an attack!").replace("%target%", "$1");
         applyText = getSetting(null, "apply-text", "%target% has recovered from the curse!").replace("%target%", "$1");
         expireText = getSetting(null, "expire-text", "%target% has recovered from the poison!").replace("%target%", "$1");
     }
@@ -63,7 +64,7 @@ public class SkillCurse extends TargettedSkill {
         return false;
     }
     
-    public class CurseEffect extends ExpirableEffect implements Dispellable {
+    public class CurseEffect extends ExpirableEffect implements Dispellable, Harmful {
 
         private final double missChance;
         

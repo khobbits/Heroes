@@ -18,11 +18,19 @@ Skills:
 
     All
         - Skills that damage entities have all been updated to generate SkillDamageEvents for the additional API
+        - Added new Harmful and Beneficial effect types to improve Dispallables
     Backstab
         - Only messages affected players instead of broadcasting the backstab event
         - Added chances! You can now set a standard chance for a player to be effected by backstab, and a chance while they are sneaking.
     Curse - (NEW!)
         - Curses a player/creature giving them a chance to miss each of there physical attacks
+    Dispel
+        - Can now banish enemy summons!
+        - Now Only removes Harmful effects from Party Members & yourself
+        - Now only removes Beneficial effects from enemies!
+        - new max-removals will limit the number of effects that dispel can remove per cast.
+    Flameshield
+        - Now also blocks damage from any skill with Fire or Flame in it's name (eg. Fireball, Firearrow)
     ForcePush
         - Added missing usage info
     IcyAura

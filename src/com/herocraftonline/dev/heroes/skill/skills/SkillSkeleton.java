@@ -16,6 +16,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.effects.Beneficial;
 import com.herocraftonline.dev.heroes.effects.Dispellable;
 import com.herocraftonline.dev.heroes.effects.Effect;
 import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
@@ -31,7 +32,7 @@ public class SkillSkeleton extends ActiveSkill {
     private SummonEntityListener eListener;
     private SummonPlayerListener pListener;
     public SkillSkeleton(Heroes plugin) {
-        super(plugin, "Summon");
+        super(plugin, "Skeleton");
         setDescription("Summons a skeleton to fight by your side");
         setUsage("/skill skeleton");
         setArgumentRange(0, 0);
@@ -72,11 +73,11 @@ public class SkillSkeleton extends ActiveSkill {
             return true;
         }
 
-        Messaging.send(player, "You can't control anymore summons!");
+        Messaging.send(player, "You can't control anymore skeletons!");
         return false;
     }
 
-    public class SummonEffect extends ExpirableEffect implements Dispellable {
+    public class SummonEffect extends ExpirableEffect implements Dispellable, Beneficial {
 
         private Hero summoner;
 
