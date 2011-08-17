@@ -519,6 +519,17 @@ public class HeroManager {
     public Set<Effect> getCreatureEffects(Creature creature) {
         return creatureEffects.get(creature);
     }
+    
+    public Effect getCreatureEffect(Creature creature, String name) {
+        if (creatureEffects.get(creature) == null) return null;
+        
+        for (Effect effect : creatureEffects.get(creature)) {
+            if (effect.getName().equals(name)) {
+                return effect;
+            }
+        }
+        return null;
+    }
 }
 
 class EffectUpdater implements Runnable {

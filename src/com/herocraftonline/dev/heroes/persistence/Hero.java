@@ -12,8 +12,7 @@ import java.util.concurrent.Callable;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.entity.CreatureType;
-import org.bukkit.entity.Entity;
+import org.bukkit.entity.Creature;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -41,7 +40,7 @@ public class Hero {
     protected Set<Effect> effects = new HashSet<Effect>();
     protected Map<String, Double> experience = new HashMap<String, Double>();
     protected Map<String, Long> cooldowns = new HashMap<String, Long>();
-    protected Map<Entity, CreatureType> summons = new HashMap<Entity, CreatureType>();
+    protected Set<Creature> summons = new HashSet<Creature>();
     protected Map<Material, String[]> binds = new HashMap<Material, String[]>();
     protected List<ItemStack> itemRecovery = new ArrayList<ItemStack>();
     protected Set<String> suppressedSkills = new HashSet<String>();
@@ -258,13 +257,13 @@ public class Hero {
         return this.itemRecovery;
     }
 
-    public Map<Entity, CreatureType> getSummons() {
+    public Set<Creature> getSummons() {
         return summons;
     }
 
     public void clearSummons() {
-        for (Entity entity : summons.keySet()) {
-            entity.remove();
+        for (Creature summon : summons) {
+            summon.remove();
         }
         summons.clear();
     }

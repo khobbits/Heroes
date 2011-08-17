@@ -3,6 +3,7 @@ Bug Fixes:
     Never allow permission-skills to overwrite Official Skills
 	All block Materials defined in properties now trigger Logging as an exp gain source rather than just Logs
 	PermissionHandler is no longer registered if Permissions2 is detected. Heroes is NOT compatible with P2
+	Fixed possible NPE during getSetting when some settings weren't defined for skills
 
 General:
 
@@ -10,7 +11,8 @@ General:
 	SkillUseEvent - called before any ActiveSkill is used. - allows other skills/plugins to cancel the use of a skill.
 	Created HeroesEventListener for simpler API hooking
 	renamed HeroesWeaponDamageEvent it is now: WeaponDamageEvent
-	HLevelListener has been moved to HEventListener - it now uses the HeroesEventListener for simplicit
+	HLevelListener has been moved to HEventListener - it now uses the HeroesEventListener for simplicity
+	added getCreatureEffect to HeroManager for easy retrieval of an effect from a creature. Returns null if the effect can't be found.
 
 Skills:
 
@@ -21,7 +23,7 @@ Skills:
     ForcePush
         - Added missing usage info
     IcyAura
-        - Now limited to not change 'sensetive' blocks such as chests/doors
+        - Now limited to not change 'sensitive' blocks such as chests/doors
     Poison
         - Fixed bug where duration and period values were being swapped for the poison effect
     Port
@@ -29,9 +31,12 @@ Skills:
     Speed
     	- Renamed from One
     	- No longer sets velocity on canceled move events, also uses Priority.monitor now.
+    Skeleton - (NEW!)
+        - Skeletons are now released/removed properly on-death and when the player disconnects
+        - Skeletons will no longer target the player, or party members
+        - Skeletons can be 'banished' by being Dispelled!
+        - Duration added so the 'summon' does not last forever.
     Summon
-        - Summons are now released/removed properly on-death and when the player disconnects
-        - Summons will no longer target the player, or party members
-        - Currently only Skeletons can be summoned
+        - Renamed to Skeleton
     Web
-        - Now limited to not change 'sensetive' blocks such as chests
+        - Now limited to not change 'sensitive' blocks such as chests
