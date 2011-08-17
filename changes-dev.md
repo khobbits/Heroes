@@ -23,6 +23,8 @@ Skills:
         - Now limited to not change 'sensetive' blocks such as chests/doors
     Poison
         - Fixed bug where duration and period values were being swapped for the poison effect
+    Port
+        - Now supports multi-world
     Speed
     	- Renamed from One
     	- No longer sets velocity on canceled move events, also uses Priority.monitor now.

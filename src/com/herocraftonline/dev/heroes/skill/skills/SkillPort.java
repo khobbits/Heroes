@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -28,6 +29,7 @@ public class SkillPort extends ActiveSkill {
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
         node.setProperty("item-cost", "redstone");
+        node.setProperty("range", 10);
         return node;
     }
 
@@ -38,7 +40,7 @@ public class SkillPort extends ActiveSkill {
         if(args[0].equalsIgnoreCase("list")) {
             for(String n : getConfig().getKeys()) {
                 String retrievedNode = getSetting(hero.getHeroClass(), n, null);
-                if(retrievedNode != null && retrievedNode.split(":").length == 4) {
+                if(retrievedNode != null && retrievedNode.split(":").length == 5) {
                     Messaging.send(player, "$1 - $2", n, retrievedNode);
                 }
             }
@@ -46,7 +48,11 @@ public class SkillPort extends ActiveSkill {
         }
         if (getSetting(hero.getHeroClass(), args[0].toLowerCase(), null) != null) {
             String[] splitArg = getSetting(hero.getHeroClass(), args[0].toLowerCase(), null).split(":");
-            int levelRequirement = Integer.parseInt(splitArg[3]);
+            int levelRequirement = Integer.parseInt(splitArg[4]);
+            World world = getPlugin().getServer().getWorld(splitArg[0]);
+            if (world == null) {
+                Messaging.send(player, "That teleport location no longer exists!");
+            }
 
             if (hero.getLevel() < levelRequirement) {
                 Messaging.send(player, "Sorry, you need to be level $1 to use that!", levelRequirement);
@@ -66,20 +72,21 @@ public class SkillPort extends ActiveSkill {
                     return false;
                 }
             }
-
-            List<Entity> surrounding = player.getNearbyEntities(10, 10, 10);
-            for (Entity n : surrounding) {
-                if (n instanceof Player) {
-                    Player playerN = (Player) n;
-                    if (getPlugin().getHeroManager().getHero(playerN).getParty() != null) {
-                        if (getPlugin().getHeroManager().getHero(playerN).getParty().isPartyMember(hero)) {
-                            playerN.teleport(new Location(hero.getPlayer().getWorld(), Double.parseDouble(splitArg[0]), Double.parseDouble(splitArg[1]), Double.parseDouble(splitArg[2])));
-                        }
+            
+            int range = getSetting(hero.getHeroClass(), "range", 10);
+            Location loc = new Location(world, Double.parseDouble(splitArg[1]), Double.parseDouble(splitArg[2]), Double.parseDouble(splitArg[3]));
+            broadcastExecuteText(hero);
+            if (hero.getParty() != null) {
+                for (Hero pHero : hero.getParty().getMembers()) {
+                    if (!pHero.getPlayer().getWorld().equals(player.getWorld())) continue;
+                    if (player.getLocation().distanceSquared(pHero.getPlayer().getLocation()) <= range) {
+                        pHero.getPlayer().teleport(loc);
                     }
                 }
+            } else {
+                player.teleport(loc);
             }
-            player.teleport(new Location(hero.getPlayer().getWorld(), Double.parseDouble(splitArg[0]), Double.parseDouble(splitArg[1]), Double.parseDouble(splitArg[2])));
-            broadcastExecuteText(hero);
+            
             return true;
         } else {
             return false;
