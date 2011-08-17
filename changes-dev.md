@@ -2,6 +2,7 @@ Bug Fixes:
 
     Never allow permission-skills to overwrite Official Skills
 	All block Materials defined in properties now trigger Logging as an exp gain source rather than just Logs
+	PermissionHandler is no longer registered if Permissions2 is detected. Heroes is NOT compatible with P2
 
 General:
 
@@ -31,6 +32,6 @@ Skills:
     Summon
         - Summons are now released/removed properly on-death and when the player disconnects
         - Summons will no longer target the player, or party members
-        - Currently on Skeletons can be summoned
+        - Currently only Skeletons can be summoned
     Web
         - Now limited to not change 'sensetive' blocks such as chests

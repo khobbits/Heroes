@@ -50,11 +50,11 @@ public class SkillSummon extends ActiveSkill {
     @Override
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
-        CreatureType creatureType = CreatureType.fromName(args[0].toUpperCase());
+        CreatureType creatureType = CreatureType.fromName(toCamelCase(args[0]));
         //TODO: Why do we only allow Skeleton if this is a full-features Summon skill that says it allows all creatures-types
-        if (creatureType == CreatureType.SKELETON && hero.getSummons().size() <= getSetting(hero.getHeroClass(), "max-summons", 3)) {
+        if (creatureType == CreatureType.SKELETON && hero.getSummons().size() < getSetting(hero.getHeroClass(), "max-summons", 3)) {
             Entity spawnedEntity = player.getWorld().spawnCreature(player.getLocation(), creatureType);
-            if (spawnedEntity instanceof Creature && spawnedEntity instanceof Ghast && spawnedEntity instanceof Slime) {
+            if (spawnedEntity instanceof Creature || spawnedEntity instanceof Ghast || spawnedEntity instanceof Slime) {
                 spawnedEntity.remove();
                 return false;
             }
@@ -114,5 +114,11 @@ public class SkillSummon extends ActiveSkill {
             }
             hero.getSummons().clear();
         }
+    }
+    
+    private String toCamelCase(String string) {
+        string = string.toLowerCase();
+        string.replaceFirst(string.substring(0, 0), string.substring(0, 0).toUpperCase());
+        return string;
     }
  }
