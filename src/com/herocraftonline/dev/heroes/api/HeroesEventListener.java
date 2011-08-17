@@ -50,6 +50,15 @@ public class HeroesEventListener extends CustomEventListener {
         
     }
     
+    /**
+     * Called when a skill is being used by a player
+     * 
+     * @param event
+     */
+    public void onSkillUse(SkillUseEvent event) {
+        
+    }
+    
     @Override
     public void onCustomEvent(Event event) {
         
@@ -63,6 +72,8 @@ public class HeroesEventListener extends CustomEventListener {
             onHeroLevel((HeroLevelEvent) event);
         } else if (event instanceof SkillDamageEvent) {
             onSkillDamage((SkillDamageEvent) event);
+        } else if (event instanceof SkillUseEvent) {
+            onSkillUse((SkillUseEvent) event);
         }
     }
 }

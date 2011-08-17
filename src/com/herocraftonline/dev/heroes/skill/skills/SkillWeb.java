@@ -22,12 +22,13 @@ import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
+import com.herocraftonline.dev.heroes.util.Properties;
 
 public class SkillWeb extends TargettedSkill {
 
     private String applyText;
     private static Map<Hero, Map<Location, Material>> changedBlocks = new HashMap<Hero, Map<Location, Material>>();
-    
+
     public SkillWeb(Heroes plugin) {
         super(plugin, "Web");
         setDescription("Catches your target in a web");
@@ -121,7 +122,7 @@ public class SkillWeb extends TargettedSkill {
             if (heroChangedBlocks == null) {
                 changedBlocks.put(hero, new HashMap<Location, Material>());
             }
-            if (location.getBlock().getType() != Material.WEB) {
+            if (location.getBlock().getType() != Material.WEB && !Properties.protectedBlocks.contains(location.getBlock().getTypeId())) {
                 changedBlocks.get(hero).put(location, location.getBlock().getType());
                 location.getBlock().setType(Material.WEB);
             }

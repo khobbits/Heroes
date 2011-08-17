@@ -81,7 +81,7 @@ public class HBlockListener extends BlockListener {
                 return;
             }
         }
-        hero.gainExp(addedExp, block.getType() == Material.LOG ? ExperienceType.LOGGING : ExperienceType.MINING);
+        hero.gainExp(addedExp, prop.loggingExp.containsKey(block.getType()) ? ExperienceType.LOGGING : ExperienceType.MINING);
     }
 
     @Override

@@ -20,6 +20,7 @@ import com.herocraftonline.dev.heroes.effects.Dispellable;
 import com.herocraftonline.dev.heroes.effects.PeriodicEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
+import com.herocraftonline.dev.heroes.util.Properties;
 
 public class SkillIcyAura extends ActiveSkill {
 
@@ -127,7 +128,7 @@ public class SkillIcyAura extends ActiveSkill {
             if (heroChangedBlocks == null) {
                 changedBlocks.put(hero, new HashMap<Location, Material>());
             }
-            if (loc.getBlock().getType() != Material.ICE) {
+            if (loc.getBlock().getType() != Material.ICE && !Properties.protectedBlocks.contains(loc.getBlock().getTypeId())) {
                 changedBlocks.get(hero).put(loc, loc.getBlock().getType());
                 loc.getBlock().setType(Material.ICE);
             }

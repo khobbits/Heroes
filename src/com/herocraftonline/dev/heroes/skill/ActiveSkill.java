@@ -9,6 +9,7 @@ import org.bukkit.util.config.Configuration;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.api.SkillUseEvent;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
 import com.herocraftonline.dev.heroes.persistence.Hero;
@@ -91,7 +92,7 @@ public abstract class ActiveSkill extends Skill {
             return false;
         }
         HeroClass heroClass = hero.getHeroClass();
-        if (!heroClass.hasSkill(name) && !heroClass.hasSkill("*")) {
+        if (!heroClass.hasSkill(name)) {
             Messaging.send(player, "$1s cannot use $2.", heroClass.getName(), name);
             return false;
         }
@@ -118,6 +119,14 @@ public abstract class ActiveSkill extends Skill {
                 }
             }
         }
+        
+        SkillUseEvent skillEvent = new SkillUseEvent(this, player, hero, args);
+        getPlugin().getServer().getPluginManager().callEvent(skillEvent);
+        if (skillEvent.isCancelled()) {
+            Messaging.send(player, "You can not use that skill at this time!");
+            return false;
+        }
+        
         if (use(hero, args)) {
             if (cooldown > 0) {
                 cooldowns.put(name, time + cooldown);
