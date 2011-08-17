@@ -18,6 +18,9 @@ Skills:
 
     All
         - Skills that damage entities have all been updated to generate SkillDamageEvents for the additional API
+    Backstab
+        - Only messages affected players instead of broadcasting the backstab event
+        - Added chances! You can now set a standard chance for a player to be effected by backstab, and a chance while they are sneaking.
     Curse - (NEW!)
         - Curses a player/creature giving them a chance to miss each of there physical attacks
     ForcePush

@@ -1,5 +1,7 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
+import java.util.Random;
+
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Player;
 import org.bukkit.event.CustomEventListener;
@@ -16,6 +18,8 @@ import com.herocraftonline.dev.heroes.util.Messaging;
 
 public class SkillBackstab extends PassiveSkill {
 
+    private Random rand = new Random();
+
     public SkillBackstab(Heroes plugin) {
         super(plugin, "Backstab");
         setDescription("You are more lethal when attacking from behind!");
@@ -28,7 +32,9 @@ public class SkillBackstab extends PassiveSkill {
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
         node.setProperty("attack-bonus", 1.5);
+        node.setProperty("attack-chance", .5);
         node.setProperty("sneak-bonus", 2.0); // Alternative bonus if player is sneaking when doing the backstab
+        node.setProperty("sneak-chance", 1.0);
         return node;
     }
 
@@ -45,18 +51,20 @@ public class SkillBackstab extends PassiveSkill {
                 if (hero.hasEffect(getName())) {
                     if (subEvent.getEntity().getLocation().getDirection().dot(player.getLocation().getDirection()) <= 0) return;
 
-                    if (hero.hasEffect("Sneak")) {
+                    if (hero.hasEffect("Sneak") && rand.nextDouble() < getSetting(hero.getHeroClass(), "sneak-chance", 1.0) ) {
                         subEvent.setDamage((int) (subEvent.getDamage() * getSetting(hero.getHeroClass(), "sneak-bonus", 2.0)));
-                    } else {
+                    } else if (rand.nextDouble() < getSetting(hero.getHeroClass(), "attack-chance", .5)){
                         subEvent.setDamage((int) (subEvent.getDamage() * getSetting(hero.getHeroClass(), "attack-bonus", 1.5)));
                     }
                     String name = "";
-                    if (subEvent.getEntity() instanceof Player)
+                    if (subEvent.getEntity() instanceof Player) {
                         name = ((Player) subEvent.getEntity()).getName();
-                    else if (subEvent.getEntity() instanceof Creature)
+                        Messaging.send((Player) subEvent.getEntity(), player.getName() + " has backstabbed you!");
+                    } else if (subEvent.getEntity() instanceof Creature) {
                         name = "a " + Messaging.getCreatureName((Creature) subEvent.getEntity()).toLowerCase();
-
-                    broadcast(player.getLocation(), player.getName() + " backstabbed " + name, player.getDisplayName());
+                    }
+                    
+                    Messaging.send(player, "You have backstabbed " + name);
                 }
             }
         }
