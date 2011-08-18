@@ -29,7 +29,7 @@ public class SkillCurse extends TargettedSkill {
     private String missText;
     private Random rand = new Random();
     
-    public SkillCurse(Heroes plugin, String name) {
+    public SkillCurse(Heroes plugin) {
         super(plugin, "Curse");
         setDescription("Curses your target causing their attacks to miss");
         setUsage("/skill curse <target>");
