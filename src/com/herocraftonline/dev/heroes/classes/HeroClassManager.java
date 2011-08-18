@@ -56,6 +56,7 @@ public class HeroClassManager {
         Configuration config = new Configuration(file);
         config.load();
         List<String> classNames = config.getKeys("classes");
+        //Warn console if there are No class definitions
         if (classNames == null) {
             Heroes.log(Level.WARNING, "You have no classes defined in your setup!");
             return;
@@ -71,9 +72,11 @@ public class HeroClassManager {
             List<String> defaultType = new ArrayList<String>();
             defaultType.add("DIAMOND");
 
+            //Stringbuilders for printing out the list of Allowed Armors/Weapons
             StringBuilder aLimits = new StringBuilder();
             StringBuilder wLimits = new StringBuilder();
 
+            //Get the list of Allowed armors for this class
             List<String> armor = config.getStringList("classes." + className + ".permitted-armor", defaultType);
             if (armor == null) {
                 plugin.debugLog(Level.WARNING, className + " has no permitted-armor section");
@@ -113,6 +116,7 @@ public class HeroClassManager {
                 }
             }
 
+            //Get the list of allowed weapons for this class
             List<String> weapon = config.getStringList("classes." + className + ".permitted-weapon", defaultType);
             if (armor == null) {
                 plugin.debugLog(Level.WARNING, className + " has no permitted-weapon section");
@@ -160,10 +164,12 @@ public class HeroClassManager {
                     }
                 }
             }
-
+            
+            //Print out the debug log for the allowed weapons/armors
             plugin.debugLog(Level.INFO, "Allowed Weapons - " + wLimits.toString());
             plugin.debugLog(Level.INFO, "Allowed Armor - " + aLimits.toString());
 
+            //Load in item/weapon damages for this class
             List<String> itemDamages = config.getKeys("classes." + className + ".item-damage");
             if (itemDamages == null) {
                 plugin.debugLog(Level.WARNING, className + " has no item damage section");
@@ -179,6 +185,7 @@ public class HeroClassManager {
                 }
             }
 
+            //Load in Projectile Damages for the class
             List<String> projectileDamages = config.getKeys("classes." + className + ".projectile-damage");
             if (projectileDamages == null) {
                 plugin.debugLog(Level.WARNING, className + " has no projectile damage section");
@@ -193,7 +200,8 @@ public class HeroClassManager {
                     }
                 }
             }
-
+            
+            //Load in Permitted Skills for the class
             if (config.getKeys("classes." + className + ".permitted-skills") == null) {
                 plugin.debugLog(Level.WARNING, className + " has no permitted-skills section");
             } else {
@@ -224,14 +232,14 @@ public class HeroClassManager {
                         Heroes.log(Level.WARNING, "Invalid skill (" + skillName + ") defined for " + className + ". Skipping this skill.");
                     }
                 }
+                //Load all skills onto the Class if we found ALL
                 if (allSkills) {
                     for (Command command : plugin.getCommandHandler().getCommands()) {
                         try {
                             Skill skill = (Skill) command;
-                            if (newClass.hasSkill(skill.getName())) {
-                                Heroes.log(Level.WARNING, "Skill already assigned (" + skill + ") for " + className + ". Skipping this skill");
-                                continue;
-                            }
+                            //Ignore this skill if it was already loaded onto the class (we don't want to overwrite defined skills as they have settings)
+                            if (newClass.hasSkill(skill.getName())) continue;
+                            
                             ConfigurationNode skillSettings = Configuration.getEmptyNode();
                             List<String> settings = config.getKeys("classes." + className + ".permitted-skills." + skill.getName());
                             if (settings != null) {
@@ -246,12 +254,16 @@ public class HeroClassManager {
                     }
                 }
             }
-
+            
+            //Load in the Permission-Skills
             List<String> permissionSkillNames = config.getKeys("classes." + className + ".permission-skills");
             if (permissionSkillNames != null) {
                 for (String skill : permissionSkillNames) {
                     //Ignore Overlapping Skill names that are already loaded as permitted-skills
-                    if (newClass.hasSkill(skill)) continue;
+                    if (newClass.hasSkill(skill)) { 
+                        Heroes.log(Level.WARNING, "Skill already assigned (" + skill + ") for " + className + ". Skipping this skill");
+                        continue;
+                    }
                     try {
                         ConfigurationNode skillSettings = Configuration.getEmptyNode();
                         skillSettings.setProperty("level", config.getInt("classes." + className + ".permission-skills." + skill + ".level", 1));
@@ -271,7 +283,8 @@ public class HeroClassManager {
             Double maxHealthPerLevel = config.getDouble("classes." + className + ".max-health-per-level", 0);
             newClass.setBaseMaxHealth(baseMaxHealth);
             newClass.setMaxHealthPerLevel(maxHealthPerLevel);
-
+            
+            //Get experience for each class
             List<String> experienceNames = config.getStringList("classes." + className + ".experience-sources", null);
             Set<ExperienceType> experienceSources = new HashSet<ExperienceType>();
             if (experienceNames == null) {
@@ -289,7 +302,8 @@ public class HeroClassManager {
                 }
             }
             newClass.setExperienceSources(experienceSources);
-
+            
+            //Attempt to add the class
             boolean added = addClass(newClass);
             if (!added) {
                 Heroes.log(Level.WARNING, "Duplicate class (" + className + ") found. Skipping this class.");
