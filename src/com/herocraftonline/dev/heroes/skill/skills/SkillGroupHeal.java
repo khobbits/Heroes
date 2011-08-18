@@ -47,9 +47,14 @@ public class SkillGroupHeal extends ActiveSkill {
             for (Hero partyHero : hero.getParty().getMembers()) {
                 if (!hero.getPlayer().getWorld().equals(partyHero.getPlayer().getWorld())) continue;
                 if (partyHero.getPlayer().getLocation().distanceSquared(heroLoc) <= radiusSquared) {
-                    partyHero.setHealth(partyHero.getHealth() + healAmount);
+                    HeroRegainHealthEvent hrhEvent = new HeroRegainHealthEvent(partyHero, healAmount, this);
+                    getPlugin().getServer().getPluginManager().callEvent(hrhEvent);
+                    if (hrhEvent.isCancelled()) {
+                        Messaging.send(hero.getPlayer(), "Unable to heal the target at this time!");
+                        return false;
+                    }
+                    partyHero.setHealth(partyHero.getHealth() + hrhEvent.getAmount());
                     partyHero.syncHealth();
-                    hero.getParty().setUpdateMapDisplay(true);
                 }
             }
         }

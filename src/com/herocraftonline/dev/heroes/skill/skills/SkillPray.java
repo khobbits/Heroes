@@ -49,9 +49,6 @@ public class SkillPray extends TargettedSkill {
             
             targetHero.setHealth(targetHealth + hrhEvent.getAmount());
             targetHero.syncHealth();
-            if (targetHero.getParty() != null) {
-                targetHero.getParty().setUpdateMapDisplay(true);
-            }
             broadcastExecuteText(hero, target);
             return true;
         }

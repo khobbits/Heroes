@@ -72,10 +72,6 @@ public class SkillBandage extends TargettedSkill {
             
             targetHero.setHealth(targetHealth + hrhEvent.getAmount());
             targetHero.syncHealth();
-            //update the map if this player is in the party
-            if (targetHero.getParty() != null) {
-                targetHero.getParty().setUpdateMapDisplay(true);
-            }
             //Bandage cures Bleeding!
             for (Effect effect : targetHero.getEffects()) {
                 if (effect instanceof BleedEffect) targetHero.removeEffect(effect);
