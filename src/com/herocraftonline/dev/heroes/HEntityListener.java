@@ -101,7 +101,7 @@ public class HEntityListener extends EntityListener {
             if (defender instanceof LivingEntity && !(defender instanceof Player) && expSources.contains(ExperienceType.KILLING)) {
                 // Get the dying entity's CreatureType
                 CreatureType type = Properties.getCreatureFromEntity(defender);
-                if (type != null) {
+                if (type != null && !hero.getSummons().contains(defender)) {
                     // If EXP hasn't been assigned for this Entity then we stop here.
                     if (!prop.creatureKillingExp.containsKey(type)) return;
                     addedExp = prop.creatureKillingExp.get(type);
