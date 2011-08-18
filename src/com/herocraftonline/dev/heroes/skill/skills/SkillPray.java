@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.api.HeroRegainHealthEvent;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
@@ -39,10 +40,18 @@ public class SkillPray extends TargettedSkill {
                 Messaging.send(player, "Target is already fully healed.");
                 return false;
             }
-
-            targetHero.setHealth(targetHealth + hpPlus);
+            HeroRegainHealthEvent hrhEvent = new HeroRegainHealthEvent(targetHero, hpPlus, this);
+            getPlugin().getServer().getPluginManager().callEvent(hrhEvent);
+            if (hrhEvent.isCancelled()) {
+                Messaging.send(player, "Unable to heal the target at this time!");
+                return false;
+            }
+            
+            targetHero.setHealth(targetHealth + hrhEvent.getAmount());
             targetHero.syncHealth();
-
+            if (targetHero.getParty() != null) {
+                targetHero.getParty().setUpdateMapDisplay(true);
+            }
             broadcastExecuteText(hero, target);
             return true;
         }

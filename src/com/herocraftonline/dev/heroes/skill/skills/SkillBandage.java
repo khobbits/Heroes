@@ -1,15 +1,15 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
+
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityRegainHealthEvent;
-import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.api.HeroRegainHealthEvent;
 import com.herocraftonline.dev.heroes.effects.BleedEffect;
 import com.herocraftonline.dev.heroes.effects.Effect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
@@ -54,13 +54,14 @@ public class SkillBandage extends TargettedSkill {
                 Messaging.send(player, "You need paper to perform this.");
                 return false;
             }
-            EntityRegainHealthEvent erhEvent = new EntityRegainHealthEvent(target, hpPlus, RegainReason.CUSTOM);
-            getPlugin().getServer().getPluginManager().callEvent(erhEvent);
-            if (erhEvent.isCancelled()) {
-                Messaging.send(player, "You can't heal right now!");
+            
+            HeroRegainHealthEvent hrhEvent = new HeroRegainHealthEvent(targetHero, hpPlus, this);
+            getPlugin().getServer().getPluginManager().callEvent(hrhEvent);
+            if (hrhEvent.isCancelled()) {
+                Messaging.send(player, "Unable to heal the target at this time!");
                 return false;
             }
-            hpPlus = erhEvent.getAmount();
+            
             int amount = inHand.getAmount();
             if (amount > 1) {
                 inHand.setAmount(amount - 1);
@@ -69,9 +70,12 @@ public class SkillBandage extends TargettedSkill {
             }
             
             
-            targetHero.setHealth(targetHealth + hpPlus);
+            targetHero.setHealth(targetHealth + hrhEvent.getAmount());
             targetHero.syncHealth();
-            
+            //update the map if this player is in the party
+            if (targetHero.getParty() != null) {
+                targetHero.getParty().setUpdateMapDisplay(true);
+            }
             //Bandage cures Bleeding!
             for (Effect effect : targetHero.getEffects()) {
                 if (effect instanceof BleedEffect) targetHero.removeEffect(effect);

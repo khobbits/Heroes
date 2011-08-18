@@ -91,6 +91,7 @@ public class Heroes extends JavaPlugin {
     private final HEntityListener entityListener = new HEntityListener(this);
     private final HBlockListener blockListener = new HBlockListener(this);
     private final HPartyListener partyListener = new HPartyListener(this);
+    private final HEventListener hEventListener = new HEventListener(this);
 
 
     // Various data managers
@@ -427,7 +428,8 @@ public class Heroes extends JavaPlugin {
         pluginManager.registerEvent(Type.PLUGIN_ENABLE, pluginListener, Priority.Monitor, this);
         pluginManager.registerEvent(Type.PLUGIN_DISABLE, pluginListener, Priority.Monitor, this);
 
-        pluginManager.registerEvent(Type.CUSTOM_EVENT, new HEventListener(this), Priority.Monitor, this);
+        pluginManager.registerEvent(Type.CUSTOM_EVENT, hEventListener, Priority.Monitor, this);
+        pluginManager.registerEvent(Type.CUSTOM_EVENT, hEventListener, Priority.Monitor, this);
         pluginManager.registerEvent(Type.CUSTOM_EVENT, new HPermissionsListener(this), Priority.Monitor, this);
 
         // Map Party UI

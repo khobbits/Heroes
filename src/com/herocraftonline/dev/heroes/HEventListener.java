@@ -3,9 +3,11 @@ package com.herocraftonline.dev.heroes;
 import java.util.List;
 
 import com.herocraftonline.dev.heroes.api.HeroLevelEvent;
+import com.herocraftonline.dev.heroes.api.HeroRegainHealthEvent;
 import com.herocraftonline.dev.heroes.api.HeroesEventListener;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.command.Command;
+import com.herocraftonline.dev.heroes.party.HeroParty;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.util.Messaging;
@@ -36,6 +38,16 @@ public class HEventListener extends HeroesEventListener {
                     }
                 }
             }
+        }
+    }
+    
+    @Override
+    public void onHeroRegainHealth(HeroRegainHealthEvent event) {
+        if (event.isCancelled() || !event.getHero().hasParty()) return;
+        
+        HeroParty party = event.getHero().getParty();
+        if (event.getAmount() > 0 && !party.updateMapDisplay()) {
+            party.setUpdateMapDisplay(true);
         }
     }
 }

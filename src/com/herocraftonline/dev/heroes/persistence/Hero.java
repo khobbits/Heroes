@@ -14,8 +14,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityRegainHealthEvent;
-import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 import org.bukkit.inventory.ItemStack;
 
 import com.herocraftonline.dev.heroes.Heroes;
@@ -415,13 +413,7 @@ public class Hero {
     }
 
     public Callable<?> bedHeal(int healAmount, Heroes plugin) {
-        EntityRegainHealthEvent erhEvent = new EntityRegainHealthEvent(player, healAmount, RegainReason.CUSTOM);
-        plugin.getServer().getPluginManager().callEvent(erhEvent);
-        if (erhEvent.isCancelled()) {
-            Messaging.send(player, "You can't heal right now!");
-            return null;
-        }
-        health = health + erhEvent.getAmount();
+        health = health + healAmount;
         syncHealth();
         player.sendMessage(Messaging.createFullHealthBar(health, getMaxHealth()));
         return null;
