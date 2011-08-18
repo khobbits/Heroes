@@ -228,7 +228,7 @@ public class HeroClassManager {
                     for (Command command : plugin.getCommandHandler().getCommands()) {
                         try {
                             Skill skill = (Skill) command;
-                            if (skillNames.contains(skill.getName())) continue;
+                            if (newClass.hasSkill(skill.getName())) continue;
                             ConfigurationNode skillSettings = Configuration.getEmptyNode();
                             List<String> settings = config.getKeys("classes." + className + ".permitted-skills." + skill.getName());
                             if (settings != null) {

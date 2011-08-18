@@ -22,6 +22,7 @@ Skills:
         - Skills that damage entities have all been updated to generate SkillDamageEvents for the additional API
         - Added new Harmful and Beneficial effect types to improve Dispellables
         - All heal skills will now properly call an EntityRegainHealth event before doing the heal.
+        - Summoned monsters no longer award XP to their owners
     Backstab
         - Only messages affected players instead of broadcasting the backstab event
         - Added chances! You can now set a standard chance for a player to be effected by backstab, and a chance while they are sneaking.
@@ -59,5 +60,7 @@ Skills:
         - now plays a Smoke effect when used.
     Summon
         - Renamed to Skeleton
+    Telekenesis
+        - Really fixed now.
     Web
         - Now limited to not change 'sensitive' blocks such as chests
