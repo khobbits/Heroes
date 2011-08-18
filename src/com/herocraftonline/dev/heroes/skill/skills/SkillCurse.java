@@ -135,6 +135,7 @@ public class SkillCurse extends TargettedSkill {
                     }
                 }
             } else if (creature != null) {
+                if (getPlugin().getHeroManager().getCreatureEffects(creature) == null) return;
                 for ( Effect effect : getPlugin().getHeroManager().getCreatureEffects(creature)) {
                     if (effect instanceof CurseEffect) {
                         CurseEffect cEffect = (CurseEffect) effect;

@@ -105,7 +105,7 @@ public class Heroes extends JavaPlugin {
     public static PermissionHandler Permissions;
     public Method Method = null;
 
-    // Variable for BukkitContrib.
+    // Variable for Spout.
     public static boolean useSpout = false;
 
     // Inventory Checker Class -- This class has the methods to check a players inventory and

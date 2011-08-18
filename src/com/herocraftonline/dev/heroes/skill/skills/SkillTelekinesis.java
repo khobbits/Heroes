@@ -8,6 +8,7 @@ import net.minecraft.server.EntityHuman;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.CraftWorld;
+import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 import com.herocraftonline.dev.heroes.Heroes;
@@ -34,8 +35,9 @@ public class SkillTelekinesis extends ActiveSkill {
         List<Block> lineOfSight = player.getLineOfSight(transparent, 15);
         Block block = lineOfSight.get(lineOfSight.size() - 1);
         if (block.getType() == Material.LEVER || block.getType() == Material.STONE_BUTTON) {
+            EntityHuman eH = ((CraftPlayer) player).getHandle();
             //Can't adjust levers/Buttons through CB 
-            net.minecraft.server.Block.byId[block.getTypeId()].interact(((CraftWorld)block.getWorld()).getHandle(), block.getX(), block.getY(), block.getZ(), (EntityHuman) player);
+            net.minecraft.server.Block.byId[block.getTypeId()].interact(((CraftWorld)block.getWorld()).getHandle(), block.getX(), block.getY(), block.getZ(), eH);
             //In Case Bukkit ever fixes blockState changes on levers:
             //Lever lever = (Lever) block.getState().getData();
             //lever.setPowered(!lever.isPowered());
