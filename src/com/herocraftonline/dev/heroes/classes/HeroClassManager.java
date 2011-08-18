@@ -228,7 +228,10 @@ public class HeroClassManager {
                     for (Command command : plugin.getCommandHandler().getCommands()) {
                         try {
                             Skill skill = (Skill) command;
-                            if (newClass.hasSkill(skill.getName())) continue;
+                            if (newClass.hasSkill(skill.getName())) {
+                                Heroes.log(Level.WARNING, "Skill already assigned (" + skill + ") for " + className + ". Skipping this skill");
+                                continue;
+                            }
                             ConfigurationNode skillSettings = Configuration.getEmptyNode();
                             List<String> settings = config.getKeys("classes." + className + ".permitted-skills." + skill.getName());
                             if (settings != null) {
@@ -248,7 +251,7 @@ public class HeroClassManager {
             if (permissionSkillNames != null) {
                 for (String skill : permissionSkillNames) {
                     //Ignore Overlapping Skill names that are already loaded as permitted-skills
-                    if (plugin.getCommandHandler().getCommand(skill) != null) continue;
+                    if (newClass.hasSkill(skill)) continue;
                     try {
                         ConfigurationNode skillSettings = Configuration.getEmptyNode();
                         skillSettings.setProperty("level", config.getInt("classes." + className + ".permission-skills." + skill + ".level", 1));

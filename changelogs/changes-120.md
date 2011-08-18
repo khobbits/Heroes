@@ -1,3 +1,5 @@
+Version 1.2.0
+
 Bug Fixes:
 
     No longer try to set HP less than 0 when handling damage.

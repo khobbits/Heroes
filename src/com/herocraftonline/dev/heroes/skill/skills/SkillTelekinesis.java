@@ -1,8 +1,6 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
 import java.util.HashSet;
-import java.util.List;
-
 import net.minecraft.server.EntityHuman;
 
 import org.bukkit.Material;
@@ -32,19 +30,24 @@ public class SkillTelekinesis extends ActiveSkill {
         HashSet<Byte> transparent = new HashSet<Byte>();
         transparent.add((byte) Material.AIR.getId());
         transparent.add((byte) Material.WATER.getId());
-        List<Block> lineOfSight = player.getLineOfSight(transparent, 15);
-        Block block = lineOfSight.get(lineOfSight.size() - 1);
+        transparent.add((byte) Material.REDSTONE_TORCH_ON.getId());
+        transparent.add((byte) Material.REDSTONE_TORCH_OFF.getId());
+        transparent.add((byte) Material.REDSTONE_WIRE.getId());
+        transparent.add((byte) Material.TORCH.getId());
+        transparent.add((byte) Material.SNOW.getId());
+        Block block = player.getTargetBlock(transparent, 15);
         if (block.getType() == Material.LEVER || block.getType() == Material.STONE_BUTTON) {
             EntityHuman eH = ((CraftPlayer) player).getHandle();
             //Can't adjust levers/Buttons through CB 
             net.minecraft.server.Block.byId[block.getTypeId()].interact(((CraftWorld)block.getWorld()).getHandle(), block.getX(), block.getY(), block.getZ(), eH);
-            //In Case Bukkit ever fixes blockState changes on levers:
+            //In Case Bukkit eaver fixes blockState changes on levers:
             //Lever lever = (Lever) block.getState().getData();
             //lever.setPowered(!lever.isPowered());
             //block.getState().update();
             broadcastExecuteText(hero);
             return true;
         } 
+
         Messaging.send(player, "You must target a lever or button");
         return false;
     }
