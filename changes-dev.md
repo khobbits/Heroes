@@ -8,11 +8,14 @@ General/API:
 
 	Removed EntityRegainHealthEvent calls from all skills - they now generate our own internal HeroRegainHealthEvent
 	Permission-Skills will now report when they are trying to replace a base skill
+	Massive simplification to how BedHealing works - now uses Effect system
 
 Skills:
 
 	Heals
 		- Fixed heals healing the wrong amount
+	Curse
+	    - Fixed curse not triggering properly 
 	Rejuvenate - (NEW!)
 	    - Heal-over-Time ability.
 	Telekinesis

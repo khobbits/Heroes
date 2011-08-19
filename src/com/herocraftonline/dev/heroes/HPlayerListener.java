@@ -20,9 +20,11 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.command.Command;
+import com.herocraftonline.dev.heroes.effects.PeriodicEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.persistence.HeroManager;
 import com.herocraftonline.dev.heroes.skill.OutsourcedSkill;
+import com.herocraftonline.dev.heroes.util.Messaging;
 
 public class HPlayerListener extends PlayerListener {
 
@@ -96,7 +98,7 @@ public class HPlayerListener extends PlayerListener {
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
         HeroManager heroManager = plugin.getHeroManager();
-        heroManager.removeBedHealer(heroManager.getHero(player));
+        heroManager.getHero(event.getPlayer()).clearEffects();
         heroManager.saveHero(player);
         heroManager.removeHero(heroManager.getHero(player));
         for (Command command : plugin.getCommandHandler().getCommands()) {
@@ -134,12 +136,9 @@ public class HPlayerListener extends PlayerListener {
             return;
         }
 
-        HeroManager heroManager = plugin.getHeroManager();
-        //This player is now in bed so add them to the bedHealers Set
-        heroManager.addBedHealer(heroManager.getHero(event.getPlayer()));
-        if (!heroManager.isBedHealThreadAlive()) {
-            heroManager.startBedHealThread();
-        }
+        Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
+        BedHealEffect bhEffect = new BedHealEffect();
+        hero.addEffect(bhEffect);
     }
 
     @Override
@@ -149,7 +148,33 @@ public class HPlayerListener extends PlayerListener {
         }
 
         //This player is no longer in bed so remove them from the bedHealer set
-        plugin.getHeroManager().removeBedHealer(plugin.getHeroManager().getHero(event.getPlayer()));
+        Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
+        hero.removeEffect(hero.getEffect("BedHeal"));
     }
 
+    public class BedHealEffect extends PeriodicEffect {
+        
+        public BedHealEffect() {
+            super(null, "BedHeal", plugin.getConfigManager().getProperties().healInterval * 1000, 100000);
+        }
+        
+        @Override
+        public void apply(Hero hero) {
+            super.apply(hero);
+        }
+        
+        @Override
+        public void remove(Hero hero) {
+            super.remove(hero);
+        }
+        
+        @Override
+        public void tick(Hero hero) {
+            Player player = hero.getPlayer();
+            double healAmount = hero.getMaxHealth() * plugin.getConfigManager().getProperties().healPercent / 100;
+            hero.setHealth(hero.getHealth() + healAmount);
+            hero.syncHealth();
+            player.sendMessage(Messaging.createFullHealthBar(hero.getHealth(), hero.getMaxHealth()));
+        }
+    }
 }

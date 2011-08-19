@@ -210,7 +210,6 @@ public class Heroes extends JavaPlugin {
             heroManager.saveHero(player);
             switchToBNSH(player);
         }
-        this.heroManager.shutdownBedHealThread(); //Clears the list of heroes in beds and shuts down the thread
         this.Method = null; // When it Enables again it performs the checks anyways.
         Heroes.Permissions = null; // When it Enables again it performs the checks anyways.
         log.info(getDescription().getName() + " version " + getDescription().getVersion() + " is disabled!");

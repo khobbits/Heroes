@@ -5,12 +5,10 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
 import com.herocraftonline.dev.heroes.party.HeroParty;
@@ -36,7 +34,6 @@ import com.herocraftonline.dev.heroes.effects.Periodic;
 import com.herocraftonline.dev.heroes.skill.OutsourcedSkill;
 import com.herocraftonline.dev.heroes.skill.PassiveSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
-import com.herocraftonline.dev.heroes.util.Properties;
 
 /**
  * Player management
@@ -47,18 +44,15 @@ public class HeroManager {
 
     private Heroes plugin;
     private Set<Hero> heroes;
-    private Map<Hero, Boolean> bedHealers;
     protected Map<Creature, Set<Effect>> creatureEffects;
     private File playerFolder;
     private final static int effectInterval = 2;
     private final static int manaInterval = 5;
     private final static int partyUpdateInterval = 5;
-    private BedHealThread bedHealThread = null;
 
     public HeroManager(Heroes plugin) {
         this.plugin = plugin;
         this.heroes = new HashSet<Hero>();
-        this.bedHealers = new ConcurrentHashMap<Hero, Boolean>();
         this.creatureEffects = new HashMap<Creature, Set<Effect>>();
         playerFolder = new File(plugin.getDataFolder(), "players"); // Setup our Player Data Folder
         playerFolder.mkdirs(); // Create the folder if it doesn't exist.
@@ -377,76 +371,6 @@ public class HeroManager {
     }
 
     /**
-     * Removes a hero from the set of heroes currently in bed
-     *
-     * @param hero
-     */
-    public void removeBedHealer(Hero hero) {
-        bedHealers.remove(hero);
-    }
-
-    /**
-     * Flushes the bed healer Set of all records
-     */
-    public void clearBedHealers() {
-        bedHealers.clear();
-    }
-
-    /**
-     * Adds a hero to the set of heroes currently in bed
-     *
-     * @param hero
-     */
-    public void addBedHealer(Hero hero) {
-        bedHealers.put(hero, true);
-    }
-
-    /**
-     * Gets the full set of Heroes currently healing in beds
-     *
-     * @return
-     */
-    public Map<Hero, Boolean> getBedHealers() {
-        return bedHealers;
-    }
-
-    /**
-     * Starts an instance of the BedHealThread
-     */
-    public void startBedHealThread() {
-        bedHealThread = new BedHealThread(plugin);
-        bedHealThread.start();
-    }
-
-    /**
-     * tests if the BedHealThread is still alive
-     *
-     * @return
-     */
-    public boolean isBedHealThreadAlive() {
-        if (bedHealThread == null) {
-            return false;
-        } else {
-            return bedHealThread.isAlive();
-        }
-    }
-
-    public void shutdownBedHealThread() {
-        if (!isBedHealThreadAlive()) {
-            return;
-        }
-        this.bedHealers.clear();
-        synchronized(bedHealThread) {
-            bedHealThread.notify();
-            try {
-                bedHealThread.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    /**
      * Adds a new effect to the specific creature
      * 
      * @param creature
@@ -710,42 +634,5 @@ class PartyUpdater implements Runnable {
         double percent = (health / maxHealth * 100);
         DecimalFormat df = new DecimalFormat("#.##");
         return manaBar + " - " + com.herocraftonline.dev.heroes.ui.MapColor.GREEN + df.format(percent) + "%";
-    }
-}
-
-class BedHealThread extends Thread { 
-
-    private Heroes plugin;
-    private Properties props;
-    private HeroManager heroManager;
-    private Map<Hero, Boolean> bedHealers;
-
-    public BedHealThread(Heroes plugin) {
-        this.plugin = plugin;
-        props = plugin.getConfigManager().getProperties();
-        heroManager = plugin.getHeroManager();
-        bedHealers = heroManager.getBedHealers();
-    }
-
-    public void run() {
-        boolean isEmpty = false;
-        while (!isEmpty) {
-            synchronized(this) {
-                try {
-                    wait(props.healInterval * 1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                    break;
-                }
-            }
-
-            Iterator<Hero> iter = bedHealers.keySet().iterator();
-            while (iter.hasNext()) {
-                Hero hero = iter.next();
-                double healAmount = hero.getMaxHealth() * props.healPercent / 100;
-                plugin.getServer().getScheduler().callSyncMethod(plugin, hero.bedHeal((int) healAmount, plugin));
-            }
-            isEmpty = bedHealers.isEmpty();
-        }
     }
 }

@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.concurrent.Callable;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -410,12 +409,5 @@ public class Hero {
         } else {
             this.health = health;
         }
-    }
-
-    public Callable<?> bedHeal(int healAmount, Heroes plugin) {
-        health = health + healAmount;
-        syncHealth();
-        player.sendMessage(Messaging.createFullHealthBar(health, getMaxHealth()));
-        return null;
     }
 }
