@@ -5,10 +5,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.api.HeroRegainHealthEvent;
 import com.herocraftonline.dev.heroes.effects.Beneficial;
 import com.herocraftonline.dev.heroes.effects.Dispellable;
-import com.herocraftonline.dev.heroes.effects.PeriodicEffect;
+import com.herocraftonline.dev.heroes.effects.PeriodicHealEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
@@ -16,6 +15,9 @@ import com.herocraftonline.dev.heroes.util.Messaging;
 
 public class SkillRejuvenate extends TargettedSkill {
 
+    private String expireText;
+    private String applyText;
+    
     public SkillRejuvenate(Heroes plugin) {
         super(plugin, "Rejuvenate");
         setDescription("Heals the target over time");
@@ -27,12 +29,19 @@ public class SkillRejuvenate extends TargettedSkill {
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty("heal", 1);
+        node.setProperty("tick-heal", 1);
         node.setProperty("period", 3000);
         node.setProperty("duration", 21000);
         return node;
     }
     
+    @Override
+    public void init() {
+        super.init();
+        applyText = getSetting(null, "apply-text", "%target% is rejuvenating health!").replace("%target%", "$1");
+        expireText = getSetting(null, "expire-text", "%target% has stopped rejuvenating health!").replace("%target%", "$1");
+    }
+
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
@@ -46,10 +55,9 @@ public class SkillRejuvenate extends TargettedSkill {
             
             long period = getSetting(hero.getHeroClass(), "period", 3000);
             long duration = getSetting(hero.getHeroClass(), "duration", 21000);
-            int tickHealth = getSetting(hero.getHeroClass(), "heal", 1);
-            RejuvenateEffect rEffect = new RejuvenateEffect(this, period, duration, tickHealth);
+            int tickHealth = getSetting(hero.getHeroClass(), "tick-heal", 1);
+            RejuvenateEffect rEffect = new RejuvenateEffect(this, period, duration, tickHealth, player);
             targetHero.addEffect(rEffect);
-            broadcastExecuteText(hero, target);
             return true;
         }
         
@@ -57,37 +65,25 @@ public class SkillRejuvenate extends TargettedSkill {
         return false;
     }
     
-    public class RejuvenateEffect extends PeriodicEffect implements Dispellable, Beneficial {
+    public class RejuvenateEffect extends PeriodicHealEffect implements Dispellable, Beneficial {
 
-        private final int tickHealth;
         
-        public RejuvenateEffect(Skill skill, long period, long duration, int tickHealth) {
-            super(skill, "Rejuvenate", period, duration);
-            this.tickHealth = tickHealth;
+        public RejuvenateEffect(Skill skill, long period, long duration, int tickHealth, Player applier) {
+            super(skill, "Rejuvenate", period, duration, tickHealth, applier);
         }
         
         @Override
         public void apply(Hero hero) {
             super.apply(hero);
             Player player = hero.getPlayer();
-            Messaging.send(player, "You begin rejuvenating health!");
+            broadcast(player.getLocation(), applyText, new Object[] { player.getDisplayName()});
         }
         
         @Override
         public void remove(Hero hero) {
             super.remove(hero);
             Player player = hero.getPlayer();
-            Messaging.send(player, "You are no longer regaining health!");
-        }
-        
-        @Override
-        public void tick(Hero hero) {
-            HeroRegainHealthEvent hrhEvent = new HeroRegainHealthEvent(hero, tickHealth, this.getSkill());
-            getPlugin().getServer().getPluginManager().callEvent(hrhEvent);
-            if (hrhEvent.isCancelled()) return;
-
-            hero.setHealth(hero.getHealth() + hrhEvent.getAmount());
-            hero.syncHealth();
+            broadcast(player.getLocation(), expireText, new Object[] { player.getDisplayName()});
         }
     }
 }

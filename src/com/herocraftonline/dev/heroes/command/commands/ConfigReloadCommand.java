@@ -25,11 +25,6 @@ public class ConfigReloadCommand extends BasicCommand {
     public boolean execute(CommandSender sender, String identifier, String[] args) {
         if (!(sender instanceof Player)) return false;
 
-        if (!Heroes.Permissions.has((Player) sender, "heroes.admin.reload")) {
-            Messaging.send(sender, "Insufficient permission.");
-            return false;
-        }
-
         if (plugin.getConfigManager().reload()) {
             Messaging.send(sender, "Configs reloaded.");
         }
