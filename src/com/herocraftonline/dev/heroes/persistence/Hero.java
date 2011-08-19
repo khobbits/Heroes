@@ -307,7 +307,7 @@ public class Hero {
     }
 
     public void clearEffects() {
-        for (Effect effect : effects) {
+        for (Effect effect : getEffects()) {
             removeEffect(effect);
         }
     }

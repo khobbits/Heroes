@@ -4,6 +4,7 @@ Bug Fixes:
 
 	Fixed occurrences where permissions-skills would not be added to classes properly.
 	Properly check permission for /hero admin relaod 
+	Fix ConcurrentModificationExceptions related to hero effects & changing classes
 
 General/API:
 
