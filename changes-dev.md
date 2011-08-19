@@ -13,6 +13,8 @@ Skills:
 
 	Heals
 		- Fixed heals healing the wrong amount
+	Rejuvenate - (NEW!)
+	    - Heal-over-Time ability.
 	Telekinesis
 		- Now ignores more blocks (snow was causing problems with targeting) to make it function better
 	Web

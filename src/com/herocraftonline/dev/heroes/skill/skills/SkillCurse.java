@@ -60,7 +60,36 @@ public class SkillCurse extends TargettedSkill {
     
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
+        Player player = hero.getPlayer();
+        if (target.equals(player)) {
+            Messaging.send(player, "You need a target!");
+            return false;
+        }
         
+        if (target instanceof Player && hero.getParty() != null) {
+            for (Hero h : hero.getParty().getMembers()) {
+                if (target.equals(h.getPlayer())) {
+                    Messaging.send(player, "You need a target!");
+                    return false;
+                }
+            }
+        }
+        
+        long duration = getSetting(hero.getHeroClass(), "duration", 5000);
+        double missChance = getSetting(hero.getHeroClass(), "miss-chance", .50);
+        CurseEffect cEffect = new CurseEffect(this, duration, missChance);
+        
+        if (target instanceof Player) {
+            Hero tHero = getPlugin().getHeroManager().getHero((Player) target);
+            tHero.addEffect(cEffect);
+            return true;
+        } else if (target instanceof Creature) {
+            Creature creature = (Creature) target;
+            getPlugin().getHeroManager().addCreatureEffect(creature, cEffect);
+            return true;
+        }
+        
+        Messaging.send(player, "Invalid target!");
         return false;
     }
     
