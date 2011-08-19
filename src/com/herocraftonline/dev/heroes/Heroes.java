@@ -242,7 +242,7 @@ public class Heroes extends JavaPlugin {
 
         final Player[] players = getServer().getOnlinePlayers();
         for (Player player : players) {
-            if (heroManager.Player(player)) {
+            if (heroManager.containsPlayer(player)) {
                 continue;
             }
             switchToHNSH(player);
