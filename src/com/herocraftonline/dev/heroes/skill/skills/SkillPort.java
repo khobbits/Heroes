@@ -70,7 +70,7 @@ public class SkillPort extends ActiveSkill {
                 }
             }
             
-            int range = getSetting(hero.getHeroClass(), "range", 10)^2;
+            int range = (int) Math.pow(getSetting(hero.getHeroClass(), "range", 10), 2);
             Location loc = new Location(world, Double.parseDouble(splitArg[1]), Double.parseDouble(splitArg[2]), Double.parseDouble(splitArg[3]));
             broadcastExecuteText(hero);
             if (hero.getParty() != null) {

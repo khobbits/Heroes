@@ -137,7 +137,9 @@ public class HPlayerListener extends PlayerListener {
         }
 
         Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
-        BedHealEffect bhEffect = new BedHealEffect();
+        long period = plugin.getConfigManager().getProperties().healInterval;
+        int tickHeal = plugin.getConfigManager().getProperties().healPercent / 100;
+        BedHealEffect bhEffect = new BedHealEffect(period, 100000, tickHeal);
         hero.addEffect(bhEffect);
     }
 
@@ -154,8 +156,11 @@ public class HPlayerListener extends PlayerListener {
 
     public class BedHealEffect extends PeriodicEffect {
         
-        public BedHealEffect() {
-            super(null, "BedHeal", plugin.getConfigManager().getProperties().healInterval * 1000, 100000);
+        private final int tickHeal;
+        
+        public BedHealEffect(long period, long duration, int tickHeal) {
+            super(null, "BedHeal", period, duration);
+            this.tickHeal = tickHeal;
         }
         
         @Override
@@ -170,8 +175,9 @@ public class HPlayerListener extends PlayerListener {
         
         @Override
         public void tick(Hero hero) {
+            super.tick(hero);
             Player player = hero.getPlayer();
-            double healAmount = hero.getMaxHealth() * plugin.getConfigManager().getProperties().healPercent / 100;
+            double healAmount = hero.getMaxHealth() * (double) tickHeal;
             hero.setHealth(hero.getHealth() + healAmount);
             hero.syncHealth();
             player.sendMessage(Messaging.createFullHealthBar(hero.getHealth(), hero.getMaxHealth()));

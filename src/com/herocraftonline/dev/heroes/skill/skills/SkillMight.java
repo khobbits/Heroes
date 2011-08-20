@@ -55,7 +55,7 @@ public class SkillMight extends ActiveSkill {
             }
             hero.addEffect(mEffect);
         } else {
-            int rangeSquared = getSetting(hero.getHeroClass(), "range", 10)^2;
+            int rangeSquared = (int) Math.pow(getSetting(hero.getHeroClass(), "range", 10), 2);
             for (Hero pHero : hero.getParty().getMembers()) {
                 if (!pHero.getPlayer().getWorld().equals(player.getWorld())) continue;
                 if (pHero.getPlayer().getLocation().distanceSquared(player.getLocation()) > rangeSquared) continue;

@@ -15,7 +15,7 @@ properties:
     useDamageSystem: true #toggles the damage system
 bed:
     bedHeal: true #Do you want players to heal in beds? NOTE - useDamageSystem must be true
-    healInterval: 30 #the seconds it takes to heal the healPercent
+    healInterval: 15000 #the milliseconds it takes to heal the healPercent
     healPercent: 5 #the amount of damage to heal.
 default:
     level: 1 #Level to use HATS!
