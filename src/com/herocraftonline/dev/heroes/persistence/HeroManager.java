@@ -253,6 +253,10 @@ public class HeroManager {
             hero.cooldowns = cooldowns;
         }
     }
+    
+    HashMap<Creature, Set<Effect>> getCreatureEffects() {
+        return new HashMap<Creature, Set<Effect>>(creatureEffects);
+    }
 
     private void loadExperience(Hero hero, Configuration config) {
         if (hero == null || hero.getClass() == null || config == null) return;
@@ -483,7 +487,7 @@ class EffectUpdater implements Runnable {
                 }
             }
         }
-        for (Entry<Creature, Set<Effect>> cEntry : heroManager.creatureEffects.entrySet()) {
+        for (Entry<Creature, Set<Effect>> cEntry : heroManager.getCreatureEffects().entrySet()) {
             for (Effect effect : cEntry.getValue()) {
                 if (effect instanceof Expirable) {
                     Expirable expirable = (Expirable) effect;
