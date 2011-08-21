@@ -1,8 +1,5 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Priority;
@@ -22,19 +19,12 @@ import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.util.Messaging;
+import com.herocraftonline.dev.heroes.util.Properties;
 
 public class SkillAssassinsBlade extends ActiveSkill {
 
     private String applyText;
     private String expireText;
-    private static final List<String> defaultWeapons;
-    static {
-        defaultWeapons = new ArrayList<String>();
-        defaultWeapons.add("WOOD_SWORD");
-        defaultWeapons.add("STONE_SWORD");
-        defaultWeapons.add("GOLD_SWORD");
-        defaultWeapons.add("DIAMOND_SWORD");
-    }
     
     public SkillAssassinsBlade(Heroes plugin) {
         super(plugin, "AssassinsBlade");
@@ -49,7 +39,7 @@ public class SkillAssassinsBlade extends ActiveSkill {
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty("weapons", defaultWeapons);
+        node.setProperty("weapons", Properties.defaultWeapons);
         node.setProperty("buff-duration", 600000); // 10 minutes in milliseconds
         node.setProperty("poison-duration", 10000); // 10 seconds in milliseconds
         node.setProperty("period", 2000); // 2 seconds in milliseconds
@@ -100,7 +90,7 @@ public class SkillAssassinsBlade extends ActiveSkill {
             Player player = (Player) subEvent.getDamager();
             ItemStack item = player.getItemInHand();
             Hero hero = getPlugin().getHeroManager().getHero(player);
-            if (!getSetting(hero.getHeroClass(), "weapons", defaultWeapons).contains(item.getType().name()))
+            if (!getSetting(hero.getHeroClass(), "weapons", Properties.defaultWeapons).contains(item.getType().name()))
                 return;
             
             if (hero.hasEffect("PoisonBlade")) {
