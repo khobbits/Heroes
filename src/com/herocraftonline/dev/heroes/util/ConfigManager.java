@@ -232,7 +232,7 @@ public class ConfigManager {
 
     private void loadWorldConfig(Configuration config) {
         String root = "worlds.";
-        properties.disabledExperience = config.getStringList(root + "disabledExperience", new ArrayList<String>());
+        properties.disabledExperience = config.getStringList(root + "disableExperience", new ArrayList<String>());
         properties.disabledSkills = config.getStringList(root + "disableSkills", new ArrayList<String>());
     }
 
