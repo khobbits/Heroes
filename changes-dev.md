@@ -24,7 +24,9 @@ Skills:
 	 	- Sexified. (You can now change the distance).
 	 	- Fixed teleporting through walls
 	Curse
-	    - Fixed curse not triggering properly 
+	    - Fixed curse not triggering properly
+	PoisonArrow - (NEW!)
+	    - Next arrow hit will poison the target!
 	Rejuvenate - (NEW!)
 	    - Heal-over-Time ability.
 	Skeleton
