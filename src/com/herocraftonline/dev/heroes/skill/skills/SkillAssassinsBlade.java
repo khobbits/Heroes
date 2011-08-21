@@ -110,7 +110,6 @@ public class SkillAssassinsBlade extends ActiveSkill {
                 AssassinsPoison apEffect = new AssassinsPoison(skill, period, duration, tickDamage, player);
                 if (event.getEntity() instanceof Creature) {
                     getPlugin().getHeroManager().addCreatureEffect((Creature) event.getEntity(), apEffect);
-                    hero.removeEffect(hero.getEffect("PoisonBlade"));
                     checkBuff(hero);
                 } else if (event.getEntity() instanceof Player) {
                     Hero target = getPlugin().getHeroManager().getHero((Player) event.getEntity());
@@ -122,33 +121,33 @@ public class SkillAssassinsBlade extends ActiveSkill {
         
         private void checkBuff(Hero hero) {
             AssassinBladeBuff abBuff = (AssassinBladeBuff) hero.getEffect("PoisonBlade");
-            abBuff.numAttacks -= 1;
-            if (abBuff.numAttacks < 1)
+            abBuff.applicationsLeft -= 1;
+            if (abBuff.applicationsLeft < 1)
                 hero.removeEffect(abBuff);
         }
     }
     
     public class AssassinBladeBuff extends ExpirableEffect implements Beneficial {
 
-        private int numAttacks;
+        private int applicationsLeft = 1;
         
         public AssassinBladeBuff(Skill skill, long duration, int numAttacks) {
             super(skill, "PoisonBlade", duration);
-            this.numAttacks = numAttacks;
-        }
-        
-        /**
-         * @return the numAttacks
-         */
-        public int getNumAttacks() {
-            return numAttacks;
+            this.applicationsLeft = numAttacks;
         }
 
         /**
-         * @param numAttacks the numAttacks to set
+         * @return the applicationsLeft
          */
-        public void setNumAttacks(int numAttacks) {
-            this.numAttacks = numAttacks;
+        public int getApplicationsLeft() {
+            return applicationsLeft;
+        }
+
+        /**
+         * @param applicationsLeft the applicationsLeft to set
+         */
+        public void setApplicationsLeft(int applicationsLeft) {
+            this.applicationsLeft = applicationsLeft;
         }
 
         @Override
