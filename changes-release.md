@@ -15,6 +15,7 @@ General/API:
 	PeriodicHealEffect - just like the damage effect, but heals the target
 
 Skills:
+
 	Heals
 		- Fixed heals healing the wrong amount
 		- Made more heal fail options.
