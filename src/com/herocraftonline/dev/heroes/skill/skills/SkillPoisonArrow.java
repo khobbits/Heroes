@@ -11,10 +11,14 @@ import org.bukkit.event.entity.EntityListener;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.effects.Beneficial;
+import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
+import com.herocraftonline.dev.heroes.effects.Harmful;
 import com.herocraftonline.dev.heroes.effects.PoisonEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
+import com.herocraftonline.dev.heroes.skill.skills.SkillAssassinsBlade.AssassinBladeBuff;
 import com.herocraftonline.dev.heroes.util.Messaging;
 
 public class SkillPoisonArrow extends ActiveSkill {
@@ -51,6 +55,8 @@ public class SkillPoisonArrow extends ActiveSkill {
     }
 
     public boolean use(Hero hero, String[] args) {
+        long duration = getSetting(hero.getHeroClass(), "buff-duration", 600000);
+        hero.addEffect(new PoisonArrowBuff(this, duration));
         broadcastExecuteText(hero);
         return true;
     }
@@ -78,26 +84,38 @@ public class SkillPoisonArrow extends ActiveSkill {
             Player player = (Player) arrow.getShooter();
             Hero hero = getPlugin().getHeroManager().getHero(player);
 
-            if (hero.hasEffect("PoisonArrow")) {
+            if (hero.hasEffect("PoisonArrowBuff")) {
                 long duration = getSetting(hero.getHeroClass(), "poison-duration", 10000);
                 long period = getSetting(hero.getHeroClass(), "period", 2000);
                 int tickDamage = getSetting(hero.getHeroClass(), "tick-damage", 2);
-                arrowPoison apEffect = new arrowPoison(skill, period, duration, tickDamage, player);
+                ArrowPoison apEffect = new ArrowPoison(skill, period, duration, tickDamage, player);
                 
                 if (event.getEntity() instanceof Creature) {
                     getPlugin().getHeroManager().addCreatureEffect((Creature) event.getEntity(), apEffect);
-                    hero.removeEffect(hero.getEffect("PoisonArrow"));
+                    hero.removeEffect(hero.getEffect("PoisonArrowBuff"));
                 } else if (event.getEntity() instanceof Player) {
                     Hero target = getPlugin().getHeroManager().getHero((Player) event.getEntity());
                     target.addEffect(apEffect);
-                    hero.removeEffect(hero.getEffect("PoisonArrow"));
+                    hero.removeEffect(hero.getEffect("PoisonArrowBuff"));
                 }
             }
         }
     }
-    public class arrowPoison extends PoisonEffect {
+    
+    public class PoisonArrowBuff extends ExpirableEffect implements Beneficial {
+        public PoisonArrowBuff(Skill skill, long duration) {
+            super(skill, "PoisonArrowBuff", duration);
+        }
+        
+        @Override
+        public void remove(Hero hero) {
+            Messaging.send(hero.getPlayer(), "Your arrows are no longer poisoned");
+        }
+    }
+    
+    public class ArrowPoison extends PoisonEffect implements Harmful {
 
-        public arrowPoison(Skill skill, long period, long duration, int tickDamage, Player applier) {
+        public ArrowPoison(Skill skill, long period, long duration, int tickDamage, Player applier) {
             super(skill, "ArrowPoison", period, duration, tickDamage, applier);
 
         }

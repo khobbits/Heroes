@@ -16,6 +16,7 @@ import org.bukkit.util.config.ConfigurationNode;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.effects.Beneficial;
 import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
+import com.herocraftonline.dev.heroes.effects.Harmful;
 import com.herocraftonline.dev.heroes.effects.PoisonEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
@@ -156,7 +157,7 @@ public class SkillAssassinsBlade extends ActiveSkill {
         }
     }
     
-    public class AssassinsPoison extends PoisonEffect {
+    public class AssassinsPoison extends PoisonEffect implements Harmful {
 
         public AssassinsPoison(Skill skill, long period, long duration, int tickDamage, Player applier) {
             super(skill, "AssassinsPoison", period, duration, tickDamage, applier);
