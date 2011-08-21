@@ -1,6 +1,7 @@
 package com.herocraftonline.dev.heroes;
 
 import java.util.List;
+import java.util.logging.Level;
 
 import com.herocraftonline.dev.heroes.party.HeroParty;
 import org.bukkit.Material;
