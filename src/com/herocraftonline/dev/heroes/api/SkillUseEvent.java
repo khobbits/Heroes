@@ -9,13 +9,13 @@ import com.herocraftonline.dev.heroes.skill.Skill;
 
 @SuppressWarnings("serial")
 public class SkillUseEvent extends Event implements Cancellable {
-    
+
     private final Player player;
     private final Skill skill;
     private final Hero hero;
     private String[] args;
     private boolean cancelled = false;
-    
+
     public SkillUseEvent(Skill skill, Player player, Hero hero, String[] args) {
         super("SkillUseEvent");
         this.player = player;
@@ -68,6 +68,5 @@ public class SkillUseEvent extends Event implements Cancellable {
     public void setCancelled(boolean val) {
         cancelled = val;
     }
-    
 
 }

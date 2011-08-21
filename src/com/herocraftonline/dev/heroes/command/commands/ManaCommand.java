@@ -17,12 +17,13 @@ public class ManaCommand extends BasicCommand {
         setDescription("Displays your current mana");
         setUsage("/level");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[]{"mana"});
+        setIdentifiers(new String[] { "mana" });
     }
 
     @Override
     public boolean execute(CommandSender sender, String identifier, String[] args) {
-        if (!(sender instanceof Player)) return false;
+        if (!(sender instanceof Player))
+            return false;
 
         Player player = (Player) sender;
         Hero hero = plugin.getHeroManager().getHero(player);

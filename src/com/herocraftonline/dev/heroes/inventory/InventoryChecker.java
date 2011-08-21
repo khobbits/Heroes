@@ -102,7 +102,7 @@ public class InventoryChecker {
 
     /**
      * Check the given Players inventory for any Armor or Weapons which are restricted.
-     *
+     * 
      * @param name
      */
     public void checkInventory(String name) {
@@ -114,7 +114,7 @@ public class InventoryChecker {
 
     /**
      * Grab the first empty INVENTORY SLOT, skips the Hotbar.
-     *
+     * 
      * @param p
      * @return
      */
@@ -130,7 +130,7 @@ public class InventoryChecker {
 
     /**
      * Move the selected Item to an available slot, if a slot does not exist then we remove it from the inventory.
-     *
+     * 
      * @param p
      * @param slot
      * @param item
@@ -160,7 +160,7 @@ public class InventoryChecker {
      * Synchronize the Clients Inventory with the Server. This is dealt during a scheduler so it happens after ANY
      * changes are made.
      * Synchronizing during changes often results in the client losing Sync.
-     *
+     * 
      * @param player
      */
     public void syncInventory(final Player player) {

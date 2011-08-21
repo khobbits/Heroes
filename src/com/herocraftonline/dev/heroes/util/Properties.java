@@ -3,6 +3,7 @@ package com.herocraftonline.dev.heroes.util;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -13,7 +14,6 @@ import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-
 
 public class Properties {
 
@@ -52,7 +52,7 @@ public class Properties {
     public boolean swapMasteryCost;
     public boolean damageSystem;
 
-    //Bed Stuffs
+    // Bed Stuffs
     public boolean bedHeal;
     public int healInterval;
     public int healPercent;
@@ -62,16 +62,20 @@ public class Properties {
     public byte mapID;
     public int mapPacketInterval;
 
+    // Worlds
+    public List<String> disabledSkills;
+    public List<String> disabledExperience;
+
     // Stupid Hats...
     public boolean allowHats;
 
-    //Blocks that we don't want to change during skills otherwise it causes problems
+    // Blocks that we don't want to change during skills otherwise it causes problems
     public final static Set<Integer> protectedBlocks;
     static {
         protectedBlocks = new HashSet<Integer>();
         protectedBlocks.addAll(Arrays.asList(23, 26, 27, 28, 29, 33, 34, 36, 50, 54, 59, 60, 61, 62, 63, 64, 68, 71, 75, 76, 77, 84, 93, 94, 95, 96));
     }
-    
+
     /**
      * Generate experience for the level ArrayList<Integer>
      */
@@ -91,7 +95,7 @@ public class Properties {
 
     /**
      * Convert the given Exp into the correct Level.
-     *
+     * 
      * @param exp
      * @return
      */
@@ -106,13 +110,14 @@ public class Properties {
 
     /**
      * Converts an entity into its CreatureType
-     *
+     * 
      * @param entity
      * @return
      */
     public static CreatureType getCreatureFromEntity(Entity entity) {
         CreatureType type = null;
-        if (entity == null) return type;
+        if (entity == null)
+            return type;
         try {
             Class<?>[] interfaces = entity.getClass().getInterfaces();
             for (Class<?> c : interfaces) {

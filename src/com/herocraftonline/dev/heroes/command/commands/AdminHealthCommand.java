@@ -18,7 +18,7 @@ public class AdminHealthCommand extends BasicCommand {
         setDescription("Sets a user's health");
         setUsage("/hero admin hp §9<player> <health>");
         setArgumentRange(2, 2);
-        setIdentifiers(new String[]{"hero admin hp"});
+        setIdentifiers(new String[] { "hero admin hp" });
         setPermission("heroes.admin.healthchange");
     }
 

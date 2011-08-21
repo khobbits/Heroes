@@ -17,6 +17,7 @@ Skills:
 
 	Heals
 		- Fixed heals healing the wrong amount
+		- Made more heal fail options.
 	Curse
 	    - Fixed curse not triggering properly 
 	Rejuvenate - (NEW!)

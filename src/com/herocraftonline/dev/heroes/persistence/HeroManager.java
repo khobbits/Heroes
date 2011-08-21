@@ -37,7 +37,7 @@ import com.herocraftonline.dev.heroes.util.Messaging;
 
 /**
  * Player management
- *
+ * 
  * @author Herocraft's Plugin Team
  */
 public class HeroManager {
@@ -90,7 +90,8 @@ public class HeroManager {
                 removeHero(hero); // Seeing as it's null we might as well remove it.
                 continue;
             }
-            if (player.getName().equalsIgnoreCase(hero.getPlayer().getName())) return hero;
+            if (player.getName().equalsIgnoreCase(hero.getPlayer().getName()))
+                return hero;
         }
         // If it gets to this stage then clearly the HeroManager doesn't have it so we create it...
         return loadHero(player);
@@ -102,7 +103,7 @@ public class HeroManager {
 
     /**
      * Load the given Players Data file.
-     *
+     * 
      * @param player
      * @return
      */
@@ -157,7 +158,7 @@ public class HeroManager {
 
     /**
      * Save the given Players Data to a file.
-     *
+     * 
      * @param player
      */
     public void saveHero(Player player) {
@@ -253,13 +254,14 @@ public class HeroManager {
             hero.cooldowns = cooldowns;
         }
     }
-    
+
     HashMap<Creature, Set<Effect>> getCreatureEffects() {
         return new HashMap<Creature, Set<Effect>>(creatureEffects);
     }
 
     private void loadExperience(Hero hero, Configuration config) {
-        if (hero == null || hero.getClass() == null || config == null) return;
+        if (hero == null || hero.getClass() == null || config == null)
+            return;
 
         String root = "experience";
         List<String> expList = config.getKeys(root);
@@ -337,7 +339,7 @@ public class HeroManager {
     private void saveSkillSettings(Hero hero, Configuration config) {
         String path = "skill-settings";
         for (Entry<String, Map<String, String>> entry : hero.skillSettings.entrySet()) {
-            for(Entry<String, String> node : entry.getValue().entrySet()) {
+            for (Entry<String, String> node : entry.getValue().entrySet()) {
                 config.setProperty(path + "." + entry.getKey() + "." + node.getKey(), node.getValue());
             }
         }
@@ -359,7 +361,8 @@ public class HeroManager {
     }
 
     private void saveExperience(Hero hero, Configuration config) {
-        if (hero == null || hero.getClass() == null || config == null) return;
+        if (hero == null || hero.getClass() == null || config == null)
+            return;
 
         String root = "experience";
         for (Map.Entry<String, Double> entry : hero.experience.entrySet()) {
@@ -401,7 +404,7 @@ public class HeroManager {
         if (cEffects != null) {
             effect.remove(creature);
             cEffects.remove(effect);
-            //If the creature has no effects left
+            // If the creature has no effects left
             if (cEffects.isEmpty()) {
                 creatureEffects.remove(creature);
             }
@@ -415,7 +418,7 @@ public class HeroManager {
      */
     public void clearCreatureEffects(Creature creature) {
         if (creatureEffects.containsKey(creature)) {
-            for(Effect effect : creatureEffects.get(creature)) {
+            for (Effect effect : creatureEffects.get(creature)) {
                 removeCreatureEffect(creature, effect);
             }
         }
@@ -429,7 +432,8 @@ public class HeroManager {
      * @return
      */
     public boolean creatureHasEffect(Creature creature, String name) {
-        if (!creatureEffects.containsKey(creature)) return false;
+        if (!creatureEffects.containsKey(creature))
+            return false;
         for (Effect effect : creatureEffects.get(creature)) {
             if (effect.getName().equalsIgnoreCase(name)) {
                 return true;
@@ -447,10 +451,11 @@ public class HeroManager {
     public Set<Effect> getCreatureEffects(Creature creature) {
         return creatureEffects.get(creature);
     }
-    
+
     public Effect getCreatureEffect(Creature creature, String name) {
-        if (creatureEffects.get(creature) == null) return null;
-        
+        if (creatureEffects.get(creature) == null)
+            return null;
+
         for (Effect effect : creatureEffects.get(creature)) {
             if (effect.getName().equals(name)) {
                 return effect;
@@ -552,12 +557,14 @@ class PartyUpdater implements Runnable {
     }
 
     public void run() {
-        if (!this.plugin.getConfigManager().getProperties().mapUI) return;
+        if (!this.plugin.getConfigManager().getProperties().mapUI)
+            return;
 
         // System.out.print("Size - " + partyManager.getParties().size() + " Tick - " +
         // Bukkit.getServer().getWorlds().get(0).getTime());
 
-        if (partyManager.getParties().size() == 0) return;
+        if (partyManager.getParties().size() == 0)
+            return;
 
         for (HeroParty party : partyManager.getParties()) {
             if (party.updateMapDisplay()) {

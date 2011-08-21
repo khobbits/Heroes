@@ -6,7 +6,7 @@ public class SkillUseInfo {
 
     private final Hero hero;
     private final Skill skill;
-    
+
     public SkillUseInfo(Hero hero, Skill skill) {
         this.hero = hero;
         this.skill = skill;

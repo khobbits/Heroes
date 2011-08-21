@@ -14,13 +14,13 @@ public class WeaponDamageEvent extends Event implements Cancellable {
     private Entity entity;
     private DamageCause cause;
     private boolean cancelled = false;
-    
+
     public WeaponDamageEvent(int damage, EntityDamageByEntityEvent event) {
         super("HeroesWeaponDamageEvent");
         this.damage = damage;
         this.damager = event.getDamager();
         this.entity = event.getEntity();
-        this.cause = event.getCause();  
+        this.cause = event.getCause();
     }
 
     public void setDamage(int damage) {

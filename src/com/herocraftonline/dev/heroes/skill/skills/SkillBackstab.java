@@ -42,18 +42,20 @@ public class SkillBackstab extends PassiveSkill {
 
         @Override
         public void onCustomEvent(Event event) {
-            if (!(event instanceof WeaponDamageEvent)) return;
+            if (!(event instanceof WeaponDamageEvent))
+                return;
 
             WeaponDamageEvent subEvent = (WeaponDamageEvent) event;
             if (subEvent.getDamager() instanceof Player) {
                 Player player = (Player) subEvent.getDamager();
                 Hero hero = getPlugin().getHeroManager().getHero(player);
                 if (hero.hasEffect(getName())) {
-                    if (subEvent.getEntity().getLocation().getDirection().dot(player.getLocation().getDirection()) <= 0) return;
+                    if (subEvent.getEntity().getLocation().getDirection().dot(player.getLocation().getDirection()) <= 0)
+                        return;
 
-                    if (hero.hasEffect("Sneak") && rand.nextDouble() < getSetting(hero.getHeroClass(), "sneak-chance", 1.0) ) {
+                    if (hero.hasEffect("Sneak") && rand.nextDouble() < getSetting(hero.getHeroClass(), "sneak-chance", 1.0)) {
                         subEvent.setDamage((int) (subEvent.getDamage() * getSetting(hero.getHeroClass(), "sneak-bonus", 2.0)));
-                    } else if (rand.nextDouble() < getSetting(hero.getHeroClass(), "attack-chance", .5)){
+                    } else if (rand.nextDouble() < getSetting(hero.getHeroClass(), "attack-chance", .5)) {
                         subEvent.setDamage((int) (subEvent.getDamage() * getSetting(hero.getHeroClass(), "attack-bonus", 1.5)));
                     }
                     String name = "";
@@ -63,7 +65,7 @@ public class SkillBackstab extends PassiveSkill {
                     } else if (subEvent.getEntity() instanceof Creature) {
                         name = "a " + Messaging.getCreatureName((Creature) subEvent.getEntity()).toLowerCase();
                     }
-                    
+
                     Messaging.send(player, "You have backstabbed " + name);
                 }
             }

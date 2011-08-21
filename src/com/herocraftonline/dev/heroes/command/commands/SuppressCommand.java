@@ -21,12 +21,13 @@ public class SuppressCommand extends BasicCommand {
         setDescription("Toggles the suppression of skill messages");
         setUsage("/hero stfu §9<skill>");
         setArgumentRange(1, 1);
-        setIdentifiers(new String[]{"hero stfu", "hero suppress"});
+        setIdentifiers(new String[] { "hero stfu", "hero suppress" });
     }
 
     @Override
     public boolean execute(CommandSender sender, String identifier, String[] args) {
-        if (!(sender instanceof Player)) return false;
+        if (!(sender instanceof Player))
+            return false;
 
         Player player = (Player) sender;
         Hero hero = plugin.getHeroManager().getHero(player);

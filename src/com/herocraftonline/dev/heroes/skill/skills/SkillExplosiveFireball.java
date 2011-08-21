@@ -32,7 +32,7 @@ public class SkillExplosiveFireball extends ActiveSkill {
         setDescription("Shoots an explosive ball of fire");
         setUsage("/skill fireball");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[]{"skill explosivefireball"});
+        setIdentifiers(new String[] { "skill explosivefireball" });
 
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(this), Priority.Normal);
     }
@@ -99,14 +99,15 @@ public class SkillExplosiveFireball extends ActiveSkill {
     public class SkillEntityListener extends EntityListener {
 
         private final Skill skill;
-        
+
         public SkillEntityListener(Skill skill) {
             this.skill = skill;
         }
-        
+
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
-            if (event.isCancelled()) return;
+            if (event.isCancelled())
+                return;
 
             if (event instanceof EntityDamageByEntityEvent) {
                 EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;

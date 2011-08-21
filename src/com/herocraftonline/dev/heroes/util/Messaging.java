@@ -39,11 +39,11 @@ public final class Messaging {
         manaBar += ChatColor.RED + "]";
         return manaBar + " - " + ChatColor.BLUE + mana + "%";
     }
-    
+
     public static String createFullHealthBar(double health, double maxHealth) {
         return "§aHP: §f" + (int) Math.ceil(health) + "/" + (int) Math.ceil(maxHealth) + " " + createHealthBar(health, maxHealth);
     }
-    
+
     public static String createHealthBar(double health, double maxHealth) {
         String healthBar = ChatColor.RED + "[" + ChatColor.GREEN;
         int progress = (int) (health / maxHealth * 50.0);
@@ -55,7 +55,7 @@ public final class Messaging {
             healthBar += "|";
         }
         healthBar += ChatColor.RED + "]";
-        return healthBar + " - " + ChatColor.GREEN + (int) (health/maxHealth * 100.0) + "%";
+        return healthBar + " - " + ChatColor.GREEN + (int) (health / maxHealth * 100.0) + "%";
     }
 
     public static void send(CommandSender player, String msg, Object... params) {

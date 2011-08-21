@@ -26,7 +26,7 @@ public class SkillMight extends ActiveSkill {
         setDescription("You increase your party's damage with weapons!");
         setArgumentRange(0, 0);
         setUsage("/skill might");
-        setIdentifiers(new String[]{"skill might"});
+        setIdentifiers(new String[] { "skill might" });
 
         registerEvent(Type.CUSTOM_EVENT, new CustomListener(), Priority.Normal);
     }
@@ -36,7 +36,7 @@ public class SkillMight extends ActiveSkill {
         ConfigurationNode node = super.getDefaultConfig();
         node.setProperty("damage-bonus", 1.25);
         node.setProperty("range", 10);
-        node.setProperty("duration", 600000); //in Milliseconds - 10 minutes
+        node.setProperty("duration", 600000); // in Milliseconds - 10 minutes
         return node;
     }
 
@@ -51,18 +51,20 @@ public class SkillMight extends ActiveSkill {
             if (hero.hasEffect("Might")) {
                 if (((MightEffect) hero.getEffect("Might")).getDamageBonus() > mEffect.getDamageBonus()) {
                     Messaging.send(player, "You have a more powerful effect already!");
-                }   
+                }
             }
             hero.addEffect(mEffect);
         } else {
             int rangeSquared = (int) Math.pow(getSetting(hero.getHeroClass(), "range", 10), 2);
             for (Hero pHero : hero.getParty().getMembers()) {
-                if (!pHero.getPlayer().getWorld().equals(player.getWorld())) continue;
-                if (pHero.getPlayer().getLocation().distanceSquared(player.getLocation()) > rangeSquared) continue;
+                if (!pHero.getPlayer().getWorld().equals(player.getWorld()))
+                    continue;
+                if (pHero.getPlayer().getLocation().distanceSquared(player.getLocation()) > rangeSquared)
+                    continue;
                 if (pHero.hasEffect("Might")) {
                     if (((MightEffect) pHero.getEffect("Might")).getDamageBonus() > mEffect.getDamageBonus()) {
                         continue;
-                    }   
+                    }
                 }
                 pHero.addEffect(mEffect);
             }
@@ -104,10 +106,12 @@ public class SkillMight extends ActiveSkill {
 
         @Override
         public void onCustomEvent(Event event) {
-            if (!(event instanceof WeaponDamageEvent)) return;
+            if (!(event instanceof WeaponDamageEvent))
+                return;
             WeaponDamageEvent subEvent = (WeaponDamageEvent) event;
 
-            if (subEvent.getCause() != DamageCause.ENTITY_ATTACK)  return;
+            if (subEvent.getCause() != DamageCause.ENTITY_ATTACK)
+                return;
 
             if (subEvent.getDamager() instanceof Player) {
                 Player player = (Player) subEvent.getDamager();
@@ -119,7 +123,7 @@ public class SkillMight extends ActiveSkill {
                 }
             } else if (subEvent.getDamager() instanceof Projectile) {
                 if (((Projectile) subEvent.getDamager()).getShooter() instanceof Player) {
-                    Player player = (Player) ((Projectile)subEvent.getDamager()).getShooter();
+                    Player player = (Player) ((Projectile) subEvent.getDamager()).getShooter();
                     Hero hero = getPlugin().getHeroManager().getHero(player);
 
                     if (hero.hasEffect("Might")) {

@@ -29,7 +29,7 @@ public class SkillSneak extends ActiveSkill {
         setDescription("You crouch into the shadows");
         setUsage("/skill stealth");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[]{"skill sneak"});
+        setIdentifiers(new String[] { "skill sneak" });
 
         registerEvent(Type.PLAYER_TOGGLE_SNEAK, new SneakListener(), Priority.Highest);
     }
@@ -113,7 +113,8 @@ public class SkillSneak extends ActiveSkill {
 
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
-            if (event.isCancelled()) return;
+            if (event.isCancelled())
+                return;
             Player player = null;
             if (damageCancels && event.getEntity() instanceof Player) {
                 player = (Player) event.getEntity();
@@ -127,7 +128,8 @@ public class SkillSneak extends ActiveSkill {
                     }
                 }
             }
-            if (player == null) return;
+            if (player == null)
+                return;
 
             Hero hero = getPlugin().getHeroManager().getHero(player);
             if (hero.hasEffect("Sneak")) {

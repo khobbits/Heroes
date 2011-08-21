@@ -28,14 +28,14 @@ public class SkillIcyAura extends ActiveSkill {
     private String applyText;
     private String expireText;
     private static Map<Hero, Map<Location, Material>> changedBlocks = new HashMap<Hero, Map<Location, Material>>();
-    
+
     public SkillIcyAura(Heroes plugin) {
         super(plugin, "IcyAura");
         setDescription("Triggers an aura of ice around you.");
         setUsage("/skill icyaura");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[]{"skill icyaura"});
-        
+        setIdentifiers(new String[] { "skill icyaura" });
+
         registerEvent(Type.BLOCK_BREAK, new IcyAuraBlockListener(), Priority.Highest);
     }
 
@@ -53,7 +53,7 @@ public class SkillIcyAura extends ActiveSkill {
 
     @Override
     public void init() {
-        super.init(); 
+        super.init();
         applyText = getSetting(null, "apply-text", "%hero% is emitting ice!").replace("%hero%", "$1");
         expireText = getSetting(null, "expire-text", "%hero% has stopped emitting ice!").replace("%hero%", "$1");
     }
@@ -75,7 +75,6 @@ public class SkillIcyAura extends ActiveSkill {
         private final int tickDamage;
         private final int range;
 
-
         public IcyAuraEffect(SkillIcyAura skill, long duration, long period, int tickDamage, int range) {
             super(skill, "IcyAura", period, duration);
             this.tickDamage = tickDamage;
@@ -93,10 +92,10 @@ public class SkillIcyAura extends ActiveSkill {
         public void remove(Hero hero) {
             super.remove(hero);
             Player player = hero.getPlayer();
-            for(Entry<Location, Material> entry : changedBlocks.get(hero).entrySet()) {
+            for (Entry<Location, Material> entry : changedBlocks.get(hero).entrySet()) {
                 entry.getKey().getBlock().setType(entry.getValue());
             }
-            //CleanUp
+            // CleanUp
             changedBlocks.get(hero).clear();
             changedBlocks.remove(hero);
             broadcast(player.getLocation(), expireText, player.getDisplayName());
@@ -110,7 +109,7 @@ public class SkillIcyAura extends ActiveSkill {
             Location loc = player.getLocation().clone();
             loc.setY(loc.getY() - 1);
             changeBlock(loc, hero);
-            
+
             for (Entity entity : player.getNearbyEntities(range, range, range)) {
                 if (entity instanceof LivingEntity) {
                     LivingEntity lEntity = (LivingEntity) entity;
@@ -135,17 +134,18 @@ public class SkillIcyAura extends ActiveSkill {
             }
         }
     }
-    
+
     public class IcyAuraBlockListener extends BlockListener {
-        
+
         @Override
         public void onBlockBreak(BlockBreakEvent event) {
-            if (event.isCancelled()) return;
-            
-            //Check out mappings to see if this block was a changed block, if so lets deny breaking it.
-            for(Map<Location, Material> blockMap : changedBlocks.values()) 
-                for (Location loc : blockMap.keySet()) 
-                    if (event.getBlock().getLocation().equals(loc)) 
+            if (event.isCancelled())
+                return;
+
+            // Check out mappings to see if this block was a changed block, if so lets deny breaking it.
+            for (Map<Location, Material> blockMap : changedBlocks.values())
+                for (Location loc : blockMap.keySet())
+                    if (event.getBlock().getLocation().equals(loc))
                         event.setCancelled(true);
         }
     }

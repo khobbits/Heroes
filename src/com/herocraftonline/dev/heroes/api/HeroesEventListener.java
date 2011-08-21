@@ -11,84 +11,84 @@ public class HeroesEventListener extends CustomEventListener {
      * @param event
      */
     public void onExperienceGain(ExperienceGainEvent event) {
-        
+
     }
-    
+
     /**
      * Called when an entity is dealing damage with a weapon
      * 
      * @param event
      */
     public void onWeaponDamage(WeaponDamageEvent event) {
-        
+
     }
-    
+
     /**
      * Called when a Hero changes their class
      * 
      * @param event
      */
     public void onClassChange(ClassChangeEvent event) {
-        
+
     }
-    
+
     /**
      * Called when a Hero levels up
      * 
      * @param event
      */
     public void onHeroLevel(HeroLevelEvent event) {
-        
+
     }
-    
+
     /**
      * Called when a target takes damage as a result of a skill
      * 
      * @param event
      */
     public void onSkillDamage(SkillDamageEvent event) {
-        
+
     }
-    
+
     /**
      * Called when a skill is being used by a player
      * 
      * @param event
      */
     public void onSkillUse(SkillUseEvent event) {
-        
+
     }
-    
+
     /**
      * Called when a hero is joining a group
      * 
      * @param event
      */
     public void onHeroJoinParty(HeroJoinPartyEvent event) {
-        
+
     }
-    
+
     /**
      * Called when a hero is leaving a party
      * 
      * @param event
      */
     public void onHeroLeaveParty(HeroLeavePartyEvent event) {
-        
+
     }
-    
+
     /**
      * Called when a hero regains health
      * 
      * @param event
      */
     public void onHeroRegainHealth(HeroRegainHealthEvent event) {
-        
+
     }
-    
+
     @Override
     public void onCustomEvent(Event event) {
-        
+
         if (event instanceof ClassChangeEvent) {
             onClassChange((ClassChangeEvent) event);
         } else if (event instanceof ExperienceGainEvent) {

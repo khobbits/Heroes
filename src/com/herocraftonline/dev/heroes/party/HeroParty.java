@@ -27,7 +27,7 @@ public class HeroParty {
         invites.add(player);
     }
 
-    public void addMember(Hero hero) {        
+    public void addMember(Hero hero) {
         setUpdateMapDisplay(true);
         members.add(hero);
     }

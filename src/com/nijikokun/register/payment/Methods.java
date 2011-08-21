@@ -9,7 +9,7 @@ import org.bukkit.plugin.PluginManager;
 /**
  * Methods.java
  * Controls the getting / setting of methods & the method of payment used.
- *
+ * 
  * @author: Nijikokun<nijikokun@gmail.com> (@nijikokun)
  * @copyright: Copyright (C) 2011
  * @license: GNUv3 Affero License <http://www.gnu.org/licenses/agpl-3.0.html>
@@ -28,7 +28,7 @@ public class Methods {
 
     /**
      * Allows you to set which economy plugin is most preferred.
-     *
+     * 
      * @param preferred
      */
     public Methods(String preferred) {

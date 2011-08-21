@@ -24,11 +24,13 @@ public abstract class BasicInteractiveCommandState implements InteractiveCommand
         this.minArguments = min;
         this.maxArguments = max;
     }
+
     /*
-    @Override
-    public String getIdentifier() {
-        return identifier;
-    }*/
+     * @Override
+     * public String getIdentifier() {
+     * return identifier;
+     * }
+     */
 
     @Override
     public boolean isIdentifier(String input) {

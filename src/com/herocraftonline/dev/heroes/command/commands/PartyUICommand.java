@@ -18,12 +18,13 @@ public class PartyUICommand extends BasicCommand {
         setDescription("Gives the Player a Map linked to the Party UI.");
         setUsage("/party ui");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[]{"party ui"});
+        setIdentifiers(new String[] { "party ui" });
     }
 
     @Override
     public boolean execute(CommandSender sender, String identifier, String[] args) {
-        if (!(sender instanceof Player)) return false;
+        if (!(sender instanceof Player))
+            return false;
 
         if (!this.plugin.getConfigManager().getProperties().mapUI) {
             Messaging.send(sender, "Map UI is not enabled so this command has been disabled.");

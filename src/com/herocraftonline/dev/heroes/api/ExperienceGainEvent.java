@@ -23,7 +23,7 @@ public class ExperienceGainEvent extends Event implements Cancellable {
 
     /**
      * Returns the player's experience
-     *
+     * 
      * @return
      */
     public double getExpGain() {
@@ -50,7 +50,7 @@ public class ExperienceGainEvent extends Event implements Cancellable {
 
     /**
      * Sets the player's experience
-     *
+     * 
      * @param exp
      */
     public void setExpGain(double exp) {

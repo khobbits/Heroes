@@ -54,7 +54,7 @@ public abstract class Skill extends BasicCommand {
      * <li><code>identifiers</code></li>
      * <li><code>notes</code> (optional)</li>
      * </ul>
-     *
+     * 
      * @param plugin the active Heroes instance
      */
     public Skill(Heroes plugin, String name) {
@@ -69,12 +69,12 @@ public abstract class Skill extends BasicCommand {
     /**
      * Helper method that broadcasts a message to all players within 30 blocks of the specified source. These messages
      * can be suppressed by players on an individual basis.
-     *
-     * @param source  the <code>Location</code> to measure from
+     * 
+     * @param source the <code>Location</code> to measure from
      * @param message the content of the message
-     * @param args    any text in the message of the format $<i>n</i> where <i>n</i>
-     *                is an integer will be replaced with the <i>n</i>th element of
-     *                this array
+     * @param args any text in the message of the format $<i>n</i> where <i>n</i>
+     *        is an integer will be replaced with the <i>n</i>th element of
+     *        this array
      */
     public void broadcast(Location source, String message, Object... args) {
         if (message.isEmpty()) {
@@ -99,9 +99,9 @@ public abstract class Skill extends BasicCommand {
     /**
      * The end of the execution path of a skill, this method is called whenever a command with a registered identifier
      * is used.
-     *
+     * 
      * @param sender the <code>CommandSender</code> issuing the command
-     * @param args   the arguments provided with the command
+     * @param args the arguments provided with the command
      */
     @Override
     public abstract boolean execute(CommandSender sender, String identifier, String[] args);
@@ -109,7 +109,7 @@ public abstract class Skill extends BasicCommand {
     /**
      * Creates and returns a <code>ConfigurationNode</code> containing all the default data for the skill. By default,
      * this configuration is empty.
-     *
+     * 
      * @return an empty configuration
      */
     public ConfigurationNode getDefaultConfig() {
@@ -123,10 +123,10 @@ public abstract class Skill extends BasicCommand {
     /**
      * Retrieves a <code>double</code> value from the skill's configuration. Data from the provided <code>HeroClass</code> will be preferred over the skill's own data, if found. If the setting is found in neither
      * of these sources, the default value is returned.
-     *
+     * 
      * @param heroClass the class to search for skill data
-     * @param setting   the name of the data entry to retrieve
-     * @param def       the default value to be used if no entry is found
+     * @param setting the name of the data entry to retrieve
+     * @param def the default value to be used if no entry is found
      * @return the stored setting
      */
     public double getSetting(HeroClass heroClass, String setting, double def) {
@@ -146,10 +146,10 @@ public abstract class Skill extends BasicCommand {
     /**
      * Retrieves a <code>int</code> value from the skill's configuration. Data from the provided <code>HeroClass</code> will be preferred over the skill's own data, if found. If the setting is found in neither of these sources, the
      * default value is returned.
-     *
+     * 
      * @param heroClass the class to search for skill data
-     * @param setting   the name of the data entry to retrieve
-     * @param def       the default value to be used if no entry is found
+     * @param setting the name of the data entry to retrieve
+     * @param def the default value to be used if no entry is found
      * @return the stored setting
      */
     public int getSetting(HeroClass heroClass, String setting, int def) {
@@ -169,10 +169,10 @@ public abstract class Skill extends BasicCommand {
     /**
      * Retrieves a <code>String</code> value from the skill's configuration. Data from the provided <code>HeroClass</code> will be preferred over the skill's own data, if found. If the setting is found in neither
      * of these sources, the default value is returned.
-     *
+     * 
      * @param heroClass the class to search for skill data
-     * @param setting   the name of the data entry to retrieve
-     * @param def       the default value to be used if no entry is found
+     * @param setting the name of the data entry to retrieve
+     * @param def the default value to be used if no entry is found
      * @return the stored setting
      */
     public String getSetting(HeroClass heroClass, String setting, String def) {
@@ -192,10 +192,10 @@ public abstract class Skill extends BasicCommand {
     /**
      * Retrieves a <code>Boolean</code> value from the skill's configuration. Data from the provided <code>HeroClass</code> will be preferred over the skill's own data, if found. If the setting is found in neither
      * of these sources, the default value is returned.
-     *
+     * 
      * @param heroClass the class to search for skill data
-     * @param setting   the name of the data entry to retrieve
-     * @param def       the default value to be used if no entry is found
+     * @param setting the name of the data entry to retrieve
+     * @param def the default value to be used if no entry is found
      * @return the stored setting
      */
     public boolean getSetting(HeroClass heroClass, String setting, boolean def) {
@@ -220,7 +220,7 @@ public abstract class Skill extends BasicCommand {
     /**
      * Sets the configuration containing all settings related to the skill. This should only be used by the skill loader
      * in most cases.
-     *
+     * 
      * @param config the new skill configuration
      */
     public void setConfig(ConfigurationNode config) {
@@ -229,8 +229,8 @@ public abstract class Skill extends BasicCommand {
 
     /**
      * Helper method to make registering an event a little easier.
-     *
-     * @param type     the type of event
+     * 
+     * @param type the type of event
      * @param listener the listener used to handle the event
      * @param priority the priority given to the event handler
      */

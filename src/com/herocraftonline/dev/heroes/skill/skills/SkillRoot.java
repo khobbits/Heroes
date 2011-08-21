@@ -24,7 +24,7 @@ public class SkillRoot extends TargettedSkill {
         setDescription("Roots your target in place");
         setUsage("/skill root <target>");
         setArgumentRange(0, 1);
-        setIdentifiers(new String[]{"skill root"});
+        setIdentifiers(new String[] { "skill root" });
     }
 
     @Override

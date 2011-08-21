@@ -30,7 +30,7 @@ public enum MapColor {
 
     /**
      * Gets the data value associated with this color
-     *
+     * 
      * @return An integer value of this color code
      */
     public int getCode() {
@@ -56,7 +56,7 @@ public enum MapColor {
 
     /**
      * Gets the color represented by the specified color code
-     *
+     * 
      * @param code Code to check
      * @return Associative Color with the given code, or null if it doesn't exist
      */
@@ -93,7 +93,7 @@ public enum MapColor {
 
     /**
      * Strips the given message of all color codes
-     *
+     * 
      * @param input String to strip of color
      * @return A copy of the input string, without any coloring
      */
@@ -107,7 +107,7 @@ public enum MapColor {
 
     static {
         for (MapColor color : MapColor.values()) {
-            //System.out.print("Code - " + color.getCode() + " - " + color.getRed() + "," + color.getGreen() + "," + color.getBlue());
+            // System.out.print("Code - " + color.getCode() + " - " + color.getRed() + "," + color.getGreen() + "," + color.getBlue());
             colors.put(color.getCode(), color);
         }
     }

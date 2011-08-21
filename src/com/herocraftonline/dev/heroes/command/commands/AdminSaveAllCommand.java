@@ -18,7 +18,7 @@ public class AdminSaveAllCommand extends BasicCommand {
         setDescription("Saves all heros online");
         setUsage("/hero admin saveall");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[]{"hero admin saveall"});
+        setIdentifiers(new String[] { "hero admin saveall" });
         setPermission("heroes.admin.saveall");
     }
 

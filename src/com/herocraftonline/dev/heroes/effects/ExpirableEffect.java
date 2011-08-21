@@ -24,7 +24,7 @@ public class ExpirableEffect extends Effect implements Expirable {
     public void apply(Creature creature) {
         applyTime = System.currentTimeMillis();
     }
-    
+
     @Override
     public long getDuration() {
         return duration;
@@ -44,9 +44,9 @@ public class ExpirableEffect extends Effect implements Expirable {
     public void remove(Hero hero) {
 
     }
-    
+
     @Override
     public void remove(Creature creature) {
-        
+
     }
 }

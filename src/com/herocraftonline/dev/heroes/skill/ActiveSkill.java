@@ -18,8 +18,7 @@ import com.herocraftonline.dev.heroes.util.Messaging;
 /**
  * A skill that performs an action in direct response to a user command. All skill identifiers <i>must</i>
  * begin with <i>skill</i>, e.g. "skill fireball", in order to be recognized. ActiveSkills define four default settings:
- * mana, cooldown, experience and usage text. Mana is deducted and a cooldown is activated when the
- * {@link #use(Hero, String[]) use} method returns <code>true</code>. The {@link #execute(CommandSender, String[])
+ * mana, cooldown, experience and usage text. Mana is deducted and a cooldown is activated when the {@link #use(Hero, String[]) use} method returns <code>true</code>. The {@link #execute(CommandSender, String[])
  * execute} automatically handles class, level, mana and cooldown checks on a player attempting to use a skill and
  * should not be overridden. If all of these checks pass, the <code>use</code> method is called, which should contain
  * the heart of the skill's behavior that is unique to each skill.
@@ -63,7 +62,7 @@ public abstract class ActiveSkill extends Skill {
      * When defining your own constructor, be sure to assign the name, description, usage, argument bounds and
      * identifier fields as defined in {@link com.herocraftonline.dev.heroes.command.BaseCommand}. Remember that each
      * identifier must begin with <i>skill</i>.
-     *
+     * 
      * @param plugin the active Heroes instance
      */
     public ActiveSkill(Heroes plugin, String name) {
@@ -73,16 +72,16 @@ public abstract class ActiveSkill extends Skill {
     /**
      * Called whenever a command with an identifier registered to this skill is used. This implementation performs all
      * necessary class, level, mana and cooldown checks. This method should <i>not</i> be overridden unless you really
-     * know what you're doing. If all checks pass, this method calls {@link #use(Hero, String[]) use}. If
-     * <code>use</code> returns <code>true</code>, this method automatically deducts mana, awards experience and sets a
+     * know what you're doing. If all checks pass, this method calls {@link #use(Hero, String[]) use}. If <code>use</code> returns <code>true</code>, this method automatically deducts mana, awards experience and sets a
      * cooldown.
-     *
+     * 
      * @param sender the <code>CommandSender</code> issuing the command
-     * @param args   the arguments provided with the command
+     * @param args the arguments provided with the command
      */
     @Override
     public boolean execute(CommandSender sender, String identifier, String[] args) {
-        if (!(sender instanceof Player)) return false;
+        if (!(sender instanceof Player))
+            return false;
 
         String name = this.getName();
         Player player = (Player) sender;
@@ -119,14 +118,17 @@ public abstract class ActiveSkill extends Skill {
                 }
             }
         }
-        
+
         SkillUseEvent skillEvent = new SkillUseEvent(this, player, hero, args);
         getPlugin().getServer().getPluginManager().callEvent(skillEvent);
+        if (getPlugin().getConfigManager().getProperties().disabledSkills.contains(player.getWorld().getName())) {
+            skillEvent.setCancelled(true);
+        }
         if (skillEvent.isCancelled()) {
             Messaging.send(player, "You can not use that skill at this time!");
             return false;
         }
-        
+
         if (use(hero, args)) {
             if (cooldown > 0) {
                 cooldowns.put(name, time + cooldown);
@@ -150,7 +152,7 @@ public abstract class ActiveSkill extends Skill {
     /**
      * Creates and returns a <code>ConfigurationNode</code> containing the default usage text. When using additional
      * configuration settings in your skills, be sure to override this method to define them with defaults.
-     *
+     * 
      * @return a default configuration
      */
     @Override
@@ -161,9 +163,8 @@ public abstract class ActiveSkill extends Skill {
     }
 
     /**
-     * Returns the text to be displayed when the skill is successfully used. This text is pulled from the
-     * {@link #SETTING_USETEXT} entry in the skill's configuration during initialization.
-     *
+     * Returns the text to be displayed when the skill is successfully used. This text is pulled from the {@link #SETTING_USETEXT} entry in the skill's configuration during initialization.
+     * 
      * @return the usage text
      */
     public String getUseText() {
@@ -183,7 +184,7 @@ public abstract class ActiveSkill extends Skill {
 
     /**
      * Changes the stored usage text. This can be used to override the message found in the skill's configuration.
-     *
+     * 
      * @param useText the new usage text
      */
     public void setUseText(String useText) {
@@ -191,9 +192,8 @@ public abstract class ActiveSkill extends Skill {
     }
 
     /**
-     * The heart of any ActiveSkill, this method defines what actually happens when the skill is used. See
-     * {@link #execute(CommandSender, String[]) execute} for a brief explanation of the execution process.
-     *
+     * The heart of any ActiveSkill, this method defines what actually happens when the skill is used. See {@link #execute(CommandSender, String[]) execute} for a brief explanation of the execution process.
+     * 
      * @param hero the {@link Hero} using the skill
      * @param args the arguments provided with the command
      * @return <code>true</code> if the skill executed properly, <code>false</code> otherwise

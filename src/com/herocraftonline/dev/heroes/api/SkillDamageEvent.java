@@ -16,7 +16,7 @@ public class SkillDamageEvent extends Event implements Cancellable {
     private final Entity entity;
     private final Skill skill;
     private boolean cancelled = false;
-    
+
     public SkillDamageEvent(int damage, Entity entity, SkillUseInfo skillInfo) {
         super("HeroesSkillDamageEvent");
         this.damage = damage;
@@ -52,7 +52,7 @@ public class SkillDamageEvent extends Event implements Cancellable {
 
     @Override
     public void setCancelled(boolean val) {
-        this.cancelled = val;     
+        this.cancelled = val;
     }
 
 }

@@ -18,21 +18,23 @@ public class PartyLeaveCommand extends BasicCommand {
         setDescription("Leaves your party");
         setUsage("/party leave");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[]{"party leave"});
+        setIdentifiers(new String[] { "party leave" });
     }
 
     @Override
     public boolean execute(CommandSender sender, String identifier, String[] args) {
-        if (!(sender instanceof Player)) return false;
+        if (!(sender instanceof Player))
+            return false;
 
         Player player = (Player) sender;
         Hero hero = plugin.getHeroManager().getHero(player);
-        if (hero.getParty() == null) return false;
+        if (hero.getParty() == null)
+            return false;
         HeroParty heroParty = hero.getParty();
-        //Call the HeroLeavePartyEvent
+        // Call the HeroLeavePartyEvent
         HeroLeavePartyEvent event = new HeroLeavePartyEvent(hero, heroParty);
         plugin.getServer().getPluginManager().callEvent(event);
-        
+
         heroParty.messageParty("$1 has left the party", player.getName());
         heroParty.removeMember(hero);
         if (heroParty.getMembers().size() == 0) {

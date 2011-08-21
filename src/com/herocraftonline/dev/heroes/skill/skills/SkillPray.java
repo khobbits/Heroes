@@ -17,7 +17,7 @@ public class SkillPray extends TargettedSkill {
         setDescription("Heals the target");
         setUsage("/skill pray <target>");
         setArgumentRange(0, 1);
-        setIdentifiers(new String[]{"skill pray"});
+        setIdentifiers(new String[] { "skill pray" });
     }
 
     @Override
@@ -37,16 +37,21 @@ public class SkillPray extends TargettedSkill {
             double targetHealth = targetHero.getHealth();
 
             if (targetHealth >= targetHero.getMaxHealth()) {
-                Messaging.send(player, "Target is already fully healed.");
+                if (player.equals(targetHero.getPlayer())) {
+                    Messaging.send(player, "You are already at full health.");
+                } else {
+                    Messaging.send(player, "Target is already fully healed.");
+                }
                 return false;
             }
+
             HeroRegainHealthEvent hrhEvent = new HeroRegainHealthEvent(targetHero, hpPlus, this);
             getPlugin().getServer().getPluginManager().callEvent(hrhEvent);
             if (hrhEvent.isCancelled()) {
                 Messaging.send(player, "Unable to heal the target at this time!");
                 return false;
             }
-            
+
             targetHero.setHealth(targetHealth + hrhEvent.getAmount());
             targetHero.syncHealth();
             broadcastExecuteText(hero, target);

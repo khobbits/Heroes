@@ -24,7 +24,7 @@ public class ChooseCommand extends BasicInteractiveCommand {
     public ChooseCommand(Heroes plugin) {
         super("Choose Class");
         this.plugin = plugin;
-        this.setStates(new InteractiveCommandState[]{new StateA(), new StateB()});
+        this.setStates(new InteractiveCommandState[] { new StateA(), new StateB() });
         setDescription("Selects a new path or specialization");
         setUsage("/hero choose §9<type>");
     }
@@ -43,7 +43,8 @@ public class ChooseCommand extends BasicInteractiveCommand {
 
         @Override
         public boolean execute(CommandSender executor, String identifier, String[] args) {
-            if (!(executor instanceof Player)) return false;
+            if (!(executor instanceof Player))
+                return false;
 
             Player player = (Player) executor;
             Hero hero = plugin.getHeroManager().getHero(player);
@@ -113,7 +114,8 @@ public class ChooseCommand extends BasicInteractiveCommand {
 
         @Override
         public boolean execute(CommandSender executor, String identifier, String[] args) {
-            if (!(executor instanceof Player)) return false;
+            if (!(executor instanceof Player))
+                return false;
 
             Player player = (Player) executor;
             Hero hero = plugin.getHeroManager().getHero(player);
@@ -123,8 +125,9 @@ public class ChooseCommand extends BasicInteractiveCommand {
 
             ClassChangeEvent event = new ClassChangeEvent(hero, currentClass, newClass);
             plugin.getServer().getPluginManager().callEvent(event);
-            if (event.isCancelled()) return false;
-            
+            if (event.isCancelled())
+                return false;
+
             hero.clearEffects(); // clear any leftover/passive effects
             hero.setHeroClass(newClass);
 
@@ -153,7 +156,8 @@ public class ChooseCommand extends BasicInteractiveCommand {
 
     @Override
     public void onCommandCancelled(CommandSender executor) {
-        if (!(executor instanceof Player)) return;
+        if (!(executor instanceof Player))
+            return;
         pendingClassSelections.remove((Player) executor);
     }
 

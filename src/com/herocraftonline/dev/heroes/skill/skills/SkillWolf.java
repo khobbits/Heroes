@@ -21,7 +21,7 @@ public class SkillWolf extends ActiveSkill {
         setDescription("Summons and tames a wolf to your side");
         setUsage("/skill wolf");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[]{"skill wolf"});
+        setIdentifiers(new String[] { "skill wolf" });
     }
 
     @Override

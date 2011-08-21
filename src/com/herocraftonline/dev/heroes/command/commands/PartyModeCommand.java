@@ -18,12 +18,13 @@ public class PartyModeCommand extends BasicCommand {
         setDescription("Toggles exp sharing or party pvp");
         setUsage("/party mode §9<pvp|exp>");
         setArgumentRange(1, 1);
-        setIdentifiers(new String[]{"party mode"});
+        setIdentifiers(new String[] { "party mode" });
     }
 
     @Override
     public boolean execute(CommandSender sender, String identifier, String[] args) {
-        if (!(sender instanceof Player)) return false;
+        if (!(sender instanceof Player))
+            return false;
 
         Player player = (Player) sender;
         Hero hero = plugin.getHeroManager().getHero(player);

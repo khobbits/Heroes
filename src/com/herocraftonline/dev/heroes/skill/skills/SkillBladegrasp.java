@@ -26,7 +26,7 @@ public class SkillBladegrasp extends ActiveSkill {
         setDescription("Blocks incoming melee damage");
         setUsage("/skill bladegrasp");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[]{"skill bladegrasp"});
+        setIdentifiers(new String[] { "skill bladegrasp" });
 
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
     }
@@ -80,13 +80,13 @@ public class SkillBladegrasp extends ActiveSkill {
     }
 
     public class SkillEntityListener extends EntityListener {
-        
+
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
-            //Ignore cancelled damage events & 0 damage events for Spam Control
+            // Ignore cancelled damage events & 0 damage events for Spam Control
             if (event.getDamage() == 0 || event.isCancelled())
                 return;
-            
+
             Entity defender = event.getEntity();
             if (defender instanceof Player) {
                 Player player = (Player) defender;

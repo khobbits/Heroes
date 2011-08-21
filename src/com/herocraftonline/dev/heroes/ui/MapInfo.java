@@ -42,7 +42,8 @@ public final class MapInfo {
     }
 
     public byte getData(int row, int col) {
-        if (row < 0 || col < 0 || row >= 128 || col >= 128) return 0;
+        if (row < 0 || col < 0 || row >= 128 || col >= 128)
+            return 0;
         return data[row * 128 + col];
     }
 
@@ -52,8 +53,10 @@ public final class MapInfo {
     }
 
     public void setScale(byte scale) {
-        if (scale < 0) scale = 0;
-        if (scale > 4) scale = 4;
+        if (scale < 0)
+            scale = 0;
+        if (scale > 4)
+            scale = 4;
         this.scale = scale;
     }
 
@@ -65,7 +68,8 @@ public final class MapInfo {
     }
 
     public void setData(int row, int col, byte value) {
-        if (row < 0 || col < 0 || row >= 128 || col >= 128) return;
+        if (row < 0 || col < 0 || row >= 128 || col >= 128)
+            return;
         data[row * 128 + col] = value;
     }
 

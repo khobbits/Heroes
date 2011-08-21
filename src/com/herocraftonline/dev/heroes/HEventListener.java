@@ -40,11 +40,12 @@ public class HEventListener extends HeroesEventListener {
             }
         }
     }
-    
+
     @Override
     public void onHeroRegainHealth(HeroRegainHealthEvent event) {
-        if (event.isCancelled() || !event.getHero().hasParty()) return;
-        
+        if (event.isCancelled() || !event.getHero().hasParty())
+            return;
+
         HeroParty party = event.getHero().getParty();
         if (event.getAmount() > 0 && !party.updateMapDisplay()) {
             party.setUpdateMapDisplay(true);

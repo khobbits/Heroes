@@ -28,7 +28,7 @@ public class SkillInvuln extends ActiveSkill {
         setDescription("Grants total damage immunity");
         setUsage("/skill invuln");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[]{"skill invuln"});
+        setIdentifiers(new String[] { "skill invuln" });
 
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
     }
@@ -53,7 +53,7 @@ public class SkillInvuln extends ActiveSkill {
     public boolean use(Hero hero, String[] args) {
         broadcastExecuteText(hero);
         int duration = getSetting(hero.getHeroClass(), "duration", 10000);
-        //Remove any harmful effects on the caster
+        // Remove any harmful effects on the caster
         for (Effect effect : hero.getEffects()) {
             if (effect instanceof Harmful) {
                 hero.removeEffect(effect);

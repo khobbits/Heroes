@@ -21,12 +21,13 @@ public class SpecsCommand extends BasicCommand {
         setDescription("Lists all specializations available to your path");
         setUsage("/hero specs §8[page#]");
         setArgumentRange(0, 1);
-        setIdentifiers(new String[]{"hero specs"});
+        setIdentifiers(new String[] { "hero specs" });
     }
 
     @Override
     public boolean execute(CommandSender sender, String identifier, String[] args) {
-        if (!(sender instanceof Player)) return false;
+        if (!(sender instanceof Player))
+            return false;
 
         HeroClass playerClass = plugin.getHeroManager().getHero((Player) sender).getHeroClass();
 

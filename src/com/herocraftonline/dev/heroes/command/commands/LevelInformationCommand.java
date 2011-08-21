@@ -19,12 +19,13 @@ public class LevelInformationCommand extends BasicCommand {
         setDescription("Displays hero information");
         setUsage("/hero level");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[]{"hero level", "level", "lvl"});
+        setIdentifiers(new String[] { "hero level", "level", "lvl" });
     }
 
     @Override
     public boolean execute(CommandSender sender, String identifier, String[] args) {
-        if (!(sender instanceof Player)) return false;
+        if (!(sender instanceof Player))
+            return false;
 
         Player player = (Player) sender;
         Hero hero = plugin.getHeroManager().getHero(player);

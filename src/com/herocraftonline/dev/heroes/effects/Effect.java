@@ -21,10 +21,10 @@ public class Effect {
     public void apply(Hero hero) {
     }
 
-    public void apply (Creature creature) {
-        
+    public void apply(Creature creature) {
+
     }
-    
+
     public void broadcast(Location source, String message, Object... args) {
         skill.broadcast(source, message, args);
     }
@@ -76,7 +76,7 @@ public class Effect {
 
     public void remove(Creature creature) {
     }
-    
+
     public void setPersistent(boolean persistent) {
         this.persistent = persistent;
     }

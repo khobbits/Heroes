@@ -21,12 +21,13 @@ public class WhoCommand extends BasicCommand {
         setDescription("Checks the players level and other information");
         setUsage("/hero who §9<player|class>");
         setArgumentRange(1, 1);
-        setIdentifiers(new String[]{"hero who"});
+        setIdentifiers(new String[] { "hero who" });
     }
 
     @Override
     public boolean execute(CommandSender sender, String identifier, String[] args) {
-        if (!(sender instanceof Player)) return false;
+        if (!(sender instanceof Player))
+            return false;
 
         Player searchedPlayer = plugin.getServer().getPlayer(args[0]);
         HeroClass searchedClass = plugin.getClassManager().getClass(args[0]);

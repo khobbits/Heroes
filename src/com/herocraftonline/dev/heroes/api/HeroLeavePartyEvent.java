@@ -10,7 +10,7 @@ public class HeroLeavePartyEvent extends Event {
 
     private final Hero hero;
     private final HeroParty party;
-    
+
     public HeroLeavePartyEvent(Hero hero, HeroParty heroParty) {
         super("HeroLeavePartyEvent");
         this.hero = hero;

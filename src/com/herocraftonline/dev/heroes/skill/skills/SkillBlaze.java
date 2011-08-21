@@ -20,7 +20,7 @@ public class SkillBlaze extends ActiveSkill {
         setDescription("Sets everyone around you on fire");
         setUsage("/skill blaze");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[]{"skill blaze"});
+        setIdentifiers(new String[] { "skill blaze" });
     }
 
     @Override

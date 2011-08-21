@@ -26,7 +26,7 @@ public class SkillFirearrow extends ActiveSkill {
         setDescription("Shoots a burning arrow");
         setUsage("/skill firearrow");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[]{"skill firearrow"});
+        setIdentifiers(new String[] { "skill firearrow" });
 
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(this), Priority.Normal);
     }
@@ -53,14 +53,15 @@ public class SkillFirearrow extends ActiveSkill {
     public class SkillEntityListener extends EntityListener {
 
         private final Skill skill;
-        
+
         public SkillEntityListener(Skill skill) {
             this.skill = skill;
         }
-        
+
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
-            if (event.isCancelled()) return;
+            if (event.isCancelled())
+                return;
             if (event instanceof EntityDamageByEntityEvent) {
                 EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
                 Entity projectile = subEvent.getDamager();
@@ -75,11 +76,12 @@ public class SkillFirearrow extends ActiveSkill {
                                 // Perform a check to see if any plugin is preventing us from damaging the player.
                                 EntityDamageByEntityEvent damageEvent = new EntityDamageByEntityEvent(dmger, entity, DamageCause.ENTITY_ATTACK, 0);
                                 Bukkit.getServer().getPluginManager().callEvent(damageEvent);
-                                if (damageEvent.isCancelled()) return;
+                                if (damageEvent.isCancelled())
+                                    return;
                                 // Damage the player and ignite them.
                                 LivingEntity livingEntity = (LivingEntity) entity;
                                 livingEntity.setFireTicks(getSetting(heroClass, "fire-ticks", 100));
-                                
+
                                 int damage = getSetting(heroClass, "damage", 4);
                                 getPlugin().getDamageManager().addSpellTarget((Entity) entity, hero, skill);
                                 event.setDamage(damage);

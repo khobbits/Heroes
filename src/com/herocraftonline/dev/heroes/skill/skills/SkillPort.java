@@ -19,7 +19,7 @@ public class SkillPort extends ActiveSkill {
         setDescription("Teleports you and your nearby party to the set location!");
         setUsage("/skill port <location>");
         setArgumentRange(1, 1);
-        setIdentifiers(new String[]{"skill port"});
+        setIdentifiers(new String[] { "skill port" });
     }
 
     @Override
@@ -33,11 +33,11 @@ public class SkillPort extends ActiveSkill {
     @Override
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
-        
-        if(args[0].equalsIgnoreCase("list")) {
-            for(String n : getConfig().getKeys()) {
+
+        if (args[0].equalsIgnoreCase("list")) {
+            for (String n : getConfig().getKeys()) {
                 String retrievedNode = getSetting(hero.getHeroClass(), n, null);
-                if(retrievedNode != null && retrievedNode.split(":").length == 5) {
+                if (retrievedNode != null && retrievedNode.split(":").length == 5) {
                     Messaging.send(player, "$1 - $2", n, retrievedNode);
                 }
             }
@@ -69,13 +69,14 @@ public class SkillPort extends ActiveSkill {
                     return false;
                 }
             }
-            
+
             int range = (int) Math.pow(getSetting(hero.getHeroClass(), "range", 10), 2);
             Location loc = new Location(world, Double.parseDouble(splitArg[1]), Double.parseDouble(splitArg[2]), Double.parseDouble(splitArg[3]));
             broadcastExecuteText(hero);
             if (hero.getParty() != null) {
                 for (Hero pHero : hero.getParty().getMembers()) {
-                    if (!pHero.getPlayer().getWorld().equals(player.getWorld())) continue;
+                    if (!pHero.getPlayer().getWorld().equals(player.getWorld()))
+                        continue;
                     if (player.getLocation().distanceSquared(pHero.getPlayer().getLocation()) <= range) {
                         pHero.getPlayer().teleport(loc);
                     }
@@ -83,7 +84,7 @@ public class SkillPort extends ActiveSkill {
             } else {
                 player.teleport(loc);
             }
-            
+
             return true;
         } else {
             return false;

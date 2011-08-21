@@ -13,7 +13,7 @@ public class SkillGroupTeleport extends ActiveSkill {
         setDescription("Summons your group to your location");
         setUsage("/skill groupteleport");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[]{"skill groupteleport"});
+        setIdentifiers(new String[] { "skill groupteleport" });
     }
 
     @Override

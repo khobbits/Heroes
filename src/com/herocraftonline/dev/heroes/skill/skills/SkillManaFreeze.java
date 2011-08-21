@@ -21,7 +21,7 @@ public class SkillManaFreeze extends TargettedSkill {
         setDescription("Stops your target regening mana");
         setUsage("/skill manafreeze");
         setArgumentRange(0, 1);
-        setIdentifiers(new String[]{"skill manafreeze"});
+        setIdentifiers(new String[] { "skill manafreeze" });
     }
 
     @Override

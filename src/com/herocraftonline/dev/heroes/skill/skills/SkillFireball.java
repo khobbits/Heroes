@@ -26,7 +26,7 @@ public class SkillFireball extends ActiveSkill {
         setDescription("Shoots a dangerous ball of fire");
         setUsage("/skill fireball");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[]{"skill fireball"});
+        setIdentifiers(new String[] { "skill fireball" });
 
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(this), Priority.Normal);
     }
@@ -53,14 +53,15 @@ public class SkillFireball extends ActiveSkill {
     public class SkillEntityListener extends EntityListener {
 
         private final Skill skill;
-        
+
         public SkillEntityListener(Skill skill) {
             this.skill = skill;
         }
-        
+
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
-            if (event.isCancelled()) return;
+            if (event.isCancelled())
+                return;
             if (event instanceof EntityDamageByEntityEvent) {
                 EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
                 Entity projectile = subEvent.getDamager();
@@ -76,7 +77,8 @@ public class SkillFireball extends ActiveSkill {
                                 // Perform a check to see if any plugin is preventing us from damaging the player.
                                 EntityDamageByEntityEvent damageEvent = new EntityDamageByEntityEvent(dmger, entity, DamageCause.ENTITY_ATTACK, 0);
                                 Bukkit.getServer().getPluginManager().callEvent(damageEvent);
-                                if (damageEvent.isCancelled()) return;
+                                if (damageEvent.isCancelled())
+                                    return;
                                 // Damage the player and ignite them.
                                 livingEntity.setFireTicks(getSetting(heroClass, "fire-ticks", 100));
 

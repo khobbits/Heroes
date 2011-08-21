@@ -20,7 +20,7 @@ public class SkillDrainsoul extends TargettedSkill {
         setDescription("Absorb health from target");
         setUsage("/skill drainsoul <target>");
         setArgumentRange(0, 1);
-        setIdentifiers(new String[]{"skill drainsoul"});
+        setIdentifiers(new String[] { "skill drainsoul" });
     }
 
     @Override
@@ -42,7 +42,8 @@ public class SkillDrainsoul extends TargettedSkill {
         // Throw a dummy damage event to make it obey PvP restricting plugins
         EntityDamageEvent event = new EntityDamageByEntityEvent(player, target, DamageCause.CUSTOM, 0);
         getPlugin().getServer().getPluginManager().callEvent(event);
-        if (event.isCancelled()) return false;
+        if (event.isCancelled())
+            return false;
 
         int absorbAmount = getSetting(hero.getHeroClass(), "absorb-amount", 4);
 

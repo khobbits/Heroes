@@ -72,7 +72,7 @@ import javax.imageio.ImageIO;
 
 /**
  * Heroes Plugin for Herocraft
- *
+ * 
  * @author Herocraft's Plugin Team
  */
 public class Heroes extends JavaPlugin {
@@ -92,7 +92,6 @@ public class Heroes extends JavaPlugin {
     private final HBlockListener blockListener = new HBlockListener(this);
     private final HPartyListener partyListener = new HPartyListener(this);
     private final HEventListener hEventListener = new HEventListener(this);
-
 
     // Various data managers
     private ConfigManager configManager;
@@ -116,7 +115,7 @@ public class Heroes extends JavaPlugin {
     /**
      * Print messages to the Debug Log, if the servers in Debug Mode then we also wan't to print the messages to the
      * standard Server Console.
-     *
+     * 
      * @param level
      * @param msg
      */
@@ -183,7 +182,7 @@ public class Heroes extends JavaPlugin {
     /**
      * Print messages to the server Log as well as to our DebugLog. 'debugLog' is used to seperate Heroes information
      * from the Servers Log Output.
-     *
+     * 
      * @param level
      * @param msg
      */
@@ -310,7 +309,8 @@ public class Heroes extends JavaPlugin {
     public void setupPermissions() {
         Plugin test = this.getServer().getPluginManager().getPlugin("Permissions");
         if (Heroes.Permissions == null) {
-            if (test.getDescription().getVersion().startsWith("2")) return;
+            if (test.getDescription().getVersion().startsWith("2"))
+                return;
             if (test != null) {
                 Heroes.Permissions = ((Permissions) test).getHandler();
                 log(Level.INFO, "Permissions found.");

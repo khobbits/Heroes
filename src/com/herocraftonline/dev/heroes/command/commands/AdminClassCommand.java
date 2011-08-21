@@ -19,7 +19,7 @@ public class AdminClassCommand extends BasicCommand {
         setDescription("Changes a users class");
         setUsage("/hero admin class §9<player> <class>");
         setArgumentRange(2, 2);
-        setIdentifiers(new String[]{"hero admin class"});
+        setIdentifiers(new String[] { "hero admin class" });
         setPermission("heroes.admin.classchange");
     }
 

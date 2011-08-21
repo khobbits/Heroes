@@ -23,7 +23,7 @@ public class SkillBleed extends TargettedSkill {
         setDescription("Causes your target to bleed");
         setUsage("/skill bleed <target>");
         setArgumentRange(0, 1);
-        setIdentifiers(new String[]{"skill bleed"});
+        setIdentifiers(new String[] { "skill bleed" });
     }
 
     @Override
@@ -59,7 +59,7 @@ public class SkillBleed extends TargettedSkill {
                 Messaging.send(player, "You need a target!");
                 return false;
             }
-            //Party check
+            // Party check
             if (hero.getParty() != null) {
                 if (hero.getParty().isPartyMember(targetHero)) {
                     Messaging.send(player, "You need a target!");
@@ -73,19 +73,18 @@ public class SkillBleed extends TargettedSkill {
         long period = getSetting(hero.getHeroClass(), "period", 2000);
         int tickDamage = getSetting(hero.getHeroClass(), "tick-damage", 1);
         BleedSkillEffect bEffect = new BleedSkillEffect(this, "Bleed", duration, period, tickDamage, player);
-        
+
         if (targetHero != null) {
             targetHero.addEffect(bEffect);
         } else if (target instanceof Creature) {
             Creature creature = (Creature) target;
             getPlugin().getHeroManager().addCreatureEffect(creature, bEffect);
-            
+
         }
         return true;
     }
 
     public class BleedSkillEffect extends BleedEffect implements Harmful {
-
 
         public BleedSkillEffect(Skill skill, String name, long duration, long period, int tickDamage, Player applier) {
             super(skill, "Bleed", period, duration, tickDamage, applier);
@@ -102,7 +101,7 @@ public class SkillBleed extends TargettedSkill {
         public void apply(Creature creature) {
             super.apply(creature);
         }
-        
+
         @Override
         public void remove(Hero hero) {
             super.remove(hero);
@@ -110,7 +109,7 @@ public class SkillBleed extends TargettedSkill {
             Player player = hero.getPlayer();
             broadcast(player.getLocation(), expireText, player.getDisplayName());
         }
-        
+
         @Override
         public void remove(Creature creature) {
             super.remove(creature);

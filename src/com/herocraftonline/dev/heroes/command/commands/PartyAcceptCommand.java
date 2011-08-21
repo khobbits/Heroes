@@ -18,12 +18,13 @@ public class PartyAcceptCommand extends BasicCommand {
         setDescription("Accept a party invite");
         setUsage("/party accept §9<player>");
         setArgumentRange(1, 1);
-        setIdentifiers(new String[]{"party accept"});
+        setIdentifiers(new String[] { "party accept" });
     }
 
     @Override
     public boolean execute(CommandSender sender, String identifier, String[] args) {
-        if (!(sender instanceof Player)) return false;
+        if (!(sender instanceof Player))
+            return false;
 
         Player player = (Player) sender;
         Hero hero = plugin.getHeroManager().getHero(player);
@@ -35,11 +36,12 @@ public class PartyAcceptCommand extends BasicCommand {
                 return false;
             }
             if (newHero.getParty() != null && newHero.getParty().isInvited(player.getName())) {
-                //Generate an event before adding them to the party
+                // Generate an event before adding them to the party
                 HeroJoinPartyEvent event = new HeroJoinPartyEvent(hero, newHero.getParty());
                 plugin.getServer().getPluginManager().callEvent(event);
-                if (event.isCancelled()) return false;
-                
+                if (event.isCancelled())
+                    return false;
+
                 hero.setParty(newHero.getParty());
                 newHero.getParty().addMember(hero);
                 hero.getParty().messageParty("$1 has joined the party", player.getName());

@@ -22,14 +22,14 @@ public class SkillPoison extends TargettedSkill {
         setDescription("Poisons your target");
         setUsage("/skill poison <target>");
         setArgumentRange(0, 1);
-        setIdentifiers(new String[]{"skill poison"});
+        setIdentifiers(new String[] { "skill poison" });
     }
 
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty("duration", 10000); //in milliseconds
-        node.setProperty("period", 2000); //in milliseconds
+        node.setProperty("duration", 10000); // in milliseconds
+        node.setProperty("period", 2000); // in milliseconds
         node.setProperty("tick-damage", 1);
         node.setProperty("expire-text", "%target% has recovered from the poison!");
         return node;
@@ -57,7 +57,7 @@ public class SkillPoison extends TargettedSkill {
                 Messaging.send(player, "You need a target!");
                 return false;
             }
-            //Party check
+            // Party check
             if (hero.getParty() != null) {
                 if (hero.getParty().isPartyMember(targetHero)) {
                     Messaging.send(player, "You need a target!");
@@ -95,7 +95,7 @@ public class SkillPoison extends TargettedSkill {
         public void apply(Creature creature) {
             super.apply(creature);
         }
-        
+
         @Override
         public void remove(Hero hero) {
             super.remove(hero);
@@ -103,7 +103,7 @@ public class SkillPoison extends TargettedSkill {
             Player player = hero.getPlayer();
             broadcast(player.getLocation(), expireText, player.getDisplayName());
         }
-        
+
         @Override
         public void remove(Creature creature) {
             super.remove(creature);

@@ -27,7 +27,7 @@ public class SkillSafefall extends ActiveSkill {
         setDescription("Stops you from taking fall damage for a short amount of time");
         setUsage("/skill safefall");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[]{"skill safefall"});
+        setIdentifiers(new String[] { "skill safefall" });
 
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
     }

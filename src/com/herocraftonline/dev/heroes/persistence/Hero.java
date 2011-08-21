@@ -103,6 +103,8 @@ public class Hero {
     public void gainExp(double expGain, ExperienceType source, boolean distributeToParty) {
         Properties prop = plugin.getConfigManager().getProperties();
 
+        if (prop.disabledExperience.contains(player.getWorld().getName()))
+            return;
         if (distributeToParty && party != null && party.getExp()) {
             Location location = getPlayer().getLocation();
 
@@ -111,7 +113,7 @@ public class Hero {
             for (Hero partyMember : partyMembers) {
                 if (!location.getWorld().equals(partyMember.getPlayer().getLocation().getWorld()))
                     continue;
-                
+
                 if (location.distanceSquared(partyMember.getPlayer().getLocation()) <= 2500) {
                     inRangeMembers.add(partyMember);
                 }
@@ -140,7 +142,7 @@ public class Hero {
 
         // add the experience
         exp += expGain;
-        
+
         // call event
         ExperienceGainEvent expEvent;
         if (newLevel == currentLevel) {
@@ -162,9 +164,9 @@ public class Hero {
         // add the updated experience
         exp += expGain;
 
-        //Track if the Hero leveled for persisting
+        // Track if the Hero leveled for persisting
         boolean leveledUp = false;
-        
+
         // notify the user
         if (expGain != 0) {
             if (verbose) {
@@ -184,7 +186,7 @@ public class Hero {
         }
 
         setExperience(exp);
-        //Save the hero file when the Hero levels to prevent rollback issues
+        // Save the hero file when the Hero levels to prevent rollback issues
         if (leveledUp)
             plugin.getHeroManager().saveHero(getPlayer());
     }
@@ -266,7 +268,7 @@ public class Hero {
         }
         summons.clear();
     }
-    
+
     public Set<String> getSuppressedSkills() {
         return new HashSet<String>(suppressedSkills);
     }
@@ -311,7 +313,7 @@ public class Hero {
             removeEffect(effect);
         }
     }
-    
+
     public void removeEffect(Effect effect) {
         effects.remove(effect);
         if (effect != null) {
@@ -332,7 +334,7 @@ public class Hero {
             entry.setValue(0.0);
         }
     }
-    
+
     public void setHeroClass(HeroClass heroClass) {
         double currentMaxHP = getMaxHealth();
         this.heroClass = heroClass;
@@ -370,19 +372,19 @@ public class Hero {
             suppressedSkills.remove(skill.getName());
         }
     }
-    
+
     public Map<String, String> getSkillSettings(Skill skill) {
         if (skill == null || !heroClass.hasSkill(skill.getName())) {
             return null;
         }
-        
+
         return skillSettings.get(skill.getName().toLowerCase());
     }
-    
+
     public void setSkillSetting(Skill skill, String node, Object val) {
         setSkillSetting(skill.getName(), node, val);
     }
-    
+
     public void setSkillSetting(String skillName, String node, Object val) {
         Map<String, String> settings = skillSettings.get(skillName.toLowerCase());
         if (settings == null) {
@@ -391,7 +393,7 @@ public class Hero {
         }
         settings.put(node, val.toString());
     }
-    
+
     public void setVerbose(boolean verbose) {
         this.verbose = verbose;
     }

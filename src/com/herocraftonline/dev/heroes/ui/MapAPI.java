@@ -19,24 +19,26 @@ public final class MapAPI {
     }
 
     public void sendRawData(Player player, short mapId, byte[] data) {
-        //Packet packet = new Packet131((short) Material.MAP.getId(), mapId, data);
-        //EntityPlayer entity = ((CraftPlayer) player).getHandle();
-        //entity.netServerHandler.sendPacket(packet);
+        // Packet packet = new Packet131((short) Material.MAP.getId(), mapId, data);
+        // EntityPlayer entity = ((CraftPlayer) player).getHandle();
+        // entity.netServerHandler.sendPacket(packet);
     }
 
     public void sendMap(Player player, short mapId, byte[] data, int interval) {
-        /*for (int col = 0; col < 128; ++col) {
-            byte[] raw = new byte[131];
-            raw[0] = 0;
-            raw[1] = (byte) col;
-            raw[2] = 0;
-
-            for (int row = 0; row < 128; ++row) {
-                raw[3 + row] = data[row * 128 + col];
-            }
-
-            sendRawData(player, mapId, raw);
-        }*/
+        /*
+         * for (int col = 0; col < 128; ++col) {
+         * byte[] raw = new byte[131];
+         * raw[0] = 0;
+         * raw[1] = (byte) col;
+         * raw[2] = 0;
+         * 
+         * for (int row = 0; row < 128; ++row) {
+         * raw[3 + row] = data[row * 128 + col];
+         * }
+         * 
+         * sendRawData(player, mapId, raw);
+         * }
+         */
 
         UIUpdater updater = new UIUpdater(((CraftPlayer) player).getHandle(), data, (byte) mapId, interval);
         updater.start();

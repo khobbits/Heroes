@@ -31,7 +31,7 @@ public final class SkillLoader {
             }
 
             if (mainClass != null) {
-                ClassLoader loader = URLClassLoader.newInstance(new URL[]{file.toURI().toURL()}, plugin.getClass().getClassLoader());
+                ClassLoader loader = URLClassLoader.newInstance(new URL[] { file.toURI().toURL() }, plugin.getClass().getClassLoader());
                 Class<?> clazz = Class.forName(mainClass, true, loader);
                 for (Class<?> subclazz : clazz.getClasses()) {
                     Class.forName(subclazz.getName(), true, loader);

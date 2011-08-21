@@ -21,12 +21,13 @@ public class BindSkillCommand extends BasicCommand {
         setDescription("Binds a skill with an item");
         setUsage("/bind §9<skill> §8[args]");
         setArgumentRange(0, 1000);
-        setIdentifiers(new String[]{"bind"});
+        setIdentifiers(new String[] { "bind" });
     }
 
     @Override
     public boolean execute(CommandSender sender, String identifier, String[] args) {
-        if (!(sender instanceof Player)) return false;
+        if (!(sender instanceof Player))
+            return false;
 
         Player player = (Player) sender;
         Hero hero = plugin.getHeroManager().getHero(player);

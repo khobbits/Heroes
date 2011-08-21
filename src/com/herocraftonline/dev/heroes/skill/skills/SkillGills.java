@@ -26,7 +26,7 @@ public class SkillGills extends ActiveSkill {
         setDescription("Negate drowning damage");
         setUsage("/skill gills");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[]{"skill gills"});
+        setIdentifiers(new String[] { "skill gills" });
 
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
     }

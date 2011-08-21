@@ -23,7 +23,7 @@ public class SkillDispel extends TargettedSkill {
         setDescription("Removes all magical effects from your target");
         setUsage("/skill dispel");
         setArgumentRange(0, 1);
-        setIdentifiers(new String[]{"skill dispel"});
+        setIdentifiers(new String[] { "skill dispel" });
     }
 
     @Override
@@ -32,7 +32,7 @@ public class SkillDispel extends TargettedSkill {
         node.setProperty("max-removals", 3);
         return node;
     }
-    
+
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
@@ -41,24 +41,25 @@ public class SkillDispel extends TargettedSkill {
         int maxRemovals = getSetting(hero.getHeroClass(), "max-removals", 3);
         if (target instanceof Player) {
             Player targetPlayer = (Player) target;
-            //if player is targetting itself
+            // if player is targetting itself
             if (targetPlayer.equals(player)) {
                 for (Effect effect : hero.getEffects()) {
                     if (effect instanceof Dispellable && effect instanceof Harmful) {
                         hero.removeEffect(effect);
                         removed = true;
                         maxRemovals--;
-                        if (maxRemovals == 0) break;
+                        if (maxRemovals == 0)
+                            break;
                     }
                 }
             } else {
                 Hero targetHero = getPlugin().getHeroManager().getHero(targetPlayer);
                 boolean removeHarmful = false;
                 if (hero.hasParty()) {
-                    //If the target is a partymember lets make sure we only remove harmful effects
+                    // If the target is a partymember lets make sure we only remove harmful effects
                     if (hero.getParty().isPartyMember(targetHero)) {
                         removeHarmful = true;
-                    } 
+                    }
                 }
                 for (Effect effect : targetHero.getEffects()) {
                     if (effect instanceof Dispellable) {
@@ -66,19 +67,21 @@ public class SkillDispel extends TargettedSkill {
                             targetHero.removeEffect(effect);
                             removed = true;
                             maxRemovals--;
-                            if (maxRemovals == 0) break;
+                            if (maxRemovals == 0)
+                                break;
                         } else if (!removeHarmful && effect instanceof Beneficial) {
                             targetHero.removeEffect(effect);
                             removed = true;
                             maxRemovals--;
-                            if (maxRemovals == 0) break;
+                            if (maxRemovals == 0)
+                                break;
                         }
                     }
                 }
             }
         } else if (target instanceof Creature) {
             Set<Effect> cEffects = getPlugin().getHeroManager().getCreatureEffects((Creature) target);
-            if ( cEffects != null) {
+            if (cEffects != null) {
                 boolean removeHarmful = false;
                 if (hero.getSummons().contains(target)) {
                     removeHarmful = true;
@@ -89,12 +92,14 @@ public class SkillDispel extends TargettedSkill {
                             getPlugin().getHeroManager().removeCreatureEffect((Creature) target, effect);
                             removed = true;
                             maxRemovals--;
-                            if (maxRemovals == 0) break;
+                            if (maxRemovals == 0)
+                                break;
                         } else if (!removeHarmful && effect instanceof Beneficial) {
                             getPlugin().getHeroManager().removeCreatureEffect((Creature) target, effect);
                             removed = true;
                             maxRemovals--;
-                            if (maxRemovals == 0) break;
+                            if (maxRemovals == 0)
+                                break;
                         }
                     }
                 }

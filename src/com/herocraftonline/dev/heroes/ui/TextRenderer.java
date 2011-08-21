@@ -23,7 +23,7 @@ public final class TextRenderer {
     public TextRenderer(Heroes plugin) {
         try {
             BufferedImage image = ImageIO.read(new File(plugin.getDataFolder(), "font.png"));
-            //BufferedImage image = ImageIO.read(new File("font.png"));
+            // BufferedImage image = ImageIO.read(new File("font.png"));
 
             for (int row = 0; row < 16; ++row) {
                 for (int col = 0; col < 16; ++col) {
@@ -45,8 +45,8 @@ public final class TextRenderer {
 
     /**
      * Set the sprite for a given character.
-     *
-     * @param ch     The character to set the sprite for.
+     * 
+     * @param ch The character to set the sprite for.
      * @param sprite The CharacterSprite to set.
      */
     public void setChar(char ch, CharacterSprite sprite) {
@@ -55,12 +55,12 @@ public final class TextRenderer {
 
     /**
      * Render text to a map in the given color.
-     *
-     * @param map   The MapInfo to render to.
-     * @param row   The row to start rendering on.
-     * @param col   The column to start rendering on.
+     * 
+     * @param map The MapInfo to render to.
+     * @param row The row to start rendering on.
+     * @param col The column to start rendering on.
      * @param color The palette index of the color to render in.
-     * @param text  The text to render.
+     * @param text The text to render.
      */
     public void render(MapInfo map, int row, int col, byte color, String text) {
         validate(text, false);
@@ -87,10 +87,10 @@ public final class TextRenderer {
      * will move down one line and return to the original column, and the text
      * color can be changed using sequences such as "�12;", replacing 12 with
      * the palette index of the color (see ColorMap.indexOf).
-     *
-     * @param map  The MapInfo to render to.
-     * @param row  The row to start rendering on.
-     * @param col  The column to start rendering on.
+     * 
+     * @param map The MapInfo to render to.
+     * @param row The row to start rendering on.
+     * @param col The column to start rendering on.
      * @param text The formatted text to render.
      */
     public void fancyRender(MapInfo map, int row, int col, String text) {
@@ -132,7 +132,7 @@ public final class TextRenderer {
 
     /**
      * Calculate the width of given text.
-     *
+     * 
      * @param text The text.
      * @return The width of the text.
      */
@@ -148,7 +148,8 @@ public final class TextRenderer {
     private void validate(String text, boolean fancy) {
         for (int i = 0; i < text.length(); ++i) {
             char ch = text.charAt(i);
-            if (fancy && (ch == '\u00A7' || ch == '\n')) continue;
+            if (fancy && (ch == '\u00A7' || ch == '\n'))
+                continue;
             if (chars.get(ch) == null) {
                 throw new IllegalArgumentException("Text contains invalid character '" + text.charAt(i) + "'");
             }
@@ -167,7 +168,7 @@ public final class TextRenderer {
          * Initialize the character sprite to the given data. The data must be
          * 8 by 8 pixels, with true representing solid and false transparent.
          * Width is automatically calculated based on solid pixels.
-         *
+         * 
          * @param data A boolean[8*8] representing the bitmap.
          */
         public CharacterSprite(boolean[] data) {
@@ -194,7 +195,7 @@ public final class TextRenderer {
         /**
          * Initialize the character sprite to the given data. The data must be
          * 8 by 8 pixels, with true representing solid and false transparent.
-         *
+         * 
          * @param data A boolean[8*8] representing the bitmap.
          */
         public CharacterSprite(boolean[] data, int width) {
@@ -207,19 +208,20 @@ public final class TextRenderer {
 
         /**
          * Get the value of a pixel of the character.
-         *
+         * 
          * @param row The row, in the range [0,8).
          * @param col The column, in the range [0,8).
          * @return True if the pixel is solid, false if transparent.
          */
         public boolean get(int row, int col) {
-            if (row < 0 || col < 0 || row >= 8 || col >= 8) return false;
+            if (row < 0 || col < 0 || row >= 8 || col >= 8)
+                return false;
             return data[row * 8 + col];
         }
 
         /**
          * Get the width of the character sprite.
-         *
+         * 
          * @return The width of the character.
          */
         public int getWidth() {
@@ -229,7 +231,7 @@ public final class TextRenderer {
         /**
          * Generate a CharacterSprite from an array of 8 strings of 8 characters
          * each. Spaces are transparent and any other characters are solid.
-         *
+         * 
          * @param lines The 8 rows of the sprite.
          * @return The generated CharacterSprite.
          */

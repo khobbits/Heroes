@@ -38,9 +38,9 @@ public class SpoutInventoryListener extends InventoryListener {
         final Player player = event.getPlayer();
         // Grab the Players HeroClass.
         HeroClass clazz = plugin.getHeroManager().getHero(player).getHeroClass();
-        
+
         // Allowing "*" to be added so we can allow all armor types
-        if(!clazz.getAllowedArmor().contains("*")) {
+        if (!clazz.getAllowedArmor().contains("*")) {
             // Check if the Slot is an Armor Slot.
             if (event.getSlotType() == InventorySlotType.ARMOR) {
                 // Perform Armor Check.
@@ -52,9 +52,9 @@ public class SpoutInventoryListener extends InventoryListener {
                 }
             }
         }
-        
+
         // Allowing "*" to be added so we can allow all weapons
-        if(!clazz.getAllowedWeapons().contains("*")) {
+        if (!clazz.getAllowedWeapons().contains("*")) {
             // Check if the Slot is a Weapon Slot.
             if (event.getSlotType() == InventorySlotType.QUICKBAR) {
                 // Perform Weapon Check.

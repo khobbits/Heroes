@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,6 +60,7 @@ public class ConfigManager {
         loadProperties(primaryConfig);
         loadBedConfig(primaryConfig);
         loadMapConfig(primaryConfig);
+        loadWorldConfig(primaryConfig);
         primaryConfig.save();
 
         Configuration damageConfig = new Configuration(damageConfigFile);
@@ -228,6 +230,12 @@ public class ConfigManager {
         properties.mapPacketInterval = config.getInt(root + "packetinterval", 20);
     }
 
+    private void loadWorldConfig(Configuration config) {
+        String root = "worlds.";
+        properties.disabledExperience = config.getStringList(root + "disabledExperience", new ArrayList<String>());
+        properties.disabledSkills = config.getStringList(root + "disableSkills", new ArrayList<String>());
+    }
+
     private void loadSkills(Configuration config) {
         config.load();
         for (Command baseCommand : plugin.getCommandHandler().getCommands()) {
@@ -258,7 +266,7 @@ public class ConfigManager {
         }
     }
 
-    @SuppressWarnings({"unchecked"})
+    @SuppressWarnings({ "unchecked" })
     public void print(Map<String, Object> map, String indent) {
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             if (entry.getValue() instanceof Map) {

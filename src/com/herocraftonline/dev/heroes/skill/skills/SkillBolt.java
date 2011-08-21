@@ -18,7 +18,7 @@ public class SkillBolt extends TargettedSkill {
         setDescription("Calls a bolt of lightning down on the target");
         setUsage("/skill bolt [target]");
         setArgumentRange(0, 1);
-        setIdentifiers(new String[]{"skill bolt"});
+        setIdentifiers(new String[] { "skill bolt" });
     }
 
     @Override
@@ -32,20 +32,20 @@ public class SkillBolt extends TargettedSkill {
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
 
-        if (target.equals(player))  return false;
-        
-        //PvP test
+        if (target.equals(player))
+            return false;
+
+        // PvP test
         EntityDamageByEntityEvent damageEntityEvent = new EntityDamageByEntityEvent(player, target, DamageCause.CUSTOM, 0);
         getPlugin().getServer().getPluginManager().callEvent(damageEntityEvent);
         if (damageEntityEvent.isCancelled()) {
             Messaging.send(player, "Invalid target!");
             return false;
         }
-        
+
         getPlugin().getDamageManager().addSpellTarget(target, hero, this);
         target.getWorld().strikeLightningEffect(target.getLocation());
         target.damage(getSetting(hero.getHeroClass(), "damage", 4), player);
-        
 
         broadcastExecuteText(hero, target);
         return true;

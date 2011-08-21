@@ -132,14 +132,15 @@ public class HeroesDamageListener extends EntityListener {
 
     @Override
     public void onEntityDamage(EntityDamageEvent event) {
-        if (event.isCancelled() || event.getCause() == DamageCause.SUICIDE) return;
+        if (event.isCancelled() || event.getCause() == DamageCause.SUICIDE)
+            return;
 
         Entity entity = event.getEntity();
         Entity attacker = null;
         DamageCause cause = event.getCause();
         int damage = event.getDamage();
         if (damageManager.getSpellTargets().containsKey(entity)) { // Start of skill -> listener communication
-            SkillUseInfo skillInfo = damageManager.getSpellTargets().remove(entity); 
+            SkillUseInfo skillInfo = damageManager.getSpellTargets().remove(entity);
             if (event instanceof EntityDamageByEntityEvent) {
                 SkillDamageEvent spellDamageEvent = new SkillDamageEvent(damage, entity, skillInfo);
                 plugin.getServer().getPluginManager().callEvent(spellDamageEvent);
@@ -149,11 +150,11 @@ public class HeroesDamageListener extends EntityListener {
                 }
                 damage = spellDamageEvent.getDamage();
             }
-        } else if (damage != 0 ){
+        } else if (damage != 0) {
             if (event instanceof EntityDamageByEntityEvent) {
                 attacker = ((EntityDamageByEntityEvent) event).getDamager();
                 if (attacker instanceof Player) {
-                    //Get the damage this player should deal for the weapon they are using
+                    // Get the damage this player should deal for the weapon they are using
                     damage = getPlayerDamage((Player) attacker, damage);
                 } else if (attacker instanceof LivingEntity) {
                     CreatureType type = Properties.getCreatureFromEntity(attacker);
@@ -173,7 +174,7 @@ public class HeroesDamageListener extends EntityListener {
                     Projectile projectile = (Projectile) attacker;
                     if (projectile.getShooter() instanceof Player) {
                         attacker = projectile.getShooter();
-                        //Allow alteration of player damage
+                        // Allow alteration of player damage
                         damage = getPlayerDamage((Player) projectile.getShooter(), damage);
                     } else {
                         attacker = projectile.getShooter();
@@ -186,7 +187,7 @@ public class HeroesDamageListener extends EntityListener {
                         }
                     }
                 }
-                //Call the custom event to allow skills to adjust weapon damage
+                // Call the custom event to allow skills to adjust weapon damage
                 WeaponDamageEvent weaponDamageEvent = new WeaponDamageEvent(damage, (EntityDamageByEntityEvent) event);
                 plugin.getServer().getPluginManager().callEvent(weaponDamageEvent);
                 if (weaponDamageEvent.isCancelled()) {
@@ -194,7 +195,7 @@ public class HeroesDamageListener extends EntityListener {
                     return;
                 }
                 damage = weaponDamageEvent.getDamage();
-                
+
             } else if (cause != DamageCause.CUSTOM) {
                 Integer tmpDamage = damageManager.getEnvironmentalDamage(cause);
                 if (tmpDamage != null) {
@@ -213,7 +214,7 @@ public class HeroesDamageListener extends EntityListener {
                 return;
             }
             final Hero hero = plugin.getHeroManager().getHero(player);
-            //Party damage test
+            // Party damage test
             if (attacker instanceof Player) {
                 if (hero.getParty() != null) {
                     if (hero.getParty().isPartyMember(plugin.getHeroManager().getHero((Player) attacker))) {
@@ -222,7 +223,8 @@ public class HeroesDamageListener extends EntityListener {
                     }
                 }
             }
-            if (damage == 0) return;
+            if (damage == 0)
+                return;
             int damageReduction = calculateArmorReduction(player.getInventory(), damage);
             damage -= damageReduction;
             if (damage < 0) {
@@ -232,13 +234,14 @@ public class HeroesDamageListener extends EntityListener {
             double iHeroHP = hero.getHealth();
             double fHeroHP = iHeroHP - damage;
             // Never set HP less than 0
-            if (fHeroHP < 0) fHeroHP = 0;
+            if (fHeroHP < 0)
+                fHeroHP = 0;
 
             // Round up to get the number of remaining Hearts
             int fPlayerHP = (int) Math.ceil(fHeroHP / hero.getMaxHealth() * 20);
             plugin.debugLog(Level.INFO, "Damage done to " + player.getName() + " by " + cause + ": " + iHeroHP + " -> " + fHeroHP + "   |   " + player.getHealth() + " -> " + fPlayerHP);
 
-            //TODO: Doing this completely Breaks any form of damage modification from passive/active skills 
+            // TODO: Doing this completely Breaks any form of damage modification from passive/active skills
             hero.setHealth(fHeroHP);
 
             // If final HP is 0, make sure we kill the player

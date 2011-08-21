@@ -24,7 +24,7 @@ public class HeroClass {
     private Map<Material, Integer> itemDamage;
     private Map<ProjectileType, Integer> projectileDamage;
     private Map<String, ConfigurationNode> skills;
-    //private Map<String, SkillData> skillData;
+    // private Map<String, SkillData> skillData;
     private double expModifier;
 
     private double baseMaxHealth;

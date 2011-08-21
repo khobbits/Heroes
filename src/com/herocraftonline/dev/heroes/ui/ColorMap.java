@@ -43,11 +43,11 @@ public final class ColorMap {
             // ID 48-51
             "45,45,180", "55,55,220", "64,64,255", "55,55,220",
             // ID 52-55
-            "73,58,35", "89,71,43", "104,83,50", "89,71,43",};
+            "73,58,35", "89,71,43", "104,83,50", "89,71,43", };
 
     /**
      * Resize an image to fit on a map.
-     *
+     * 
      * @param image The image to resize.
      * @return The resized image.
      */
@@ -61,7 +61,7 @@ public final class ColorMap {
 
     /**
      * Convert an Image to a byte[] using the palette.
-     *
+     * 
      * @param originalImage The image to convert.
      * @return A byte[128 * 128] containing the pixels of the image.
      */
@@ -80,7 +80,7 @@ public final class ColorMap {
         byte[] result = new byte[128 * 128];
         for (int i = 0; i < pixels.length; i++) {
             if (i == pixels.length / 2) {
-                //System.out.println("50% converted");
+                // System.out.println("50% converted");
             }
             result[i] = indexOf(new Color(pixels[i]));
         }
@@ -90,7 +90,7 @@ public final class ColorMap {
 
     /**
      * Convert a byte[] to an Image using the palette.
-     *
+     * 
      * @param bytes The byte[128 * 128] to convert.
      * @return A BufferedImage containing the pixels from bytes.
      */
@@ -107,7 +107,7 @@ public final class ColorMap {
 
     /**
      * Get the index of the closest matching color in the palette to the given color.
-     *
+     * 
      * @param r The red component of the color.
      * @param b The blue component of the color.
      * @param g The green component of the color.
@@ -142,18 +142,19 @@ public final class ColorMap {
 
     /**
      * Get the index of the closest matching color in the palette to the given color.
-     *
+     * 
      * @param color The Color to match.
      * @return The index in the palette.
      */
     public static byte indexOf(Color color) {
-        if (color.getAlpha() < 128) return 0;
+        if (color.getAlpha() < 128)
+            return 0;
         return indexOf(color.getRed(), color.getGreen(), color.getBlue());
     }
 
     /**
      * Get the value of the given color in the palette.
-     *
+     * 
      * @param index The index in the palette.
      * @return The Color of the palette entry.
      */

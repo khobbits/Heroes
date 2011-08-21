@@ -1,6 +1,5 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
-
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -23,7 +22,7 @@ public class SkillBandage extends TargettedSkill {
         setDescription("Bandages the target");
         setUsage("/skill bandage <target>");
         setArgumentRange(0, 1);
-        setIdentifiers(new String[]{"skill bandage"});
+        setIdentifiers(new String[] { "skill bandage" });
     }
 
     @Override
@@ -43,7 +42,11 @@ public class SkillBandage extends TargettedSkill {
             double targetHealth = targetHero.getHealth();
 
             if (targetHealth >= targetHero.getMaxHealth()) {
-                Messaging.send(player, "Target is already fully healed.");
+                if (player.equals(targetHero.getPlayer())) {
+                    Messaging.send(player, "You are already at full health.");
+                } else {
+                    Messaging.send(player, "Target is already fully healed.");
+                }
                 return false;
             }
 
@@ -54,27 +57,27 @@ public class SkillBandage extends TargettedSkill {
                 Messaging.send(player, "You need paper to perform this.");
                 return false;
             }
-            
+
             HeroRegainHealthEvent hrhEvent = new HeroRegainHealthEvent(targetHero, hpPlus, this);
             getPlugin().getServer().getPluginManager().callEvent(hrhEvent);
             if (hrhEvent.isCancelled()) {
                 Messaging.send(player, "Unable to heal the target at this time!");
                 return false;
             }
-            
+
             int amount = inHand.getAmount();
             if (amount > 1) {
                 inHand.setAmount(amount - 1);
             } else {
                 inv.setItemInHand(null);
             }
-            
-            
+
             targetHero.setHealth(targetHealth + hrhEvent.getAmount());
             targetHero.syncHealth();
-            //Bandage cures Bleeding!
+            // Bandage cures Bleeding!
             for (Effect effect : targetHero.getEffects()) {
-                if (effect instanceof BleedEffect) targetHero.removeEffect(effect);
+                if (effect instanceof BleedEffect)
+                    targetHero.removeEffect(effect);
             }
 
             broadcastExecuteText(hero, target);

@@ -19,7 +19,7 @@ public class UIUpdater extends Thread {
     }
 
     public void run() {
-        //for (int i = 0; i < 128; i++) {
+        // for (int i = 0; i < 128; i++) {
         for (int i = 127; 0 <= i; --i) {
             byte[] abyte = new byte[131];
             abyte[1] = (byte) i;

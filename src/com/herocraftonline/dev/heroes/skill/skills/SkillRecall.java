@@ -18,7 +18,7 @@ public class SkillRecall extends ActiveSkill {
         setDescription("Marks a location for use with recall, or recalls you to the marked Location");
         setUsage("/skill recall <set|mark|info>");
         setArgumentRange(0, 1);
-        setIdentifiers(new String[]{"skill recall"});
+        setIdentifiers(new String[] { "skill recall" });
     }
 
     @Override
@@ -26,19 +26,20 @@ public class SkillRecall extends ActiveSkill {
         Player player = hero.getPlayer();
         Map<String, String> skillSetting = hero.getSkillSettings(this);
 
-        if (args.length == 1 ) {
+        if (args.length == 1) {
             String label = args[0].toLowerCase();
             if (!label.equals("mark") && !label.equals("info") && !label.equals("set")) {
                 return false;
             } else if (label.equals("info")) {
-                //Display the info about the current mark
+                // Display the info about the current mark
                 World world = validateLocation(skillSetting, player);
-                if ( world == null) return false;
+                if (world == null)
+                    return false;
                 double[] xyzyp = getStoredData(skillSetting);
-                Messaging.send(player, "Your recall is currently marked on $1 at: $2, $3, $4", new Object[] {world.getName(), (int) xyzyp[0], (int) xyzyp[1], (int) xyzyp[2]});
+                Messaging.send(player, "Your recall is currently marked on $1 at: $2, $3, $4", new Object[] { world.getName(), (int) xyzyp[0], (int) xyzyp[1], (int) xyzyp[2] });
                 return true;
             } else {
-                //Save a new mark
+                // Save a new mark
                 Location loc = player.getLocation();
                 hero.setSkillSetting(this, "world", loc.getWorld().getName());
                 hero.setSkillSetting(this, "x", loc.getX());
@@ -46,16 +47,17 @@ public class SkillRecall extends ActiveSkill {
                 hero.setSkillSetting(this, "z", loc.getZ());
                 hero.setSkillSetting(this, "yaw", (double) loc.getYaw());
                 hero.setSkillSetting(this, "pitch", (double) loc.getPitch());
-                Object[] obj = new Object[] {loc.getWorld().getName(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()};
+                Object[] obj = new Object[] { loc.getWorld().getName(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ() };
                 Messaging.send(player, "You have marked a new location on $1 at: $2, $3, $4", obj);
 
                 getPlugin().getHeroManager().saveHero(player);
                 return true;
             }
-        } 
-        //Try to teleport back to the location
+        }
+        // Try to teleport back to the location
         World world = validateLocation(skillSetting, player);
-        if (world == null) return false;
+        if (world == null)
+            return false;
         double[] xyzyp = getStoredData(skillSetting);
         broadcastExecuteText(hero);
         player.teleport(new Location(world, xyzyp[0], xyzyp[1], xyzyp[2], (float) xyzyp[3], (float) xyzyp[4]));
@@ -80,12 +82,12 @@ public class SkillRecall extends ActiveSkill {
             return null;
         }
 
-        //Make sure the world setting isn't null - this lets us know the player has a location saved
+        // Make sure the world setting isn't null - this lets us know the player has a location saved
         if (skillSetting.get("world") == null || skillSetting.get("world").equals("")) {
             Messaging.send(player, "You do not have a recall location marked.");
             return null;
         }
-        //Get the world and make sure it's still available to return to
+        // Get the world and make sure it's still available to return to
         World world = getPlugin().getServer().getWorld((String) skillSetting.get("world"));
         if (world == null) {
             Messaging.send(player, "You have an invalid recall location marked!");

@@ -20,12 +20,13 @@ public class PartyInviteCommand extends BasicCommand {
         setDescription("Invites a player to your party");
         setUsage("/party invite §9<player>");
         setArgumentRange(1, 1);
-        setIdentifiers(new String[]{"party invite"});
+        setIdentifiers(new String[] { "party invite" });
     }
 
     @Override
     public boolean execute(CommandSender sender, String identifier, String[] args) {
-        if (!(sender instanceof Player)) return false;
+        if (!(sender instanceof Player))
+            return false;
 
         Player player = (Player) sender;
         Player target = plugin.getServer().getPlayer(args[0]);

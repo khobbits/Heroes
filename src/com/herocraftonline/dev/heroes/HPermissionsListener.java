@@ -49,7 +49,7 @@ public class HPermissionsListener extends CustomEventListener {
 
     /**
      * The following attempts to relearn all skills for the players in a given world.
-     *
+     * 
      * @param world
      */
     private void relearnSkills(World world) {

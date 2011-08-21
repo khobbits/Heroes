@@ -18,13 +18,13 @@ public class SkillUnholyRitual extends TargettedSkill {
         setDescription("Target Zombie or Skeleton is sacrificed, necromancer receives mana");
         setUsage("/skill unholyritual");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[]{"skill unholyritual"});
+        setIdentifiers(new String[] { "skill unholyritual" });
     }
 
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
-        
+
         if (!(target instanceof Zombie) && !(target instanceof Skeleton)) {
             Messaging.send(player, "You need a target!");
             return false;

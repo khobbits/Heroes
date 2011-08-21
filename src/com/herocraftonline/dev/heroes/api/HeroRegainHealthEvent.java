@@ -13,7 +13,7 @@ public class HeroRegainHealthEvent extends Event implements Cancellable {
     private final Hero hero;
     private final Skill skill;
     private boolean cancelled = false;
-    
+
     public HeroRegainHealthEvent(Hero hero, int amount, Skill skill) {
         super("HeroRegainHealthEvent");
         this.amount = amount;
@@ -60,6 +60,5 @@ public class HeroRegainHealthEvent extends Event implements Cancellable {
     public void setCancelled(boolean cancelled) {
         this.cancelled = cancelled;
     }
-
 
 }

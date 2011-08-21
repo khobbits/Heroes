@@ -17,12 +17,13 @@ public class HeroSaveCommand extends BasicCommand {
         setDescription("Saves your hero file");
         setUsage("/hero save");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[]{"hero save"});
+        setIdentifiers(new String[] { "hero save" });
     }
 
     @Override
     public boolean execute(CommandSender sender, String identifier, String[] args) {
-        if (!(sender instanceof Player)) return false;
+        if (!(sender instanceof Player))
+            return false;
 
         Player player = (Player) sender;
         plugin.getHeroManager().saveHero(player);

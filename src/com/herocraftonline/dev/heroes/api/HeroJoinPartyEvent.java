@@ -12,7 +12,7 @@ public class HeroJoinPartyEvent extends Event implements Cancellable {
     private boolean cancelled = false;
     private final Hero hero;
     private final HeroParty party;
-    
+
     public HeroJoinPartyEvent(Hero hero, HeroParty heroParty) {
         super("PlayerJoinPartyEvent");
         this.hero = hero;

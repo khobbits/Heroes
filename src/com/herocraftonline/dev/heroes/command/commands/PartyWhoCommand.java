@@ -21,12 +21,13 @@ public class PartyWhoCommand extends BasicCommand {
         setDescription("Lists your party members");
         setUsage("/party who");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[]{"party who"});
+        setIdentifiers(new String[] { "party who" });
     }
 
     @Override
     public boolean execute(CommandSender sender, String identifier, String[] args) {
-        if (!(sender instanceof Player)) return false;
+        if (!(sender instanceof Player))
+            return false;
 
         Player player = (Player) sender;
         Hero hero = plugin.getHeroManager().getHero(player);

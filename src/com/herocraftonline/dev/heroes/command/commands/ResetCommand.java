@@ -22,7 +22,7 @@ public class ResetCommand extends BasicInteractiveCommand {
     public ResetCommand(Heroes plugin) {
         super("Reset Class");
         this.plugin = plugin;
-        this.setStates(new InteractiveCommandState[]{new StateA(), new StateB()});
+        this.setStates(new InteractiveCommandState[] { new StateA(), new StateB() });
         setDescription("Resets your XP and path");
         setUsage("/hero reset");
     }
@@ -34,9 +34,11 @@ public class ResetCommand extends BasicInteractiveCommand {
 
     @Override
     public void onCommandCancelled(CommandSender executor) {
-        if (!(executor instanceof Player)) return;
+        if (!(executor instanceof Player))
+            return;
         pendingResets.remove((Player) executor);
     }
+
     class StateA extends BasicInteractiveCommandState {
 
         public StateA() {
@@ -46,7 +48,8 @@ public class ResetCommand extends BasicInteractiveCommand {
 
         @Override
         public boolean execute(CommandSender executor, String identifier, String[] args) {
-            if (!(executor instanceof Player)) return false;
+            if (!(executor instanceof Player))
+                return false;
 
             Player player = (Player) executor;
             HeroClass defaultClass = plugin.getClassManager().getDefaultClass();
@@ -69,28 +72,29 @@ public class ResetCommand extends BasicInteractiveCommand {
 
         @Override
         public boolean execute(CommandSender executor, String identifier, String[] args) {
-            if (!(executor instanceof Player)) return false;
+            if (!(executor instanceof Player))
+                return false;
             Player player = (Player) executor;
-            
-            if (Heroes.Permissions != null ) {
+
+            if (Heroes.Permissions != null) {
                 if (!Heroes.Permissions.has(player, "heroes.reset")) {
                     Messaging.send(player, "You don't have permission to reset your hero");
                     return false;
                 }
             }
-            
+
             Hero hero = plugin.getHeroManager().getHero(player);
             HeroClass defaultClass = plugin.getClassManager().getDefaultClass();
-            
-            //Reset Everything
+
+            // Reset Everything
             hero.clearEffects();
             hero.clearExperience();
             hero.getCooldowns().clear();
-            hero.clearSummons(); 
+            hero.clearSummons();
             hero.getBinds().clear();
-            
-            hero.setHeroClass(defaultClass); //Set the hero to the default class
-            hero.syncHealth(); //re-sync health just in-case the display isn't 100% accurate
+
+            hero.setHeroClass(defaultClass); // Set the hero to the default class
+            hero.syncHealth(); // re-sync health just in-case the display isn't 100% accurate
 
             Messaging.send(player, "Welcome to the path of the $1!", defaultClass.getName());
             plugin.getHeroManager().saveHero(player);

@@ -21,7 +21,7 @@ public class SkillTelekinesis extends ActiveSkill {
         setDescription("Activate levers, buttons and other interactable objects from afar!");
         setUsage("/skill telekinesis");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[]{"skill telekinesis"});
+        setIdentifiers(new String[] { "skill telekinesis" });
     }
 
     @Override
@@ -38,15 +38,15 @@ public class SkillTelekinesis extends ActiveSkill {
         Block block = player.getTargetBlock(transparent, 15);
         if (block.getType() == Material.LEVER || block.getType() == Material.STONE_BUTTON) {
             EntityHuman eH = ((CraftPlayer) player).getHandle();
-            //Can't adjust levers/Buttons through CB 
-            net.minecraft.server.Block.byId[block.getTypeId()].interact(((CraftWorld)block.getWorld()).getHandle(), block.getX(), block.getY(), block.getZ(), eH);
-            //In Case Bukkit eaver fixes blockState changes on levers:
-            //Lever lever = (Lever) block.getState().getData();
-            //lever.setPowered(!lever.isPowered());
-            //block.getState().update();
+            // Can't adjust levers/Buttons through CB
+            net.minecraft.server.Block.byId[block.getTypeId()].interact(((CraftWorld) block.getWorld()).getHandle(), block.getX(), block.getY(), block.getZ(), eH);
+            // In Case Bukkit eaver fixes blockState changes on levers:
+            // Lever lever = (Lever) block.getState().getData();
+            // lever.setPowered(!lever.isPowered());
+            // block.getState().update();
             broadcastExecuteText(hero);
             return true;
-        } 
+        }
 
         Messaging.send(player, "You must target a lever or button");
         return false;

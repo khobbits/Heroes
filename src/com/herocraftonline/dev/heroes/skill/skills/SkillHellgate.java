@@ -20,7 +20,7 @@ public class SkillHellgate extends ActiveSkill {
         setDescription("Teleports you and your nearby party to or from the nether");
         setUsage("/skill hellgate");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[]{"skill hellgate"});
+        setIdentifiers(new String[] { "skill hellgate" });
     }
 
     @Override
@@ -28,10 +28,9 @@ public class SkillHellgate extends ActiveSkill {
         ConfigurationNode node = super.getDefaultConfig();
         node.setProperty("range", 10);
         node.setProperty("hell-world", "world_nether");
-        node.setProperty("default-return", "world"); //default world the player return to if their location wasn't saved
+        node.setProperty("default-return", "world"); // default world the player return to if their location wasn't saved
         return node;
     }
-
 
     @Override
     public boolean use(Hero hero, String[] args) {
@@ -47,21 +46,22 @@ public class SkillHellgate extends ActiveSkill {
             player.teleport(teleportLocation);
             hero.removeEffect(hero.getEffect("Hellgate"));
         } else if (player.getWorld().getEnvironment() == Environment.NETHER) {
-            //If the player doesn't have the Hellgate effect and is on nether - return them to spawn on the default world
+            // If the player doesn't have the Hellgate effect and is on nether - return them to spawn on the default world
             world = getPlugin().getServer().getWorld(defaultWorld);
             if (world == null) {
                 world = getPlugin().getServer().getWorlds().get(0);
             }
             player.teleport(world.getSpawnLocation());
         } else {
-            //We are on the main world so lets setup a teleport to nether!
+            // We are on the main world so lets setup a teleport to nether!
             world = getPlugin().getServer().getWorld(hellWorld);
             if (world == null) {
                 for (World tWorld : getPlugin().getServer().getWorlds()) {
-                    if (tWorld.getEnvironment() == Environment.NETHER) world = tWorld;
+                    if (tWorld.getEnvironment() == Environment.NETHER)
+                        world = tWorld;
                 }
             }
-            //If world is still null then there is no world to teleport to
+            // If world is still null then there is no world to teleport to
             if (world == null) {
                 Messaging.send(player, "No world to open a Hellgate into!");
                 return false;
@@ -71,13 +71,16 @@ public class SkillHellgate extends ActiveSkill {
             player.teleport(world.getSpawnLocation());
         }
 
-        if (hero.getParty() != null ){
-            int rangeSquared = getSetting(hero.getHeroClass(), "range", 10)^2;
+        if (hero.getParty() != null) {
+            int rangeSquared = getSetting(hero.getHeroClass(), "range", 10) ^ 2;
             for (Hero targetHero : hero.getParty().getMembers()) {
                 Player target = targetHero.getPlayer();
-                if (target.equals(player)) continue;
-                if (!player.getWorld().equals(target.getWorld())) continue;
-                if (player.getLocation().distanceSquared(target.getLocation()) > rangeSquared) continue;
+                if (target.equals(player))
+                    continue;
+                if (!player.getWorld().equals(target.getWorld()))
+                    continue;
+                if (player.getLocation().distanceSquared(target.getLocation()) > rangeSquared)
+                    continue;
 
                 if (targetHero.hasEffect("Hellgate")) {
                     HellgateEffect hEffect = (HellgateEffect) targetHero.getEffect("Hellgate");
@@ -85,7 +88,7 @@ public class SkillHellgate extends ActiveSkill {
                     targetHero.removeEffect(hEffect);
                 } else {
                     target.teleport(world.getSpawnLocation());
-                    //If we teleported to a hell-world lets add the effect
+                    // If we teleported to a hell-world lets add the effect
                     if (world.getEnvironment() == Environment.NETHER) {
                         targetHero.addEffect(new HellgateEffect(this, target.getLocation()));
                     }
@@ -97,7 +100,7 @@ public class SkillHellgate extends ActiveSkill {
         return true;
     }
 
-    //Tracks the players original location for returning
+    // Tracks the players original location for returning
     public class HellgateEffect extends Effect {
 
         private final Location location;

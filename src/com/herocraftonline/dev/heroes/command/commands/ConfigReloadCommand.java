@@ -17,13 +17,14 @@ public class ConfigReloadCommand extends BasicCommand {
         setDescription("Reloads the heroes config file");
         setUsage("/hero admin reload");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[]{"hero admin reload"});
+        setIdentifiers(new String[] { "hero admin reload" });
         setPermission("heroes.admin.reload");
     }
 
     @Override
     public boolean execute(CommandSender sender, String identifier, String[] args) {
-        if (!(sender instanceof Player)) return false;
+        if (!(sender instanceof Player))
+            return false;
 
         if (plugin.getConfigManager().reload()) {
             Messaging.send(sender, "Configs reloaded.");

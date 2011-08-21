@@ -16,7 +16,7 @@ public class SkillGroupHeal extends ActiveSkill {
         setDescription("Heals all players around you");
         setUsage("/skill groupheal");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[]{"skill groupheal"});
+        setIdentifiers(new String[] { "skill groupheal" });
     }
 
     @Override
@@ -31,7 +31,7 @@ public class SkillGroupHeal extends ActiveSkill {
     public boolean use(Hero hero, String[] args) {
         int healAmount = getSetting(hero.getHeroClass(), "heal-amount", 2);
         if (hero.getParty() == null) {
-            //Heal just the caster if he's not in a party
+            // Heal just the caster if he's not in a party
             HeroRegainHealthEvent hrhEvent = new HeroRegainHealthEvent(hero, healAmount, this);
             getPlugin().getServer().getPluginManager().callEvent(hrhEvent);
             if (hrhEvent.isCancelled()) {
@@ -41,11 +41,12 @@ public class SkillGroupHeal extends ActiveSkill {
             hero.setHealth(hero.getHealth() + hrhEvent.getAmount());
             hero.syncHealth();
         } else {
-            int radiusSquared = getSetting(hero.getHeroClass(), "heal-radius", 5)^2;
+            int radiusSquared = getSetting(hero.getHeroClass(), "heal-radius", 5) ^ 2;
             Location heroLoc = hero.getPlayer().getLocation();
-            //Heal party members near the caster
+            // Heal party members near the caster
             for (Hero partyHero : hero.getParty().getMembers()) {
-                if (!hero.getPlayer().getWorld().equals(partyHero.getPlayer().getWorld())) continue;
+                if (!hero.getPlayer().getWorld().equals(partyHero.getPlayer().getWorld()))
+                    continue;
                 if (partyHero.getPlayer().getLocation().distanceSquared(heroLoc) <= radiusSquared) {
                     HeroRegainHealthEvent hrhEvent = new HeroRegainHealthEvent(partyHero, healAmount, this);
                     getPlugin().getServer().getPluginManager().callEvent(hrhEvent);

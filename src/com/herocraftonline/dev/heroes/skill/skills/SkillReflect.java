@@ -28,7 +28,7 @@ public class SkillReflect extends ActiveSkill {
         setDescription("Reflects all the damage done to you back to your target");
         setUsage("/skill reflect");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[]{"skill reflect"});
+        setIdentifiers(new String[] { "skill reflect" });
 
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(this), Priority.Normal);
     }
@@ -84,11 +84,11 @@ public class SkillReflect extends ActiveSkill {
     public class SkillEntityListener extends EntityListener {
 
         private final Skill skill;
-        
+
         public SkillEntityListener(Skill skill) {
             this.skill = skill;
         }
-        
+
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
             if (event.isCancelled() || !(event instanceof EntityDamageByEntityEvent)) {

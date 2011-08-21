@@ -19,7 +19,7 @@ public class SkillSmite extends TargettedSkill {
         setDescription("Uses smite on a player");
         setUsage("/skill smite");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[]{"skill smite"});
+        setIdentifiers(new String[] { "skill smite" });
     }
 
     @Override

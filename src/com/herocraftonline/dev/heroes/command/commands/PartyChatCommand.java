@@ -20,12 +20,13 @@ public class PartyChatCommand extends BasicCommand {
         setDescription("Sends messages to your party");
         setUsage("/party §9<msg> OR /p §9<msg>");
         setArgumentRange(1, 1000);
-        setIdentifiers(new String[]{"pc", "p", "party"});
+        setIdentifiers(new String[] { "pc", "p", "party" });
     }
 
     @Override
     public boolean execute(CommandSender sender, String identifier, String[] args) {
-        if (!(sender instanceof Player)) return false;
+        if (!(sender instanceof Player))
+            return false;
 
         Player player = (Player) sender;
         Hero hero = plugin.getHeroManager().getHero(player);

@@ -37,26 +37,26 @@ public class SkillWeb extends TargettedSkill {
         setDescription("Catches your target in a web");
         setUsage("/skill web [target]");
         setArgumentRange(0, 1);
-        setIdentifiers(new String[]{"skill web"});
-        
+        setIdentifiers(new String[] { "skill web" });
+
         registerEvent(Type.BLOCK_BREAK, new WebBlockListener(), Priority.Highest);
     }
-    
+
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
         node.setProperty("range", 10);
-        node.setProperty("duration", 5000); //in milliseconds
+        node.setProperty("duration", 5000); // in milliseconds
         node.setProperty("apply-text", "%hero% conjured a web at %target%'s feet!");
         return node;
     }
-    
+
     @Override
     public void init() {
         super.init();
         applyText = getSetting(null, "apply-text", "%hero% conjured a web at %target%'s feet!").replace("%hero%", "$1").replace("%target%", "$2");
     }
-    
+
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
@@ -66,9 +66,9 @@ public class SkillWeb extends TargettedSkill {
             return false;
         }
         String name = "";
-        
+
         if (target instanceof Player) {
-            //Party check before allowing the cast
+            // Party check before allowing the cast
             if (hero.getParty() != null) {
                 if (hero.getParty().isPartyMember(getPlugin().getHeroManager().getHero((Player) target))) {
                     Messaging.send(player, "You need a target!");
@@ -79,19 +79,19 @@ public class SkillWeb extends TargettedSkill {
         } else if (target instanceof Creature) {
             name = Messaging.getCreatureName((Creature) target).toLowerCase();
         }
-        
-        //Damage check
+
+        // Damage check
         EntityDamageByEntityEvent damageCheck = new EntityDamageByEntityEvent(player, target, DamageCause.CUSTOM, 0);
         getPlugin().getServer().getPluginManager().callEvent(damageCheck);
         if (damageCheck.isCancelled()) {
             Messaging.send(player, "You can't use that skill here!");
             return false;
         }
-        
-        broadcast(player.getLocation(), applyText, new Object[] {player.getDisplayName(), name});
+
+        broadcast(player.getLocation(), applyText, new Object[] { player.getDisplayName(), name });
         int duration = getSetting(hero.getHeroClass(), "duration", 5000);
         WebEffect wEffect = new WebEffect(this, duration, target.getLocation().getBlock().getLocation());
-        //Hero can only have one web effect active at a time - prevents issues with blocks never turning back.
+        // Hero can only have one web effect active at a time - prevents issues with blocks never turning back.
         if (hero.hasEffect("Web")) {
             hero.removeEffect(hero.getEffect("Web"));
         }
@@ -103,18 +103,19 @@ public class SkillWeb extends TargettedSkill {
 
         private List<Location> locations = new ArrayList<Location>();
         private Location loc;
-        
+
         public WebEffect(Skill skill, long duration, Location location) {
             super(skill, "Web", duration);
             this.loc = location;
         }
-        
+
         @Override
         public void apply(Hero hero) {
             super.apply(hero);
             changeBlock(loc, hero);
             for (BlockFace face : BlockFace.values()) {
-                if (face.toString().contains("_") || face == BlockFace.UP || face == BlockFace.DOWN) continue;
+                if (face.toString().contains("_") || face == BlockFace.UP || face == BlockFace.DOWN)
+                    continue;
                 Location blockLoc = loc.getBlock().getRelative(face).getLocation();
                 changeBlock(blockLoc, hero);
             }
@@ -129,14 +130,14 @@ public class SkillWeb extends TargettedSkill {
             }
             locations.clear();
         }
-        
+
         public Location getLocation() {
             return this.loc;
         }
-        
+
         private void changeBlock(Location location, Hero hero) {
             Block block = location.getBlock();
-            
+
             if (block.getType() == Material.WATER || block.getType() == Material.LAVA || block.getType() == Material.SNOW || block.getType() == Material.AIR) {
                 changedBlocks.add(location);
                 locations.add(location);
@@ -144,14 +145,15 @@ public class SkillWeb extends TargettedSkill {
             }
         }
     }
-    
+
     public class WebBlockListener extends BlockListener {
-        
+
         @Override
         public void onBlockBreak(BlockBreakEvent event) {
-            if (event.isCancelled()) return;
-            
-            //Check out mappings to see if this block was a changed block, if so lets deny breaking it.
+            if (event.isCancelled())
+                return;
+
+            // Check out mappings to see if this block was a changed block, if so lets deny breaking it.
             if (changedBlocks.contains(event.getBlock().getLocation())) {
                 event.setCancelled(true);
             }

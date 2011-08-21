@@ -18,7 +18,7 @@ public class SkillAntidote extends TargettedSkill {
         setDescription("Cures your target of poisons");
         setUsage("/skill antidote [target]");
         setArgumentRange(0, 1);
-        setIdentifiers(new String[]{"skill antidote"});
+        setIdentifiers(new String[] { "skill antidote" });
     }
 
     @Override
@@ -27,7 +27,7 @@ public class SkillAntidote extends TargettedSkill {
         node.setProperty("range", 10);
         return node;
     }
-    
+
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();

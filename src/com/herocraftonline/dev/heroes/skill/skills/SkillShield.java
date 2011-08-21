@@ -37,10 +37,11 @@ public class SkillShield extends PassiveSkill {
 
         @Override
         public void onCustomEvent(Event event) {
-            if (!(event instanceof WeaponDamageEvent)) return;
-            
+            if (!(event instanceof WeaponDamageEvent))
+                return;
+
             WeaponDamageEvent subEvent = (WeaponDamageEvent) event;
-            if (subEvent.getCause() != DamageCause.ENTITY_ATTACK || subEvent.getDamage() == 0 ) {
+            if (subEvent.getCause() != DamageCause.ENTITY_ATTACK || subEvent.getDamage() == 0) {
                 return;
             }
             if (subEvent.getEntity() instanceof Player) {

@@ -47,7 +47,7 @@ public class HEntityListener extends EntityListener {
                 }
             }
         }
-        
+
         Properties prop = plugin.getConfigManager().getProperties();
         if (defender instanceof Player) {
             // Incur 5% experience loss to dying player
@@ -89,7 +89,7 @@ public class HEntityListener extends EntityListener {
 
             // If the Player killed another Player we check to see if they can earn EXP from PVP.
             if (defender instanceof Player && expSources.contains(ExperienceType.PVP)) {
-                //Don't award XP for Players killing themselves
+                // Don't award XP for Players killing themselves
                 if (!(defender.equals(attacker))) {
                     prop.playerDeaths.put((Player) defender, defender.getLocation());
                     addedExp = prop.playerKillingExp;
@@ -103,7 +103,8 @@ public class HEntityListener extends EntityListener {
                 CreatureType type = Properties.getCreatureFromEntity(defender);
                 if (type != null && !hero.getSummons().contains(defender)) {
                     // If EXP hasn't been assigned for this Entity then we stop here.
-                    if (!prop.creatureKillingExp.containsKey(type)) return;
+                    if (!prop.creatureKillingExp.containsKey(type))
+                        return;
                     addedExp = prop.creatureKillingExp.get(type);
                     experienceType = ExperienceType.KILLING;
                 }
@@ -111,7 +112,7 @@ public class HEntityListener extends EntityListener {
             if (experienceType != null && addedExp > 0) {
                 hero.gainExp(addedExp, experienceType);
             }
-            //Make sure to remove any effects this creature may have had from the creatureEffect map
+            // Make sure to remove any effects this creature may have had from the creatureEffect map
             if (defender instanceof Creature) {
                 plugin.getHeroManager().clearCreatureEffects((Creature) defender);
             }

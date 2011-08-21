@@ -17,18 +17,19 @@ public class HealthCommand extends BasicCommand {
         setDescription("Displays your health");
         setUsage("/hp");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[]{"health", "hp"});
+        setIdentifiers(new String[] { "health", "hp" });
     }
 
     @Override
     public boolean execute(CommandSender sender, String identifier, String[] args) {
-        if (!(sender instanceof Player)) return false;
+        if (!(sender instanceof Player))
+            return false;
 
         Player player = (Player) sender;
         Hero hero = plugin.getHeroManager().getHero(player);
         double hp = hero.getHealth();
         double maxHp = hero.getMaxHealth();
-        
+
         player.sendMessage(Messaging.createFullHealthBar(hp, maxHp));
         return true;
     }

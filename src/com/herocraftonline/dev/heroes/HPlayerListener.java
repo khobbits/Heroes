@@ -48,7 +48,8 @@ public class HPlayerListener extends PlayerListener {
 
     @Override
     public void onPlayerInteract(PlayerInteractEvent event) {
-        if (event.useItemInHand() == Result.DENY) return;
+        if (event.useItemInHand() == Result.DENY)
+            return;
 
         Player player = event.getPlayer();
         Material material = player.getItemInHand().getType();
@@ -110,7 +111,8 @@ public class HPlayerListener extends PlayerListener {
 
     @Override
     public void onPlayerTeleport(PlayerTeleportEvent event) {
-        if (event.isCancelled()) return;
+        if (event.isCancelled())
+            return;
 
         Player player = event.getPlayer();
         if (event.getFrom().getWorld() != event.getTo().getWorld()) {
@@ -137,9 +139,9 @@ public class HPlayerListener extends PlayerListener {
         }
 
         Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
-        long period = plugin.getConfigManager().getProperties().healInterval;
-        int tickHeal = plugin.getConfigManager().getProperties().healPercent / 100;
-        BedHealEffect bhEffect = new BedHealEffect(period, 100000, tickHeal);
+        long period = plugin.getConfigManager().getProperties().healInterval * 1000;
+        double tickHealPercent = plugin.getConfigManager().getProperties().healPercent / 100;
+        BedHealEffect bhEffect = new BedHealEffect(period, 100000, tickHealPercent);
         hero.addEffect(bhEffect);
     }
 
@@ -149,35 +151,35 @@ public class HPlayerListener extends PlayerListener {
             return;
         }
 
-        //This player is no longer in bed so remove them from the bedHealer set
+        // This player is no longer in bed so remove them from the bedHealer set
         Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
         hero.removeEffect(hero.getEffect("BedHeal"));
     }
 
     public class BedHealEffect extends PeriodicEffect {
-        
-        private final int tickHeal;
-        
-        public BedHealEffect(long period, long duration, int tickHeal) {
+
+        private final double tickHealPercent;
+
+        public BedHealEffect(long period, long duration, double tickHealPercent) {
             super(null, "BedHeal", period, duration);
-            this.tickHeal = tickHeal;
+            this.tickHealPercent = tickHealPercent;
         }
-        
+
         @Override
         public void apply(Hero hero) {
             super.apply(hero);
         }
-        
+
         @Override
         public void remove(Hero hero) {
             super.remove(hero);
         }
-        
+
         @Override
         public void tick(Hero hero) {
             super.tick(hero);
             Player player = hero.getPlayer();
-            double healAmount = hero.getMaxHealth() * (double) tickHeal;
+            double healAmount = hero.getMaxHealth() * tickHealPercent;
             hero.setHealth(hero.getHealth() + healAmount);
             hero.syncHealth();
             player.sendMessage(Messaging.createFullHealthBar(hero.getHealth(), hero.getMaxHealth()));

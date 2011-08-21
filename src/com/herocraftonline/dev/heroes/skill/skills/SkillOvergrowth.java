@@ -22,7 +22,7 @@ public class SkillOvergrowth extends ActiveSkill {
         setDescription("Turns a sapling into a full grown tree");
         setUsage("/skill overgrowth");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[]{"skill overgrowth"});
+        setIdentifiers(new String[] { "skill overgrowth" });
         rand = new Random();
     }
 
@@ -40,21 +40,25 @@ public class SkillOvergrowth extends ActiveSkill {
         if (player.getTargetBlock(null, range).getType() == Material.SAPLING) {
             Block targetBlock = player.getTargetBlock(null, range);
             TreeType tType = null;
-            
+
             switch (targetBlock.getData()) {
-            case (0x0) : 
-                if (rand.nextInt(2) == 0) tType = TreeType.TREE;
-                else tType = TreeType.BIG_TREE;
-                break;
-            case (0x1) : 
-                if (rand.nextInt(2) == 0) tType = TreeType.REDWOOD;
-                else tType = TreeType.TALL_REDWOOD;
-                break;
-            case (0x2) : 
-                tType = TreeType.BIRCH;
-                break;
-            default :
-                tType = TreeType.TREE;
+                case (0x0):
+                    if (rand.nextInt(2) == 0)
+                        tType = TreeType.TREE;
+                    else
+                        tType = TreeType.BIG_TREE;
+                    break;
+                case (0x1):
+                    if (rand.nextInt(2) == 0)
+                        tType = TreeType.REDWOOD;
+                    else
+                        tType = TreeType.TALL_REDWOOD;
+                    break;
+                case (0x2):
+                    tType = TreeType.BIRCH;
+                    break;
+                default:
+                    tType = TreeType.TREE;
             }
             Material sapling = targetBlock.getType();
             targetBlock.setType(Material.AIR);

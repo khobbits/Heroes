@@ -8,7 +8,7 @@ public interface InteractiveCommandState {
 
     public int getMaxArguments();
 
-    //public String getIdentifier();
+    // public String getIdentifier();
     public boolean isIdentifier(String input);
 
     public boolean execute(CommandSender executor, String identifier, String[] args);

@@ -32,7 +32,7 @@ public class SkillFlameshield extends ActiveSkill {
         setDescription("Fire can't hurt you!");
         setUsage("/skill flameshield");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[]{"skill flameshield"});
+        setIdentifiers(new String[] { "skill flameshield" });
 
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
         registerEvent(Type.CUSTOM_EVENT, new HeroesSkillListener(), Priority.Highest);
@@ -91,12 +91,12 @@ public class SkillFlameshield extends ActiveSkill {
 
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
-            if (event.isCancelled()) 
+            if (event.isCancelled())
                 return;
-            
+
             if (event.getCause() != DamageCause.FIRE && event.getCause() != DamageCause.FIRE_TICK && event.getCause() != DamageCause.LAVA)
                 return;
-            
+
             Entity defender = event.getEntity();
             if (defender instanceof Player) {
                 Player player = (Player) defender;
@@ -107,21 +107,23 @@ public class SkillFlameshield extends ActiveSkill {
             }
         }
     }
-    
+
     public class HeroesSkillListener extends HeroesEventListener {
-        
+
         @Override
         public void onSkillDamage(SkillDamageEvent event) {
-            if (event.isCancelled()) return;
-            if (!event.getSkill().getName().toLowerCase().contains("fire") && !event.getSkill().getName().toLowerCase().contains("flame")) return;
-            
+            if (event.isCancelled())
+                return;
+            if (!event.getSkill().getName().toLowerCase().contains("fire") && !event.getSkill().getName().toLowerCase().contains("flame"))
+                return;
+
             if (event.getEntity() instanceof Player) {
                 Player player = (Player) event.getEntity();
                 Hero hero = getPlugin().getHeroManager().getHero(player);
                 if (hero.hasEffect("Flameshield")) {
                     String name = event.getDamager().getPlayer().getName();
                     String skillName = event.getSkill().getName().toLowerCase();
-                    broadcast(event.getEntity().getLocation(), skillBlockText, new Object[] {player.getName(), name, skillName});
+                    broadcast(event.getEntity().getLocation(), skillBlockText, new Object[] { player.getName(), name, skillName });
                     event.setCancelled(true);
                 }
             } else if (event.getEntity() instanceof Creature) {
@@ -129,7 +131,7 @@ public class SkillFlameshield extends ActiveSkill {
                 if (getPlugin().getHeroManager().creatureHasEffect(creature, "Flameshield")) {
                     String name = event.getDamager().getPlayer().getName();
                     String skillName = event.getSkill().getName().toLowerCase();
-                    broadcast(event.getEntity().getLocation(), skillBlockText, new Object[] {Messaging.getCreatureName(creature), name, skillName});
+                    broadcast(event.getEntity().getLocation(), skillBlockText, new Object[] { Messaging.getCreatureName(creature), name, skillName });
                     event.setCancelled(true);
                 }
             }
