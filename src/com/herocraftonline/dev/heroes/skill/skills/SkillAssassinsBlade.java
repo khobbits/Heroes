@@ -53,6 +53,7 @@ public class SkillAssassinsBlade extends ActiveSkill {
         node.setProperty("poison-duration", 10000); // 10 seconds in milliseconds
         node.setProperty("period", 2000); // 2 seconds in milliseconds
         node.setProperty("tick-damage", 2);
+        node.setProperty("attacks", 1); //How many attacks the buff lasts for.
         node.setProperty("apply-text", "%target% is poisoned!");
         node.setProperty("expire-text", "%target% has recovered from the poison!");
         return node;
@@ -68,7 +69,8 @@ public class SkillAssassinsBlade extends ActiveSkill {
     @Override
     public boolean use(Hero hero, String[] args) {
         long duration = getSetting(hero.getHeroClass(), "buff-duration", 600000);
-        hero.addEffect(new AssassinBladeBuff(this, duration));
+        int numAttacks = getSetting(hero.getHeroClass(), "attacks", 1);
+        hero.addEffect(new AssassinBladeBuff(this, duration, numAttacks));
         broadcastExecuteText(hero);
         return true;
     }
@@ -108,21 +110,46 @@ public class SkillAssassinsBlade extends ActiveSkill {
                 if (event.getEntity() instanceof Creature) {
                     getPlugin().getHeroManager().addCreatureEffect((Creature) event.getEntity(), apEffect);
                     hero.removeEffect(hero.getEffect("PoisonBlade"));
+                    checkBuff(hero);
                 } else if (event.getEntity() instanceof Player) {
                     Hero target = getPlugin().getHeroManager().getHero((Player) event.getEntity());
                     target.addEffect(apEffect);
-                    hero.removeEffect(hero.getEffect("PoisonBlade"));
+                    checkBuff(hero);
                 }
             }
+        }
+        
+        private void checkBuff(Hero hero) {
+            AssassinBladeBuff abBuff = (AssassinBladeBuff) hero.getEffect("PoisonBlade");
+            abBuff.numAttacks -= 1;
+            if (abBuff.numAttacks < 1)
+                hero.removeEffect(abBuff);
         }
     }
     
     public class AssassinBladeBuff extends ExpirableEffect implements Beneficial {
 
-        public AssassinBladeBuff(Skill skill, long duration) {
+        private int numAttacks;
+        
+        public AssassinBladeBuff(Skill skill, long duration, int numAttacks) {
             super(skill, "PoisonBlade", duration);
+            this.numAttacks = numAttacks;
         }
         
+        /**
+         * @return the numAttacks
+         */
+        public int getNumAttacks() {
+            return numAttacks;
+        }
+
+        /**
+         * @param numAttacks the numAttacks to set
+         */
+        public void setNumAttacks(int numAttacks) {
+            this.numAttacks = numAttacks;
+        }
+
         @Override
         public void remove(Hero hero) {
             Messaging.send(hero.getPlayer(), "Your blade is no longer poisoned!");
