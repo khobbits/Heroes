@@ -121,9 +121,6 @@ public abstract class ActiveSkill extends Skill {
 
         SkillUseEvent skillEvent = new SkillUseEvent(this, player, hero, args);
         getPlugin().getServer().getPluginManager().callEvent(skillEvent);
-        if (getPlugin().getConfigManager().getProperties().disabledSkills.contains(player.getWorld().getName())) {
-            skillEvent.setCancelled(true);
-        }
         if (skillEvent.isCancelled()) {
             Messaging.send(player, "You can not use that skill at this time!");
             return false;

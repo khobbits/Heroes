@@ -58,7 +58,9 @@ public class HPlayerListener extends PlayerListener {
             if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 event.setCancelled(false);
                 String[] args = hero.getBinds().get(material);
-                plugin.onCommand(player, null, "skill", args);
+                if(!plugin.getConfigManager().getProperties().disabledSkills.contains(player.getWorld().getName())) {
+                    plugin.onCommand(player, null, "skill", args);
+                }
             }
         }
     }
