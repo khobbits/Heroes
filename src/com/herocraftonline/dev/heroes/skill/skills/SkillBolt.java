@@ -32,8 +32,10 @@ public class SkillBolt extends TargettedSkill {
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
 
-        if (target.equals(player))
+        if (target.equals(player)) {
+            Messaging.send(player, "Invalid target!");
             return false;
+        }
 
         // PvP test
         EntityDamageByEntityEvent damageEntityEvent = new EntityDamageByEntityEvent(player, target, DamageCause.CUSTOM, 0);
