@@ -53,7 +53,7 @@ public class SkillFlameshield extends ActiveSkill {
         super.init();
         applyText = getSetting(null, "apply-text", "%hero% conjured a shield of flames!").replace("%hero%", "$1");
         expireText = getSetting(null, "expire-text", "%hero% lost his shield of flames!").replace("%hero%", "$1");
-        skillBlockText = getSetting(null, "skill-block-text", "%name%'s flameshield has blocked %hero%'s %skill%.").replace("%name%", "$1").replace("%hero%", "$2").replace("%hero%", "$3");
+        skillBlockText = getSetting(null, "skill-block-text", "%name%'s flameshield has blocked %hero%'s %skill%.").replace("%name%", "$1").replace("%hero%", "$2").replace("%skill%", "$3");
     }
 
     @Override

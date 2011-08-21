@@ -7,3 +7,6 @@ General/API:
 
 
 Skills:
+
+	Flameshield
+		- Fixed report message for Skill blocking
