@@ -43,7 +43,11 @@ public class SkillBandage extends TargettedSkill {
             double targetHealth = targetHero.getHealth();
 
             if (targetHealth >= targetHero.getMaxHealth()) {
-                Messaging.send(player, "Target is already fully healed.");
+                if (player.equals(targetHero.getPlayer())) {
+                    Messaging.send(player, "You are already at full health.");  
+                } else {
+                    Messaging.send(player, "Target is already fully healed.");
+                }
                 return false;
             }
 
