@@ -19,14 +19,14 @@ Skills:
 		- Fixed heals healing the wrong amount
 		- Made more heal fail options.
 	Assassin's Blade
-		- Your blade poisons those you hit!
+		- Poison your blade for the next attack
 	Blink
 	 	- Sexified. (You can now change the distance).
 	 	- Fixed teleporting through walls
 	Curse
 	    - Fixed curse not triggering properly
 	PoisonArrow - (NEW!)
-	    - Your arrows poison the target!
+	    - Next arrow hit will poison the target!
 	Rejuvenate - (NEW!)
 	    - Heal-over-Time ability.
 	Skeleton

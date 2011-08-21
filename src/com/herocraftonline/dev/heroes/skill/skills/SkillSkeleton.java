@@ -103,7 +103,7 @@ public class SkillSkeleton extends ActiveSkill {
         public void apply(Creature creature) {
             super.apply(creature);
             summoner.getSummons().add(creature);
-            FollowEffect fEffect = new FollowEffect(getSkill(), 3000, getDuration());
+            FollowEffect fEffect = new FollowEffect(getSkill(), 1500, getDuration());
             summoner.addEffect(fEffect);
         }
 
@@ -159,10 +159,9 @@ public class SkillSkeleton extends ActiveSkill {
          */
         private void moveSkeleton(Creature creature, Hero hero) {
             // Check how far away the Skeleton is
-            if (creature.getLocation().distanceSquared(hero.getPlayer().getLocation()) > 9) {
-                EntityCreature cEntity = ((CraftCreature) creature).getHandle();
-                cEntity.pathEntity = cEntity.world.findPath(cEntity, ((CraftPlayer) hero.getPlayer()).getHandle(), 16.0F);
-            }
+            EntityCreature cEntity = ((CraftCreature) creature).getHandle();
+            cEntity.pathEntity = cEntity.world.findPath(cEntity, ((CraftPlayer) hero.getPlayer()).getHandle(), 16.0F);
+            
         }
     }
 
