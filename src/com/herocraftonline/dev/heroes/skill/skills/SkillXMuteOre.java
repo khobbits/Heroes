@@ -80,7 +80,7 @@ public class SkillXMuteOre extends ActiveSkill {
         // Narrowing primitive conversion
         data = (byte) getSetting(hero.getHeroClass(), mat.toString() + ".reagentdata", -1);
         count = getSetting(hero.getHeroClass(), mat.toString() + ".count", 1);
-        String productName = getSetting(hero.getHeroClass(), mat.toString() + ".product", null);
+        String productName = getSetting(hero.getHeroClass(), mat.toString() + ".product", (String) null);
         nextMat = Material.getMaterial(productName);
 
         if (nextMat != null && count > 0) {

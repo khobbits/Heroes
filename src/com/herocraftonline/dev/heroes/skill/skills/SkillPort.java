@@ -36,15 +36,15 @@ public class SkillPort extends ActiveSkill {
 
         if (args[0].equalsIgnoreCase("list")) {
             for (String n : getConfig().getKeys()) {
-                String retrievedNode = getSetting(hero.getHeroClass(), n, null);
+                String retrievedNode = getSetting(hero.getHeroClass(), n, (String) null);
                 if (retrievedNode != null && retrievedNode.split(":").length == 5) {
                     Messaging.send(player, "$1 - $2", n, retrievedNode);
                 }
             }
             return false;
         }
-        if (getSetting(hero.getHeroClass(), args[0].toLowerCase(), null) != null) {
-            String[] splitArg = getSetting(hero.getHeroClass(), args[0].toLowerCase(), null).split(":");
+        if (getSetting(hero.getHeroClass(), args[0].toLowerCase(), (String) null) != null) {
+            String[] splitArg = getSetting(hero.getHeroClass(), args[0].toLowerCase(), (String) null).split(":");
             int levelRequirement = Integer.parseInt(splitArg[4]);
             World world = getPlugin().getServer().getWorld(splitArg[0]);
             if (world == null) {
