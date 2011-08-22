@@ -131,10 +131,8 @@ public class HeroManager {
             playerHero.setVerbose(playerConfig.getBoolean("verbose", true));
             playerHero.suppressedSkills = new HashSet<String>(playerConfig.getStringList("suppressed", null));
             addHero(playerHero);
-            // This probably doesn't work, but it /might/
-            if(!player.isDead()) {
-                playerHero.syncHealth();
-            }
+            playerHero.syncHealth();
+
             performSkillChecks(playerHero);
 
             Heroes.log(Level.INFO, "Loaded hero: " + player.getName());
