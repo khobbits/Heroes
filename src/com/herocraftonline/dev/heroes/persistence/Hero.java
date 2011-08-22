@@ -14,6 +14,8 @@ import org.bukkit.Material;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.config.Configuration;
+import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.ExperienceGainEvent;
@@ -44,6 +46,8 @@ public class Hero {
     protected List<ItemStack> itemRecovery = new ArrayList<ItemStack>();
     protected Set<String> suppressedSkills = new HashSet<String>();
     protected Map<String, Map<String, String>> skillSettings = new HashMap<String, Map<String, String>>();
+
+    private Map<String, ConfigurationNode> skills;
     protected double health;
 
     public Hero(Heroes plugin, Player player, HeroClass heroClass) {
@@ -411,5 +415,17 @@ public class Hero {
         } else {
             this.health = health;
         }
+    }
+    
+    public boolean hasSkill(String skill) {
+        return skills.containsKey(skill);
+    }
+    
+    public Map<String, ConfigurationNode> getSkills() {
+        return skills;
+    }
+    
+    public void addSkill(String skill) {
+        skills.put(skill, Configuration.getEmptyNode());
     }
 }
