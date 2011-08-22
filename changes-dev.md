@@ -11,6 +11,7 @@ General/API:
 Skills:
 
 ALL
+
 	ActiveSkills can now be given 'reagent' and 'reagent-cost' nodes to require specific items during cast
 	All 'range' variables have been replaced with 'radius' if they were meant to be radius checks.
 		- Blaze, Boltstorm, GroupHeal, Hellgate, IcyAura, Might, MultiBolt, Port, Pulse

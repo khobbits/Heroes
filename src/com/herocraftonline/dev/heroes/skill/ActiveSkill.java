@@ -37,10 +37,10 @@ import com.herocraftonline.dev.heroes.util.Setting;
  * <li>{@link PassiveSkill}</li> <li>{@link OutsourcedSkill}</li> </ul>
  */
 public abstract class ActiveSkill extends Skill {
-    
+
     private String useText;
     private boolean awardExpOnCast = true;
-    
+
 
     /**
      * When defining your own constructor, be sure to assign the name, description, usage, argument bounds and
@@ -114,13 +114,13 @@ public abstract class ActiveSkill extends Skill {
         if (skillEvent.isCancelled()) {
             return false;
         }
-        
+
         manaCost = skillEvent.getManaCost();
         if (manaCost > hero.getMana()) {
             Messaging.send(player, "Not enough mana!");
             return false;
         }
-        
+
         itemStack = skillEvent.getReagentCost();
         if (itemStack != null) {
             if (itemStack.getAmount() != 0 && !hasReagentCost(player, itemStack)) {
@@ -129,7 +129,7 @@ public abstract class ActiveSkill extends Skill {
                 return false;
             }
         }
-        
+
         if (use(hero, args)) {
             if (cooldown > 0) {
                 cooldowns.put(name, time + cooldown);
@@ -143,10 +143,13 @@ public abstract class ActiveSkill extends Skill {
             if (hero.isVerbose() && manaCost > 0) {
                 Messaging.send(hero.getPlayer(), ChatColor.BLUE + "MANA " + Messaging.createManaBar(hero.getMana()));
             }
-            
-            player.getInventory().removeItem(itemStack);
-            player.updateInventory();
-            
+
+            //Only charge the item cost if it's non-null
+            if (itemStack != null) {
+                player.getInventory().removeItem(itemStack);
+                player.updateInventory();
+            }
+
             return true;
         } else {
             return false;
@@ -167,7 +170,7 @@ public abstract class ActiveSkill extends Skill {
         }
         return amount >= itemStack.getAmount();
     }
-    
+
     /**
      * Creates and returns a <code>ConfigurationNode</code> containing the default usage text. When using additional
      * configuration settings in your skills, be sure to override this method to define them with defaults.
