@@ -13,6 +13,7 @@ import com.herocraftonline.dev.heroes.api.ClassChangeEvent;
 import com.herocraftonline.dev.heroes.api.HeroLevelEvent;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.persistence.Hero;
+import com.herocraftonline.dev.heroes.util.Setting;
 
 /**
  * Allows any plugin to be adapted into a Heroes skill via permissions restrictions. These permission based skills are
@@ -94,7 +95,7 @@ public class OutsourcedSkill extends Skill {
         String playerName = player.getName();
         ConfigurationNode settings = heroClass.getSkillSettings(getName());
         if (settings != null) {
-            if (hero.getLevel() >= getSetting(heroClass, SETTING_LEVEL, 1)) {
+            if (hero.getLevel() >= getSetting(heroClass, Setting.LEVEL.node(), 1)) {
                 for (String permission : permissions) {
                     if (!hasPermission(world, playerName, permission)) {
                         addPermission(world, playerName, permission);

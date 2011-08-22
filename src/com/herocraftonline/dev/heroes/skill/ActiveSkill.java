@@ -80,7 +80,7 @@ public abstract class ActiveSkill extends Skill {
             Messaging.send(player, "$1s cannot use $2.", heroClass.getName(), name);
             return false;
         }
-        int level = getSetting(heroClass, SETTING_LEVEL, 1);
+        int level = getSetting(heroClass, Setting.LEVEL.node(), 1);
         if (hero.getLevel() < level) {
             Messaging.send(player, "You must be level $1 to use $2.", String.valueOf(level), name);
             return false;
@@ -163,7 +163,7 @@ public abstract class ActiveSkill extends Skill {
      * @param itemStack
      * @return
      */
-    private boolean hasReagentCost(Player player, ItemStack itemStack) {
+    protected boolean hasReagentCost(Player player, ItemStack itemStack) {
         int amount = 0;
         for (ItemStack stack : player.getInventory().all(itemStack.getType()).values()) {
             amount += stack.getAmount();

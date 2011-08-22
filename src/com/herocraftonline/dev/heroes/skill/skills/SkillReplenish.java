@@ -1,9 +1,12 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
+import org.bukkit.util.config.ConfigurationNode;
+
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
+import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillReplenish extends ActiveSkill {
 
@@ -16,9 +19,17 @@ public class SkillReplenish extends ActiveSkill {
     }
 
     @Override
+    public ConfigurationNode getDefaultConfig() {
+        ConfigurationNode node = super.getDefaultConfig();
+        node.setProperty("mana-bonus", 100);
+        return node;
+    }
+    
+    @Override
     public boolean use(Hero hero, String[] args) {
-        hero.setMana(100);
-        Messaging.send(hero.getPlayer(), "Your mana has been fully replenished!");
+        int manaBonus = getSetting(hero.getHeroClass(), "mana-bonus", 100);
+        hero.setMana(manaBonus + hero.getMana());
+        Messaging.send(hero.getPlayer(), "Your mana has been replenished!");
         if (hero.isVerbose()) {
             Messaging.send(hero.getPlayer(), Messaging.createManaBar(100));
         }

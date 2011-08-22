@@ -54,13 +54,20 @@ public class SkillBlink extends ActiveSkill {
         return node;
     }
     
+    @SuppressWarnings("null")
     @Override
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
         int distance = getSetting(hero.getHeroClass(), Setting.MAX_DISTANCE.node(), 6);
         Block prev = null;
         Block b;
-        BlockIterator iter = new BlockIterator(player, distance);
+        BlockIterator iter = null;
+        try {
+            new BlockIterator(player, distance);
+        } catch (IllegalStateException e) {
+            Messaging.send(player, "There was an error getting your blink location!");
+            return false;
+        }
         while (iter.hasNext()) {
             b = iter.next();
             if (transparentBlocks.contains(b.getType())) {

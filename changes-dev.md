@@ -7,21 +7,23 @@ Bug Fixes:
 General/API:
 
 	SkillUseEvent now tracks manacost and reagentcost which can be adjusted during the event
+	Added getSettingKeys to the skill configuration methods.
 
 Skills:
 
-ALL
-
-	ActiveSkills can now be given 'reagent' and 'reagent-cost' nodes to require specific items during cast
-	All 'range' variables have been replaced with 'radius' if they were meant to be radius checks.
-		- Blaze, Boltstorm, GroupHeal, Hellgate, IcyAura, Might, MultiBolt, Port, Pulse
-	All other instances of 'range' should now use the max-distance setting for limiting target distance
-		- Antidote, Web
-	
+	ALL
+		- ActiveSkills can now be given 'reagent' and 'reagent-cost' nodes to require specific items during cast
+		- All 'range' variables have been replaced with 'radius' if they were meant to be radius checks.
+			- Blaze, Boltstorm, GroupHeal, Hellgate, IcyAura, Might, MultiBolt, Port, Pulse
+		- All other instances of 'range' should now use the max-distance setting for limiting target distance
+			- Antidote, Web
 	Backstab
 		- Is now limited to only the specific weapons on the weapon list (melee only)
 	Bolt
 		- Made targeting more verbose
+	Consume - (NEW!)
+		- Works very similar to Replenish, but allows multiple different materials to give mana
+		- Configuration allows different materials to be granted at different levels
 	Flameshield
 		- Fixed report message for Skill blocking
 	IcyAura
@@ -34,6 +36,8 @@ ALL
 		- Renamed item-cost/amount to "reagent" and "reagent-cost" for the skill settings
 	Pulse
 		- Radius is now configurable
+	Replenish
+		- Amount of mana returned to player is now configurable
 	Skeleton
 		- Will now teleport to the player if it gets too far away.
 	Telekinesis

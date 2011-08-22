@@ -35,11 +35,6 @@ import com.herocraftonline.dev.heroes.util.Messaging;
  */
 public abstract class Skill extends BasicCommand {
 
-    /**
-     * Identifier used to store level requirement setting
-     */
-    public static final String SETTING_LEVEL = "level";
-
     private final Heroes plugin;
     private ConfigurationNode config;
 
@@ -234,7 +229,23 @@ public abstract class Skill extends BasicCommand {
             return config.getBoolean(setting, def);
         }
     }
-
+    
+    /**
+     * Retrieves a <code>List of String</code> keys from the skill's configuration. Data from the provided <code>HeroClass</code> will be preferred over the skill's own data, if found. If the setting is found in neither
+     * of these sources, null is returned.
+     * 
+     * @param heroClass the class to search for skill data
+     * @return the stored setting
+     */
+    public List<String> getSettingKeys(HeroClass heroClass) {
+        if (!(heroClass == null)) {
+            if (heroClass.getSkillSettings(getName()) != null) {
+                return heroClass.getSkillSettings(getName()).getKeys();
+            }
+        }
+        return config.getKeys();
+    }
+    
     /**
      * An initialization method called after all configuration data is loaded.
      */
