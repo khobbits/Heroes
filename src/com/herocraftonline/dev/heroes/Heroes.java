@@ -309,9 +309,9 @@ public class Heroes extends JavaPlugin {
     public void setupPermissions() {
         Plugin test = this.getServer().getPluginManager().getPlugin("Permissions");
         if (Heroes.Permissions == null) {
-            if (test.getDescription().getVersion().startsWith("2"))
-                return;
             if (test != null) {
+                if (test.getDescription().getVersion().startsWith("2"))
+                    return;
                 Heroes.Permissions = ((Permissions) test).getHandler();
                 log(Level.INFO, "Permissions found.");
                 final Player[] players = getServer().getOnlinePlayers();

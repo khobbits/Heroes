@@ -1,8 +1,10 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -21,14 +23,26 @@ import com.herocraftonline.dev.heroes.effects.Dispellable;
 import com.herocraftonline.dev.heroes.effects.PeriodicEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
-import com.herocraftonline.dev.heroes.util.Properties;
 
 public class SkillIcyAura extends ActiveSkill {
 
     private String applyText;
     private String expireText;
     private static Map<Hero, Map<Location, Material>> changedBlocks = new HashMap<Hero, Map<Location, Material>>();
-
+    private static final Set<Material> allowedBlocks;
+    static {
+        allowedBlocks = new HashSet<Material>();
+        allowedBlocks.add(Material.STONE);
+        allowedBlocks.add(Material.SAND);
+        allowedBlocks.add(Material.SNOW);
+        allowedBlocks.add(Material.SNOW_BLOCK);
+        allowedBlocks.add(Material.DIRT);
+        allowedBlocks.add(Material.GRASS);
+        allowedBlocks.add(Material.SOIL);
+        allowedBlocks.add(Material.CLAY);
+        allowedBlocks.add(Material.WATER);
+        allowedBlocks.add(Material.STATIONARY_WATER);
+    }
     public SkillIcyAura(Heroes plugin) {
         super(plugin, "IcyAura");
         setDescription("Triggers an aura of ice around you.");
@@ -128,7 +142,7 @@ public class SkillIcyAura extends ActiveSkill {
             if (heroChangedBlocks == null) {
                 changedBlocks.put(hero, new HashMap<Location, Material>());
             }
-            if (loc.getBlock().getType() != Material.ICE && !Properties.protectedBlocks.contains(loc.getBlock().getTypeId())) {
+            if (loc.getBlock().getType() != Material.ICE && allowedBlocks.contains(loc.getBlock().getTypeId())) {
                 changedBlocks.get(hero).put(loc, loc.getBlock().getType());
                 loc.getBlock().setType(Material.ICE);
             }

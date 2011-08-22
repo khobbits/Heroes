@@ -1,12 +1,9 @@
 package com.herocraftonline.dev.heroes.util;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -71,12 +68,8 @@ public class Properties {
     public boolean allowHats;
 
     // Blocks that we don't want to change during skills otherwise it causes problems
-    public final static Set<Integer> protectedBlocks;
     public final static List<String> defaultWeapons;
     static {
-        protectedBlocks = new HashSet<Integer>();
-        protectedBlocks.addAll(Arrays.asList(23, 26, 27, 28, 29, 33, 34, 36, 50, 54, 59, 60, 61, 62, 63, 64, 68, 71, 75, 76, 77, 84, 93, 94, 95, 96));
-    
         defaultWeapons = new ArrayList<String>();
         defaultWeapons.add("WOOD_SWORD");
         defaultWeapons.add("STONE_SWORD");

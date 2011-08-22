@@ -25,7 +25,8 @@ public class SkillPort extends ActiveSkill {
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty("item-cost", "redstone");
+        node.setProperty("item-cost", "REDSTONE");
+        node.setProperty("item-cost-amount", 1);
         node.setProperty("range", 10);
         return node;
     }
@@ -43,6 +44,7 @@ public class SkillPort extends ActiveSkill {
             }
             return false;
         }
+
         if (getSetting(hero.getHeroClass(), args[0].toLowerCase(), (String) null) != null) {
             String[] splitArg = getSetting(hero.getHeroClass(), args[0].toLowerCase(), (String) null).split(":");
             int levelRequirement = Integer.parseInt(splitArg[4]);
@@ -57,18 +59,23 @@ public class SkillPort extends ActiveSkill {
             }
 
             ItemStack itemStack = null;
-            if (Material.matchMaterial(getSetting(hero.getHeroClass(), "itemcost", "redstone")) != null) {
-                itemStack = new ItemStack(Material.matchMaterial(getSetting(hero.getHeroClass(), "itemcost", "redstone")), 1);
-            }
+            String materialName = getSetting(hero.getHeroClass(), "itemcost", "REDSTONE");
+            if (Material.matchMaterial(materialName) != null) {
+                int cost = getSetting(hero.getHeroClass(), "item-cost-amount", 1);
+                itemStack = new ItemStack(Material.matchMaterial(materialName), cost);
+            } 
 
-            if (!(itemStack == null)) {
-                if (player.getInventory().contains(itemStack.getType())) {
+            if (itemStack != null) {
+                if (player.getInventory().contains(itemStack)) {
                     player.getInventory().remove(itemStack);
+                    player.updateInventory();
                 } else {
                     Messaging.send(player, "Sorry, you need to have $1 to use that!", itemStack.getType().toString());
                     return false;
                 }
             }
+
+
 
             int range = (int) Math.pow(getSetting(hero.getHeroClass(), "range", 10), 2);
             Location loc = new Location(world, Double.parseDouble(splitArg[1]), Double.parseDouble(splitArg[2]), Double.parseDouble(splitArg[3]));
