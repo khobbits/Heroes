@@ -1,10 +1,8 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
@@ -26,15 +24,11 @@ public class SkillPort extends ActiveSkill {
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty(Setting.REAGENT.node(), "REDSTONE");
-        node.setProperty(Setting.REAGENT_COST.node(), 1);
         node.setProperty(Setting.RADIUS.node(), 10);
         return node;
     }
 
-    
     @Override
-    @SuppressWarnings({ "deprecation" })
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
 
@@ -60,25 +54,6 @@ public class SkillPort extends ActiveSkill {
                 Messaging.send(player, "Sorry, you need to be level $1 to use that!", levelRequirement);
                 return false;
             }
-
-            ItemStack itemStack = null;
-            String materialName = getSetting(hero.getHeroClass(), Setting.REAGENT.node(), "REDSTONE");
-            if (Material.matchMaterial(materialName) != null) {
-                int cost = getSetting(hero.getHeroClass(), Setting.REAGENT_COST.node(), 1);
-                itemStack = new ItemStack(Material.matchMaterial(materialName), cost);
-            } 
-
-            if (itemStack != null) {
-                if (player.getInventory().contains(itemStack)) {
-                    player.getInventory().remove(itemStack);
-                    player.updateInventory();
-                } else {
-                    Messaging.send(player, "Sorry, you need to have $1 to use that!", itemStack.getType().toString());
-                    return false;
-                }
-            }
-
-
 
             int range = (int) Math.pow(getSetting(hero.getHeroClass(), Setting.RADIUS.node(), 10), 2);
             Location loc = new Location(world, Double.parseDouble(splitArg[1]), Double.parseDouble(splitArg[2]), Double.parseDouble(splitArg[3]));

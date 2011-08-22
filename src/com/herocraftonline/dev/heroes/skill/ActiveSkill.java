@@ -3,8 +3,10 @@ package com.herocraftonline.dev.heroes.skill;
 import java.util.Map;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.config.Configuration;
 import org.bukkit.util.config.ConfigurationNode;
 
@@ -38,6 +40,7 @@ public abstract class ActiveSkill extends Skill {
     
     private String useText;
     private boolean awardExpOnCast = true;
+    
 
     /**
      * When defining your own constructor, be sure to assign the name, description, usage, argument bounds and
@@ -59,6 +62,7 @@ public abstract class ActiveSkill extends Skill {
      * @param sender the <code>CommandSender</code> issuing the command
      * @param args the arguments provided with the command
      */
+    @SuppressWarnings("deprecation")
     @Override
     public boolean execute(CommandSender sender, String identifier, String[] args) {
         if (!(sender instanceof Player))
@@ -81,11 +85,7 @@ public abstract class ActiveSkill extends Skill {
             Messaging.send(player, "You must be level $1 to use $2.", String.valueOf(level), name);
             return false;
         }
-        int manaCost = getSetting(heroClass, Setting.MANA.node(), 0);
-        if (manaCost > hero.getMana()) {
-            Messaging.send(player, "Not enough mana!");
-            return false;
-        }
+
         Map<String, Long> cooldowns = hero.getCooldowns();
         long time = System.currentTimeMillis();
         int cooldown = getSetting(heroClass, Setting.COOLDOWN.node(), 0);
@@ -99,13 +99,37 @@ public abstract class ActiveSkill extends Skill {
                 }
             }
         }
+        int manaCost = getSetting(heroClass, Setting.MANA.node(), 0);
+        String reagentName = getSetting(heroClass, Setting.REAGENT.node(), (String) null);
+        ItemStack itemStack = null;
+        if (reagentName != null) {
+            if (Material.matchMaterial(reagentName) != null) {
+                int reagentCost = getSetting(hero.getHeroClass(), Setting.REAGENT_COST.node(), 0);
+                itemStack = new ItemStack(Material.matchMaterial(reagentName), reagentCost);
+            }
+        }
 
-        SkillUseEvent skillEvent = new SkillUseEvent(this, player, hero, args);
+        SkillUseEvent skillEvent = new SkillUseEvent(this, player, hero, manaCost, itemStack, args);
         getPlugin().getServer().getPluginManager().callEvent(skillEvent);
         if (skillEvent.isCancelled()) {
             return false;
         }
-
+        
+        manaCost = skillEvent.getManaCost();
+        if (manaCost > hero.getMana()) {
+            Messaging.send(player, "Not enough mana!");
+            return false;
+        }
+        
+        itemStack = skillEvent.getReagentCost();
+        if (itemStack != null) {
+            if (itemStack.getAmount() != 0 && !hasReagentCost(player, itemStack)) {
+                reagentName = itemStack.getType().name().toLowerCase().replace("_", " ");
+                Messaging.send(player, "Sorry, you need to have $1 $2 to use that skill!", new Object[] {itemStack.getAmount(), reagentName});
+                return false;
+            }
+        }
+        
         if (use(hero, args)) {
             if (cooldown > 0) {
                 cooldowns.put(name, time + cooldown);
@@ -119,13 +143,31 @@ public abstract class ActiveSkill extends Skill {
             if (hero.isVerbose() && manaCost > 0) {
                 Messaging.send(hero.getPlayer(), ChatColor.BLUE + "MANA " + Messaging.createManaBar(hero.getMana()));
             }
-
+            
+            player.getInventory().removeItem(itemStack);
+            player.updateInventory();
+            
             return true;
         } else {
             return false;
         }
     }
 
+    /**
+     * Checks if the player has enough of the specified reagent in their inventory
+     * 
+     * @param player
+     * @param itemStack
+     * @return
+     */
+    private boolean hasReagentCost(Player player, ItemStack itemStack) {
+        int amount = 0;
+        for (ItemStack stack : player.getInventory().all(itemStack.getType()).values()) {
+            amount += stack.getAmount();
+        }
+        return amount >= itemStack.getAmount();
+    }
+    
     /**
      * Creates and returns a <code>ConfigurationNode</code> containing the default usage text. When using additional
      * configuration settings in your skills, be sure to override this method to define them with defaults.

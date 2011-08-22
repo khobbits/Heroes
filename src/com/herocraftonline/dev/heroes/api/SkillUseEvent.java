@@ -3,6 +3,7 @@ package com.herocraftonline.dev.heroes.api;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
+import org.bukkit.inventory.ItemStack;
 
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
@@ -13,15 +14,19 @@ public class SkillUseEvent extends Event implements Cancellable {
     private final Player player;
     private final Skill skill;
     private final Hero hero;
+    private int manaCost = 0;
     private String[] args;
+    private ItemStack reagentCost;
     private boolean cancelled = false;
 
-    public SkillUseEvent(Skill skill, Player player, Hero hero, String[] args) {
+    public SkillUseEvent(Skill skill, Player player, Hero hero, int manaCost, ItemStack reagentCost, String[] args) {
         super("SkillUseEvent");
         this.player = player;
         this.skill = skill;
         this.hero = hero;
         this.args = args;
+        this.manaCost = manaCost;
+        this.reagentCost = reagentCost;
     }
 
     /**
@@ -50,6 +55,28 @@ public class SkillUseEvent extends Event implements Cancellable {
      */
     public void setArgs(String[] args) {
         this.args = args;
+    }
+
+    /**
+     * @return the manaCost
+     */
+    public int getManaCost() {
+        return manaCost;
+    }
+
+    /**
+     * @param manaCost the manaCost to set
+     */
+    public void setManaCost(int manaCost) {
+        this.manaCost = manaCost;
+    }
+
+    public void setReagentCost(ItemStack reagentCost) {
+        this.reagentCost = reagentCost;
+    }
+
+    public ItemStack getReagentCost() {
+        return reagentCost;
     }
 
     /**

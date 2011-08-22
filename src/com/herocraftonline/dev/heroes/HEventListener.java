@@ -5,7 +5,6 @@ import java.util.List;
 import com.herocraftonline.dev.heroes.api.HeroLevelEvent;
 import com.herocraftonline.dev.heroes.api.HeroRegainHealthEvent;
 import com.herocraftonline.dev.heroes.api.HeroesEventListener;
-import com.herocraftonline.dev.heroes.api.SkillUseEvent;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.command.Command;
 import com.herocraftonline.dev.heroes.party.HeroParty;
