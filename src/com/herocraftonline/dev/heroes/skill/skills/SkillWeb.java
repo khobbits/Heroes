@@ -26,6 +26,7 @@ import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
+import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillWeb extends TargettedSkill {
 
@@ -45,16 +46,15 @@ public class SkillWeb extends TargettedSkill {
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty("range", 10);
-        node.setProperty("duration", 5000); // in milliseconds
-        node.setProperty("apply-text", "%hero% conjured a web at %target%'s feet!");
+        node.setProperty(Setting.DURATION.node(), 5000); // in milliseconds
+        node.setProperty(Setting.APPLY_TEXT.node(), "%hero% conjured a web at %target%'s feet!");
         return node;
     }
 
     @Override
     public void init() {
         super.init();
-        applyText = getSetting(null, "apply-text", "%hero% conjured a web at %target%'s feet!").replace("%hero%", "$1").replace("%target%", "$2");
+        applyText = getSetting(null, Setting.APPLY_TEXT.node(), "%hero% conjured a web at %target%'s feet!").replace("%hero%", "$1").replace("%target%", "$2");
     }
 
     @Override
@@ -89,7 +89,7 @@ public class SkillWeb extends TargettedSkill {
         }
 
         broadcast(player.getLocation(), applyText, new Object[] { player.getDisplayName(), name });
-        int duration = getSetting(hero.getHeroClass(), "duration", 5000);
+        int duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 5000);
         WebEffect wEffect = new WebEffect(this, duration, target.getLocation().getBlock().getLocation());
         // Hero can only have one web effect active at a time - prevents issues with blocks never turning back.
         if (hero.hasEffect("Web")) {

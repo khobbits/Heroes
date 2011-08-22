@@ -14,6 +14,7 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
+import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillBlink extends ActiveSkill {
     
@@ -49,14 +50,14 @@ public class SkillBlink extends ActiveSkill {
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty("max-distance", 6);
+        node.setProperty(Setting.MAX_DISTANCE.node(), 6);
         return node;
     }
     
     @Override
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
-        int distance = getSetting(hero.getHeroClass(), "max-distance", 6);
+        int distance = getSetting(hero.getHeroClass(), Setting.MAX_DISTANCE.node(), 6);
         Block prev = null;
         Block b;
         BlockIterator iter = new BlockIterator(player, distance);

@@ -12,6 +12,7 @@ import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
+import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillRejuvenate extends TargettedSkill {
 
@@ -30,16 +31,18 @@ public class SkillRejuvenate extends TargettedSkill {
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
         node.setProperty("tick-heal", 1);
-        node.setProperty("period", 3000);
-        node.setProperty("duration", 21000);
+        node.setProperty(Setting.PERIOD.node(), 3000);
+        node.setProperty(Setting.DURATION.node(), 21000);
+        node.setProperty(Setting.APPLY_TEXT.node(), "%target% is rejuvenating health!");
+        node.setProperty(Setting.EXPIRE_TEXT.node(), "%target% has stopped rejuvenating health!");
         return node;
     }
 
     @Override
     public void init() {
         super.init();
-        applyText = getSetting(null, "apply-text", "%target% is rejuvenating health!").replace("%target%", "$1");
-        expireText = getSetting(null, "expire-text", "%target% has stopped rejuvenating health!").replace("%target%", "$1");
+        applyText = getSetting(null, Setting.APPLY_TEXT.node(), "%target% is rejuvenating health!").replace("%target%", "$1");
+        expireText = getSetting(null, Setting.EXPIRE_TEXT.node(), "%target% has stopped rejuvenating health!").replace("%target%", "$1");
     }
 
     @Override
@@ -53,8 +56,8 @@ public class SkillRejuvenate extends TargettedSkill {
                 return false;
             }
 
-            long period = getSetting(hero.getHeroClass(), "period", 3000);
-            long duration = getSetting(hero.getHeroClass(), "duration", 21000);
+            long period = getSetting(hero.getHeroClass(), Setting.PERIOD.node(), 3000);
+            long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 21000);
             int tickHealth = getSetting(hero.getHeroClass(), "tick-heal", 1);
             RejuvenateEffect rEffect = new RejuvenateEffect(this, period, duration, tickHealth, player);
             targetHero.addEffect(rEffect);

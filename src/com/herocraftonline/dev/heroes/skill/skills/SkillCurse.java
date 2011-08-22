@@ -21,6 +21,7 @@ import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
+import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillCurse extends TargettedSkill {
 
@@ -42,11 +43,11 @@ public class SkillCurse extends TargettedSkill {
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty("duration", 5000); // in milliseconds
+        node.setProperty(Setting.DURATION.node(), 5000); // in milliseconds
         node.setProperty("miss-chance", .50); // decimal representation of miss-chance
         node.setProperty("miss-text", "%target% misses an attack!");
-        node.setProperty("apply-text", "%target% has been cursed!");
-        node.setProperty("expire-text", "%target% has recovered from the curse!");
+        node.setProperty(Setting.APPLY_TEXT.node(), "%target% has been cursed!");
+        node.setProperty(Setting.EXPIRE_TEXT.node(), "%target% has recovered from the curse!");
         return node;
     }
 
@@ -54,8 +55,8 @@ public class SkillCurse extends TargettedSkill {
     public void init() {
         super.init();
         missText = getSetting(null, "miss-text", "%target% misses an attack!").replace("%target%", "$1");
-        applyText = getSetting(null, "apply-text", "%target% has recovered from the curse!").replace("%target%", "$1");
-        expireText = getSetting(null, "expire-text", "%target% has recovered from the poison!").replace("%target%", "$1");
+        applyText = getSetting(null, Setting.APPLY_TEXT.node(), "%target% has recovered from the curse!").replace("%target%", "$1");
+        expireText = getSetting(null, Setting.EXPIRE_TEXT.node(), "%target% has recovered from the poison!").replace("%target%", "$1");
     }
 
     @Override
@@ -75,7 +76,7 @@ public class SkillCurse extends TargettedSkill {
             }
         }
 
-        long duration = getSetting(hero.getHeroClass(), "duration", 5000);
+        long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 5000);
         double missChance = getSetting(hero.getHeroClass(), "miss-chance", .50);
         CurseEffect cEffect = new CurseEffect(this, duration, missChance);
 

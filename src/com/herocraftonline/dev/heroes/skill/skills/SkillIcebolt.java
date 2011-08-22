@@ -23,6 +23,7 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
+import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillIcebolt extends ActiveSkill {
 
@@ -41,7 +42,7 @@ public class SkillIcebolt extends ActiveSkill {
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty("damage", 3);
+        node.setProperty(Setting.DAMAGE.node(), 3);
         return node;
     }
 
@@ -88,7 +89,7 @@ public class SkillIcebolt extends ActiveSkill {
                             return;
                         }
                         event.getEntity().setFireTicks(0);
-                        int damage = getSetting(heroClass, "damage", 3);
+                        int damage = getSetting(heroClass, Setting.DAMAGE.node(), 3);
                         event.setDamage(damage);
                     }
                 }

@@ -18,6 +18,7 @@ import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.util.Messaging;
+import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillSneak extends ActiveSkill {
 
@@ -37,7 +38,7 @@ public class SkillSneak extends ActiveSkill {
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty("duration", 600000); // 10 minutes in milliseconds
+        node.setProperty(Setting.DURATION.node(), 600000); // 10 minutes in milliseconds
         node.setProperty("damage-cancels", true);
         node.setProperty("atacking-cancels", true);
         node.setProperty("refresh-interval", 5000); // in milliseconds
@@ -61,7 +62,7 @@ public class SkillSneak extends ActiveSkill {
         } else {
             Messaging.send(hero.getPlayer(), "You are now sneaking");
 
-            int duration = getSetting(hero.getHeroClass(), "duration", 600000);
+            int duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 600000);
             int period = getSetting(hero.getHeroClass(), "refresh-interval", 5000);
             hero.addEffect(new SneakEffect(this, period, duration));
 

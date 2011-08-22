@@ -15,6 +15,7 @@ import com.herocraftonline.dev.heroes.api.HeroLevelEvent;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.effects.Effect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
+import com.herocraftonline.dev.heroes.util.Setting;
 
 /**
  * A skill that provides a passive bonus to a {@link Hero}. The skill's effects are automatically applied when a Hero of
@@ -34,16 +35,6 @@ import com.herocraftonline.dev.heroes.persistence.Hero;
  * <li>{@link PassiveSkill}</li> <li>{@link OutsourcedSkill}</li> </ul>
  */
 public abstract class PassiveSkill extends Skill {
-
-    /**
-     * Identifier used to store apply text setting
-     */
-    public static final String SETTING_APPLYTEXT = "apply-text";
-
-    /**
-     * Identifier used to store unapply text setting
-     */
-    public static final String SETTING_UNAPPLYTEXT = "unapply-text";
 
     private String applyText = null;
     private String unapplyText = null;
@@ -79,8 +70,8 @@ public abstract class PassiveSkill extends Skill {
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = Configuration.getEmptyNode();
-        node.setProperty(SETTING_APPLYTEXT, "%hero% gained %skill%!");
-        node.setProperty(SETTING_UNAPPLYTEXT, "%hero% lost %skill%!");
+        node.setProperty(Setting.APPLY_TEXT.node(), "%hero% gained %skill%!");
+        node.setProperty(Setting.UNAPPLY_TEXT.node(), "%hero% lost %skill%!");
         return node;
     }
 
@@ -91,9 +82,9 @@ public abstract class PassiveSkill extends Skill {
      */
     @Override
     public void init() {
-        applyText = getSetting(null, SETTING_APPLYTEXT, "%hero% gained %skill%!");
+        applyText = getSetting(null, Setting.APPLY_TEXT.node(), "%hero% gained %skill%!");
         applyText = applyText.replace("%hero%", "$1").replace("%skill%", "$2");
-        unapplyText = getSetting(null, SETTING_UNAPPLYTEXT, "%hero% lost %skill%!");
+        unapplyText = getSetting(null, Setting.UNAPPLY_TEXT.node(), "%hero% lost %skill%!");
         unapplyText = unapplyText.replace("%hero%", "$1").replace("%skill%", "$2");
     }
 

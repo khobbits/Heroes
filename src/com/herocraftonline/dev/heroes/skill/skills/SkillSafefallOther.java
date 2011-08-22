@@ -17,6 +17,7 @@ import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
+import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillSafefallOther extends TargettedSkill {
 
@@ -36,17 +37,17 @@ public class SkillSafefallOther extends TargettedSkill {
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty("duration", 10000);
-        node.setProperty("apply-text", "%target% has gained safefall!");
-        node.setProperty("expire-text", "%target% has lost safefall!");
+        node.setProperty(Setting.DURATION.node(), 10000);
+        node.setProperty(Setting.APPLY_TEXT.node(), "%target% has gained safefall!");
+        node.setProperty(Setting.EXPIRE_TEXT.node(), "%target% has lost safefall!");
         return node;
     }
 
     @Override
     public void init() {
         super.init();
-        applyText = getSetting(null, "apply-text", "%target% has gained safefall!").replace("%target%", "$1");
-        expireText = getSetting(null, "expire-text", "%target% has lost safefall!").replace("%target%", "$1");
+        applyText = getSetting(null, Setting.APPLY_TEXT.node(), "%target% has gained safefall!").replace("%target%", "$1");
+        expireText = getSetting(null, Setting.EXPIRE_TEXT.node(), "%target% has lost safefall!").replace("%target%", "$1");
     }
 
     @Override
@@ -56,7 +57,7 @@ public class SkillSafefallOther extends TargettedSkill {
 
             broadcastExecuteText(hero, target);
 
-            int duration = getSetting(hero.getHeroClass(), "duration", 10000);
+            int duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 10000);
             targetHero.addEffect(new SafefallEffect(this, duration));
 
             return true;

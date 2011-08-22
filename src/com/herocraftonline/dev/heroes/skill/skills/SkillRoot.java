@@ -13,6 +13,7 @@ import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
+import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillRoot extends TargettedSkill {
 
@@ -30,17 +31,17 @@ public class SkillRoot extends TargettedSkill {
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty("duration", 5000);
-        node.setProperty("apply-text", "%target% was rooted!");
-        node.setProperty("expire-text", "Root faded from %target%!");
+        node.setProperty(Setting.DURATION.node(), 5000);
+        node.setProperty(Setting.APPLY_TEXT.node(), "%target% was rooted!");
+        node.setProperty(Setting.EXPIRE_TEXT.node(), "Root faded from %target%!");
         return node;
     }
 
     @Override
     public void init() {
         super.init();
-        applyText = getSetting(null, "apply-text", "%target% was rooted!").replace("%target%", "$1");
-        expireText = getSetting(null, "expire-text", "Root faded from %target%!").replace("%target%", "$1");
+        applyText = getSetting(null, Setting.APPLY_TEXT.node(), "%target% was rooted!").replace("%target%", "$1");
+        expireText = getSetting(null, Setting.EXPIRE_TEXT.node(), "Root faded from %target%!").replace("%target%", "$1");
     }
 
     @Override
@@ -60,7 +61,7 @@ public class SkillRoot extends TargettedSkill {
 
         broadcastExecuteText(hero, target);
 
-        long duration = getSetting(hero.getHeroClass(), "duration", 5000);
+        long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 5000);
         targetHero.addEffect(new RootEffect(this, duration));
         return true;
     }

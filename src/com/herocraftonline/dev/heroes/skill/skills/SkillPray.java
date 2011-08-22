@@ -9,6 +9,7 @@ import com.herocraftonline.dev.heroes.api.HeroRegainHealthEvent;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
+import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillPray extends TargettedSkill {
 
@@ -24,7 +25,7 @@ public class SkillPray extends TargettedSkill {
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
         node.setProperty("health", 10);
-        node.setProperty(SETTING_MAXDISTANCE, 25);
+        node.setProperty(Setting.MAX_DISTANCE.node(), 25);
         return node;
     }
 

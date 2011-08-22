@@ -24,6 +24,7 @@ import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
+import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillExplosiveFireball extends ActiveSkill {
 
@@ -40,7 +41,7 @@ public class SkillExplosiveFireball extends ActiveSkill {
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty("damage", 4);
+        node.setProperty(Setting.DAMAGE.node(), 4);
         node.setProperty("fire-ticks", 100);
         return node;
     }
@@ -119,7 +120,7 @@ public class SkillExplosiveFireball extends ActiveSkill {
                         Player shooter = (Player) fireball.getShooter();
                         Hero hero = getPlugin().getHeroManager().getHero(shooter);
                         HeroClass heroClass = hero.getHeroClass();
-                        int damage = getSetting(heroClass, "damage", 4);
+                        int damage = getSetting(heroClass, Setting.DAMAGE.node(), 4);
                         getPlugin().getDamageManager().addSpellTarget(entity, hero, skill);
                         entity.setFireTicks(getSetting(heroClass, "fire-ticks", 100));
                         event.setDamage(damage);

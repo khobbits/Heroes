@@ -34,6 +34,7 @@ import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.util.Messaging;
+import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillSkeleton extends ActiveSkill {
 
@@ -62,15 +63,15 @@ public class SkillSkeleton extends ActiveSkill {
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
         node.setProperty("max-summons", 3);
-        node.setProperty("duration", 60000);
-        node.setProperty("expire-text", "The skeleton returns to it's hellish domain.");
+        node.setProperty(Setting.DURATION.node(), 60000);
+        node.setProperty(Setting.EXPIRE_TEXT.node(), "The skeleton returns to it's hellish domain.");
         return node;
     }
 
     @Override
     public void init() {
         super.init();
-        expireText = getSetting(null, "expire-text", "The skeleton returns to it's hellish domain.");
+        expireText = getSetting(null, Setting.EXPIRE_TEXT.node(), "The skeleton returns to it's hellish domain.");
     }
 
     @Override
@@ -79,7 +80,7 @@ public class SkillSkeleton extends ActiveSkill {
 
         if (hero.getSummons().size() < getSetting(hero.getHeroClass(), "max-summons", 3)) {
             Creature skeleton = (Creature) player.getWorld().spawnCreature(player.getLocation(), CreatureType.SKELETON);
-            long duration = getSetting(hero.getHeroClass(), "duration", 60000);
+            long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 60000);
             getPlugin().getHeroManager().addCreatureEffect(skeleton, new SummonEffect(this, duration, hero));
             broadcastExecuteText(hero);
             Messaging.send(player, "You have succesfully summoned a skeleton to fight for you.");
@@ -158,7 +159,15 @@ public class SkillSkeleton extends ActiveSkill {
          * @param hero
          */
         private void moveSkeleton(Creature creature, Hero hero) {
-            // Check how far away the Skeleton is
+            // Make sure the skeleton isn't in combat
+            if (creature.getTarget() != null || creature.getTarget().isDead())
+                return;
+            
+            //If the skeleton is far away lets teleport them to the player
+            if(creature.getLocation().distanceSquared(hero.getPlayer().getLocation()) > 400)
+                creature.teleport(hero.getPlayer());
+            
+            //Initiate pathing to the player
             EntityCreature cEntity = ((CraftCreature) creature).getHandle();
             cEntity.pathEntity = cEntity.world.findPath(cEntity, ((CraftPlayer) hero.getPlayer()).getHandle(), 16.0F);
             

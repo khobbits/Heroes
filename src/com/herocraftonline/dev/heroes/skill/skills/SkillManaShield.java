@@ -17,6 +17,7 @@ import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.util.Messaging;
+import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillManaShield extends ActiveSkill {
 
@@ -37,24 +38,24 @@ public class SkillManaShield extends ActiveSkill {
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
         node.setProperty("mana-amount", 20);
-        node.setProperty("duration", 20000);
-        node.setProperty("apply-text", "%hero% was surrounded by a mana shield!");
-        node.setProperty("expire-text", "%hero% lost his mana shield!");
+        node.setProperty(Setting.DURATION.node(), 20000);
+        node.setProperty(Setting.APPLY_TEXT.node(), "%hero% was surrounded by a mana shield!");
+        node.setProperty(Setting.EXPIRE_TEXT.node(), "%hero% lost his mana shield!");
         return node;
     }
 
     @Override
     public void init() {
         super.init();
-        applyText = getSetting(null, "apply-text", "%hero% was surrounded by a mana shield!").replace("%hero%", "$1");
-        expireText = getSetting(null, "expire-text", "%hero% lost his mana shield!").replace("%hero%", "$1");
+        applyText = getSetting(null, Setting.APPLY_TEXT.node(), "%hero% was surrounded by a mana shield!").replace("%hero%", "$1");
+        expireText = getSetting(null, Setting.EXPIRE_TEXT.node(), "%hero% lost his mana shield!").replace("%hero%", "$1");
     }
 
     @Override
     public boolean use(Hero hero, String[] args) {
         broadcastExecuteText(hero);
 
-        int duration = getSetting(hero.getHeroClass(), "duration", 5000);
+        int duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 5000);
         hero.addEffect(new ManaShieldEffect(this, duration));
 
         return true;

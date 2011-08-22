@@ -12,6 +12,7 @@ import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
+import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillBleed extends TargettedSkill {
 
@@ -29,19 +30,19 @@ public class SkillBleed extends TargettedSkill {
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty("duration", 10000);
-        node.setProperty("period", 2000);
+        node.setProperty(Setting.DURATION.node(), 10000);
+        node.setProperty(Setting.PERIOD.node(), 2000);
         node.setProperty("tick-damage", 1);
-        node.setProperty("apply-text", "%target% is bleeding!");
-        node.setProperty("expire-text", "%target% has stopped bleeding!");
+        node.setProperty(Setting.APPLY_TEXT.node(), "%target% is bleeding!");
+        node.setProperty(Setting.EXPIRE_TEXT.node(), "%target% has stopped bleeding!");
         return node;
     }
 
     @Override
     public void init() {
         super.init();
-        applyText = getSetting(null, "apply-text", "%target% is bleeding!").replace("%target%", "$1");
-        expireText = getSetting(null, "expire-text", "%target% has stopped bleeding!").replace("%target%", "$1");
+        applyText = getSetting(null, Setting.APPLY_TEXT.node(), "%target% is bleeding!").replace("%target%", "$1");
+        expireText = getSetting(null, Setting.EXPIRE_TEXT.node(), "%target% has stopped bleeding!").replace("%target%", "$1");
     }
 
     @Override
@@ -69,8 +70,8 @@ public class SkillBleed extends TargettedSkill {
         }
         broadcastExecuteText(hero, target);
 
-        long duration = getSetting(hero.getHeroClass(), "duration", 10000);
-        long period = getSetting(hero.getHeroClass(), "period", 2000);
+        long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 10000);
+        long period = getSetting(hero.getHeroClass(), Setting.PERIOD.node(), 2000);
         int tickDamage = getSetting(hero.getHeroClass(), "tick-damage", 1);
         BleedSkillEffect bEffect = new BleedSkillEffect(this, "Bleed", duration, period, tickDamage, player);
 

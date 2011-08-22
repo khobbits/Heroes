@@ -11,6 +11,7 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
+import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillHarmtouch extends TargettedSkill {
 
@@ -25,7 +26,7 @@ public class SkillHarmtouch extends TargettedSkill {
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty("damage", 10);
+        node.setProperty(Setting.DAMAGE.node(), 10);
         return node;
     }
 
@@ -37,7 +38,7 @@ public class SkillHarmtouch extends TargettedSkill {
             return false;
         }
 
-        int damage = getSetting(hero.getHeroClass(), "damage", 10);
+        int damage = getSetting(hero.getHeroClass(), Setting.DAMAGE.node(), 10);
         EntityDamageByEntityEvent damageEntityEvent = new EntityDamageByEntityEvent(player, target, DamageCause.CUSTOM, damage);
         getPlugin().getServer().getPluginManager().callEvent(damageEntityEvent);
         if (damageEntityEvent.isCancelled()) {

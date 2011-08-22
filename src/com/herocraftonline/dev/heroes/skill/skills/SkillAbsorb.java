@@ -17,6 +17,7 @@ import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.util.Messaging;
+import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillAbsorb extends ActiveSkill {
 
@@ -37,16 +38,16 @@ public class SkillAbsorb extends ActiveSkill {
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
         node.setProperty("mana-amount", 20);
-        node.setProperty("apply-text", "%target% is absorbing damage");
-        node.setProperty("expire-text", "Absorb faded from %target%!");
+        node.setProperty(Setting.APPLY_TEXT.node(), "%target% is absorbing damage");
+        node.setProperty(Setting.EXPIRE_TEXT.node(), "Absorb faded from %target%!");
         return node;
     }
 
     @Override
     public void init() {
         super.init();
-        applyText = getSetting(null, "apply-text", "%target% is absorbing damage!").replace("%target%", "$1");
-        expireText = getSetting(null, "expire-text", "Absorb faded from %target%!").replace("%target%", "$1");
+        applyText = getSetting(null, Setting.APPLY_TEXT.node(), "%target% is absorbing damage!").replace("%target%", "$1");
+        expireText = getSetting(null, Setting.EXPIRE_TEXT.node(), "Absorb faded from %target%!").replace("%target%", "$1");
     }
 
     @Override

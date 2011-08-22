@@ -17,6 +17,7 @@ import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
+import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillSuperheat extends ActiveSkill {
 
@@ -37,24 +38,24 @@ public class SkillSuperheat extends ActiveSkill {
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty("duration", 20000);
-        node.setProperty("apply-text", "%hero%'s pick has become superheated!");
-        node.setProperty("expire-text", "%hero%'s pick has cooled down!");
+        node.setProperty(Setting.DURATION.node(), 20000);
+        node.setProperty(Setting.APPLY_TEXT.node(), "%hero%'s pick has become superheated!");
+        node.setProperty(Setting.EXPIRE_TEXT.node(), "%hero%'s pick has cooled down!");
         return node;
     }
 
     @Override
     public void init() {
         super.init();
-        applyText = getSetting(null, "apply-text", "%hero%'s pick has become superheated!").replace("%hero%", "$1");
-        expireText = getSetting(null, "expire-text", "%hero%'s pick has cooled down!").replace("%hero%", "$1");
+        applyText = getSetting(null, Setting.APPLY_TEXT.node(), "%hero%'s pick has become superheated!").replace("%hero%", "$1");
+        expireText = getSetting(null, Setting.EXPIRE_TEXT.node(), "%hero%'s pick has cooled down!").replace("%hero%", "$1");
     }
 
     @Override
     public boolean use(Hero hero, String[] args) {
         broadcastExecuteText(hero);
 
-        int duration = getSetting(hero.getHeroClass(), "duration", 20000);
+        int duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 20000);
         hero.addEffect(new SuperheatEffect(this, duration));
 
         return true;

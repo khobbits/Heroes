@@ -15,6 +15,7 @@ import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
+import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillGills extends ActiveSkill {
 
@@ -34,24 +35,24 @@ public class SkillGills extends ActiveSkill {
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty("duration", 30000);
-        node.setProperty("apply-text", "%hero% has grown a set of gills!");
-        node.setProperty("expire-text", "%hero% lost his gills!");
+        node.setProperty(Setting.DURATION.node(), 30000);
+        node.setProperty(Setting.APPLY_TEXT.node(), "%hero% has grown a set of gills!");
+        node.setProperty(Setting.EXPIRE_TEXT.node(), "%hero% lost his gills!");
         return node;
     }
 
     @Override
     public void init() {
         super.init();
-        applyText = getSetting(null, "apply-text", "%hero% has grown a set of gills!").replace("%hero%", "$1");
-        expireText = getSetting(null, "expire-text", "%hero% lost his gills!").replace("%hero%", "$1");
+        applyText = getSetting(null, Setting.APPLY_TEXT.node(), "%hero% has grown a set of gills!").replace("%hero%", "$1");
+        expireText = getSetting(null, Setting.EXPIRE_TEXT.node(), "%hero% lost his gills!").replace("%hero%", "$1");
     }
 
     @Override
     public boolean use(Hero hero, String[] args) {
         broadcastExecuteText(hero);
 
-        int duration = getSetting(hero.getHeroClass(), "duration", 5000);
+        int duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 5000);
         hero.addEffect(new GillsEffect(this, duration));
 
         return true;

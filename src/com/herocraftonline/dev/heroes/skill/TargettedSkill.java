@@ -19,6 +19,7 @@ import org.bukkit.util.config.ConfigurationNode;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.util.Messaging;
+import com.herocraftonline.dev.heroes.util.Setting;
 
 /**
  * A triggered skill that requires a target. TargettedSkills define a maximum distance setting. A target can be supplied
@@ -42,11 +43,6 @@ import com.herocraftonline.dev.heroes.util.Messaging;
 public abstract class TargettedSkill extends ActiveSkill {
 
     /**
-     * Identifier used to store maximum targetting distance setting
-     */
-    public static final String SETTING_MAXDISTANCE = "max-distance";
-
-    /**
      * When defining your own constructor, be sure to assign the name, description, usage, argument bounds and
      * identifier fields as defined in {@link com.herocraftonline.dev.heroes.command.BaseCommand}. Remember that each
      * identifier must begin with <i>skill</i>.
@@ -67,8 +63,8 @@ public abstract class TargettedSkill extends ActiveSkill {
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = Configuration.getEmptyNode();
-        node.setProperty(SETTING_USETEXT, "%hero% used %skill% on %target%!");
-        node.setProperty(SETTING_MAXDISTANCE, 15);
+        node.setProperty(Setting.USE_TEXT.node(), "%hero% used %skill% on %target%!");
+        node.setProperty(Setting.MAX_DISTANCE.node(), 15);
         return node;
     }
 
@@ -79,7 +75,7 @@ public abstract class TargettedSkill extends ActiveSkill {
      */
     @Override
     public void init() {
-        String useText = getSetting(null, SETTING_USETEXT, "%hero% used %skill% on %target%!");
+        String useText = getSetting(null, Setting.USE_TEXT.node(), "%hero% used %skill% on %target%!");
         useText = useText.replace("%hero%", "$1").replace("%skill%", "$2").replace("%target%", "$3");
         setUseText(useText);
     }
@@ -103,7 +99,7 @@ public abstract class TargettedSkill extends ActiveSkill {
     @Override
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
-        int maxDistance = getSetting(hero.getHeroClass(), SETTING_MAXDISTANCE, 15);
+        int maxDistance = getSetting(hero.getHeroClass(), Setting.MAX_DISTANCE.node(), 15);
         LivingEntity target = null;
         if (args.length > 0) {
             target = getPlugin().getServer().getPlayer(args[0]);

@@ -15,6 +15,7 @@ import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
+import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillConfuse extends TargettedSkill {
 
@@ -34,19 +35,19 @@ public class SkillConfuse extends TargettedSkill {
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty("duration", 10000);
-        node.setProperty("period", 1000);
+        node.setProperty(Setting.DURATION.node(), 10000);
+        node.setProperty(Setting.PERIOD.node(), 1000);
         node.setProperty("max-drift", 0.35);
-        node.setProperty("apply-text", "%target% is confused!");
-        node.setProperty("expire-text", "%target% has regained his wit!");
+        node.setProperty(Setting.APPLY_TEXT.node(), "%target% is confused!");
+        node.setProperty(Setting.EXPIRE_TEXT.node(), "%target% has regained his wit!");
         return node;
     }
 
     @Override
     public void init() {
         super.init();
-        applyText = getSetting(null, "apply-text", "%target% is confused!").replace("%target%", "$1");
-        expireText = getSetting(null, "expire-text", "%target% has regained his wit!").replace("%target%", "$1");
+        applyText = getSetting(null, Setting.APPLY_TEXT.node(), "%target% is confused!").replace("%target%", "$1");
+        expireText = getSetting(null, Setting.EXPIRE_TEXT.node(), "%target% has regained his wit!").replace("%target%", "$1");
     }
 
     @Override
@@ -66,8 +67,8 @@ public class SkillConfuse extends TargettedSkill {
 
         broadcastExecuteText(hero, target);
 
-        long duration = getSetting(hero.getHeroClass(), "duration", 10000);
-        long period = getSetting(hero.getHeroClass(), "period", 2000);
+        long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 10000);
+        long period = getSetting(hero.getHeroClass(), Setting.PERIOD.node(), 2000);
         float maxDrift = (float) getSetting(hero.getHeroClass(), "max-drift", 0.35);
         targetHero.addEffect(new ConfuseEffect(this, duration, period, maxDrift));
         return true;

@@ -10,6 +10,7 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
+import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillSummonArrow extends ActiveSkill {
 
@@ -24,7 +25,7 @@ public class SkillSummonArrow extends ActiveSkill {
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty("amount", 1);
+        node.setProperty(Setting.AMOUNT.node(), 1);
         return node;
     }
 

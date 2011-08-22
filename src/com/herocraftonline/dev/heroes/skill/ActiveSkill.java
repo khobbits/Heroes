@@ -14,6 +14,7 @@ import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.util.Messaging;
+import com.herocraftonline.dev.heroes.util.Setting;
 
 /**
  * A skill that performs an action in direct response to a user command. All skill identifiers <i>must</i>
@@ -34,27 +35,7 @@ import com.herocraftonline.dev.heroes.util.Messaging;
  * <li>{@link PassiveSkill}</li> <li>{@link OutsourcedSkill}</li> </ul>
  */
 public abstract class ActiveSkill extends Skill {
-
-    /**
-     * Identifier used to store mana usage setting
-     */
-    public static final String SETTING_MANA = "mana";
-
-    /**
-     * Identifier used to store cooldown duration setting
-     */
-    public static final String SETTING_COOLDOWN = "cooldown";
-
-    /**
-     * Identifier used to store experience award setting
-     */
-    public static final String SETTING_EXP = "exp";
-
-    /**
-     * Identifier used to store usage text setting
-     */
-    public static final String SETTING_USETEXT = "use-text";
-
+    
     private String useText;
     private boolean awardExpOnCast = true;
 
@@ -100,14 +81,14 @@ public abstract class ActiveSkill extends Skill {
             Messaging.send(player, "You must be level $1 to use $2.", String.valueOf(level), name);
             return false;
         }
-        int manaCost = getSetting(heroClass, SETTING_MANA, 0);
+        int manaCost = getSetting(heroClass, Setting.MANA.node(), 0);
         if (manaCost > hero.getMana()) {
             Messaging.send(player, "Not enough mana!");
             return false;
         }
         Map<String, Long> cooldowns = hero.getCooldowns();
         long time = System.currentTimeMillis();
-        int cooldown = getSetting(heroClass, SETTING_COOLDOWN, 0);
+        int cooldown = getSetting(heroClass, Setting.COOLDOWN.node(), 0);
         if (cooldown > 0) {
             Long expiry = cooldowns.get(name);
             if (expiry != null) {
@@ -154,7 +135,7 @@ public abstract class ActiveSkill extends Skill {
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = Configuration.getEmptyNode();
-        node.setProperty(SETTING_USETEXT, "%hero% used %skill%!");
+        node.setProperty(Setting.USE_TEXT.node(), "%hero% used %skill%!");
         return node;
     }
 
@@ -173,7 +154,7 @@ public abstract class ActiveSkill extends Skill {
      */
     @Override
     public void init() {
-        String useText = getSetting(null, SETTING_USETEXT, "%hero% used %skill%!");
+        String useText = getSetting(null, Setting.USE_TEXT.node(), "%hero% used %skill%!");
         useText = useText.replace("%hero%", "$1").replace("%skill%", "$2");
         setUseText(useText);
     }
@@ -199,7 +180,7 @@ public abstract class ActiveSkill extends Skill {
     private void awardExp(Hero hero) {
         HeroClass heroClass = hero.getHeroClass();
         if (heroClass.getExperienceSources().contains(ExperienceType.SKILL)) {
-            hero.gainExp(this.getSetting(heroClass, SETTING_EXP, 0), ExperienceType.SKILL);
+            hero.gainExp(this.getSetting(heroClass, Setting.EXP.node(), 0), ExperienceType.SKILL);
         }
     }
 

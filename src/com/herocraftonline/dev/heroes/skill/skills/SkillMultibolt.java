@@ -11,6 +11,7 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
+import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillMultibolt extends TargettedSkill {
 
@@ -25,8 +26,8 @@ public class SkillMultibolt extends TargettedSkill {
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty("damage", 4);
-        node.setProperty("range", 5);
+        node.setProperty(Setting.DAMAGE.node(), 4);
+        node.setProperty(Setting.RADIUS.node(), 5);
         return node;
     }
     
@@ -46,8 +47,8 @@ public class SkillMultibolt extends TargettedSkill {
             Messaging.send(player, "Invalid target!");
             return false;
         }
-        int range = getSetting(hero.getHeroClass(), "range", 5);
-        int damage = getSetting(hero.getHeroClass(), "damage", 4);
+        int range = getSetting(hero.getHeroClass(), Setting.RADIUS.node(), 5);
+        int damage = getSetting(hero.getHeroClass(), Setting.DAMAGE.node(), 4);
         
         //Damage the first target
         getPlugin().getDamageManager().addSpellTarget(target, hero, this);

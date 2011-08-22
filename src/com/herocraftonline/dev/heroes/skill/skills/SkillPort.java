@@ -11,6 +11,7 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
+import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillPort extends ActiveSkill {
 
@@ -25,13 +26,15 @@ public class SkillPort extends ActiveSkill {
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty("item-cost", "REDSTONE");
-        node.setProperty("item-cost-amount", 1);
-        node.setProperty("range", 10);
+        node.setProperty(Setting.REAGENT.node(), "REDSTONE");
+        node.setProperty(Setting.REAGENT_COST.node(), 1);
+        node.setProperty(Setting.RADIUS.node(), 10);
         return node;
     }
 
+    
     @Override
+    @SuppressWarnings({ "deprecation" })
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
 
@@ -59,9 +62,9 @@ public class SkillPort extends ActiveSkill {
             }
 
             ItemStack itemStack = null;
-            String materialName = getSetting(hero.getHeroClass(), "itemcost", "REDSTONE");
+            String materialName = getSetting(hero.getHeroClass(), Setting.REAGENT.node(), "REDSTONE");
             if (Material.matchMaterial(materialName) != null) {
-                int cost = getSetting(hero.getHeroClass(), "item-cost-amount", 1);
+                int cost = getSetting(hero.getHeroClass(), Setting.REAGENT_COST.node(), 1);
                 itemStack = new ItemStack(Material.matchMaterial(materialName), cost);
             } 
 
@@ -77,7 +80,7 @@ public class SkillPort extends ActiveSkill {
 
 
 
-            int range = (int) Math.pow(getSetting(hero.getHeroClass(), "range", 10), 2);
+            int range = (int) Math.pow(getSetting(hero.getHeroClass(), Setting.RADIUS.node(), 10), 2);
             Location loc = new Location(world, Double.parseDouble(splitArg[1]), Double.parseDouble(splitArg[2]), Double.parseDouble(splitArg[3]));
             broadcastExecuteText(hero);
             if (hero.getParty() != null) {

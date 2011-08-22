@@ -12,6 +12,7 @@ import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.util.Messaging;
+import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillHellgate extends ActiveSkill {
 
@@ -26,7 +27,7 @@ public class SkillHellgate extends ActiveSkill {
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty("range", 10);
+        node.setProperty(Setting.RADIUS.node(), 10);
         node.setProperty("hell-world", "world_nether");
         node.setProperty("default-return", "world"); // default world the player return to if their location wasn't saved
         return node;
@@ -72,7 +73,7 @@ public class SkillHellgate extends ActiveSkill {
         }
 
         if (hero.getParty() != null) {
-            int rangeSquared = getSetting(hero.getHeroClass(), "range", 10) ^ 2;
+            int rangeSquared = (int) Math.pow(getSetting(hero.getHeroClass(), Setting.RADIUS.node(), 10), 2);
             for (Hero targetHero : hero.getParty().getMembers()) {
                 Player target = targetHero.getPlayer();
                 if (target.equals(player))

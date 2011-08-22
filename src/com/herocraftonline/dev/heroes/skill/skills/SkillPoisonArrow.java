@@ -19,6 +19,7 @@ import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.util.Messaging;
+import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillPoisonArrow extends ActiveSkill {
 
@@ -39,23 +40,23 @@ public class SkillPoisonArrow extends ActiveSkill {
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
         node.setProperty("poison-duration", 10000); // 10 seconds in
-        node.setProperty("duration", 60000); // milliseconds
-        node.setProperty("period", 2000); // 2 seconds in milliseconds
+        node.setProperty(Setting.DURATION.node(), 60000); // milliseconds
+        node.setProperty(Setting.PERIOD.node(), 2000); // 2 seconds in milliseconds
         node.setProperty("tick-damage", 2);
         node.setProperty("attacks", 1); //How many attacks the buff lasts for.
-        node.setProperty("apply-text", "%target% is poisoned!");
-        node.setProperty("expire-text", "%target% has recovered from the poison!");
+        node.setProperty(Setting.APPLY_TEXT.node(), "%target% is poisoned!");
+        node.setProperty(Setting.EXPIRE_TEXT.node(), "%target% has recovered from the poison!");
         return node;
     }
 
     public void init() {
         super.init();
-        applyText = getSetting(null, "apply-text", "%target% is poisoned!").replace("%target%", "$1");
-        expireText = getSetting(null, "expire-text", "%target% has recovered from the poison!").replace("%target%", "$1");
+        applyText = getSetting(null, Setting.APPLY_TEXT.node(), "%target% is poisoned!").replace("%target%", "$1");
+        expireText = getSetting(null, Setting.EXPIRE_TEXT.node(), "%target% has recovered from the poison!").replace("%target%", "$1");
     }
 
     public boolean use(Hero hero, String[] args) {
-        long duration = getSetting(hero.getHeroClass(), "buff-duration", 600000);
+        long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 600000);
         int numAttacks = getSetting(hero.getHeroClass(), "attacks", 1);
         hero.addEffect(new PoisonArrowBuff(this, duration, numAttacks));
         broadcastExecuteText(hero);
@@ -87,7 +88,7 @@ public class SkillPoisonArrow extends ActiveSkill {
 
             if (hero.hasEffect("PoisonArrowBuff")) {
                 long duration = getSetting(hero.getHeroClass(), "poison-duration", 10000);
-                long period = getSetting(hero.getHeroClass(), "period", 2000);
+                long period = getSetting(hero.getHeroClass(), Setting.PERIOD.node(), 2000);
                 int tickDamage = getSetting(hero.getHeroClass(), "tick-damage", 2);
                 ArrowPoison apEffect = new ArrowPoison(skill, period, duration, tickDamage, player);
                 

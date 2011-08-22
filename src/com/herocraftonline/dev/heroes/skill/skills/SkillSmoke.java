@@ -21,6 +21,7 @@ import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
+import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillSmoke extends ActiveSkill {
 
@@ -41,24 +42,24 @@ public class SkillSmoke extends ActiveSkill {
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty("duration", 20000);
-        node.setProperty("apply-text", "%hero% vanished in a cloud of smoke!");
-        node.setProperty("expire-text", "%hero% reappeared!");
+        node.setProperty(Setting.DURATION.node(), 20000);
+        node.setProperty(Setting.APPLY_TEXT.node(), "%hero% vanished in a cloud of smoke!");
+        node.setProperty(Setting.EXPIRE_TEXT.node(), "%hero% reappeared!");
         return node;
     }
 
     @Override
     public void init() {
         super.init();
-        applyText = getSetting(null, "apply-text", "%hero% vanished in a cloud of smoke!").replace("%hero%", "$1");
-        expireText = getSetting(null, "expire-text", "%hero% reappeard!").replace("%hero%", "$1");
+        applyText = getSetting(null, Setting.APPLY_TEXT.node(), "%hero% vanished in a cloud of smoke!").replace("%hero%", "$1");
+        expireText = getSetting(null, Setting.EXPIRE_TEXT.node(), "%hero% reappeard!").replace("%hero%", "$1");
     }
 
     @Override
     public boolean use(Hero hero, String[] args) {
         broadcastExecuteText(hero);
 
-        long duration = getSetting(hero.getHeroClass(), "duration", 20000);
+        long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 20000);
         Player player = hero.getPlayer();
         player.getWorld().playEffect(player.getLocation(), org.bukkit.Effect.SMOKE, 4);
         hero.addEffect(new SmokeEffect(this, duration));

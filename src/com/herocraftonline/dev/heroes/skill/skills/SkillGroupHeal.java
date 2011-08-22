@@ -8,6 +8,7 @@ import com.herocraftonline.dev.heroes.api.HeroRegainHealthEvent;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
+import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillGroupHeal extends ActiveSkill {
 
@@ -23,7 +24,7 @@ public class SkillGroupHeal extends ActiveSkill {
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
         node.setProperty("heal-amount", 2);
-        node.setProperty("heal-radius", 5);
+        node.setProperty(Setting.RADIUS.node(), 5);
         return node;
     }
 
@@ -41,7 +42,7 @@ public class SkillGroupHeal extends ActiveSkill {
             hero.setHealth(hero.getHealth() + hrhEvent.getAmount());
             hero.syncHealth();
         } else {
-            int radiusSquared = getSetting(hero.getHeroClass(), "heal-radius", 5) ^ 2;
+            int radiusSquared = (int) Math.pow(getSetting(hero.getHeroClass(), Setting.RADIUS.node(), 5), 2);
             Location heroLoc = hero.getPlayer().getLocation();
             // Heal party members near the caster
             for (Hero partyHero : hero.getParty().getMembers()) {

@@ -7,6 +7,7 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
+import com.herocraftonline.dev.heroes.util.Setting;
 
 import java.util.Random;
 import org.bukkit.Material;
@@ -29,14 +30,14 @@ public class SkillOvergrowth extends ActiveSkill {
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty("max-distance", 15);
+        node.setProperty(Setting.MAX_DISTANCE.node(), 15);
         return node;
     }
 
     @Override
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
-        int range = getSetting(hero.getHeroClass(), "max-distance", 15);
+        int range = getSetting(hero.getHeroClass(), Setting.MAX_DISTANCE.node(), 15);
         if (player.getTargetBlock(null, range).getType() == Material.SAPLING) {
             Block targetBlock = player.getTargetBlock(null, range);
             TreeType tType = null;

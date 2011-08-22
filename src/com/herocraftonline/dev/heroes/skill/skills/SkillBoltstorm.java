@@ -16,6 +16,7 @@ import com.herocraftonline.dev.heroes.effects.PeriodicEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
+import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillBoltstorm extends ActiveSkill {
 
@@ -35,19 +36,19 @@ public class SkillBoltstorm extends ActiveSkill {
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty("range", 7); // radius
-        node.setProperty("duration", 10000); // in milliseconds
-        node.setProperty("period", 1000); // in milliseconds
-        node.setProperty("damage", 4); // Per-tick damage
-        node.setProperty("apply-text", "%hero% has summoned a boltstorm!");
-        node.setProperty("expire-text", "%hero%'s boltstorm has subsided!");
+        node.setProperty(Setting.RADIUS.node(), 7); // radius
+        node.setProperty(Setting.DURATION.node(), 10000); // in milliseconds
+        node.setProperty(Setting.PERIOD.node(), 1000); // in milliseconds
+        node.setProperty(Setting.DAMAGE.node(), 4); // Per-tick damage
+        node.setProperty(Setting.APPLY_TEXT.node(), "%hero% has summoned a boltstorm!");
+        node.setProperty(Setting.EXPIRE_TEXT.node(), "%hero%'s boltstorm has subsided!");
         return node;
     }
 
     @Override
     public boolean use(Hero hero, String[] args) {
-        int period = getSetting(hero.getHeroClass(), "period", 1000);
-        int duration = getSetting(hero.getHeroClass(), "duration", 10000);
+        int period = getSetting(hero.getHeroClass(), Setting.PERIOD.node(), 1000);
+        int duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 10000);
         hero.addEffect(new BoltStormEffect(this, period, duration));
         return true;
     }
@@ -55,8 +56,8 @@ public class SkillBoltstorm extends ActiveSkill {
     @Override
     public void init() {
         super.init();
-        applyText = getSetting(null, "apply-text", "%hero% has summoned a boltstorm!").replace("%hero%", "$1");
-        expireText = getSetting(null, "expire-text", "%hero%'s boltstorm has subsided!").replace("%hero%", "$1");
+        applyText = getSetting(null, Setting.APPLY_TEXT.node(), "%hero% has summoned a boltstorm!").replace("%hero%", "$1");
+        expireText = getSetting(null, Setting.EXPIRE_TEXT.node(), "%hero%'s boltstorm has subsided!").replace("%hero%", "$1");
     }
 
     public class BoltStormEffect extends PeriodicEffect implements Dispellable, Beneficial {
@@ -84,7 +85,7 @@ public class SkillBoltstorm extends ActiveSkill {
             super.tick(hero);
 
             Player player = hero.getPlayer();
-            int range = getSetting(hero.getHeroClass(), "range", 7);
+            int range = getSetting(hero.getHeroClass(), Setting.RADIUS.node(), 7);
 
             List<LivingEntity> targets = new ArrayList<LivingEntity>();
             for (Entity entity : player.getNearbyEntities(range, range, range)) {
@@ -102,7 +103,7 @@ public class SkillBoltstorm extends ActiveSkill {
             if (targets.isEmpty())
                 return;
 
-            int damage = getSetting(hero.getHeroClass(), "damage", 4);
+            int damage = getSetting(hero.getHeroClass(), Setting.DAMAGE.node(), 4);
             LivingEntity target = targets.get(rand.nextInt(targets.size()));
             getPlugin().getDamageManager().addSpellTarget(target, hero, getSkill());
 

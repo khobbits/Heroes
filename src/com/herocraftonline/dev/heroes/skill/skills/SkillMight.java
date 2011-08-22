@@ -18,6 +18,7 @@ import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.util.Messaging;
+import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillMight extends ActiveSkill {
 
@@ -35,15 +36,15 @@ public class SkillMight extends ActiveSkill {
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
         node.setProperty("damage-bonus", 1.25);
-        node.setProperty("range", 10);
-        node.setProperty("duration", 600000); // in Milliseconds - 10 minutes
+        node.setProperty(Setting.RADIUS.node(), 10);
+        node.setProperty(Setting.DURATION.node(), 600000); // in Milliseconds - 10 minutes
         return node;
     }
 
     @Override
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
-        int duration = getSetting(hero.getHeroClass(), "duration", 600000);
+        int duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 600000);
         double damageBonus = getSetting(hero.getHeroClass(), "damage-bonus", 1.25);
 
         MightEffect mEffect = new MightEffect(this, duration, damageBonus);
@@ -55,7 +56,7 @@ public class SkillMight extends ActiveSkill {
             }
             hero.addEffect(mEffect);
         } else {
-            int rangeSquared = (int) Math.pow(getSetting(hero.getHeroClass(), "range", 10), 2);
+            int rangeSquared = (int) Math.pow(getSetting(hero.getHeroClass(), Setting.RADIUS.node(), 10), 2);
             for (Hero pHero : hero.getParty().getMembers()) {
                 if (!pHero.getPlayer().getWorld().equals(player.getWorld()))
                     continue;

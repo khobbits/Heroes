@@ -23,6 +23,7 @@ import com.herocraftonline.dev.heroes.effects.Harmful;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
+import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillPiggify extends TargettedSkill {
 
@@ -41,7 +42,7 @@ public class SkillPiggify extends TargettedSkill {
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty("duration", 10000);
+        node.setProperty(Setting.DURATION.node(), 10000);
         return node;
     }
 
@@ -75,7 +76,7 @@ public class SkillPiggify extends TargettedSkill {
                 creatures.get(0).remove();
                 creatures.remove(0);
             }
-        }, (long) (getSetting(hero.getHeroClass(), "duration", 10000) * 0.02));
+        }, (long) (getSetting(hero.getHeroClass(), Setting.DURATION.node(), 10000) * 0.02));
 
         broadcastExecuteText(hero, target);
         return true;
@@ -90,7 +91,5 @@ public class SkillPiggify extends TargettedSkill {
                 event.setCancelled(true);
             }
         }
-
     }
-
 }

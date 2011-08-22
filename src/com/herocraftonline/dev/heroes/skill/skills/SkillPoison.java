@@ -12,6 +12,7 @@ import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
+import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillPoison extends TargettedSkill {
 
@@ -28,17 +29,17 @@ public class SkillPoison extends TargettedSkill {
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty("duration", 10000); // in milliseconds
-        node.setProperty("period", 2000); // in milliseconds
+        node.setProperty(Setting.DURATION.node(), 10000); // in milliseconds
+        node.setProperty(Setting.PERIOD.node(), 2000); // in milliseconds
         node.setProperty("tick-damage", 1);
-        node.setProperty("expire-text", "%target% has recovered from the poison!");
+        node.setProperty(Setting.EXPIRE_TEXT.node(), "%target% has recovered from the poison!");
         return node;
     }
 
     @Override
     public void init() {
         super.init();
-        expireText = getSetting(null, "expire-text", "%target% has recovered from the poison!").replace("%target%", "$1");
+        expireText = getSetting(null, Setting.EXPIRE_TEXT.node(), "%target% has recovered from the poison!").replace("%target%", "$1");
     }
 
     @Override
@@ -67,8 +68,8 @@ public class SkillPoison extends TargettedSkill {
         }
 
         broadcastExecuteText(hero, target);
-        long duration = getSetting(hero.getHeroClass(), "duration", 10000);
-        long period = getSetting(hero.getHeroClass(), "period", 2000);
+        long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 10000);
+        long period = getSetting(hero.getHeroClass(), Setting.PERIOD.node(), 2000);
         int tickDamage = getSetting(hero.getHeroClass(), "tick-damage", 1);
         PoisonSkillEffect pEffect = new PoisonSkillEffect(this, "Poison", period, duration, tickDamage, player);
         if (targetHero != null) {

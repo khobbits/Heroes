@@ -10,6 +10,7 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
+import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillBolt extends TargettedSkill {
 
@@ -24,7 +25,7 @@ public class SkillBolt extends TargettedSkill {
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty("damage", 4);
+        node.setProperty(Setting.DAMAGE.node(), 4);
         return node;
     }
 
@@ -47,7 +48,7 @@ public class SkillBolt extends TargettedSkill {
 
         getPlugin().getDamageManager().addSpellTarget(target, hero, this);
         target.getWorld().strikeLightningEffect(target.getLocation());
-        target.damage(getSetting(hero.getHeroClass(), "damage", 4), player);
+        target.damage(getSetting(hero.getHeroClass(), Setting.DAMAGE.node(), 4), player);
 
         broadcastExecuteText(hero, target);
         return true;

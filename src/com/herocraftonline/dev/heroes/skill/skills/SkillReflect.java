@@ -17,6 +17,7 @@ import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
+import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillReflect extends ActiveSkill {
 
@@ -36,25 +37,25 @@ public class SkillReflect extends ActiveSkill {
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty("duration", 5000);
+        node.setProperty(Setting.DURATION.node(), 5000);
         node.setProperty("reflected-amount", 0.5);
-        node.setProperty("apply-text", "%hero% put up a reflective shield!");
-        node.setProperty("expire-text", "%hero% lost his reflective shield!");
+        node.setProperty(Setting.APPLY_TEXT.node(), "%hero% put up a reflective shield!");
+        node.setProperty(Setting.EXPIRE_TEXT.node(), "%hero% lost his reflective shield!");
         return node;
     }
 
     @Override
     public void init() {
         super.init();
-        applyText = getSetting(null, "apply-text", "%hero% put up a reflective shield!").replace("%hero%", "$1");
-        expireText = getSetting(null, "expire-text", "%hero% lost his reflective shield!").replace("%hero%", "$1");
+        applyText = getSetting(null, Setting.APPLY_TEXT.node(), "%hero% put up a reflective shield!").replace("%hero%", "$1");
+        expireText = getSetting(null, Setting.EXPIRE_TEXT.node(), "%hero% lost his reflective shield!").replace("%hero%", "$1");
     }
 
     @Override
     public boolean use(Hero hero, String[] args) {
         broadcastExecuteText(hero);
 
-        int duration = getSetting(hero.getHeroClass(), "duration", 5000);
+        int duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 5000);
         hero.addEffect(new ReflectEffect(this, duration));
 
         return true;

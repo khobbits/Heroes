@@ -10,6 +10,7 @@ import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
+import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillManaFreeze extends TargettedSkill {
 
@@ -27,17 +28,17 @@ public class SkillManaFreeze extends TargettedSkill {
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty("duration", 5000);
-        node.setProperty("apply-text", "%target% has stopped regenerating mana!");
-        node.setProperty("expire-text", "%target% is once again regenerating mana!");
+        node.setProperty(Setting.DURATION.node(), 5000);
+        node.setProperty(Setting.APPLY_TEXT.node(), "%target% has stopped regenerating mana!");
+        node.setProperty(Setting.EXPIRE_TEXT.node(), "%target% is once again regenerating mana!");
         return node;
     }
 
     @Override
     public void init() {
         super.init();
-        applyText = getSetting(null, "apply-text", "%target% has stopped regenerating mana!").replace("%target%", "$1");
-        expireText = getSetting(null, "expire-text", "%target% is once again regenerating mana!").replace("%target%", "$1");
+        applyText = getSetting(null, Setting.APPLY_TEXT.node(), "%target% has stopped regenerating mana!").replace("%target%", "$1");
+        expireText = getSetting(null, Setting.EXPIRE_TEXT.node(), "%target% is once again regenerating mana!").replace("%target%", "$1");
     }
 
     @Override
@@ -46,7 +47,7 @@ public class SkillManaFreeze extends TargettedSkill {
             broadcastExecuteText(hero, target);
 
             Hero targetHero = getPlugin().getHeroManager().getHero((Player) target);
-            int duration = getSetting(hero.getHeroClass(), "duration", 5000);
+            int duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 5000);
             targetHero.addEffect(new ManaFreezeEffect(this, duration));
             return true;
         } else {

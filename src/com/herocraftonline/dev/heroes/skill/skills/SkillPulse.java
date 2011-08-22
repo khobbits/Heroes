@@ -13,6 +13,7 @@ import org.bukkit.util.config.ConfigurationNode;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
+import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillPulse extends ActiveSkill {
 
@@ -27,14 +28,16 @@ public class SkillPulse extends ActiveSkill {
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty("damage", 1);
+        node.setProperty(Setting.DAMAGE.node(), 1);
+        node.setProperty(Setting.RADIUS.node(), 5);
         return node;
     }
 
     @Override
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
-        List<Entity> entities = hero.getPlayer().getNearbyEntities(5, 5, 5);
+        int radius = getSetting(hero.getHeroClass(), Setting.RADIUS.node(), 5);
+        List<Entity> entities = hero.getPlayer().getNearbyEntities(radius, radius, radius);
         for (Entity entity : entities) {
             if (!(entity instanceof LivingEntity)) {
                 continue;

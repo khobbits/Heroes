@@ -23,6 +23,7 @@ import com.herocraftonline.dev.heroes.effects.Dispellable;
 import com.herocraftonline.dev.heroes.effects.PeriodicEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
+import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillIcyAura extends ActiveSkill {
 
@@ -56,30 +57,30 @@ public class SkillIcyAura extends ActiveSkill {
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty("duration", 10000);
-        node.setProperty("period", 2000);
+        node.setProperty(Setting.DURATION.node(), 10000);
+        node.setProperty(Setting.PERIOD.node(), 2000);
         node.setProperty("tick-damage", 1);
-        node.setProperty("range", 10);
-        node.setProperty("apply-text", "%hero% is emitting ice!");
-        node.setProperty("expire-text", "%hero% has stopped emitting ice!");
+        node.setProperty(Setting.RADIUS.node(), 10);
+        node.setProperty(Setting.APPLY_TEXT.node(), "%hero% is emitting ice!");
+        node.setProperty(Setting.EXPIRE_TEXT.node(), "%hero% has stopped emitting ice!");
         return node;
     }
 
     @Override
     public void init() {
         super.init();
-        applyText = getSetting(null, "apply-text", "%hero% is emitting ice!").replace("%hero%", "$1");
-        expireText = getSetting(null, "expire-text", "%hero% has stopped emitting ice!").replace("%hero%", "$1");
+        applyText = getSetting(null, Setting.APPLY_TEXT.node(), "%hero% is emitting ice!").replace("%hero%", "$1");
+        expireText = getSetting(null, Setting.EXPIRE_TEXT.node(), "%hero% has stopped emitting ice!").replace("%hero%", "$1");
     }
 
     @Override
     public boolean use(Hero hero, String[] args) {
         broadcastExecuteText(hero);
 
-        long duration = getSetting(hero.getHeroClass(), "duration", 10000);
-        long period = getSetting(hero.getHeroClass(), "period", 500);
+        long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 10000);
+        long period = getSetting(hero.getHeroClass(), Setting.PERIOD.node(), 500);
         int tickDamage = getSetting(hero.getHeroClass(), "tick-damage", 1);
-        int range = getSetting(hero.getHeroClass(), "range", 10);
+        int range = getSetting(hero.getHeroClass(), Setting.RADIUS.node(), 10);
         hero.addEffect(new IcyAuraEffect(this, duration, period, tickDamage, range));
         return true;
     }

@@ -14,6 +14,7 @@ import com.herocraftonline.dev.heroes.effects.Effect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
+import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillBandage extends TargettedSkill {
 
@@ -29,7 +30,7 @@ public class SkillBandage extends TargettedSkill {
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
         node.setProperty("health", 5);
-        node.setProperty(SETTING_MAXDISTANCE, 5);
+        node.setProperty(Setting.MAX_DISTANCE.node(), 5);
         return node;
     }
 
