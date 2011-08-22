@@ -132,8 +132,16 @@ public class HeroesDamageListener extends EntityListener {
 
     @Override
     public void onEntityDamage(EntityDamageEvent event) {
-        if (event.isCancelled() || event.getCause() == DamageCause.SUICIDE)
+        if (event.isCancelled())
             return;
+        
+        if (event.getCause() == DamageCause.SUICIDE) {
+            if (event.getEntity() instanceof Player) {
+                Player player = (Player) event.getEntity();
+                plugin.getHeroManager().getHero(player).setHealth(0D);
+                return;
+            }
+        }
 
         Entity entity = event.getEntity();
         Entity attacker = null;
