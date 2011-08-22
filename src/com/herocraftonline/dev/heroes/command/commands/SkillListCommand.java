@@ -17,6 +17,7 @@ import com.herocraftonline.dev.heroes.command.BasicCommand;
 import com.herocraftonline.dev.heroes.command.Command;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
+import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillListCommand extends BasicCommand {
 
@@ -55,7 +56,7 @@ public class SkillListCommand extends BasicCommand {
             if (command instanceof Skill) {
                 Skill skill = (Skill) command;
                 if (heroClass.hasSkill(skill.getName()) && !skills.containsKey(skill)) {
-                    skills.put(skill, skill.getSetting(heroClass, Skill.SETTING_LEVEL, 1));
+                    skills.put(skill, skill.getSetting(heroClass, Setting.LEVEL.node(), 1));
                 }
             }
         }
