@@ -6,7 +6,6 @@ import org.bukkit.event.Event;
 
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
-import com.herocraftonline.dev.heroes.skill.SkillUseInfo;
 
 @SuppressWarnings("serial")
 public class SkillDamageEvent extends Event implements Cancellable {

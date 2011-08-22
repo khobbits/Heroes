@@ -2,8 +2,10 @@ package com.herocraftonline.dev.heroes.util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -61,8 +63,7 @@ public class Properties {
     public int mapPacketInterval;
 
     // Worlds
-    public List<String> disabledSkills;
-    public List<String> disabledExperience;
+    public Set<String> disabledWorlds = new HashSet<String>();
 
     // Stupid Hats...
     public boolean allowHats;

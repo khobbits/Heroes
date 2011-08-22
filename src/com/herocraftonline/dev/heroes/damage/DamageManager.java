@@ -19,10 +19,10 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.util.config.Configuration;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.api.SkillUseInfo;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
-import com.herocraftonline.dev.heroes.skill.SkillUseInfo;
 import com.herocraftonline.dev.heroes.util.Properties;
 
 public class DamageManager {

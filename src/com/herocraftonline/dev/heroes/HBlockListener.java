@@ -48,7 +48,10 @@ public class HBlockListener extends BlockListener {
 
         Block block = event.getBlock();
         Player player = event.getPlayer();
-
+        
+        if(plugin.getConfigManager().getProperties().disabledWorlds.contains(player.getWorld().getName()))
+            return;
+        
         // Get the Hero representing the player
         Hero hero = plugin.getHeroManager().getHero(player);
         // Get the player's class definition
@@ -92,8 +95,10 @@ public class HBlockListener extends BlockListener {
 
         Block block = event.getBlock();
         Material material = block.getType();
-
+        
         Properties prop = plugin.getConfigManager().getProperties();
+        if (prop.disabledWorlds.contains(block.getWorld().getName()))
+            return;
         if (prop.miningExp.containsKey(material) || prop.loggingExp.containsKey(material)) {
             Location loc = block.getLocation();
             if (placedBlocks.containsKey(loc)) {

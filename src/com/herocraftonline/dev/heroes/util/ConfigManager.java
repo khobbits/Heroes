@@ -232,8 +232,8 @@ public class ConfigManager {
 
     private void loadWorldConfig(Configuration config) {
         String root = "worlds.";
-        properties.disabledExperience = config.getStringList(root + "disableExperience", new ArrayList<String>());
-        properties.disabledSkills = config.getStringList(root + "disableSkills", new ArrayList<String>());
+        List<String> worlds = config.getStringList(root + "disabledWorlds", new ArrayList<String>());
+        properties.disabledWorlds.addAll(worlds);
     }
 
     private void loadSkills(Configuration config) {

@@ -428,7 +428,7 @@ public class Heroes extends JavaPlugin {
         pluginManager.registerEvent(Type.PLUGIN_DISABLE, pluginListener, Priority.Monitor, this);
 
         pluginManager.registerEvent(Type.CUSTOM_EVENT, hEventListener, Priority.Monitor, this);
-        pluginManager.registerEvent(Type.CUSTOM_EVENT, hEventListener, Priority.Monitor, this);
+        pluginManager.registerEvent(Type.CUSTOM_EVENT, new HSkillListener(this), Priority.Highest, this);
         pluginManager.registerEvent(Type.CUSTOM_EVENT, new HPermissionsListener(this), Priority.Monitor, this);
 
         // Map Party UI

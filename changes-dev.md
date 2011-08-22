@@ -2,6 +2,7 @@ Version Dev
 
 Bug Fixes:
 
+	Fixed Multiworld Bug denying skills being bound to items
 
 General/API:
 

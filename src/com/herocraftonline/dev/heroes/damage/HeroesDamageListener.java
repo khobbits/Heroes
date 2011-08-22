@@ -23,9 +23,9 @@ import org.bukkit.inventory.PlayerInventory;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.SkillDamageEvent;
+import com.herocraftonline.dev.heroes.api.SkillUseInfo;
 import com.herocraftonline.dev.heroes.api.WeaponDamageEvent;
 import com.herocraftonline.dev.heroes.persistence.Hero;
-import com.herocraftonline.dev.heroes.skill.SkillUseInfo;
 import com.herocraftonline.dev.heroes.util.Properties;
 
 // import org.bukkit.entity.Projectile;

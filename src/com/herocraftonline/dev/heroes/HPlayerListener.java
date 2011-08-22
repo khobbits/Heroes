@@ -1,7 +1,6 @@
 package com.herocraftonline.dev.heroes;
 
 import java.util.List;
-import java.util.logging.Level;
 
 import com.herocraftonline.dev.heroes.party.HeroParty;
 import org.bukkit.Material;
@@ -53,15 +52,14 @@ public class HPlayerListener extends PlayerListener {
             return;
 
         Player player = event.getPlayer();
+        
         Material material = player.getItemInHand().getType();
         Hero hero = plugin.getHeroManager().getHero(player);
         if (hero.getBinds().containsKey(material)) {
             if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 event.setCancelled(false);
                 String[] args = hero.getBinds().get(material);
-                if(!plugin.getConfigManager().getProperties().disabledSkills.contains(player.getWorld().getName())) {
-                    plugin.onCommand(player, null, "skill", args);
-                }
+                plugin.onCommand(player, null, "skill", args);
             }
         }
     }

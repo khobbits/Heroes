@@ -103,7 +103,7 @@ public class Hero {
     public void gainExp(double expGain, ExperienceType source, boolean distributeToParty) {
         Properties prop = plugin.getConfigManager().getProperties();
 
-        if (prop.disabledExperience.contains(player.getWorld().getName()))
+        if (prop.disabledWorlds.contains(player.getWorld().getName()))
             return;
         if (distributeToParty && party != null && party.getExp()) {
             Location location = getPlayer().getLocation();

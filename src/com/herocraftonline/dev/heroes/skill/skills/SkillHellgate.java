@@ -11,7 +11,7 @@ import com.herocraftonline.dev.heroes.effects.Effect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
-import com.nijiko.coelho.iConomy.util.Messaging;
+import com.herocraftonline.dev.heroes.util.Messaging;
 
 public class SkillHellgate extends ActiveSkill {
 
