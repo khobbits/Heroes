@@ -33,7 +33,7 @@ public class SkillFlameshield extends ActiveSkill {
         setDescription("Fire can't hurt you!");
         setUsage("/skill flameshield");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "skill flameshield" });
+        setIdentifiers(new String[] { "skill flameshield", "skill fshield" });
 
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
         registerEvent(Type.CUSTOM_EVENT, new HeroesSkillListener(), Priority.Highest);

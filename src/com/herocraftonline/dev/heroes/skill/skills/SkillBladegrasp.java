@@ -27,7 +27,7 @@ public class SkillBladegrasp extends ActiveSkill {
         setDescription("Blocks incoming melee damage");
         setUsage("/skill bladegrasp");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "skill bladegrasp" });
+        setIdentifiers(new String[] { "skill bladegrasp", "skill bgrasp" });
 
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
     }

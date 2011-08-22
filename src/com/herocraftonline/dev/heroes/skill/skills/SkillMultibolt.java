@@ -20,7 +20,7 @@ public class SkillMultibolt extends TargettedSkill {
         setDescription("Calls down multiple bolts of lightning centered on the target.");
         setUsage("/skill mbolt [target]");
         setArgumentRange(0, 1);
-        setIdentifiers(new String[] { "skill mbolt" });
+        setIdentifiers(new String[] { "skill multibolt", "skill mbolt" });
     }
     
     @Override

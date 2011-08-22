@@ -32,7 +32,7 @@ public class SkillAssassinsBlade extends ActiveSkill {
         setDescription("You dab your blade with deadly poison");
         setUsage("/skill ablade");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "skill ablade" });
+        setIdentifiers(new String[] { "skill ablade", "skill assassinsblade" });
         
         registerEvent(Type.ENTITY_DAMAGE, new SkillDamageListener(this), Priority.Monitor);
     }
