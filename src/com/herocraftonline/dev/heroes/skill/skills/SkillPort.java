@@ -1,5 +1,7 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
+import java.util.logging.Level;
+
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -58,21 +60,22 @@ public class SkillPort extends ActiveSkill {
             int range = (int) Math.pow(getSetting(hero.getHeroClass(), Setting.RADIUS.node(), 10), 2);
             Location loc = new Location(world, Double.parseDouble(splitArg[1]), Double.parseDouble(splitArg[2]), Double.parseDouble(splitArg[3]));
             broadcastExecuteText(hero);
-            if (hero.getParty() != null) {
-                for (Hero pHero : hero.getParty().getMembers()) {
-                    if (!pHero.getPlayer().getWorld().equals(player.getWorld()))
-                        continue;
-                    if (player.getLocation().distanceSquared(pHero.getPlayer().getLocation()) <= range) {
-                        pHero.getPlayer().teleport(loc);
-                    }
-                }
-            } else {
+            if (hero.getParty() == null) {
                 player.teleport(loc);
+                return true;
+            }
+
+            for (Hero pHero : hero.getParty().getMembers()) {
+                if (!pHero.getPlayer().getWorld().equals(player.getWorld()))
+                    continue;
+                double distance = player.getLocation().distanceSquared(pHero.getPlayer().getLocation());
+                if ( distance <= range) {
+                    pHero.getPlayer().teleport(loc);
+                }
             }
 
             return true;
-        } else {
+        } else
             return false;
-        }
     }
 }
