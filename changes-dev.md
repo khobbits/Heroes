@@ -2,13 +2,16 @@ Version Dev
 
 Bug Fixes:
 
-	Fixed Multiworld Bug denying skills being bound to items
+	Multiworld support re-done, Binding should now work again
+	bedhealing percentages are no longer rounded down to 0, this fixes bedhealing
+	BedHeal HP display now respects verbosity settings for the hero
 
 General/API:
 
 	SkillUseEvent now tracks manacost and reagentcost which can be adjusted during the event
 	Added getSettingKeys to the skill configuration methods.
 	HeroRegainManaEvent added to the API - called when a skill/mana regeneration is triggered
+	
 
 Skills:
 
@@ -31,6 +34,8 @@ Skills:
 		- Implemented a much more limited set of block-types that IcyAura can turn into Ice.
 	ManaFreeze
 		- Now prevents the target player from regenerating mana
+	Mark - (NEW!)
+		- Marks a location for the hero to recall back to using Recall
 	Multibolt - (NEW!)
 		- AoE version of Bolt.
 	Port
@@ -39,6 +44,8 @@ Skills:
 		- Renamed item-cost/amount to "reagent" and "reagent-cost" for the skill settings
 	Pulse
 		- Radius is now configurable
+	Recall
+		- Split marking of recall locations onto a different skill called 'Mark'
 	Replenish
 		- Amount of mana returned to player is now configurable
 	Skeleton

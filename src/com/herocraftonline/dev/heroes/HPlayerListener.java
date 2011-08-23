@@ -52,7 +52,7 @@ public class HPlayerListener extends PlayerListener {
             return;
 
         Player player = event.getPlayer();
-        
+
         Material material = player.getItemInHand().getType();
         Hero hero = plugin.getHeroManager().getHero(player);
         if (hero.getBinds().containsKey(material)) {
@@ -141,7 +141,7 @@ public class HPlayerListener extends PlayerListener {
 
         Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
         long period = plugin.getConfigManager().getProperties().healInterval * 1000;
-        double tickHealPercent = plugin.getConfigManager().getProperties().healPercent / 100;
+        double tickHealPercent = plugin.getConfigManager().getProperties().healPercent / 100.0;
         BedHealEffect bhEffect = new BedHealEffect(period, 100000, tickHealPercent);
         hero.addEffect(bhEffect);
     }
@@ -182,7 +182,9 @@ public class HPlayerListener extends PlayerListener {
             double healAmount = hero.getMaxHealth() * tickHealPercent;
             hero.setHealth(hero.getHealth() + healAmount);
             hero.syncHealth();
-            player.sendMessage(Messaging.createFullHealthBar(hero.getHealth(), hero.getMaxHealth()));
+            if (hero.isVerbose()) {
+                player.sendMessage(Messaging.createFullHealthBar(hero.getHealth(), hero.getMaxHealth()));
+            }
         }
     }
 }
