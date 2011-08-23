@@ -52,7 +52,7 @@ public class HPlayerListener extends PlayerListener {
             return;
 
         Player player = event.getPlayer();
-        
+
         Material material = player.getItemInHand().getType();
         Hero hero = plugin.getHeroManager().getHero(player);
         if (hero.getBinds().containsKey(material)) {
@@ -182,7 +182,9 @@ public class HPlayerListener extends PlayerListener {
             double healAmount = hero.getMaxHealth() * tickHealPercent;
             hero.setHealth(hero.getHealth() + healAmount);
             hero.syncHealth();
-            player.sendMessage(Messaging.createFullHealthBar(hero.getHealth(), hero.getMaxHealth()));
+            if (hero.isVerbose()) {
+                player.sendMessage(Messaging.createFullHealthBar(hero.getHealth(), hero.getMaxHealth()));
+            }
         }
     }
 }

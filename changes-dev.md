@@ -2,14 +2,16 @@ Version Dev
 
 Bug Fixes:
 
-	Fixed Multiworld Bug denying skills being bound to items
-	Fixed issue with bedhealing percentages being rounded down to 0.
+	Multiworld support re-done, Binding should now work again
+	bedhealing percentages are no longer rounded down to 0, this fixes bedhealing
+	BedHeal HP display now respects verbosity settings for the hero
 
 General/API:
 
 	SkillUseEvent now tracks manacost and reagentcost which can be adjusted during the event
 	Added getSettingKeys to the skill configuration methods.
 	HeroRegainManaEvent added to the API - called when a skill/mana regeneration is triggered
+	
 
 Skills:
 
