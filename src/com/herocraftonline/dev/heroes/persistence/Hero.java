@@ -47,7 +47,7 @@ public class Hero {
     protected Set<String> suppressedSkills = new HashSet<String>();
     protected Map<String, Map<String, String>> skillSettings = new HashMap<String, Map<String, String>>();
 
-    private Map<String, ConfigurationNode> skills;
+    private Map<String, ConfigurationNode> skills = new HashMap<String, ConfigurationNode>();
     protected double health;
 
     public Hero(Heroes plugin, Player player, HeroClass heroClass) {

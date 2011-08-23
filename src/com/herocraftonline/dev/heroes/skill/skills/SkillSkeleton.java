@@ -160,7 +160,7 @@ public class SkillSkeleton extends ActiveSkill {
          */
         private void moveSkeleton(Creature creature, Hero hero) {
             // Make sure the skeleton isn't in combat
-            if (creature.getTarget() != null || creature.getTarget().isDead())
+            if (creature.getTarget() != null)
                 return;
             
             //If the skeleton is far away lets teleport them to the player
