@@ -28,10 +28,10 @@ public class SkillDeconstruct extends ActiveSkill {
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
         String root = "IRON_AXE";
-        String mat = "IRON_INGOT";
         node.setProperty(root + "." + Setting.LEVEL.node(), 1);
         node.setProperty(root + ".min-durability", .5); //Minimum durability percentage the item must have to deconstruct
-        node.setProperty(root + "." + mat, 1);
+        node.setProperty(root + ".IRON_INGOT", 1);
+        node.setProperty(root + ".STICK", 1);
         node.setProperty(Setting.USE_TEXT.node(), "%hero% has deconstructed a %item%");
         return node;
     }
