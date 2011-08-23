@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
 import com.herocraftonline.dev.heroes.party.HeroParty;
@@ -53,7 +54,7 @@ public class HeroManager {
     public HeroManager(Heroes plugin) {
         this.plugin = plugin;
         this.heroes = new HashSet<Hero>();
-        this.creatureEffects = new HashMap<Creature, Set<Effect>>();
+        this.creatureEffects = new ConcurrentHashMap<Creature, Set<Effect>>();
         playerFolder = new File(plugin.getDataFolder(), "players"); // Setup our Player Data Folder
         playerFolder.mkdirs(); // Create the folder if it doesn't exist.
 

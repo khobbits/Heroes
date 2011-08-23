@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -38,7 +39,7 @@ public class Hero {
     protected int mana = 0;
     protected HeroParty party = null;
     protected boolean verbose = true;
-    protected Set<Effect> effects = new HashSet<Effect>();
+    protected Map<Effect, Boolean> effects = new ConcurrentHashMap<Effect, Boolean>();
     protected Map<String, Double> experience = new HashMap<String, Double>();
     protected Map<String, Long> cooldowns = new HashMap<String, Long>();
     protected Set<Creature> summons = new HashSet<Creature>();
@@ -61,7 +62,7 @@ public class Hero {
     }
 
     public void addEffect(Effect effect) {
-        effects.add(effect);
+        effects.put(effect, true);
         effect.apply(this);
     }
 
@@ -204,7 +205,7 @@ public class Hero {
     }
 
     public Effect getEffect(String name) {
-        for (Effect effect : effects) {
+        for (Effect effect : effects.keySet()) {
             if (effect.getName().equalsIgnoreCase(name)) {
                 return effect;
             }
@@ -213,7 +214,7 @@ public class Hero {
     }
 
     public Set<Effect> getEffects() {
-        return new HashSet<Effect>(effects);
+        return effects.keySet();
     }
 
     public double getExperience() {
@@ -278,7 +279,7 @@ public class Hero {
     }
 
     public boolean hasEffect(String name) {
-        for (Effect effect : effects) {
+        for (Effect effect : effects.keySet()) {
             if (effect.getName().equalsIgnoreCase(name)) {
                 return true;
             }
