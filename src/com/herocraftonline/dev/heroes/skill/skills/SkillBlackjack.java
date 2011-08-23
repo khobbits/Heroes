@@ -16,6 +16,8 @@ import org.bukkit.event.player.PlayerListener;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.api.HeroesEventListener;
+import com.herocraftonline.dev.heroes.api.SkillUseEvent;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.effects.Expirable;
 import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
@@ -34,9 +36,6 @@ public class SkillBlackjack extends ActiveSkill {
     private String stunApplyText;
     private String stunExpireText;
 
-    private PlayerListener playerListener = new SkillPlayerListener();
-    private EntityListener entityListener = new SkillEntityListener(this);
-
     private Random random = new Random();
 
     public SkillBlackjack(Heroes plugin) {
@@ -46,8 +45,9 @@ public class SkillBlackjack extends ActiveSkill {
         setArgumentRange(0, 0);
         setIdentifiers(new String[] { "skill blackjack", "skill bjack" });
 
-        registerEvent(Type.ENTITY_DAMAGE, entityListener, Priority.Normal);
-        registerEvent(Type.PLAYER_INTERACT, playerListener, Priority.Normal);
+        registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(this), Priority.Normal);
+        registerEvent(Type.PLAYER_INTERACT, new SkillPlayerListener(), Priority.Normal);
+        registerEvent(Type.CUSTOM_EVENT, new SkillUseListener(), Priority.Highest);
     }
 
     @Override
@@ -165,7 +165,20 @@ public class SkillBlackjack extends ActiveSkill {
                 event.setCancelled(true);
             }
         }
-
+    }
+    
+    public class SkillUseListener extends HeroesEventListener {
+        
+        @Override
+        public void onSkillUse(SkillUseEvent event) {
+            if (event.isCancelled())
+                return;
+            
+            if (event.getHero().hasEffect("Stun")) {
+                if (!(event.getSkill() instanceof SkillInvuln))
+                    event.setCancelled(true);
+            }
+        }
     }
 
     public class StunEffect extends PeriodicEffect implements Periodic, Expirable {
@@ -183,12 +196,10 @@ public class SkillBlackjack extends ActiveSkill {
             super.apply(hero);
 
             Player player = hero.getPlayer();
-            Location location = hero.getPlayer().getLocation();
-            x = location.getX();
-            y = location.getY();
-            z = location.getZ();
-
-            broadcast(location, stunApplyText, player.getDisplayName());
+            x = player.getLocation().getX();
+            y = player.getLocation().getY();
+            z = player.getLocation().getZ();
+            broadcast(player.getLocation(), stunApplyText, player.getDisplayName());
         }
 
         @Override
@@ -203,15 +214,11 @@ public class SkillBlackjack extends ActiveSkill {
         public void tick(Hero hero) {
             super.tick(hero);
 
-            Player player = hero.getPlayer();
-            Location location = player.getLocation();
+            Location location = hero.getPlayer().getLocation();
             if (location.getX() != x || location.getY() != y || location.getZ() != z) {
-                location.setX(x);
-                location.setY(y);
-                location.setZ(z);
-                player.teleport(location);
+                Location loc = new Location(location.getWorld(), x, y, z, location.getYaw(), location.getPitch());
+                hero.getPlayer().teleport(loc);
             }
         }
     }
-
 }

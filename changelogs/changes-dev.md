@@ -9,6 +9,9 @@ General/API:
 
 Skills:
 
+	Blackjack
+		- No longer resets player yaw and pitch.
+		- Blackjack now prevents the player from using all skills except invuln.
 	Construct - (NEW!)
 		- Ability to construct items using non-standard amounts, and to get back non-standard amounts!
 		- XP values can be assigned to construction
