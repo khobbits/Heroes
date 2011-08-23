@@ -33,7 +33,7 @@ public class SkillMark extends ActiveSkill {
                 return false;
             double[] xyzyp = getStoredData(skillSetting);
             Messaging.send(player, "Your recall is currently marked on $1 at: $2, $3, $4", new Object[] { world.getName(), (int) xyzyp[0], (int) xyzyp[1], (int) xyzyp[2] });
-            return true;
+            return false;
         } else {
             // Save a new mark
             Location loc = player.getLocation();
