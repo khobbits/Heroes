@@ -175,7 +175,7 @@ public class SkillBlackjack extends ActiveSkill {
                 return;
             
             if (event.getHero().hasEffect("Stun")) {
-                if (!(event.getSkill() instanceof SkillInvuln))
+                if (!(event.getSkill().getName().equals("Invuln")))
                     event.setCancelled(true);
             }
         }
