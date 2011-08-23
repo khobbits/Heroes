@@ -11,30 +11,44 @@ import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
 
-public class SkillRecall extends ActiveSkill {
+public class SkillMark extends ActiveSkill {
 
-    public SkillRecall(Heroes plugin) {
-        super(plugin, "Recall");
-        setDescription("Recalls you to your marked Location");
-        setUsage("/skill recall");
-        setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "skill recall" });
+    public SkillMark(Heroes plugin) {
+        super(plugin, "Mark");
+        setDescription("Marks a location for use with recall");
+        setUsage("/skill mark <info>");
+        setArgumentRange(0, 1);
+        setIdentifiers(new String[] { "skill mark" });
     }
 
     @Override
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
-        Map<String, String> skillSetting = hero.getSkillSettings(this);
-
-        // Try to teleport back to the location
-        World world = validateLocation(skillSetting, player);
-        if (world == null)
-            return false;
+        Map<String, String> skillSetting = hero.getSkillSettings("Recall");
         
-        double[] xyzyp = getStoredData(skillSetting);
-        broadcastExecuteText(hero);
-        player.teleport(new Location(world, xyzyp[0], xyzyp[1], xyzyp[2], (float) xyzyp[3], (float) xyzyp[4]));
-        return true;
+        if (args.length > 0) {
+            // Display the info about the current mark
+            World world = validateLocation(skillSetting, player);
+            if (world == null)
+                return false;
+            double[] xyzyp = getStoredData(skillSetting);
+            Messaging.send(player, "Your recall is currently marked on $1 at: $2, $3, $4", new Object[] { world.getName(), (int) xyzyp[0], (int) xyzyp[1], (int) xyzyp[2] });
+            return true;
+        } else {
+            // Save a new mark
+            Location loc = player.getLocation();
+            hero.setSkillSetting("Recall", "world", loc.getWorld().getName());
+            hero.setSkillSetting("Recall", "x", loc.getX());
+            hero.setSkillSetting("Recall", "y", loc.getY());
+            hero.setSkillSetting("Recall", "z", loc.getZ());
+            hero.setSkillSetting("Recall", "yaw", (double) loc.getYaw());
+            hero.setSkillSetting("Recall", "pitch", (double) loc.getPitch());
+            Object[] obj = new Object[] { loc.getWorld().getName(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ() };
+            Messaging.send(player, "You have marked a new location on $1 at: $2, $3, $4", obj);
+
+            getPlugin().getHeroManager().saveHero(player);
+            return true;
+        }
     }
 
     private double[] getStoredData(Map<String, String> skillSetting) {

@@ -379,11 +379,15 @@ public class Hero {
     }
 
     public Map<String, String> getSkillSettings(Skill skill) {
-        if (skill == null || !heroClass.hasSkill(skill.getName())) {
+        return skill == null ? null : getSkillSettings(skill.getName());
+    }
+    
+    public Map<String, String> getSkillSettings(String skillName) {
+        if (!heroClass.hasSkill(skillName)) {
             return null;
         }
-
-        return skillSettings.get(skill.getName().toLowerCase());
+        
+        return skillSettings.get(skillName.toLowerCase());
     }
 
     public void setSkillSetting(Skill skill, String node, Object val) {
