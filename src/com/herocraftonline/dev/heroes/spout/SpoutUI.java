@@ -1,12 +1,10 @@
 package com.herocraftonline.dev.heroes.spout;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.persistence.Hero;
 
 public class SpoutUI {
     
@@ -18,7 +16,7 @@ public class SpoutUI {
     
     
     public void sendPlayerNotification(Player player, String title, String Body, Material material) {
-        if(!plugin.useSpout) {
+        if(!Heroes.useSpout) {
             return;
         }
         SpoutPlayer sPlayer = (SpoutPlayer) player;

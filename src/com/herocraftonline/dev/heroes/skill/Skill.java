@@ -125,13 +125,7 @@ public abstract class Skill extends BasicCommand {
      * @return the stored setting
      */
     public double getSetting(HeroClass heroClass, String setting, double def) {
-        List<String> keys = null;
-        if (!(heroClass == null)) {
-            if (heroClass.getSkillSettings(getName()) != null) {
-                keys = heroClass.getSkillSettings(getName()).getKeys();
-            }
-        }
-        if (keys != null && keys.contains(setting)) {
+        if (hasSetting(heroClass, setting)) {
             return heroClass.getSkillSettings(getName()).getDouble(setting, def);
         } else {
             return config.getDouble(setting, def);
@@ -148,13 +142,7 @@ public abstract class Skill extends BasicCommand {
      * @return the stored setting
      */
     public int getSetting(HeroClass heroClass, String setting, int def) {
-        List<String> keys = null;
-        if (!(heroClass == null)) {
-            if (heroClass.getSkillSettings(getName()) != null) {
-                keys = heroClass.getSkillSettings(getName()).getKeys();
-            }
-        }
-        if (keys != null && keys.contains(setting)) {
+        if (hasSetting(heroClass, setting)) {
             return heroClass.getSkillSettings(getName()).getInt(setting, def);
         } else {
             return config.getInt(setting, def);
@@ -171,14 +159,8 @@ public abstract class Skill extends BasicCommand {
      * @return the stored setting
      */
     public String getSetting(HeroClass heroClass, String setting, String def) {
-        List<String> keys = null;
-        if (!(heroClass == null)) {
-            if (heroClass.getSkillSettings(getName()) != null) {
-                keys = heroClass.getSkillSettings(getName()).getKeys();
-            }
-        }
-        if (keys != null && keys.contains(setting)) {
-            return heroClass.getSkillSettings(getName()).getString(setting, def);
+        if (hasSetting(heroClass, setting)) {
+            return heroClass.getSkillSettings(getName()).getString(setting, def);  
         } else {
             return config.getString(setting, def);
         }
@@ -194,13 +176,7 @@ public abstract class Skill extends BasicCommand {
      * @return the stored setting
      */
     public List<String> getSetting(HeroClass heroClass, String setting, List<String> def) {
-        List<String> keys = null;
-        if (!(heroClass == null)) {
-            if (heroClass.getSkillSettings(getName()) != null) {
-                keys = heroClass.getSkillSettings(getName()).getKeys();
-            }
-        }
-        if (keys != null && keys.contains(setting)) {
+        if (hasSetting(heroClass, setting)) {
             return heroClass.getSkillSettings(getName()).getStringList(setting, def);
         } else {
             return config.getStringList(setting, def);
@@ -217,17 +193,31 @@ public abstract class Skill extends BasicCommand {
      * @return the stored setting
      */
     public boolean getSetting(HeroClass heroClass, String setting, boolean def) {
-        List<String> keys = null;
-        if (!(heroClass == null)) {
-            if (heroClass.getSkillSettings(getName()) != null) {
-                keys = heroClass.getSkillSettings(getName()).getKeys();
-            }
-        }
-        if (keys != null && keys.contains(setting)) {
+        if (hasSetting(heroClass, setting)) {
             return heroClass.getSkillSettings(getName()).getBoolean(setting, def);
         } else {
             return config.getBoolean(setting, def);
         }
+    }
+    
+    private boolean hasSetting(HeroClass heroClass, String setting) {
+        if (heroClass == null)
+            return false;
+        if (heroClass.getSkillSettings(getName()) == null)
+            return false;
+        
+        return heroClass.getSkillSettings(getName()).getString(setting) != null;
+    }
+    
+    public boolean hasNode(HeroClass heroClass, String setting) {
+        if (heroClass == null)
+            return false;
+        if (heroClass.getSkillSettings(getName()) == null)
+            return false;
+        if (setting == null) 
+            return !heroClass.getSkillSettings(getName()).getKeys().isEmpty();
+        
+        return heroClass.getSkillSettings(getName()).getNode(setting) != null;
     }
     
     /**
@@ -238,12 +228,24 @@ public abstract class Skill extends BasicCommand {
      * @return the stored setting
      */
     public List<String> getSettingKeys(HeroClass heroClass) {
-        if (!(heroClass == null)) {
-            if (heroClass.getSkillSettings(getName()) != null) {
-                return heroClass.getSkillSettings(getName()).getKeys();
-            }
+        if (hasNode(heroClass, null)) {
+            return heroClass.getSkillSettings(getName()).getKeys();
         }
         return config.getKeys();
+    }
+    
+    /**
+     * Retrieves a <code>List of String</code> keys from the skill's configuration at the given node. Data from the provided <code>HeroClass</code> will be preferred over the skill's own data, if found. If the setting is found in neither
+     * of these sources, null is returned.
+     * 
+     * @param heroClass the class to search for skill data
+     * @return the stored setting
+     */
+    public List<String> getSettingKeys(HeroClass heroClass, String setting) {
+        if (hasNode(heroClass, setting)) {
+            return heroClass.getSkillSettings(getName()).getKeys(setting);
+        }
+        return config.getKeys(setting);
     }
     
     /**

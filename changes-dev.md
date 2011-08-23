@@ -28,6 +28,8 @@ Skills:
 	Consume - (NEW!)
 		- Works very similar to Replenish, but allows multiple different materials to give mana
 		- Configuration allows different materials to be granted at different levels
+	Deconstruct - (NEW!)
+		- Allows a player to deconstruct an item gaining back some materials
 	Flameshield
 		- Fixed report message for Skill blocking
 	IcyAura
