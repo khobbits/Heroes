@@ -6,6 +6,7 @@ Bug Fixes:
 	bedhealing percentages are no longer rounded down to 0, this fixes bedhealing
 	BedHeal HP display now respects verbosity settings for the hero
 
+
 General/API:
 
 	SkillUseEvent now tracks manacost and reagentcost which can be adjusted during the event

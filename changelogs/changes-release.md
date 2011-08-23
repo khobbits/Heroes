@@ -1,42 +1,61 @@
-Version 1.2.2
+Version 1.2.3
 
 Bug Fixes:
 
-	Fixed occurrences where permissions-skills would not be added to classes properly.
-	Properly check permission for /hero admin relaod 
-	Fix ConcurrentModificationExceptions related to hero effects & changing classes
+	Multiworld support re-done, Binding should now work again
+	bedhealing percentages are no longer rounded down to 0, this fixes bedhealing
+	BedHeal HP display now respects verbosity settings for the hero
 
 General/API:
 
-	Xp/Skills can now be turned off per-world
-	Removed EntityRegainHealthEvent calls from all skills - they now generate our own internal HeroRegainHealthEvent
-	Permission-Skills will now report when they are trying to replace a base skill
-	Massive simplification to how BedHealing works - now uses Effect system
-	PeriodicHealEffect - just like the damage effect, but heals the target
+	SkillUseEvent now tracks manacost and reagentcost which can be adjusted during the event
+	Added getSettingKeys to the skill configuration methods.
+	HeroRegainManaEvent added to the API - called when a skill/mana regeneration is triggered
+	
 
 Skills:
 
-	Heals
-		- Fixed heals healing the wrong amount
-		- Made more heal fail options.
-	Assassin's Blade
-		- Poison your blade for the next attack
-	Blink
-	 	- Sexified. (You can now change the distance).
-	 	- Fixed teleporting through walls
-	Curse
-	    - Fixed curse not triggering properly
-	PoisonArrow - (NEW!)
-	    - Next arrow hit will poison the target!
-	Rejuvenate - (NEW!)
-	    - Heal-over-Time ability.
+	ALL
+		- ActiveSkills can now be given 'reagent' and 'reagent-cost' nodes to require specific items during cast
+		- All 'range' variables have been replaced with 'radius' if they were meant to be radius checks.
+			- Blaze, Boltstorm, GroupHeal, Hellgate, IcyAura, Might, MultiBolt, Port, Pulse
+		- All other instances of 'range' should now use the max-distance setting for limiting target distance
+			- Antidote, Web
+	Backstab
+		- Is now limited to only the specific weapons on the weapon list (melee only)
+	Bolt
+		- Made targeting more verbose
+	ChainLightning - (NEW!)
+		- Bolts the target, and then bounces to secondary targets within range!
+		- ChainLightning requires Line-Of-Sight to bounce to secondary targets, minor hills can sometimes block the bounce!
+	Consume - (NEW!)
+		- Works very similar to Replenish, but allows multiple different materials to give mana
+		- Configuration allows different materials to be granted at different levels
+	Deconstruct - (NEW!)
+		- Allows a player to deconstruct an item gaining back some materials
+	Flameshield
+		- Fixed report message for Skill blocking
+	IcyAura
+		- Implemented a much more limited set of block-types that IcyAura can turn into Ice.
+	ManaFreeze
+		- Now prevents the target player from regenerating mana as intended
+	Mark - (NEW!)
+		- Marks a location for the hero to recall back to using Recall
+	Multibolt - (NEW!)
+		- AoE version of Bolt.
+	Port
+		- Now allows more than 1 item as a cost
+		- Reminder - Port item costs must be ALL-CAPS.
+		- Renamed item-cost/amount to "reagent" and "reagent-cost" for the skill settings
+	Pulse
+		- Radius is now configurable
+	Recall
+		- Split marking of recall locations onto a different skill called 'Mark'
+	Replenish
+		- Amount of mana returned to player is now configurable
 	Skeleton
-	    - no longer combust in day-light to make them more useful
-	    - Will path toward the player if they get too far away
-	    - Will defend the player and attack what the player attacks
+		- Will now teleport to the player if it gets too far away.
+	Superheat
+		- No longer expires immediately.
 	Telekinesis
-		- Now ignores more blocks (snow was causing problems with targeting) to make it function better
-	Web
-		- Only changes Air, Water, or Lava blocks now
-		- Optimized how it changes/stores block data
-		- Fixed center web block being destructible
+		- Target distance is now configurable through 'max-distance' node
