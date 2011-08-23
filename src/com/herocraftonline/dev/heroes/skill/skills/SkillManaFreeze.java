@@ -2,15 +2,20 @@ package com.herocraftonline.dev.heroes.skill.skills;
 
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event.Priority;
+import org.bukkit.event.Event.Type;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.api.HeroRegainManaEvent;
+import com.herocraftonline.dev.heroes.api.HeroesEventListener;
 import com.herocraftonline.dev.heroes.effects.Dispellable;
 import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 import com.herocraftonline.dev.heroes.util.Setting;
+import com.nijiko.coelho.iConomy.util.Messaging;
 
 public class SkillManaFreeze extends TargettedSkill {
 
@@ -23,6 +28,8 @@ public class SkillManaFreeze extends TargettedSkill {
         setUsage("/skill manafreeze");
         setArgumentRange(0, 1);
         setIdentifiers(new String[] { "skill manafreeze", "skill mfreeze" });
+        
+        registerEvent(Type.CUSTOM_EVENT, new HeroListener(), Priority.Highest);
     }
 
     @Override
@@ -43,7 +50,8 @@ public class SkillManaFreeze extends TargettedSkill {
 
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
-        if (target instanceof Player) {
+        Player player = hero.getPlayer();
+        if (target instanceof Player && !target.equals(player)) {
             broadcastExecuteText(hero, target);
 
             Hero targetHero = getPlugin().getHeroManager().getHero((Player) target);
@@ -51,6 +59,7 @@ public class SkillManaFreeze extends TargettedSkill {
             targetHero.addEffect(new ManaFreezeEffect(this, duration));
             return true;
         } else {
+            Messaging.send(player, "You must target another player!");
             return false;
         }
     }
@@ -73,6 +82,18 @@ public class SkillManaFreeze extends TargettedSkill {
             Player player = hero.getPlayer();
             broadcast(player.getLocation(), expireText, player.getDisplayName());
         }
-
+    }
+    
+    public class HeroListener extends HeroesEventListener {
+        
+        @Override
+        public void onHeroRegainMana(HeroRegainManaEvent event) {
+            if (event.isCancelled())
+                return;
+            
+            if (event.getHero().hasEffect("ManaFreeze")) {
+                event.setCancelled(true);
+            }
+        }
     }
 }

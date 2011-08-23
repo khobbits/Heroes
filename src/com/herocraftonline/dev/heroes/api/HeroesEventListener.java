@@ -86,6 +86,15 @@ public class HeroesEventListener extends CustomEventListener {
 
     }
 
+    /**
+     * Called when a hero regains mana
+     * 
+     * @param event
+     */
+    public void onHeroRegainMana(HeroRegainManaEvent event) {
+        
+    }
+    
     @Override
     public void onCustomEvent(Event event) {
 
@@ -107,6 +116,8 @@ public class HeroesEventListener extends CustomEventListener {
             onHeroLeaveParty((HeroLeavePartyEvent) event);
         } else if (event instanceof HeroRegainHealthEvent) {
             onHeroRegainHealth((HeroRegainHealthEvent) event);
+        } else if (event instanceof HeroRegainManaEvent) {
+            onHeroRegainMana((HeroRegainManaEvent) event);
         }
     }
 }

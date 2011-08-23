@@ -8,6 +8,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.api.HeroRegainManaEvent;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
@@ -67,13 +68,20 @@ public class SkillConsume extends ActiveSkill {
                     Messaging.send(player, "Sorry, you need to have $1 $2 to use that skill!", new Object[] {reagent.getAmount(), reagentName});
                     return false;
                 }
+                player.getInventory().removeItem(reagent);
                 int mana = getSetting(hero.getHeroClass(), key + "." + Setting.MANA.node(), 20);
-                hero.setMana(mana + hero.getMana()); 
+                HeroRegainManaEvent hrmEvent = new HeroRegainManaEvent(hero, mana, this);
+                getPlugin().getServer().getPluginManager().callEvent(hrmEvent);
+                if (hrmEvent.isCancelled()) {
+                    return false;
+                }
+                hero.setMana(hrmEvent.getAmount() + hero.getMana()); 
                 if (hero.isVerbose()) {
                     Messaging.send(player, Messaging.createManaBar(100));
                 } else {
                     Messaging.send(player, "You regain " + mana + " mana");
                 }
+                
                 broadcastExecuteText(hero);
                 return true;
             }

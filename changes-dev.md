@@ -8,6 +8,7 @@ General/API:
 
 	SkillUseEvent now tracks manacost and reagentcost which can be adjusted during the event
 	Added getSettingKeys to the skill configuration methods.
+	HeroRegainManaEvent added to the API - called when a skill/mana regeneration is triggered
 
 Skills:
 
@@ -28,6 +29,8 @@ Skills:
 		- Fixed report message for Skill blocking
 	IcyAura
 		- Implemented a much more limited set of block-types that IcyAura can turn into Ice.
+	ManaFreeze
+		- Now prevents the target player from regenerating mana
 	Multibolt - (NEW!)
 		- AoE version of Bolt.
 	Port

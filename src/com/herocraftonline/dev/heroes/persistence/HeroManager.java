@@ -27,6 +27,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.config.Configuration;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.api.HeroRegainManaEvent;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.command.Command;
 import com.herocraftonline.dev.heroes.effects.Effect;
@@ -43,7 +44,7 @@ import com.herocraftonline.dev.heroes.util.Messaging;
  */
 public class HeroManager {
 
-    private Heroes plugin;
+    protected Heroes plugin;
     private Set<Hero> heroes;
     protected Map<Creature, Set<Effect>> creatureEffects;
     private File playerFolder;
@@ -537,7 +538,15 @@ class ManaUpdater implements Runnable {
             }
 
             int mana = hero.getMana();
-            hero.setMana(mana > 100 ? mana : mana > 95 ? 100 : mana + 5); // Hooray for the ternary operator!
+            if (mana == 100)
+                continue;
+            
+            HeroRegainManaEvent hrmEvent = new HeroRegainManaEvent(hero, 5, null);
+            manager.plugin.getServer().getPluginManager().callEvent(hrmEvent);
+            if (hrmEvent.isCancelled())
+                continue;
+            
+            hero.setMana(mana + 5);
             if (mana != 100 && hero.isVerbose()) {
                 Messaging.send(hero.getPlayer(), ChatColor.BLUE + "MANA " + Messaging.createManaBar(hero.getMana()));
             }
