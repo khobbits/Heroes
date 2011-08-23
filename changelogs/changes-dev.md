@@ -25,6 +25,9 @@ Skills:
 		- Is now limited to only the specific weapons on the weapon list (melee only)
 	Bolt
 		- Made targeting more verbose
+	ChainLightning - (NEW!)
+		- Bolts the target, and then bounces to secondary targets within range!
+		- ChainLightning requires Line-Of-Sight to bounce to secondary targets, minor hills can sometimes block the bounce!
 	Consume - (NEW!)
 		- Works very similar to Replenish, but allows multiple different materials to give mana
 		- Configuration allows different materials to be granted at different levels
@@ -35,7 +38,7 @@ Skills:
 	IcyAura
 		- Implemented a much more limited set of block-types that IcyAura can turn into Ice.
 	ManaFreeze
-		- Now prevents the target player from regenerating mana
+		- Now prevents the target player from regenerating mana as intended
 	Mark - (NEW!)
 		- Marks a location for the hero to recall back to using Recall
 	Multibolt - (NEW!)
@@ -52,5 +55,7 @@ Skills:
 		- Amount of mana returned to player is now configurable
 	Skeleton
 		- Will now teleport to the player if it gets too far away.
+	Superheat
+		- No longer expires immediately.
 	Telekinesis
 		- Target distance is now configurable through 'max-distance' node

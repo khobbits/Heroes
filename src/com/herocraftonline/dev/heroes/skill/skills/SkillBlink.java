@@ -37,6 +37,11 @@ public class SkillBlink extends ActiveSkill {
         transparentBlocks.add(Material.LEVER);
         transparentBlocks.add(Material.WATER);
         transparentBlocks.add(Material.STATIONARY_WATER);
+        transparentBlocks.add(Material.RAILS);
+        transparentBlocks.add(Material.POWERED_RAIL);
+        transparentBlocks.add(Material.DETECTOR_RAIL);
+        transparentBlocks.add(Material.DIODE_BLOCK_OFF);
+        transparentBlocks.add(Material.DIODE_BLOCK_ON);
     }
     
     public SkillBlink(Heroes plugin) {
