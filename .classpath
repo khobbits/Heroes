@@ -10,5 +10,6 @@
 	<classpathentry kind="lib" path="libs/iConomy.jar"/>
 	<classpathentry kind="lib" path="libs/Permissions.jar"/>
 	<classpathentry kind="lib" path="libs/Spout.jar"/>
+	<classpathentry kind="lib" path="libs/PermissionsBukkit-1.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

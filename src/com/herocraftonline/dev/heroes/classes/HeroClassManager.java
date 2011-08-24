@@ -286,6 +286,10 @@ public class HeroClassManager {
             newClass.setBaseMaxHealth(baseMaxHealth);
             newClass.setMaxHealthPerLevel(maxHealthPerLevel);
 
+            // Get the class expLoss
+            double expLoss = config.getDouble("classes." + className + ".expLoss", -1);
+            newClass.setExpLoss(expLoss);
+            
             // Get experience for each class
             List<String> experienceNames = config.getStringList("classes." + className + ".experience-sources", null);
             Set<ExperienceType> experienceSources = new HashSet<ExperienceType>();

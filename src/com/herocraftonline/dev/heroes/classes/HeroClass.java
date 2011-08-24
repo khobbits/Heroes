@@ -26,6 +26,7 @@ public class HeroClass {
     private Map<String, ConfigurationNode> skills;
     // private Map<String, SkillData> skillData;
     private double expModifier;
+    private double expLoss;
 
     private double baseMaxHealth;
     private double maxHealthPerLevel;
@@ -204,6 +205,20 @@ public class HeroClass {
     @Override
     public String toString() {
         return name;
+    }
+
+    /**
+     * @param expLoss the expLoss to set
+     */
+    public void setExpLoss(double expLoss) {
+        this.expLoss = expLoss;
+    }
+
+    /**
+     * @return the expLoss
+     */
+    public double getExpLoss() {
+        return expLoss;
     }
 
     public static enum ArmorItems {

@@ -22,6 +22,7 @@ classes:
         expmodifier: 1.0
         item-damage:
             air: 1
+        expLoss: 0
     Warrior:
         default: false
         summon-max: 0
@@ -55,6 +56,7 @@ classes:
         - LOGGING
         - SKILL
         expmodifier: 1.5
+        expLoss: 0.05
     Paladin:
         default: false
         parent: Warrior
@@ -96,6 +98,7 @@ classes:
         - PVP
         - SKILL
         expmodifier: 1.0
+        expLoss: 0.1
     Shadowknight:
         default: false
         parent: Warrior
@@ -143,3 +146,4 @@ classes:
         - PVP
         - SKILL
         expmodifier: 1.0
+        expLoss: 0.05

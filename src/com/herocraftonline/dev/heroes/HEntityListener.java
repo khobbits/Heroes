@@ -59,7 +59,11 @@ public class HEntityListener extends EntityListener {
             if (level < prop.maxLevel) {
                 int currentLevelExp = (int) prop.getExperience(level);
                 int nextLevelExp = (int) prop.getExperience(level + 1);
-                double expLoss = (nextLevelExp - currentLevelExp) * prop.expLoss;
+                double nexpLoss = prop.expLoss;
+                if(heroDefender.getHeroClass().getExpLoss() != -1) {
+                    nexpLoss = heroDefender.getHeroClass().getExpLoss();
+                }
+                double expLoss = (nextLevelExp - currentLevelExp) * nexpLoss;
                 if (exp - expLoss < currentLevelExp) {
                     expLoss = exp - currentLevelExp;
                 }
