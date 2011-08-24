@@ -13,14 +13,14 @@ import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Setting;
 
-public class SkillMultibolt extends TargettedSkill {
+public class SkillMegabolt extends TargettedSkill {
 
-    public SkillMultibolt(Heroes plugin) {
-        super(plugin, "Multibolt");
+    public SkillMegabolt(Heroes plugin) {
+        super(plugin, "Megabolt");
         setDescription("Calls down multiple bolts of lightning centered on the target.");
         setUsage("/skill mbolt [target]");
         setArgumentRange(0, 1);
-        setIdentifiers(new String[] { "skill multibolt", "skill mbolt" });
+        setIdentifiers(new String[] { "skill megabolt", "skill mbolt" });
     }
     
     @Override
@@ -71,7 +71,8 @@ public class SkillMultibolt extends TargettedSkill {
             }
         }
         
-        return false;
+        broadcastExecuteText(hero);
+        return true;
     }
 
 }

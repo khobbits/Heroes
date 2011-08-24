@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.bukkit.Material;
+import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -14,7 +15,10 @@ import org.bukkit.util.Vector;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
+import com.herocraftonline.dev.heroes.effects.Harmful;
 import com.herocraftonline.dev.heroes.persistence.Hero;
+import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Setting;
@@ -99,6 +103,7 @@ public class SkillChainLightning extends TargettedSkill {
         previousTargets.add(target);
         int range = getSetting(hero.getHeroClass(), Setting.RADIUS.node(), 7);
         int bounces = getSetting(hero.getHeroClass(), "max-bounces", 3);
+        int maxBounce = bounces + 1;
         boolean keepBouncing = true;
         while (bounces > 0 && keepBouncing) {
             for (Entity entity : target.getNearbyEntities(range, range, range)) {
@@ -109,9 +114,14 @@ public class SkillChainLightning extends TargettedSkill {
                         continue;
                     }
                     if (!previousTargets.contains(entity) && checkTarget(target, entity)) {
-                        target = (LivingEntity) entity;
-                        target.getWorld().strikeLightningEffect(target.getLocation());
-                        target.damage(damage, player);
+                        if (target instanceof Player) {
+                            Hero tHero = getPlugin().getHeroManager().getHero((Player) target);
+                            tHero.addEffect(new DelayedBolt(this, (maxBounce - bounces) * 250, hero, damage));
+                        } else if (target instanceof Creature) {
+                            getPlugin().getHeroManager().addCreatureEffect((Creature) target, new DelayedBolt(this, (maxBounce - bounces) * 500, hero, damage));
+                        } else {
+                            continue;
+                        }
                         keepBouncing = true;
                         break;
                     }
@@ -119,7 +129,8 @@ public class SkillChainLightning extends TargettedSkill {
             }
             bounces -= 1;
         }
-        return false;
+        broadcastExecuteText(hero);
+        return true;
     }
     
     private boolean checkTarget(Entity previousTarget, Entity potentialTarget) {
@@ -136,5 +147,37 @@ public class SkillChainLightning extends TargettedSkill {
             return false;
         }
         return true;
+    }
+    
+    public class DelayedBolt extends ExpirableEffect implements Harmful {
+
+        private final Hero applier;
+        private final int bounceDamage ;
+        public DelayedBolt(Skill skill, long duration, Hero applier, int bounceDamage) {
+            super(skill, "DelayedBolt", duration);
+            this.applier = applier;
+            this.bounceDamage = bounceDamage;
+        }
+        
+        @Override
+        public void remove(Hero hero) {
+            super.remove(hero);
+            Player target = hero.getPlayer();
+            getPlugin().getDamageManager().addSpellTarget(target, applier, getSkill());
+            target.damage(bounceDamage, applier.getPlayer());
+            target.getWorld().strikeLightningEffect(target.getLocation());
+        }  
+        
+        @Override
+        public void remove(Creature creature) {
+            super.remove(creature);
+            getPlugin().getDamageManager().addSpellTarget(creature, applier, getSkill());
+            creature.damage(bounceDamage, applier.getPlayer());
+            creature.getWorld().strikeLightningEffect(creature.getLocation());
+        }
+
+        public Hero getApplier() {
+            return applier;
+        }
     }
 }
