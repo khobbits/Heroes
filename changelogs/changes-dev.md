@@ -3,6 +3,7 @@ Version Dev
 Bug Fixes:
 
 	ProjectileDamages properly use the entity-name for their damages now (ARROW, EGG, SNOWBALL)
+	Fixed ALL: skill-setting causing issues when Administrators set it improperly.
 
 General/API:
 

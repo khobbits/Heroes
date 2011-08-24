@@ -306,6 +306,9 @@ public class HeroManager {
         List<Command> commands = plugin.getCommandHandler().getCommands();
         if (Heroes.Permissions != null) {
             for (Command cmd : commands) {
+                //Never try to learn * or ALL as skills, can happen if the nodes are added incorrectly
+                if (cmd.getName().equals("*") || cmd.getName().toLowerCase().equals("ALL"))
+                    continue;
                 if (cmd instanceof OutsourcedSkill) {
                     OutsourcedSkill skill = (OutsourcedSkill) cmd;
                     if (playerClass.hasSkill(skill.getName())) {
