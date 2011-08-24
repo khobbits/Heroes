@@ -7,17 +7,17 @@ import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 
 @SuppressWarnings("serial")
-public class ExperienceGainEvent extends Event implements Cancellable {
+public class ExperienceChangeEvent extends Event implements Cancellable {
 
     protected boolean cancelled = false;
     protected final Hero hero;
-    protected double expGain;
+    protected double expChange;
     protected final ExperienceType source;
 
-    public ExperienceGainEvent(Hero hero, double expGain, ExperienceType source) {
+    public ExperienceChangeEvent(Hero hero, double expChange, ExperienceType source) {
         super("ExperienceGainEvent");
         this.hero = hero;
-        this.expGain = expGain;
+        this.expChange = expChange;
         this.source = source;
     }
 
@@ -26,8 +26,8 @@ public class ExperienceGainEvent extends Event implements Cancellable {
      * 
      * @return
      */
-    public double getExpGain() {
-        return expGain;
+    public double getExpChange() {
+        return expChange;
     }
 
     public final Hero getHero() {
@@ -54,7 +54,7 @@ public class ExperienceGainEvent extends Event implements Cancellable {
      * @param exp
      */
     public void setExpGain(double exp) {
-        this.expGain = exp;
+        this.expChange = exp;
     }
 
 }

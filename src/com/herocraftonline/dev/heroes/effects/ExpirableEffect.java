@@ -30,6 +30,10 @@ public class ExpirableEffect extends Effect implements Expirable {
         return duration;
     }
 
+    public long getApplyTime() {
+        return applyTime;
+    }
+
     @Override
     public long getExpiry() {
         return applyTime + duration;

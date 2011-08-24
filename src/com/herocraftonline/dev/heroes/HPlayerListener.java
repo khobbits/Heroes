@@ -168,6 +168,7 @@ public class HPlayerListener extends PlayerListener {
         @Override
         public void apply(Hero hero) {
             super.apply(hero);
+            this.lastTickTime = getApplyTime();
         }
 
         @Override

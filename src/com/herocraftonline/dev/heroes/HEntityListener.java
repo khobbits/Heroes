@@ -1,6 +1,5 @@
 package com.herocraftonline.dev.heroes;
 
-import java.text.DecimalFormat;
 import java.util.Set;
 
 import org.bukkit.entity.Creature;
@@ -18,12 +17,9 @@ import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
 import com.herocraftonline.dev.heroes.effects.Effect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
-import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Properties;
 
 public class HEntityListener extends EntityListener {
-
-    private static final DecimalFormat decFormat = new DecimalFormat("#0.##");
 
     private final Heroes plugin;
 
@@ -52,30 +48,21 @@ public class HEntityListener extends EntityListener {
         if (defender instanceof Player) {
             // Incur 5% experience loss to dying player
             // 5% of the next level's experience requirement
-            // Experience loss can't reduce level
+            // Experience loss can optionally reduce Level
             Hero heroDefender = plugin.getHeroManager().getHero((Player) defender);
             double exp = heroDefender.getExperience();
             int level = prop.getLevel(exp);
-            if (level < prop.maxLevel) {
-                int currentLevelExp = (int) prop.getExperience(level);
-                int nextLevelExp = (int) prop.getExperience(level + 1);
-                double nexpLoss = prop.expLoss;
-                if(heroDefender.getHeroClass().getExpLoss() != -1) {
-                    nexpLoss = heroDefender.getHeroClass().getExpLoss();
-                }
-                double expLoss;
-                if(prop.levelsViaExpLoss) {
-                    expLoss = (nextLevelExp - currentLevelExp) * nexpLoss;
-                }else {
-                    expLoss = currentLevelExp * nexpLoss;
-                }
-                if (exp - expLoss < currentLevelExp) {
-                    expLoss = exp - currentLevelExp;
-                }
-                heroDefender.setExperience(exp - expLoss);
-                heroDefender.setMana(0);
-                Messaging.send(heroDefender.getPlayer(), "You have lost " + decFormat.format(expLoss) + " exp for dying.");
+
+            int currentLevelExp = (int) prop.getExperience(level);
+            int nextLevelExp = (int) prop.getExperience(level + 1);
+            double expLossPercent = prop.expLoss;
+            if(heroDefender.getHeroClass().getExpLoss() != -1) {
+                expLossPercent = heroDefender.getHeroClass().getExpLoss();
             }
+            double expLoss = (nextLevelExp - currentLevelExp) * expLossPercent;
+            heroDefender.gainExp(-expLoss, ExperienceType.DEATH, false);
+            heroDefender.setMana(0);
+
 
             // Remove any nonpersistent effects
             for (Effect effect : heroDefender.getEffects()) {

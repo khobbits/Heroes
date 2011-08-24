@@ -4,14 +4,14 @@ import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 
 @SuppressWarnings("serial")
-public class HeroLevelEvent extends ExperienceGainEvent {
+public class HeroLevelEvent extends ExperienceChangeEvent {
 
     protected final int from;
     protected final int to;
 
-    public HeroLevelEvent(Hero hero, double expGain, int from, int to, ExperienceType source) {
-        super(hero, expGain, source);
-        this.expGain = expGain;
+    public HeroLevelEvent(Hero hero, double expChange, int from, int to, ExperienceType source) {
+        super(hero, expChange, source);
+        this.expChange = expChange;
         this.from = from;
         this.to = to;
     }

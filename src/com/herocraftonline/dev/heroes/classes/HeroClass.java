@@ -243,6 +243,7 @@ public class HeroClass {
         MINING,
         CRAFTING,
         LOGGING,
+        DEATH,
         EXTERNAL
     }
 
