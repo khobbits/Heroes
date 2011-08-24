@@ -4,11 +4,11 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -40,7 +40,7 @@ public class Hero {
     protected int mana = 0;
     protected HeroParty party = null;
     protected boolean verbose = true;
-    protected Map<Effect, Boolean> effects = new ConcurrentHashMap<Effect, Boolean>();
+    protected Set<Effect> effects = new HashSet<Effect>();
     protected Map<String, Double> experience = new HashMap<String, Double>();
     protected Map<String, Long> cooldowns = new HashMap<String, Long>();
     protected Set<Creature> summons = new HashSet<Creature>();
@@ -63,7 +63,7 @@ public class Hero {
     }
 
     public void addEffect(Effect effect) {
-        effects.put(effect, true);
+        effects.add(effect);
         effect.apply(this);
     }
 
@@ -207,7 +207,7 @@ public class Hero {
     }
 
     public Effect getEffect(String name) {
-        for (Effect effect : effects.keySet()) {
+        for (Effect effect : effects) {
             if (effect.getName().equalsIgnoreCase(name)) {
                 return effect;
             }
@@ -216,7 +216,7 @@ public class Hero {
     }
 
     public Set<Effect> getEffects() {
-        return effects.keySet();
+        return new HashSet<Effect>(effects);
     }
 
     public double getExperience() {
@@ -281,7 +281,7 @@ public class Hero {
     }
 
     public boolean hasEffect(String name) {
-        for (Effect effect : effects.keySet()) {
+        for (Effect effect : effects) {
             if (effect.getName().equalsIgnoreCase(name)) {
                 return true;
             }
@@ -315,12 +315,23 @@ public class Hero {
         return verbose;
     }
 
+    /**
+     * Iterates over the effects this Hero has and removes them
+     * 
+     */
     public void clearEffects() {
-        for (Effect effect : getEffects()) {
-            removeEffect(effect);
+        Iterator<Effect> iter = effects.iterator();
+        while (iter.hasNext()) {
+            iter.next().remove(this);
+            iter.remove();
         }
     }
 
+    /**
+     * This method can NOT be called from an iteration over the effect set
+     * 
+     * @param effect
+     */
     public void removeEffect(Effect effect) {
         effects.remove(effect);
         if (effect != null) {

@@ -5,11 +5,11 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
 import com.herocraftonline.dev.heroes.party.HeroParty;
@@ -55,7 +55,7 @@ public class HeroManager {
     public HeroManager(Heroes plugin) {
         this.plugin = plugin;
         this.heroes = new HashSet<Hero>();
-        this.creatureEffects = new ConcurrentHashMap<Creature, Set<Effect>>();
+        this.creatureEffects = new HashMap<Creature, Set<Effect>>();
         playerFolder = new File(plugin.getDataFolder(), "players"); // Setup our Player Data Folder
         playerFolder.mkdirs(); // Create the folder if it doesn't exist.
 
@@ -420,9 +420,12 @@ public class HeroManager {
      */
     public void clearCreatureEffects(Creature creature) {
         if (creatureEffects.containsKey(creature)) {
-            for (Effect effect : creatureEffects.get(creature)) {
-                removeCreatureEffect(creature, effect);
+            Iterator<Effect> iter = creatureEffects.get(creature).iterator();
+            while (iter.hasNext()) {
+                iter.next().remove(creature);
+                iter.remove();
             }
+            creatureEffects.remove(creature);
         }
     }
 
@@ -494,6 +497,7 @@ class EffectUpdater implements Runnable {
                 }
             }
         }
+        
         for (Entry<Creature, Set<Effect>> cEntry : heroManager.getCreatureEffects().entrySet()) {
             for (Effect effect : cEntry.getValue()) {
                 if (effect instanceof Expirable) {
