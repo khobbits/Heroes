@@ -7,6 +7,7 @@ import org.bukkit.util.config.ConfigurationNode;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
+import com.nijiko.coelho.iConomy.util.Messaging;
 
 public class SkillManaburn extends TargettedSkill {
 
@@ -27,9 +28,12 @@ public class SkillManaburn extends TargettedSkill {
 
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
-        if (!(target instanceof Player)) {
+        Player player = hero.getPlayer();
+        if (!(target instanceof Player) || target.equals(hero.getPlayer())) {
+            Messaging.send(player, "You need a target!");
             return false;
         }
+        
         Hero tHero = getPlugin().getHeroManager().getHero((Player) target);
         if (tHero == null) {
             return false;

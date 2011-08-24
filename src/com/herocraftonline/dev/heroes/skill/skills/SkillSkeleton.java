@@ -146,7 +146,10 @@ public class SkillSkeleton extends ActiveSkill {
         public void tick(Hero hero) {
             super.tick(hero);
             for (Creature creature : hero.getSummons()) {
-                if (creature instanceof Skeleton && (creature.getTarget() == null || creature.getTarget().isDead())) {
+                if (creature instanceof Skeleton) {
+                    if (creature.getTarget() != null && creature.getTarget() instanceof LivingEntity) 
+                            return;
+                    
                     moveSkeleton(creature, hero);
                 }
             }
@@ -159,9 +162,6 @@ public class SkillSkeleton extends ActiveSkill {
          * @param hero
          */
         private void moveSkeleton(Creature creature, Hero hero) {
-            // Make sure the skeleton isn't in combat
-            if (creature.getTarget() != null)
-                return;
             
             //If the skeleton is far away lets teleport them to the player
             if(creature.getLocation().distanceSquared(hero.getPlayer().getLocation()) > 400)

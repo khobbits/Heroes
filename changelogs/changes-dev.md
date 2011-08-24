@@ -2,6 +2,7 @@ Version Dev
 
 Bug Fixes:
 
+	ProjectileDamages properly use the entity-name for their damages now (ARROW, EGG, SNOWBALL)
 
 General/API:
 
@@ -18,5 +19,9 @@ Skills:
 	Deconstruct
 		- Can now be set to require the player to be targeting a Workbench
 		- XP can now be gained from deconstruction
+	Manaburn
+		- Players can no longer manaburn themselves if they don't have a target.
 	Mark
 		- Fixed mark charging mana/cooldown/reagents for using list
+	Skeleton
+		- Fixed bug that could cause improper targeting

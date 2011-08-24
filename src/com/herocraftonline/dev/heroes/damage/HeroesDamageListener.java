@@ -25,6 +25,7 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.SkillDamageEvent;
 import com.herocraftonline.dev.heroes.api.SkillUseInfo;
 import com.herocraftonline.dev.heroes.api.WeaponDamageEvent;
+import com.herocraftonline.dev.heroes.damage.DamageManager.ProjectileType;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.util.Properties;
 
@@ -114,6 +115,9 @@ public class HeroesDamageListener extends EntityListener {
             Material armorType = armor.getType();
             if (armorType != Material.AIR) {
                 short armorDurability = armor.getDurability();
+                //Ignore non-durable items
+                if (armorDurability == -1)
+                    continue;
                 missingDurability += armorDurability;
                 maxDurability += armorType.getMaxDurability();
                 baseArmorPoints += armorPoints.get(armorType);
@@ -183,7 +187,7 @@ public class HeroesDamageListener extends EntityListener {
                     if (projectile.getShooter() instanceof Player) {
                         attacker = projectile.getShooter();
                         // Allow alteration of player damage
-                        damage = getPlayerDamage((Player) projectile.getShooter(), damage);
+                        damage = getPlayerProjectileDamage((Player) projectile.getShooter(), projectile, damage);
                     } else {
                         attacker = projectile.getShooter();
                         CreatureType type = Properties.getCreatureFromEntity(projectile.getShooter());
@@ -272,6 +276,11 @@ public class HeroesDamageListener extends EntityListener {
         }
     }
 
+    private int getPlayerProjectileDamage(Player attacker, Projectile projectile, int damage) {
+        Integer tmpDamage = damageManager.getProjectileDamage(ProjectileType.valueOf(projectile), attacker);
+        return (tmpDamage == null) ? damage : tmpDamage;
+    }
+    
     private int getPlayerDamage(Player attacker, int damage) {
         ItemStack weapon = attacker.getItemInHand();
         Material weaponType = weapon.getType();
