@@ -185,7 +185,7 @@ public class SkillBlackjack extends ActiveSkill {
 
         private static final long period = 100;
 
-        private double x, y, z;
+        private Location loc;
 
         public StunEffect(Skill skill, long duration) {
             super(skill, "Stun", period, duration);
@@ -196,10 +196,8 @@ public class SkillBlackjack extends ActiveSkill {
             super.apply(hero);
 
             Player player = hero.getPlayer();
-            x = player.getLocation().getX();
-            y = player.getLocation().getY();
-            z = player.getLocation().getZ();
-            broadcast(player.getLocation(), stunApplyText, player.getDisplayName());
+            loc = player.getLocation();
+            broadcast(loc, stunApplyText, player.getDisplayName());
         }
 
         @Override
@@ -215,8 +213,9 @@ public class SkillBlackjack extends ActiveSkill {
             super.tick(hero);
 
             Location location = hero.getPlayer().getLocation();
-            if (location.getX() != x || location.getY() != y || location.getZ() != z) {
-                Location loc = new Location(location.getWorld(), x, y, z, location.getYaw(), location.getPitch());
+            if (location.getX() != loc.getX() || location.getY() != loc.getY() || location.getZ() != loc.getZ()) {
+                loc.setYaw(location.getYaw());
+                loc.setPitch(location.getPitch());
                 hero.getPlayer().teleport(loc);
             }
         }
