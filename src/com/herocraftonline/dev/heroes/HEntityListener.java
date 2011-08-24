@@ -63,7 +63,12 @@ public class HEntityListener extends EntityListener {
                 if(heroDefender.getHeroClass().getExpLoss() != -1) {
                     nexpLoss = heroDefender.getHeroClass().getExpLoss();
                 }
-                double expLoss = (nextLevelExp - currentLevelExp) * nexpLoss;
+                double expLoss;
+                if(prop.levelsViaExpLoss) {
+                    expLoss = (nextLevelExp - currentLevelExp) * nexpLoss;
+                }else {
+                    expLoss = currentLevelExp * nexpLoss;
+                }
                 if (exp - expLoss < currentLevelExp) {
                     expLoss = exp - currentLevelExp;
                 }

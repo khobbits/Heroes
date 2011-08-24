@@ -8,6 +8,7 @@ leveling:
     resetExpOnClassChange: true #will reset the exp if the player switches without mastering
     swapMasteryCost: false #will allow for users to change back to their mastered class freely
     partyBonus: 0.20 #cumulative bonus for each player after the first in a party
+    levelsViaExpLoss: false
 properties:
     iConomy: false #use of the cost system
     swapcost: 0 #cost to swap

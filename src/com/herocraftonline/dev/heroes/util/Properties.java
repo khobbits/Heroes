@@ -36,7 +36,7 @@ public class Properties {
     public Map<Material, Double> miningExp = new HashMap<Material, Double>();
     public Map<Material, Double> loggingExp = new HashMap<Material, Double>();
     public Map<Material, Double> craftingExp = new HashMap<Material, Double>();
-
+    public boolean levelsViaExpLoss = false;
     public Map<String, String> skillInfo = new HashMap<String, String>();
     public Map<Player, Location> playerDeaths = new HashMap<Player, Location>();
 

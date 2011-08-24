@@ -186,6 +186,7 @@ public class ConfigManager {
         properties.maxTrackedBlocks = config.getInt(root + "max-tracked-blocks", 1000);
         properties.resetExpOnClassChange = config.getBoolean(root + "resetExpOnClassChange", true);
         properties.swapMasteryCost = config.getBoolean(root + "swapMasteryCost", false);
+        properties.levelsViaExpLoss = config.getBoolean(root + "levelsViaExpLoss", false);
         properties.calcExp();
     }
 
