@@ -58,15 +58,16 @@ public class SkillPort extends ActiveSkill {
             int range = (int) Math.pow(getSetting(hero.getHeroClass(), Setting.RADIUS.node(), 10), 2);
             Location loc = new Location(world, Double.parseDouble(splitArg[1]), Double.parseDouble(splitArg[2]), Double.parseDouble(splitArg[3]));
             broadcastExecuteText(hero);
-            if (hero.getParty() == null) {
+            if (!hero.hasParty()) {
                 player.teleport(loc);
                 return true;
             }
-
+            
+            Location castLocation = player.getLocation();
             for (Hero pHero : hero.getParty().getMembers()) {
-                if (!pHero.getPlayer().getWorld().equals(player.getWorld()))
+                if (!castLocation.getWorld().equals(player.getWorld()))
                     continue;
-                double distance = player.getLocation().distanceSquared(pHero.getPlayer().getLocation());
+                double distance = castLocation.distanceSquared(pHero.getPlayer().getLocation());
                 if ( distance <= range) {
                     pHero.getPlayer().teleport(loc);
                 }

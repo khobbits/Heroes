@@ -6,7 +6,8 @@ Bug Fixes:
 
 General/API:
 
-	
+	Class-Based XP loss on death
+	There is now a setting to allow XP loss to incur Level losses
 
 Skills:
 
@@ -19,9 +20,13 @@ Skills:
 	Deconstruct
 		- Can now be set to require the player to be targeting a Workbench
 		- XP can now be gained from deconstruction
+	Hellgate
+		- See Port Fix.
 	Manaburn
 		- Players can no longer manaburn themselves if they don't have a target.
 	Mark
 		- Fixed mark charging mana/cooldown/reagents for using list
+	Port
+		- Will now properly teleport all party members instead of just some, or just yourself.
 	Skeleton
 		- Fixed bug that could cause improper targeting

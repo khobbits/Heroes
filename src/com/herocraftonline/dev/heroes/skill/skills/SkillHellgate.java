@@ -72,15 +72,17 @@ public class SkillHellgate extends ActiveSkill {
             player.teleport(world.getSpawnLocation());
         }
 
-        if (hero.getParty() != null) {
+       
+        if (hero.hasParty()) {
             int rangeSquared = (int) Math.pow(getSetting(hero.getHeroClass(), Setting.RADIUS.node(), 10), 2);
+            Location castLocation =  player.getLocation();
             for (Hero targetHero : hero.getParty().getMembers()) {
                 Player target = targetHero.getPlayer();
                 if (target.equals(player))
                     continue;
-                if (!player.getWorld().equals(target.getWorld()))
+                if (!castLocation.getWorld().equals(target.getWorld()))
                     continue;
-                if (player.getLocation().distanceSquared(target.getLocation()) > rangeSquared)
+                if (castLocation.distanceSquared(target.getLocation()) > rangeSquared)
                     continue;
 
                 if (targetHero.hasEffect("Hellgate")) {
