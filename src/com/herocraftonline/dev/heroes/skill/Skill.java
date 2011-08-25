@@ -1,6 +1,9 @@
 package com.herocraftonline.dev.heroes.skill;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
@@ -221,31 +224,36 @@ public abstract class Skill extends BasicCommand {
     }
     
     /**
-     * Retrieves a <code>List of String</code> keys from the skill's configuration. Data from the provided <code>HeroClass</code> will be preferred over the skill's own data, if found. If the setting is found in neither
-     * of these sources, null is returned.
+     * Retrieves all <code>String</code> keys from the skill's configuration. Data from the provided <code>HeroClass</code> and
+     * the main configuration will be returned
      * 
      * @param heroClass the class to search for skill data
      * @return the stored setting
      */
     public List<String> getSettingKeys(HeroClass heroClass) {
+        Set<String> keys = new HashSet<String>();
+        keys.addAll(config.getKeys());
+        
         if (hasNode(heroClass, null)) {
-            return heroClass.getSkillSettings(getName()).getKeys();
+            keys.addAll(heroClass.getSkillSettings(getName()).getKeys());
         }
-        return config.getKeys();
+        return new ArrayList<String>(keys);
     }
     
     /**
-     * Retrieves a <code>List of String</code> keys from the skill's configuration at the given node. Data from the provided <code>HeroClass</code> will be preferred over the skill's own data, if found. If the setting is found in neither
-     * of these sources, null is returned.
+     * Retrieves all <code>String</code> keys from the skill's configuration. Data from the provided <code>HeroClass</code> and
+     * the main configuration will be returned
      * 
      * @param heroClass the class to search for skill data
      * @return the stored setting
      */
     public List<String> getSettingKeys(HeroClass heroClass, String setting) {
+        Set<String> keys = new HashSet<String>();
+        keys.addAll(config.getKeys(setting));
         if (hasNode(heroClass, setting)) {
-            return heroClass.getSkillSettings(getName()).getKeys(setting);
+            keys.addAll(heroClass.getSkillSettings(getName()).getKeys(setting));
         }
-        return config.getKeys(setting);
+        return new ArrayList<String>(keys);
     }
     
     /**

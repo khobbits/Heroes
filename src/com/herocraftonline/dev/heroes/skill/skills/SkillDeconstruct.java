@@ -51,14 +51,15 @@ public class SkillDeconstruct extends ActiveSkill {
     @Override
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
-
+        Set<String> items = new HashSet<String>(getSettingKeys(hero.getHeroClass()));
+        items.remove("require-workbench");
+        for (Setting set : Setting.values()) {
+            items.remove(set.node());
+        }
+        
         if (args.length > 0) {
             if (args[0].toLowerCase().equals("list")) {
-                Set<String> items = new HashSet<String>(getSettingKeys(hero.getHeroClass()));
-                items.remove("require-workbench");
-                for (Setting set : Setting.values()) {
-                    items.remove(set.node());
-                }
+                
                 Messaging.send(player, "You can deconstruct these items: " + items.toString());
                 return false;
             } else {
@@ -79,8 +80,7 @@ public class SkillDeconstruct extends ActiveSkill {
         }
 
         String matName = item.getType().name();
-        if (!getSettingKeys(hero.getHeroClass()).contains(matName)) {
-            Messaging.send(player, "Found Keys: " + getSettingKeys(hero.getHeroClass()).toString());
+        if (!items.contains(matName)) {
             Messaging.send(player, "You can't deconstruct that item!");
             return false;
         }
