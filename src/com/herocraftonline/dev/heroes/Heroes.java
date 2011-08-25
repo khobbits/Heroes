@@ -101,7 +101,7 @@ public class Heroes extends JavaPlugin {
     public SpoutUI getSpoutUI() {
         return spoutUI;
     }
-
+    
     private HeroManager heroManager;
     private PartyManager partyManager;
     private DamageManager damageManager;
@@ -117,6 +117,7 @@ public class Heroes extends JavaPlugin {
     // restrictions.
     private InventoryChecker inventoryChecker;
 
+    private ArrayList<String> skillList = new ArrayList<String>();
     /**
      * Print messages to the Debug Log, if the servers in Debug Mode then we also wan't to print the messages to the
      * standard Server Console.
@@ -177,6 +178,7 @@ public class Heroes extends JavaPlugin {
                         added = true;
                     }
                     skNo.add(skill.getName());
+                    skillList.add(skill.getName());
                     debugLog.log(Level.INFO, "Skill " + skill.getName() + " Loaded");
                 }
             }
@@ -442,5 +444,12 @@ public class Heroes extends JavaPlugin {
         pluginManager.registerEvent(Type.ENTITY_REGAIN_HEALTH, partyListener, Priority.Monitor, this);
 
         damageManager.registerEvents();
+    }
+    
+    /**
+     * @return the skillList
+     */
+    public ArrayList<String> getSkillList() {
+        return skillList;
     }
 }
