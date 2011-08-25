@@ -244,6 +244,7 @@ public class HeroClass {
         CRAFTING,
         LOGGING,
         DEATH,
+        ADMIN,
         EXTERNAL
     }
 

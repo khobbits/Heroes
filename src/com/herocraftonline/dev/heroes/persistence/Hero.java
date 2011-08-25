@@ -188,7 +188,7 @@ public class Hero {
                 HeroChangeLevelEvent hLEvent = new HeroChangeLevelEvent(this, currentLevel, newLevel);
                 plugin.getServer().getPluginManager().callEvent(hLEvent);
                 if (newLevel >= prop.maxLevel) {
-                    exp = prop.getExperience(prop.maxLevel);
+                    setExperience(prop.getExperience(prop.maxLevel));
                     Messaging.broadcast(plugin, "$1 has become a master $2!", player.getName(), heroClass.getName());
                     plugin.getHeroManager().saveHero(player);
                 }
