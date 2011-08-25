@@ -133,11 +133,10 @@ public class SkillConstruct extends ActiveSkill {
         }
         player.updateInventory();
         
-        //Grant the hero experience
+        //Give/Take experience from the hero
         int xp = getSetting(hero.getHeroClass(), matName + "." + Setting.EXP.node(), 0);
-        if ( xp > 0) {
-            hero.gainExp(xp, ExperienceType.CRAFTING);
-        }
+        hero.gainExp(xp, ExperienceType.CRAFTING);
+        
         
         broadcast(player.getLocation(), getUseText(), new Object[] { player.getDisplayName(), matName.toLowerCase().replace("_", " ") });
         return true;
