@@ -28,14 +28,23 @@ public class HEventListener extends HeroesEventListener {
 
         int level = event.getTo();
         List<Command> sortCommands = plugin.getCommandHandler().getCommands();
-        for (Command command : sortCommands) {
-            if (command instanceof Skill) {
-                Skill skill = (Skill) command;
-                if (heroClass.hasSkill(skill.getName())) {
-                    int levelRequired = skill.getSetting(heroClass, "level", 1);
-                    if (levelRequired == level) {
-                        Messaging.send(event.getHero().getPlayer(), "You have learned $1.", skill.getName());
+        if (level > event.getFrom()) {
+            for (Command command : sortCommands) {
+                if (command instanceof Skill) {
+                    Skill skill = (Skill) command;
+                    if (heroClass.hasSkill(skill.getName())) {
+                        int levelRequired = skill.getSetting(heroClass, "level", 1);
+                        if (levelRequired == level) {
+                            Messaging.send(event.getHero().getPlayer(), "You have learned $1.", skill.getName());
+                        }
                     }
+                }
+            }
+        } else {
+            for (String skillName : heroClass.getSkillNames()) {
+                Skill skill = (Skill) plugin.getCommandHandler().getCommand(skillName);
+                if (skill.getSetting(heroClass, "level", 1) > level) {
+                    Messaging.send(event.getHero().getPlayer(), "You have forgotton how to use $1", skillName);
                 }
             }
         }

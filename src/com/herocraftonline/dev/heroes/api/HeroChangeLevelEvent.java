@@ -26,9 +26,6 @@ public class HeroChangeLevelEvent extends Event {
         return to;
     }
 
-    /**
-     * @return the hero
-     */
     public Hero getHero() {
         return hero;
     }
