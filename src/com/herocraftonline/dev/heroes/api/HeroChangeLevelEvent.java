@@ -7,13 +7,15 @@ import com.herocraftonline.dev.heroes.persistence.Hero;
 @SuppressWarnings("serial")
 public class HeroChangeLevelEvent extends Event {
 
-    protected final int from;
-    protected final int to;
+    private final int from;
+    private final int to;
+    private final Hero hero;
 
     public HeroChangeLevelEvent(Hero hero, int from, int to) {
         super("HeroLevelEvent");
         this.from = from;
         this.to = to;
+        this.hero = hero;
     }
 
     public final int getFrom() {
@@ -22,6 +24,13 @@ public class HeroChangeLevelEvent extends Event {
 
     public final int getTo() {
         return to;
+    }
+
+    /**
+     * @return the hero
+     */
+    public Hero getHero() {
+        return hero;
     }
 
 }
