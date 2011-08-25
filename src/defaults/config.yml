@@ -26,5 +26,4 @@ mappartyui:
     enabled: true
     packetinterval: 20 #Rate of packets
 worlds:
-    disableSkills: ['World1', 'World2', 'World3'] #If your worlds are in a seperate folder, include the path. E.g. 'worlds/world1'
-    disableExperience: ['World1', 'World2', 'World3'] #If your worlds are in a seperate folder, include the path. E.g. 'worlds/world1'
+    disabledWorlds: ['World1', 'World2', 'World3'] #If your worlds are in a seperate folder, include the path. E.g. 'worlds/world1'
