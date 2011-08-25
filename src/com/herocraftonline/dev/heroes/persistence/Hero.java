@@ -194,7 +194,7 @@ public class Hero {
             if (verbose && expChange > 0) {
                 Messaging.send(player, "$1: Gained $2 Exp", heroClass.getName(), decFormat.format(expChange));
             } else if ( verbose && expChange < 0) {
-                Messaging.send(player, "$1: Lost $2 Exp", heroClass.getName(), decFormat.format(expChange));
+                Messaging.send(player, "$1: Lost $2 Exp", heroClass.getName(), decFormat.format(-expChange));
             }
             if (newLevel != currentLevel) {
                 changedLevel = true;
