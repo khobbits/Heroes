@@ -22,6 +22,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.api.HeroDamageCause;
+import com.herocraftonline.dev.heroes.api.HeroSkillDamageCause;
+import com.herocraftonline.dev.heroes.api.HeroAttackDamageCause;
 import com.herocraftonline.dev.heroes.api.SkillDamageEvent;
 import com.herocraftonline.dev.heroes.api.SkillUseInfo;
 import com.herocraftonline.dev.heroes.api.WeaponDamageEvent;
@@ -149,6 +152,7 @@ public class HeroesDamageListener extends EntityListener {
 
         Entity entity = event.getEntity();
         Entity attacker = null;
+        HeroDamageCause heroLastDamage = null;
         DamageCause cause = event.getCause();
         int damage = event.getDamage();
         if (damageManager.getSpellTargets().containsKey(entity)) { // Start of skill -> listener communication
@@ -161,6 +165,9 @@ public class HeroesDamageListener extends EntityListener {
                     return;
                 }
                 damage = spellDamageEvent.getDamage();
+                if (entity instanceof Player) {
+                    heroLastDamage = new HeroSkillDamageCause(damage, cause, skillInfo.getHero().getPlayer(), skillInfo.getSkill());
+                }
             }
         } else if (damage != 0) {
             if (event instanceof EntityDamageByEntityEvent) {
@@ -207,7 +214,7 @@ public class HeroesDamageListener extends EntityListener {
                     return;
                 }
                 damage = weaponDamageEvent.getDamage();
-
+                heroLastDamage = new HeroAttackDamageCause(damage, cause, attacker);
             } else if (cause != DamageCause.CUSTOM) {
                 Integer tmpDamage = damageManager.getEnvironmentalDamage(cause);
                 if (tmpDamage != null) {
@@ -216,6 +223,9 @@ public class HeroesDamageListener extends EntityListener {
                         damage += damage / 3 * (event.getDamage() - 3);
                     }
                 }
+                heroLastDamage = new HeroDamageCause(damage, cause);
+            } else {
+                heroLastDamage = new HeroDamageCause(damage, cause);
             }
         } // End of skill -> listener communication
 
@@ -242,7 +252,9 @@ public class HeroesDamageListener extends EntityListener {
             if (damage < 0) {
                 damage = 0;
             }
-
+            
+            hero.setLastDamageCause(heroLastDamage);
+            
             double iHeroHP = hero.getHealth();
             double fHeroHP = iHeroHP - damage;
             // Never set HP less than 0
@@ -255,7 +267,7 @@ public class HeroesDamageListener extends EntityListener {
 
             // TODO: Doing this completely Breaks any form of damage modification from passive/active skills
             hero.setHealth(fHeroHP);
-
+            
             // If final HP is 0, make sure we kill the player
             if (fHeroHP == 0) {
                 event.setDamage(200);

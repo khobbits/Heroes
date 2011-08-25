@@ -16,6 +16,8 @@ General/API:
 	HeroLevelEvent is now HeroChangeLevelEvent
 	hero.gainExp now fully supports negative values
 	ExperienceType.DEATH added
+	HeroDamageCause is now added to the hero object when the hero is damaged.
+	Added HeroDamageCause, HeroAttackDamageCause, HeroSkillDamageCause
 
 Skills:
 

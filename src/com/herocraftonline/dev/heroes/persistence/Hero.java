@@ -22,6 +22,7 @@ import org.bukkit.util.config.ConfigurationNode;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.ExperienceChangeEvent;
 import com.herocraftonline.dev.heroes.api.HeroChangeLevelEvent;
+import com.herocraftonline.dev.heroes.api.HeroDamageCause;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
 import com.herocraftonline.dev.heroes.effects.Effect;
@@ -40,6 +41,7 @@ public class Hero {
     protected int mana = 0;
     protected HeroParty party = null;
     protected boolean verbose = true;
+    protected HeroDamageCause lastDamageCause = null;
     protected Set<Effect> effects = new HashSet<Effect>();
     protected Map<String, Double> experience = new HashMap<String, Double>();
     protected Map<String, Long> cooldowns = new HashMap<String, Long>();
@@ -457,5 +459,13 @@ public class Hero {
 
     public void addSkill(String skill) {
         skills.put(skill, Configuration.getEmptyNode());
+    }
+
+    public HeroDamageCause getLastDamageCause() {
+        return lastDamageCause;
+    }
+
+    public void setLastDamageCause(HeroDamageCause lastDamageCause) {
+        this.lastDamageCause = lastDamageCause;
     }
 }
