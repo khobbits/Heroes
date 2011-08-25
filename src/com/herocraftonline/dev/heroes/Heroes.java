@@ -117,7 +117,7 @@ public class Heroes extends JavaPlugin {
     // restrictions.
     private InventoryChecker inventoryChecker;
 
-    private ArrayList<String> skillList = new ArrayList<String>();
+    private ArrayList<Skill> skillList = new ArrayList<Skill>();
     /**
      * Print messages to the Debug Log, if the servers in Debug Mode then we also wan't to print the messages to the
      * standard Server Console.
@@ -178,7 +178,7 @@ public class Heroes extends JavaPlugin {
                         added = true;
                     }
                     skNo.add(skill.getName());
-                    skillList.add(skill.getName());
+                    skillList.add(skill);
                     debugLog.log(Level.INFO, "Skill " + skill.getName() + " Loaded");
                 }
             }
@@ -449,7 +449,7 @@ public class Heroes extends JavaPlugin {
     /**
      * @return the skillList
      */
-    public ArrayList<String> getSkillList() {
+    public ArrayList<Skill> getSkillList() {
         return skillList;
     }
 }
