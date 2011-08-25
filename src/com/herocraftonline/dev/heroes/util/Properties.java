@@ -82,13 +82,14 @@ public class Properties {
      * Generate experience for the level ArrayList<Integer>
      */
     public void calcExp() {
-        levels = new int[maxLevel];
+        levels = new int[maxLevel + 1];
 
         double A = maxExp * Math.pow(maxLevel - 1, -(power + 1));
         for (int i = 0; i < maxLevel; i++) {
             levels[i] = (int) (A * Math.pow(i, power + 1));
         }
         levels[maxLevel - 1] = maxExp;
+        levels[maxLevel] = (int) (A * Math.pow(maxLevel, power + 1));
     }
 
     public double getExperience(int level) {

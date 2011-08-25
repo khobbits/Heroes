@@ -137,32 +137,12 @@ public class Hero {
         }
 
         double exp = getExperience();
+        int currentLevel = prop.getLevel(exp);
+        int newLevel = prop.getLevel(exp + expChange);
         
         // adjust exp using the class modifier if it's positive
         if (expChange > 0) {
             expChange *= heroClass.getExpModifier();
-        } else if (expChange < 0 && !prop.levelsViaExpLoss){
-            double currentLevelExp = prop.getExperience(getLevel());
-            if (exp + expChange < currentLevelExp) {
-                exp = currentLevelExp;
-            }
-        }
-        
-        int currentLevel = prop.getLevel(exp);
-        int newLevel = prop.getLevel(exp + expChange);
-        if (currentLevel >= prop.maxLevel) {
-            expChange = 0;
-        } else if (currentLevel > newLevel && !prop.levelsViaExpLoss) {
-            expChange = (exp + expChange) - prop.getExperience(currentLevel);
-        }
-
-        // add the experience
-        exp += expChange;
-        
-        //If we went negative lets reset our values so that we would hit 0
-        if (exp < 0) {
-            expChange = expChange - exp;
-            exp = 0;
         }
         
         // call event
@@ -172,22 +152,29 @@ public class Hero {
         } else {
             expEvent = new HeroLevelEvent(this, expChange, currentLevel, newLevel, source);
         }
+        
         plugin.getServer().getPluginManager().callEvent(expEvent);
         if (expEvent.isCancelled()) {
-            // undo the experience gain
-            exp -= expChange;
             return;
         }
-
-        // undo the previous gain to make sure we use the updated value
-        exp -= expChange;
+        
+        //Lets get our modified xp change value
         expChange = expEvent.getExpChange();
+        
+        if (currentLevel >= prop.maxLevel && expChange > 0) {
+            expChange = 0;
+        } else if (currentLevel > newLevel && !prop.levelsViaExpLoss) {
+            expChange = prop.getExperience(currentLevel) - (exp - 1);
+        }
 
-        // add the updated experience
+        // add the experience
         exp += expChange;
-
-        // Track if the Hero leveled for persisting
-        boolean changedLevel = false;
+        
+        //If we went negative lets reset our values so that we would hit 0
+        if (exp < 0) {
+            expChange = -(expChange + exp);
+            exp = 0;
+        }
 
         // notify the user
         if (expChange != 0) {
@@ -197,9 +184,6 @@ public class Hero {
                 Messaging.send(player, "$1: Lost $2 Exp", heroClass.getName(), decFormat.format(-expChange));
             }
             if (newLevel != currentLevel) {
-                changedLevel = true;
-                setHealth(getMaxHealth());
-                syncHealth();
                 if (newLevel >= prop.maxLevel) {
                     exp = prop.getExperience(prop.maxLevel);
                     Messaging.broadcast(plugin, "$1 has become a master $2!", player.getName(), heroClass.getName());
@@ -208,6 +192,8 @@ public class Hero {
                 if (newLevel > currentLevel) {
                     plugin.getSpoutUI().sendPlayerNotification(player, ChatColor.GOLD + "Level Up!", ChatColor.DARK_RED + "Level - " + String.valueOf(newLevel), Material.DIAMOND_HELMET);
                     Messaging.send(player, "You leveled up! (Lvl $1 $2)", String.valueOf(newLevel), heroClass.getName());
+                    setHealth(getMaxHealth());
+                    syncHealth();
                 } else {
                     plugin.getSpoutUI().sendPlayerNotification(player, ChatColor.GOLD + "Level Lost!", ChatColor.DARK_RED + "Level - " + String.valueOf(newLevel), Material.DIAMOND_HELMET);
                     Messaging.send(player, "You lost a level up! (Lvl $1 $2)", String.valueOf(newLevel), heroClass.getName());
@@ -216,8 +202,8 @@ public class Hero {
         }
 
         setExperience(exp);
-        // Save the hero file when the Hero levels to prevent rollback issues
-        if (changedLevel)
+        // Save the hero file when the Hero changes levels to prevent rollback issues
+        if (newLevel != currentLevel)
             plugin.getHeroManager().saveHero(getPlayer());
     }
 
