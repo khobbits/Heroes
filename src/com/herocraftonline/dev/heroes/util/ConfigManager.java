@@ -187,6 +187,7 @@ public class ConfigManager {
         properties.resetExpOnClassChange = config.getBoolean(root + "resetExpOnClassChange", true);
         properties.swapMasteryCost = config.getBoolean(root + "swapMasteryCost", false);
         properties.levelsViaExpLoss = config.getBoolean(root + "levelsViaExpLoss", false);
+        properties.masteryLoss = config.getBoolean(root + "mastery-loss", false);
         properties.calcExp();
     }
 

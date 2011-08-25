@@ -5,12 +5,15 @@ Bug Fixes:
 	ProjectileDamages properly use the entity-name for their damages now (ARROW, EGG, SNOWBALL)
 	Fixed ALL: skill-setting causing issues when Administrators set it improperly.
 	Bedhealing no longer immediately heals.
+	Multi-World default settings populate properly now
 
 General/API:
 
 	Class-Based XP loss on death
-	There is now a setting to allow XP loss to incur Level loss
+	Added setting for Exp loss to incur level-losses
+	Added setting for exp losses to incur level-losses
 	ExperienceGainEvent is now ExperienceChangeEvent
+	HeroLevelEvent is now HeroChangeLevelEvent
 	hero.gainExp now fully supports negative values
 	ExperienceType.DEATH added
 

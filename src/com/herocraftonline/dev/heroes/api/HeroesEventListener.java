@@ -6,11 +6,11 @@ import org.bukkit.event.Event;
 public class HeroesEventListener extends CustomEventListener {
 
     /**
-     * Called when a Hero gain experience
+     * Called when a Hero gains or loses experience
      * 
      * @param event
      */
-    public void onExperienceGain(ExperienceChangeEvent event) {
+    public void onExperienceChange(ExperienceChangeEvent event) {
 
     }
 
@@ -33,11 +33,11 @@ public class HeroesEventListener extends CustomEventListener {
     }
 
     /**
-     * Called when a Hero levels up
+     * Called when a Hero's level changes
      * 
      * @param event
      */
-    public void onHeroLevel(HeroLevelEvent event) {
+    public void onHeroChangeLevel(HeroChangeLevelEvent event) {
 
     }
 
@@ -101,11 +101,11 @@ public class HeroesEventListener extends CustomEventListener {
         if (event instanceof ClassChangeEvent) {
             onClassChange((ClassChangeEvent) event);
         } else if (event instanceof ExperienceChangeEvent) {
-            onExperienceGain((ExperienceChangeEvent) event);
+            onExperienceChange((ExperienceChangeEvent) event);
         } else if (event instanceof WeaponDamageEvent) {
             onWeaponDamage((WeaponDamageEvent) event);
-        } else if (event instanceof HeroLevelEvent) {
-            onHeroLevel((HeroLevelEvent) event);
+        } else if (event instanceof HeroChangeLevelEvent) {
+            onHeroChangeLevel((HeroChangeLevelEvent) event);
         } else if (event instanceof SkillDamageEvent) {
             onSkillDamage((SkillDamageEvent) event);
         } else if (event instanceof SkillUseEvent) {

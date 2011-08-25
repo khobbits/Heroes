@@ -8,7 +8,8 @@ leveling:
     resetExpOnClassChange: true #will reset the exp if the player switches without mastering
     swapMasteryCost: false #will allow for users to change back to their mastered class freely
     partyBonus: 0.20 #cumulative bonus for each player after the first in a party
-    levelsViaExpLoss: false
+    levelsViaExpLoss: false #allow level loss when players lose xp
+    masteryLoss: false #allow mastery loss when players lose xp
 properties:
     iConomy: false #use of the cost system
     swapcost: 0 #cost to swap
@@ -26,5 +27,4 @@ mappartyui:
     enabled: true
     packetinterval: 20 #Rate of packets
 worlds:
-    disableSkills: ['World1', 'World2', 'World3'] #If your worlds are in a seperate folder, include the path. E.g. 'worlds/world1'
-    disableExperience: ['World1', 'World2', 'World3'] #If your worlds are in a seperate folder, include the path. E.g. 'worlds/world1'
+    disabledWorlds: ['World1', 'World2', 'World3'] #If your worlds are in a seperate folder, include the path. E.g. 'worlds/world1'

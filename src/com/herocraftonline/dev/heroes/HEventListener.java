@@ -2,7 +2,7 @@ package com.herocraftonline.dev.heroes;
 
 import java.util.List;
 
-import com.herocraftonline.dev.heroes.api.HeroLevelEvent;
+import com.herocraftonline.dev.heroes.api.HeroChangeLevelEvent;
 import com.herocraftonline.dev.heroes.api.HeroRegainHealthEvent;
 import com.herocraftonline.dev.heroes.api.HeroesEventListener;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
@@ -21,7 +21,7 @@ public class HEventListener extends HeroesEventListener {
     }
 
     @Override
-    public void onHeroLevel(HeroLevelEvent event) {
+    public void onHeroChangeLevel(HeroChangeLevelEvent event) {
         Hero hero = event.getHero();
         HeroClass heroClass = hero.getHeroClass();
         hero.syncHealth();

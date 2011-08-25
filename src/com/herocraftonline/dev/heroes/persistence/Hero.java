@@ -21,7 +21,7 @@ import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.ExperienceChangeEvent;
-import com.herocraftonline.dev.heroes.api.HeroLevelEvent;
+import com.herocraftonline.dev.heroes.api.HeroChangeLevelEvent;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
 import com.herocraftonline.dev.heroes.effects.Effect;
@@ -137,22 +137,16 @@ public class Hero {
         }
 
         double exp = getExperience();
-        int currentLevel = prop.getLevel(exp);
-        int newLevel = prop.getLevel(exp + expChange);
         
         // adjust exp using the class modifier if it's positive
         if (expChange > 0) {
             expChange *= heroClass.getExpModifier();
+        } else if (getLevel() >= prop.maxLevel && (!prop.masteryLoss || !prop.levelsViaExpLoss)) {
+            return;
         }
         
         // call event
-        ExperienceChangeEvent expEvent;
-        if (newLevel == currentLevel) {
-            expEvent = new ExperienceChangeEvent(this, expChange, source);
-        } else {
-            expEvent = new HeroLevelEvent(this, expChange, currentLevel, newLevel, source);
-        }
-        
+        ExperienceChangeEvent expEvent = new ExperienceChangeEvent(this, expChange, source);
         plugin.getServer().getPluginManager().callEvent(expEvent);
         if (expEvent.isCancelled()) {
             return;
@@ -160,6 +154,9 @@ public class Hero {
         
         //Lets get our modified xp change value
         expChange = expEvent.getExpChange();
+        
+        int currentLevel = prop.getLevel(exp);
+        int newLevel = prop.getLevel(exp + expChange);
         
         if (currentLevel >= prop.maxLevel && expChange > 0) {
             expChange = 0;
@@ -169,12 +166,15 @@ public class Hero {
 
         // add the experience
         exp += expChange;
-        
+               
         //If we went negative lets reset our values so that we would hit 0
         if (exp < 0) {
             expChange = -(expChange + exp);
             exp = 0;
         }
+        
+        //Reset our new level - in case xp adjustement settings actually don't cause us to change
+        newLevel = prop.getLevel(exp);
 
         // notify the user
         if (expChange != 0) {
@@ -184,6 +184,8 @@ public class Hero {
                 Messaging.send(player, "$1: Lost $2 Exp", heroClass.getName(), decFormat.format(-expChange));
             }
             if (newLevel != currentLevel) {
+                HeroChangeLevelEvent hLEvent = new HeroChangeLevelEvent(this, currentLevel, newLevel);
+                plugin.getServer().getPluginManager().callEvent(hLEvent);
                 if (newLevel >= prop.maxLevel) {
                     exp = prop.getExperience(prop.maxLevel);
                     Messaging.broadcast(plugin, "$1 has become a master $2!", player.getName(), heroClass.getName());
@@ -191,12 +193,12 @@ public class Hero {
                 }
                 if (newLevel > currentLevel) {
                     plugin.getSpoutUI().sendPlayerNotification(player, ChatColor.GOLD + "Level Up!", ChatColor.DARK_RED + "Level - " + String.valueOf(newLevel), Material.DIAMOND_HELMET);
-                    Messaging.send(player, "You leveled up! (Lvl $1 $2)", String.valueOf(newLevel), heroClass.getName());
+                    Messaging.send(player, "You gained a level! (Lvl $1 $2)", String.valueOf(newLevel), heroClass.getName());
                     setHealth(getMaxHealth());
                     syncHealth();
                 } else {
                     plugin.getSpoutUI().sendPlayerNotification(player, ChatColor.GOLD + "Level Lost!", ChatColor.DARK_RED + "Level - " + String.valueOf(newLevel), Material.DIAMOND_HELMET);
-                    Messaging.send(player, "You lost a level up! (Lvl $1 $2)", String.valueOf(newLevel), heroClass.getName());
+                    Messaging.send(player, "You lost a level! (Lvl $1 $2)", String.valueOf(newLevel), heroClass.getName());
                 }
             }
         }
