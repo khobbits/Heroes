@@ -24,8 +24,7 @@ public class HEventListener extends HeroesEventListener {
     public void onHeroChangeLevel(HeroChangeLevelEvent event) {
         Hero hero = event.getHero();
         HeroClass heroClass = hero.getHeroClass();
-        hero.syncHealth();
-
+        
         int level = event.getTo();
         List<Command> sortCommands = plugin.getCommandHandler().getCommands();
         if (level > event.getFrom()) {

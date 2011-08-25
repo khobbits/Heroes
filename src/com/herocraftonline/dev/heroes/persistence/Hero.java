@@ -175,7 +175,8 @@ public class Hero {
         
         //Reset our new level - in case xp adjustement settings actually don't cause us to change
         newLevel = prop.getLevel(exp);
-
+        setExperience(exp);
+        
         // notify the user
         if (expChange != 0) {
             if (verbose && expChange > 0) {
@@ -203,7 +204,7 @@ public class Hero {
             }
         }
 
-        setExperience(exp);
+        
         // Save the hero file when the Hero changes levels to prevent rollback issues
         if (newLevel != currentLevel)
             plugin.getHeroManager().saveHero(getPlayer());
