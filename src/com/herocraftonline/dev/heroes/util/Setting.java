@@ -22,7 +22,8 @@ public enum Setting {
     REAGENT("reagent"),
     REAGENT_COST("reagent-cost"),
     UNAPPLY_TEXT("unapply-text"),
-    USE_TEXT("use-text");
+    USE_TEXT("use-text"),
+    DEATH_TEXT("death-text");
 
     private final String node;
     

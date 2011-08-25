@@ -37,6 +37,7 @@ public class SkillFireball extends ActiveSkill {
         ConfigurationNode node = super.getDefaultConfig();
         node.setProperty(Setting.DAMAGE.node(), 4);
         node.setProperty("fire-ticks", 100);
+        node.setProperty(Setting.DEATH_TEXT.node(), "%target% was burned alive by %hero%'s fireball!");
         return node;
     }
 
