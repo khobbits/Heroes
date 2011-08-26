@@ -141,9 +141,9 @@ public class Hero {
         double exp = getExperience();
         
         // adjust exp using the class modifier if it's positive
-        if (expChange > 0) {
+        if (expChange > 0 && source != ExperienceType.ADMIN) {
             expChange *= heroClass.getExpModifier();
-        } else if (getLevel() >= prop.maxLevel && (!prop.masteryLoss || !prop.levelsViaExpLoss)) {
+        } else if (source != ExperienceType.ADMIN && getLevel() >= prop.maxLevel && (!prop.masteryLoss || !prop.levelsViaExpLoss)) {
             return;
         }
         
@@ -162,7 +162,7 @@ public class Hero {
         
         if (currentLevel >= prop.maxLevel && expChange > 0) {
             expChange = 0;
-        } else if (currentLevel > newLevel && !prop.levelsViaExpLoss) {
+        } else if (currentLevel > newLevel && !prop.levelsViaExpLoss && source != ExperienceType.ADMIN) {
             expChange = prop.getExperience(currentLevel) - (exp - 1);
         }
 

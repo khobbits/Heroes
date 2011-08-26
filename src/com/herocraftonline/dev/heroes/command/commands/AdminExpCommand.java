@@ -33,7 +33,7 @@ public class AdminExpCommand extends BasicCommand {
             return false;
         }
         try {
-            int expChange = (int) (hero.getExperience() - Integer.parseInt(args[1]));
+            int expChange = (int) (Integer.parseInt(args[1]) - hero.getExperience());
             hero.gainExp(expChange, ExperienceType.ADMIN, false);
             Messaging.send(sender, "Experience changed.");
             return true;
