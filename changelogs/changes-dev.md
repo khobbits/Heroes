@@ -38,6 +38,9 @@ Skills:
 		- XP can now be granted/taken from deconstruction
 	Hellgate
 		- See Port Fix.
+	LickWounds - (REWRITE!)
+		- Requires SkillWolf now
+		- Will only heal wolves summoned/tamed with SkillWolf
 	Manaburn
 		- Players can no longer manaburn themselves if they don't have a target.
 	Megabolt - (renamed Multibolt)
@@ -48,3 +51,7 @@ Skills:
 		- Will now properly teleport all party members instead of just some, or just yourself.
 	Skeleton
 		- Fixed bug that could cause improper targeting
+	Wolf - (REWRITE!)
+		- Will now remove/respawn wolves when the player enters/exits the world
+		- wolves can now be summoned to the players location at any time
+		- wolves will de-spawn on player quit, and respawn when the player re-enters the game at the players location
