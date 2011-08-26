@@ -18,6 +18,7 @@ General/API:
 	ExperienceType.DEATH added
 	HeroDamageCause is now added to the hero object when the hero is damaged.
 	Added HeroDamageCause, HeroAttackDamageCause, HeroSkillDamageCause
+	Added /cooldowns (/cd) command to get a list of cooldowns
 
 Skills:
 

@@ -1,12 +1,9 @@
 package com.herocraftonline.dev.heroes;
 
-import java.util.List;
-
 import com.herocraftonline.dev.heroes.api.HeroChangeLevelEvent;
 import com.herocraftonline.dev.heroes.api.HeroRegainHealthEvent;
 import com.herocraftonline.dev.heroes.api.HeroesEventListener;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
-import com.herocraftonline.dev.heroes.command.Command;
 import com.herocraftonline.dev.heroes.party.HeroParty;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
@@ -26,24 +23,19 @@ public class HEventListener extends HeroesEventListener {
         HeroClass heroClass = hero.getHeroClass();
         
         int level = event.getTo();
-        List<Command> sortCommands = plugin.getCommandHandler().getCommands();
         if (level > event.getFrom()) {
-            for (Command command : sortCommands) {
-                if (command instanceof Skill) {
-                    Skill skill = (Skill) command;
-                    if (heroClass.hasSkill(skill.getName())) {
-                        int levelRequired = skill.getSetting(heroClass, "level", 1);
-                        if (levelRequired == level) {
-                            Messaging.send(event.getHero().getPlayer(), "You have learned $1.", skill.getName());
-                        }
+            for (Skill skill : plugin.getSkillList()) {
+                if (heroClass.hasSkill(skill.getName())) {
+                    int levelRequired = skill.getSetting(heroClass, "level", 1);
+                    if (levelRequired == level) {
+                        Messaging.send(event.getHero().getPlayer(), "You have learned $1.", skill.getName());
                     }
                 }
             }
         } else {
-            for (String skillName : heroClass.getSkillNames()) {
-                Skill skill = (Skill) plugin.getCommandHandler().getCommand(skillName);
+            for (Skill skill : plugin.getSkillList()) {
                 if (skill.getSetting(heroClass, "level", 1) > level) {
-                    Messaging.send(event.getHero().getPlayer(), "You have forgotton how to use $1", skillName);
+                    Messaging.send(event.getHero().getPlayer(), "You have forgotton how to use $1", skill.getName());
                 }
             }
         }

@@ -40,6 +40,10 @@ commands:
     aliases: [hp]
     description: Displays the hero's health
     usage: /<command>
+  cooldowns:
+    aliases: [cd]
+    description: Displays a list of the hero's cooldowns
+    usage: /<command>
   party:
     aliases: ['p','pc']
     description: Chat with Heroes party members

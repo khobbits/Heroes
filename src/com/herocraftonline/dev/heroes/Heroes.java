@@ -4,6 +4,10 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -32,6 +36,7 @@ import com.herocraftonline.dev.heroes.command.commands.ArmorCommand;
 import com.herocraftonline.dev.heroes.command.commands.BindSkillCommand;
 import com.herocraftonline.dev.heroes.command.commands.ChooseCommand;
 import com.herocraftonline.dev.heroes.command.commands.ConfigReloadCommand;
+import com.herocraftonline.dev.heroes.command.commands.CooldownCommand;
 import com.herocraftonline.dev.heroes.command.commands.HealthCommand;
 import com.herocraftonline.dev.heroes.command.commands.HelpCommand;
 import com.herocraftonline.dev.heroes.command.commands.HeroSaveCommand;
@@ -117,7 +122,8 @@ public class Heroes extends JavaPlugin {
     // restrictions.
     private InventoryChecker inventoryChecker;
 
-    private ArrayList<Skill> skillList = new ArrayList<Skill>();
+    private Map<String, Skill> skillMap = new HashMap<String, Skill>();
+    
     /**
      * Print messages to the Debug Log, if the servers in Debug Mode then we also wan't to print the messages to the
      * standard Server Console.
@@ -178,7 +184,7 @@ public class Heroes extends JavaPlugin {
                         added = true;
                     }
                     skNo.add(skill.getName());
-                    skillList.add(skill);
+                    skillMap.put(skill.getName(), skill);
                     debugLog.log(Level.INFO, "Skill " + skill.getName() + " Loaded");
                 }
             }
@@ -385,15 +391,17 @@ public class Heroes extends JavaPlugin {
 
         // Page 2
         commandHandler.addCommand(new ManaCommand(this));
+        commandHandler.addCommand(new CooldownCommand(this));
         commandHandler.addCommand(new VerboseCommand(this));
         commandHandler.addCommand(new SuppressCommand(this));
         commandHandler.addCommand(new WhoCommand(this));
         commandHandler.addCommand(new PartyAcceptCommand(this));
         commandHandler.addCommand(new PartyInviteCommand(this));
         commandHandler.addCommand(new PartyWhoCommand(this));
-        commandHandler.addCommand(new PartyLeaveCommand(this));
+        
 
         // Page 3
+        commandHandler.addCommand(new PartyLeaveCommand(this));
         commandHandler.addCommand(new PartyModeCommand(this));
         commandHandler.addCommand(new PartyUICommand(this));
         commandHandler.addCommand(new PartyChatCommand(this));
@@ -401,9 +409,10 @@ public class Heroes extends JavaPlugin {
         commandHandler.addCommand(new ConfigReloadCommand(this));
         commandHandler.addCommand(new HelpCommand(this));
         commandHandler.addCommand(new AdminExpCommand(this));
-        commandHandler.addCommand(new AdminClassCommand(this));
+
 
         // Page 4
+        commandHandler.addCommand(new AdminClassCommand(this));
         commandHandler.addCommand(new AdminHealthCommand(this));
         commandHandler.addCommand(new HealthCommand(this));
         commandHandler.addCommand(new LeaderboardCommand(this));
@@ -449,7 +458,15 @@ public class Heroes extends JavaPlugin {
     /**
      * @return the skillList
      */
-    public ArrayList<Skill> getSkillList() {
-        return skillList;
+    public Collection<Skill> getSkillList() {
+        return Collections.unmodifiableCollection(skillMap.values());
+    }
+    
+    /**
+     * 
+     * @return the skillMap
+     */
+    public Map<String, Skill> getSkillMap() {
+        return Collections.unmodifiableMap(skillMap);
     }
 }
