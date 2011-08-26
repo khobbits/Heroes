@@ -22,6 +22,8 @@ General/API:
 
 Skills:
 
+	Bite - (NEW!)
+		- Short-Range Damaging attack.
 	Blackjack
 		- No longer resets player yaw and pitch.
 		- Blackjack now prevents the player from using all skills except invuln.
