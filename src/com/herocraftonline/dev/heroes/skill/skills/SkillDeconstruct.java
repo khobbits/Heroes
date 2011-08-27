@@ -22,8 +22,8 @@ public class SkillDeconstruct extends ActiveSkill {
     public SkillDeconstruct(Heroes plugin) {
         super(plugin, "Deconstruct");
         setDescription("Deconstructs the object you are holding.");
-        setUsage("/skill deconstruct <list>");
-        setArgumentRange(0, 1);
+        setUsage("/skill deconstruct <list|info|item>");
+        setArgumentRange(0, 2);
         setIdentifiers(new String[] { "skill deconstruct", "skill dstruct" });
     }
 
@@ -62,6 +62,27 @@ public class SkillDeconstruct extends ActiveSkill {
                 
                 Messaging.send(player, "You can deconstruct these items: " + items.toString());
                 return false;
+            } else if (args[0].toLowerCase().equals("info")) {
+                //Usage Checks if the player passed in arguments
+                if (args.length < 2) {
+                    Messaging.send(player, "Proper usage is /skill deconstruct info item");
+                    return false;
+                } else if (!items.contains(args[1])) {
+                    Messaging.send(player, "You can't deconstruct that item!");
+                    return false;
+                } else { 
+                    //Iterate over the deconstruct recipe and get all the items/amounts it turns into
+                    Messaging.send(player, args[1] + " deconstructs into the following items: ");
+                    for (String s : getSettingKeys(hero.getHeroClass(), args[1])) {
+                        if (s.equals("min-durability") || s.equals(Setting.LEVEL.node()) || s.equals(Setting.EXP.node()))
+                            continue;
+                        
+                        int amount = getSetting(hero.getHeroClass(), args[1] + "." + s, 1);
+                        Messaging.send(player, s.toLowerCase().replace("_", " ") + ": " + amount);
+                    }
+                    
+                    return false;
+                }
             } else {
                 Messaging.send(player, getUsage());
                 return false;

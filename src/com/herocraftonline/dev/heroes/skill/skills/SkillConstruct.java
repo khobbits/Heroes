@@ -54,17 +54,34 @@ public class SkillConstruct extends ActiveSkill {
         Player player = hero.getPlayer();
 
         //List all items this hero can make with construct
+        Set<String> itemSet = new HashSet<String>(getSettingKeys(hero.getHeroClass()));
         if (args[0].toLowerCase().equals("list")) {
-            Set<String> items = new HashSet<String>(getSettingKeys(hero.getHeroClass()));
-            items.remove("require-workbench");
+            itemSet.remove("require-workbench");
             for (Setting set : Setting.values()) {
-                items.remove(set.node());
+                itemSet.remove(set.node());
             }
-            Messaging.send(player, "You can craft these items: " + items.toString());
+            Messaging.send(player, "You can craft these items: " + itemSet.toString());
             return false;
         } else if (args[0].toLowerCase().equals("info")) {
-            //TODO: List construction information for this item
-            return false;
+            //Usage Checks if the player passed in arguments
+            if (args.length < 2) {
+                Messaging.send(player, "Proper usage is /skill construct info item");
+                return false;
+            } else if (!itemSet.contains(args[1])) {
+                Messaging.send(player, "You can't construct that item!");
+                return false;
+            } else { 
+                //Iterate over the construct recipe and get all the items/amounts it turns into
+                Messaging.send(player, args[1] + " requires the following items to craft: ");
+                for (String s : getSettingKeys(hero.getHeroClass(), args[1])) {
+                    if (s.equals(Setting.LEVEL.node()) || s.equals(Setting.EXP.node())  || s.equals(Setting.AMOUNT.node()))
+                        continue;
+                    
+                    int amount = getSetting(hero.getHeroClass(), args[1] + "." + s, 1);
+                    Messaging.send(player, s.toLowerCase().replace("_", " ") + ": " + amount);
+                }
+                return false;
+            }
         }
         
         if (player.getTargetBlock(null, 3).getType() != Material.WORKBENCH && getSetting(hero.getHeroClass(), "require-workbench", true)) {
