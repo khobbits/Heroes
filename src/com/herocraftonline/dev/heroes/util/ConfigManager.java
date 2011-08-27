@@ -59,6 +59,7 @@ public class ConfigManager {
         loadDefaultConfig(primaryConfig);
         loadProperties(primaryConfig);
         loadBedConfig(primaryConfig);
+        loadManaConfig(primaryConfig);
         loadMapConfig(primaryConfig);
         loadWorldConfig(primaryConfig);
         primaryConfig.save();
@@ -225,6 +226,14 @@ public class ConfigManager {
         properties.healPercent = config.getInt(root + "healPercent", 5);
     }
 
+    private void loadManaConfig(Configuration config) {
+        String root = "mana.";
+        properties.manaRegenInterval = config.getInt(root + "regenInterval", 5);
+        properties.manaRegenPercent = config.getInt(root + "regenPercent", 5);
+        //Out of bounds check
+        if (properties.manaRegenPercent > 100 || properties.manaRegenPercent < 0)
+            properties.manaRegenPercent = 5;
+    }
     private void loadMapConfig(Configuration config) {
         String root = "mappartyui.";
         properties.mapUI = config.getBoolean(root + "enabled", false);

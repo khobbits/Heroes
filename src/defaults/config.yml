@@ -19,6 +19,9 @@ bed:
     bedHeal: true #Do you want players to heal in beds? NOTE - useDamageSystem must be true
     healInterval: 15 #the seconds it takes to heal the healPercent
     healPercent: 5 #the amount of damage to heal.
+mana:
+    regenInterval: 5 #time in seconds between regen ticks
+    regenPercent: 5 #the percent regenned each tick
 default:
     level: 1 #Level to use HATS!
     allowhatsplugin: false

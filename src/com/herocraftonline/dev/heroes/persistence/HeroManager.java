@@ -61,8 +61,10 @@ public class HeroManager {
 
         Runnable effectTimer = new EffectUpdater(this);
         plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, effectTimer, 0, effectInterval);
-
-        Runnable manaTimer = new ManaUpdater(this);
+        
+        int regenAmount = plugin.getConfigManager().getProperties().manaRegenPercent;
+        long regenInterval = plugin.getConfigManager().getProperties().manaRegenInterval * 1000;
+        Runnable manaTimer = new ManaUpdater(this, regenInterval, regenAmount);
         plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, manaTimer, 0, manaInterval);
 
         Runnable partyUpdater = new PartyUpdater(this, plugin, plugin.getPartyManager());
@@ -524,11 +526,14 @@ class EffectUpdater implements Runnable {
 class ManaUpdater implements Runnable {
 
     private final HeroManager manager;
-    private final long updateInterval = 5000;
+    private final long updateInterval;
+    private final int manaPercent;
     private long lastUpdate = 0;
 
-    ManaUpdater(HeroManager manager) {
+    ManaUpdater(HeroManager manager, long updateInterval, int manaPercent) {
         this.manager = manager;
+        this.updateInterval = updateInterval;
+        this.manaPercent = manaPercent;
     }
 
     public void run() {
@@ -548,7 +553,7 @@ class ManaUpdater implements Runnable {
             if (mana == 100)
                 continue;
             
-            HeroRegainManaEvent hrmEvent = new HeroRegainManaEvent(hero, 5, null);
+            HeroRegainManaEvent hrmEvent = new HeroRegainManaEvent(hero, manaPercent, null);
             manager.plugin.getServer().getPluginManager().callEvent(hrmEvent);
             if (hrmEvent.isCancelled())
                 continue;
