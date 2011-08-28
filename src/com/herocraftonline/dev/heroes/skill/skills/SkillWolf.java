@@ -146,7 +146,7 @@ public class SkillWolf extends ActiveSkill {
                 return;
 
             if (hero.getSkillSettings(skill).containsKey("wolves")) {
-                int wolves = Integer.parseInt(hero.getSkillSettings(skill).get("Wolves"));
+                int wolves = Integer.parseInt(hero.getSkillSettings(skill).get("wolves"));
                 for (int i = 0; i < wolves; i++) {
                     Wolf wolf = (Wolf) event.getPlayer().getWorld().spawnCreature(event.getPlayer().getLocation(), CreatureType.WOLF);
                     setWolfSettings(hero, wolf);
