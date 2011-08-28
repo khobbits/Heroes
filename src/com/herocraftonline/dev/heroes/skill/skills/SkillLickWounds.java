@@ -8,6 +8,7 @@ import org.bukkit.util.config.ConfigurationNode;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
+import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Setting;
 
@@ -18,7 +19,7 @@ public class SkillLickWounds extends ActiveSkill {
         setDescription("Heals your nearby wolves");
         setUsage("/skill lickwounds");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "skill lickwounds" });
+        setIdentifiers(new String[] { "skill lickwounds", "skill lwounds" });
     }
     @Override
     public ConfigurationNode getDefaultConfig() {
@@ -36,8 +37,8 @@ public class SkillLickWounds extends ActiveSkill {
             return false;
         }
         
-        SkillWolf skill = (SkillWolf) getPlugin().getSkillMap().get("Wolf");
-        if (!hero.hasSkill("Wolf")) {
+        Skill skill = getPlugin().getSkillMap().get("Wolf");
+        if (!hero.hasSkill("Wolf") || skill.getSetting(hero.getHeroClass(), Setting.LEVEL.node(), 1) > hero.getLevel()) {
             Messaging.send(player, "You don't have the proper skills to do that!");
             return false;
         }

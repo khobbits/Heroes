@@ -149,7 +149,7 @@ public class HeroClass {
     public boolean hasSkill(String name) {
         return skills.containsKey(name.toLowerCase());
     }
-
+    
     public boolean isPrimary() {
         return parent == null;
     }

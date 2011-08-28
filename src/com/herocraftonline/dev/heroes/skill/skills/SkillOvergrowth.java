@@ -62,9 +62,11 @@ public class SkillOvergrowth extends ActiveSkill {
                     tType = TreeType.TREE;
             }
             Material sapling = targetBlock.getType();
+            byte data = targetBlock.getData();
             targetBlock.setType(Material.AIR);
             if (!player.getWorld().generateTree(targetBlock.getLocation(), tType)) {
                 targetBlock.setType(sapling);
+                targetBlock.setData(data);
                 Messaging.send(player, "The spell fizzled!");
                 return false;
             }

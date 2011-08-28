@@ -1,7 +1,6 @@
 classes:
     Vagrant:
         default: true
-        summon-max: 0
         description: The vagrant, starter PATH
         permitted-armor:
         - '*'
@@ -25,7 +24,6 @@ classes:
         expLoss: 0
     Warrior:
         default: false
-        summon-max: 0
         description: Skilled in Defense Combat and Heavy Armor
         permitted-armor:
         - LEATHER
@@ -60,7 +58,6 @@ classes:
     Paladin:
         default: false
         parent: Warrior
-        summon-max: 0
         description: Divine Knight
         permitted-armor:
         - IRON
@@ -102,7 +99,6 @@ classes:
     Shadowknight:
         default: false
         parent: Warrior
-        summon-max: 0
         description: Dark Knight
         permitted-armor:
         - LEATHER

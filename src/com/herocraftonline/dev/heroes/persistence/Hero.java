@@ -16,8 +16,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.config.Configuration;
-import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.ExperienceChangeEvent;
@@ -51,7 +49,7 @@ public class Hero {
     protected Set<String> suppressedSkills = new HashSet<String>();
     protected Map<String, Map<String, String>> skillSettings = new HashMap<String, Map<String, String>>();
 
-    private Map<String, ConfigurationNode> skills = new HashMap<String, ConfigurationNode>();
+    //private Map<String, ConfigurationNode> skills = new HashMap<String, ConfigurationNode>();
     protected double health;
 
     public Hero(Heroes plugin, Player player, HeroClass heroClass) {
@@ -450,9 +448,12 @@ public class Hero {
     }
 
     public boolean hasSkill(String skill) {
-        return skills.containsKey(skill);
+        return this.heroClass.hasSkill(skill);
     }
-
+    
+/*
+ * These are never called, possible future use?
+ * 
     public Map<String, ConfigurationNode> getSkills() {
         return skills;
     }
@@ -460,7 +461,7 @@ public class Hero {
     public void addSkill(String skill) {
         skills.put(skill, Configuration.getEmptyNode());
     }
-
+*/
     public HeroDamageCause getLastDamageCause() {
         return lastDamageCause;
     }

@@ -48,6 +48,8 @@ Skills:
 		- Fixed skill not charging mana/cooldown properly
 	Mark
 		- Fixed mark charging mana/cooldown/reagents for using list
+	Overgrowth
+		- Fixed sapling resetting to default type when the skill fails
 	Port
 		- Will now properly teleport all party members instead of just some, or just yourself.
 	Skeleton
