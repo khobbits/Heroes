@@ -38,12 +38,14 @@ public class SkillSmite extends TargettedSkill {
             return false;
         }
 
-        int damage = getSetting(hero.getHeroClass(), Setting.DAMAGE.node(), 10);
-        EntityDamageByEntityEvent damageEntityEvent = new EntityDamageByEntityEvent(player, target, DamageCause.CUSTOM, damage);
+        //PvP Check
+        EntityDamageByEntityEvent damageEntityEvent = new EntityDamageByEntityEvent(player, target, DamageCause.CUSTOM, 0);
         getPlugin().getServer().getPluginManager().callEvent(damageEntityEvent);
         if (damageEntityEvent.isCancelled()) {
             return false;
         }
+        
+        int damage = getSetting(hero.getHeroClass(), Setting.DAMAGE.node(), 10);
         getPlugin().getDamageManager().addSpellTarget((Entity) target, hero, this);
         target.damage(damage, player);
         broadcastExecuteText(hero, target);

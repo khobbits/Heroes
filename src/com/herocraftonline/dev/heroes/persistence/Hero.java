@@ -113,15 +113,15 @@ public class Hero {
             return;
         
         if (distributeToParty && party != null && party.getExp() && expChange > 0) {
-            Location location = getPlayer().getLocation();
+            Location location = player.getLocation();
 
             Set<Hero> partyMembers = party.getMembers();
             Set<Hero> inRangeMembers = new HashSet<Hero>();
             for (Hero partyMember : partyMembers) {
-                if (!location.getWorld().equals(partyMember.getPlayer().getLocation().getWorld()))
+                if (!location.getWorld().equals(partyMember.player.getLocation().getWorld()))
                     continue;
 
-                if (location.distanceSquared(partyMember.getPlayer().getLocation()) <= 2500) {
+                if (location.distanceSquared(partyMember.player.getLocation()) <= 2500) {
                     inRangeMembers.add(partyMember);
                 }
             }
@@ -207,7 +207,7 @@ public class Hero {
         
         // Save the hero file when the Hero changes levels to prevent rollback issues
         if (newLevel != currentLevel)
-            plugin.getHeroManager().saveHero(getPlayer());
+            plugin.getHeroManager().saveHero(player);
     }
 
     public Map<Material, String[]> getBinds() {
@@ -371,7 +371,7 @@ public class Hero {
         }
 
         // Check the Players inventory now that they have changed class.
-        this.plugin.getInventoryChecker().checkInventory(getPlayer());
+        this.plugin.getInventoryChecker().checkInventory(player);
     }
 
     public void setMana(int mana) {

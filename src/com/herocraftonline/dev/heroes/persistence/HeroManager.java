@@ -90,11 +90,11 @@ public class HeroManager {
 
     public Hero getHero(Player player) {
         for (Hero hero : getHeroes()) {
-            if (hero == null || hero.getPlayer() == null) {
+            if (hero == null || hero.player == null) {
                 removeHero(hero); // Seeing as it's null we might as well remove it.
                 continue;
             }
-            if (player.getName().equalsIgnoreCase(hero.getPlayer().getName()))
+            if (player.getName().equalsIgnoreCase(hero.player.getName()))
                 return hero;
         }
         // If it gets to this stage then clearly the HeroManager doesn't have it so we create it...
@@ -560,7 +560,7 @@ class ManaUpdater implements Runnable {
             
             hero.setMana(mana + hrmEvent.getAmount());
             if (hero.isVerbose()) {
-                Messaging.send(hero.getPlayer(), ChatColor.BLUE + "MANA " + Messaging.createManaBar(hero.getMana()));
+                Messaging.send(hero.player, ChatColor.BLUE + "MANA " + Messaging.createManaBar(hero.getMana()));
             }
         }
     }
@@ -594,7 +594,7 @@ class PartyUpdater implements Runnable {
                 Player[] players = new Player[party.getMembers().size()];
                 int count = 0;
                 for (Hero heroes : party.getMembers()) {
-                    players[count] = heroes.getPlayer();
+                    players[count] = heroes.player;
                     count++;
                 }
                 updateMapView(players);
@@ -639,7 +639,7 @@ class PartyUpdater implements Runnable {
                 currentHP = hero.getHealth();
                 maxHP = hero.getMaxHealth();
             } else {
-                currentHP = hero.getPlayer().getHealth();
+                currentHP = hero.player.getHealth();
                 maxHP = 20;
             }
             map += " §12;" + players[i].getName() + "\n" + createHealthBar(currentHP, maxHP) + "\n";
