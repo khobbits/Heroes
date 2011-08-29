@@ -144,7 +144,7 @@ public class SkillWolf extends ActiveSkill {
             Player player = event.getPlayer();
             Hero hero = getPlugin().getHeroManager().getHero(player);
 
-            if (!hero.hasSkill(skill))
+            if (!hero.hasSkill(skill) || hero.getSkillSettings(skill) == null)
                 return;
 
             if (hero.getSkillSettings(skill).containsKey("wolves")) {
