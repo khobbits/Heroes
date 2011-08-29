@@ -48,8 +48,13 @@ Skills:
 	Megabolt - (renamed Multibolt)
 		- Fixed skill not charging mana/cooldown properly
 		- Megabolt no longer hits the player if they are too close to the radius
+		- Fixed skill not reporting the target properly.
 	Mark
 		- Fixed mark charging mana/cooldown/reagents for using list
+	MortalWound - (NEW!)
+		- Must be bound to a weapon as defined in the weapons node for the skill
+		- Applies a healing debuff to the target.
+		- Deals Weapon damage + a bleed effect.
 	Overgrowth
 		- Fixed sapling resetting to default type when the skill fails
 	Port

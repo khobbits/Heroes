@@ -86,8 +86,7 @@ public class SkillSmoke extends ActiveSkill {
         @Override
         public void onPlayerInteract(PlayerInteractEvent event) {
             if (event.getAction() != Action.PHYSICAL) {
-                Player player = event.getPlayer();
-                Hero hero = getPlugin().getHeroManager().getHero(player);
+                Hero hero = getPlugin().getHeroManager().getHero(event.getPlayer());
                 if (hero.hasEffect("Smoke")) {
                     hero.removeEffect(hero.getEffect("Smoke"));
                 }
@@ -104,7 +103,6 @@ public class SkillSmoke extends ActiveSkill {
         @Override
         public void apply(Hero hero) {
             super.apply(hero);
-            Player player = hero.getPlayer();
             CraftPlayer craftPlayer = (CraftPlayer) hero.getPlayer();
             // Tell all the logged in Clients to Destroy the Entity - Appears Invisible.
             final Player[] players = getPlugin().getServer().getOnlinePlayers();
@@ -113,7 +111,7 @@ public class SkillSmoke extends ActiveSkill {
                 hostilePlayer.getHandle().netServerHandler.sendPacket(new Packet29DestroyEntity(craftPlayer.getEntityId()));
             }
 
-            broadcast(player.getLocation(), applyText, player.getDisplayName());
+            broadcast(craftPlayer.getLocation(), applyText, craftPlayer.getDisplayName());
         }
 
         @Override
@@ -125,8 +123,7 @@ public class SkillSmoke extends ActiveSkill {
                 if (onlinePlayer.equals(player)) {
                     continue;
                 }
-                CraftPlayer hostilePlayer = (CraftPlayer) onlinePlayer;
-                hostilePlayer.getHandle().netServerHandler.sendPacket(new Packet20NamedEntitySpawn(entity));
+                ((CraftPlayer) onlinePlayer).getHandle().netServerHandler.sendPacket(new Packet20NamedEntitySpawn(entity));
             }
 
             broadcast(player.getLocation(), expireText, player.getDisplayName());
