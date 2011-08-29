@@ -1,10 +1,10 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.bukkit.Material;
+import org.bukkit.entity.Creature;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -19,15 +19,17 @@ import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.effects.Dispellable;
+import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
 import com.herocraftonline.dev.heroes.effects.Harmful;
 import com.herocraftonline.dev.heroes.persistence.Hero;
+import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillPiggify extends TargettedSkill {
 
-    private List<Entity> creatures = Collections.synchronizedList(new LinkedList<Entity>());
+    private Set<Entity> creatures = new HashSet<Entity>();
 
     public SkillPiggify(Heroes plugin) {
         super(plugin, "Piggify");
@@ -49,7 +51,7 @@ public class SkillPiggify extends TargettedSkill {
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
-        if (target == player || creatures.contains(target)) {
+        if (target.equals(player) || creatures.contains(target)) {
             Messaging.send(player, "You need a target.");
             return false;
         }
@@ -67,29 +69,47 @@ public class SkillPiggify extends TargettedSkill {
         }
 
         Entity creature = target.getWorld().spawnCreature(target.getLocation(), type);
-        creature.setPassenger(target);
-        creatures.add(creature);
-        getPlugin().getServer().getScheduler().scheduleAsyncDelayedTask(getPlugin(), new Runnable() {
-
-            @Override
-            public void run() {
-                creatures.get(0).remove();
-                creatures.remove(0);
-            }
-        }, (long) (getSetting(hero.getHeroClass(), Setting.DURATION.node(), 10000) * 0.02));
+        long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 10000);
+        PigEffect pEffect = new PigEffect(this, duration, (Creature) creature);
+        getPlugin().getHeroManager().getHero((Player) target).addEffect(pEffect);
 
         broadcastExecuteText(hero, target);
         return true;
     }
 
-    public class SkillEntityListener extends EntityListener implements Dispellable, Harmful {
+    public class SkillEntityListener extends EntityListener {
 
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
-            Entity entity = event.getEntity();
-            if (creatures.contains(entity)) {
-                event.setCancelled(true);
-            }
+            if (event.isCancelled() || !creatures.contains(event.getEntity()))
+                return;
+
+            event.setCancelled(true);
+        }
+    }
+    
+    public class PigEffect extends ExpirableEffect implements Dispellable, Harmful {
+
+        private final Creature creature;
+        
+        public PigEffect(Skill skill, long duration, Creature creature) {
+            super(skill, "Piggify", duration);
+            this.creature = creature;
+        }
+
+        @Override
+        public void apply(Hero hero) {
+            super.apply(hero);
+            Player player = hero.getPlayer();
+            creature.setPassenger(player);
+            creatures.add(creature);
+        }
+
+        @Override
+        public void remove(Hero hero) {
+            super.remove(hero);
+            creatures.remove(creature);
+            creature.remove();
         }
     }
 }

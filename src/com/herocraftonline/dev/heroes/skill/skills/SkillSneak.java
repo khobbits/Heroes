@@ -114,10 +114,10 @@ public class SkillSneak extends ActiveSkill {
 
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
-            if (event.isCancelled())
+            if (event.isCancelled() || !damageCancels)
                 return;
             Player player = null;
-            if (damageCancels && event.getEntity() instanceof Player) {
+            if (event.getEntity() instanceof Player) {
                 player = (Player) event.getEntity();
             } else if (attackCancels && event instanceof EntityDamageByEntityEvent) {
                 EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
