@@ -71,7 +71,7 @@ public class SkillMegabolt extends TargettedSkill {
             }
         }
         
-        broadcastExecuteText(hero);
+        broadcastExecuteText(hero, target);
         return true;
     }
 
