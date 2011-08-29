@@ -24,13 +24,13 @@ import com.herocraftonline.dev.heroes.skill.Skill;
 
 public class ConfigManager {
 
-    protected Heroes plugin;
-    protected File primaryConfigFile;
-    protected File classConfigFile;
-    protected File expConfigFile;
-    protected File skillConfigFile;
-    protected File damageConfigFile;
-    protected Properties properties = new Properties();
+    protected final Heroes plugin;
+    protected final File primaryConfigFile;
+    protected final File classConfigFile;
+    protected final File expConfigFile;
+    protected final File skillConfigFile;
+    protected final File damageConfigFile;
+    protected final Properties properties = new Properties();
 
     public ConfigManager(Heroes plugin) {
         this.plugin = plugin;
@@ -63,7 +63,9 @@ public class ConfigManager {
         loadMapConfig(primaryConfig);
         loadWorldConfig(primaryConfig);
         primaryConfig.save();
-
+    }
+    
+    public void loadManagers() {
         Configuration damageConfig = new Configuration(damageConfigFile);
         damageConfig.load();
         plugin.getDamageManager().load(damageConfig);
@@ -88,6 +90,7 @@ public class ConfigManager {
                 plugin.getHeroManager().saveHero(player);
             }
             load();
+            loadManagers();
         } catch (Exception e) {
             e.printStackTrace();
             Heroes.log(Level.SEVERE, "Critical error encountered while loading. Disabling...");
@@ -226,7 +229,7 @@ public class ConfigManager {
         properties.healPercent = config.getInt(root + "healPercent", 5);
     }
 
-    private void loadManaConfig(Configuration config) {
+    public void loadManaConfig(Configuration config) {
         String root = "mana.";
         properties.manaRegenInterval = config.getInt(root + "regenInterval", 5);
         properties.manaRegenPercent = config.getInt(root + "regenPercent", 5);
@@ -234,6 +237,7 @@ public class ConfigManager {
         if (properties.manaRegenPercent > 100 || properties.manaRegenPercent < 0)
             properties.manaRegenPercent = 5;
     }
+    
     private void loadMapConfig(Configuration config) {
         String root = "mappartyui.";
         properties.mapUI = config.getBoolean(root + "enabled", false);

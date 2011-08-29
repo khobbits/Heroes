@@ -230,6 +230,17 @@ public class Heroes extends JavaPlugin {
 
     public void onEnable() {
         configManager = new ConfigManager(this);
+        
+        // Attempt to load the Configuration file.
+        try {
+            configManager.load();
+        } catch (Exception e) {
+            e.printStackTrace();
+            log(Level.SEVERE, "Critical error encountered while loading. Disabling...");
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
+        
         partyManager = new PartyManager(this);
         heroManager = new HeroManager(this);
         damageManager = new DamageManager(this);
@@ -241,16 +252,9 @@ public class Heroes extends JavaPlugin {
         // Skills Loader
         loadSkills();
 
-        // Attempt to load the Configuration file.
-        try {
-            configManager.load();
-        } catch (Exception e) {
-            e.printStackTrace();
-            log(Level.SEVERE, "Critical error encountered while loading. Disabling...");
-            getServer().getPluginManager().disablePlugin(this);
-            return;
-        }
-
+        //Load in the rest of the values into their managers
+        configManager.loadManagers();
+        
         blockListener.init();
 
         final Player[] players = getServer().getOnlinePlayers();
