@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
 
-public class PeriodicDamageEffect extends PeriodicEffect {
+public class PeriodicDamageEffect extends PeriodicEffect implements Harmful {
 
     private int tickDamage;
     private final Player applier;
