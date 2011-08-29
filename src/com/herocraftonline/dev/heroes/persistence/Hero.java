@@ -266,10 +266,6 @@ public class Hero {
     }
 
     public Player getPlayer() {
-        Player servPlayer = plugin.getServer().getPlayer(player.getName());
-        if (servPlayer != null && player != servPlayer) {
-            player = servPlayer;
-        }
         return player;
     }
 
