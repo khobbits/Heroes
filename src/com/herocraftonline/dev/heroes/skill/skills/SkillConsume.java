@@ -48,26 +48,30 @@ public class SkillConsume extends ActiveSkill {
         }
         
         for (String key : keys) {
-            if (key.equals(args[0].toUpperCase())) {
+            if (key.equals(args[0])) {
                 Material mat = Material.matchMaterial(key);
                 if (mat == null) {
                     throw new IllegalArgumentException("Invalid Configuration for Skill Consume: " + key + " is not a valid Material");
                 }
+                
                 int amount = getSetting(hero.getHeroClass(), key + "." + Setting.AMOUNT.node(), 1);
                 if (amount < 1) {
                     throw new IllegalArgumentException("Invalid Configuration for Skill Consume: " + key + " has invalid amount defined");
                 }
+                
                 int level = getSetting(hero.getHeroClass(), key + "." + Setting.LEVEL.node(), 1);
                 if (hero.getLevel() < level) {
                     Messaging.send(player, "You must be level $1 before you can consume that item", level);
                     return false;
                 }
+                
                 ItemStack reagent = new ItemStack(mat, amount);
                 if (!hasReagentCost(player, reagent)) {
                     String reagentName = reagent.getType().name().toLowerCase().replace("_", " ");
                     Messaging.send(player, "Sorry, you need to have $1 $2 to use that skill!", new Object[] {reagent.getAmount(), reagentName});
                     return false;
                 }
+                
                 player.getInventory().removeItem(reagent);
                 int mana = getSetting(hero.getHeroClass(), key + "." + Setting.MANA.node(), 20);
                 HeroRegainManaEvent hrmEvent = new HeroRegainManaEvent(hero, mana, this);
@@ -75,6 +79,7 @@ public class SkillConsume extends ActiveSkill {
                 if (hrmEvent.isCancelled()) {
                     return false;
                 }
+                
                 hero.setMana(hrmEvent.getAmount() + hero.getMana()); 
                 if (hero.isVerbose()) {
                     Messaging.send(player, Messaging.createManaBar(100));

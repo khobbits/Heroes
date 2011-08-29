@@ -63,7 +63,7 @@ public class HeroManager {
         plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, effectTimer, 0, effectInterval);
         
         int regenAmount = plugin.getConfigManager().getProperties().manaRegenPercent;
-        long regenInterval = plugin.getConfigManager().getProperties().manaRegenInterval * 1000;
+        long regenInterval = plugin.getConfigManager().getProperties().manaRegenInterval * 1000L;
         Runnable manaTimer = new ManaUpdater(this, regenInterval, regenAmount);
         plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, manaTimer, 0, manaInterval);
 
