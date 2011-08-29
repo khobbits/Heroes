@@ -20,6 +20,7 @@ General/API:
 	Added HeroDamageCause, HeroAttackDamageCause, HeroSkillDamageCause
 	Added /cooldowns (/cd) command to get a list of cooldowns
 	Mana regen is now configurable in the main configuration.
+	Various improvements to optimize CPU usage.
 
 Skills:
 
@@ -55,9 +56,11 @@ Skills:
 		- Will now properly teleport all party members instead of just some, or just yourself.
 	Skeleton
 		- Fixed bug that could cause improper targeting
+		- Now summons at the players target, max distance default is 5
 	Superheat
 		- now drops blocks properly.
 	Wolf - (REWRITE!)
 		- Will now remove/respawn wolves when the player enters/exits the world
 		- wolves can now be summoned to the players location at any time
 		- wolves will de-spawn on player quit, and respawn when the player re-enters the game at the players location
+		- now summons at the players target, max distance default is 5

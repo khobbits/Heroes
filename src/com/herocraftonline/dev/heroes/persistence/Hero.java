@@ -443,8 +443,12 @@ public class Hero {
         }
     }
 
-    public boolean hasSkill(String skill) {
-        return this.heroClass.hasSkill(skill);
+    public boolean hasSkill(String name) {
+        return this.heroClass.hasSkill(name);
+    }
+    
+    public boolean hasSkill(Skill skill) {
+        return this.heroClass.hasSkill(skill.getName());
     }
     
 /*

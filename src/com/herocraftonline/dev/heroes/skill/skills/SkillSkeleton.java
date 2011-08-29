@@ -4,6 +4,7 @@ import java.util.Set;
 
 import net.minecraft.server.EntityCreature;
 
+import org.bukkit.Location;
 import org.bukkit.craftbukkit.entity.CraftCreature;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Creature;
@@ -63,6 +64,7 @@ public class SkillSkeleton extends ActiveSkill {
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
         node.setProperty("max-summons", 3);
+        node.setProperty(Setting.MAX_DISTANCE.node(), 5);
         node.setProperty(Setting.DURATION.node(), 60000);
         node.setProperty(Setting.EXPIRE_TEXT.node(), "The skeleton returns to it's hellish domain.");
         return node;
@@ -79,7 +81,9 @@ public class SkillSkeleton extends ActiveSkill {
         Player player = hero.getPlayer();
 
         if (hero.getSummons().size() < getSetting(hero.getHeroClass(), "max-summons", 3)) {
-            Creature skeleton = (Creature) player.getWorld().spawnCreature(player.getLocation(), CreatureType.SKELETON);
+            int distance = getSetting(hero.getHeroClass(), Setting.MAX_DISTANCE.node(), 5);
+            Location castLoc = player.getTargetBlock(null, distance).getLocation();
+            Creature skeleton = (Creature) player.getWorld().spawnCreature(castLoc, CreatureType.SKELETON);
             long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 60000);
             getPlugin().getHeroManager().addCreatureEffect(skeleton, new SummonEffect(this, duration, hero));
             broadcastExecuteText(hero);

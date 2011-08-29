@@ -2,6 +2,7 @@ package com.herocraftonline.dev.heroes.skill.skills;
 
 import java.util.Iterator;
 
+import org.bukkit.Location;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Player;
@@ -55,6 +56,7 @@ public class SkillWolf extends ActiveSkill {
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
+        node.setProperty(Setting.MAX_DISTANCE.node(), 5);
         node.setProperty("max-wolves", 3);
         node.setProperty(Setting.HEALTH.node(), 30);
         node.setProperty("health-per-level", .25);
@@ -75,7 +77,9 @@ public class SkillWolf extends ActiveSkill {
 
                 return false;
             }
-            Wolf wolf = (Wolf) player.getWorld().spawnCreature(player.getLocation(), CreatureType.WOLF);
+            int distance = getSetting(hero.getHeroClass(), Setting.MAX_DISTANCE.node(), 5);
+            Location castLoc = player.getTargetBlock(null, distance).getLocation();
+            Wolf wolf = (Wolf) player.getWorld().spawnCreature(castLoc, CreatureType.WOLF);
             setWolfSettings(hero, wolf);
             updateWolves(hero);
             broadcastExecuteText(hero);
@@ -142,7 +146,7 @@ public class SkillWolf extends ActiveSkill {
         public void onPlayerJoin(PlayerJoinEvent event) {
             Hero hero = getPlugin().getHeroManager().getHero(event.getPlayer());
             
-            if (!hero.hasSkill("Wolf"))
+            if (!hero.hasSkill(skill))
                 return;
 
             if (hero.getSkillSettings(skill).containsKey("wolves")) {
