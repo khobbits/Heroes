@@ -187,7 +187,7 @@ public class SkillSkeleton extends ActiveSkill {
             Creature defender = (Creature) event.getEntity();
             Set<Hero> heroes = getPlugin().getHeroManager().getHeroes();
             for (Hero hero : heroes) {
-                if (hero.getSummons().contains(defender)) {
+                if (hero.getSummons().contains(defender) && defender instanceof Skeleton) {
                     hero.getSummons().remove(defender);
                 }
             }

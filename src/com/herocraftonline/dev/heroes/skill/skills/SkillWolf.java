@@ -42,7 +42,7 @@ public class SkillWolf extends ActiveSkill {
 
         registerEvent(Type.ENTITY_TAME, seListener, Priority.Highest);
         registerEvent(Type.ENTITY_DEATH, seListener, Priority.Monitor);
-        registerEvent(Type.PLAYER_JOIN, spListener, Priority.Monitor);
+        registerEvent(Type.PLAYER_JOIN, spListener, Priority.High);
         registerEvent(Type.PLAYER_QUIT, spListener, Priority.Lowest);
         registerEvent(Type.CUSTOM_EVENT, new SkillHeroListener(), Priority.Highest);
     }
@@ -71,17 +71,18 @@ public class SkillWolf extends ActiveSkill {
         Player player = hero.getPlayer();
 
         if (args.length == 0) {
+            int wolves = Integer.parseInt(hero.getSkillSettings(this).get("wolves"));
             int maxWolves = getSetting(hero.getHeroClass(), "max-wolves", 3);
-            if (hero.getSummons().size() >= maxWolves) {
+            if (wolves >= maxWolves) {
                 Messaging.send(player, "You already have the maximum number of wolves");
-
                 return false;
             }
+            
             int distance = getSetting(hero.getHeroClass(), Setting.MAX_DISTANCE.node(), 5);
             Location castLoc = player.getTargetBlock(null, distance).getLocation();
             Wolf wolf = (Wolf) player.getWorld().spawnCreature(castLoc, CreatureType.WOLF);
             setWolfSettings(hero, wolf);
-            updateWolves(hero);
+            hero.setSkillSetting(this, "wolves", wolves + 1);
             broadcastExecuteText(hero);
             return true;
         } else if (args[0].equals("summon")) {
@@ -115,15 +116,6 @@ public class SkillWolf extends ActiveSkill {
         return false;
     }
 
-    private void updateWolves(Hero hero) {
-        int wolves = 0;
-        for (Creature creature : hero.getSummons()) {
-            if (creature instanceof Wolf)
-                wolves++;
-        }
-        hero.setSkillSetting(this, "wolves", wolves);
-    }
-
     private void setWolfSettings(Hero hero, Wolf wolf) {
         Player player = hero.getPlayer();
         int health = getSetting(hero.getHeroClass(), Setting.HEALTH.node(), 30);
@@ -144,7 +136,8 @@ public class SkillWolf extends ActiveSkill {
 
         @Override
         public void onPlayerJoin(PlayerJoinEvent event) {
-            Hero hero = getPlugin().getHeroManager().getHero(event.getPlayer());
+            Player player = event.getPlayer();
+            Hero hero = getPlugin().getHeroManager().getHero(player);
             
             if (!hero.hasSkill(skill))
                 return;
@@ -152,7 +145,7 @@ public class SkillWolf extends ActiveSkill {
             if (hero.getSkillSettings(skill).containsKey("wolves")) {
                 int wolves = Integer.parseInt(hero.getSkillSettings(skill).get("wolves"));
                 for (int i = 0; i < wolves; i++) {
-                    Wolf wolf = (Wolf) event.getPlayer().getWorld().spawnCreature(event.getPlayer().getLocation(), CreatureType.WOLF);
+                    Wolf wolf = (Wolf) player.getWorld().spawnCreature(player.getLocation(), CreatureType.WOLF);
                     setWolfSettings(hero, wolf);
                 }
             }
@@ -209,8 +202,9 @@ public class SkillWolf extends ActiveSkill {
                 return;
 
             Hero hero = getPlugin().getHeroManager().getHero((Player) wolf.getOwner());
-            if (!hero.getSummons().contains(wolf))
+            if (!hero.getSummons().contains(wolf)) {
                 return;
+            }
 
             hero.getSummons().remove(wolf);
             int wolves = Integer.parseInt(hero.getSkillSettings(skill).get("wolves"));
