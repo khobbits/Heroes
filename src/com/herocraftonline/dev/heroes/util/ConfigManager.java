@@ -229,7 +229,7 @@ public class ConfigManager {
         properties.healPercent = config.getInt(root + "healPercent", 5);
     }
 
-    public void loadManaConfig(Configuration config) {
+    private void loadManaConfig(Configuration config) {
         String root = "mana.";
         properties.manaRegenInterval = config.getInt(root + "regenInterval", 5);
         properties.manaRegenPercent = config.getInt(root + "regenPercent", 5);

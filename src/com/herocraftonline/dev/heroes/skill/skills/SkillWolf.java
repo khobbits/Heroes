@@ -42,7 +42,7 @@ public class SkillWolf extends ActiveSkill {
         registerEvent(Type.ENTITY_TAME, seListener, Priority.Highest);
         registerEvent(Type.ENTITY_DEATH, seListener, Priority.Monitor);
         registerEvent(Type.PLAYER_JOIN, spListener, Priority.Monitor);
-        registerEvent(Type.PLAYER_QUIT, spListener, Priority.Monitor);
+        registerEvent(Type.PLAYER_QUIT, spListener, Priority.Lowest);
         registerEvent(Type.CUSTOM_EVENT, new SkillHeroListener(), Priority.Highest);
     }
 
