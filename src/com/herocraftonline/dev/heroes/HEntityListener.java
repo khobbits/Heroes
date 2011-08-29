@@ -92,7 +92,11 @@ public class HEntityListener extends EntityListener {
                     experienceType = ExperienceType.PVP;
                 }
             }
-
+            
+            //If this entity is on the summon map, don't award XP!
+            if (hero.getSummons().contains(defender))
+                return;
+            
             // If the Player killed a Monster/Animal then we check to see if they can earn EXP from KILLING.
             if (defender instanceof LivingEntity && !(defender instanceof Player) && expSources.contains(ExperienceType.KILLING)) {
                 // Get the dying entity's CreatureType

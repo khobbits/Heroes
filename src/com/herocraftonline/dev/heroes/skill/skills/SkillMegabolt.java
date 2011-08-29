@@ -58,7 +58,7 @@ public class SkillMegabolt extends TargettedSkill {
 
         
         for (Entity entity : target.getNearbyEntities(range, range, range)) {
-            if (entity instanceof LivingEntity) {
+            if (entity instanceof LivingEntity && !entity.equals(player)) {
                 // PvP test
                 damageEntityEvent = new EntityDamageByEntityEvent(player, entity, DamageCause.CUSTOM, 0);
                 getPlugin().getServer().getPluginManager().callEvent(damageEntityEvent);

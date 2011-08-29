@@ -46,6 +46,7 @@ Skills:
 		- Players can no longer manaburn themselves if they don't have a target.
 	Megabolt - (renamed Multibolt)
 		- Fixed skill not charging mana/cooldown properly
+		- Megabolt no longer hits the player if they are too close to the radius
 	Mark
 		- Fixed mark charging mana/cooldown/reagents for using list
 	Overgrowth

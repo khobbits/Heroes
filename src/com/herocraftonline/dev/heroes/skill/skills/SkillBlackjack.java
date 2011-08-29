@@ -17,13 +17,11 @@ import org.bukkit.util.config.ConfigurationNode;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.HeroesEventListener;
 import com.herocraftonline.dev.heroes.api.SkillUseEvent;
-import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.effects.Expirable;
 import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
 import com.herocraftonline.dev.heroes.effects.Periodic;
 import com.herocraftonline.dev.heroes.effects.PeriodicEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
-import com.herocraftonline.dev.heroes.persistence.HeroManager;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.util.Setting;
@@ -120,18 +118,15 @@ public class SkillBlackjack extends ActiveSkill {
                     return;
                 }
 
-                HeroManager heroManager = getPlugin().getHeroManager();
-                Hero attackingHero = heroManager.getHero((Player) subEvent.getDamager());
-                Hero defendingHero = heroManager.getHero((Player) event.getEntity());
-
+                Hero attackingHero = getPlugin().getHeroManager().getHero((Player) subEvent.getDamager());
                 if (!attackingHero.hasEffect("Blackjack")) {
                     return;
                 }
+                Hero defendingHero = getPlugin().getHeroManager().getHero((Player) event.getEntity());
 
-                HeroClass heroClass = attackingHero.getHeroClass();
-                double chance = getSetting(heroClass, "stun-chance", 0.20);
+                double chance = getSetting(attackingHero.getHeroClass(), "stun-chance", 0.20);
                 if (random.nextDouble() < chance) {
-                    int duration = getSetting(heroClass, "stun-duration", 5000);
+                    int duration = getSetting(attackingHero.getHeroClass(), "stun-duration", 5000);
                     defendingHero.addEffect(new StunEffect(skill, duration));
                 }
             }
