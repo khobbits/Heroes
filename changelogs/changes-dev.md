@@ -26,8 +26,8 @@ Skills:
 	Bite - (NEW!)
 		- Short-Range Damaging attack.
 	Blackjack
-		- No longer resets player yaw and pitch.
 		- Blackjack now prevents the player from using all skills except invuln.
+		- Optimized code a little
 	ChainLightning
 		- Now has a 250ms delay between bounces
 		- Fixed skill not charging mana/cooldowns etc properly
@@ -54,6 +54,8 @@ Skills:
 		- Will now properly teleport all party members instead of just some, or just yourself.
 	Skeleton
 		- Fixed bug that could cause improper targeting
+	Superheat
+		- now drops blocks properly.
 	Wolf - (REWRITE!)
 		- Will now remove/respawn wolves when the player enters/exits the world
 		- wolves can now be summoned to the players location at any time

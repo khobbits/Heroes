@@ -3,7 +3,6 @@ package com.herocraftonline.dev.heroes.skill.skills;
 import java.util.Random;
 
 import org.bukkit.Location;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
@@ -112,34 +111,18 @@ public class SkillBlackjack extends ActiveSkill {
 
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
-            if (event.isCancelled()) {
+            if (event.isCancelled() || !(event.getEntity() instanceof Player)) {
                 return;
             }
             if (event instanceof EntityDamageByEntityEvent) {
                 EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
-                if (subEvent.getCause() != DamageCause.ENTITY_ATTACK) {
-                    return;
-                }
-
-                Entity attackingEntity = subEvent.getDamager();
-                Entity defendingEntity = subEvent.getEntity();
-
-                if (!(attackingEntity instanceof Player)) {
-                    return;
-                }
-
-                if (!(defendingEntity instanceof Player)) {
+                if (subEvent.getCause() != DamageCause.ENTITY_ATTACK || !(subEvent.getDamager() instanceof Player)) {
                     return;
                 }
 
                 HeroManager heroManager = getPlugin().getHeroManager();
-                Hero attackingHero = heroManager.getHero((Player) attackingEntity);
-                Hero defendingHero = heroManager.getHero((Player) defendingEntity);
-
-                if (attackingHero.hasEffect("Stun")) {
-                    event.setCancelled(true);
-                    return;
-                }
+                Hero attackingHero = heroManager.getHero((Player) subEvent.getDamager());
+                Hero defendingHero = heroManager.getHero((Player) event.getEntity());
 
                 if (!attackingHero.hasEffect("Blackjack")) {
                     return;

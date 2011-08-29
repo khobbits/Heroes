@@ -59,8 +59,8 @@ public class Properties {
     public int healPercent;
 
     // Mana stuff
-    public int manaRegenPercent;
-    public int manaRegenInterval;
+    public int manaRegenPercent = 5;
+    public int manaRegenInterval = 5;
     
     // Map Stuffs
     public boolean mapUI;
