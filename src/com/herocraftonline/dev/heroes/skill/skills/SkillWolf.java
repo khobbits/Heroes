@@ -71,13 +71,18 @@ public class SkillWolf extends ActiveSkill {
         Player player = hero.getPlayer();
 
         if (args.length == 0) {
-            int wolves = Integer.parseInt(hero.getSkillSettings(this).get("wolves"));
+            
+            int wolves = 0;
+            if (hero.getSkillSettings(this) != null) {
+                wolves = Integer.parseInt(hero.getSkillSettings(this).get("wolves"));
+            }
+            
             int maxWolves = getSetting(hero.getHeroClass(), "max-wolves", 3);
             if (wolves >= maxWolves) {
                 Messaging.send(player, "You already have the maximum number of wolves");
                 return false;
             }
-            
+
             int distance = getSetting(hero.getHeroClass(), Setting.MAX_DISTANCE.node(), 5);
             Location castLoc = player.getTargetBlock(null, distance).getLocation();
             Wolf wolf = (Wolf) player.getWorld().spawnCreature(castLoc, CreatureType.WOLF);
@@ -108,11 +113,11 @@ public class SkillWolf extends ActiveSkill {
                     creature.remove();
                 }
             }
-            
+
             hero.setSkillSetting(this, "wolves", 0);
             broadcast(player.getLocation(), "$1 has released their wolves into the wild", player.getDisplayName());
         }
-        
+
         return false;
     }
 
@@ -138,7 +143,7 @@ public class SkillWolf extends ActiveSkill {
         public void onPlayerJoin(PlayerJoinEvent event) {
             Player player = event.getPlayer();
             Hero hero = getPlugin().getHeroManager().getHero(player);
-            
+
             if (!hero.hasSkill(skill))
                 return;
 
@@ -180,7 +185,7 @@ public class SkillWolf extends ActiveSkill {
         public void onEntityTame(EntityTameEvent event) {
             if (event.isCancelled() || !(event.getEntity() instanceof Wolf) || !(event.getOwner() instanceof Player))
                 return;
-            
+
             Player player = (Player) event.getOwner();
             Hero hero = getPlugin().getHeroManager().getHero((Player) event.getOwner());
             if (skill.skillTaming && !hero.hasSkill(skill.getName())) {
