@@ -1,4 +1,4 @@
-Version Dev
+Version 1.2.4
 
 Bug Fixes:
 
