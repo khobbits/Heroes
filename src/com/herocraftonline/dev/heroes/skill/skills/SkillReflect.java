@@ -101,18 +101,18 @@ public class SkillReflect extends ActiveSkill {
             Entity attacker = edbe.getDamager();
             if (attacker instanceof LivingEntity && defender instanceof Player) {
                 Player defPlayer = (Player) defender;
-                Hero hero = getPlugin().getHeroManager().getHero(defPlayer);
+                Hero hero = plugin.getHeroManager().getHero(defPlayer);
                 if (hero.hasEffect("Reflect")) {
                     if (attacker instanceof Player) {
                         Player attPlayer = (Player) attacker;
-                        if (getPlugin().getHeroManager().getHero(attPlayer).hasEffect(getName())) {
+                        if (plugin.getHeroManager().getHero(attPlayer).hasEffect(getName())) {
                             event.setCancelled(true);
                             return;
                         }
                     }
                     LivingEntity attEntity = (LivingEntity) attacker;
                     int damage = (int) (event.getDamage() * getSetting(hero.getHeroClass(), "reflected-amount", 0.5));
-                    getPlugin().getDamageManager().addSpellTarget((Entity) attacker, hero, skill);
+                    plugin.getDamageManager().addSpellTarget((Entity) attacker, hero, skill);
                     attEntity.damage(damage, defender);
                 }
             }

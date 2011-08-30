@@ -86,7 +86,7 @@ public class SkillChainLightning extends TargettedSkill {
 
         // PvP test
         EntityDamageByEntityEvent damageEntityEvent = new EntityDamageByEntityEvent(player, target, DamageCause.CUSTOM, 0);
-        getPlugin().getServer().getPluginManager().callEvent(damageEntityEvent);
+        plugin.getServer().getPluginManager().callEvent(damageEntityEvent);
         if (damageEntityEvent.isCancelled()) {
             Messaging.send(player, "Invalid target!");
             return false;
@@ -94,7 +94,7 @@ public class SkillChainLightning extends TargettedSkill {
         int damage = getSetting(hero.getHeroClass(), Setting.DAMAGE.node(), 6);
 
         //Damage the first target
-        getPlugin().getDamageManager().addSpellTarget(target, hero, this);
+        addSpellTarget(target, hero);
         
         
         target.getWorld().strikeLightningEffect(target.getLocation());
@@ -115,10 +115,10 @@ public class SkillChainLightning extends TargettedSkill {
                     }
                     if (!previousTargets.contains(entity) && checkTarget(target, entity)) {
                         if (target instanceof Player) {
-                            Hero tHero = getPlugin().getHeroManager().getHero((Player) target);
+                            Hero tHero = plugin.getHeroManager().getHero((Player) target);
                             tHero.addEffect(new DelayedBolt(this, (maxBounce - bounces) * 250, hero, damage));
                         } else if (target instanceof Creature) {
-                            getPlugin().getHeroManager().addCreatureEffect((Creature) target, new DelayedBolt(this, (maxBounce - bounces) * 500, hero, damage));
+                            plugin.getHeroManager().addCreatureEffect((Creature) target, new DelayedBolt(this, (maxBounce - bounces) * 500, hero, damage));
                         } else {
                             continue;
                         }
@@ -163,7 +163,7 @@ public class SkillChainLightning extends TargettedSkill {
         public void remove(Hero hero) {
             super.remove(hero);
             Player target = hero.getPlayer();
-            getPlugin().getDamageManager().addSpellTarget(target, applier, getSkill());
+            addSpellTarget(target, applier);
             target.damage(bounceDamage, applier.getPlayer());
             target.getWorld().strikeLightningEffect(target.getLocation());
         }  
@@ -171,7 +171,7 @@ public class SkillChainLightning extends TargettedSkill {
         @Override
         public void remove(Creature creature) {
             super.remove(creature);
-            getPlugin().getDamageManager().addSpellTarget(creature, applier, getSkill());
+            addSpellTarget(creature, applier);
             creature.damage(bounceDamage, applier.getPlayer());
             creature.getWorld().strikeLightningEffect(creature.getLocation());
         }

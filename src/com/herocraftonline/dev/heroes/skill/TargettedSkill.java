@@ -102,7 +102,7 @@ public abstract class TargettedSkill extends ActiveSkill {
         int maxDistance = getSetting(hero.getHeroClass(), Setting.MAX_DISTANCE.node(), 15);
         LivingEntity target = null;
         if (args.length > 0) {
-            target = getPlugin().getServer().getPlayer(args[0]);
+            target = plugin.getServer().getPlayer(args[0]);
             if (target == null) {
                 Messaging.send(player, "Target not found.");
                 return false;

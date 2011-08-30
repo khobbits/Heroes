@@ -46,7 +46,7 @@ public class SkillMark extends ActiveSkill {
             Object[] obj = new Object[] { loc.getWorld().getName(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ() };
             Messaging.send(player, "You have marked a new location on $1 at: $2, $3, $4", obj);
 
-            getPlugin().getHeroManager().saveHero(player);
+            plugin.getHeroManager().saveHero(player);
             return true;
         }
     }
@@ -75,7 +75,7 @@ public class SkillMark extends ActiveSkill {
             return null;
         }
         // Get the world and make sure it's still available to return to
-        World world = getPlugin().getServer().getWorld((String) skillSetting.get("world"));
+        World world = plugin.getServer().getWorld((String) skillSetting.get("world"));
         if (world == null) {
             Messaging.send(player, "You have an invalid recall location marked!");
             return null;

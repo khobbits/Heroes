@@ -84,7 +84,7 @@ public class SkillPoisonArrow extends ActiveSkill {
                 return;
             
             Player player = (Player) arrow.getShooter();
-            Hero hero = getPlugin().getHeroManager().getHero(player);
+            Hero hero = plugin.getHeroManager().getHero(player);
 
             if (hero.hasEffect("PoisonArrowBuff")) {
                 long duration = getSetting(hero.getHeroClass(), "poison-duration", 10000);
@@ -93,10 +93,10 @@ public class SkillPoisonArrow extends ActiveSkill {
                 ArrowPoison apEffect = new ArrowPoison(skill, period, duration, tickDamage, player);
                 
                 if (event.getEntity() instanceof Creature) {
-                    getPlugin().getHeroManager().addCreatureEffect((Creature) event.getEntity(), apEffect);
+                    plugin.getHeroManager().addCreatureEffect((Creature) event.getEntity(), apEffect);
                     checkBuff(hero);
                 } else if (event.getEntity() instanceof Player) {
-                    Hero target = getPlugin().getHeroManager().getHero((Player) event.getEntity());
+                    Hero target = plugin.getHeroManager().getHero((Player) event.getEntity());
                     target.addEffect(apEffect);
                     checkBuff(hero);
                 }

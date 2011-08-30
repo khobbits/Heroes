@@ -38,14 +38,14 @@ public class SkillBite extends TargettedSkill {
         }
 
         EntityDamageByEntityEvent damageEntityEvent = new EntityDamageByEntityEvent(player, target, DamageCause.CUSTOM, 0);
-        getPlugin().getServer().getPluginManager().callEvent(damageEntityEvent);
+        plugin.getServer().getPluginManager().callEvent(damageEntityEvent);
         if (damageEntityEvent.isCancelled()) {
             Messaging.send(player, "Invalid target!");
             return false;
         }
 
         int damage = getSetting(hero.getHeroClass(), Setting.DAMAGE.node(), 10);
-        getPlugin().getDamageManager().addSpellTarget(target, hero, this);
+        addSpellTarget(target, hero);
         target.damage(damage, player);
         broadcastExecuteText(hero, target);
         return true;

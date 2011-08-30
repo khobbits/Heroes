@@ -17,7 +17,6 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
-import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillFireball extends ActiveSkill {
@@ -29,7 +28,7 @@ public class SkillFireball extends ActiveSkill {
         setArgumentRange(0, 0);
         setIdentifiers(new String[] { "skill fireball" });
 
-        registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(this), Priority.Normal);
+        registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
     }
 
     @Override
@@ -54,12 +53,6 @@ public class SkillFireball extends ActiveSkill {
 
     public class SkillEntityListener extends EntityListener {
 
-        private final Skill skill;
-
-        public SkillEntityListener(Skill skill) {
-            this.skill = skill;
-        }
-
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
             if (event.isCancelled())
@@ -73,7 +66,7 @@ public class SkillFireball extends ActiveSkill {
                         if (entity instanceof LivingEntity) {
                             Entity dmger = ((Snowball) subEvent.getDamager()).getShooter();
                             if (dmger instanceof Player) {
-                                Hero hero = getPlugin().getHeroManager().getHero((Player) dmger);
+                                Hero hero = plugin.getHeroManager().getHero((Player) dmger);
                                 HeroClass heroClass = hero.getHeroClass();
                                 LivingEntity livingEntity = (LivingEntity) entity;
                                 // Perform a check to see if any plugin is preventing us from damaging the player.
@@ -84,7 +77,7 @@ public class SkillFireball extends ActiveSkill {
                                 // Damage the player and ignite them.
                                 livingEntity.setFireTicks(getSetting(heroClass, "fire-ticks", 100));
 
-                                getPlugin().getDamageManager().addSpellTarget((Entity) entity, hero, skill);
+                                addSpellTarget(entity, hero);
                                 int damage = getSetting(heroClass, Setting.DAMAGE.node(), 4);
                                 event.setDamage(damage);
                             }

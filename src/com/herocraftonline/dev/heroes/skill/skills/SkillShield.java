@@ -46,7 +46,7 @@ public class SkillShield extends PassiveSkill {
             }
             if (subEvent.getEntity() instanceof Player) {
                 Player player = (Player) subEvent.getEntity();
-                Hero hero = getPlugin().getHeroManager().getHero(player);
+                Hero hero = plugin.getHeroManager().getHero(player);
                 if (hero.hasEffect(getName())) {
                     double multiplier = 1;
                     if (player.getItemInHand().getType() == Material.IRON_DOOR) {

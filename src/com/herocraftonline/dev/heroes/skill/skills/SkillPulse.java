@@ -46,15 +46,17 @@ public class SkillPulse extends ActiveSkill {
             if (target.equals(player)) {
                 continue;
             }
-            int damage = getSetting(hero.getHeroClass(), "damage", 1);
-            EntityDamageEvent damageEvent = new EntityDamageEvent(player, DamageCause.CUSTOM, 0);
-            Bukkit.getServer().getPluginManager().callEvent(damageEvent);
-            if (damageEvent.isCancelled()) {
-                return false;
+
+            if (target instanceof Player) {
+                EntityDamageEvent damageEvent = new EntityDamageEvent(player, DamageCause.CUSTOM, 0);
+                Bukkit.getServer().getPluginManager().callEvent(damageEvent);
+                if (damageEvent.isCancelled()) {
+                    return false;
+                }
             }
 
-            // See problem in SkillFireball.
-            getPlugin().getDamageManager().addSpellTarget((Entity) target, hero, this);
+            int damage = getSetting(hero.getHeroClass(), "damage", 1);
+            addSpellTarget(target, hero);
             target.damage(damage, player);
         }
         broadcastExecuteText(hero);

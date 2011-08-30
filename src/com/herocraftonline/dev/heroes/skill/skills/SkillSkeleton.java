@@ -85,7 +85,7 @@ public class SkillSkeleton extends ActiveSkill {
             Location castLoc = player.getTargetBlock(null, distance).getLocation();
             Creature skeleton = (Creature) player.getWorld().spawnCreature(castLoc, CreatureType.SKELETON);
             long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 60000);
-            getPlugin().getHeroManager().addCreatureEffect(skeleton, new SummonEffect(this, duration, hero));
+            plugin.getHeroManager().addCreatureEffect(skeleton, new SummonEffect(this, duration, hero));
             broadcastExecuteText(hero);
             Messaging.send(player, "You have succesfully summoned a skeleton to fight for you.");
             return true;
@@ -108,7 +108,7 @@ public class SkillSkeleton extends ActiveSkill {
         public void apply(Creature creature) {
             super.apply(creature);
             summoner.getSummons().add(creature);
-            FollowEffect fEffect = new FollowEffect(getSkill(), 1500, getDuration());
+            FollowEffect fEffect = new FollowEffect(skill, 1500, getDuration());
             summoner.addEffect(fEffect);
         }
 
@@ -185,7 +185,7 @@ public class SkillSkeleton extends ActiveSkill {
             if (!(event.getEntity() instanceof Creature))
                 return;
             Creature defender = (Creature) event.getEntity();
-            Set<Hero> heroes = getPlugin().getHeroManager().getHeroes();
+            Set<Hero> heroes = plugin.getHeroManager().getHeroes();
             for (Hero hero : heroes) {
                 if (hero.getSummons().contains(defender) && defender instanceof Skeleton) {
                     hero.getSummons().remove(defender);
@@ -199,7 +199,7 @@ public class SkillSkeleton extends ActiveSkill {
                 return;
             Creature creature = (Creature) event.getEntity();
             // Don't allow summoned creatures to combust
-            if (getPlugin().getHeroManager().creatureHasEffect(creature, "Summon"))
+            if (plugin.getHeroManager().creatureHasEffect(creature, "Summon"))
                 event.setCancelled(true);
         }
 
@@ -208,7 +208,7 @@ public class SkillSkeleton extends ActiveSkill {
             if (event.isCancelled() || !(event.getEntity() instanceof Creature))
                 return;
             if (event.getTarget() instanceof Player) {
-                for (Hero hero : getPlugin().getHeroManager().getHeroes()) {
+                for (Hero hero : plugin.getHeroManager().getHeroes()) {
                     if (hero.getSummons().contains((Creature) event.getEntity())) {
                         if (hero.getParty() != null) {
                             // Don't target party members either
@@ -230,7 +230,7 @@ public class SkillSkeleton extends ActiveSkill {
             if (event.isCancelled() || !(event instanceof EntityDamageByEntityEvent))
                 return;
             if (event.getEntity() instanceof Player) {
-                Hero hero = getPlugin().getHeroManager().getHero((Player) event.getEntity());
+                Hero hero = plugin.getHeroManager().getHero((Player) event.getEntity());
                 // If this hero has no summons then ignore the event
                 if (hero.getSummons().isEmpty())
                     return;
@@ -266,7 +266,7 @@ public class SkillSkeleton extends ActiveSkill {
 
                 if (player == null)
                     return;
-                Hero hero = getPlugin().getHeroManager().getHero(player);
+                Hero hero = plugin.getHeroManager().getHero(player);
                 if (hero.getSummons().isEmpty())
                     return;
                 for (Creature creature : hero.getSummons()) {
@@ -283,14 +283,14 @@ public class SkillSkeleton extends ActiveSkill {
         @Override
         public void onPlayerQuit(PlayerQuitEvent event) {
             // Destroy any summoned creatures when the player exits
-            Hero hero = getPlugin().getHeroManager().getHero(event.getPlayer());
+            Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
             if (hero.getSummons().isEmpty())
                 return;
             for (Creature summon : hero.getSummons()) {
                 if (summon instanceof Skeleton) {
-                    Effect effect = getPlugin().getHeroManager().getCreatureEffect(summon, "Summon");
+                    Effect effect = plugin.getHeroManager().getCreatureEffect(summon, "Summon");
                     if (effect != null) {
-                        getPlugin().getHeroManager().removeCreatureEffect(summon, effect);
+                        plugin.getHeroManager().removeCreatureEffect(summon, effect);
                     } else {
                         summon.remove();
                     }

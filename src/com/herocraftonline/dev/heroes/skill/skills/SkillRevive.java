@@ -4,14 +4,11 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityListener;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
@@ -44,16 +41,9 @@ public class SkillRevive extends ActiveSkill {
     }
 
     @Override
-    public ConfigurationNode getDefaultConfig() {
-        ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty("slime-amount", 1);
-        return node;
-    }
-
-    @Override
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
-        Player target = getPlugin().getServer().getPlayer(args[0]);
+        Player target = plugin.getServer().getPlayer(args[0]);
 
         if (target == null) {
             player.sendMessage("Player not found.");
@@ -79,13 +69,7 @@ public class SkillRevive extends ActiveSkill {
             return false;
         }
 
-        int slimeballs = getSetting(hero.getHeroClass(), "slime-amount", 1);
-        if (!player.getInventory().contains(Material.SLIME_BALL, slimeballs)) {
-            Messaging.send(player, "You don't have enough slimeballs (" + slimeballs + ")");
-            return false;
-        }
-
-        Hero targetHero = getPlugin().getHeroManager().getHero(targetPlayer);
+        Hero targetHero = plugin.getHeroManager().getHero(targetPlayer);
         if (!hero.hasParty() || !hero.getParty().isPartyMember(targetHero)) {
             Messaging.send(player, "The person needs to be in your party to do that!");
             return false;
@@ -93,7 +77,6 @@ public class SkillRevive extends ActiveSkill {
 
         targetPlayer.teleport(playerLoc);
 
-        player.getInventory().remove(new ItemStack(Material.SLIME_BALL, slimeballs));
         broadcastExecuteText(hero);
         return true;
     }

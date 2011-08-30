@@ -23,7 +23,6 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
-import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillExplosiveFireball extends ActiveSkill {
@@ -35,7 +34,7 @@ public class SkillExplosiveFireball extends ActiveSkill {
         setArgumentRange(0, 0);
         setIdentifiers(new String[] { "skill explosivefireball" });
 
-        registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(this), Priority.Normal);
+        registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
     }
 
     @Override
@@ -99,12 +98,6 @@ public class SkillExplosiveFireball extends ActiveSkill {
 
     public class SkillEntityListener extends EntityListener {
 
-        private final Skill skill;
-
-        public SkillEntityListener(Skill skill) {
-            this.skill = skill;
-        }
-
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
             if (event.isCancelled())
@@ -118,10 +111,10 @@ public class SkillExplosiveFireball extends ActiveSkill {
                     if (fireball.getShooter() instanceof Player) {
                         Entity entity = event.getEntity();
                         Player shooter = (Player) fireball.getShooter();
-                        Hero hero = getPlugin().getHeroManager().getHero(shooter);
+                        Hero hero = plugin.getHeroManager().getHero(shooter);
                         HeroClass heroClass = hero.getHeroClass();
                         int damage = getSetting(heroClass, Setting.DAMAGE.node(), 4);
-                        getPlugin().getDamageManager().addSpellTarget(entity, hero, skill);
+                        addSpellTarget(entity, hero);
                         entity.setFireTicks(getSetting(heroClass, "fire-ticks", 100));
                         event.setDamage(damage);
                     }

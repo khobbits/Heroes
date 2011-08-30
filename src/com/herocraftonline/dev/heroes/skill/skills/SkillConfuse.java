@@ -59,7 +59,7 @@ public class SkillConfuse extends TargettedSkill {
         }
 
         Player targetPlayer = (Player) target;
-        Hero targetHero = getPlugin().getHeroManager().getHero(targetPlayer);
+        Hero targetHero = plugin.getHeroManager().getHero(targetPlayer);
         if (targetHero.equals(hero)) {
             Messaging.send(player, "You need a target!");
             return false;

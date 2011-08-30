@@ -16,21 +16,21 @@ public class PeriodicDamageEffect extends PeriodicEffect implements Harmful {
         super(skill, name, period, duration);
         this.tickDamage = tickDamage;
         this.applier = applier;
-        this.applyHero = getSkill().getPlugin().getHeroManager().getHero(applier);
+        this.applyHero = plugin.getHeroManager().getHero(applier);
     }
 
     @Override
     public void tick(Hero hero) {
         super.tick(hero);
         Player player = hero.getPlayer();
-        getSkill().getPlugin().getDamageManager().addSpellTarget(player, applyHero, getSkill());
+        skill.addSpellTarget(player, applyHero);
         player.damage(tickDamage, applier);
     }
 
     @Override
     public void tick(Creature creature) {
         super.tick(creature);
-        getSkill().getPlugin().getDamageManager().addSpellTarget(creature, applyHero, getSkill());
+        skill.addSpellTarget(creature, applyHero);
         creature.damage(tickDamage, applier);
     }
 

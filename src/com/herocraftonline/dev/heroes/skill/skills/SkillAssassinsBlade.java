@@ -90,7 +90,7 @@ public class SkillAssassinsBlade extends ActiveSkill {
             
             Player player = (Player) subEvent.getDamager();
             ItemStack item = player.getItemInHand();
-            Hero hero = getPlugin().getHeroManager().getHero(player);
+            Hero hero = plugin.getHeroManager().getHero(player);
             if (!getSetting(hero.getHeroClass(), "weapons", Properties.defaultWeapons).contains(item.getType().name()))
                 return;
             
@@ -100,10 +100,10 @@ public class SkillAssassinsBlade extends ActiveSkill {
                 int tickDamage = getSetting(hero.getHeroClass(), "tick-damage", 2);
                 AssassinsPoison apEffect = new AssassinsPoison(skill, period, duration, tickDamage, player);
                 if (event.getEntity() instanceof Creature) {
-                    getPlugin().getHeroManager().addCreatureEffect((Creature) event.getEntity(), apEffect);
+                    plugin.getHeroManager().addCreatureEffect((Creature) event.getEntity(), apEffect);
                     checkBuff(hero);
                 } else if (event.getEntity() instanceof Player) {
-                    Hero target = getPlugin().getHeroManager().getHero((Player) event.getEntity());
+                    Hero target = plugin.getHeroManager().getHero((Player) event.getEntity());
                     target.addEffect(apEffect);
                     checkBuff(hero);
                 }

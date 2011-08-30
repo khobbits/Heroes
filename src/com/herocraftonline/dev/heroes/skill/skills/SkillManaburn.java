@@ -34,7 +34,7 @@ public class SkillManaburn extends TargettedSkill {
             return false;
         }
         
-        Hero tHero = getPlugin().getHeroManager().getHero((Player) target);
+        Hero tHero = plugin.getHeroManager().getHero((Player) target);
         if (tHero == null) {
             return false;
         }

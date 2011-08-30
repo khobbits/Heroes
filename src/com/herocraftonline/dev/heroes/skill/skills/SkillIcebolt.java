@@ -81,7 +81,7 @@ public class SkillIcebolt extends ActiveSkill {
                         snowballs.remove(projectile);
                         // Damage Event //
                         LivingEntity dmger = ((Snowball) subEvent.getDamager()).getShooter();
-                        Hero hero = getPlugin().getHeroManager().getHero((Player) dmger);
+                        Hero hero = plugin.getHeroManager().getHero((Player) dmger);
                         HeroClass heroClass = hero.getHeroClass();
                         EntityDamageByEntityEvent damageEvent = new EntityDamageByEntityEvent(dmger, event.getEntity(), DamageCause.ENTITY_ATTACK, 0);
                         Bukkit.getServer().getPluginManager().callEvent(damageEvent);

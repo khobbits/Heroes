@@ -73,7 +73,7 @@ public class SkillSmoke extends ActiveSkill {
         public void onEntityDamage(EntityDamageEvent event) {
             if (event.getEntity() instanceof Player) {
                 Player player = (Player) event.getEntity();
-                Hero hero = getPlugin().getHeroManager().getHero(player);
+                Hero hero = plugin.getHeroManager().getHero(player);
                 if (hero.hasEffect("Smoke")) {
                     hero.removeEffect(hero.getEffect("Smoke"));
                 }
@@ -86,7 +86,7 @@ public class SkillSmoke extends ActiveSkill {
         @Override
         public void onPlayerInteract(PlayerInteractEvent event) {
             if (event.getAction() != Action.PHYSICAL) {
-                Hero hero = getPlugin().getHeroManager().getHero(event.getPlayer());
+                Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
                 if (hero.hasEffect("Smoke")) {
                     hero.removeEffect(hero.getEffect("Smoke"));
                 }
@@ -105,7 +105,7 @@ public class SkillSmoke extends ActiveSkill {
             super.apply(hero);
             CraftPlayer craftPlayer = (CraftPlayer) hero.getPlayer();
             // Tell all the logged in Clients to Destroy the Entity - Appears Invisible.
-            final Player[] players = getPlugin().getServer().getOnlinePlayers();
+            final Player[] players = plugin.getServer().getOnlinePlayers();
             for (Player onlinePlayer : players) {
                 CraftPlayer hostilePlayer = (CraftPlayer) onlinePlayer;
                 hostilePlayer.getHandle().netServerHandler.sendPacket(new Packet29DestroyEntity(craftPlayer.getEntityId()));
@@ -118,7 +118,7 @@ public class SkillSmoke extends ActiveSkill {
         public void remove(Hero hero) {
             Player player = hero.getPlayer();
             EntityHuman entity = ((CraftPlayer) player).getHandle();
-            final Player[] players = getPlugin().getServer().getOnlinePlayers();
+            final Player[] players = plugin.getServer().getOnlinePlayers();
             for (Player onlinePlayer : players) {
                 if (onlinePlayer.equals(player)) {
                     continue;

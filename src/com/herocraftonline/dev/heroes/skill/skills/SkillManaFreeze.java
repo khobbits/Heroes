@@ -54,7 +54,7 @@ public class SkillManaFreeze extends TargettedSkill {
         if (target instanceof Player && !target.equals(player)) {
             broadcastExecuteText(hero, target);
 
-            Hero targetHero = getPlugin().getHeroManager().getHero((Player) target);
+            Hero targetHero = plugin.getHeroManager().getHero((Player) target);
             int duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 5000);
             targetHero.addEffect(new ManaFreezeEffect(this, duration));
             return true;

@@ -88,7 +88,7 @@ public class SkillAbsorb extends ActiveSkill {
             Entity defender = event.getEntity();
             if (defender instanceof Player) {
                 Player player = (Player) defender;
-                Hero hero = getPlugin().getHeroManager().getHero(player);
+                Hero hero = plugin.getHeroManager().getHero(player);
                 if (hero.hasEffect("Absorb")) {
                     int absorbAmount = getSetting(hero.getHeroClass(), "mana-amount", 20);
                     event.setDamage((int) (event.getDamage() * 0.50));

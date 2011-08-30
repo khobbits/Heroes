@@ -25,7 +25,7 @@ public class SkillLayhands extends TargettedSkill {
             return false;
         }
 
-        Hero targetHero = getPlugin().getHeroManager().getHero((Player) target);
+        Hero targetHero = plugin.getHeroManager().getHero((Player) target);
 
         targetHero.setHealth(targetHero.getMaxHealth());
         targetHero.syncHealth();

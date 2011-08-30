@@ -101,7 +101,7 @@ public class SkillFlameshield extends ActiveSkill {
             Entity defender = event.getEntity();
             if (defender instanceof Player) {
                 Player player = (Player) defender;
-                Hero hero = getPlugin().getHeroManager().getHero(player);
+                Hero hero = plugin.getHeroManager().getHero(player);
                 if (hero.hasEffect(getName())) {
                     event.setCancelled(true);
                 }
@@ -120,7 +120,7 @@ public class SkillFlameshield extends ActiveSkill {
 
             if (event.getEntity() instanceof Player) {
                 Player player = (Player) event.getEntity();
-                Hero hero = getPlugin().getHeroManager().getHero(player);
+                Hero hero = plugin.getHeroManager().getHero(player);
                 if (hero.hasEffect("Flameshield")) {
                     String name = event.getDamager().getPlayer().getName();
                     String skillName = event.getSkill().getName().toLowerCase();
@@ -129,7 +129,7 @@ public class SkillFlameshield extends ActiveSkill {
                 }
             } else if (event.getEntity() instanceof Creature) {
                 Creature creature = (Creature) event.getEntity();
-                if (getPlugin().getHeroManager().creatureHasEffect(creature, "Flameshield")) {
+                if (plugin.getHeroManager().creatureHasEffect(creature, "Flameshield")) {
                     String name = event.getDamager().getPlayer().getName();
                     String skillName = event.getSkill().getName().toLowerCase();
                     broadcast(event.getEntity().getLocation(), skillBlockText, new Object[] { Messaging.getCreatureName(creature), name, skillName });

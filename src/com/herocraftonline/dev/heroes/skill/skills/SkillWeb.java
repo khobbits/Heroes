@@ -70,7 +70,7 @@ public class SkillWeb extends TargettedSkill {
         if (target instanceof Player) {
             // Party check before allowing the cast
             if (hero.getParty() != null) {
-                if (hero.getParty().isPartyMember(getPlugin().getHeroManager().getHero((Player) target))) {
+                if (hero.getParty().isPartyMember(plugin.getHeroManager().getHero((Player) target))) {
                     Messaging.send(player, "You need a target!");
                     return false;
                 }
@@ -81,11 +81,13 @@ public class SkillWeb extends TargettedSkill {
         }
 
         // Damage check
-        EntityDamageByEntityEvent damageCheck = new EntityDamageByEntityEvent(player, target, DamageCause.CUSTOM, 0);
-        getPlugin().getServer().getPluginManager().callEvent(damageCheck);
-        if (damageCheck.isCancelled()) {
-            Messaging.send(player, "You can't use that skill here!");
-            return false;
+        if (target instanceof Player) {
+            EntityDamageByEntityEvent damageCheck = new EntityDamageByEntityEvent(player, target, DamageCause.CUSTOM, 0);
+            plugin.getServer().getPluginManager().callEvent(damageCheck);
+            if (damageCheck.isCancelled()) {
+                Messaging.send(player, "You can't use that skill here!");
+                return false;
+            }
         }
 
         broadcast(player.getLocation(), applyText, new Object[] { player.getDisplayName(), name });

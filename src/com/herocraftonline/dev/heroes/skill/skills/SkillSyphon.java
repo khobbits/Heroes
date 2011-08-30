@@ -35,7 +35,7 @@ public class SkillSyphon extends TargettedSkill {
             return false;
         }
 
-        Hero targetHero = getPlugin().getHeroManager().getHero((Player) target);
+        Hero targetHero = plugin.getHeroManager().getHero((Player) target);
 
         double transferredHealth = getSetting(hero.getHeroClass(), "default-health", 4);
         if (args.length == 2) {

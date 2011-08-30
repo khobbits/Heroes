@@ -70,7 +70,7 @@ public abstract class ActiveSkill extends Skill {
 
         String name = this.getName();
         Player player = (Player) sender;
-        Hero hero = getPlugin().getHeroManager().getHero(player);
+        Hero hero = plugin.getHeroManager().getHero(player);
         if (hero == null) {
             Messaging.send(player, "You are not a hero.");
             return false;
@@ -110,7 +110,7 @@ public abstract class ActiveSkill extends Skill {
         }
 
         SkillUseEvent skillEvent = new SkillUseEvent(this, player, hero, manaCost, itemStack, args);
-        getPlugin().getServer().getPluginManager().callEvent(skillEvent);
+        plugin.getServer().getPluginManager().callEvent(skillEvent);
         if (skillEvent.isCancelled()) {
             return false;
         }
@@ -233,5 +233,4 @@ public abstract class ActiveSkill extends Skill {
         Player player = hero.getPlayer();
         broadcast(player.getLocation(), getUseText(), player.getDisplayName(), getName());
     }
-
 }

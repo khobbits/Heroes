@@ -1,6 +1,5 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -41,7 +40,7 @@ public class SkillDrainsoul extends TargettedSkill {
 
         // Throw a dummy damage event to make it obey PvP restricting plugins
         EntityDamageEvent event = new EntityDamageByEntityEvent(player, target, DamageCause.CUSTOM, 0);
-        getPlugin().getServer().getPluginManager().callEvent(event);
+        plugin.getServer().getPluginManager().callEvent(event);
         if (event.isCancelled())
             return false;
 
@@ -49,7 +48,7 @@ public class SkillDrainsoul extends TargettedSkill {
 
         hero.setHealth(hero.getHealth() + (double) absorbAmount);
         hero.syncHealth();
-        getPlugin().getDamageManager().addSpellTarget((Entity) target, hero, this);
+        addSpellTarget(target, hero);
         target.damage(absorbAmount, player);
 
         broadcastExecuteText(hero, target);

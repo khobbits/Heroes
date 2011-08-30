@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
@@ -38,7 +39,7 @@ import com.herocraftonline.dev.heroes.util.Messaging;
  */
 public abstract class Skill extends BasicCommand {
 
-    private final Heroes plugin;
+    public final Heroes plugin;
     private ConfigurationNode config;
 
     /**
@@ -58,10 +59,6 @@ public abstract class Skill extends BasicCommand {
     public Skill(Heroes plugin, String name) {
         super(name);
         this.plugin = plugin;
-    }
-
-    public final Heroes getPlugin() {
-        return plugin;
     }
 
     /**
@@ -285,6 +282,14 @@ public abstract class Skill extends BasicCommand {
     @Override
     public boolean isShownOnHelpMenu() {
         return false;
+    }
+    
+    public void addSpellTarget(Entity o, Hero hero) {
+        plugin.getDamageManager().addSpellTarget(o, hero, this);
+    }
+
+    public Heroes getPlugin() {
+        return plugin;
     }
 
 }

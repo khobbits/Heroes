@@ -53,7 +53,7 @@ public class SkillPoison extends TargettedSkill {
         Hero targetHero = null;
         if (target instanceof Player) {
             Player targetPlayer = (Player) target;
-            targetHero = getPlugin().getHeroManager().getHero(targetPlayer);
+            targetHero = plugin.getHeroManager().getHero(targetPlayer);
             if (targetHero.equals(hero)) {
                 Messaging.send(player, "You need a target!");
                 return false;
@@ -76,7 +76,7 @@ public class SkillPoison extends TargettedSkill {
             targetHero.addEffect(pEffect);
         } else if (target instanceof Creature) {
             Creature creature = (Creature) target;
-            getPlugin().getHeroManager().addCreatureEffect(creature, pEffect);
+            plugin.getHeroManager().addCreatureEffect(creature, pEffect);
         }
         return true;
     }

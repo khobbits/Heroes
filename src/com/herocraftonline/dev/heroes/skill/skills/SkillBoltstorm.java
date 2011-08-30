@@ -90,7 +90,7 @@ public class SkillBoltstorm extends ActiveSkill {
             List<LivingEntity> targets = new ArrayList<LivingEntity>();
             for (Entity entity : player.getNearbyEntities(range, range, range)) {
                 if (hero.getParty() != null && entity instanceof Player) { // Party check
-                    Hero targetHero = getPlugin().getHeroManager().getHero((Player) entity);
+                    Hero targetHero = plugin.getHeroManager().getHero((Player) entity);
                     if (hero.getParty().isPartyMember(targetHero))
                         continue;
                 }
@@ -105,7 +105,7 @@ public class SkillBoltstorm extends ActiveSkill {
 
             int damage = getSetting(hero.getHeroClass(), Setting.DAMAGE.node(), 4);
             LivingEntity target = targets.get(rand.nextInt(targets.size()));
-            getPlugin().getDamageManager().addSpellTarget(target, hero, getSkill());
+            addSpellTarget(target, hero);
 
             target.getWorld().strikeLightningEffect(target.getLocation());
             target.damage(damage, player);

@@ -53,7 +53,7 @@ public class SkillDispel extends TargettedSkill {
                     }
                 }
             } else {
-                Hero targetHero = getPlugin().getHeroManager().getHero(targetPlayer);
+                Hero targetHero = plugin.getHeroManager().getHero(targetPlayer);
                 boolean removeHarmful = false;
                 if (hero.hasParty()) {
                     // If the target is a partymember lets make sure we only remove harmful effects
@@ -80,7 +80,7 @@ public class SkillDispel extends TargettedSkill {
                 }
             }
         } else if (target instanceof Creature) {
-            Set<Effect> cEffects = getPlugin().getHeroManager().getCreatureEffects((Creature) target);
+            Set<Effect> cEffects = plugin.getHeroManager().getCreatureEffects((Creature) target);
             if (cEffects != null) {
                 boolean removeHarmful = false;
                 if (hero.getSummons().contains(target)) {
@@ -89,13 +89,13 @@ public class SkillDispel extends TargettedSkill {
                 for (Effect effect : cEffects) {
                     if (effect instanceof Dispellable) {
                         if (removeHarmful && effect instanceof Harmful) {
-                            getPlugin().getHeroManager().removeCreatureEffect((Creature) target, effect);
+                            plugin.getHeroManager().removeCreatureEffect((Creature) target, effect);
                             removed = true;
                             maxRemovals--;
                             if (maxRemovals == 0)
                                 break;
                         } else if (!removeHarmful && effect instanceof Beneficial) {
-                            getPlugin().getHeroManager().removeCreatureEffect((Creature) target, effect);
+                            plugin.getHeroManager().removeCreatureEffect((Creature) target, effect);
                             removed = true;
                             maxRemovals--;
                             if (maxRemovals == 0)

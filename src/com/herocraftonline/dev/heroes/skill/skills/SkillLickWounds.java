@@ -33,11 +33,11 @@ public class SkillLickWounds extends ActiveSkill {
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
         int rangeSquared = (int) Math.pow(getSetting(hero.getHeroClass(), Setting.RADIUS.node(), 10), 2);
-        if (getPlugin().getSkillMap().get("Wolf") == null) {
+        if (plugin.getSkillMap().get("Wolf") == null) {
             return false;
         }
         
-        Skill skill = getPlugin().getSkillMap().get("Wolf");
+        Skill skill = plugin.getSkillMap().get("Wolf");
         if (!hero.hasSkill("Wolf") || skill.getSetting(hero.getHeroClass(), Setting.LEVEL.node(), 1) > hero.getLevel()) {
             Messaging.send(player, "You don't have the proper skills to do that!");
             return false;

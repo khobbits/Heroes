@@ -81,12 +81,12 @@ public class SkillCurse extends TargettedSkill {
         CurseEffect cEffect = new CurseEffect(this, duration, missChance);
 
         if (target instanceof Player) {
-            Hero tHero = getPlugin().getHeroManager().getHero((Player) target);
+            Hero tHero = plugin.getHeroManager().getHero((Player) target);
             tHero.addEffect(cEffect);
             return true;
         } else if (target instanceof Creature) {
             Creature creature = (Creature) target;
-            getPlugin().getHeroManager().addCreatureEffect(creature, cEffect);
+            plugin.getHeroManager().addCreatureEffect(creature, cEffect);
             return true;
         }
 
@@ -145,7 +145,7 @@ public class SkillCurse extends TargettedSkill {
             Hero hero = null;
             Creature creature = null;
             if (event.getDamager() instanceof Player) {
-                hero = getPlugin().getHeroManager().getHero((Player) event.getDamager());
+                hero = plugin.getHeroManager().getHero((Player) event.getDamager());
             } else if (event.getDamager() instanceof Creature) {
                 creature = (Creature) event.getDamager();
             } else if (event.getDamager() instanceof Projectile) {
@@ -153,7 +153,7 @@ public class SkillCurse extends TargettedSkill {
                 if (proj.getShooter() == null)
                     return;
                 if (proj.getShooter() instanceof Player) {
-                    hero = getPlugin().getHeroManager().getHero((Player) proj.getShooter());
+                    hero = plugin.getHeroManager().getHero((Player) proj.getShooter());
                 } else if (proj.getShooter() instanceof Creature) {
                     creature = (Creature) proj.getShooter();
                 }
@@ -167,9 +167,9 @@ public class SkillCurse extends TargettedSkill {
                     }
                 }
             } else if (creature != null) {
-                if (getPlugin().getHeroManager().getCreatureEffects(creature) == null)
+                if (plugin.getHeroManager().getCreatureEffects(creature) == null)
                     return;
-                for (Effect effect : getPlugin().getHeroManager().getCreatureEffects(creature)) {
+                for (Effect effect : plugin.getHeroManager().getCreatureEffects(creature)) {
                     if (effect instanceof CurseEffect) {
                         CurseEffect cEffect = (CurseEffect) effect;
                         if (rand.nextDouble() < cEffect.missChance) {

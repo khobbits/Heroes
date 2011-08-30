@@ -24,7 +24,7 @@ public class SkillAntidote extends TargettedSkill {
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
         if (target instanceof Player) {
-            Hero targetHero = getPlugin().getHeroManager().getHero((Player) target);
+            Hero targetHero = plugin.getHeroManager().getHero((Player) target);
             boolean cured = false;
             for (Effect effect : targetHero.getEffects()) {
                 if (effect instanceof PoisonEffect) {

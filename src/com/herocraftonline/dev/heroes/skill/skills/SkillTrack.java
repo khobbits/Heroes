@@ -35,13 +35,13 @@ public class SkillTrack extends ActiveSkill {
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
 
-        Player target = getPlugin().getServer().getPlayer(args[0]);
+        Player target = plugin.getServer().getPlayer(args[0]);
         if (target == null) {
             Messaging.send(player, "Target not found.");
             return false;
         }
 
-        HeroClass heroClass = getPlugin().getHeroManager().getHero(player).getHeroClass();
+        HeroClass heroClass = plugin.getHeroManager().getHero(player).getHeroClass();
 
         Location location = target.getLocation();
         int randomness = getSetting(heroClass, "randomness", 50);

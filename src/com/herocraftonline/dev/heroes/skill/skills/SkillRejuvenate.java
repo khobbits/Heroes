@@ -49,7 +49,7 @@ public class SkillRejuvenate extends TargettedSkill {
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
         if (target instanceof Player) {
-            Hero targetHero = getPlugin().getHeroManager().getHero((Player) target);
+            Hero targetHero = plugin.getHeroManager().getHero((Player) target);
 
             if (targetHero.getHealth() >= targetHero.getMaxHealth()) {
                 Messaging.send(player, "Target is already fully healed.");

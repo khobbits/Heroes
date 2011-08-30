@@ -23,8 +23,8 @@ public class PeriodicHealEffect extends PeriodicEffect implements Beneficial {
     @Override
     public void tick(Hero hero) {
         super.tick(hero);
-        HeroRegainHealthEvent hrhEvent = new HeroRegainHealthEvent(hero, tickHealth, this.getSkill());
-        getSkill().getPlugin().getServer().getPluginManager().callEvent(hrhEvent);
+        HeroRegainHealthEvent hrhEvent = new HeroRegainHealthEvent(hero, tickHealth, skill);
+        plugin.getServer().getPluginManager().callEvent(hrhEvent);
         if (hrhEvent.isCancelled())
             return;
 
@@ -39,7 +39,7 @@ public class PeriodicHealEffect extends PeriodicEffect implements Beneficial {
         CreatureType cType = Properties.getCreatureFromEntity(creature);
         if (cType == null)
             return;
-        int maxHealth = getSkill().getPlugin().getDamageManager().getCreatureHealth(cType);
+        int maxHealth = plugin.getDamageManager().getCreatureHealth(cType);
         creature.setHealth(tickHealth + creature.getHealth());
         if (creature.getHealth() > maxHealth) {
             creature.setHealth(maxHealth);

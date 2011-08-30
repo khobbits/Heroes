@@ -75,7 +75,7 @@ public class SkillConsume extends ActiveSkill {
                 player.getInventory().removeItem(reagent);
                 int mana = getSetting(hero.getHeroClass(), key + "." + Setting.MANA.node(), 20);
                 HeroRegainManaEvent hrmEvent = new HeroRegainManaEvent(hero, mana, this);
-                getPlugin().getServer().getPluginManager().callEvent(hrmEvent);
+                plugin.getServer().getPluginManager().callEvent(hrmEvent);
                 if (hrmEvent.isCancelled()) {
                     return false;
                 }

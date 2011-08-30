@@ -33,7 +33,7 @@ public class SkillPray extends TargettedSkill {
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
         if (target instanceof Player) {
-            Hero targetHero = getPlugin().getHeroManager().getHero((Player) target);
+            Hero targetHero = plugin.getHeroManager().getHero((Player) target);
             int hpPlus = getSetting(hero.getHeroClass(), "health", 10);
             double targetHealth = targetHero.getHealth();
 
@@ -48,7 +48,7 @@ public class SkillPray extends TargettedSkill {
             }
 
             HeroRegainHealthEvent hrhEvent = new HeroRegainHealthEvent(targetHero, hpPlus, this);
-            getPlugin().getServer().getPluginManager().callEvent(hrhEvent);
+            plugin.getServer().getPluginManager().callEvent(hrhEvent);
             if (hrhEvent.isCancelled()) {
                 Messaging.send(player, "Unable to heal the target at this time!");
                 return false;

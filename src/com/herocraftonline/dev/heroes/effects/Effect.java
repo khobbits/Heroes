@@ -3,18 +3,21 @@ package com.herocraftonline.dev.heroes.effects;
 import org.bukkit.Location;
 import org.bukkit.entity.Creature;
 
+import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
 
 public class Effect {
 
-    private final String name;
-    private final Skill skill;
+    protected final String name;
+    protected final Skill skill;
+    protected Heroes plugin;
     private boolean persistent;
 
     public Effect(Skill skill, String name) {
         this.name = name;
         this.skill = skill;
+        this.plugin = skill.plugin;
         this.persistent = false;
     }
 

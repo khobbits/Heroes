@@ -26,7 +26,7 @@ public class SkillMortalWound extends TargettedSkill {
 
     private String applyText;
     private String expireText;
-    
+
     public SkillMortalWound(Heroes plugin) {
         super(plugin, "MortalWound");
         setDescription("Prevents the target from healing, and applies a minor bleed effect");
@@ -34,14 +34,14 @@ public class SkillMortalWound extends TargettedSkill {
         setArgumentRange(0, 1);
         setIdentifiers(new String[] { "skill mortalwound", "skill mwound" });
     }
-    
+
     @Override
     public void init() {
         super.init();
         applyText = getSetting(null, Setting.APPLY_TEXT.node(), "%target% is bleeding!").replace("%target%", "$1");
         expireText = getSetting(null, Setting.EXPIRE_TEXT.node(), "%target% has stopped bleeding!").replace("%target%", "$1");
     }
-    
+
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
@@ -55,41 +55,45 @@ public class SkillMortalWound extends TargettedSkill {
         node.setProperty(Setting.EXPIRE_TEXT.node(), "%target% has recovered from their mortal wound!");
         return node;
     }
-    
+
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
-        
+
         Material item = player.getItemInHand().getType();
         if (!getSetting(hero.getHeroClass(), "weapons", Properties.defaultWeapons).contains(item.name())) {
             Messaging.send(player, "You can't Mortal Strike with that weapon!");
         }
-        
+
         if (hero.getPlayer().equals(target)) {
             Messaging.send(player, "You need a target!");
             return false;
         }
-        
-        EntityDamageByEntityEvent damageEntityEvent = new EntityDamageByEntityEvent(player, target, DamageCause.CUSTOM, 0);
-        getPlugin().getServer().getPluginManager().callEvent(damageEntityEvent);
-        if (damageEntityEvent.isCancelled()) {
-            Messaging.send(player, "Invalid target!");
-            return false;
+
+        if (target instanceof Player) {
+            EntityDamageByEntityEvent damageEntityEvent = new EntityDamageByEntityEvent(player, target, DamageCause.CUSTOM, 0);
+            plugin.getServer().getPluginManager().callEvent(damageEntityEvent);
+            if (damageEntityEvent.isCancelled()) {
+                Messaging.send(player, "Invalid target!");
+                return false;
+            }
         }
+        
         HeroClass heroClass = hero.getHeroClass();
         int damage = heroClass.getItemDamage(item) == null ? 0 : heroClass.getItemDamage(item);
-        getPlugin().getDamageManager().addSpellTarget(target, hero, this);
         target.damage(damage, player);
+        
         long duration = getSetting(heroClass, Setting.DURATION.node(), 12000);
         long period = getSetting(heroClass, Setting.PERIOD.node(), 3000);
         int tickDamage = getSetting(heroClass, "tick-damage", 1);
         double healMultiplier = getSetting(heroClass, "heal-multiplier", 0.5);
         MortalWound mEffect = new MortalWound(this, period, duration, tickDamage, player, healMultiplier);
         if (target instanceof Player) {
-            getPlugin().getHeroManager().getHero((Player) target).addEffect(mEffect);
+            plugin.getHeroManager().getHero((Player) target).addEffect(mEffect);
         } else if (target instanceof Creature) {
-            getPlugin().getHeroManager().addCreatureEffect((Creature) target, mEffect);
+            plugin.getHeroManager().addCreatureEffect((Creature) target, mEffect);
         }
+        
         broadcastExecuteText(hero, target);
         return true;
     }
@@ -97,12 +101,12 @@ public class SkillMortalWound extends TargettedSkill {
     public class MortalWound extends BleedEffect {
 
         private final double healMultiplier;
-        
+
         public MortalWound(Skill skill, long period, long duration, int tickDamage, Player applier, double healMultiplier) {
             super(skill, "MortalWound", period, duration, tickDamage, applier);
             this.healMultiplier = healMultiplier;
         }
-        
+
         @Override
         public void apply(Hero hero) {
             super.apply(hero);
@@ -129,34 +133,34 @@ public class SkillMortalWound extends TargettedSkill {
             broadcast(creature.getLocation(), expireText, Messaging.getCreatureName(creature).toLowerCase());
         }
     }
-    
+
     public class SkillHeroListener extends HeroesEventListener {
 
         @Override
         public void onHeroRegainHealth(HeroRegainHealthEvent event) {
             if (event.isCancelled())
                 return;
-            
+
             if (event.getHero().hasEffect("MortalWound")) {
                 MortalWound mEffect = (MortalWound) event.getHero().getEffect("MortalWound");
                 event.setAmount((int) (event.getAmount() * mEffect.healMultiplier));
             }
         }
     }
-    
+
     public class SkillEntityListener extends EntityListener {
 
         @Override
         public void onEntityRegainHealth(EntityRegainHealthEvent event) {
             if (event.isCancelled() || !(event.getEntity() instanceof Player))
                 return;
-            
-            Hero hero = getPlugin().getHeroManager().getHero((Player) event.getEntity());
+
+            Hero hero = plugin.getHeroManager().getHero((Player) event.getEntity());
             if (hero.hasEffect("MortalWound")) {
                 MortalWound mEffect = (MortalWound) hero.getEffect("MortalWound");
                 event.setAmount( (int) (event.getAmount() * mEffect.healMultiplier));
             }
         }
-        
+
     }
 }

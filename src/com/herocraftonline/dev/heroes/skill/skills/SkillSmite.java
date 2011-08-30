@@ -1,6 +1,5 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -33,20 +32,22 @@ public class SkillSmite extends TargettedSkill {
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
-        if (target == player) {
+        if (target.equals(player) || hero.getSummons().contains(target)) {
             Messaging.send(player, "You need a target!");
             return false;
         }
 
         //PvP Check
-        EntityDamageByEntityEvent damageEntityEvent = new EntityDamageByEntityEvent(player, target, DamageCause.CUSTOM, 0);
-        getPlugin().getServer().getPluginManager().callEvent(damageEntityEvent);
-        if (damageEntityEvent.isCancelled()) {
-            return false;
+        if (target instanceof Player) {
+            EntityDamageByEntityEvent damageEntityEvent = new EntityDamageByEntityEvent(player, target, DamageCause.CUSTOM, 0);
+            plugin.getServer().getPluginManager().callEvent(damageEntityEvent);
+            if (damageEntityEvent.isCancelled()) {
+                return false;
+            }
         }
-        
+
         int damage = getSetting(hero.getHeroClass(), Setting.DAMAGE.node(), 10);
-        getPlugin().getDamageManager().addSpellTarget((Entity) target, hero, this);
+        addSpellTarget(target, hero);
         target.damage(damage, player);
         broadcastExecuteText(hero, target);
         return true;

@@ -22,7 +22,7 @@ public class SkillMegabolt extends TargettedSkill {
         setArgumentRange(0, 1);
         setIdentifiers(new String[] { "skill megabolt", "skill mbolt" });
     }
-    
+
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
@@ -30,47 +30,51 @@ public class SkillMegabolt extends TargettedSkill {
         node.setProperty(Setting.RADIUS.node(), 5);
         return node;
     }
-    
+
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
 
-        if (target.equals(player)) {
+        if (target.equals(player) || hero.getSummons().contains(target)) {
             Messaging.send(player, "Invalid target!");
             return false;
         }
-        
+
         // PvP test
-        EntityDamageByEntityEvent damageEntityEvent = new EntityDamageByEntityEvent(player, target, DamageCause.CUSTOM, 0);
-        getPlugin().getServer().getPluginManager().callEvent(damageEntityEvent);
-        if (damageEntityEvent.isCancelled()) {
-            Messaging.send(player, "Invalid target!");
-            return false;
+        if (target instanceof Player) {
+            EntityDamageByEntityEvent damageEntityEvent = new EntityDamageByEntityEvent(player, target, DamageCause.CUSTOM, 0);
+            plugin.getServer().getPluginManager().callEvent(damageEntityEvent);
+            if (damageEntityEvent.isCancelled()) {
+                Messaging.send(player, "Invalid target!");
+                return false;
+            }
         }
         int range = getSetting(hero.getHeroClass(), Setting.RADIUS.node(), 5);
         int damage = getSetting(hero.getHeroClass(), Setting.DAMAGE.node(), 4);
-        
+
         //Damage the first target
-        getPlugin().getDamageManager().addSpellTarget(target, hero, this);
+        addSpellTarget(target, hero);
         target.getWorld().strikeLightningEffect(target.getLocation());
         target.damage(damage, player);
-        
 
-        
+
+
         for (Entity entity : target.getNearbyEntities(range, range, range)) {
             if (entity instanceof LivingEntity && !entity.equals(player)) {
                 // PvP test
-                damageEntityEvent = new EntityDamageByEntityEvent(player, entity, DamageCause.CUSTOM, 0);
-                getPlugin().getServer().getPluginManager().callEvent(damageEntityEvent);
-                if (damageEntityEvent.isCancelled()) {
-                    continue;
+                if (entity instanceof Player) {
+                    EntityDamageByEntityEvent damageEntityEvent = new EntityDamageByEntityEvent(player, entity, DamageCause.CUSTOM, 0);
+                    plugin.getServer().getPluginManager().callEvent(damageEntityEvent);
+                    if (damageEntityEvent.isCancelled()) {
+                        continue;
+                    }
                 }
-                getPlugin().getDamageManager().addSpellTarget(entity, hero, this);
+                addSpellTarget(entity, hero);
                 entity.getWorld().strikeLightningEffect(entity.getLocation());
                 ((LivingEntity) entity).damage(damage, player);
             }
         }
-        
+
         broadcastExecuteText(hero, target);
         return true;
     }

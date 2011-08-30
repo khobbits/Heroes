@@ -57,10 +57,12 @@ public class SkillPiggify extends TargettedSkill {
         }
 
         // Throw a dummy damage event to make it obey PvP restricting plugins
-        EntityDamageEvent event = new EntityDamageByEntityEvent(player, target, DamageCause.ENTITY_ATTACK, 0);
-        getPlugin().getServer().getPluginManager().callEvent(event);
-        if (event.isCancelled()) {
-            return false;
+        if (target instanceof Player) {
+            EntityDamageEvent event = new EntityDamageByEntityEvent(player, target, DamageCause.ENTITY_ATTACK, 0);
+            plugin.getServer().getPluginManager().callEvent(event);
+            if (event.isCancelled()) {
+                return false;
+            }
         }
 
         CreatureType type = CreatureType.PIG;
@@ -71,8 +73,14 @@ public class SkillPiggify extends TargettedSkill {
         Entity creature = target.getWorld().spawnCreature(target.getLocation(), type);
         long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 10000);
         PigEffect pEffect = new PigEffect(this, duration, (Creature) creature);
-        getPlugin().getHeroManager().getHero((Player) target).addEffect(pEffect);
-
+        if (target instanceof Player) {
+            plugin.getHeroManager().getHero((Player) target).addEffect(pEffect);
+        } else if (target instanceof Creature) {
+            plugin.getHeroManager().addCreatureEffect((Creature) target, pEffect);
+        } else {
+            Messaging.send(player, "Invalid Target!");
+            return false;
+        }
         broadcastExecuteText(hero, target);
         return true;
     }
@@ -87,11 +95,11 @@ public class SkillPiggify extends TargettedSkill {
             event.setCancelled(true);
         }
     }
-    
+
     public class PigEffect extends ExpirableEffect implements Dispellable, Harmful {
 
         private final Creature creature;
-        
+
         public PigEffect(Skill skill, long duration, Creature creature) {
             super(skill, "Piggify", duration);
             this.creature = creature;
@@ -106,8 +114,22 @@ public class SkillPiggify extends TargettedSkill {
         }
 
         @Override
+        public void apply(Creature rider) {
+            super.apply(rider);
+            creature.setPassenger(rider);
+            creatures.add(creature);
+        }
+
+        @Override
         public void remove(Hero hero) {
             super.remove(hero);
+            creatures.remove(creature);
+            creature.remove();
+        }
+
+        @Override
+        public void remove(Creature rider) {
+            super.remove(rider);
             creatures.remove(creature);
             creature.remove();
         }

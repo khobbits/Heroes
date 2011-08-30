@@ -48,16 +48,16 @@ public class SkillHellgate extends ActiveSkill {
             hero.removeEffect(hero.getEffect("Hellgate"));
         } else if (player.getWorld().getEnvironment() == Environment.NETHER) {
             // If the player doesn't have the Hellgate effect and is on nether - return them to spawn on the default world
-            world = getPlugin().getServer().getWorld(defaultWorld);
+            world = plugin.getServer().getWorld(defaultWorld);
             if (world == null) {
-                world = getPlugin().getServer().getWorlds().get(0);
+                world = plugin.getServer().getWorlds().get(0);
             }
             player.teleport(world.getSpawnLocation());
         } else {
             // We are on the main world so lets setup a teleport to nether!
-            world = getPlugin().getServer().getWorld(hellWorld);
+            world = plugin.getServer().getWorld(hellWorld);
             if (world == null) {
-                for (World tWorld : getPlugin().getServer().getWorlds()) {
+                for (World tWorld : plugin.getServer().getWorlds()) {
                     if (tWorld.getEnvironment() == Environment.NETHER)
                         world = tWorld;
                 }

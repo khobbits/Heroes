@@ -91,7 +91,7 @@ public class SkillSafefall extends ActiveSkill {
             Entity defender = event.getEntity();
             if (defender instanceof Player) {
                 Player player = (Player) defender;
-                Hero hero = getPlugin().getHeroManager().getHero(player);
+                Hero hero = plugin.getHeroManager().getHero(player);
                 if (hero.hasEffect("Safefall")) {
                     event.setCancelled(true);
                 }

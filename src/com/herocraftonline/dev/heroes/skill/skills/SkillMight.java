@@ -116,7 +116,7 @@ public class SkillMight extends ActiveSkill {
 
             if (subEvent.getDamager() instanceof Player) {
                 Player player = (Player) subEvent.getDamager();
-                Hero hero = getPlugin().getHeroManager().getHero(player);
+                Hero hero = plugin.getHeroManager().getHero(player);
 
                 if (hero.hasEffect("Might")) {
                     double damageBonus = ((MightEffect) hero.getEffect("Might")).getDamageBonus();
@@ -125,7 +125,7 @@ public class SkillMight extends ActiveSkill {
             } else if (subEvent.getDamager() instanceof Projectile) {
                 if (((Projectile) subEvent.getDamager()).getShooter() instanceof Player) {
                     Player player = (Player) ((Projectile) subEvent.getDamager()).getShooter();
-                    Hero hero = getPlugin().getHeroManager().getHero(player);
+                    Hero hero = plugin.getHeroManager().getHero(player);
 
                     if (hero.hasEffect("Might")) {
                         double damageBonus = ((MightEffect) hero.getEffect("Might")).getDamageBonus();

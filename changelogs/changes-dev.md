@@ -10,8 +10,7 @@ Bug Fixes:
 General/API:
 
 	Class-Based XP loss on death
-	Added setting for Exp loss to incur level-losses
-	Added setting for exp losses to incur level-losses
+	Added setting for experience loss to incur level-losses
 	ExperienceGainEvent is now ExperienceChangeEvent
 	HeroLevelEvent is now HeroChangeLevelEvent
 	hero.gainExp now fully supports negative values
@@ -21,6 +20,7 @@ General/API:
 	Added /cooldowns (/cd) command to get a list of cooldowns
 	Mana regen is now configurable in the main configuration.
 	Various improvements to optimize CPU usage.
+	Skills now have an addSpellTarget method for simplification
 
 Skills:
 
@@ -38,6 +38,13 @@ Skills:
 	Deconstruct
 		- Can now be set to require the player to be targeting a Workbench
 		- XP can now be granted/taken from deconstruction
+	ForcePull - (NEW!) - Thanks fghjconnor!
+		- Pulls a target closer to you
+		- Can be configured to deal damage
+	ForcePush
+		- Implemented fghjconnor's alterations
+		- now checks if the target is pvpable
+		- can now be configured to deal damage
 	Hellgate
 		- See Port Fix.
 	LickWounds - (REWRITE!)
@@ -59,6 +66,8 @@ Skills:
 		- Fixed sapling resetting to default type when the skill fails
 	Port
 		- Will now properly teleport all party members instead of just some, or just yourself.
+	Revive
+		- now uses reagent/reagent cost for reagents. This means slime is no longer hard-coded into the cost
 	Skeleton
 		- Fixed bug that could cause improper targeting
 		- Now summons at the players target, max distance default is 5

@@ -55,7 +55,7 @@ public class SkillBleed extends TargettedSkill {
         Hero targetHero = null;
         if (target instanceof Player) {
             Player targetPlayer = (Player) target;
-            targetHero = getPlugin().getHeroManager().getHero(targetPlayer);
+            targetHero = plugin.getHeroManager().getHero(targetPlayer);
             if (targetHero.equals(hero)) {
                 Messaging.send(player, "You need a target!");
                 return false;
@@ -79,7 +79,7 @@ public class SkillBleed extends TargettedSkill {
             targetHero.addEffect(bEffect);
         } else if (target instanceof Creature) {
             Creature creature = (Creature) target;
-            getPlugin().getHeroManager().addCreatureEffect(creature, bEffect);
+            plugin.getHeroManager().addCreatureEffect(creature, bEffect);
 
         }
         return true;

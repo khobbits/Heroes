@@ -142,7 +142,7 @@ public class SkillWolf extends ActiveSkill {
         @Override
         public void onPlayerJoin(PlayerJoinEvent event) {
             Player player = event.getPlayer();
-            Hero hero = getPlugin().getHeroManager().getHero(player);
+            Hero hero = plugin.getHeroManager().getHero(player);
 
             if (!hero.hasSkill(skill) || hero.getSkillSettings(skill) == null)
                 return;
@@ -158,7 +158,7 @@ public class SkillWolf extends ActiveSkill {
 
         @Override
         public void onPlayerQuit(PlayerQuitEvent event) {
-            Hero hero = getPlugin().getHeroManager().getHero(event.getPlayer());
+            Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
             if (!hero.hasSkill("Wolf"))
                 return;
 
@@ -187,7 +187,7 @@ public class SkillWolf extends ActiveSkill {
                 return;
 
             Player player = (Player) event.getOwner();
-            Hero hero = getPlugin().getHeroManager().getHero((Player) event.getOwner());
+            Hero hero = plugin.getHeroManager().getHero((Player) event.getOwner());
             if (skill.skillTaming && !hero.hasSkill(skill.getName())) {
                 event.setCancelled(true);
             } else {
@@ -206,7 +206,7 @@ public class SkillWolf extends ActiveSkill {
             if (!wolf.isTamed() || wolf.getOwner() == null || !(wolf.getOwner() instanceof Player))
                 return;
 
-            Hero hero = getPlugin().getHeroManager().getHero((Player) wolf.getOwner());
+            Hero hero = plugin.getHeroManager().getHero((Player) wolf.getOwner());
             if (!hero.getSummons().contains(wolf)) {
                 return;
             }
@@ -229,11 +229,11 @@ public class SkillWolf extends ActiveSkill {
             if (!wolf.isTamed() || wolf.getOwner() == null || !(wolf.getOwner() instanceof Player))
                 return;
 
-            Hero hero = getPlugin().getHeroManager().getHero((Player) wolf.getOwner());
+            Hero hero = plugin.getHeroManager().getHero((Player) wolf.getOwner());
             if (!hero.getSummons().contains(wolf))
                 return;
 
-            Skill skill = getPlugin().getSkillMap().get("Wolf");
+            Skill skill = plugin.getSkillMap().get("Wolf");
             double damagePerLevel = skill.getSetting(hero.getHeroClass(), "damage-per-level", .1);
             int damage = skill.getSetting(hero.getHeroClass(), Setting.DAMAGE.node(), 3) + (int) (hero.getLevel() * damagePerLevel);
             event.setDamage(damage);

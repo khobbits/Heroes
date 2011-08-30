@@ -1,6 +1,5 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -40,11 +39,11 @@ public class SkillHarmtouch extends TargettedSkill {
 
         int damage = getSetting(hero.getHeroClass(), Setting.DAMAGE.node(), 10);
         EntityDamageByEntityEvent damageEntityEvent = new EntityDamageByEntityEvent(player, target, DamageCause.CUSTOM, damage);
-        getPlugin().getServer().getPluginManager().callEvent(damageEntityEvent);
+        plugin.getServer().getPluginManager().callEvent(damageEntityEvent);
         if (damageEntityEvent.isCancelled()) {
             return false;
         }
-        getPlugin().getDamageManager().addSpellTarget((Entity) target, hero, this);
+        addSpellTarget(target, hero);
         target.damage(damage, player);
         broadcastExecuteText(hero, target);
         return true;

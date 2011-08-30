@@ -102,7 +102,7 @@ public class SkillSneak extends ActiveSkill {
 
         @Override
         public void onPlayerToggleSneak(PlayerToggleSneakEvent event) {
-            Hero hero = getPlugin().getHeroManager().getHero(event.getPlayer());
+            Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
             if (hero.hasEffect("Sneak")) {
                 event.getPlayer().setSneaking(true);
                 event.setCancelled(true);
@@ -132,7 +132,7 @@ public class SkillSneak extends ActiveSkill {
             if (player == null)
                 return;
 
-            Hero hero = getPlugin().getHeroManager().getHero(player);
+            Hero hero = plugin.getHeroManager().getHero(player);
             if (hero.hasEffect("Sneak")) {
                 player.setSneaking(false);
                 hero.removeEffect(hero.getEffect("Sneak"));
