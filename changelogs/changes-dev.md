@@ -29,6 +29,8 @@ Skills:
 	Blackjack
 		- Blackjack now prevents the player from using all skills except invuln.
 		- Optimized code a little
+	Blink
+		- now requires at least a 2 block vertical hole to move through
 	ChainLightning
 		- Now has a 250ms delay between bounces
 		- Fixed skill not charging mana/cooldowns etc properly

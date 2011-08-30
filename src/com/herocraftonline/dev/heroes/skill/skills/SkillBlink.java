@@ -6,6 +6,7 @@ import java.util.Set;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.util.BlockIterator;
 import org.bukkit.util.config.ConfigurationNode;
@@ -74,7 +75,7 @@ public class SkillBlink extends ActiveSkill {
         }
         while (iter.hasNext()) {
             b = iter.next();
-            if (transparentBlocks.contains(b.getType())) {
+            if (transparentBlocks.contains(b.getType()) && ( transparentBlocks.contains(b.getRelative(BlockFace.UP).getType()) || transparentBlocks.contains(b.getRelative(BlockFace.DOWN).getType()))) {
                 prev = b;
             } else {
                 break;
