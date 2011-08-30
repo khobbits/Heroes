@@ -57,7 +57,7 @@ public class SkillSkeleton extends ActiveSkill {
         registerEvent(Type.ENTITY_TARGET, eListener, Priority.Highest);
         registerEvent(Type.ENTITY_COMBUST, eListener, Priority.Highest);
         registerEvent(Type.ENTITY_DAMAGE, eListener, Priority.Monitor);
-        registerEvent(Type.PLAYER_QUIT, pListener, Priority.Monitor);
+        registerEvent(Type.PLAYER_QUIT, pListener, Priority.Lowest);
     }
 
     @Override
