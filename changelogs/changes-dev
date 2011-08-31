@@ -13,6 +13,9 @@ Skills:
 
 	FireArmor - (NEW!)
 		- Ignites a players armor causing attacks against them to have a chance to light them on fire, (melee only)
+	ForcePush
+		- Fixed invalid messaging causing NPEs
+		- Fixed directionals
 	Root
 		- No longer circumvents PvP
 		- Can now be applied to creatures

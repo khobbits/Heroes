@@ -11,8 +11,8 @@ import org.bukkit.util.config.ConfigurationNode;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
+import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Setting;
-import com.nijiko.coelho.iConomy.util.Messaging;
 
 public class SkillForcePush extends TargettedSkill {
 
@@ -61,7 +61,7 @@ public class SkillForcePush extends TargettedSkill {
         
         float multiplier = getSetting(hero.getHeroClass(), "horizontal-power", 1) * (90f + pitch) / 40f;
         float vertPower = getSetting(hero.getHeroClass(), "vertical-power", 1);
-        Vector v = target.getVelocity().setY(vertPower).add(target.getLocation().getDirection().setY(0).normalize().multiply(multiplier));
+        Vector v = target.getVelocity().setY(vertPower).add(player.getLocation().getDirection().setY(0).normalize().multiply(multiplier));
         target.setVelocity(v);
 
         broadcastExecuteText(hero, target);

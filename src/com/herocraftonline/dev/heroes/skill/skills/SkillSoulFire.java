@@ -61,7 +61,7 @@ public class SkillSoulFire extends ActiveSkill {
     
     @Override
     public boolean use(Hero hero, String[] args) {
-        int duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 20000);
+        int duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 600000);
         hero.addEffect(new SoulFireEffect(this, duration));
         return true;
     }
@@ -106,14 +106,14 @@ public class SkillSoulFire extends ActiveSkill {
             if (random.nextDouble() >= chance)
                 return;
             
-            int fireTicks = getSetting(hero.getHeroClass(), "ignite-duration", 5000) / 200;
+            int fireTicks = getSetting(hero.getHeroClass(), "ignite-duration", 5000) / 50;
             event.getEntity().setFireTicks(fireTicks);
             
             String name = null;
             if (event.getEntity() instanceof Player) {
                 name = ((Player) event.getEntity()).getName();
             } else if (event.getEntity() instanceof Creature) {
-                Messaging.getCreatureName((Creature) event.getEntity());
+                name = Messaging.getCreatureName((Creature) event.getEntity());
             }
             
             broadcast(player.getLocation(), igniteText, new Object[] {player.getDisplayName(), name});
