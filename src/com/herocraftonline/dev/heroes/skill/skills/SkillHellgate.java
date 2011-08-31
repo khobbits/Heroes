@@ -41,7 +41,8 @@ public class SkillHellgate extends ActiveSkill {
         String hellWorld = getSetting(hero.getHeroClass(), "hell-world", "world_nether");
         World world = null;
         Location teleportLocation = null;
-
+        Location castLocation = player.getLocation();
+        
         if (hero.hasEffect("Hellgate")) {
             teleportLocation = ((HellgateEffect) hero.getEffect("Hellgate")).getLocation();
             player.teleport(teleportLocation);
@@ -71,11 +72,9 @@ public class SkillHellgate extends ActiveSkill {
             hero.addEffect(new HellgateEffect(this, player.getLocation()));
             player.teleport(world.getSpawnLocation());
         }
-
        
         if (hero.hasParty()) {
             int rangeSquared = (int) Math.pow(getSetting(hero.getHeroClass(), Setting.RADIUS.node(), 10), 2);
-            Location castLocation =  player.getLocation();
             for (Hero targetHero : hero.getParty().getMembers()) {
                 Player target = targetHero.getPlayer();
                 if (target.equals(player))

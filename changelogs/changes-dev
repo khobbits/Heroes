@@ -17,6 +17,8 @@ Skills:
 	ForcePush
 		- Fixed invalid messaging causing NPEs
 		- Fixed directionals
+	Hellgate
+		- Fixed group members not being teleported
 	Root
 		- No longer circumvents PvP
 		- Can now be applied to creatures
