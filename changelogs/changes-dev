@@ -9,6 +9,7 @@ Bug Fixes:
 General/API:
 
 	Updated Default classes.yml to be more descriptive
+	Hero Help will no longer display commands the player does not have access to.
 
 Skills:
 

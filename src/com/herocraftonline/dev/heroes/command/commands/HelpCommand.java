@@ -16,6 +16,7 @@ import org.bukkit.command.CommandSender;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.command.BasicCommand;
 import com.herocraftonline.dev.heroes.command.Command;
+import com.herocraftonline.dev.heroes.command.CommandHandler;
 
 public class HelpCommand extends BasicCommand {
 
@@ -47,7 +48,8 @@ public class HelpCommand extends BasicCommand {
         // Filter out Skills from the command list.
         for (Command command : sortCommands) {
             if (command.isShownOnHelpMenu()) {
-                commands.add(command);
+                if (CommandHandler.hasPermission(sender, command.getPermission()))
+                    commands.add(command);
             }
         }
 

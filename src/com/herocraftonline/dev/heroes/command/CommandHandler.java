@@ -69,8 +69,7 @@ public class CommandHandler {
                         }
                     }
 
-                    String permission = cmd.getPermission();
-                    if (permission != null && !permission.isEmpty() && !hasPermission(sender, permission)) {
+                    if (!hasPermission(sender, cmd.getPermission())) {
                         Messaging.send(sender, "Insufficient permission.");
                         return true;
                     }
@@ -95,8 +94,8 @@ public class CommandHandler {
         }
     }
 
-    public boolean hasPermission(CommandSender sender, String permission) {
-        if (!(sender instanceof Player)) {
+    public static boolean hasPermission(CommandSender sender, String permission) {
+        if (!(sender instanceof Player) || permission == null || permission.isEmpty()) {
             return true;
         }
         Player player = (Player) sender;
