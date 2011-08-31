@@ -17,7 +17,11 @@ public class Effect {
     public Effect(Skill skill, String name) {
         this.name = name;
         this.skill = skill;
-        this.plugin = skill.plugin;
+        if (this.skill != null) {
+            this.plugin = skill.plugin;
+        } else {
+            this.plugin = null;
+        }
         this.persistent = false;
     }
 

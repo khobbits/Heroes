@@ -2,7 +2,7 @@ Version dev
 
 Bug Fixes:
 
-
+	Fixed NPE when instantiating bedheal
 
 General/API:
 
