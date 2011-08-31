@@ -1,8 +1,11 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
 import org.bukkit.Location;
+import org.bukkit.entity.Creature;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
@@ -47,22 +50,35 @@ public class SkillRoot extends TargettedSkill {
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
+        if (player.equals(target) || hero.getSummons().contains(target))
         if (!(target instanceof Player)) {
             Messaging.send(player, "You need a target!");
             return false;
         }
 
-        Player targetPlayer = (Player) target;
-        Hero targetHero = plugin.getHeroManager().getHero(targetPlayer);
-        if (targetHero.equals(hero)) {
-            Messaging.send(player, "You need a target!");
-            return false;
+        //PvP Check
+        if (target instanceof Player) {
+            EntityDamageByEntityEvent damageEntityEvent = new EntityDamageByEntityEvent(player, target, DamageCause.CUSTOM, 0);
+            plugin.getServer().getPluginManager().callEvent(damageEntityEvent);
+            if (damageEntityEvent.isCancelled()) {
+                Messaging.send(player, "Invalid target!");
+                return false;
+            }
         }
 
-        broadcastExecuteText(hero, target);
-
         long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 5000);
-        targetHero.addEffect(new RootEffect(this, duration));
+        RootEffect rEffect = new RootEffect(this, duration);
+        
+        if (target instanceof Player) {
+            plugin.getHeroManager().getHero((Player) target).addEffect(rEffect);
+        } else if (target instanceof Creature) {
+            plugin.getHeroManager().addCreatureEffect((Creature) target, rEffect);
+        } else {
+            Messaging.send(player, "Invalid target!");
+            return false;
+        }
+        
+        broadcastExecuteText(hero, target);
         return true;
     }
 
@@ -76,6 +92,17 @@ public class SkillRoot extends TargettedSkill {
             super(skill, "Root", period, duration);
         }
 
+        @Override
+        public void apply(Creature creature) {
+            super.apply(creature);
+            Location location = creature.getLocation();
+            x = location.getX();
+            y = location.getY();
+            z = location.getZ();
+
+            broadcast(location, applyText, Messaging.getCreatureName(creature));
+        }
+        
         @Override
         public void apply(Hero hero) {
             super.apply(hero);
@@ -95,6 +122,12 @@ public class SkillRoot extends TargettedSkill {
 
             Player player = hero.getPlayer();
             broadcast(player.getLocation(), expireText, player.getDisplayName());
+        }
+        
+        @Override
+        public void remove(Creature creature) {
+            super.remove(creature);
+            broadcast(creature.getLocation(), expireText, Messaging.getCreatureName(creature));
         }
 
         @Override
