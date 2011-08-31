@@ -4,6 +4,7 @@ Bug Fixes:
 
 	Fixed NPE when instantiating bedheal
 	BedHealEffect wont expire as quickly
+	Fixed cooldown command displaying skills that were ready to use not ones on cooldown.
 
 General/API:
 

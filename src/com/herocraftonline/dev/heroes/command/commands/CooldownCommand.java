@@ -40,7 +40,7 @@ public class CooldownCommand extends BasicCommand {
         Map<String, Skill> skillMap = plugin.getSkillMap();
         for (Entry<String, Long> entry : hero.getCooldowns().entrySet()) {
             Skill skill = skillMap.get(entry.getKey());
-            long timeLeft = time - entry.getValue();
+            long timeLeft = entry.getValue() - time;
             if (timeLeft <= 0)
                 continue;
             
