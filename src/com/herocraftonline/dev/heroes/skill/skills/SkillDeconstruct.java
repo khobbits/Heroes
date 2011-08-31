@@ -56,10 +56,10 @@ public class SkillDeconstruct extends ActiveSkill {
         for (Setting set : Setting.values()) {
             items.remove(set.node());
         }
-        
+
+        ItemStack item = null;
         if (args.length > 0) {
             if (args[0].toLowerCase().equals("list")) {
-                
                 Messaging.send(player, "You can deconstruct these items: " + items.toString());
                 return false;
             } else if (args[0].toLowerCase().equals("info")) {
@@ -76,15 +76,22 @@ public class SkillDeconstruct extends ActiveSkill {
                     for (String s : getSettingKeys(hero.getHeroClass(), args[1])) {
                         if (s.equals("min-durability") || s.equals(Setting.LEVEL.node()) || s.equals(Setting.EXP.node()))
                             continue;
-                        
+
                         int amount = getSetting(hero.getHeroClass(), args[1] + "." + s, 1);
                         Messaging.send(player, s.toLowerCase().replace("_", " ") + ": " + amount);
                     }
-                    
+
                     return false;
                 }
-            } else {
-                Messaging.send(player, getUsage());
+            } else if (items.contains(args[0])) {
+                item = new ItemStack(Material.matchMaterial(args[0]), 1);
+                if (!player.getInventory().contains(item.getType(), 1)) {
+                    Messaging.send(player, "You don't have any " + item.getType().name().toLowerCase().replace("_", " ") + " to deconstruct!");
+                    return false;
+                }
+            }
+            if (item == null) {
+                Messaging.send(player, "Invalid item to deconstruct, or bad command!");
                 return false;
             }
         }
@@ -94,11 +101,16 @@ public class SkillDeconstruct extends ActiveSkill {
             return false;
         }
 
-        ItemStack item = player.getItemInHand();
+        if (item == null) {
+            item = player.getItemInHand().clone();
+            item.setAmount(1);
+        }
+
         if (item.getType() == Material.AIR) {
             Messaging.send(player, "You must be holding the item you wish to deconstruct!");
             return false;
         }
+
 
         String matName = item.getType().name();
         if (!items.contains(matName)) {
@@ -149,13 +161,13 @@ public class SkillDeconstruct extends ActiveSkill {
             }
         }
 
-        player.getInventory().removeItem(new ItemStack(player.getItemInHand().getType(), 1));
+        player.getInventory().removeItem(item);
         player.updateInventory();
-        
+
         //Grant the hero experience
         int xp = getSetting(hero.getHeroClass(), matName + "." + Setting.EXP.node(), 0);
         hero.gainExp(xp, ExperienceType.CRAFTING);
-        
+
         broadcast(player.getLocation(), getUseText(), new Object[] { player.getDisplayName(), matName.toLowerCase().replace("_", " ") });
         return true;
     }

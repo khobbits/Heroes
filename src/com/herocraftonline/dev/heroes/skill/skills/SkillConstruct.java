@@ -23,7 +23,7 @@ public class SkillConstruct extends ActiveSkill {
     public SkillConstruct(Heroes plugin) {
         super(plugin, "Construct");
         setDescription("Constructs an object from materials.");
-        setUsage("/skill deconstruct [item|list]");
+        setUsage("/skill construct [item|list]");
         setArgumentRange(1, 2);
         setIdentifiers(new String[] { "skill construct" });
     }
@@ -52,14 +52,15 @@ public class SkillConstruct extends ActiveSkill {
     @Override
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
-
+        
         //List all items this hero can make with construct
         Set<String> itemSet = new HashSet<String>(getSettingKeys(hero.getHeroClass()));
+        itemSet.remove("require-workbench");
+        for (Setting set : Setting.values()) {
+            itemSet.remove(set.node());
+        }
+
         if (args[0].toLowerCase().equals("list")) {
-            itemSet.remove("require-workbench");
-            for (Setting set : Setting.values()) {
-                itemSet.remove(set.node());
-            }
             Messaging.send(player, "You can craft these items: " + itemSet.toString());
             return false;
         } else if (args[0].toLowerCase().equals("info")) {

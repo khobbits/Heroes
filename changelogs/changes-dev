@@ -8,15 +8,19 @@ Bug Fixes:
 
 General/API:
 
-
+	Updated Default classes.yml to be more descriptive
 
 Skills:
 
+	Deconstruct
+		- items can now be deconstructed if they are not in your hand via /skill deconstruct item
 	FireArmor - (NEW!)
 		- Ignites a players armor causing attacks against them to have a chance to light them on fire, (melee only)
 	ForcePush
 		- Fixed invalid messaging causing NPEs
 		- Fixed directionals
+	Hellgate
+		- Fixed group members not being teleported
 	Root
 		- No longer circumvents PvP
 		- Can now be applied to creatures
