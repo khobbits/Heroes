@@ -21,10 +21,12 @@ classes:
         expmodifier: 1.0
         item-damage:
             air: 1
+        projectile-damages:
+            Arrow: 3
         expLoss: 0
     Warrior:
         default: false
-        description: Skilled in Defense Combat and Heavy Armor
+        description: This is a PARENT
         permitted-armor:
         - LEATHER
         - CHAINMAIL
@@ -55,10 +57,10 @@ classes:
         - SKILL
         expmodifier: 1.5
         expLoss: 0.05
-    Paladin:
+    Knight:
         default: false
         parent: Warrior
-        description: Divine Knight
+        description: This is a CHILD
         permitted-armor:
         - IRON
         - CHAINMAIL
@@ -96,10 +98,9 @@ classes:
         - SKILL
         expmodifier: 1.0
         expLoss: 0.1
-    Shadowknight:
+    MAGE:
         default: false
-        parent: Warrior
-        description: Dark Knight
+        description: This is a Parent!
         permitted-armor:
         - LEATHER
         - DIAMOND_LEGGINGS
@@ -112,27 +113,22 @@ classes:
         - STONE
         - IRON_PICKAXE
         permitted-skills:
-            Layhands:
+            Fireball:
                 level: 10
                 mana: 100
-                cooldown: 30000
+                cooldown: 3000
             Invuln:
                 level: 40
                 mana: 100
-                cooldown: 500000
+                cooldown: 50000
             Revive:
                 level: 50
                 mana: 100
                 cooldown: 60000
-            Taunt:
+            Replenish:
                 level: 1
                 mana: 20
                 cooldown: 3000
-            Fireball:
-                level: 1
-                mana: 5
-                cooldown: 2000
-                exp: 1
             Manaburn:
                 level: 1
                 mana: 50
@@ -143,3 +139,42 @@ classes:
         - SKILL
         expmodifier: 1.0
         expLoss: 0.05
+    Warlock:
+        default: false
+        parent: MAGE
+        description: This is a CHILD
+        permitted-armor:
+        - GOLD
+        permitted-weapon:
+        - WOOD
+        - GOLD
+        - STONE
+        - IRON_PICKAXE
+        permitted-skills:
+            Fireball:
+                level: 1
+                mana: 25
+                cooldown: 30000
+                exp: 5
+            Icebolt:
+                level: 20
+                mana: 25
+                cooldown: 500000
+            Blaze:
+                level: 30
+                mana: 55
+                cooldown: 60000
+            Dispel:
+                level: 40
+                mana: 5
+                cooldown: 2000
+            Bolt:
+                level: 50
+                mana: 65
+                cooldown: 3000
+        experience-sources:
+        - KILLING
+        - PVP
+        - SKILL
+        expmodifier: 1.0
+        expLoss: 0.1
