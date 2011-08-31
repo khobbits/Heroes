@@ -3,6 +3,7 @@ Version dev
 Bug Fixes:
 
 	Fixed NPE when instantiating bedheal
+	BedHealEffect wont expire as quickly
 
 General/API:
 

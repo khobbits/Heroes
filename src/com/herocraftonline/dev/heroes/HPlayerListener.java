@@ -142,7 +142,7 @@ public class HPlayerListener extends PlayerListener {
         Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
         long period = plugin.getConfigManager().getProperties().healInterval * 1000;
         double tickHealPercent = plugin.getConfigManager().getProperties().healPercent / 100.0;
-        BedHealEffect bhEffect = new BedHealEffect(period, 100000, tickHealPercent);
+        BedHealEffect bhEffect = new BedHealEffect(period, 600000, tickHealPercent);
         hero.addEffect(bhEffect);
     }
 
