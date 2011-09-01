@@ -24,6 +24,9 @@ Skills:
 		- It's a disease - Noh Waih!
 	Deconstruct
 		- items can now be deconstructed if they are not in your hand via /skill deconstruct item
+	DeepFreeze
+		- roots the target in place and deals a small amount of initial damage
+		- If the target takes fire damage while the effect is active they will 'shatter' doing massive damage and removing the root effect
 	FireArmor - (NEW!)
 		- Ignites a players armor causing attacks against them to have a chance to light them on fire, (melee only)
 	ForcePush
