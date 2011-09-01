@@ -26,12 +26,13 @@ public class AdminExpCommand extends BasicCommand {
     @Override
     public boolean execute(CommandSender sender, String identifier, String[] args) {
         Player player = plugin.getServer().getPlayer(args[0]);
-        Hero hero = plugin.getHeroManager().getHero(player);
         // Check the Player exists.
         if (player == null) {
-            Messaging.send(sender, "Failed to find a matching Player for '$1'.", args[0]);
+            Messaging.send(sender, "Failed to find a matching Player for '$1'.  Offline players are not supported!", args[0]);
             return false;
         }
+        Hero hero = plugin.getHeroManager().getHero(player);
+
         try {
             int expChange = (int) (Integer.parseInt(args[1]) - hero.getExperience());
             hero.gainExp(expChange, ExperienceType.ADMIN, false);

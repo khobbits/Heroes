@@ -26,9 +26,6 @@ public class WhoCommand extends BasicCommand {
 
     @Override
     public boolean execute(CommandSender sender, String identifier, String[] args) {
-        if (!(sender instanceof Player))
-            return false;
-
         Player searchedPlayer = plugin.getServer().getPlayer(args[0]);
         HeroClass searchedClass = plugin.getClassManager().getClass(args[0]);
         if (searchedPlayer != null) {

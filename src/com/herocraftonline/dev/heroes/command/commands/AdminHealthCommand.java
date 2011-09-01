@@ -27,7 +27,7 @@ public class AdminHealthCommand extends BasicCommand {
         Player player = plugin.getServer().getPlayer(args[0]);
         // Check the Player exists.
         if (player == null) {
-            Messaging.send(sender, "Failed to find a matching Player for $1.", args[0]);
+            Messaging.send(sender, "Failed to find a matching Player for $1. Offline players are not supported!", args[0]);
             return false;
         }
         // Check if the health is valid.

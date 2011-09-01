@@ -26,12 +26,12 @@ public class AdminClassCommand extends BasicCommand {
     @Override
     public boolean execute(CommandSender sender, String identifier, String[] args) {
         Player player = plugin.getServer().getPlayer(args[0]);
-        HeroClass heroClass = plugin.getClassManager().getClass(args[1]);
         // Check the Player exists.
         if (player == null) {
-            Messaging.send(sender, "Failed to find a matching Player for '$1'.", args[0]);
+            Messaging.send(sender, "Failed to find a matching Player for '$1'. Offline players are not supported!", args[0]);
             return false;
         }
+        HeroClass heroClass = plugin.getClassManager().getClass(args[1]);
         // Check the HeroClass exists.
         if (heroClass == null) {
             Messaging.send(sender, "Failed to find a matching HeroClass for '$1'.", args[1]);
