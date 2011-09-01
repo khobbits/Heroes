@@ -189,7 +189,7 @@ public class Heroes extends JavaPlugin {
                 }
             }
         }
-        log(Level.INFO, "Skills loaded: " + skNo.toString());
+        log(Level.INFO, "Skills loaded: " + skNo.toString().replace("[", "").replace("]", ""));
     }
 
     /**

@@ -60,7 +60,7 @@ public class SkillDeconstruct extends ActiveSkill {
         ItemStack item = null;
         if (args.length > 0) {
             if (args[0].toLowerCase().equals("list")) {
-                Messaging.send(player, "You can deconstruct these items: " + items.toString());
+                Messaging.send(player, "You can deconstruct these items: " + items.toString().replace("[", "").replace("]", ""));
                 return false;
             } else if (args[0].toLowerCase().equals("info")) {
                 //Usage Checks if the player passed in arguments

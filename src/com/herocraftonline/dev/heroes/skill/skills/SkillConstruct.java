@@ -61,7 +61,7 @@ public class SkillConstruct extends ActiveSkill {
         }
 
         if (args[0].toLowerCase().equals("list")) {
-            Messaging.send(player, "You can craft these items: " + itemSet.toString());
+            Messaging.send(player, "You can craft these items: " + itemSet.toString().replace("[", "").replace("]", ""));
             return false;
         } else if (args[0].toLowerCase().equals("info")) {
             //Usage Checks if the player passed in arguments
