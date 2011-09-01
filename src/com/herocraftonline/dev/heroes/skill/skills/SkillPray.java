@@ -32,33 +32,36 @@ public class SkillPray extends TargettedSkill {
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
-        if (target instanceof Player) {
-            Hero targetHero = plugin.getHeroManager().getHero((Player) target);
-            int hpPlus = getSetting(hero.getHeroClass(), "health", 10);
-            double targetHealth = targetHero.getHealth();
-
-            if (targetHealth >= targetHero.getMaxHealth()) {
-                if (player.equals(targetHero.getPlayer())) {
-                    Messaging.send(player, "You are already at full health.");
-
-                } else {
-                    Messaging.send(player, "Target is already fully healed.");
-                }
-                return false;
-            }
-
-            HeroRegainHealthEvent hrhEvent = new HeroRegainHealthEvent(targetHero, hpPlus, this);
-            plugin.getServer().getPluginManager().callEvent(hrhEvent);
-            if (hrhEvent.isCancelled()) {
-                Messaging.send(player, "Unable to heal the target at this time!");
-                return false;
-            }
-
-            targetHero.setHealth(targetHealth + hrhEvent.getAmount());
-            targetHero.syncHealth();
-            broadcastExecuteText(hero, target);
-            return true;
+        if (!(target instanceof Player)) {
+            Messaging.send(player, "Invalid target!");
+            return false;
         }
-        return false;
+
+
+        Hero targetHero = plugin.getHeroManager().getHero((Player) target);
+        int hpPlus = getSetting(hero.getHeroClass(), "health", 10);
+        double targetHealth = targetHero.getHealth();
+
+        if (targetHealth >= targetHero.getMaxHealth()) {
+            if (player.equals(targetHero.getPlayer())) {
+                Messaging.send(player, "You are already at full health.");
+
+            } else {
+                Messaging.send(player, "Target is already fully healed.");
+            }
+            return false;
+        }
+
+        HeroRegainHealthEvent hrhEvent = new HeroRegainHealthEvent(targetHero, hpPlus, this);
+        plugin.getServer().getPluginManager().callEvent(hrhEvent);
+        if (hrhEvent.isCancelled()) {
+            Messaging.send(player, "Unable to heal the target at this time!");
+            return false;
+        }
+
+        targetHero.setHealth(targetHealth + hrhEvent.getAmount());
+        targetHero.syncHealth();
+        broadcastExecuteText(hero, target);
+        return true;
     }
 }

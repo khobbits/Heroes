@@ -3,6 +3,8 @@ package com.herocraftonline.dev.heroes.skill.skills;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
@@ -44,30 +46,24 @@ public class SkillPoison extends TargettedSkill {
 
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
-
         Player player = hero.getPlayer();
-        if (!(target instanceof Player) && !(target instanceof Creature)) {
+        if (target.equals(player) || hero.getSummons().contains(target)) {
             Messaging.send(player, "You need a target!");
             return false;
         }
+        
+        // PvP test
         Hero targetHero = null;
         if (target instanceof Player) {
-            Player targetPlayer = (Player) target;
-            targetHero = plugin.getHeroManager().getHero(targetPlayer);
-            if (targetHero.equals(hero)) {
-                Messaging.send(player, "You need a target!");
+            EntityDamageByEntityEvent damageEntityEvent = new EntityDamageByEntityEvent(player, target, DamageCause.CUSTOM, 0);
+            plugin.getServer().getPluginManager().callEvent(damageEntityEvent);
+            if (damageEntityEvent.isCancelled()) {
+                Messaging.send(player, "Invalid target!");
                 return false;
             }
-            // Party check
-            if (hero.getParty() != null) {
-                if (hero.getParty().isPartyMember(targetHero)) {
-                    Messaging.send(player, "You need a target!");
-                    return false;
-                }
-            }
+            targetHero = plugin.getHeroManager().getHero((Player) target);
         }
-
-        broadcastExecuteText(hero, target);
+        
         long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 10000);
         long period = getSetting(hero.getHeroClass(), Setting.PERIOD.node(), 2000);
         int tickDamage = getSetting(hero.getHeroClass(), "tick-damage", 1);
@@ -77,7 +73,12 @@ public class SkillPoison extends TargettedSkill {
         } else if (target instanceof Creature) {
             Creature creature = (Creature) target;
             plugin.getHeroManager().addCreatureEffect(creature, pEffect);
+        } else {
+            Messaging.send(player, "Invalid target!");
+            return false;
         }
+        
+        broadcastExecuteText(hero, target);
         return true;
     }
 

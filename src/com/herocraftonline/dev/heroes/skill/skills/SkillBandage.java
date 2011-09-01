@@ -1,10 +1,7 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
-import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
@@ -31,59 +28,48 @@ public class SkillBandage extends TargettedSkill {
         ConfigurationNode node = super.getDefaultConfig();
         node.setProperty("health", 5);
         node.setProperty(Setting.MAX_DISTANCE.node(), 5);
+        node.setProperty(Setting.REAGENT.node(), "PAPER");
+        node.setProperty(Setting.REAGENT_COST.node(), 1);
         return node;
     }
 
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
-        if (target instanceof Player) {
-            Hero targetHero = plugin.getHeroManager().getHero((Player) target);
-            int hpPlus = getSetting(hero.getHeroClass(), "health", 5);
-            double targetHealth = targetHero.getHealth();
-
-            if (targetHealth >= targetHero.getMaxHealth()) {
-                if (player.equals(targetHero.getPlayer())) {
-                    Messaging.send(player, "You are already at full health.");  
-                } else {
-                    Messaging.send(player, "Target is already fully healed.");
-                }
-                return false;
-            }
-
-            PlayerInventory inv = player.getInventory();
-            ItemStack inHand = inv.getItem(inv.getHeldItemSlot());
-
-            if (!(inHand.getType() == Material.PAPER)) {
-                Messaging.send(player, "You need paper to perform this.");
-                return false;
-            }
-
-            HeroRegainHealthEvent hrhEvent = new HeroRegainHealthEvent(targetHero, hpPlus, this);
-            plugin.getServer().getPluginManager().callEvent(hrhEvent);
-            if (hrhEvent.isCancelled()) {
-                Messaging.send(player, "Unable to heal the target at this time!");
-                return false;
-            }
-
-            int amount = inHand.getAmount();
-            if (amount > 1) {
-                inHand.setAmount(amount - 1);
-            } else {
-                inv.setItemInHand(null);
-            }
-
-            targetHero.setHealth(targetHealth + hrhEvent.getAmount());
-            targetHero.syncHealth();
-            // Bandage cures Bleeding!
-            for (Effect effect : targetHero.getEffects()) {
-                if (effect instanceof BleedEffect)
-                    targetHero.removeEffect(effect);
-            }
-
-            broadcastExecuteText(hero, target);
-            return true;
+        if (!(target instanceof Player)) {
+            Messaging.send(player, "Invalid target!");
+            return false;
         }
-        return false;
+        
+        Hero targetHero = plugin.getHeroManager().getHero((Player) target);
+        int hpPlus = getSetting(hero.getHeroClass(), "health", 5);
+        double targetHealth = targetHero.getHealth();
+
+        if (targetHealth >= targetHero.getMaxHealth()) {
+            if (player.equals(targetHero.getPlayer())) {
+                Messaging.send(player, "You are already at full health.");  
+            } else {
+                Messaging.send(player, "Target is already fully healed.");
+            }
+            return false;
+        }
+
+        HeroRegainHealthEvent hrhEvent = new HeroRegainHealthEvent(targetHero, hpPlus, this);
+        plugin.getServer().getPluginManager().callEvent(hrhEvent);
+        if (hrhEvent.isCancelled()) {
+            Messaging.send(player, "Unable to heal the target at this time!");
+            return false;
+        }
+
+        targetHero.setHealth(targetHealth + hrhEvent.getAmount());
+        targetHero.syncHealth();
+        // Bandage cures Bleeding!
+        for (Effect effect : targetHero.getEffects()) {
+            if (effect instanceof BleedEffect)
+                targetHero.removeEffect(effect);
+        }
+
+        broadcastExecuteText(hero, target);
+        return true;
     }
 }

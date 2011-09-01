@@ -28,7 +28,7 @@ public class SkillManaFreeze extends TargettedSkill {
         setUsage("/skill manafreeze");
         setArgumentRange(0, 1);
         setIdentifiers(new String[] { "skill manafreeze", "skill mfreeze" });
-        
+
         registerEvent(Type.CUSTOM_EVENT, new HeroListener(), Priority.Highest);
     }
 
@@ -51,17 +51,19 @@ public class SkillManaFreeze extends TargettedSkill {
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
-        if (target instanceof Player && !target.equals(player)) {
-            broadcastExecuteText(hero, target);
-
-            Hero targetHero = plugin.getHeroManager().getHero((Player) target);
-            int duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 5000);
-            targetHero.addEffect(new ManaFreezeEffect(this, duration));
-            return true;
-        } else {
+        
+        if (target.equals(player) || !(target instanceof Player)) {
             Messaging.send(player, "You must target another player!");
             return false;
         }
+        
+        broadcastExecuteText(hero, target);
+        Hero targetHero = plugin.getHeroManager().getHero((Player) target);
+        int duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 5000);
+        targetHero.addEffect(new ManaFreezeEffect(this, duration));
+        return true;
+
+
     }
 
     public class ManaFreezeEffect extends ExpirableEffect implements Dispellable {
@@ -83,14 +85,14 @@ public class SkillManaFreeze extends TargettedSkill {
             broadcast(player.getLocation(), expireText, player.getDisplayName());
         }
     }
-    
+
     public class HeroListener extends HeroesEventListener {
-        
+
         @Override
         public void onHeroRegainMana(HeroRegainManaEvent event) {
             if (event.isCancelled())
                 return;
-            
+
             if (event.getHero().hasEffect("ManaFreeze")) {
                 event.setCancelled(true);
             }

@@ -62,7 +62,7 @@ public class SkillCurse extends TargettedSkill {
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
-        if (target.equals(player)) {
+        if (target.equals(player) || hero.getSummons().contains(target)) {
             Messaging.send(player, "You need a target!");
             return false;
         }
@@ -81,12 +81,10 @@ public class SkillCurse extends TargettedSkill {
         CurseEffect cEffect = new CurseEffect(this, duration, missChance);
 
         if (target instanceof Player) {
-            Hero tHero = plugin.getHeroManager().getHero((Player) target);
-            tHero.addEffect(cEffect);
+            plugin.getHeroManager().getHero((Player) target).addEffect(cEffect);
             return true;
         } else if (target instanceof Creature) {
-            Creature creature = (Creature) target;
-            plugin.getHeroManager().addCreatureEffect(creature, cEffect);
+            plugin.getHeroManager().addCreatureEffect((Creature) target, cEffect);
             return true;
         }
 

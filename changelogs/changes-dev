@@ -12,7 +12,14 @@ General/API:
 	Hero Help will no longer display commands the player does not have access to.
 
 Skills:
-
+	
+	Bandage
+		- no longer inherently requires Paper, it is now set as a default reagent instead
+	Chant - (NEW!)
+		- Heals the target for the amount specified - defaults are lower than Pray - intended as a lower level Heal
+		- This allows healer classes to have more than just pray as a flat heal
+	Decay - (NEW!)
+		- Dispellable periodic damage effect (similar to Bleed & Poison)
 	Deconstruct
 		- items can now be deconstructed if they are not in your hand via /skill deconstruct item
 	FireArmor - (NEW!)

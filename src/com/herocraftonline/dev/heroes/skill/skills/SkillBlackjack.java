@@ -74,7 +74,6 @@ public class SkillBlackjack extends ActiveSkill {
         broadcastExecuteText(hero);
         int duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 20000);
         hero.addEffect(new BlackjackEffect(this, duration));
-
         return true;
     }
 

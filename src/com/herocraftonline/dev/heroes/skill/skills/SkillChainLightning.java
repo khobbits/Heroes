@@ -26,7 +26,7 @@ import com.herocraftonline.dev.heroes.util.Setting;
 public class SkillChainLightning extends TargettedSkill {
 
     private static final Set<Material> transparentBlocks;
-    
+
     static {
         transparentBlocks = new HashSet<Material>();
         transparentBlocks.add(Material.AIR);
@@ -56,7 +56,7 @@ public class SkillChainLightning extends TargettedSkill {
         transparentBlocks.add(Material.SUGAR_CANE_BLOCK);
         transparentBlocks.add(Material.STEP);
     }
-    
+
     public SkillChainLightning(Heroes plugin) {
         super(plugin, "ChainLightning");
         setDescription("Calls down a bolt of lightning that bounces to other targets");
@@ -79,26 +79,28 @@ public class SkillChainLightning extends TargettedSkill {
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
 
-        if (target.equals(player)) {
+        if (target.equals(player) || hero.getSummons().contains(target)) {
             Messaging.send(player, "Invalid target!");
             return false;
         }
 
         // PvP test
-        EntityDamageByEntityEvent damageEntityEvent = new EntityDamageByEntityEvent(player, target, DamageCause.CUSTOM, 0);
-        plugin.getServer().getPluginManager().callEvent(damageEntityEvent);
-        if (damageEntityEvent.isCancelled()) {
-            Messaging.send(player, "Invalid target!");
-            return false;
+        if (target instanceof Player) {
+            EntityDamageByEntityEvent damageEntityEvent = new EntityDamageByEntityEvent(player, target, DamageCause.CUSTOM, 0);
+            plugin.getServer().getPluginManager().callEvent(damageEntityEvent);
+            if (damageEntityEvent.isCancelled()) {
+                Messaging.send(player, "Invalid target!");
+                return false;
+            }
         }
         int damage = getSetting(hero.getHeroClass(), Setting.DAMAGE.node(), 6);
 
         //Damage the first target
         addSpellTarget(target, hero);
-        
-        
         target.getWorld().strikeLightningEffect(target.getLocation());
         target.damage(damage, player);
+        
+        //Try to bounce
         Set<Entity> previousTargets = new HashSet<Entity>();
         previousTargets.add(target);
         int range = getSetting(hero.getHeroClass(), Setting.RADIUS.node(), 7);
@@ -132,7 +134,7 @@ public class SkillChainLightning extends TargettedSkill {
         broadcastExecuteText(hero);
         return true;
     }
-    
+
     private boolean checkTarget(Entity previousTarget, Entity potentialTarget) {
         Vector v1 = previousTarget.getLocation().toVector();
         Vector v2 = potentialTarget.getLocation().toVector();
@@ -148,7 +150,7 @@ public class SkillChainLightning extends TargettedSkill {
         }
         return true;
     }
-    
+
     public class DelayedBolt extends ExpirableEffect implements Harmful {
 
         private final Hero applier;
@@ -158,7 +160,7 @@ public class SkillChainLightning extends TargettedSkill {
             this.applier = applier;
             this.bounceDamage = bounceDamage;
         }
-        
+
         @Override
         public void remove(Hero hero) {
             super.remove(hero);
@@ -167,7 +169,7 @@ public class SkillChainLightning extends TargettedSkill {
             target.damage(bounceDamage, applier.getPlayer());
             target.getWorld().strikeLightningEffect(target.getLocation());
         }  
-        
+
         @Override
         public void remove(Creature creature) {
             super.remove(creature);

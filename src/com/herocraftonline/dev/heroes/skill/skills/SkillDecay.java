@@ -8,43 +8,43 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.effects.BleedEffect;
-import com.herocraftonline.dev.heroes.effects.Harmful;
+import com.herocraftonline.dev.heroes.effects.Dispellable;
+import com.herocraftonline.dev.heroes.effects.PeriodicDamageEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Setting;
 
-public class SkillBleed extends TargettedSkill {
+public class SkillDecay extends TargettedSkill {
 
     private String applyText;
     private String expireText;
 
-    public SkillBleed(Heroes plugin) {
-        super(plugin, "Bleed");
-        setDescription("Causes your target to bleed");
-        setUsage("/skill bleed <target>");
+    public SkillDecay(Heroes plugin) {
+        super(plugin, "Decay");
+        setDescription("Causes your target's flesh to decay rapidly");
+        setUsage("/skill decay <target>");
         setArgumentRange(0, 1);
-        setIdentifiers(new String[] { "skill bleed" });
+        setIdentifiers(new String[] { "skill decay" });
     }
 
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty(Setting.DURATION.node(), 10000);
-        node.setProperty(Setting.PERIOD.node(), 2000);
+        node.setProperty(Setting.DURATION.node(), 21000);
+        node.setProperty(Setting.PERIOD.node(), 3000);
         node.setProperty("tick-damage", 1);
-        node.setProperty(Setting.APPLY_TEXT.node(), "%target% is bleeding!");
-        node.setProperty(Setting.EXPIRE_TEXT.node(), "%target% has stopped bleeding!");
+        node.setProperty(Setting.APPLY_TEXT.node(), "%target%'s flesh has begun to rot!");
+        node.setProperty(Setting.EXPIRE_TEXT.node(), "%target% is no longer decaying alive!");
         return node;
     }
 
     @Override
     public void init() {
         super.init();
-        applyText = getSetting(null, Setting.APPLY_TEXT.node(), "%target% is bleeding!").replace("%target%", "$1");
-        expireText = getSetting(null, Setting.EXPIRE_TEXT.node(), "%target% has stopped bleeding!").replace("%target%", "$1");
+        applyText = getSetting(null, Setting.APPLY_TEXT.node(), "%target%'s flesh has begun to rot!").replace("%target%", "$1");
+        expireText = getSetting(null, Setting.EXPIRE_TEXT.node(), "%target% is no longer decaying alive!").replace("%target%", "$1");
     }
 
     @Override
@@ -67,10 +67,10 @@ public class SkillBleed extends TargettedSkill {
             targetHero = plugin.getHeroManager().getHero((Player) target);
         }
         
-        long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 10000);
-        long period = getSetting(hero.getHeroClass(), Setting.PERIOD.node(), 2000);
+        long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 21000);
+        long period = getSetting(hero.getHeroClass(), Setting.PERIOD.node(), 3000);
         int tickDamage = getSetting(hero.getHeroClass(), "tick-damage", 1);
-        BleedSkillEffect bEffect = new BleedSkillEffect(this, duration, period, tickDamage, player);
+        DecaySkillEffect bEffect = new DecaySkillEffect(this, duration, period, tickDamage, player);
 
         if (targetHero != null) {
             targetHero.addEffect(bEffect);
@@ -81,14 +81,15 @@ public class SkillBleed extends TargettedSkill {
             Messaging.send(player, "Invalid target!");
             return false;
         }
+        
         broadcastExecuteText(hero, target);
         return true;
     }
 
-    public class BleedSkillEffect extends BleedEffect implements Harmful {
+    public class DecaySkillEffect extends PeriodicDamageEffect implements Dispellable {
 
-        public BleedSkillEffect(Skill skill, long duration, long period, int tickDamage, Player applier) {
-            super(skill, "Bleed", period, duration, tickDamage, applier);
+        public DecaySkillEffect(Skill skill, long duration, long period, int tickDamage, Player applier) {
+            super(skill, "Decay", period, duration, tickDamage, applier);
         }
 
         @Override
