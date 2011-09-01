@@ -4,8 +4,12 @@ import org.bukkit.Location;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event.Priority;
+import org.bukkit.event.Event.Type;
+import org.bukkit.event.entity.EntityCombustEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.entity.EntityListener;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
@@ -34,7 +38,8 @@ public class SkillDeepFreeze extends TargettedSkill {
         setArgumentRange(0, 1);
         setIdentifiers(new String[] { "skill deepfreeze", "skill dfreeze" });
         
-        
+        registerEvent(Type.CUSTOM_EVENT, new SkillHeroListener(), Priority.Monitor);
+        registerEvent(Type.ENTITY_COMBUST, new SkillEntityListener(), Priority.Monitor);
     }
 
     @Override
@@ -76,7 +81,7 @@ public class SkillDeepFreeze extends TargettedSkill {
         }
 
         long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 5000);
-        FreezeEffect fEffect = new FreezeEffect(this, duration);
+        FreezeEffect fEffect = new FreezeEffect(this, duration, hero);
         
         if (target instanceof Player) {
             plugin.getHeroManager().getHero((Player) target).addEffect(fEffect);
@@ -94,11 +99,12 @@ public class SkillDeepFreeze extends TargettedSkill {
     public class FreezeEffect extends PeriodicEffect implements Dispellable, Harmful {
 
         private static final long period = 100;
-
+        private final Hero applier;
         private double x, y, z;
 
-        public FreezeEffect(Skill skill, long duration) {
+        public FreezeEffect(Skill skill, long duration, Hero applier) {
             super(skill, "Freeze", period, duration);
+            this.applier = applier;
         }
 
         @Override
@@ -155,6 +161,10 @@ public class SkillDeepFreeze extends TargettedSkill {
                 player.teleport(location);
             }
         }
+
+        public Hero getApplier() {
+            return applier;
+        }
     }
     
     public class SkillHeroListener extends HeroesEventListener {
@@ -185,6 +195,42 @@ public class SkillDeepFreeze extends TargettedSkill {
                     creature.damage(damage, event.getDamager().getPlayer());
                     broadcast(creature.getLocation(), shatterText, Messaging.getCreatureName(creature));
                     plugin.getHeroManager().removeCreatureEffect(creature, plugin.getHeroManager().getCreatureEffect(creature, "Freeze"));
+                }
+            }
+        }
+    }
+    
+    public class SkillEntityListener extends EntityListener {
+        
+        
+        
+        @Override
+        public void onEntityCombust(EntityCombustEvent event) {
+            if (event.isCancelled() || !(event.getEntity() instanceof LivingEntity))
+                return;
+            
+            if (event.getEntity() instanceof Player) {
+                Player player = (Player) event.getEntity();
+                Hero tHero = plugin.getHeroManager().getHero(player);
+                if (tHero.hasEffect("Freeze")) {
+                    FreezeEffect fEffect = ((FreezeEffect) tHero.getEffect("Freeze"));
+                    Hero hero = fEffect.getApplier();
+                    int damage = getSetting(hero.getHeroClass(), "shatter-damage", 7);
+                    addSpellTarget(player, hero);
+                    player.damage(damage, hero.getPlayer());
+                    broadcast(player.getLocation(), shatterText, player.getDisplayName());
+                    tHero.removeEffect(fEffect);
+                }
+            } else if (event.getEntity() instanceof Creature) {
+                Creature creature = (Creature) event.getEntity();
+                if (plugin.getHeroManager().creatureHasEffect(creature, "Freeze")) {
+                    FreezeEffect fEffect = ((FreezeEffect) plugin.getHeroManager().getCreatureEffect(creature, "Freeze"));
+                    Hero hero = fEffect.getApplier();
+                    int damage = getSetting(hero.getHeroClass(), "shatter-damage", 7);
+                    addSpellTarget(creature, hero);
+                    creature.damage(damage, hero.getPlayer());
+                    broadcast(creature.getLocation(), shatterText, Messaging.getCreatureName(creature));
+                    plugin.getHeroManager().removeCreatureEffect(creature, fEffect);
                 }
             }
         }
