@@ -38,6 +38,8 @@ Skills:
 		- Fixed directionals
 	Hellgate
 		- Fixed group members not being teleported
+	Plague - (NEW!)
+		- Disease effect that spreads to nearby enemies when it deals damage!
 	Root
 		- No longer circumvents PvP
 		- Can now be applied to creatures

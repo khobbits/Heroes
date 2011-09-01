@@ -17,17 +17,17 @@ import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Setting;
 
-public class SkillBlight extends TargettedSkill {
+public class SkillPlague extends TargettedSkill {
 
     private String applyText;
     private String expireText;
 
-    public SkillBlight(Heroes plugin) {
-        super(plugin, "Blight");
-        setDescription("Causes your target's flesh to decay rapidly");
-        setUsage("/skill blight <target>");
+    public SkillPlague(Heroes plugin) {
+        super(plugin, "Plague");
+        setDescription("You infect your target with the plague!");
+        setUsage("/skill plague <target>");
         setArgumentRange(0, 1);
-        setIdentifiers(new String[] { "skill blight" });
+        setIdentifiers(new String[] { "skill plague" });
     }
 
     @Override
@@ -37,16 +37,16 @@ public class SkillBlight extends TargettedSkill {
         node.setProperty(Setting.PERIOD.node(), 3000);
         node.setProperty("tick-damage", 1);
         node.setProperty(Setting.RADIUS.node(), 4);
-        node.setProperty(Setting.APPLY_TEXT.node(), "%target% begins to radiate a cloud of disease!");
-        node.setProperty(Setting.EXPIRE_TEXT.node(), "%target% is no longer diseased!");
+        node.setProperty(Setting.APPLY_TEXT.node(), "%target% is infected with the plague!");
+        node.setProperty(Setting.EXPIRE_TEXT.node(), "%target% is no longer infected with the plague!");
         return node;
     }
 
     @Override
     public void init() {
         super.init();
-        applyText = getSetting(null, Setting.APPLY_TEXT.node(), "%target% begins to radiate a cloud of disease!").replace("%target%", "$1");
-        expireText = getSetting(null, Setting.EXPIRE_TEXT.node(), "%target% is no longer diseased!").replace("%target%", "$1");
+        applyText = getSetting(null, Setting.APPLY_TEXT.node(), "%target% is infected with the plague!").replace("%target%", "$1");
+        expireText = getSetting(null, Setting.EXPIRE_TEXT.node(), "%target% is no longer infected with the plague!").replace("%target%", "$1");
     }
 
     @Override
@@ -72,7 +72,7 @@ public class SkillBlight extends TargettedSkill {
         long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 21000);
         long period = getSetting(hero.getHeroClass(), Setting.PERIOD.node(), 3000);
         int tickDamage = getSetting(hero.getHeroClass(), "tick-damage", 1);
-        BlightEffect bEffect = new BlightEffect(this, duration, period, tickDamage, player);
+        PlagueEffect bEffect = new PlagueEffect(this, duration, period, tickDamage, player);
 
         if (targetHero != null) {
             targetHero.addEffect(bEffect);
@@ -88,12 +88,17 @@ public class SkillBlight extends TargettedSkill {
         return true;
     }
 
-    public class BlightEffect extends DiseaseEffect implements Dispellable {
+    public class PlagueEffect extends DiseaseEffect implements Dispellable {
 
-        public BlightEffect(Skill skill, long duration, long period, int tickDamage, Player applier) {
-            super(skill, "Blight", period, duration, tickDamage, applier);
+        public PlagueEffect(Skill skill, long duration, long period, int tickDamage, Player applier) {
+            super(skill, "Plague", period, duration, tickDamage, applier);
         }
-
+        
+        //Clone Constructor
+        private PlagueEffect(PlagueEffect pEffect) {
+            super(pEffect.skill, pEffect.name, pEffect.getPeriod(), pEffect.getDuration(), pEffect.tickDamage, pEffect.applier);
+        }
+        
         @Override
         public void apply(Hero hero) {
             super.apply(hero);
@@ -123,16 +128,22 @@ public class SkillBlight extends TargettedSkill {
         @Override
         public void tick(Creature creature) {
             super.tick(creature);
-            damageNearby(creature);
+            spreadToNearbyEntities(creature);
         }
         
         @Override
         public void tick(Hero hero) {
             super.tick(hero);
-            damageNearby(hero.getPlayer());
+            spreadToNearbyEntities(hero.getPlayer());
         }
         
-        private void damageNearby(LivingEntity lEntity) {
+        /**
+         * Attempts to spread the effect to all nearby entities
+         * Will not target non-pvpable targets
+         * 
+         * @param lEntity
+         */
+        private void spreadToNearbyEntities(LivingEntity lEntity) {
             int radius = getSetting(applyHero.getHeroClass(), Setting.RADIUS.node(), 4);
             for (Entity target : lEntity.getNearbyEntities(radius, radius, radius)) {
                 if (!(target instanceof LivingEntity) || target.equals(applier) || applyHero.getSummons().contains(target)) {
@@ -146,17 +157,22 @@ public class SkillBlight extends TargettedSkill {
                         continue;
                     }
                     
-                    //Also ignore players that already have the blight effect - the are already sick, they can't be more sick
-                    if (plugin.getHeroManager().getHero((Player) target).hasEffect("Blight"))
+                    Hero tHero = plugin.getHeroManager().getHero((Player) target);
+                    //Ignore heroes that already have the plague effect
+                    if (tHero.hasEffect("Plague"))
                         continue;
-                } else if (target instanceof Creature && plugin.getHeroManager().creatureHasEffect((Creature) target, "Blight")) {
-                    continue;
-                } else {
-                    //Skip this one if for some reason it's not a creature or player
-                    continue;
+                    
+                    //Apply the effect to the hero creating a copy of the effect
+                    tHero.addEffect(new PlagueEffect(this));
+                } else if (target instanceof Creature) {
+                    Creature creature = (Creature) target;
+                    //Make sure the creature doesn't already have the effect
+                    if (plugin.getHeroManager().creatureHasEffect(creature, "Plague"))
+                        continue;
+                    
+                    //Apply the effect to the creature, creating a copy of the effect
+                    plugin.getHeroManager().addCreatureEffect(creature, new PlagueEffect(this));
                 }
-                addSpellTarget(target, applyHero);
-                ((LivingEntity) target).damage(tickDamage, applier);
             }
         }
     }

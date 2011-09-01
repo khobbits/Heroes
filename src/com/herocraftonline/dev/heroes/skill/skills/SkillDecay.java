@@ -70,7 +70,7 @@ public class SkillDecay extends TargettedSkill {
         long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 21000);
         long period = getSetting(hero.getHeroClass(), Setting.PERIOD.node(), 3000);
         int tickDamage = getSetting(hero.getHeroClass(), "tick-damage", 1);
-        DecaySkillEffect bEffect = new DecaySkillEffect(this, duration, period, tickDamage, player);
+        DecayEffect bEffect = new DecayEffect(this, duration, period, tickDamage, player);
 
         if (targetHero != null) {
             targetHero.addEffect(bEffect);
@@ -86,9 +86,9 @@ public class SkillDecay extends TargettedSkill {
         return true;
     }
 
-    public class DecaySkillEffect extends DiseaseEffect implements Dispellable {
+    public class DecayEffect extends DiseaseEffect implements Dispellable {
 
-        public DecaySkillEffect(Skill skill, long duration, long period, int tickDamage, Player applier) {
+        public DecayEffect(Skill skill, long duration, long period, int tickDamage, Player applier) {
             super(skill, "Decay", period, duration, tickDamage, applier);
         }
 
