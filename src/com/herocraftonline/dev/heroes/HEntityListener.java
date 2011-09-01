@@ -54,19 +54,22 @@ public class HEntityListener extends EntityListener {
             int level = prop.getLevel(exp);
 
             if(prop.resetOnDeath) {
+                //Wipe xp if we are in hardcore mode
                 heroDefender.changeHeroClass(plugin.getClassManager().getDefaultClass());
-                heroDefender.gainExp(-heroDefender.getExperience(), ExperienceType.DEATH);
-                return;
+                heroDefender.gainExp(-heroDefender.getExperience(), ExperienceType.DEATH, false);
+            } else {
+                //otherwise just do standard loss
+                int currentLevelExp = (int) prop.getExperience(level);
+                int nextLevelExp = (int) prop.getExperience(level + 1);
+                double expLossPercent = prop.expLoss;
+                if(heroDefender.getHeroClass().getExpLoss() != -1) {
+                    expLossPercent = heroDefender.getHeroClass().getExpLoss();
+                }
+                double expLoss = (nextLevelExp - currentLevelExp) * expLossPercent;
+                heroDefender.gainExp(-expLoss, ExperienceType.DEATH, false);
             }
             
-            int currentLevelExp = (int) prop.getExperience(level);
-            int nextLevelExp = (int) prop.getExperience(level + 1);
-            double expLossPercent = prop.expLoss;
-            if(heroDefender.getHeroClass().getExpLoss() != -1) {
-                expLossPercent = heroDefender.getHeroClass().getExpLoss();
-            }
-            double expLoss = (nextLevelExp - currentLevelExp) * expLossPercent;
-            heroDefender.gainExp(-expLoss, ExperienceType.DEATH, false);
+            //Always reset mana on death
             heroDefender.setMana(0);
 
 
@@ -98,11 +101,11 @@ public class HEntityListener extends EntityListener {
                     experienceType = ExperienceType.PVP;
                 }
             }
-            
+
             //If this entity is on the summon map, don't award XP!
             if (hero.getSummons().contains(defender))
                 return;
-            
+
             // If the Player killed a Monster/Animal then we check to see if they can earn EXP from KILLING.
             if (defender instanceof LivingEntity && !(defender instanceof Player) && expSources.contains(ExperienceType.KILLING)) {
                 // Get the dying entity's CreatureType
