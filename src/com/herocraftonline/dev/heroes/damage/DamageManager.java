@@ -189,6 +189,18 @@ public class DamageManager {
                 throw new IllegalArgumentException(entity.getClass().getSimpleName() + " is not a projectile.");
             }
         }
+        
+        public static ProjectileType matchProjectile(final String name) {
+            if (name.toLowerCase().equals("arrow")) {
+                return ARROW;
+            } else if (name.toLowerCase().equals("snowball")) {
+                return SNOWBALL;
+            } else if (name.toLowerCase().equals("egg")) {
+                return EGG;
+            } else {
+                throw new IllegalArgumentException(name + " is not a projectiletype.");
+            }
+        }
     }
 
 }

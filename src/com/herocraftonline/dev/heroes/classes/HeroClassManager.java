@@ -193,7 +193,8 @@ public class HeroClassManager {
             } else {
                 for (String projectileName : projectileDamages) {
                     try {
-                        ProjectileType type = ProjectileType.valueOf(projectileName);
+                        ProjectileType type = ProjectileType.matchProjectile(projectileName);
+                        
                         int damage = config.getInt("classes." + className + ".projectile-damage." + projectileName, 0);
                         newClass.setProjectileDamage(type, damage);
                     } catch (IllegalArgumentException e) {
