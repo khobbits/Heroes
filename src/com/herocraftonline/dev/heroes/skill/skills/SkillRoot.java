@@ -50,8 +50,7 @@ public class SkillRoot extends TargettedSkill {
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
-        if (player.equals(target) || hero.getSummons().contains(target))
-        if (!(target instanceof Player)) {
+        if (player.equals(target) || hero.getSummons().contains(target)) {
             Messaging.send(player, "You need a target!");
             return false;
         }
