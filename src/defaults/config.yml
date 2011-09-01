@@ -26,6 +26,7 @@ default:
     level: 1 #Level to use HATS!
     allowHatsPlugin: false
     prefixClassName: false
+    resetOnDeath: false
 mappartyui:
     id: 1 #Map ID number, 0 or 1 is desired
     enabled: true

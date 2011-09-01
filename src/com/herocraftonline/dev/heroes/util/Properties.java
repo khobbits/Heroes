@@ -44,7 +44,8 @@ public class Properties {
     // Default//
     public String defClass;
     public int defLevel;
-
+    public boolean resetOnDeath;
+    
     // Properties//
     public boolean iConomy;
     public ChatColor cColor;

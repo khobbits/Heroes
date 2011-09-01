@@ -53,6 +53,12 @@ public class HEntityListener extends EntityListener {
             double exp = heroDefender.getExperience();
             int level = prop.getLevel(exp);
 
+            if(prop.resetOnDeath) {
+                heroDefender.changeHeroClass(plugin.getClassManager().getDefaultClass());
+                heroDefender.gainExp(-heroDefender.getExperience(), ExperienceType.DEATH);
+                return;
+            }
+            
             int currentLevelExp = (int) prop.getExperience(level);
             int nextLevelExp = (int) prop.getExperience(level + 1);
             double expLossPercent = prop.expLoss;

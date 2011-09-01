@@ -155,6 +155,7 @@ public class ConfigManager {
         properties.defLevel = config.getInt(root + "level", 1);
         properties.allowHats = config.getBoolean(root + "allowhatsplugin", false);
         properties.prefixClassName = config.getBoolean(root + "prefixClassName", false);
+        properties.resetOnDeath = config.getBoolean(root + "resetOnDeath", false);
     }
 
     private void loadExperience(Configuration config) {
