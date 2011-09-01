@@ -72,7 +72,7 @@ public class HPlayerListener extends PlayerListener {
         this.plugin.getInventoryChecker().checkInventory(player);
         if(plugin.getConfigManager().getProperties().prefixClassName) {
             Hero hero = plugin.getHeroManager().getHero(player);
-            player.setDisplayName(hero.getHeroClass().getName());
+            player.setDisplayName("[" + hero.getHeroClass().getName() + "]" + player.getName());
         }
     }
 
