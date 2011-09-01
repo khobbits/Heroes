@@ -104,6 +104,7 @@ public class SkillDeepFreeze extends TargettedSkill {
         @Override
         public void apply(Creature creature) {
             super.apply(creature);
+            creature.setFireTicks(0);
             Location location = creature.getLocation();
             x = location.getX();
             y = location.getY();
@@ -115,13 +116,13 @@ public class SkillDeepFreeze extends TargettedSkill {
         @Override
         public void apply(Hero hero) {
             super.apply(hero);
-
-            Location location = hero.getPlayer().getLocation();
+            Player player = hero.getPlayer();
+            player.setFireTicks(0);
+            Location location = player.getLocation();
             x = location.getX();
             y = location.getY();
             z = location.getZ();
 
-            Player player = hero.getPlayer();
             broadcast(location, applyText, player.getDisplayName());
         }
 
