@@ -8,9 +8,9 @@ import com.herocraftonline.dev.heroes.skill.Skill;
 
 public class PeriodicDamageEffect extends PeriodicEffect implements Harmful {
 
-    private int tickDamage;
-    private final Player applier;
-    private final Hero applyHero;
+    protected int tickDamage;
+    protected final Player applier;
+    protected final Hero applyHero;
 
     public PeriodicDamageEffect(Skill skill, String name, long period, long duration, int tickDamage, Player applier) {
         super(skill, name, period, duration);
@@ -44,6 +44,10 @@ public class PeriodicDamageEffect extends PeriodicEffect implements Harmful {
 
     public Player getApplier() {
         return applier;
+    }
+    
+    public Hero getApplierHero() {
+        return applyHero;
     }
 
 }
