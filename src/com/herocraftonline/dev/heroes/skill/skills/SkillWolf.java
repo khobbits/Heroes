@@ -199,6 +199,7 @@ public class SkillWolf extends ActiveSkill {
                 if (numWolves >= getSetting(hero.getHeroClass(), "max-wolves", 3)) {
                     event.setCancelled(true);
                     Messaging.send(player, "You can't tame anymore wolves!");
+                    return;
                 }
                 skill.setWolfSettings(hero, (Wolf) event.getEntity());
                 Messaging.send(player, "You have tamed a wolf!");
