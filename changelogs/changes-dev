@@ -6,7 +6,7 @@ Bug Fixes:
 	BedHealEffect wont expire as quickly
 	Fixed cooldown command displaying skills that were ready to use not ones on cooldown.
 	Fixed admin commands erroring when attempting to modify offline players.  They will simple warn the user now.
-	Who command now works from console
+	Who & Reload commands now work from console as intended
 	Paths command will no longer show Paths the player can not select
 	
 General/API:

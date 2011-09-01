@@ -23,9 +23,6 @@ public class ConfigReloadCommand extends BasicCommand {
 
     @Override
     public boolean execute(CommandSender sender, String identifier, String[] args) {
-        if (!(sender instanceof Player))
-            return false;
-
         if (plugin.getConfigManager().reload()) {
             Messaging.send(sender, "Configs reloaded.");
         }
