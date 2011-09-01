@@ -10,6 +10,7 @@ General/API:
 
 	Updated Default classes.yml to be more descriptive
 	Hero Help will no longer display commands the player does not have access to.
+	DiseaseEffect - works just like Bleed/Poison effects
 
 Skills:
 	
@@ -20,6 +21,7 @@ Skills:
 		- This allows healer classes to have more than just pray as a flat heal
 	Decay - (NEW!)
 		- Dispellable periodic damage effect (similar to Bleed & Poison)
+		- It's a disease - Noh Waih!
 	Deconstruct
 		- items can now be deconstructed if they are not in your hand via /skill deconstruct item
 	FireArmor - (NEW!)

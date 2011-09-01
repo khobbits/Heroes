@@ -8,8 +8,8 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.effects.DiseaseEffect;
 import com.herocraftonline.dev.heroes.effects.Dispellable;
-import com.herocraftonline.dev.heroes.effects.PeriodicDamageEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
@@ -86,7 +86,7 @@ public class SkillDecay extends TargettedSkill {
         return true;
     }
 
-    public class DecaySkillEffect extends PeriodicDamageEffect implements Dispellable {
+    public class DecaySkillEffect extends DiseaseEffect implements Dispellable {
 
         public DecaySkillEffect(Skill skill, long duration, long period, int tickDamage, Player applier) {
             super(skill, "Decay", period, duration, tickDamage, applier);
