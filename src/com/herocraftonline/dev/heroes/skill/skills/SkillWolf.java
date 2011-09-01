@@ -188,11 +188,19 @@ public class SkillWolf extends ActiveSkill {
 
             Player player = (Player) event.getOwner();
             Hero hero = plugin.getHeroManager().getHero((Player) event.getOwner());
+            int numWolves = 0;
+            for (Creature creature : hero.getSummons()) {
+                if (creature instanceof Wolf)
+                    numWolves++;
+            }
             if (skill.skillTaming && !hero.hasSkill(skill.getName())) {
                 event.setCancelled(true);
             } else {
-                Wolf wolf = (Wolf) player.getWorld().spawnCreature(player.getLocation(), CreatureType.WOLF);
-                skill.setWolfSettings(hero, wolf);
+                if (numWolves >= getSetting(hero.getHeroClass(), "max-wolves", 3)) {
+                    event.setCancelled(true);
+                    Messaging.send(player, "You can't tame anymore wolves!");
+                }
+                skill.setWolfSettings(hero, (Wolf) event.getEntity());
                 Messaging.send(player, "You have tamed a wolf!");
             }
         }

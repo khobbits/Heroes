@@ -27,3 +27,6 @@ Skills:
 		- Can now be applied to creatures
 	SoulFire - (NEW!)
 		- Ignites a players weapon causing attacks with it to have a chance to light their target on fire (Melee only)
+	Wolf
+		- Tamed wolves will now adhere to max-wolves restrictions
+		- Tamed wolves will now have the proper statistics as defined in the skill configuration
