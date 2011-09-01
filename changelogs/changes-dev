@@ -14,6 +14,8 @@ General/API:
 	Updated Default classes.yml to be more descriptive
 	Hero Help will no longer display commands the player does not have access to.
 	DiseaseEffect - works just like Bleed/Poison effects
+	Commented the Hero class
+	Added EffectType Enum for future use
 
 Skills:
 	

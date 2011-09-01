@@ -58,10 +58,18 @@ public class Hero {
         this.heroClass = heroClass;
     }
 
+    /**
+     * Syncs the Heros current health with the Minecraft HealthBar
+     */
     public void syncHealth() {
         getPlayer().setHealth((int) (health / getMaxHealth() * 20));
     }
 
+    /**
+     * Adds the Effect onto the hero, and calls it's apply method initiating it's first tic.
+     * 
+     * @param effect
+     */
     public void addEffect(Effect effect) {
         effects.add(effect);
         effect.apply(this);
@@ -71,10 +79,25 @@ public class Hero {
         this.itemRecovery.add(item);
     }
 
+    /**
+     * Adds a skill binding to the given Material.
+     * Ignores Air/Null values
+     * 
+     * @param material
+     * @param skillName
+     */
     public void bind(Material material, String[] skillName) {
+        if (material == Material.AIR || material == null)
+            return;
+        
         binds.put(material, skillName);
     }
 
+    /**
+     * Changes the hero's current class to the given class then clears all binds
+     * 
+     * @param heroClass
+     */
     public void changeHeroClass(HeroClass heroClass) {
         setHeroClass(heroClass);
         binds.clear();
@@ -102,10 +125,25 @@ public class Hero {
         return true;
     }
 
+    /**
+     * Standard Experience gain Call - automatically splits the gain between party members
+     * expChange supports negative values for experience loss.
+     * 
+     * @param expGain
+     * @param source
+     */
     public void gainExp(double expGain, ExperienceType source) {
         gainExp(expGain, source, true);
     }
 
+    /**
+     * Adds the specified experience to the hero before modifiers from the given source.
+     * expChange value supports negatives for experience loss.
+     * 
+     * @param expChange - amount of base exp to add
+     * @param source
+     * @param boolean - distributeToParty
+     */
     public void gainExp(double expChange, ExperienceType source, boolean distributeToParty) {
         Properties prop = plugin.getConfigManager().getProperties();
 
@@ -210,14 +248,30 @@ public class Hero {
             plugin.getHeroManager().saveHero(player);
     }
 
+    /**
+     * Gets the Map of all Bindings
+     * 
+     * @return
+     */
     public Map<Material, String[]> getBinds() {
         return binds;
     }
 
+    /**
+     * Gets the Map of all cooldowns
+     * 
+     * @return
+     */
     public Map<String, Long> getCooldowns() {
         return cooldowns;
     }
 
+    /**
+     * Attempts to find the effect from the given name
+     * 
+     * @param name
+     * @return the Effect with the name - or null if not found
+     */
     public Effect getEffect(String name) {
         for (Effect effect : effects) {
             if (effect.getName().equalsIgnoreCase(name)) {
@@ -227,44 +281,92 @@ public class Hero {
         return null;
     }
 
+    /**
+     * get a Clone of all effects active on the hero
+     * 
+     * @return
+     */
     public Set<Effect> getEffects() {
         return new HashSet<Effect>(effects);
     }
 
+    /**
+     * Get the hero's experience in it's current class.
+     * 
+     * @return double experience
+     */
     public double getExperience() {
         return getExperience(heroClass);
     }
 
+    /**
+     * Get the hero's experience in the given class
+     * 
+     * @param heroClass
+     * @return double experience
+     */
     public double getExperience(HeroClass heroClass) {
         Double exp = experience.get(heroClass.getName());
         return exp == null ? 0 : exp;
     }
 
+    /**
+     * Returns the hero's currently selected heroclass
+     * 
+     * @return heroclass
+     */
     public HeroClass getHeroClass() {
         return heroClass;
     }
 
+    /**
+     * 
+     * @return the level of the character - int
+     */
     public int getLevel() {
         return plugin.getConfigManager().getProperties().getLevel(getExperience());
     }
 
+    /**
+     * 
+     * @return the hero's current health - double
+     */
     public double getHealth() {
         return health;
     }
 
+    /**
+     * Maximum health is derived from the hero's class. It is the classes base max hp + hp per level.
+     * 
+     * @return the hero's maximum health
+     */
     public double getMaxHealth() {
         int level = plugin.getConfigManager().getProperties().getLevel(getExperience());
         return heroClass.getBaseMaxHealth() + (level - 1) * heroClass.getMaxHealthPerLevel();
     }
 
+    /**
+     * All mana is in percentages.
+     * 
+     * @return Hero's current amount of mana
+     */
     public int getMana() {
         return mana;
     }
 
+    /**
+     * Gets the hero's current party - returns null if the hero has no party
+     * 
+     * @return HeroParty
+     */
     public HeroParty getParty() {
         return party;
     }
 
+    /**
+     * 
+     * @return player associated with this hero
+     */
     public Player getPlayer() {
         return player;
     }
@@ -273,10 +375,18 @@ public class Hero {
         return this.itemRecovery;
     }
 
+    /**
+     * 
+     * @return set of all summons the hero currently has
+     */
     public Set<Creature> getSummons() {
         return summons;
     }
 
+    /**
+     * Removes the summons from the game world - then removes them from the set
+     * 
+     */
     public void clearSummons() {
         for (Creature summon : summons) {
             summon.remove();
@@ -284,10 +394,22 @@ public class Hero {
         summons.clear();
     }
 
+    /**
+     * Returns the currently suppressed skills
+     * For use with verbosity
+     * 
+     * @return
+     */
     public Set<String> getSuppressedSkills() {
         return new HashSet<String>(suppressedSkills);
     }
 
+    /**
+     * Checks if the hero currently has the Effect with the given name.
+     * 
+     * @param name
+     * @return boolean
+     */
     public boolean hasEffect(String name) {
         for (Effect effect : effects) {
             if (effect.getName().equalsIgnoreCase(name)) {
@@ -302,23 +424,48 @@ public class Hero {
         return player == null ? 0 : player.getName().hashCode();
     }
 
+    /**
+     * 
+     * @return if the player has a party
+     */
     public boolean hasParty() {
         return party != null;
     }
 
+    /**
+     * 
+     * @return if the hero is a master of his current class (max level)
+     */
     public boolean isMaster() {
         return isMaster(heroClass);
     }
 
+    /**
+     * Checks if the hero is a master of the given class
+     * 
+     * @param heroClass
+     * @return boolean
+     */
     public boolean isMaster(HeroClass heroClass) {
         int maxExp = plugin.getConfigManager().getProperties().maxExp;
         return getExperience(heroClass) >= maxExp || getExperience(heroClass) - maxExp > 0;
     }
 
+    /**
+     * Checks if verbosity is currently disabled for the current skill
+     * 
+     * @param skill
+     * @return boolean
+     */
     public boolean isSuppressing(Skill skill) {
         return suppressedSkills.contains(skill.getName());
     }
 
+    /**
+     * Checks if verbosity is fully enabled/disabled for the hero
+     * 
+     * @return boolean
+     */
     public boolean isVerbose() {
         return verbose;
     }
@@ -347,20 +494,41 @@ public class Hero {
         }
     }
 
+    /**
+     * Sets the hero's experience to the given value - this circumvents the standard Exp change event
+     * 
+     * @param experience
+     */
     public void setExperience(double experience) {
         setExperience(heroClass, experience);
     }
-
+    
+    /**
+     * Sets the hero's experience for the given class to the given value,
+     * this method will circumvent the ExpChangeEvent
+     * 
+     * @param heroClass
+     * @param experience
+     */
     public void setExperience(HeroClass heroClass, double experience) {
         this.experience.put(heroClass.getName(), experience);
     }
 
+    /**
+     * Clears all experience for all classes on the hero
+     * 
+     */
     public void clearExperience() {
         for (Entry<String, Double> entry : experience.entrySet()) {
             entry.setValue(0.0);
         }
     }
 
+    /**
+     * Changes the hero to the given class
+     * 
+     * @param heroClass
+     */
     public void setHeroClass(HeroClass heroClass) {
         double currentMaxHP = getMaxHealth();
         this.heroClass = heroClass;
@@ -374,6 +542,12 @@ public class Hero {
         this.plugin.getInventoryChecker().checkInventory(player);
     }
 
+    /**
+     * Sets the heros mana to the given value
+     * This circumvents the HeroRegainMana event.
+     * 
+     * @param mana
+     */
     public void setMana(int mana) {
         if (mana > 100) {
             mana = 100;
@@ -383,6 +557,11 @@ public class Hero {
         this.mana = mana;
     }
 
+    /**
+     * Sets the players current party to the given value
+     * 
+     * @param party
+     */
     public void setParty(HeroParty party) {
         this.party = party;
     }
@@ -391,6 +570,12 @@ public class Hero {
         this.itemRecovery = items;
     }
 
+    /**
+     * Adds or removes the given Skill from the set of suppressed skills
+     * 
+     * @param skill
+     * @param suppressed
+     */
     public void setSuppressed(Skill skill, boolean suppressed) {
         if (suppressed) {
             suppressedSkills.add(skill.getName());
@@ -399,10 +584,22 @@ public class Hero {
         }
     }
 
+    /**
+     * gets Mapping of the persistence SkillSettings for the given skill
+     * 
+     * @param skill
+     * @return
+     */
     public Map<String, String> getSkillSettings(Skill skill) {
         return skill == null ? null : getSkillSettings(skill.getName());
     }
 
+    /**
+     * gets Mapping of the persistence SkillSettings for the given skillName
+     * 
+     * @param skill
+     * @return
+     */
     public Map<String, String> getSkillSettings(String skillName) {
         if (!heroClass.hasSkill(skillName)) {
             return null;
@@ -411,10 +608,24 @@ public class Hero {
         return skillSettings.get(skillName.toLowerCase());
     }
 
+    /**
+     * sets a single setting in the persistence skill-settings map
+     * 
+     * @param skill
+     * @param node
+     * @param val
+     */
     public void setSkillSetting(Skill skill, String node, Object val) {
         setSkillSetting(skill.getName(), node, val);
     }
 
+    /**
+     * sets a single setting in the persistence skill-settings map
+     * 
+     * @param skill
+     * @param node
+     * @param val
+     */
     public void setSkillSetting(String skillName, String node, Object val) {
         Map<String, String> settings = skillSettings.get(skillName.toLowerCase());
         if (settings == null) {
@@ -424,14 +635,30 @@ public class Hero {
         settings.put(node, val.toString());
     }
 
+    /**
+     * Sets the heros verbosity
+     * 
+     * @param verbose
+     */
     public void setVerbose(boolean verbose) {
         this.verbose = verbose;
     }
 
+    /**
+     * Unbinds the material from a skill.
+     * 
+     * @param material
+     */
     public void unbind(Material material) {
         binds.remove(material);
     }
 
+    /**
+     * Sets the heros health, This method circumvents the HeroRegainHealth event
+     * if you use it to regain health on a hero please make sure to call the regain health event prior to setHealth.
+     * 
+     * @param health
+     */
     public void setHealth(Double health) {
         double maxHealth = getMaxHealth();
         if (health > maxHealth) {
@@ -443,10 +670,22 @@ public class Hero {
         }
     }
 
+    /**
+     * Checks if the hero has access to the given Skill
+     * 
+     * @param name
+     * @return
+     */
     public boolean hasSkill(String name) {
         return this.heroClass.hasSkill(name);
     }
     
+    /**
+     * Checks if the hero has access to the given Skill
+     * 
+     * @param skill
+     * @return
+     */
     public boolean hasSkill(Skill skill) {
         return this.heroClass.hasSkill(skill.getName());
     }
@@ -466,6 +705,12 @@ public class Hero {
         return lastDamageCause;
     }
 
+    /**
+     * Sets the hero's last damage cause the the given value
+     * Generally this should never be called through API as it is updated internally through the heroesdamagelistener
+     * 
+     * @param lastDamageCause
+     */
     public void setLastDamageCause(HeroDamageCause lastDamageCause) {
         this.lastDamageCause = lastDamageCause;
     }
