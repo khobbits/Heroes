@@ -72,6 +72,9 @@ public class Properties {
 
     // Stupid Hats...
     public boolean allowHats;
+    
+    // Prefix ClassName
+    public boolean prefixClassName;
 
     // Blocks that we don't want to change during skills otherwise it causes problems
     public final static List<String> defaultWeapons;

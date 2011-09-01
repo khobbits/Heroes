@@ -154,6 +154,7 @@ public class ConfigManager {
         properties.defClass = config.getString(root + "class");
         properties.defLevel = config.getInt(root + "level", 1);
         properties.allowHats = config.getBoolean(root + "allowhatsplugin", false);
+        properties.prefixClassName = config.getBoolean(root + "prefixClassName", false);
     }
 
     private void loadExperience(Configuration config) {
