@@ -8,6 +8,7 @@ import org.bukkit.command.CommandSender;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.command.BasicCommand;
+import com.herocraftonline.dev.heroes.command.CommandHandler;
 
 public class PathsCommand extends BasicCommand {
 
@@ -58,6 +59,10 @@ public class PathsCommand extends BasicCommand {
         }
         for (int c = start; c < end; c++) {
             HeroClass heroClass = paths[c];
+            
+            if (Heroes.Permissions != null && heroClass != plugin.getClassManager().getDefaultClass() && !CommandHandler.hasPermission(sender, "heroes.classes." + heroClass.getName().toLowerCase()))
+                continue;
+            
             String description = heroClass.getDescription();
             if (description == null || description.isEmpty()) {
                 sender.sendMessage("  §a" + heroClass.getName());
