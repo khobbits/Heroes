@@ -237,6 +237,8 @@ public class HeroClassManager {
                 // Load all skills onto the Class if we found ALL
                 if (allSkills) {
                     for (Command command : plugin.getCommandHandler().getCommands()) {
+                        if (!(command instanceof Skill))
+                            continue;
                         try {
                             Skill skill = (Skill) command;
                             // Ignore this skill if it was already loaded onto the class (we don't want to overwrite defined skills as they have settings)
