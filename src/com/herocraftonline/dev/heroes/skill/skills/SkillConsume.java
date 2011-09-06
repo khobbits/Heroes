@@ -48,7 +48,7 @@ public class SkillConsume extends ActiveSkill {
         }
         
         for (String key : keys) {
-            if (key.equals(args[0])) {
+            if (key.toUpperCase().equals(args[0].toUpperCase())) {
                 Material mat = Material.matchMaterial(key);
                 if (mat == null) {
                     throw new IllegalArgumentException("Invalid Configuration for Skill Consume: " + key + " is not a valid Material");

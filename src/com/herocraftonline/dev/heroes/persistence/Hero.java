@@ -64,7 +64,10 @@ public class Hero {
      * Syncs the Heros current health with the Minecraft HealthBar
      */
     public void syncHealth() {
-        getPlayer().setHealth((int) (health / getMaxHealth() * 20));
+        if ((player.isDead() || player.getHealth() == 0) && health <= 0)
+            return;
+        
+        player.setHealth((int) (health / getMaxHealth() * 20));
     }
 
     /**
