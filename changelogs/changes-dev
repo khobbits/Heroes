@@ -16,7 +16,8 @@ General/API:
 	Hero Help will no longer display commands the player does not have access to.
 	DiseaseEffect - works just like Bleed/Poison effects
 	Commented the Hero class
-	Added EffectType Enum for future use
+	Added EffectType Enum - removed Classes to determine an Effects type, please convert to enum for type checks.
+	Added SkillType Enum - for future use, expect similar usage to EffectType
 
 Skills:
 	

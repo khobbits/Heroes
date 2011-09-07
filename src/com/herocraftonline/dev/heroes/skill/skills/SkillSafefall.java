@@ -10,8 +10,7 @@ import org.bukkit.event.entity.EntityListener;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.effects.Beneficial;
-import com.herocraftonline.dev.heroes.effects.Dispellable;
+import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
@@ -59,10 +58,12 @@ public class SkillSafefall extends ActiveSkill {
         return true;
     }
 
-    public class SafefallEffect extends ExpirableEffect implements Dispellable, Beneficial {
+    public class SafefallEffect extends ExpirableEffect {
 
         public SafefallEffect(Skill skill, long duration) {
             super(skill, "Safefall", duration);
+            this.types.add(EffectType.DISPELLABLE);
+            this.types.add(EffectType.BENEFICIAL);
         }
 
         @Override

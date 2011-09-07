@@ -26,9 +26,8 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.effects.Beneficial;
-import com.herocraftonline.dev.heroes.effects.Dispellable;
 import com.herocraftonline.dev.heroes.effects.Effect;
+import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
 import com.herocraftonline.dev.heroes.effects.PeriodicEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
@@ -95,13 +94,15 @@ public class SkillSkeleton extends ActiveSkill {
         return false;
     }
 
-    public class SummonEffect extends ExpirableEffect implements Dispellable, Beneficial {
+    public class SummonEffect extends ExpirableEffect {
 
         private Hero summoner;
 
         public SummonEffect(Skill skill, long duration, Hero summoner) {
             super(skill, "Summon", duration);
             this.summoner = summoner;
+            this.types.add(EffectType.DISPELLABLE);
+            this.types.add(EffectType.BENEFICIAL);
         }
 
         @Override

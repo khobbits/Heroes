@@ -17,9 +17,8 @@ import org.bukkit.util.config.ConfigurationNode;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.HeroesEventListener;
 import com.herocraftonline.dev.heroes.api.SkillUseEvent;
-import com.herocraftonline.dev.heroes.effects.Expirable;
+import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
-import com.herocraftonline.dev.heroes.effects.Periodic;
 import com.herocraftonline.dev.heroes.effects.PeriodicEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
@@ -81,6 +80,7 @@ public class SkillBlackjack extends ActiveSkill {
 
         public BlackjackEffect(Skill skill, long duration) {
             super(skill, "Blackjack", duration);
+            this.types.add(EffectType.BENEFICIAL);
         }
 
         @Override
@@ -158,7 +158,7 @@ public class SkillBlackjack extends ActiveSkill {
         }
     }
 
-    public class StunEffect extends PeriodicEffect implements Periodic, Expirable {
+    public class StunEffect extends PeriodicEffect {
 
         private static final long period = 100;
 
@@ -166,6 +166,10 @@ public class SkillBlackjack extends ActiveSkill {
 
         public StunEffect(Skill skill, long duration) {
             super(skill, "Stun", period, duration);
+            this.types.add(EffectType.STUN);
+            this.types.add(EffectType.HARMFUL);
+            this.types.add(EffectType.PHYSICAL);
+            this.types.add(EffectType.DISABLE);
         }
 
         @Override

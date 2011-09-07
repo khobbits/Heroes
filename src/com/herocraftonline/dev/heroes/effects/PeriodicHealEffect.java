@@ -9,7 +9,7 @@ import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.util.Properties;
 
-public class PeriodicHealEffect extends PeriodicEffect implements Beneficial {
+public class PeriodicHealEffect extends PeriodicEffect {
 
     private int tickHealth;
     private final Player applier;
@@ -18,6 +18,8 @@ public class PeriodicHealEffect extends PeriodicEffect implements Beneficial {
         super(skill, name, period, duration);
         this.tickHealth = tickHealth;
         this.applier = applier;
+        this.types.add(EffectType.BENEFICIAL);
+        this.types.add(EffectType.HEAL);
     }
 
     @Override

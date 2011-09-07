@@ -10,6 +10,7 @@ import org.bukkit.event.entity.EntityListener;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
@@ -63,6 +64,8 @@ public class SkillBladegrasp extends ActiveSkill {
 
         public BladegraspEffect(Skill skill, long duration) {
             super(skill, "Bladegrasp", duration);
+            this.types.add(EffectType.PHYSICAL);
+            this.types.add(EffectType.BENEFICIAL);
         }
 
         @Override
@@ -100,6 +103,5 @@ public class SkillBladegrasp extends ActiveSkill {
                 }
             }
         }
-
     }
 }

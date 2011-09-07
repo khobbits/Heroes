@@ -9,8 +9,8 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.effects.DiseaseEffect;
-import com.herocraftonline.dev.heroes.effects.Dispellable;
+import com.herocraftonline.dev.heroes.effects.EffectType;
+import com.herocraftonline.dev.heroes.effects.PeriodicDamageEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
@@ -88,7 +88,7 @@ public class SkillPlague extends TargettedSkill {
         return true;
     }
 
-    public class PlagueEffect extends DiseaseEffect implements Dispellable {
+    public class PlagueEffect extends PeriodicDamageEffect {
 
         public PlagueEffect(Skill skill, long duration, long period, int tickDamage, Player applier) {
             super(skill, "Plague", period, duration, tickDamage, applier);
@@ -97,6 +97,8 @@ public class SkillPlague extends TargettedSkill {
         //Clone Constructor
         private PlagueEffect(PlagueEffect pEffect) {
             super(pEffect.skill, pEffect.name, pEffect.getPeriod(), pEffect.getDuration(), pEffect.tickDamage, pEffect.applier);
+            this.types.add(EffectType.DISPELLABLE);
+            this.types.add(EffectType.DISEASE);
         }
         
         @Override

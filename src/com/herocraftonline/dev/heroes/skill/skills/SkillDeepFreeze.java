@@ -16,8 +16,7 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.HeroesEventListener;
 import com.herocraftonline.dev.heroes.api.SkillDamageEvent;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
-import com.herocraftonline.dev.heroes.effects.Dispellable;
-import com.herocraftonline.dev.heroes.effects.Harmful;
+import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.effects.PeriodicEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
@@ -96,7 +95,7 @@ public class SkillDeepFreeze extends TargettedSkill {
         return true;
     }
 
-    public class FreezeEffect extends PeriodicEffect implements Dispellable, Harmful {
+    public class FreezeEffect extends PeriodicEffect {
 
         private static final long period = 100;
         private final Hero applier;
@@ -105,6 +104,10 @@ public class SkillDeepFreeze extends TargettedSkill {
         public FreezeEffect(Skill skill, long duration, Hero applier) {
             super(skill, "Freeze", period, duration);
             this.applier = applier;
+            this.types.add(EffectType.DISPELLABLE);
+            this.types.add(EffectType.HARMFUL);
+            this.types.add(EffectType.ICE);
+            this.types.add(EffectType.ROOT);
         }
 
         @Override

@@ -18,8 +18,7 @@ import org.bukkit.event.block.BlockListener;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.effects.Beneficial;
-import com.herocraftonline.dev.heroes.effects.Dispellable;
+import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.effects.PeriodicEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
@@ -85,7 +84,7 @@ public class SkillIcyAura extends ActiveSkill {
         return true;
     }
 
-    public class IcyAuraEffect extends PeriodicEffect implements Dispellable, Beneficial {
+    public class IcyAuraEffect extends PeriodicEffect {
 
         private final int tickDamage;
         private final int range;
@@ -94,6 +93,9 @@ public class SkillIcyAura extends ActiveSkill {
             super(skill, "IcyAura", period, duration);
             this.tickDamage = tickDamage;
             this.range = range;
+            this.types.add(EffectType.DISPELLABLE);
+            this.types.add(EffectType.BENEFICIAL);
+            this.types.add(EffectType.ICE);
         }
 
         @Override

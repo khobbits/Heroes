@@ -8,8 +8,7 @@ import org.bukkit.util.Vector;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.effects.Dispellable;
-import com.herocraftonline.dev.heroes.effects.Harmful;
+import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.effects.PeriodicEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
@@ -74,13 +73,15 @@ public class SkillConfuse extends TargettedSkill {
         return true;
     }
 
-    public class ConfuseEffect extends PeriodicEffect implements Dispellable, Harmful {
+    public class ConfuseEffect extends PeriodicEffect {
 
         private final float maxDrift;
 
         public ConfuseEffect(Skill skill, long duration, long period, float maxDrift) {
             super(skill, "Confuse", period, duration);
             this.maxDrift = maxDrift;
+            this.types.add(EffectType.HARMFUL);
+            this.types.add(EffectType.DISPELLABLE);
         }
 
         @Override

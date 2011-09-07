@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.effects.Effect;
-import com.herocraftonline.dev.heroes.effects.PoisonEffect;
+import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
@@ -27,7 +27,7 @@ public class SkillAntidote extends TargettedSkill {
             Hero targetHero = plugin.getHeroManager().getHero((Player) target);
             boolean cured = false;
             for (Effect effect : targetHero.getEffects()) {
-                if (effect instanceof PoisonEffect) {
+                if (effect.getTypes().contains(EffectType.POISON) && !effect.getTypes().contains(EffectType.BENEFICIAL)) {
                     cured = true;
                     targetHero.removeEffect(effect);
                 }

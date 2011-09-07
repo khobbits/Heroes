@@ -8,8 +8,8 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.effects.Harmful;
-import com.herocraftonline.dev.heroes.effects.PoisonEffect;
+import com.herocraftonline.dev.heroes.effects.EffectType;
+import com.herocraftonline.dev.heroes.effects.PeriodicDamageEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
@@ -82,10 +82,11 @@ public class SkillPoison extends TargettedSkill {
         return true;
     }
 
-    public class PoisonSkillEffect extends PoisonEffect implements Harmful {
+    public class PoisonSkillEffect extends PeriodicDamageEffect {
 
         public PoisonSkillEffect(Skill skill, String name, long period, long duration, int tickDamage, Player applier) {
             super(skill, name, period, duration, tickDamage, applier);
+            this.types.add(EffectType.POISON);
         }
 
         @Override

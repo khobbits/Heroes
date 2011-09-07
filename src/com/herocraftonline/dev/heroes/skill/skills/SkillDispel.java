@@ -8,10 +8,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.effects.Beneficial;
-import com.herocraftonline.dev.heroes.effects.Dispellable;
 import com.herocraftonline.dev.heroes.effects.Effect;
-import com.herocraftonline.dev.heroes.effects.Harmful;
+import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
@@ -44,7 +42,7 @@ public class SkillDispel extends TargettedSkill {
             // if player is targetting itself
             if (targetPlayer.equals(player)) {
                 for (Effect effect : hero.getEffects()) {
-                    if (effect instanceof Dispellable && effect instanceof Harmful) {
+                    if (effect.getTypes().contains(EffectType.DISPELLABLE) && !effect.getTypes().contains(EffectType.HARMFUL)) {
                         hero.removeEffect(effect);
                         removed = true;
                         maxRemovals--;
@@ -62,14 +60,14 @@ public class SkillDispel extends TargettedSkill {
                     }
                 }
                 for (Effect effect : targetHero.getEffects()) {
-                    if (effect instanceof Dispellable) {
-                        if (removeHarmful && effect instanceof Harmful) {
+                    if (effect.getTypes().contains(EffectType.DISPELLABLE)) {
+                        if (removeHarmful && effect.getTypes().contains(EffectType.HARMFUL)) {
                             targetHero.removeEffect(effect);
                             removed = true;
                             maxRemovals--;
                             if (maxRemovals == 0)
                                 break;
-                        } else if (!removeHarmful && effect instanceof Beneficial) {
+                        } else if (!removeHarmful && effect.getTypes().contains(EffectType.BENEFICIAL)) {
                             targetHero.removeEffect(effect);
                             removed = true;
                             maxRemovals--;
@@ -87,14 +85,14 @@ public class SkillDispel extends TargettedSkill {
                     removeHarmful = true;
                 }
                 for (Effect effect : cEffects) {
-                    if (effect instanceof Dispellable) {
-                        if (removeHarmful && effect instanceof Harmful) {
+                    if (effect.getTypes().contains(EffectType.DISPELLABLE)) {
+                        if (removeHarmful && effect.getTypes().contains(EffectType.HARMFUL)) {
                             plugin.getHeroManager().removeCreatureEffect((Creature) target, effect);
                             removed = true;
                             maxRemovals--;
                             if (maxRemovals == 0)
                                 break;
-                        } else if (!removeHarmful && effect instanceof Beneficial) {
+                        } else if (!removeHarmful && effect.getTypes().contains(EffectType.BENEFICIAL)) {
                             plugin.getHeroManager().removeCreatureEffect((Creature) target, effect);
                             removed = true;
                             maxRemovals--;

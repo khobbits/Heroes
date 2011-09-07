@@ -8,8 +8,8 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.effects.BleedEffect;
-import com.herocraftonline.dev.heroes.effects.Harmful;
+import com.herocraftonline.dev.heroes.effects.EffectType;
+import com.herocraftonline.dev.heroes.effects.PeriodicDamageEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
@@ -85,10 +85,11 @@ public class SkillBleed extends TargettedSkill {
         return true;
     }
 
-    public class BleedSkillEffect extends BleedEffect implements Harmful {
+    public class BleedSkillEffect extends PeriodicDamageEffect {
 
         public BleedSkillEffect(Skill skill, long duration, long period, int tickDamage, Player applier) {
             super(skill, "Bleed", period, duration, tickDamage, applier);
+            this.types.add(EffectType.BLEED);
         }
 
         @Override

@@ -1,5 +1,8 @@
 package com.herocraftonline.dev.heroes.effects;
 
+import java.util.EnumSet;
+import java.util.Set;
+
 import org.bukkit.Location;
 import org.bukkit.entity.Creature;
 
@@ -13,6 +16,7 @@ public class Effect {
     protected final Skill skill;
     protected Heroes plugin;
     private boolean persistent;
+    protected final Set<EffectType> types = EnumSet.noneOf(EffectType.class);
 
     public Effect(Skill skill, String name) {
         this.name = name;
@@ -58,12 +62,27 @@ public class Effect {
         return true;
     }
 
+    /**
+     * 
+     * @return the name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * 
+     * @return the Skill
+     */
     public Skill getSkill() {
         return skill;
+    }
+
+    /**
+     * @return the types
+     */
+    public Set<EffectType> getTypes() {
+        return types;
     }
 
     @Override
@@ -74,6 +93,10 @@ public class Effect {
         return result;
     }
 
+    /**
+     * Returns if the effect is persistent or not
+     * @return 
+     */
     public boolean isPersistent() {
         return persistent;
     }
@@ -84,6 +107,10 @@ public class Effect {
     public void remove(Creature creature) {
     }
 
+    /*
+     * Sets the effects persistence value
+     * 
+     */
     public void setPersistent(boolean persistent) {
         this.persistent = persistent;
     }

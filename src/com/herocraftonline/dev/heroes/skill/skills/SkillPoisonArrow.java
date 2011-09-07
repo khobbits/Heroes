@@ -11,10 +11,9 @@ import org.bukkit.event.entity.EntityListener;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.effects.Beneficial;
+import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
-import com.herocraftonline.dev.heroes.effects.Harmful;
-import com.herocraftonline.dev.heroes.effects.PoisonEffect;
+import com.herocraftonline.dev.heroes.effects.PeriodicDamageEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
@@ -111,13 +110,15 @@ public class SkillPoisonArrow extends ActiveSkill {
         }
     }
     
-    public class PoisonArrowBuff extends ExpirableEffect implements Beneficial {
+    public class PoisonArrowBuff extends ExpirableEffect {
         
         private int applicationsLeft = 1;
         
         public PoisonArrowBuff(Skill skill, long duration, int numAttacks) {
             super(skill, "PoisonArrowBuff", duration);
             this.applicationsLeft = numAttacks;
+            this.types.add(EffectType.BENEFICIAL);
+            this.types.add(EffectType.POISON);
         }
         
         /**
@@ -140,10 +141,11 @@ public class SkillPoisonArrow extends ActiveSkill {
         }
     }
     
-    public class ArrowPoison extends PoisonEffect implements Harmful {
+    public class ArrowPoison extends PeriodicDamageEffect {
 
         public ArrowPoison(Skill skill, long period, long duration, int tickDamage, Player applier) {
             super(skill, "ArrowPoison", period, duration, tickDamage, applier);
+            this.types.add(EffectType.POISON);
 
         }
 

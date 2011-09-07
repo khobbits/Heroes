@@ -13,10 +13,9 @@ import org.bukkit.util.config.ConfigurationNode;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.HeroesEventListener;
 import com.herocraftonline.dev.heroes.api.WeaponDamageEvent;
-import com.herocraftonline.dev.heroes.effects.Dispellable;
 import com.herocraftonline.dev.heroes.effects.Effect;
+import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
-import com.herocraftonline.dev.heroes.effects.Harmful;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
@@ -92,13 +91,15 @@ public class SkillCurse extends TargettedSkill {
         return false;
     }
 
-    public class CurseEffect extends ExpirableEffect implements Dispellable, Harmful {
+    public class CurseEffect extends ExpirableEffect {
 
         private final double missChance;
 
         public CurseEffect(Skill skill, long duration, double missChance) {
             super(skill, "Curse", duration);
             this.missChance = missChance;
+            this.types.add(EffectType.HARMFUL);
+            this.types.add(EffectType.DISPELLABLE);
         }
 
         @Override

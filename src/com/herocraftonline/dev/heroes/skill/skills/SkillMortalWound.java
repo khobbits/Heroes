@@ -14,7 +14,8 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.HeroRegainHealthEvent;
 import com.herocraftonline.dev.heroes.api.HeroesEventListener;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
-import com.herocraftonline.dev.heroes.effects.BleedEffect;
+import com.herocraftonline.dev.heroes.effects.EffectType;
+import com.herocraftonline.dev.heroes.effects.PeriodicDamageEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
@@ -98,13 +99,14 @@ public class SkillMortalWound extends TargettedSkill {
         return true;
     }
 
-    public class MortalWound extends BleedEffect {
+    public class MortalWound extends PeriodicDamageEffect {
 
         private final double healMultiplier;
 
         public MortalWound(Skill skill, long period, long duration, int tickDamage, Player applier, double healMultiplier) {
             super(skill, "MortalWound", period, duration, tickDamage, applier);
             this.healMultiplier = healMultiplier;
+            this.types.add(EffectType.BLEED);
         }
 
         @Override

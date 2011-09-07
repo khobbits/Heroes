@@ -16,7 +16,7 @@ import org.bukkit.event.player.PlayerListener;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.effects.Beneficial;
+import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
@@ -94,10 +94,11 @@ public class SkillSmoke extends ActiveSkill {
         }
     }
 
-    public class SmokeEffect extends ExpirableEffect implements Beneficial {
+    public class SmokeEffect extends ExpirableEffect {
 
         public SmokeEffect(Skill skill, long duration) {
             super(skill, "Smoke", duration);
+            this.types.add(EffectType.BENEFICIAL);
         }
 
         @Override

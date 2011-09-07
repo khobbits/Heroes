@@ -13,6 +13,7 @@ import com.herocraftonline.dev.heroes.api.HeroChangeLevelEvent;
 import com.herocraftonline.dev.heroes.api.HeroesEventListener;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.effects.Effect;
+import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.util.Setting;
 
@@ -114,6 +115,7 @@ public abstract class PassiveSkill extends Skill {
     protected void apply(Hero hero) {
         Effect effect = new Effect(this, getName());
         effect.setPersistent(true);
+        effect.getTypes().add(EffectType.BENEFICIAL);
         hero.addEffect(effect);
         Player player = hero.getPlayer();
         broadcast(player.getLocation(), applyText, player.getDisplayName(), getName());

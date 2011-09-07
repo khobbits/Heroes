@@ -5,8 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.effects.Beneficial;
-import com.herocraftonline.dev.heroes.effects.Dispellable;
+import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.effects.PeriodicHealEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
@@ -68,10 +67,11 @@ public class SkillRejuvenate extends TargettedSkill {
         return false;
     }
 
-    public class RejuvenateEffect extends PeriodicHealEffect implements Dispellable, Beneficial {
+    public class RejuvenateEffect extends PeriodicHealEffect {
 
         public RejuvenateEffect(Skill skill, long period, long duration, int tickHealth, Player applier) {
             super(skill, "Rejuvenate", period, duration, tickHealth, applier);
+            this.types.add(EffectType.DISPELLABLE);
         }
 
         @Override

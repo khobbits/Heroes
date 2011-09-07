@@ -682,11 +682,7 @@ public class Hero {
      * @return
      */
     public boolean hasSkill(String name) {
-        if(this.heroClass.hasSkill(name) || hasHeroSkill(name)) {
-            return true;
-        }else {
-            return false;
-        }
+        return this.heroClass.hasSkill(name) || skills.containsKey(name);
     }
     
     /**
@@ -696,12 +692,7 @@ public class Hero {
      * @return
      */
     public boolean hasSkill(Skill skill) {
-        String name = skill.getName();
-        if(this.heroClass.hasSkill(name) || hasHeroSkill(name)) {
-            return true;
-        }else {
-            return false;
-        }
+        return hasSkill(skill.getName());
     }
 
     public Map<String, ConfigurationNode> getSkills() {
@@ -714,10 +705,6 @@ public class Hero {
     
     public void removeSkill(String skill) {
         skills.remove(skill);
-    }
-    
-    public boolean hasHeroSkill(String skill) {
-        return skills.containsKey(skill);
     }
 
     public HeroDamageCause getLastDamageCause() {

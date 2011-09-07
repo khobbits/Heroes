@@ -9,11 +9,9 @@ import org.bukkit.event.entity.EntityListener;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.effects.Beneficial;
-import com.herocraftonline.dev.heroes.effects.Dispellable;
 import com.herocraftonline.dev.heroes.effects.Effect;
+import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
-import com.herocraftonline.dev.heroes.effects.Harmful;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
@@ -56,7 +54,7 @@ public class SkillInvuln extends ActiveSkill {
         int duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 10000);
         // Remove any harmful effects on the caster
         for (Effect effect : hero.getEffects()) {
-            if (effect instanceof Harmful) {
+            if (effect.getTypes().contains(EffectType.HARMFUL)) {
                 hero.removeEffect(effect);
             }
         }
@@ -64,10 +62,13 @@ public class SkillInvuln extends ActiveSkill {
         return true;
     }
 
-    public class InvulnerabilityEffect extends ExpirableEffect implements Dispellable, Beneficial {
+    public class InvulnerabilityEffect extends ExpirableEffect {
 
         public InvulnerabilityEffect(Skill skill, long duration) {
             super(skill, "Invuln", duration);
+            this.types.add(EffectType.DISPELLABLE);
+            this.types.add(EffectType.BENEFICIAL);
+            this.types.add(EffectType.INVULNERABILITY);
         }
 
         @Override

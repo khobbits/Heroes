@@ -15,8 +15,8 @@ import org.bukkit.util.Vector;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
-import com.herocraftonline.dev.heroes.effects.Harmful;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
@@ -151,14 +151,17 @@ public class SkillChainLightning extends TargettedSkill {
         return true;
     }
 
-    public class DelayedBolt extends ExpirableEffect implements Harmful {
+    public class DelayedBolt extends ExpirableEffect {
 
         private final Hero applier;
         private final int bounceDamage ;
+        
         public DelayedBolt(Skill skill, long duration, Hero applier, int bounceDamage) {
             super(skill, "DelayedBolt", duration);
             this.applier = applier;
             this.bounceDamage = bounceDamage;
+            this.types.add(EffectType.HARMFUL);
+            this.types.add(EffectType.LIGHTNING);
         }
 
         @Override

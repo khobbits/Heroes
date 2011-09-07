@@ -18,9 +18,8 @@ import org.bukkit.event.entity.EntityListener;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.effects.Dispellable;
+import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
-import com.herocraftonline.dev.heroes.effects.Harmful;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
@@ -96,13 +95,16 @@ public class SkillPiggify extends TargettedSkill {
         }
     }
 
-    public class PigEffect extends ExpirableEffect implements Dispellable, Harmful {
+    public class PigEffect extends ExpirableEffect {
 
         private final Creature creature;
 
         public PigEffect(Skill skill, long duration, Creature creature) {
             super(skill, "Piggify", duration);
             this.creature = creature;
+            this.types.add(EffectType.DISPELLABLE);
+            this.types.add(EffectType.HARMFUL);
+            this.types.add(EffectType.DISABLE);
         }
 
         @Override

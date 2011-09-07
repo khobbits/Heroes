@@ -4,6 +4,7 @@ public enum EffectType {
 
     BENEFICIAL,
     BLEED,
+    DISABLE, // Loss of Control of character
     DISEASE,
     DISPELLABLE,
     ICE,

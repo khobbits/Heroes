@@ -11,8 +11,7 @@ import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.WeaponDamageEvent;
-import com.herocraftonline.dev.heroes.effects.Beneficial;
-import com.herocraftonline.dev.heroes.effects.Dispellable;
+import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
@@ -75,13 +74,15 @@ public class SkillMight extends ActiveSkill {
         return true;
     }
 
-    public class MightEffect extends ExpirableEffect implements Dispellable, Beneficial {
+    public class MightEffect extends ExpirableEffect {
 
         private final double damageBonus;
 
         public MightEffect(Skill skill, long duration, double damageBonus) {
             super(skill, "Might", duration);
             this.damageBonus = damageBonus;
+            this.types.add(EffectType.DISPELLABLE);
+            this.types.add(EffectType.BENEFICIAL);
         }
 
         @Override

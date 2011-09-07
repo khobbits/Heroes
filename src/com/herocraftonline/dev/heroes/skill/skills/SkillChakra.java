@@ -5,7 +5,7 @@ import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.effects.Effect;
-import com.herocraftonline.dev.heroes.effects.Harmful;
+import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.util.Setting;
@@ -67,7 +67,7 @@ public class SkillChakra extends ActiveSkill {
         }
         
         for (Effect effect : hero.getEffects()) {
-            if (effect instanceof Harmful) {
+            if (effect.getTypes().contains(EffectType.HARMFUL)) {
                 hero.removeEffect(effect);
                 removals--;
                 if (removals == 0)

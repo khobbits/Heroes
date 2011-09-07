@@ -12,7 +12,7 @@ import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.effects.Beneficial;
+import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.effects.PeriodicEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
@@ -70,10 +70,12 @@ public class SkillSneak extends ActiveSkill {
         return true;
     }
 
-    public class SneakEffect extends PeriodicEffect implements Beneficial {
+    public class SneakEffect extends PeriodicEffect {
 
         public SneakEffect(Skill skill, long period, long duration) {
             super(skill, "Sneak", period, duration);
+            this.types.add(EffectType.BENEFICIAL);
+            this.types.add(EffectType.PHYSICAL);
         }
 
         @Override

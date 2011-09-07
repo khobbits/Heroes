@@ -11,10 +11,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.effects.Beneficial;
+import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
-import com.herocraftonline.dev.heroes.effects.Harmful;
-import com.herocraftonline.dev.heroes.effects.PoisonEffect;
+import com.herocraftonline.dev.heroes.effects.PeriodicDamageEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
@@ -118,13 +117,15 @@ public class SkillAssassinsBlade extends ActiveSkill {
         }
     }
     
-    public class AssassinBladeBuff extends ExpirableEffect implements Beneficial {
+    public class AssassinBladeBuff extends ExpirableEffect {
 
         private int applicationsLeft = 1;
         
         public AssassinBladeBuff(Skill skill, long duration, int numAttacks) {
             super(skill, "PoisonBlade", duration);
             this.applicationsLeft = numAttacks;
+            this.types.add(EffectType.BENEFICIAL);
+            this.types.add(EffectType.POISON);
         }
 
         /**
@@ -147,10 +148,11 @@ public class SkillAssassinsBlade extends ActiveSkill {
         }
     }
     
-    public class AssassinsPoison extends PoisonEffect implements Harmful {
+    public class AssassinsPoison extends PeriodicDamageEffect {
 
         public AssassinsPoison(Skill skill, long period, long duration, int tickDamage, Player applier) {
             super(skill, "AssassinsPoison", period, duration, tickDamage, applier);
+            this.types.add(EffectType.POISON);
         }
         
         @Override
