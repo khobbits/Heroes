@@ -8,6 +8,7 @@ Bug Fixes:
 	Fixed admin commands erroring when attempting to modify offline players.  They will simple warn the user now.
 	Who & Reload commands now work from console as intended
 	Paths command will no longer show Paths the player can not select
+	Summons will no longer double-up/persist through a restart.
 	
 General/API:
 
@@ -26,6 +27,8 @@ Skills:
 	Chant - (NEW!)
 		- Heals the target for the amount specified - defaults are lower than Pray - intended as a lower level Heal
 		- This allows healer classes to have more than just pray as a flat heal
+	Consume
+		- Should now be case-insensetive when attempting to use the skill.
 	Decay - (NEW!)
 		- Dispellable periodic damage effect (similar to Bleed & Poison)
 		- It's a disease - Noh Waih!

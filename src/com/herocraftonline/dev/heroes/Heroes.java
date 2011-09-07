@@ -220,6 +220,7 @@ public class Heroes extends JavaPlugin {
         final Player[] players = getServer().getOnlinePlayers();
         for (Player player : players) {
             heroManager.saveHero(player);
+            heroManager.getHero(player).clearSummons();
             switchToBNSH(player);
         }
         this.Method = null; // When it Enables again it performs the checks anyways.
