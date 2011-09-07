@@ -59,9 +59,16 @@ public class SkillChakra extends ActiveSkill {
         }
         if (removals == 0)
             return;
+
+        if (hero.getPlayer().getFireTicks() > 0) {
+            removals--;
+            hero.getPlayer().setFireTicks(0);
+            if (removals == 0)
+                return;
+        }
         
         for (Effect effect : hero.getEffects()) {
-            if (effect instanceof Dispellable && effect instanceof Harmful) {
+            if (effect instanceof Harmful) {
                 hero.removeEffect(effect);
                 removals--;
                 if (removals == 0)
