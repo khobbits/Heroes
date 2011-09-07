@@ -49,8 +49,8 @@ public class SkillFireArmor extends ActiveSkill {
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
         node.setProperty("armors", defaultArmors);
-        node.setProperty(Setting.APPLY_TEXT.node(), "%hero%'s weapon is sheathed in flame!");
-        node.setProperty(Setting.EXPIRE_TEXT.node(), "%hero%'s weapon is no longer aflame!");
+        node.setProperty(Setting.APPLY_TEXT.node(), "%hero%'s armor is enveloped in flame!");
+        node.setProperty(Setting.EXPIRE_TEXT.node(), "%hero%'s armor is no longer aflame!");
         node.setProperty(Setting.DURATION.node(), 20000);
         node.setProperty("ignite-chance", 0.20);
         node.setProperty("ignite-duration", 5000);

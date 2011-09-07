@@ -3,6 +3,8 @@ package com.herocraftonline.dev.heroes.skill.skills;
 import java.util.Iterator;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Player;
@@ -85,6 +87,15 @@ public class SkillWolf extends ActiveSkill {
 
             int distance = getSetting(hero.getHeroClass(), Setting.MAX_DISTANCE.node(), 5);
             Location castLoc = player.getTargetBlock(null, distance).getLocation();
+            if (castLoc.getBlock().getType() != Material.AIR) {
+                castLoc = castLoc.getBlock().getRelative(BlockFace.UP).getLocation();
+            }
+            
+            if (castLoc.getBlock().getType() != Material.AIR) {
+                Messaging.send(player, "No room to summon a wolf at that locatioN!");
+                return false;
+            }
+            
             Wolf wolf = (Wolf) player.getWorld().spawnCreature(castLoc, CreatureType.WOLF);
             setWolfSettings(hero, wolf);
             hero.setSkillSetting(this, "wolves", wolves + 1);

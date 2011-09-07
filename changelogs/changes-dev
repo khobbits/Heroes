@@ -64,3 +64,4 @@ Skills:
 	Wolf
 		- Tamed wolves will now adhere to max-wolves restrictions
 		- Tamed wolves will now have the proper statistics as defined in the skill configuration
+		- Will no longer spawn underground and take damage

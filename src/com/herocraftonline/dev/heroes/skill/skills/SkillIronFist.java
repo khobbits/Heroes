@@ -32,7 +32,7 @@ public class SkillIronFist extends ActiveSkill {
         node.setProperty(Setting.DAMAGE.node(), 4);
         node.setProperty(Setting.RADIUS.node(), 3);
         node.setProperty("vertical-power", .25);
-        node.setProperty("horizontal-power", .25);
+        node.setProperty("horizontal-power", .5);
         return node;
     }
 
@@ -67,8 +67,8 @@ public class SkillIronFist extends ActiveSkill {
             
             //Do our knockback
             float pitch = player.getEyeLocation().getPitch();
-            float multiplier = getSetting(hero.getHeroClass(), "horizontal-power", 1) * (90f + pitch) / 40f;
-            float vertPower = getSetting(hero.getHeroClass(), "vertical-power", 1);
+            float multiplier = (float) (getSetting(hero.getHeroClass(), "horizontal-power", .5) * (90f + pitch) / 40f);
+            float vertPower = (float) getSetting(hero.getHeroClass(), "vertical-power", .25);
             Vector v = target.getVelocity().setY(vertPower).add(player.getLocation().getDirection().setY(0).normalize().multiply(multiplier));
             target.setVelocity(v);
         }
