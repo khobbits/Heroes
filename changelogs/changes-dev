@@ -52,6 +52,8 @@ Skills:
 		- Short-range AoE that also performs a mild knockback.
 	Plague - (NEW!)
 		- Disease effect that spreads to nearby enemies when it deals damage!
+	Pulse
+		- Fixed it so if one target was immune it would still effect everyone else
 	Root
 		- No longer circumvents PvP
 		- Can now be applied to creatures

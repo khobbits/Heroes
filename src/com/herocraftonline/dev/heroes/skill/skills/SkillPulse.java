@@ -51,7 +51,7 @@ public class SkillPulse extends ActiveSkill {
                 EntityDamageEvent damageEvent = new EntityDamageEvent(player, DamageCause.CUSTOM, 0);
                 Bukkit.getServer().getPluginManager().callEvent(damageEvent);
                 if (damageEvent.isCancelled()) {
-                    return false;
+                    continue;
                 }
             }
 
