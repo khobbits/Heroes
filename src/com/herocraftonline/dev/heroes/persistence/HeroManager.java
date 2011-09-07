@@ -302,7 +302,7 @@ public class HeroManager {
         hero.setRecoveryItems(itemRecovery);
     }
 
-    private void performSkillChecks(Hero hero) {
+    public void performSkillChecks(Hero hero) {
         HeroClass playerClass = hero.getHeroClass();
 
         List<Command> commands = plugin.getCommandHandler().getCommands();

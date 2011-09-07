@@ -104,6 +104,7 @@ public class Hero {
      * @param heroClass
      */
     public void changeHeroClass(HeroClass heroClass) {
+        clearEffects();
         setHeroClass(heroClass);
         binds.clear();
     }

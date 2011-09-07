@@ -145,7 +145,9 @@ public class ChooseCommand extends BasicInteractiveCommand {
                     Messaging.send(hero.getPlayer(), "The Gods are pleased with your offering of $1.", plugin.Method.format(cost));
                 }
             }
-
+            
+            //Cleanup stuff
+            plugin.getHeroManager().performSkillChecks(hero);
             hero.getBinds().clear();
 
             Messaging.send(player, "Welcome to the path of the $1!", newClass.getName());

@@ -9,6 +9,7 @@ Bug Fixes:
 	Who & Reload commands now work from console as intended
 	Paths command will no longer show Paths the player can not select
 	Summons will no longer double-up/persist through a restart.
+	Permission-Skills were sometimes not being resolved properly after an admin swapped a players class
 	
 General/API:
 
