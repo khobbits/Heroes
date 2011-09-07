@@ -37,12 +37,13 @@ public class SkillHarmtouch extends TargettedSkill {
             return false;
         }
 
-        int damage = getSetting(hero.getHeroClass(), Setting.DAMAGE.node(), 10);
-        EntityDamageByEntityEvent damageEntityEvent = new EntityDamageByEntityEvent(player, target, DamageCause.CUSTOM, damage);
+        
+        EntityDamageByEntityEvent damageEntityEvent = new EntityDamageByEntityEvent(player, target, DamageCause.CUSTOM, 0);
         plugin.getServer().getPluginManager().callEvent(damageEntityEvent);
         if (damageEntityEvent.isCancelled()) {
             return false;
         }
+        int damage = getSetting(hero.getHeroClass(), Setting.DAMAGE.node(), 10);
         addSpellTarget(target, hero);
         target.damage(damage, player);
         broadcastExecuteText(hero, target);

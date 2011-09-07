@@ -131,7 +131,7 @@ public class SkillChainLightning extends TargettedSkill {
             }
             bounces -= 1;
         }
-        broadcastExecuteText(hero);
+        broadcastExecuteText(hero, target);
         return true;
     }
 

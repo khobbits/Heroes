@@ -46,6 +46,8 @@ Skills:
 	ForcePush
 		- Fixed invalid messaging causing NPEs
 		- Fixed directionals
+	Harmtouch
+		- No longer deals double-damage to targets.
 	Hellgate
 		- Fixed group members not being teleported
 	IronFist - (NEW!)
