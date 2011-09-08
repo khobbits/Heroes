@@ -245,8 +245,11 @@ public class HeroesDamageListener extends EntityListener {
                     }
                 }
             }
-            if (damage == 0)
+            if (damage == 0) {
+                event.setDamage(0);
                 return;
+            }
+            
             int damageReduction = calculateArmorReduction(player.getInventory(), damage);
             damage -= damageReduction;
             if (damage < 0) {
