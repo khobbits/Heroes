@@ -77,16 +77,69 @@ public class Properties {
     // Prefix ClassName
     public boolean prefixClassName;
 
-    // Blocks that we don't want to change during skills otherwise it causes problems
+    // Default Weapon List
     public final static List<String> defaultWeapons;
+    
+    // Blocks that we consider transparent for skills
+    public final static Set<Material> transparentBlocks;
+    
+    // Byte Set of transparents
+    public final static HashSet<Byte> transparentIds;
+    
     static {
         defaultWeapons = new ArrayList<String>();
         defaultWeapons.add("WOOD_SWORD");
         defaultWeapons.add("STONE_SWORD");
         defaultWeapons.add("GOLD_SWORD");
         defaultWeapons.add("DIAMOND_SWORD");
+        
+        transparentBlocks = new HashSet<Material>();
+        transparentBlocks.add(Material.AIR);
+        transparentBlocks.add(Material.SNOW);
+        transparentBlocks.add(Material.REDSTONE_WIRE);
+        transparentBlocks.add(Material.TORCH);
+        transparentBlocks.add(Material.REDSTONE_TORCH_OFF);
+        transparentBlocks.add(Material.REDSTONE_TORCH_ON);
+        transparentBlocks.add(Material.RED_ROSE);
+        transparentBlocks.add(Material.YELLOW_FLOWER);
+        transparentBlocks.add(Material.SAPLING);
+        transparentBlocks.add(Material.LADDER);
+        transparentBlocks.add(Material.STONE_PLATE);
+        transparentBlocks.add(Material.WOOD_PLATE);
+        transparentBlocks.add(Material.CROPS);
+        transparentBlocks.add(Material.LEVER);
+        transparentBlocks.add(Material.WATER);
+        transparentBlocks.add(Material.STATIONARY_WATER);
+        transparentBlocks.add(Material.RAILS);
+        transparentBlocks.add(Material.POWERED_RAIL);
+        transparentBlocks.add(Material.DETECTOR_RAIL);
+        transparentBlocks.add(Material.DIODE_BLOCK_OFF);
+        transparentBlocks.add(Material.DIODE_BLOCK_ON);
+        
+        transparentIds = new HashSet<Byte>();
+        transparentIds.add((byte) Material.AIR.getId());
+        transparentIds.add((byte) Material.SNOW.getId());
+        transparentIds.add((byte) Material.REDSTONE_WIRE.getId());
+        transparentIds.add((byte) Material.TORCH.getId());
+        transparentIds.add((byte) Material.REDSTONE_TORCH_OFF.getId());
+        transparentIds.add((byte) Material.REDSTONE_TORCH_ON.getId());
+        transparentIds.add((byte) Material.RED_ROSE.getId());
+        transparentIds.add((byte) Material.YELLOW_FLOWER.getId());
+        transparentIds.add((byte) Material.SAPLING.getId());
+        transparentIds.add((byte) Material.LADDER.getId());
+        transparentIds.add((byte) Material.STONE_PLATE.getId());
+        transparentIds.add((byte) Material.WOOD_PLATE.getId());
+        transparentIds.add((byte) Material.CROPS.getId());
+        transparentIds.add((byte) Material.LEVER.getId());
+        transparentIds.add((byte) Material.WATER.getId());
+        transparentIds.add((byte) Material.STATIONARY_WATER.getId());
+        transparentIds.add((byte) Material.RAILS.getId());
+        transparentIds.add((byte) Material.POWERED_RAIL.getId());
+        transparentIds.add((byte) Material.DETECTOR_RAIL.getId());
+        transparentIds.add((byte) Material.DIODE_BLOCK_OFF.getId());
+        transparentIds.add((byte) Material.DIODE_BLOCK_ON.getId());
     }
-
+    
     /**
      * Generate experience for the level ArrayList<Integer>
      */

@@ -1,7 +1,6 @@
 package com.herocraftonline.dev.heroes.skill;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -19,6 +18,7 @@ import org.bukkit.util.config.ConfigurationNode;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.util.Messaging;
+import com.herocraftonline.dev.heroes.util.Properties;
 import com.herocraftonline.dev.heroes.util.Setting;
 
 /**
@@ -155,19 +155,14 @@ public abstract class TargettedSkill extends ActiveSkill {
      * @return the player's target or null if no target is found
      */
     public static LivingEntity getPlayerTarget(Player player, int maxDistance) {
-        HashSet<Byte> transparent = new HashSet<Byte>();
-        transparent.add((byte) Material.AIR.getId());
-        transparent.add((byte) Material.WATER.getId());
-        List<Block> lineOfSight = player.getLineOfSight(transparent, maxDistance);
+        List<Block> lineOfSight = player.getLineOfSight(Properties.transparentIds, maxDistance);
         List<Entity> nearbyEntities = player.getNearbyEntities(maxDistance, maxDistance, maxDistance);
         for (Entity entity : nearbyEntities) {
             if (entity instanceof LivingEntity) {
-                Location entityLocation = entity.getLocation();
-                int entityX = entityLocation.getBlockX();
-                int entityZ = entityLocation.getBlockZ();
+                Location eLoc = entity.getLocation();
                 for (Block block : lineOfSight) {
-                    Location blockLocation = block.getLocation();
-                    if (entityX == blockLocation.getBlockX() && entityZ == blockLocation.getBlockZ()) {
+                    Location bLoc = block.getLocation();
+                    if (eLoc.getBlockX() == bLoc.getBlockX() && eLoc.getBlockZ() == bLoc.getBlockZ() && Math.abs(eLoc.getBlockY() - bLoc.getBlockY()) < 2) {
                         return (LivingEntity) entity;
                     }
                 }

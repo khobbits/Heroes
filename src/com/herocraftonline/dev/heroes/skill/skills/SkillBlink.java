@@ -1,10 +1,6 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -15,35 +11,10 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
+import com.herocraftonline.dev.heroes.util.Properties;
 import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillBlink extends ActiveSkill {
-    
-    private static Set<Material> transparentBlocks;
-    static {
-        transparentBlocks = new HashSet<Material>();
-        transparentBlocks.add(Material.AIR);
-        transparentBlocks.add(Material.SNOW);
-        transparentBlocks.add(Material.REDSTONE_WIRE);
-        transparentBlocks.add(Material.TORCH);
-        transparentBlocks.add(Material.REDSTONE_TORCH_OFF);
-        transparentBlocks.add(Material.REDSTONE_TORCH_ON);
-        transparentBlocks.add(Material.RED_ROSE);
-        transparentBlocks.add(Material.YELLOW_FLOWER);
-        transparentBlocks.add(Material.SAPLING);
-        transparentBlocks.add(Material.LADDER);
-        transparentBlocks.add(Material.STONE_PLATE);
-        transparentBlocks.add(Material.WOOD_PLATE);
-        transparentBlocks.add(Material.CROPS);
-        transparentBlocks.add(Material.LEVER);
-        transparentBlocks.add(Material.WATER);
-        transparentBlocks.add(Material.STATIONARY_WATER);
-        transparentBlocks.add(Material.RAILS);
-        transparentBlocks.add(Material.POWERED_RAIL);
-        transparentBlocks.add(Material.DETECTOR_RAIL);
-        transparentBlocks.add(Material.DIODE_BLOCK_OFF);
-        transparentBlocks.add(Material.DIODE_BLOCK_ON);
-    }
     
     public SkillBlink(Heroes plugin) {
         super(plugin, "Blink");
@@ -75,7 +46,7 @@ public class SkillBlink extends ActiveSkill {
         }
         while (iter.hasNext()) {
             b = iter.next();
-            if (transparentBlocks.contains(b.getType()) && ( transparentBlocks.contains(b.getRelative(BlockFace.UP).getType()) || transparentBlocks.contains(b.getRelative(BlockFace.DOWN).getType()))) {
+            if (Properties.transparentBlocks.contains(b.getType()) && ( Properties.transparentBlocks.contains(b.getRelative(BlockFace.UP).getType()) || Properties.transparentBlocks.contains(b.getRelative(BlockFace.DOWN).getType()))) {
                 prev = b;
             } else {
                 break;
