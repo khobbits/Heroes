@@ -8,8 +8,6 @@ import com.herocraftonline.dev.heroes.util.Setting;
 
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.util.config.ConfigurationNode;
 
 public class SkillBite extends TargettedSkill {
@@ -32,17 +30,14 @@ public class SkillBite extends TargettedSkill {
 
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
-        if (target == player) {
+        if (target.equals(player) || hero.getSummons().contains(target)) {
             Messaging.send(player, "Invalid Target");
             return false;
         }
 
-        EntityDamageByEntityEvent damageEntityEvent = new EntityDamageByEntityEvent(player, target, DamageCause.CUSTOM, 0);
-        plugin.getServer().getPluginManager().callEvent(damageEntityEvent);
-        if (damageEntityEvent.isCancelled()) {
-            Messaging.send(player, "Invalid target!");
+        //Check if the target is damagable
+        if (!damageCheck(player, target))
             return false;
-        }
 
         int damage = getSetting(hero.getHeroClass(), Setting.DAMAGE.node(), 10);
         addSpellTarget(target, hero);

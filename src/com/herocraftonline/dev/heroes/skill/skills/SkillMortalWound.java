@@ -4,8 +4,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityListener;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.util.config.ConfigurationNode;
@@ -71,14 +69,9 @@ public class SkillMortalWound extends TargettedSkill {
             return false;
         }
 
-        if (target instanceof Player) {
-            EntityDamageByEntityEvent damageEntityEvent = new EntityDamageByEntityEvent(player, target, DamageCause.CUSTOM, 0);
-            plugin.getServer().getPluginManager().callEvent(damageEntityEvent);
-            if (damageEntityEvent.isCancelled()) {
-                Messaging.send(player, "Invalid target!");
-                return false;
-            }
-        }
+        //Check if the target is damagable
+        if (!damageCheck(player, target))
+            return false;
         
         HeroClass heroClass = hero.getHeroClass();
         int damage = heroClass.getItemDamage(item) == null ? 0 : heroClass.getItemDamage(item);

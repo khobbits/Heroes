@@ -8,9 +8,12 @@ import java.util.Set;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.Listener;
 import org.bukkit.util.config.Configuration;
 import org.bukkit.util.config.ConfigurationNode;
@@ -290,6 +293,25 @@ public abstract class Skill extends BasicCommand {
 
     public Heroes getPlugin() {
         return plugin;
+    }
+    
+    /**
+     * Tests if the target is damagable from a source.  Also adds a last-damage cause to the target which allows proper xp.
+     * Returns if the damage check was successful.
+     * 
+     * @param player
+     * @param target
+     * @return
+     */
+    public boolean damageCheck(Player player, LivingEntity target) {
+        
+        EntityDamageByEntityEvent damageEntityEvent = new EntityDamageByEntityEvent(player, target, DamageCause.CUSTOM, 0);
+        plugin.getServer().getPluginManager().callEvent(damageEntityEvent);
+        if (damageEntityEvent.isCancelled()) {
+            Messaging.send(player, "Invalid target");
+            return false;
+        }
+        return true;
     }
 
 }

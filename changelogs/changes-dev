@@ -12,6 +12,8 @@ Bug Fixes:
 	Permission-Skills were sometimes not being resolved properly after an admin swapped a players class
 	Fixed using 0 damage values not working as intended
 	
+	
+	
 General/API:
 
 	Updated Default classes.yml to be more descriptive
@@ -23,6 +25,9 @@ General/API:
 
 Skills:
 	
+	All
+		- can no longer target dead creatures/players
+		- Fixed many instances where skills were not awarding the kill to the player
 	Bandage
 		- no longer inherently requires Paper, it is now set as a default reagent instead
 	Blight - (NEW!)

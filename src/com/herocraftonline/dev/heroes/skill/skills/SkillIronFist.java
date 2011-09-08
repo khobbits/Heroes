@@ -2,12 +2,9 @@ package com.herocraftonline.dev.heroes.skill.skills;
 
 import java.util.List;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.util.Vector;
 import org.bukkit.util.config.ConfigurationNode;
 
@@ -51,14 +48,9 @@ public class SkillIronFist extends ActiveSkill {
                 continue;
             }
 
-            //PvP check
-            if (target instanceof Player) {
-                EntityDamageEvent damageEvent = new EntityDamageEvent(player, DamageCause.CUSTOM, 0);
-                Bukkit.getServer().getPluginManager().callEvent(damageEvent);
-                if (damageEvent.isCancelled()) {
-                    continue;
-                }
-            }
+            //Check if the target is damagable
+            if (!damageCheck(player, target))
+                continue;
             
             //Damage the target
             int damage = getSetting(hero.getHeroClass(), "damage", 1);

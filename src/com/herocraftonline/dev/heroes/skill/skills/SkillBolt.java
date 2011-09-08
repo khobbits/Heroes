@@ -2,8 +2,6 @@ package com.herocraftonline.dev.heroes.skill.skills;
 
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
@@ -33,20 +31,14 @@ public class SkillBolt extends TargettedSkill {
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
 
-        if (target.equals(player)) {
+        if (target.equals(player) || hero.getSummons().contains(target)) {
             Messaging.send(player, "Invalid target!");
             return false;
         }
 
-        // PvP test
-        if (target instanceof Player) {
-            EntityDamageByEntityEvent damageEntityEvent = new EntityDamageByEntityEvent(player, target, DamageCause.CUSTOM, 0);
-            plugin.getServer().getPluginManager().callEvent(damageEntityEvent);
-            if (damageEntityEvent.isCancelled()) {
-                Messaging.send(player, "Invalid target!");
-                return false;
-            }
-        }
+        //Check if the target is damagable
+        if (!damageCheck(player, target))
+            return false;
         
         plugin.getDamageManager().addSpellTarget(target, hero, this);
         target.getWorld().strikeLightningEffect(target.getLocation());

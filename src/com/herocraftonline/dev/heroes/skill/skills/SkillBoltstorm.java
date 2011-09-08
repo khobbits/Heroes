@@ -90,20 +90,23 @@ public class SkillBoltstorm extends ActiveSkill {
 
             List<LivingEntity> targets = new ArrayList<LivingEntity>();
             for (Entity entity : player.getNearbyEntities(range, range, range)) {
-                if (hero.getParty() != null && entity instanceof Player) { // Party check
-                    Hero targetHero = plugin.getHeroManager().getHero((Player) entity);
-                    if (hero.getParty().isPartyMember(targetHero))
-                        continue;
-                }
-                if (entity.equals(player)) { // never target the caster
+                if (!(entity instanceof LivingEntity))
+                    continue;
+                
+                // never target the caster
+                if (entity.equals(player) || hero.getSummons().contains(entity)) { 
                     continue;
                 }
-                if (entity instanceof LivingEntity)
-                    targets.add((LivingEntity) entity);
+                
+                //Check if the target is damagable
+                if (!damageCheck(player, (LivingEntity) entity))
+                    continue;
+                
+                targets.add((LivingEntity) entity);
             }
             if (targets.isEmpty())
                 return;
-
+            
             int damage = getSetting(hero.getHeroClass(), Setting.DAMAGE.node(), 4);
             LivingEntity target = targets.get(rand.nextInt(targets.size()));
             addSpellTarget(target, hero);

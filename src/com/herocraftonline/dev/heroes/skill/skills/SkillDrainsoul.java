@@ -2,9 +2,6 @@ package com.herocraftonline.dev.heroes.skill.skills;
 
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
@@ -33,15 +30,13 @@ public class SkillDrainsoul extends TargettedSkill {
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
 
-        if (target.equals(player)) {
+        if (target.equals(player) || hero.getSummons().contains(target)) {
             Messaging.send(player, "You need a target!");
             return false;
         }
 
-        // Throw a dummy damage event to make it obey PvP restricting plugins
-        EntityDamageEvent event = new EntityDamageByEntityEvent(player, target, DamageCause.CUSTOM, 0);
-        plugin.getServer().getPluginManager().callEvent(event);
-        if (event.isCancelled())
+        //Check if the target is damagable
+        if (!damageCheck(player, target))
             return false;
 
         int absorbAmount = getSetting(hero.getHeroClass(), "absorb-amount", 4);

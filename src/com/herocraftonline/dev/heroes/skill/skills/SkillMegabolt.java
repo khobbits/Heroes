@@ -3,8 +3,6 @@ package com.herocraftonline.dev.heroes.skill.skills;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
@@ -40,15 +38,10 @@ public class SkillMegabolt extends TargettedSkill {
             return false;
         }
 
-        // PvP test
-        if (target instanceof Player) {
-            EntityDamageByEntityEvent damageEntityEvent = new EntityDamageByEntityEvent(player, target, DamageCause.CUSTOM, 0);
-            plugin.getServer().getPluginManager().callEvent(damageEntityEvent);
-            if (damageEntityEvent.isCancelled()) {
-                Messaging.send(player, "Invalid target!");
-                return false;
-            }
-        }
+        //Check if the target is damagable
+        if (!damageCheck(player, target))
+            return false;
+        
         int range = getSetting(hero.getHeroClass(), Setting.RADIUS.node(), 5);
         int damage = getSetting(hero.getHeroClass(), Setting.DAMAGE.node(), 4);
 
@@ -61,14 +54,10 @@ public class SkillMegabolt extends TargettedSkill {
 
         for (Entity entity : target.getNearbyEntities(range, range, range)) {
             if (entity instanceof LivingEntity && !entity.equals(player)) {
-                // PvP test
-                if (entity instanceof Player) {
-                    EntityDamageByEntityEvent damageEntityEvent = new EntityDamageByEntityEvent(player, entity, DamageCause.CUSTOM, 0);
-                    plugin.getServer().getPluginManager().callEvent(damageEntityEvent);
-                    if (damageEntityEvent.isCancelled()) {
-                        continue;
-                    }
-                }
+                //Check if the target is damagable
+                if (!damageCheck(player, (LivingEntity) entity))
+                    continue;
+                
                 addSpellTarget(entity, hero);
                 entity.getWorld().strikeLightningEffect(entity.getLocation());
                 ((LivingEntity) entity).damage(damage, player);

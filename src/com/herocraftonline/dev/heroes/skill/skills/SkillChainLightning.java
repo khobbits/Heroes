@@ -8,8 +8,6 @@ import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.util.BlockIterator;
 import org.bukkit.util.Vector;
 import org.bukkit.util.config.ConfigurationNode;
@@ -84,15 +82,10 @@ public class SkillChainLightning extends TargettedSkill {
             return false;
         }
 
-        // PvP test
-        if (target instanceof Player) {
-            EntityDamageByEntityEvent damageEntityEvent = new EntityDamageByEntityEvent(player, target, DamageCause.CUSTOM, 0);
-            plugin.getServer().getPluginManager().callEvent(damageEntityEvent);
-            if (damageEntityEvent.isCancelled()) {
-                Messaging.send(player, "Invalid target!");
-                return false;
-            }
-        }
+        //Check if the target is damagable
+        if (!damageCheck(player, target))
+            return false;
+        
         int damage = getSetting(hero.getHeroClass(), Setting.DAMAGE.node(), 6);
 
         //Damage the first target

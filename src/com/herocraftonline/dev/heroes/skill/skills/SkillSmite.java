@@ -37,14 +37,9 @@ public class SkillSmite extends TargettedSkill {
             return false;
         }
 
-        //PvP Check
-        if (target instanceof Player) {
-            EntityDamageByEntityEvent damageEntityEvent = new EntityDamageByEntityEvent(player, target, DamageCause.CUSTOM, 0);
-            plugin.getServer().getPluginManager().callEvent(damageEntityEvent);
-            if (damageEntityEvent.isCancelled()) {
-                return false;
-            }
-        }
+        //Check if the target is damagable
+        if (!damageCheck(player, target))
+            return false;
 
         int damage = getSetting(hero.getHeroClass(), Setting.DAMAGE.node(), 10);
         addSpellTarget(target, hero);

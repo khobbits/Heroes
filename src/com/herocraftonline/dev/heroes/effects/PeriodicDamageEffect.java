@@ -24,6 +24,11 @@ public class PeriodicDamageEffect extends PeriodicEffect {
     public void tick(Hero hero) {
         super.tick(hero);
         Player player = hero.getPlayer();
+        
+        //Check if the target is damagable
+        if (!skill.damageCheck(applier, player))
+            return;
+        
         skill.addSpellTarget(player, applyHero);
         player.damage(tickDamage, applier);
     }

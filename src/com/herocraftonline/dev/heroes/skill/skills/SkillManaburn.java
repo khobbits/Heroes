@@ -7,7 +7,7 @@ import org.bukkit.util.config.ConfigurationNode;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
-import com.nijiko.coelho.iConomy.util.Messaging;
+import com.herocraftonline.dev.heroes.util.Messaging;
 
 public class SkillManaburn extends TargettedSkill {
 
@@ -45,6 +45,7 @@ public class SkillManaburn extends TargettedSkill {
             broadcastExecuteText(hero, target);
             return true;
         } else {
+            Messaging.send(player, "Target does not have enough mana!");
             return false;
         }
     }

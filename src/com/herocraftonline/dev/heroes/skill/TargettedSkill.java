@@ -115,6 +115,9 @@ public abstract class TargettedSkill extends ActiveSkill {
                 Messaging.send(player, "Sorry, target is not in your line of sight!");
                 return false;
             }
+            if (target.isDead() || target.getHealth() == 0) {
+                return false;
+            }
         }
         if (target == null) {
             target = getPlayerTarget(player, maxDistance);
