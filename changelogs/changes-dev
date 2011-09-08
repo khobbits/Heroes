@@ -13,7 +13,6 @@ Bug Fixes:
 	Fixed using 0 damage values not working as intended
 	
 	
-	
 General/API:
 
 	Updated Default classes.yml to be more descriptive
@@ -22,6 +21,7 @@ General/API:
 	Commented the Hero class
 	Added EffectType Enum - removed Classes to determine an Effects type, please convert to enum for type checks.
 	Added SkillType Enum - for future use, expect similar usage to EffectType
+	Adjusted targetting for skills - should be slightly less buggy, and allow for less instances of through the wall
 
 Skills:
 	

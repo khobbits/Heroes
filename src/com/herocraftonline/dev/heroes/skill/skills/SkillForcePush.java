@@ -41,15 +41,9 @@ public class SkillForcePush extends TargettedSkill {
             return false;
         }
         
-        //PvP Check
-        if (target instanceof Player) {
-            EntityDamageByEntityEvent damageEvent = new EntityDamageByEntityEvent(player, target, DamageCause.ENTITY_ATTACK, 0);
-            Bukkit.getServer().getPluginManager().callEvent(damageEvent);
-            if (damageEvent.isCancelled()) {
-                Messaging.send(player, "Invalid target!");
-                return false;
-            }
-        }
+        //Make sure we can damage the target
+        if (!damageCheck(player, target))
+            return false;
         
         int damage = getSetting(hero.getHeroClass(), Setting.DAMAGE.node(), 0);
         if (damage > 0) {
