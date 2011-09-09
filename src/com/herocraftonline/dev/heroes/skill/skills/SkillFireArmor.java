@@ -21,6 +21,7 @@ import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
+import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Setting;
 
@@ -39,6 +40,8 @@ public class SkillFireArmor extends ActiveSkill {
         setUsage("/skill firearmor");
         setArgumentRange(0, 0);
         setIdentifiers(new String[] { "skill firearmor", "skill farmor" });
+        
+        setTypes(SkillType.FIRE, SkillType.SILENCABLE, SkillType.BUFF);
         
         defaultArmors.add(Material.GOLD_CHESTPLATE.name());
         

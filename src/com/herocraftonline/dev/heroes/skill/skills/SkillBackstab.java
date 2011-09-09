@@ -15,6 +15,7 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.WeaponDamageEvent;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.PassiveSkill;
+import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Properties;
 
@@ -26,7 +27,9 @@ public class SkillBackstab extends PassiveSkill {
         super(plugin, "Backstab");
         setDescription("You are more lethal when attacking from behind!");
         setArgumentRange(0, 0);
-
+        
+        setTypes(SkillType.PHYSICAL, SkillType.BUFF);
+        
         registerEvent(Type.CUSTOM_EVENT, new CustomListener(), Priority.Normal);
     }
 

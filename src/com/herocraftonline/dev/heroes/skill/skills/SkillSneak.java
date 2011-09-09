@@ -17,6 +17,7 @@ import com.herocraftonline.dev.heroes.effects.PeriodicEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
+import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Setting;
 
@@ -31,6 +32,8 @@ public class SkillSneak extends ActiveSkill {
         setUsage("/skill stealth");
         setArgumentRange(0, 0);
         setIdentifiers(new String[] { "skill sneak" });
+        
+        setTypes(SkillType.BUFF, SkillType.PHYSICAL);
 
         registerEvent(Type.PLAYER_TOGGLE_SNEAK, new SneakListener(), Priority.Highest);
     }

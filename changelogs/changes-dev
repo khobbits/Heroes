@@ -20,9 +20,9 @@ General/API:
 	DiseaseEffect - works just like Bleed/Poison effects
 	Commented the Hero class
 	Added EffectType Enum - removed Classes to determine an Effects type, please convert to enum for type checks.
-	Added SkillType Enum - for future use, expect similar usage to EffectType
+	Added SkillType Enum - to provide better skill interactions
 	Adjusted targetting for skills - should be slightly less buggy, and allow for less instances of through the wall
-	Classes can now override the default max level. Valid values range from 1 to the default max.
+	Classes can now override the default max level. Valid values range from 1 to the default max
 
 Skills:
 	
@@ -30,6 +30,7 @@ Skills:
 		- can no longer target dead creatures/players
 		- Fixed many instances where skills were not awarding the kill to the player
 		- health-cost node added to Skills - will deduct the amount of health before using the skill
+		- All skills now have SkillTypes
 	Bandage
 		- no longer inherently requires Paper, it is now set as a default reagent instead
 	Blight - (NEW!)
@@ -67,6 +68,8 @@ Skills:
 	Root
 		- No longer circumvents PvP
 		- Can now be applied to creatures
+	Silence - (NEW!)
+		- Affected hero will not be able to use skills that are 'silencable'
 	SoulFire - (NEW!)
 		- Ignites a players weapon causing attacks with it to have a chance to light their target on fire (Melee only)
 	Wolf

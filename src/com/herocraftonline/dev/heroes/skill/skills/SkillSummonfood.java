@@ -10,6 +10,7 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
+import com.herocraftonline.dev.heroes.skill.SkillType;
 
 public class SkillSummonfood extends ActiveSkill {
 
@@ -19,6 +20,8 @@ public class SkillSummonfood extends ActiveSkill {
         setUsage("/skill summonfood");
         setArgumentRange(0, 0);
         setIdentifiers(new String[] { "skill summonfood" });
+        
+        setTypes(SkillType.ITEM, SkillType.SUMMON, SkillType.SILENCABLE);
     }
 
     @Override

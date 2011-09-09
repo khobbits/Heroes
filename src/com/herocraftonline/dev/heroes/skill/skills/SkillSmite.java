@@ -6,6 +6,7 @@ import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
+import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Setting;
@@ -18,6 +19,8 @@ public class SkillSmite extends TargettedSkill {
         setUsage("/skill smite");
         setArgumentRange(0, 0);
         setIdentifiers(new String[] { "skill smite" });
+        
+        setTypes(SkillType.DAMAGING, SkillType.LIGHT, SkillType.SILENCABLE);
     }
 
     @Override

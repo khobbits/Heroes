@@ -9,6 +9,7 @@ import com.herocraftonline.dev.heroes.api.HeroRegainHealthEvent;
 import com.herocraftonline.dev.heroes.effects.Effect;
 import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.persistence.Hero;
+import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Setting;
@@ -20,6 +21,9 @@ public class SkillBandage extends TargettedSkill {
         setDescription("Bandages the target");
         setUsage("/skill bandage <target>");
         setArgumentRange(0, 1);
+        
+        setTypes(SkillType.HEAL);
+        
         setIdentifiers(new String[] { "skill bandage" });
     }
 

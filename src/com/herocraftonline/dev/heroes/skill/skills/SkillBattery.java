@@ -6,6 +6,7 @@ import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
+import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
 
@@ -16,6 +17,9 @@ public class SkillBattery extends TargettedSkill {
         setDescription("Gives your target mana");
         setUsage("/skill battery");
         setArgumentRange(0, 1);
+        
+        setTypes(SkillType.SILENCABLE);
+        
         setIdentifiers(new String[] { "skill battery" });
     }
 

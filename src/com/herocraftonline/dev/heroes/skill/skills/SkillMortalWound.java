@@ -16,6 +16,7 @@ import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.effects.PeriodicDamageEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
+import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Properties;
@@ -32,6 +33,8 @@ public class SkillMortalWound extends TargettedSkill {
         setUsage("/skill mortalwound <target>");
         setArgumentRange(0, 1);
         setIdentifiers(new String[] { "skill mortalwound", "skill mwound" });
+        
+        setTypes(SkillType.PHYSICAL, SkillType.DAMAGING, SkillType.DEBUFF);
     }
 
     @Override

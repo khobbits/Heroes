@@ -33,6 +33,7 @@ import com.herocraftonline.dev.heroes.effects.PeriodicEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
+import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Setting;
 
@@ -50,6 +51,8 @@ public class SkillSkeleton extends ActiveSkill {
         setArgumentRange(0, 0);
         setIdentifiers(new String[] { "skill skeleton" });
 
+        setTypes(SkillType.DARK, SkillType.SUMMON, SkillType.SILENCABLE);
+        
         eListener = new SummonEntityListener();
         pListener = new SummonPlayerListener();
         registerEvent(Type.ENTITY_DEATH, eListener, Priority.Monitor);

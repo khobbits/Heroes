@@ -13,6 +13,7 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.WeaponDamageEvent;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.PassiveSkill;
+import com.herocraftonline.dev.heroes.skill.SkillType;
 
 public class SkillShield extends PassiveSkill {
 
@@ -20,6 +21,8 @@ public class SkillShield extends PassiveSkill {
         super(plugin, "Shield");
         setDescription("Your shield absorbs damage!");
         setArgumentRange(0, 0);
+
+        setTypes(SkillType.PHYSICAL);
 
         registerEvent(Type.CUSTOM_EVENT, new CustomListener(), Priority.Highest);
     }

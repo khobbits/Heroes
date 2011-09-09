@@ -2,6 +2,7 @@ package com.herocraftonline.dev.heroes.skill.skills;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
+import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Setting;
@@ -17,6 +18,9 @@ public class SkillBite extends TargettedSkill {
         setDescription("Deals physical damage to the target");
         setUsage("/skill bite <target>");
         setArgumentRange(0, 1);
+        
+        setTypes(SkillType.PHYSICAL, SkillType.DAMAGING);
+        
         setIdentifiers(new String[] { "skill bite" });
     }
 

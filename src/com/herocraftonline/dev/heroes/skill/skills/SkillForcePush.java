@@ -7,6 +7,7 @@ import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
+import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Setting;
@@ -19,6 +20,8 @@ public class SkillForcePush extends TargettedSkill {
         setUsage("/skill forcepush <target>");
         setArgumentRange(0, 1);
         setIdentifiers(new String[] { "skill forcepush", "skill fpush" });
+        
+        setTypes(SkillType.FORCE, SkillType.SILENCABLE, SkillType.DAMAGING);
     }
 
     @Override

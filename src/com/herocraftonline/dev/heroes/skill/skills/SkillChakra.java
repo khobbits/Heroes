@@ -8,6 +8,7 @@ import com.herocraftonline.dev.heroes.effects.Effect;
 import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
+import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Setting;
 
 import org.bukkit.Location;
@@ -20,6 +21,8 @@ public class SkillChakra extends ActiveSkill {
         setUsage("/skill chakra");
         setArgumentRange(0, 0);
         setIdentifiers(new String[] { "skill chakra" } );
+        
+        setTypes(SkillType.SILENCABLE, SkillType.HEAL, SkillType.LIGHT);
     }
 
     @Override

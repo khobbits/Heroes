@@ -6,6 +6,7 @@ import org.bukkit.util.Vector;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
+import com.herocraftonline.dev.heroes.skill.SkillType;
 
 public class SkillJump extends ActiveSkill {
 
@@ -16,6 +17,8 @@ public class SkillJump extends ActiveSkill {
         setUsage("/skill jump");
         setArgumentRange(0, 0);
         setIdentifiers(new String[] { "skill jump" });
+        
+        setTypes(SkillType.MOVEMENT, SkillType.PHYSICAL);
     }
 
     @Override

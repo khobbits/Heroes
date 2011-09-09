@@ -16,6 +16,7 @@ import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
+import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Setting;
 
@@ -28,6 +29,8 @@ public class SkillMight extends ActiveSkill {
         setUsage("/skill might");
         setIdentifiers(new String[] { "skill might" });
 
+        setTypes(SkillType.BUFF, SkillType.SILENCABLE);
+        
         registerEvent(Type.CUSTOM_EVENT, new CustomListener(), Priority.Normal);
     }
 

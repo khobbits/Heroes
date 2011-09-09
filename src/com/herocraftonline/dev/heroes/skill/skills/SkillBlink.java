@@ -10,6 +10,7 @@ import org.bukkit.util.config.ConfigurationNode;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
+import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Properties;
 import com.herocraftonline.dev.heroes.util.Setting;
@@ -22,6 +23,8 @@ public class SkillBlink extends ActiveSkill {
         setUsage("/skill blink");
         setArgumentRange(0, 0);
         setIdentifiers(new String[]{"skill blink"});
+        
+        setTypes(SkillType.SILENCABLE, SkillType.TELEPORT);
     }
     
     @Override

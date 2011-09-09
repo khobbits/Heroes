@@ -3,7 +3,6 @@ package com.herocraftonline.dev.heroes.skill.skills;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.bukkit.Material;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -17,43 +16,13 @@ import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
+import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
+import com.herocraftonline.dev.heroes.util.Properties;
 import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillChainLightning extends TargettedSkill {
-
-    private static final Set<Material> transparentBlocks;
-
-    static {
-        transparentBlocks = new HashSet<Material>();
-        transparentBlocks.add(Material.AIR);
-        transparentBlocks.add(Material.SNOW);
-        transparentBlocks.add(Material.REDSTONE_WIRE);
-        transparentBlocks.add(Material.TORCH);
-        transparentBlocks.add(Material.REDSTONE_TORCH_OFF);
-        transparentBlocks.add(Material.REDSTONE_TORCH_ON);
-        transparentBlocks.add(Material.RED_ROSE);
-        transparentBlocks.add(Material.YELLOW_FLOWER);
-        transparentBlocks.add(Material.SAPLING);
-        transparentBlocks.add(Material.LADDER);
-        transparentBlocks.add(Material.STONE_PLATE);
-        transparentBlocks.add(Material.WOOD_PLATE);
-        transparentBlocks.add(Material.CROPS);
-        transparentBlocks.add(Material.LEVER);
-        transparentBlocks.add(Material.WATER);
-        transparentBlocks.add(Material.STATIONARY_WATER);
-        transparentBlocks.add(Material.LAVA);
-        transparentBlocks.add(Material.STATIONARY_LAVA);
-        transparentBlocks.add(Material.RAILS);
-        transparentBlocks.add(Material.POWERED_RAIL);
-        transparentBlocks.add(Material.DETECTOR_RAIL);
-        transparentBlocks.add(Material.DIODE_BLOCK_OFF);
-        transparentBlocks.add(Material.DIODE_BLOCK_ON);
-        transparentBlocks.add(Material.BED_BLOCK);
-        transparentBlocks.add(Material.SUGAR_CANE_BLOCK);
-        transparentBlocks.add(Material.STEP);
-    }
 
     public SkillChainLightning(Heroes plugin) {
         super(plugin, "ChainLightning");
@@ -61,6 +30,8 @@ public class SkillChainLightning extends TargettedSkill {
         setUsage("/skill chainl [target]");
         setArgumentRange(0, 1);
         setIdentifiers(new String[] { "skill chainlightning", "skill clightning", "skill chainl", "skill clight" });
+        
+        setTypes(SkillType.LIGHTNING, SkillType.SILENCABLE);
     }
 
     @Override
@@ -135,7 +106,7 @@ public class SkillChainLightning extends TargettedSkill {
         try {
             BlockIterator iter = new BlockIterator(previousTarget.getWorld(), v1, directional, 0, (int) v1.distance(v2));
             while (iter.hasNext()) {
-                if (!transparentBlocks.contains(iter.next().getType()))
+                if (!Properties.transparentBlocks.contains(iter.next().getType()))
                     return false;
             }
         } catch (IllegalStateException e) {

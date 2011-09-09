@@ -18,6 +18,7 @@ import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
+import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Setting;
@@ -36,6 +37,8 @@ public class SkillCurse extends TargettedSkill {
         setArgumentRange(0, 1);
         setIdentifiers(new String[] { "skill curse" });
 
+        setTypes(SkillType.DARK, SkillType.SILENCABLE);
+        
         registerEvent(Type.CUSTOM_EVENT, new SkillEventListener(), Priority.Highest);
     }
 

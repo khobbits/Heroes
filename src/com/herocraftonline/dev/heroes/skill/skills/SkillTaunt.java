@@ -8,6 +8,7 @@ import org.bukkit.entity.Monster;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
+import com.herocraftonline.dev.heroes.skill.SkillType;
 
 public class SkillTaunt extends ActiveSkill {
 
@@ -17,6 +18,8 @@ public class SkillTaunt extends ActiveSkill {
         setUsage("/skill taunt");
         setArgumentRange(0, 0);
         setIdentifiers(new String[] { "skill taunt" });
+        
+        setTypes(SkillType.PHYSICAL);
     }
 
     @Override

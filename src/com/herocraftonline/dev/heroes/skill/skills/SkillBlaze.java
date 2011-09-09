@@ -12,6 +12,7 @@ import org.bukkit.util.config.ConfigurationNode;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
+import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillBlaze extends ActiveSkill {
@@ -29,6 +30,9 @@ public class SkillBlaze extends ActiveSkill {
         ConfigurationNode node = super.getDefaultConfig();
         node.setProperty("fire-length", 3000);
         node.setProperty(Setting.RADIUS.node(), 5);
+        
+        setTypes(SkillType.FIRE, SkillType.DAMAGING);
+        
         return node;
     }
 

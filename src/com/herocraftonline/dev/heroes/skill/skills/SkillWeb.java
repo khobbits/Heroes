@@ -24,6 +24,7 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
+import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Setting;
@@ -39,6 +40,8 @@ public class SkillWeb extends TargettedSkill {
         setUsage("/skill web [target]");
         setArgumentRange(0, 1);
         setIdentifiers(new String[] { "skill web" });
+        
+        setTypes(SkillType.EARTH, SkillType.SILENCABLE);
 
         registerEvent(Type.BLOCK_BREAK, new WebBlockListener(), Priority.Highest);
     }

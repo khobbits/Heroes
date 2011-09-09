@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
+import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 
 public class SkillCharge extends TargettedSkill {
@@ -15,6 +16,8 @@ public class SkillCharge extends TargettedSkill {
         setUsage("/skill charge");
         setArgumentRange(0, 1);
         setIdentifiers(new String[] { "skill charge" });
+        
+        setTypes(SkillType.PHYSICAL, SkillType.MOVEMENT);
     }
 
     @Override

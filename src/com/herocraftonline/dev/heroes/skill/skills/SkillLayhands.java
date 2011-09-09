@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
+import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
 
@@ -16,6 +17,8 @@ public class SkillLayhands extends TargettedSkill {
         setUsage("/skill layhands [target]");
         setArgumentRange(0, 1);
         setIdentifiers(new String[] { "skill layhands" });
+        
+        setTypes(SkillType.LIGHT, SkillType.HEAL, SkillType.SILENCABLE);
     }
 
     @Override

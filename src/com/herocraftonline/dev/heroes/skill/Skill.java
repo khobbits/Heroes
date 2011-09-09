@@ -1,6 +1,9 @@
 package com.herocraftonline.dev.heroes.skill;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -45,6 +48,8 @@ public abstract class Skill extends BasicCommand {
     public final Heroes plugin;
     private ConfigurationNode config;
 
+    private final Set<SkillType> types = EnumSet.noneOf(SkillType.class);
+    
     /**
      * The constructor of every skill must define:
      * <ul>
@@ -314,4 +319,15 @@ public abstract class Skill extends BasicCommand {
         return true;
     }
 
+    protected void setTypes(SkillType...types) {
+        this.types.addAll(Arrays.asList(types));
+    }
+    
+    public Set<SkillType> getTypes() {
+        return Collections.unmodifiableSet(this.types);
+    }
+    
+    public boolean isType(SkillType type) {
+        return types.contains(type);
+    }
 }

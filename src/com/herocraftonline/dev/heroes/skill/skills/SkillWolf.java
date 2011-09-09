@@ -25,6 +25,7 @@ import com.herocraftonline.dev.heroes.api.WeaponDamageEvent;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
+import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Setting;
 
@@ -39,6 +40,8 @@ public class SkillWolf extends ActiveSkill {
         setArgumentRange(0, 1);
         setIdentifiers(new String[] { "skill wolf" });
 
+        setTypes(SkillType.SUMMON);
+        
         SkillEntityListener seListener = new SkillEntityListener(this);
         SkillPlayerListener spListener = new SkillPlayerListener(this);
 

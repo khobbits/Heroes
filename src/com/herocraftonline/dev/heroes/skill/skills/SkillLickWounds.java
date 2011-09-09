@@ -9,6 +9,7 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
+import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Setting;
 
@@ -20,6 +21,8 @@ public class SkillLickWounds extends ActiveSkill {
         setUsage("/skill lickwounds");
         setArgumentRange(0, 0);
         setIdentifiers(new String[] { "skill lickwounds", "skill lwounds" });
+        
+        setTypes(SkillType.HEAL, SkillType.SILENCABLE);
     }
     @Override
     public ConfigurationNode getDefaultConfig() {

@@ -11,6 +11,7 @@ import com.herocraftonline.dev.heroes.effects.Effect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
+import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Setting;
 
@@ -22,6 +23,8 @@ public class SkillHellgate extends ActiveSkill {
         setUsage("/skill hellgate");
         setArgumentRange(0, 0);
         setIdentifiers(new String[] { "skill hellgate" });
+        
+        setTypes(SkillType.SILENCABLE, SkillType.TELEPORT);
     }
 
     @Override

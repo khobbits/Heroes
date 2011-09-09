@@ -12,6 +12,7 @@ import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.effects.PeriodicEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
+import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Setting;
@@ -29,6 +30,8 @@ public class SkillConfuse extends TargettedSkill {
         setUsage("/skill confuse <target>");
         setArgumentRange(0, 1);
         setIdentifiers(new String[] { "skill confuse" });
+        
+        setTypes(SkillType.SILENCABLE, SkillType.ILLUSION);
     }
 
     @Override

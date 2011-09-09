@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
+import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Messaging;
 
 public class SkillTeleport extends ActiveSkill {
@@ -16,6 +17,8 @@ public class SkillTeleport extends ActiveSkill {
         setUsage("/skill teleport <player>");
         setArgumentRange(1, 1);
         setIdentifiers(new String[] { "skill teleport" });
+        
+        setTypes(SkillType.TELEPORT, SkillType.SILENCABLE);
     }
 
     @Override

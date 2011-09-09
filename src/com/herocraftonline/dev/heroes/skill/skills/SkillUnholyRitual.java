@@ -7,6 +7,7 @@ import org.bukkit.entity.Zombie;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
+import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
 
@@ -18,6 +19,8 @@ public class SkillUnholyRitual extends TargettedSkill {
         setUsage("/skill unholyritual");
         setArgumentRange(0, 0);
         setIdentifiers(new String[] { "skill unholyritual", "skill uritual" });
+        
+        setTypes(SkillType.DARK, SkillType.SILENCABLE, SkillType.DAMAGING);
     }
 
     @Override

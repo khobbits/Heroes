@@ -6,6 +6,7 @@ import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
+import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Setting;
@@ -18,6 +19,8 @@ public class SkillBolt extends TargettedSkill {
         setUsage("/skill bolt [target]");
         setArgumentRange(0, 1);
         setIdentifiers(new String[] { "skill bolt" });
+        
+        setTypes(SkillType.LIGHTNING, SkillType.SILENCABLE, SkillType.DAMAGING);
     }
 
     @Override

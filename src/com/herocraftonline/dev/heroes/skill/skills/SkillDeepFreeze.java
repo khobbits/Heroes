@@ -20,6 +20,7 @@ import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.effects.PeriodicEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
+import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Setting;
@@ -36,6 +37,8 @@ public class SkillDeepFreeze extends TargettedSkill {
         setUsage("/skill deepfreeze <target>");
         setArgumentRange(0, 1);
         setIdentifiers(new String[] { "skill deepfreeze", "skill dfreeze" });
+        
+        setTypes(SkillType.ICE, SkillType.SILENCABLE, SkillType.DEBUFF, SkillType.DAMAGING);
         
         registerEvent(Type.CUSTOM_EVENT, new SkillHeroListener(), Priority.Monitor);
         registerEvent(Type.ENTITY_COMBUST, new SkillEntityListener(), Priority.Monitor);
@@ -177,7 +180,7 @@ public class SkillDeepFreeze extends TargettedSkill {
             if (event.isCancelled() || event.getDamage() == 0)
                 return;
             
-            if (!event.getSkill().getName().toLowerCase().contains("fire") && !event.getSkill().getName().toLowerCase().contains("flame"))
+            if (!event.getSkill().isType(SkillType.FIRE))
                 return;
             
             HeroClass heroClass = event.getDamager().getHeroClass();

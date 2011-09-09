@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
+import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Messaging;
 
 public class SkillRecall extends ActiveSkill {
@@ -19,6 +20,8 @@ public class SkillRecall extends ActiveSkill {
         setUsage("/skill recall");
         setArgumentRange(0, 0);
         setIdentifiers(new String[] { "skill recall" });
+        
+        setTypes(SkillType.SILENCABLE, SkillType.TELEPORT);
     }
 
     @Override

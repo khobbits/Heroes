@@ -16,6 +16,7 @@ public class SkillReplenish extends ActiveSkill {
         setUsage("/skill replenish");
         setArgumentRange(0, 0);
         setIdentifiers(new String[] { "skill replenish" });
+        
     }
 
     @Override

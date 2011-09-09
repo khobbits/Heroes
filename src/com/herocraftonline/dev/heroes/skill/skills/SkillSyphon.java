@@ -6,6 +6,7 @@ import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
+import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
 
@@ -17,6 +18,8 @@ public class SkillSyphon extends TargettedSkill {
         setUsage("/skill syphon [target] [health]");
         setArgumentRange(0, 2);
         setIdentifiers(new String[] { "skill syphon" });
+        
+        setTypes(SkillType.HEAL, SkillType.DAMAGING, SkillType.SILENCABLE);
     }
 
     @Override
