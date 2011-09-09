@@ -28,6 +28,7 @@ Skills:
 	All
 		- can no longer target dead creatures/players
 		- Fixed many instances where skills were not awarding the kill to the player
+		- health-cost node added to Skills - will deduct the amount of health before using the skill
 	Bandage
 		- no longer inherently requires Paper, it is now set as a default reagent instead
 	Blight - (NEW!)

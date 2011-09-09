@@ -109,18 +109,28 @@ public abstract class ActiveSkill extends Skill {
             }
         }
 
-        SkillUseEvent skillEvent = new SkillUseEvent(this, player, hero, manaCost, itemStack, args);
+        int healthCost = getSetting(heroClass, Setting.HEALTH_COST.node(), 0);
+        
+        SkillUseEvent skillEvent = new SkillUseEvent(this, player, hero, manaCost, healthCost, itemStack, args);
         plugin.getServer().getPluginManager().callEvent(skillEvent);
         if (skillEvent.isCancelled()) {
             return false;
         }
 
+        //Update manaCost with result of SkillUseEvent
         manaCost = skillEvent.getManaCost();
         if (manaCost > hero.getMana()) {
             Messaging.send(player, "Not enough mana!");
             return false;
         }
-
+        
+        //Update healthCost with results of SkillUseEvent
+        healthCost = skillEvent.getHealthCost();
+        if (healthCost > 0 && hero.getHealth() <= healthCost) {
+            Messaging.send(player, "Not enough health!");
+            return false;
+        }
+        
         itemStack = skillEvent.getReagentCost();
         if (itemStack != null) {
             if (itemStack.getAmount() != 0 && !hasReagentCost(player, itemStack)) {
@@ -131,19 +141,28 @@ public abstract class ActiveSkill extends Skill {
         }
 
         if (use(hero, args)) {
+            // Set cooldown
             if (cooldown > 0) {
                 cooldowns.put(name, time + cooldown);
             }
-
+            
+            //Award XP for skill usage
             if (this.awardExpOnCast) {
                 this.awardExp(hero);
             }
 
+            //Deduct mana
             hero.setMana(hero.getMana() - manaCost);
             if (hero.isVerbose() && manaCost > 0) {
                 Messaging.send(hero.getPlayer(), ChatColor.BLUE + "MANA " + Messaging.createManaBar(hero.getMana()));
             }
-
+            
+            // Deduct health
+            if (healthCost > 0) {
+                plugin.getDamageManager().addSpellTarget(player, hero, this);
+                player.damage(healthCost, player);
+            }
+            
             //Only charge the item cost if it's non-null
             if (itemStack != null) {
                 player.getInventory().removeItem(itemStack);

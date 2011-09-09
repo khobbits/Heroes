@@ -15,6 +15,7 @@ public enum Setting {
     EXP("exp"),
     EXPIRE_TEXT("expire-text"),
     HEALTH("health"),
+    HEALTH_COST("health-cost"),
     LEVEL("level"),
     MANA("mana"),
     MAX_DISTANCE("max-distance"),
