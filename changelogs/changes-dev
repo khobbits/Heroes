@@ -22,6 +22,7 @@ General/API:
 	Added EffectType Enum - removed Classes to determine an Effects type, please convert to enum for type checks.
 	Added SkillType Enum - for future use, expect similar usage to EffectType
 	Adjusted targetting for skills - should be slightly less buggy, and allow for less instances of through the wall
+	Classes can now override the default max level. Valid values range from 1 to the default max.
 
 Skills:
 	

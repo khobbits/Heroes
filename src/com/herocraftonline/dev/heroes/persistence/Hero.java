@@ -185,7 +185,7 @@ public class Hero {
         // adjust exp using the class modifier if it's positive
         if (expChange > 0 && source != ExperienceType.ADMIN) {
             expChange *= heroClass.getExpModifier();
-        } else if (source != ExperienceType.ADMIN && getLevel() >= prop.maxLevel && (!prop.masteryLoss || !prop.levelsViaExpLoss)) {
+        } else if (source != ExperienceType.ADMIN && isMaster() && (!prop.masteryLoss || !prop.levelsViaExpLoss)) {
             return;
         }
         
@@ -202,7 +202,7 @@ public class Hero {
         int currentLevel = prop.getLevel(exp);
         int newLevel = prop.getLevel(exp + expChange);
         
-        if (currentLevel >= prop.maxLevel && expChange > 0) {
+        if (isMaster()) {
             expChange = 0;
         } else if (currentLevel > newLevel && !prop.levelsViaExpLoss && source != ExperienceType.ADMIN) {
             expChange = prop.getExperience(currentLevel) - (exp - 1);
@@ -231,8 +231,8 @@ public class Hero {
             if (newLevel != currentLevel) {
                 HeroChangeLevelEvent hLEvent = new HeroChangeLevelEvent(this, currentLevel, newLevel);
                 plugin.getServer().getPluginManager().callEvent(hLEvent);
-                if (newLevel >= prop.maxLevel) {
-                    setExperience(prop.getExperience(prop.maxLevel));
+                if (newLevel >= heroClass.getMaxLevel()) {
+                    setExperience(prop.getExperience(heroClass.getMaxLevel()));
                     Messaging.broadcast(plugin, "$1 has become a master $2!", player.getName(), heroClass.getName());
                     plugin.getHeroManager().saveHero(player);
                 }
@@ -331,6 +331,10 @@ public class Hero {
      */
     public int getLevel() {
         return plugin.getConfigManager().getProperties().getLevel(getExperience());
+    }
+    
+    public int getLevel(HeroClass heroClass) {
+        return plugin.getConfigManager().getProperties().getLevel(getExperience(heroClass));
     }
 
     /**
@@ -453,8 +457,7 @@ public class Hero {
      * @return boolean
      */
     public boolean isMaster(HeroClass heroClass) {
-        int maxExp = plugin.getConfigManager().getProperties().maxExp;
-        return getExperience(heroClass) >= maxExp || getExperience(heroClass) - maxExp > 0;
+        return getLevel(heroClass) >= heroClass.getMaxLevel();
     }
 
     /**

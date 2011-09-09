@@ -311,6 +311,18 @@ public class HeroClassManager {
                 }
             }
             newClass.setExperienceSources(experienceSources);
+            
+            // Get the maximum level or use the default if it's not specified
+            int defaultMaxLevel = plugin.getConfigManager().getProperties().maxLevel;
+            int maxLevel = config.getInt("classes." + className + ".max-level", defaultMaxLevel);
+            if (maxLevel < 1) {
+                Heroes.log(Level.WARNING, "Class (" + className + ") max level is too low. Setting max level to 1.");
+                maxLevel = 1;
+            } else if (maxLevel > defaultMaxLevel) {
+                Heroes.log(Level.WARNING, "Class (" + className + ") max level is too high. Setting max level to " + defaultMaxLevel + ".");
+                maxLevel = defaultMaxLevel;
+            }
+            newClass.setMaxLevel(maxLevel);
 
             // Attempt to add the class
             boolean added = addClass(newClass);
@@ -325,7 +337,7 @@ public class HeroClassManager {
             }
         }
 
-        plugin.getConfigManager().print(config.getAll(), "");
+        //plugin.getConfigManager().print(config.getAll(), "");
 
         for (HeroClass unlinkedClass : classes) {
             String className = unlinkedClass.getName();

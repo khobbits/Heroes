@@ -25,6 +25,7 @@ public class HeroClass {
     private Map<ProjectileType, Integer> projectileDamage;
     private Map<String, ConfigurationNode> skills;
     // private Map<String, SkillData> skillData;
+    private int maxLevel;
     private double expModifier;
     private double expLoss;
 
@@ -44,6 +45,7 @@ public class HeroClass {
         skills = new LinkedHashMap<String, ConfigurationNode>();
         baseMaxHealth = 20;
         maxHealthPerLevel = 0;
+        maxLevel = 1;
     }
 
     public HeroClass(String name) {
@@ -219,6 +221,14 @@ public class HeroClass {
      */
     public double getExpLoss() {
         return expLoss;
+    }
+
+    public void setMaxLevel(int maxLevel) {
+        this.maxLevel = maxLevel;
+    }
+
+    public int getMaxLevel() {
+        return maxLevel;
     }
 
     public static enum ArmorItems {
