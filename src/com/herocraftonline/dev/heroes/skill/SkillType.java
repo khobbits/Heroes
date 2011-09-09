@@ -3,6 +3,7 @@ package com.herocraftonline.dev.heroes.skill;
 public enum SkillType {
 
     BUFF,
+    COUNTER,
     DARK,
     DAMAGING,
     DEBUFF,

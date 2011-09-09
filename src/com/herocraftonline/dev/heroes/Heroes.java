@@ -331,6 +331,11 @@ public class Heroes extends JavaPlugin {
             if (test != null) {
                 if (test.getDescription().getVersion().startsWith("2"))
                     return;
+                if (this.getServer().getPluginManager().getPlugin("GroupManager") != null || 
+                        this.getServer().getPluginManager().getPlugin("PermissionsBukkit") != null ||
+                        this.getServer().getPluginManager().getPlugin("bPermissions") != null) {
+                    return;
+                }
                 Heroes.Permissions = ((Permissions) test).getHandler();
                 log(Level.INFO, "Permissions found.");
                 final Player[] players = getServer().getOnlinePlayers();

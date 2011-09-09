@@ -2,7 +2,6 @@ package com.herocraftonline.dev.heroes.skill.skills;
 
 import java.util.Random;
 
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
@@ -10,16 +9,12 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityListener;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerListener;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.api.HeroesEventListener;
-import com.herocraftonline.dev.heroes.api.SkillUseEvent;
 import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
-import com.herocraftonline.dev.heroes.effects.PeriodicEffect;
+import com.herocraftonline.dev.heroes.effects.StunEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
@@ -30,8 +25,6 @@ public class SkillBlackjack extends ActiveSkill {
 
     private String applyText;
     private String expireText;
-    private String stunApplyText;
-    private String stunExpireText;
 
     private Random random = new Random();
 
@@ -45,8 +38,6 @@ public class SkillBlackjack extends ActiveSkill {
         setTypes(SkillType.PHYSICAL, SkillType.BUFF);
         
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(this), Priority.Normal);
-        registerEvent(Type.PLAYER_INTERACT, new SkillPlayerListener(), Priority.Normal);
-        registerEvent(Type.CUSTOM_EVENT, new SkillUseListener(), Priority.Highest);
     }
 
     @Override
@@ -56,8 +47,6 @@ public class SkillBlackjack extends ActiveSkill {
         node.setProperty(Setting.EXPIRE_TEXT.node(), "%hero% sheathed his blackjack!");
         node.setProperty("stun-duration", 5000);
         node.setProperty("stun-chance", 0.20);
-        node.setProperty("stun-apply-text", "%target% is stunned!");
-        node.setProperty("stun-expire-text", "%target% is no longer stunned!");
         node.setProperty(Setting.DURATION.node(), 20000);
         return node;
     }
@@ -67,8 +56,6 @@ public class SkillBlackjack extends ActiveSkill {
         super.init();
         applyText = getSetting(null, Setting.APPLY_TEXT.node(), "%hero% prepared his blackjack!").replace("%hero%", "$1");
         expireText = getSetting(null, Setting.EXPIRE_TEXT.node(), "%hero% sheathed his blackjack!").replace("%hero%", "$1");
-        stunApplyText = getSetting(null, "stun-apply-text", "%target% is stunned!").replace("%target%", "$1");
-        stunExpireText = getSetting(null, "stun-expire-text", "%target% is no longer stunned!").replace("%target%", "$1");
     }
 
     @Override
@@ -134,74 +121,5 @@ public class SkillBlackjack extends ActiveSkill {
             }
         }
 
-    }
-
-    public class SkillPlayerListener extends PlayerListener {
-
-        @Override
-        public void onPlayerInteract(PlayerInteractEvent event) {
-            Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
-            if (hero.hasEffect("Stun")) {
-                event.setCancelled(true);
-            }
-        }
-    }
-    
-    public class SkillUseListener extends HeroesEventListener {
-        
-        @Override
-        public void onSkillUse(SkillUseEvent event) {
-            if (event.isCancelled())
-                return;
-            
-            if (event.getHero().hasEffect("Stun")) {
-                if (!(event.getSkill().getName().equals("Invuln")))
-                    event.setCancelled(true);
-            }
-        }
-    }
-
-    public class StunEffect extends PeriodicEffect {
-
-        private static final long period = 100;
-
-        private Location loc;
-
-        public StunEffect(Skill skill, long duration) {
-            super(skill, "Stun", period, duration);
-            this.types.add(EffectType.STUN);
-            this.types.add(EffectType.HARMFUL);
-            this.types.add(EffectType.PHYSICAL);
-            this.types.add(EffectType.DISABLE);
-        }
-
-        @Override
-        public void apply(Hero hero) {
-            super.apply(hero);
-
-            Player player = hero.getPlayer();
-            loc = player.getLocation();
-            broadcast(loc, stunApplyText, player.getDisplayName());
-        }
-
-        @Override
-        public void remove(Hero hero) {
-            super.remove(hero);
-
-            Player player = hero.getPlayer();
-            broadcast(player.getLocation(), stunExpireText, player.getDisplayName());
-        }
-
-        @Override
-        public void tick(Hero hero) {
-            super.tick(hero);
-
-            Location location = hero.getPlayer().getLocation();
-            if (location.getX() != loc.getX() || location.getY() != loc.getY() || location.getZ() != loc.getZ()) {
-                loc.setYaw(location.getYaw());
-                loc.setPitch(location.getPitch());
-                hero.getPlayer().teleport(loc);
-            }
-        }
     }
 }

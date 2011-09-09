@@ -30,7 +30,7 @@ public class SkillInvuln extends ActiveSkill {
         setArgumentRange(0, 0);
         setIdentifiers(new String[] { "skill invuln" });
 
-        setTypes(SkillType.FORCE, SkillType.BUFF, SkillType.SILENCABLE);
+        setTypes(SkillType.FORCE, SkillType.BUFF, SkillType.SILENCABLE, SkillType.COUNTER);
         
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
     }
