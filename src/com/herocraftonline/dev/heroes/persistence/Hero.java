@@ -16,6 +16,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.util.config.Configuration;
 import org.bukkit.util.config.ConfigurationNode;
 
@@ -50,6 +51,8 @@ public class Hero {
     protected List<ItemStack> itemRecovery = new ArrayList<ItemStack>();
     protected Set<String> suppressedSkills = new HashSet<String>();
     protected Map<String, Map<String, String>> skillSettings = new HashMap<String, Map<String, String>>();
+    
+    private final PermissionAttachment transientPerms;
 
     private Map<String, ConfigurationNode> skills = new HashMap<String, ConfigurationNode>();
     protected double health;
@@ -58,6 +61,7 @@ public class Hero {
         this.plugin = plugin;
         this.player = player;
         this.heroClass = heroClass;
+        transientPerms = new PermissionAttachment(plugin, player);
     }
 
     /**
@@ -723,5 +727,30 @@ public class Hero {
      */
     public void setLastDamageCause(HeroDamageCause lastDamageCause) {
         this.lastDamageCause = lastDamageCause;
+    }
+    
+    /**
+     * Clears all set Permissions on the hero's permission attachment
+     */
+    public void clearPermissions() {
+        transientPerms.getPermissions().clear();
+    }
+    
+    /**
+     * Removes the given permission from the hero
+     * 
+     * @param permission
+     */
+    public void removePermission(String permission) {
+        transientPerms.unsetPermission(permission);
+    }
+    
+    /**
+     * Adds the given permission to the hero
+     * 
+     * @param permission
+     */
+    public void addPermission(String permission) {
+        transientPerms.setPermission(permission, true);
     }
 }

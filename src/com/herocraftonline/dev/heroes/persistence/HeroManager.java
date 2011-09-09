@@ -61,7 +61,7 @@ public class HeroManager {
 
         Runnable effectTimer = new EffectUpdater(this);
         plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, effectTimer, 0, effectInterval);
-        
+
         int regenAmount = plugin.getConfigManager().getProperties().manaRegenPercent;
         long regenInterval = plugin.getConfigManager().getProperties().manaRegenInterval * 1000L;
         Runnable manaTimer = new ManaUpdater(this, regenInterval, regenAmount);
@@ -306,21 +306,19 @@ public class HeroManager {
         HeroClass playerClass = hero.getHeroClass();
 
         List<Command> commands = plugin.getCommandHandler().getCommands();
-        if (Heroes.Permissions != null) {
-            for (Command cmd : commands) {
-                //Never try to learn * or ALL as skills, can happen if the nodes are added incorrectly
-                if (cmd.getName().equals("*") || cmd.getName().toLowerCase().equals("ALL"))
-                    continue;
-                if (cmd instanceof OutsourcedSkill) {
-                    OutsourcedSkill skill = (OutsourcedSkill) cmd;
-                    if (playerClass.hasSkill(skill.getName())) {
-                        skill.tryLearningSkill(hero);
-                    }
+        
+        for (Command cmd : commands) {
+            //Never try to learn * or ALL as skills, can happen if the nodes are added incorrectly
+            if (cmd.getName().equals("*") || cmd.getName().toLowerCase().equals("ALL"))
+                continue;
+            
+            if (cmd instanceof OutsourcedSkill) {
+                OutsourcedSkill skill = (OutsourcedSkill) cmd;
+                if (playerClass.hasSkill(skill.getName())) {
+                    skill.tryLearningSkill(hero);
                 }
             }
-        }
-
-        for (Command cmd : commands) {
+            
             if (cmd instanceof PassiveSkill) {
                 PassiveSkill skill = (PassiveSkill) cmd;
                 if (playerClass.hasSkill(skill.getName())) {
@@ -502,7 +500,7 @@ class EffectUpdater implements Runnable {
                 }
             }
         }
-        
+
         for (Entry<Creature, Set<Effect>> cEntry : heroManager.getCreatureEffects().entrySet()) {
             for (Effect effect : cEntry.getValue()) {
                 if (effect instanceof Expirable) {
@@ -552,12 +550,12 @@ class ManaUpdater implements Runnable {
             int mana = hero.getMana();
             if (mana == 100)
                 continue;
-            
+
             HeroRegainManaEvent hrmEvent = new HeroRegainManaEvent(hero, manaPercent, null);
             manager.plugin.getServer().getPluginManager().callEvent(hrmEvent);
             if (hrmEvent.isCancelled())
                 continue;
-            
+
             hero.setMana(mana + hrmEvent.getAmount());
             if (hero.isVerbose()) {
                 Messaging.send(hero.player, ChatColor.BLUE + "MANA " + Messaging.createManaBar(hero.getMana()));

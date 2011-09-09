@@ -97,22 +97,25 @@ public class OutsourcedSkill extends Skill {
         if (settings != null) {
             if (hero.getLevel() >= getSetting(heroClass, Setting.LEVEL.node(), 1)) {
                 for (String permission : permissions) {
-                    if (!hasPermission(world, playerName, permission)) {
+                    if (!hasPermission(world, playerName, permission) && Heroes.Permissions != null) {
                         addPermission(world, playerName, permission);
                     }
+                    hero.addPermission(permission);
                 }
             } else {
                 for (String permission : permissions) {
-                    if (hasPermission(world, playerName, permission)) {
+                    if (hasPermission(world, playerName, permission) && Heroes.Permissions != null ) {
                         removePermission(world, playerName, permission);
                     }
+                    hero.removePermission(permission);
                 }
             }
         } else {
             for (String permission : permissions) {
-                if (hasPermission(world, playerName, permission)) {
+                if (hasPermission(world, playerName, permission)  && Heroes.Permissions != null ) {
                     removePermission(world, playerName, permission);
                 }
+                hero.removePermission(permission);
             }
         }
     }
