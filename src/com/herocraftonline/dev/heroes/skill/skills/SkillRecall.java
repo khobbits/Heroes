@@ -7,6 +7,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.SkillType;
@@ -20,34 +21,39 @@ public class SkillRecall extends ActiveSkill {
         setUsage("/skill recall");
         setArgumentRange(0, 0);
         setIdentifiers(new String[] { "skill recall" });
-        
+
         setTypes(SkillType.SILENCABLE, SkillType.TELEPORT);
     }
 
     @Override
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
-        Map<String, String> skillSetting = hero.getSkillSettings(this);
+        Map<String, String> skillSettings = hero.getSkillSettings(this);
 
         // Try to teleport back to the location
-        World world = validateLocation(skillSetting, player);
+        World world = validateLocation(skillSettings, player);
         if (world == null)
             return false;
-        
-        double[] xyzyp = getStoredData(skillSetting);
+
+        if (hero.hasEffectType(EffectType.ROOT)) {
+            Messaging.send(player, "Teleport fizzled.");
+            return false;
+        }
+
+        double[] xyzyp = getStoredData(skillSettings);
         broadcastExecuteText(hero);
         player.teleport(new Location(world, xyzyp[0], xyzyp[1], xyzyp[2], (float) xyzyp[3], (float) xyzyp[4]));
         return true;
     }
 
-    private double[] getStoredData(Map<String, String> skillSetting) {
+    private double[] getStoredData(Map<String, String> skillSettings) {
         double[] xyzyp = new double[5];
 
-        xyzyp[0] = Double.valueOf(skillSetting.get("x"));
-        xyzyp[1] = Double.valueOf(skillSetting.get("y"));
-        xyzyp[2] = Double.valueOf(skillSetting.get("z"));
-        xyzyp[3] = Double.valueOf(skillSetting.get("yaw"));
-        xyzyp[4] = Double.valueOf(skillSetting.get("pitch"));
+        xyzyp[0] = Double.valueOf(skillSettings.get("x"));
+        xyzyp[1] = Double.valueOf(skillSettings.get("y"));
+        xyzyp[2] = Double.valueOf(skillSettings.get("z"));
+        xyzyp[3] = Double.valueOf(skillSettings.get("yaw"));
+        xyzyp[4] = Double.valueOf(skillSettings.get("pitch"));
 
         return xyzyp;
     }

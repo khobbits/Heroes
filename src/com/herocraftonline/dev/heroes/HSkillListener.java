@@ -2,6 +2,8 @@ package com.herocraftonline.dev.heroes;
 
 import com.herocraftonline.dev.heroes.api.HeroesEventListener;
 import com.herocraftonline.dev.heroes.api.SkillUseEvent;
+import com.herocraftonline.dev.heroes.effects.EffectType;
+import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Messaging;
 
@@ -24,9 +26,11 @@ public class HSkillListener extends HeroesEventListener {
             return;
         }
         
-        if (event.getHero().hasEffect("Stun")) {
-            if (!(event.getSkill().isType(SkillType.COUNTER)))
+        Hero hero = event.getHero();
+        if (hero.hasEffectType(EffectType.STUN) || hero.hasEffectType(EffectType.DISABLE)) {
+            if (!(event.getSkill().isType(SkillType.COUNTER))) {
                 event.setCancelled(true);
+            }
         }
     }
 }

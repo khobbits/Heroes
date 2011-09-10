@@ -27,6 +27,7 @@ import com.herocraftonline.dev.heroes.api.HeroDamageCause;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
 import com.herocraftonline.dev.heroes.effects.Effect;
+import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.party.HeroParty;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.util.Messaging;
@@ -427,6 +428,15 @@ public class Hero {
     public boolean hasEffect(String name) {
         for (Effect effect : effects) {
             if (effect.getName().equalsIgnoreCase(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public boolean hasEffectType(EffectType type) {
+        for (Effect effect : effects) {
+            if (effect.getTypes().contains(type)) {
                 return true;
             }
         }

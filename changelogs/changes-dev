@@ -5,5 +5,11 @@ Bug Fixes:
 	
 General/API:
 
+	Added Hero.hasEffectType to streamline effect checking
 
 Skills:
+
+	All
+		- Disables now also prevent skill usage (except counters)
+	Recall
+		- Can no longer be used when rooted
