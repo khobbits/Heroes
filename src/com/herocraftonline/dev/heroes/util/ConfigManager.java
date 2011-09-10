@@ -194,6 +194,8 @@ public class ConfigManager {
         properties.swapMasteryCost = config.getBoolean(root + "swapMasteryCost", false);
         properties.levelsViaExpLoss = config.getBoolean(root + "levelsViaExpLoss", false);
         properties.masteryLoss = config.getBoolean(root + "mastery-loss", false);
+        properties.noSpawnCamp = config.getBoolean(root + "noSpawnCamp", false);
+        properties.spawnCampRadius = config.getInt(root + "spawnCampRadius", 7);
         properties.calcExp();
     }
 

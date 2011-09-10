@@ -34,6 +34,8 @@ public class Properties {
     public int blockTrackingDuration;
     public int maxTrackedBlocks;
     public double playerKillingExp = 0;
+    public boolean noSpawnCamp = false;
+    public int spawnCampRadius;
     public Map<CreatureType, Double> creatureKillingExp = new HashMap<CreatureType, Double>();
     public Map<Material, Double> miningExp = new HashMap<Material, Double>();
     public Map<Material, Double> loggingExp = new HashMap<Material, Double>();
@@ -195,5 +197,20 @@ public class Properties {
         } catch (IllegalArgumentException e) {
         }
         return type;
+    }
+    
+    public static Boolean isNearSpawner(Entity entity, int radius)
+    {
+        Location location = entity.getLocation();
+
+        for (int i = 0 - radius; i <= radius; i++) {
+            for (int j = 0 - radius; j <= radius; j++) {
+                for (int k = 0 - radius; k <= radius; k++) {
+                    if (location.getBlock().getRelative(i, j, k).getType().equals(Material.MOB_SPAWNER))
+                        return true;
+                }
+            }
+        }
+        return false;
     }
 }

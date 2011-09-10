@@ -5,13 +5,7 @@ Bug Fixes:
 	
 General/API:
 
-	Added Hero.hasEffectType to streamline effect checking
-	Each class can be given its own cost
-	Added the firstSwapFree option to the config
+
 
 Skills:
 
-	All
-		- Disables now also prevent skill usage (except counters)
-	Recall
-		- Can no longer be used when rooted

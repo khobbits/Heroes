@@ -24,6 +24,10 @@ General/API:
 	Adjusted targetting for skills - should be slightly less buggy, and allow for less instances of through the wall
 	Classes can now override the default max level. Valid values range from 1 to the default max
 	Root & Stun effects are now standardized as players can only logically have one at a time.
+	Added Hero.hasEffectType to streamline effect checking
+	Each class can be given its own cost
+	Added the firstSwapFree option to the config
+	Added spawnCampRadius/noSpawnCamp to config - server can now configure to deny xp near Spawners
 
 Skills:
 	
@@ -33,6 +37,7 @@ Skills:
 		- health-cost node added to Skills - will deduct the amount of health before using the skill
 		- All skills now have SkillTypes
 		- Stuns now Properly block skill usage
+		- Disables now also prevent skill usage (except counters)
 	Bandage
 		- no longer inherently requires Paper, it is now set as a default reagent instead
 	Blight - (NEW!)
@@ -67,6 +72,8 @@ Skills:
 		- Disease effect that spreads to nearby enemies when it deals damage!
 	Pulse
 		- Fixed it so if one target was immune it would still effect everyone else
+	Recall
+		- Can no longer be used when rooted
 	Root
 		- No longer circumvents PvP
 		- Can now be applied to creatures

@@ -108,6 +108,10 @@ public class HEntityListener extends EntityListener {
 
             // If the Player killed a Monster/Animal then we check to see if they can earn EXP from KILLING.
             if (defender instanceof LivingEntity && !(defender instanceof Player) && expSources.contains(ExperienceType.KILLING)) {
+                //Check if the kill was near a spawner
+                if (plugin.getConfigManager().getProperties().noSpawnCamp && Properties.isNearSpawner(defender, plugin.getConfigManager().getProperties().spawnCampRadius) ) {
+                    return;
+                }
                 // Get the dying entity's CreatureType
                 CreatureType type = Properties.getCreatureFromEntity(defender);
                 if (type != null && !hero.getSummons().contains(defender)) {
