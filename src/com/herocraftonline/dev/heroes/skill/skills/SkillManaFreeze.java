@@ -30,7 +30,7 @@ public class SkillManaFreeze extends TargettedSkill {
         setArgumentRange(0, 1);
         setIdentifiers(new String[] { "skill manafreeze", "skill mfreeze" });
         
-        setTypes(SkillType.SILENCABLE, SkillType.DEBUFF);
+        setTypes(SkillType.SILENCABLE, SkillType.DEBUFF, SkillType.MANA);
 
         registerEvent(Type.CUSTOM_EVENT, new HeroListener(), Priority.Highest);
     }

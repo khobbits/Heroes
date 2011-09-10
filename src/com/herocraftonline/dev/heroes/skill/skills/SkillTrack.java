@@ -10,6 +10,7 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
+import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Messaging;
 
 public class SkillTrack extends ActiveSkill {
@@ -22,6 +23,8 @@ public class SkillTrack extends ActiveSkill {
         setUsage("/skill track <player>");
         setArgumentRange(1, 1);
         setIdentifiers(new String[] { "skill track" });
+        
+        setTypes(SkillType.EARTH, SkillType.KNOWLEDGE);
     }
 
     @Override

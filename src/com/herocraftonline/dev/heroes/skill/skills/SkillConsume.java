@@ -24,7 +24,7 @@ public class SkillConsume extends ActiveSkill {
         setArgumentRange(1, 1);
         setIdentifiers(new String[] { "skill consume" });
         
-        setTypes(SkillType.ITEM);
+        setTypes(SkillType.ITEM, SkillType.MANA);
     }
     
     @Override

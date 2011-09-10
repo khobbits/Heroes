@@ -19,7 +19,7 @@ public class SkillManaburn extends TargettedSkill {
         setArgumentRange(0, 1);
         setIdentifiers(new String[] { "skill manaburn", "skill mburn" });
         
-        setTypes(SkillType.DAMAGING, SkillType.SILENCABLE);
+        setTypes(SkillType.DAMAGING, SkillType.SILENCABLE, SkillType.MANA);
     }
 
     @Override

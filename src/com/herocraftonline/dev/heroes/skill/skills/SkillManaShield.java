@@ -31,7 +31,7 @@ public class SkillManaShield extends ActiveSkill {
         setArgumentRange(0, 0);
         setIdentifiers(new String[] { "skill manashield", "skill mshield" });
 
-        setTypes(SkillType.BUFF, SkillType.SILENCABLE);
+        setTypes(SkillType.BUFF, SkillType.SILENCABLE, SkillType.MANA);
         
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
     }

@@ -14,12 +14,13 @@ public enum SkillType {
     FORCE,
     HEAL,
     ILLUSION,
+    KNOWLEDGE,
     LIGHT,
     LIGHTNING,
+    MANA,
     MOVEMENT,
     PHYSICAL,
     SILENCABLE,
     SUMMON,
     TELEPORT;
-    
 }

@@ -31,7 +31,7 @@ public class SkillAbsorb extends ActiveSkill {
         setArgumentRange(0, 0);
         setIdentifiers(new String[] { "skill absorb" });
         
-        setTypes(SkillType.SILENCABLE, SkillType.BUFF);
+        setTypes(SkillType.SILENCABLE, SkillType.BUFF, SkillType.MANA);
         
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
     }
