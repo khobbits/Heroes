@@ -1,61 +1,80 @@
-Version 1.2.3
+Version 1.2.5
 
 Bug Fixes:
 
-	Multiworld support re-done, Binding should now work again
-	bedhealing percentages are no longer rounded down to 0, this fixes bedhealing
-	BedHeal HP display now respects verbosity settings for the hero
-
+	Fixed NPE when instantiating bedheal
+	BedHealEffect wont expire as quickly
+	Fixed cooldown command displaying skills that were ready to use not ones on cooldown.
+	Fixed admin commands erroring when attempting to modify offline players.  They will simple warn the user now.
+	Who & Reload commands now work from console as intended
+	Paths command will no longer show Paths the player can not select
+	Summons will no longer double-up/persist through a restart.
+	Permission-Skills were sometimes not being resolved properly after an admin swapped a players class
+	Fixed using 0 damage values not working as intended
+	
+	
 General/API:
 
-	SkillUseEvent now tracks manacost and reagentcost which can be adjusted during the event
-	Added getSettingKeys to the skill configuration methods.
-	HeroRegainManaEvent added to the API - called when a skill/mana regeneration is triggered
-	
+	Updated Default classes.yml to be more descriptive
+	Hero Help will no longer display commands the player does not have access to.
+	DiseaseEffect - works just like Bleed/Poison effects
+	Commented the Hero class
+	Added EffectType Enum - removed Classes to determine an Effects type, please convert to enum for type checks.
+	Added SkillType Enum - to provide better skill interactions
+	Adjusted targetting for skills - should be slightly less buggy, and allow for less instances of through the wall
+	Classes can now override the default max level. Valid values range from 1 to the default max
+	Root & Stun effects are now standardized as players can only logically have one at a time.
 
 Skills:
-
-	ALL
-		- ActiveSkills can now be given 'reagent' and 'reagent-cost' nodes to require specific items during cast
-		- All 'range' variables have been replaced with 'radius' if they were meant to be radius checks.
-			- Blaze, Boltstorm, GroupHeal, Hellgate, IcyAura, Might, MultiBolt, Port, Pulse
-		- All other instances of 'range' should now use the max-distance setting for limiting target distance
-			- Antidote, Web
-	Backstab
-		- Is now limited to only the specific weapons on the weapon list (melee only)
-	Bolt
-		- Made targeting more verbose
-	ChainLightning - (NEW!)
-		- Bolts the target, and then bounces to secondary targets within range!
-		- ChainLightning requires Line-Of-Sight to bounce to secondary targets, minor hills can sometimes block the bounce!
-	Consume - (NEW!)
-		- Works very similar to Replenish, but allows multiple different materials to give mana
-		- Configuration allows different materials to be granted at different levels
-	Deconstruct - (NEW!)
-		- Allows a player to deconstruct an item gaining back some materials
-	Flameshield
-		- Fixed report message for Skill blocking
-	IcyAura
-		- Implemented a much more limited set of block-types that IcyAura can turn into Ice.
-	ManaFreeze
-		- Now prevents the target player from regenerating mana as intended
-	Mark - (NEW!)
-		- Marks a location for the hero to recall back to using Recall
-	Multibolt - (NEW!)
-		- AoE version of Bolt.
-	Port
-		- Now allows more than 1 item as a cost
-		- Reminder - Port item costs must be ALL-CAPS.
-		- Renamed item-cost/amount to "reagent" and "reagent-cost" for the skill settings
+	
+	All
+		- can no longer target dead creatures/players
+		- Fixed many instances where skills were not awarding the kill to the player
+		- health-cost node added to Skills - will deduct the amount of health before using the skill
+		- All skills now have SkillTypes
+		- Stuns now Properly block skill usage
+	Bandage
+		- no longer inherently requires Paper, it is now set as a default reagent instead
+	Blight - (NEW!)
+		- Diseases the target, when they take damage from the blight effect, it will also damage all nearby players.
+	Chakra - (NEW!) - Thanks Multitallented!
+		- Heals nearby party members and dispells harmful effects!
+	Chant - (NEW!)
+		- Heals the target for the amount specified - defaults are lower than Pray - intended as a lower level Heal
+		- This allows healer classes to have more than just pray as a flat heal
+	Consume
+		- Should now be case-insensetive when attempting to use the skill.
+	Decay - (NEW!)
+		- Dispellable periodic damage effect (similar to Bleed & Poison)
+		- It's a disease - Noh Waih!
+	Deconstruct
+		- items can now be deconstructed if they are not in your hand via /skill deconstruct item
+	DeepFreeze
+		- roots the target in place and deals a small amount of initial damage
+		- If the target takes fire damage while the effect is active they will 'shatter' doing massive damage and removing the root effect
+	FireArmor - (NEW!)
+		- Ignites a players armor causing attacks against them to have a chance to light them on fire, (melee only)
+	ForcePush
+		- Fixed invalid messaging causing NPEs
+		- Fixed directionals
+	Harmtouch
+		- No longer deals double-damage to targets.
+	Hellgate
+		- Fixed group members not being teleported
+	IronFist - (NEW!)
+		- Short-range AoE that also performs a mild knockback.
+	Plague - (NEW!)
+		- Disease effect that spreads to nearby enemies when it deals damage!
 	Pulse
-		- Radius is now configurable
-	Recall
-		- Split marking of recall locations onto a different skill called 'Mark'
-	Replenish
-		- Amount of mana returned to player is now configurable
-	Skeleton
-		- Will now teleport to the player if it gets too far away.
-	Superheat
-		- No longer expires immediately.
-	Telekinesis
-		- Target distance is now configurable through 'max-distance' node
+		- Fixed it so if one target was immune it would still effect everyone else
+	Root
+		- No longer circumvents PvP
+		- Can now be applied to creatures
+	Silence - (NEW!)
+		- Affected hero will not be able to use skills that are 'silencable'
+	SoulFire - (NEW!)
+		- Ignites a players weapon causing attacks with it to have a chance to light their target on fire (Melee only)
+	Wolf
+		- Tamed wolves will now adhere to max-wolves restrictions
+		- Tamed wolves will now have the proper statistics as defined in the skill configuration
+		- Will no longer spawn underground and take damage
