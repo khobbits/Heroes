@@ -25,9 +25,13 @@ public class HSkillListener extends HeroesEventListener {
             event.setCancelled(true);
             return;
         }
+
         
         Hero hero = event.getHero();
-        if (hero.hasEffectType(EffectType.STUN) || hero.hasEffectType(EffectType.DISABLE)) {
+        if (hero.hasEffectType(EffectType.SILENCE) && event.getSkill().isType(SkillType.SILENCABLE)) {
+            Messaging.send(hero.getPlayer(), "You can't use that skill while silenced!");
+            event.setCancelled(true);
+        } else if (hero.hasEffectType(EffectType.STUN) || hero.hasEffectType(EffectType.DISABLE)) {
             if (!(event.getSkill().isType(SkillType.COUNTER))) {
                 event.setCancelled(true);
             }

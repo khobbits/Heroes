@@ -6,6 +6,7 @@ public enum EffectType {
     BLEED,
     DARK,
     DISABLE, // Loss of Control of character
+    DISARM,
     DISEASE,
     DISPELLABLE,
     ICE,
@@ -19,6 +20,7 @@ public enum EffectType {
     PHYSICAL,
     POISON,
     ROOT,
+    SILENCE,
     STUN,
     WATER,
     WOUNDING, //Prevents/Limits Healing

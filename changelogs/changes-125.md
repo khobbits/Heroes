@@ -23,7 +23,7 @@ General/API:
 	Added SkillType Enum - to provide better skill interactions
 	Adjusted targetting for skills - should be slightly less buggy, and allow for less instances of through the wall
 	Classes can now override the default max level. Valid values range from 1 to the default max
-	Root & Stun effects are now standardized as players can only logically have one at a time.
+	Root, Stun & Silence effects are now standardized as players can only logically have one at a time.
 	Added Hero.hasEffectType to streamline effect checking
 	Each class can be given its own cost
 	Added the firstSwapFree option to the config
