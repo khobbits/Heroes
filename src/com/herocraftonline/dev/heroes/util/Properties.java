@@ -199,7 +199,7 @@ public class Properties {
         return type;
     }
     
-    public static Boolean isNearSpawner(Entity entity, int radius)
+    public static boolean isNearSpawner(Entity entity, int radius)
     {
         Location location = entity.getLocation();
 
