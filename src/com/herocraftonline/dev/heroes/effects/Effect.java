@@ -85,6 +85,16 @@ public class Effect {
         return types;
     }
 
+    /**
+     * Returns if this Effect is the type specified
+     * 
+     * @param type
+     * @return
+     */
+    public boolean isType(EffectType type) {
+        return types.contains(type);
+    }
+    
     @Override
     public int hashCode() {
         final int prime = 31;

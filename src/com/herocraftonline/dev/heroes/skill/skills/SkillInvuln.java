@@ -1,27 +1,18 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
-import org.bukkit.event.Event.Priority;
-import org.bukkit.event.Event.Type;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityListener;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.effects.Effect;
 import com.herocraftonline.dev.heroes.effects.EffectType;
-import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
+import com.herocraftonline.dev.heroes.effects.InvulnerabilityEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
-import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillInvuln extends ActiveSkill {
 
-    private String applyText;
-    private String expireText;
 
     public SkillInvuln(Heroes plugin) {
         super(plugin, "Invuln");
@@ -31,8 +22,6 @@ public class SkillInvuln extends ActiveSkill {
         setIdentifiers(new String[] { "skill invuln" });
 
         setTypes(SkillType.FORCE, SkillType.BUFF, SkillType.SILENCABLE, SkillType.COUNTER);
-        
-        registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
     }
 
     @Override
@@ -47,8 +36,7 @@ public class SkillInvuln extends ActiveSkill {
     @Override
     public void init() {
         super.init();
-        applyText = getSetting(null, Setting.APPLY_TEXT.node(), "%hero% has become invulnerable!").replace("%hero%", "$1");
-        expireText = getSetting(null, Setting.EXPIRE_TEXT.node(), "%hero% is once again vulnerable!").replace("%hero%", "$1");
+
     }
 
     @Override
@@ -57,54 +45,11 @@ public class SkillInvuln extends ActiveSkill {
         int duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 10000);
         // Remove any harmful effects on the caster
         for (Effect effect : hero.getEffects()) {
-            if (effect.getTypes().contains(EffectType.HARMFUL)) {
+            if (effect.isType(EffectType.HARMFUL)) {
                 hero.removeEffect(effect);
             }
         }
         hero.addEffect(new InvulnerabilityEffect(this, duration));
         return true;
-    }
-
-    public class InvulnerabilityEffect extends ExpirableEffect {
-
-        public InvulnerabilityEffect(Skill skill, long duration) {
-            super(skill, "Invuln", duration);
-            this.types.add(EffectType.DISPELLABLE);
-            this.types.add(EffectType.BENEFICIAL);
-            this.types.add(EffectType.INVULNERABILITY);
-        }
-
-        @Override
-        public void apply(Hero hero) {
-            super.apply(hero);
-            Player player = hero.getPlayer();
-            broadcast(player.getLocation(), applyText, player.getDisplayName());
-        }
-
-        @Override
-        public void remove(Hero hero) {
-            Player player = hero.getPlayer();
-            broadcast(player.getLocation(), expireText, player.getDisplayName());
-        }
-
-    }
-
-    public class SkillEntityListener extends EntityListener {
-
-        @Override
-        public void onEntityDamage(EntityDamageEvent event) {
-            if (event.isCancelled()) {
-                return;
-            }
-
-            Entity defender = event.getEntity();
-            if (defender instanceof Player) {
-                Player player = (Player) defender;
-                Hero hero = plugin.getHeroManager().getHero(player);
-                if (hero.hasEffect("Invuln")) {
-                    event.setCancelled(true);
-                }
-            }
-        }
     }
 }

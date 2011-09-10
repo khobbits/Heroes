@@ -70,7 +70,7 @@ public class SkillChakra extends ActiveSkill {
         }
         
         for (Effect effect : hero.getEffects()) {
-            if (effect.getTypes().contains(EffectType.HARMFUL)) {
+            if (effect.isType(EffectType.HARMFUL)) {
                 hero.removeEffect(effect);
                 removals--;
                 if (removals == 0)
