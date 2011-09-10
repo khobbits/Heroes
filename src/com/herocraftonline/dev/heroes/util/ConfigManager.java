@@ -220,6 +220,7 @@ public class ConfigManager {
         properties.iConomy = config.getBoolean(root + "iConomy", false);
         properties.cColor = ChatColor.valueOf(config.getString(root + "color", "WHITE"));
         properties.swapCost = config.getInt(root + "swapcost", 0);
+        properties.firstSwitchFree = config.getBoolean(root + "firstSwitchFree", true);
         properties.debug = config.getBoolean(root + "debug", false);
         properties.damageSystem = config.getBoolean(root + "useDamageSystem", false);
     }

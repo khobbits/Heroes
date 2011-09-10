@@ -51,6 +51,7 @@ public class Properties {
     public ChatColor cColor;
     public String prefix;
     public int swapCost;
+    public boolean firstSwitchFree;
     public boolean swapMasteryCost;
     public boolean damageSystem;
 

@@ -323,6 +323,15 @@ public class HeroClassManager {
                 maxLevel = defaultMaxLevel;
             }
             newClass.setMaxLevel(maxLevel);
+            
+            int defaultCost = plugin.getConfigManager().getProperties().swapCost;
+            int cost = config.getInt("classes." + className + ".cost", defaultCost);
+            if (cost < 0) {
+                Heroes.log(Level.WARNING, "Class (" + className + ") cost is too low. Setting cost to 0.");
+                cost = 0;
+            }
+            newClass.setCost(cost);
+            
 
             // Attempt to add the class
             boolean added = addClass(newClass);
@@ -359,7 +368,7 @@ public class HeroClassManager {
         }
 
         // Save the Configuration setup to file, we do this so that any defaults values loaded are saved to file.
-        config.save();
+        // config.save(); <-- removing this because it adds things like cost and max level to each class, rendering the defaults in config.yml useless
     }
 
     public boolean removeClass(HeroClass c) {

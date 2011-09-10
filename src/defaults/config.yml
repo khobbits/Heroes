@@ -13,6 +13,7 @@ leveling:
 properties:
     iConomy: false #use of the cost system
     swapcost: 0 #cost to swap
+    firstSwitchFree: true #toggles charging for the first class switch
     debug: false #use this at your own risk
     useDamageSystem: true #toggles the damage system
 bed:

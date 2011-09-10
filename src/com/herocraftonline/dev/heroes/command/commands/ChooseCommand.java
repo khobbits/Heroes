@@ -15,11 +15,13 @@ import com.herocraftonline.dev.heroes.command.InteractiveCommandState;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Properties;
+import com.nijikokun.register.payment.Method.MethodAccount;
 
 public class ChooseCommand extends BasicInteractiveCommand {
 
     private final Heroes plugin;
     private Map<Player, HeroClass> pendingClassSelections = new HashMap<Player, HeroClass>();
+    private Map<Player, Boolean> pendingClassCostStatus = new HashMap<Player, Boolean>();
 
     public ChooseCommand(Heroes plugin) {
         super("Choose Class");
@@ -43,8 +45,7 @@ public class ChooseCommand extends BasicInteractiveCommand {
 
         @Override
         public boolean execute(CommandSender executor, String identifier, String[] args) {
-            if (!(executor instanceof Player))
-                return false;
+            if (!(executor instanceof Player)) return false;
 
             Player player = (Player) executor;
             Hero hero = plugin.getHeroManager().getHero(player);
@@ -77,17 +78,17 @@ public class ChooseCommand extends BasicInteractiveCommand {
                 }
             }
 
-            int cost = currentClass == plugin.getClassManager().getDefaultClass() ? 0 : prop.swapCost;
-            boolean costApplied = false;
-            if (prop.iConomy && plugin.Method != null && cost > 0) {
-                if (!hero.isMaster(newClass) || prop.swapMasteryCost) {
-                    costApplied = true;
-                    if (!plugin.Method.getAccount(player.getName()).hasEnough(cost)) {
-                        Messaging.send(hero.getPlayer(), "You're unable to meet the offering of $1 to become $2.", plugin.Method.format(cost), newClass.getName());
-                        return false;
-                    }
-                }
+            int cost = newClass.getCost();
+            boolean costApplied = true;
+            if (prop.firstSwitchFree && currentClass == plugin.getClassManager().getDefaultClass()) {
+                costApplied = false;
+            } else if (hero.isMaster(newClass) && !prop.swapMasteryCost) {
+                costApplied = false;
+            } else if (!prop.iConomy || plugin.Method == null || cost <= 0) {
+                costApplied = false;
             }
+
+            pendingClassCostStatus.put(player, costApplied);
 
             Messaging.send(executor, "You have chosen...");
             Messaging.send(executor, "$1: $2", newClass.getName(), newClass.getDescription().toLowerCase());
@@ -114,8 +115,7 @@ public class ChooseCommand extends BasicInteractiveCommand {
 
         @Override
         public boolean execute(CommandSender executor, String identifier, String[] args) {
-            if (!(executor instanceof Player))
-                return false;
+            if (!(executor instanceof Player)) return false;
 
             Player player = (Player) executor;
             Hero hero = plugin.getHeroManager().getHero(player);
@@ -125,8 +125,7 @@ public class ChooseCommand extends BasicInteractiveCommand {
 
             ClassChangeEvent event = new ClassChangeEvent(hero, currentClass, newClass);
             plugin.getServer().getPluginManager().callEvent(event);
-            if (event.isCancelled())
-                return false;
+            if (event.isCancelled()) return false;
 
             hero.clearEffects(); // clear any leftover/passive effects
             hero.setHeroClass(newClass);
@@ -137,16 +136,20 @@ public class ChooseCommand extends BasicInteractiveCommand {
                 }
             }
 
-            int cost = currentClass == plugin.getClassManager().getDefaultClass() ? 0 : prop.swapCost;
+            int cost = newClass.getCost();
 
-            if (prop.iConomy && plugin.Method != null && cost > 0) {
-                if (!hero.isMaster(newClass) || prop.swapMasteryCost) {
-                    plugin.Method.getAccount(player.getName()).subtract(cost);
+            if (pendingClassCostStatus.get(player)) {
+                MethodAccount account = plugin.Method.getAccount(player.getName());
+                if (account.hasEnough(cost)) {
+                    account.subtract(cost);
                     Messaging.send(hero.getPlayer(), "The Gods are pleased with your offering of $1.", plugin.Method.format(cost));
+                } else {
+                    Messaging.send(hero.getPlayer(), "You're unable to meet the offering of $1 to become $2.", plugin.Method.format(cost), newClass.getName());
+                    return false;
                 }
             }
-            
-            //Cleanup stuff
+
+            // Cleanup stuff
             plugin.getHeroManager().performSkillChecks(hero);
             hero.getBinds().clear();
 
@@ -158,9 +161,9 @@ public class ChooseCommand extends BasicInteractiveCommand {
 
     @Override
     public void onCommandCancelled(CommandSender executor) {
-        if (!(executor instanceof Player))
-            return;
+        if (!(executor instanceof Player)) return;
         pendingClassSelections.remove((Player) executor);
+        pendingClassCostStatus.remove((Player) executor);
     }
 
 }

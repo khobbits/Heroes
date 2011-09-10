@@ -6,6 +6,8 @@ Bug Fixes:
 General/API:
 
 	Added Hero.hasEffectType to streamline effect checking
+	Each class can be given its own cost
+	Added the firstSwapFree option to the config
 
 Skills:
 

@@ -26,9 +26,9 @@ public class HeroClass {
     private Map<String, ConfigurationNode> skills;
     // private Map<String, SkillData> skillData;
     private int maxLevel;
+    private int cost;
     private double expModifier;
     private double expLoss;
-
     private double baseMaxHealth;
     private double maxHealthPerLevel;
 
@@ -46,6 +46,7 @@ public class HeroClass {
         baseMaxHealth = 20;
         maxHealthPerLevel = 0;
         maxLevel = 1;
+        cost = 0;
     }
 
     public HeroClass(String name) {
@@ -229,6 +230,14 @@ public class HeroClass {
 
     public int getMaxLevel() {
         return maxLevel;
+    }
+
+    public void setCost(int cost) {
+        this.cost = cost;
+    }
+
+    public int getCost() {
+        return cost;
     }
 
     public static enum ArmorItems {
