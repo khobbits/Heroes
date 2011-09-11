@@ -27,7 +27,7 @@ public class SkillChainLightning extends TargettedSkill {
     public SkillChainLightning(Heroes plugin) {
         super(plugin, "ChainLightning");
         setDescription("Calls down a bolt of lightning that bounces to other targets");
-        setUsage("/skill chainl [target]");
+        setUsage("/skill chainl <target>");
         setArgumentRange(0, 1);
         setIdentifiers(new String[] { "skill chainlightning", "skill clightning", "skill chainl", "skill clight" });
         

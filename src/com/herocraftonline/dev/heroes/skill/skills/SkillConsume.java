@@ -20,7 +20,7 @@ public class SkillConsume extends ActiveSkill {
     public SkillConsume(Heroes plugin) {
         super(plugin, "Consume");
         setDescription("Consumes an item for mana");
-        setUsage("/skill consume [item]");
+        setUsage("/skill consume <item>");
         setArgumentRange(1, 1);
         setIdentifiers(new String[] { "skill consume" });
         

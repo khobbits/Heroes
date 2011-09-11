@@ -16,7 +16,7 @@ public class SkillHarmtouch extends TargettedSkill {
     public SkillHarmtouch(Heroes plugin) {
         super(plugin, "Harmtouch");
         setDescription("Deals direct damage to the target");
-        setUsage("/skill harmtouch [target]");
+        setUsage("/skill harmtouch <target>");
         setArgumentRange(0, 1);
         setIdentifiers(new String[] { "skill harmtouch" });
         

@@ -15,7 +15,7 @@ public class SkillSyphon extends TargettedSkill {
     public SkillSyphon(Heroes plugin) {
         super(plugin, "Syphon");
         setDescription("Gives your health to the target");
-        setUsage("/skill syphon [target] [health]");
+        setUsage("/skill syphon <target> <health>");
         setArgumentRange(0, 2);
         setIdentifiers(new String[] { "skill syphon" });
         

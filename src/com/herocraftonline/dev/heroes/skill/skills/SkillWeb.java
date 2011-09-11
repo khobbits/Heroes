@@ -37,7 +37,7 @@ public class SkillWeb extends TargettedSkill {
     public SkillWeb(Heroes plugin) {
         super(plugin, "Web");
         setDescription("Catches your target in a web");
-        setUsage("/skill web [target]");
+        setUsage("/skill web <target>");
         setArgumentRange(0, 1);
         setIdentifiers(new String[] { "skill web" });
         

@@ -18,7 +18,7 @@ public class SkillSilence extends TargettedSkill {
         super(plugin, "Silence");
         
         setDescription("Silences your target, making them unable to use some skills");
-        setUsage("/skill silence [target]");
+        setUsage("/skill silence <target>");
         setArgumentRange(0, 1);
         setIdentifiers(new String[] { "skill silence" });
         

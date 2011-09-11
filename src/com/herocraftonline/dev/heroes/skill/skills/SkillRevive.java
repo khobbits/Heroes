@@ -24,7 +24,7 @@ public class SkillRevive extends ActiveSkill {
     public SkillRevive(Heroes plugin) {
         super(plugin, "Revive");
         setDescription("Teleports the target to their place of death");
-        setUsage("/skill revive [target]");
+        setUsage("/skill revive <target>");
         setArgumentRange(1, 1);
         setIdentifiers(new String[] { "skill revive" });
 

@@ -17,7 +17,7 @@ public class SkillMegabolt extends TargettedSkill {
     public SkillMegabolt(Heroes plugin) {
         super(plugin, "Megabolt");
         setDescription("Calls down multiple bolts of lightning centered on the target.");
-        setUsage("/skill mbolt [target]");
+        setUsage("/skill mbolt <target>");
         setArgumentRange(0, 1);
         setIdentifiers(new String[] { "skill megabolt", "skill mbolt" });
         
