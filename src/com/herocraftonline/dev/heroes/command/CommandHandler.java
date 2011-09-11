@@ -102,6 +102,9 @@ public class CommandHandler {
         if (player.isOp()) {
             return true;
         }
+        if (player.hasPermission(permission)) {
+            return true;
+        }
         if (Heroes.Permissions != null) {
             return Heroes.Permissions.has(player, permission);
         }

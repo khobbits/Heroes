@@ -60,7 +60,7 @@ public class PathsCommand extends BasicCommand {
         for (int c = start; c < end; c++) {
             HeroClass heroClass = paths[c];
             
-            if (Heroes.Permissions != null && heroClass != plugin.getClassManager().getDefaultClass() && !CommandHandler.hasPermission(sender, "heroes.classes." + heroClass.getName().toLowerCase()))
+            if (heroClass != plugin.getClassManager().getDefaultClass() && !CommandHandler.hasPermission(sender, "heroes.classes." + heroClass.getName().toLowerCase()))
                 continue;
             
             String description = heroClass.getDescription();

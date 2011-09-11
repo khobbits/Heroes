@@ -30,6 +30,7 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.HeroRegainManaEvent;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.command.Command;
+import com.herocraftonline.dev.heroes.command.CommandHandler;
 import com.herocraftonline.dev.heroes.effects.Effect;
 import com.herocraftonline.dev.heroes.effects.Expirable;
 import com.herocraftonline.dev.heroes.effects.Periodic;
@@ -216,10 +217,8 @@ public class HeroManager {
 
         if (config.getString("class") != null) {
             playerClass = plugin.getClassManager().getClass(config.getString("class"));
-            if (Heroes.Permissions != null && playerClass != plugin.getClassManager().getDefaultClass()) {
-                if (!Heroes.Permissions.has(player, "heroes.classes." + playerClass.getName().toLowerCase())) {
-                    playerClass = plugin.getClassManager().getDefaultClass();
-                }
+            if (playerClass != plugin.getClassManager().getDefaultClass() && !CommandHandler.hasPermission(player, "heroes.classes." + playerClass.getName().toLowerCase())) {
+               playerClass = plugin.getClassManager().getDefaultClass();
             }
         } else {
             playerClass = plugin.getClassManager().getDefaultClass();

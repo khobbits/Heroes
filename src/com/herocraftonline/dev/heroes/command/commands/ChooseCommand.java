@@ -11,6 +11,7 @@ import com.herocraftonline.dev.heroes.api.ClassChangeEvent;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.command.BasicInteractiveCommand;
 import com.herocraftonline.dev.heroes.command.BasicInteractiveCommandState;
+import com.herocraftonline.dev.heroes.command.CommandHandler;
 import com.herocraftonline.dev.heroes.command.InteractiveCommandState;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.util.Messaging;
@@ -71,11 +72,9 @@ public class ChooseCommand extends BasicInteractiveCommand {
                 }
             }
 
-            if (Heroes.Permissions != null && newClass != plugin.getClassManager().getDefaultClass()) {
-                if (!Heroes.Permissions.has(player, "heroes.classes." + newClass.getName().toLowerCase())) {
-                    Messaging.send(player, "You don't have permission for $1.", newClass.getName());
-                    return false;
-                }
+            if ( newClass != plugin.getClassManager().getDefaultClass() && !CommandHandler.hasPermission(player, "heroes.classes." + newClass.getName().toLowerCase())) {
+                Messaging.send(player, "You don't have permission for $1.", newClass.getName());
+                return false;
             }
 
             int cost = newClass.getCost();

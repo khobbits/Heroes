@@ -10,6 +10,7 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.command.BasicInteractiveCommand;
 import com.herocraftonline.dev.heroes.command.BasicInteractiveCommandState;
+import com.herocraftonline.dev.heroes.command.CommandHandler;
 import com.herocraftonline.dev.heroes.command.InteractiveCommandState;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.util.Messaging;
@@ -76,12 +77,11 @@ public class ResetCommand extends BasicInteractiveCommand {
                 return false;
             Player player = (Player) executor;
 
-            if (Heroes.Permissions != null) {
-                if (!Heroes.Permissions.has(player, "heroes.reset")) {
-                    Messaging.send(player, "You don't have permission to reset your hero");
-                    return false;
-                }
+            if (!CommandHandler.hasPermission(player, "heroes.reset")) {
+                Messaging.send(player, "You don't have permission to reset your hero");
+                return false;
             }
+            
 
             Hero hero = plugin.getHeroManager().getHero(player);
             HeroClass defaultClass = plugin.getClassManager().getDefaultClass();
