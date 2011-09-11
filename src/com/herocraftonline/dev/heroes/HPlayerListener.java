@@ -51,18 +51,12 @@ public class HPlayerListener extends PlayerListener {
         if (event.useItemInHand() == Result.DENY || event.isCancelled())
             return;
 
-        
         Player player = event.getPlayer();
-
         Material material = player.getItemInHand().getType();
         Hero hero = plugin.getHeroManager().getHero(player);
-        if (hero.hasEffect("Stun")) {
-            event.setCancelled(true);
-            return;
-        }
+
         if (hero.getBinds().containsKey(material)) {
             if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-                event.setCancelled(false);
                 String[] args = hero.getBinds().get(material);
                 plugin.onCommand(player, null, "skill", args);
             }
@@ -75,7 +69,7 @@ public class HPlayerListener extends PlayerListener {
         plugin.getHeroManager().loadHero(player);
         plugin.switchToHNSH(player);
         this.plugin.getInventoryChecker().checkInventory(player);
-        if(plugin.getConfigManager().getProperties().prefixClassName) {
+        if (plugin.getConfigManager().getProperties().prefixClassName) {
             Hero hero = plugin.getHeroManager().getHero(player);
             player.setDisplayName("[" + hero.getHeroClass().getName() + "]" + player.getName());
         }
@@ -168,7 +162,8 @@ public class HPlayerListener extends PlayerListener {
 
     public class BedHealEffect extends PeriodicEffect {
 
-        private final double tickHealPercent;        
+        private final double tickHealPercent;
+
         public BedHealEffect(long period, long duration, double tickHealPercent) {
             super(null, "BedHeal", period, duration);
             this.tickHealPercent = tickHealPercent;

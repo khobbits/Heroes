@@ -19,6 +19,7 @@ public class HSkillListener extends HeroesEventListener {
     public void onSkillUse(SkillUseEvent event) {
         if (event.isCancelled())
             return;
+        
         String worldName = event.getPlayer().getWorld().getName();
         if (plugin.getConfigManager().getProperties().disabledWorlds.contains(worldName)) {
             Messaging.send(event.getPlayer(), "Skills have been disabled on this world!");
@@ -26,7 +27,6 @@ public class HSkillListener extends HeroesEventListener {
             return;
         }
 
-        
         Hero hero = event.getHero();
         if (hero.hasEffectType(EffectType.SILENCE) && event.getSkill().isType(SkillType.SILENCABLE)) {
             Messaging.send(hero.getPlayer(), "You can't use that skill while silenced!");
