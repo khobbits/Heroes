@@ -56,9 +56,7 @@ public class HPlayerListener extends PlayerListener {
         Hero hero = plugin.getHeroManager().getHero(player);
 
         if (hero.getBinds().containsKey(material)) {
-            System.out.println("  bind found");
             if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-                System.out.println("  executing bind");
                 String[] args = hero.getBinds().get(material);
                 plugin.onCommand(player, null, "skill", args);
             }
