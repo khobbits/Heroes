@@ -11,6 +11,7 @@ Bug Fixes:
 	Summons will no longer double-up/persist through a restart.
 	Permission-Skills were sometimes not being resolved properly after an admin swapped a players class
 	Fixed using 0 damage values not working as intended
+	Hero is now saved when a player chooses a class
 	
 	
 General/API:
