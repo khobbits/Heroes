@@ -214,14 +214,18 @@ public class HeroManager {
 
     private HeroClass loadClass(Player player, Configuration config) {
         HeroClass playerClass = null;
-
+        HeroClass defaultClass = plugin.getClassManager().getDefaultClass();
+        
         if (config.getString("class") != null) {
             playerClass = plugin.getClassManager().getClass(config.getString("class"));
-            if (playerClass != plugin.getClassManager().getDefaultClass() && !CommandHandler.hasPermission(player, "heroes.classes." + playerClass.getName().toLowerCase())) {
-               playerClass = plugin.getClassManager().getDefaultClass();
+
+            if (playerClass == null) {
+                playerClass = defaultClass;
+            } else if (!CommandHandler.hasPermission(player, "heroes.classes." + playerClass.getName().toLowerCase())) {
+                playerClass = defaultClass;
             }
         } else {
-            playerClass = plugin.getClassManager().getDefaultClass();
+            playerClass = defaultClass;
         }
         return playerClass;
     }
@@ -305,19 +309,19 @@ public class HeroManager {
         HeroClass playerClass = hero.getHeroClass();
 
         List<Command> commands = plugin.getCommandHandler().getCommands();
-        
+
         for (Command cmd : commands) {
-            //Never try to learn * or ALL as skills, can happen if the nodes are added incorrectly
+            // Never try to learn * or ALL as skills, can happen if the nodes are added incorrectly
             if (cmd.getName().equals("*") || cmd.getName().toLowerCase().equals("ALL"))
                 continue;
-            
+
             if (cmd instanceof OutsourcedSkill) {
                 OutsourcedSkill skill = (OutsourcedSkill) cmd;
                 if (playerClass.hasSkill(skill.getName())) {
                     skill.tryLearningSkill(hero);
                 }
             }
-            
+
             if (cmd instanceof PassiveSkill) {
                 PassiveSkill skill = (PassiveSkill) cmd;
                 if (playerClass.hasSkill(skill.getName())) {
