@@ -67,7 +67,6 @@ import com.herocraftonline.dev.heroes.persistence.HeroManager;
 import com.herocraftonline.dev.heroes.skill.OutsourcedSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.SkillLoader;
-import com.herocraftonline.dev.heroes.spout.SpoutUI;
 import com.herocraftonline.dev.heroes.util.ConfigManager;
 import com.herocraftonline.dev.heroes.util.DebugLog;
 import com.nijiko.permissions.PermissionHandler;
@@ -103,14 +102,10 @@ public class Heroes extends JavaPlugin {
     private ConfigManager configManager;
     private CommandHandler commandHandler = new CommandHandler();
     private HeroClassManager heroClassManager;
-    public SpoutUI getSpoutUI() {
-        return spoutUI;
-    }
     
     private HeroManager heroManager;
     private PartyManager partyManager;
     private DamageManager damageManager;
-    private SpoutUI spoutUI;
     // Variable for the Permissions plugin handler.
     public static PermissionHandler Permissions;
     public Method Method = null;
@@ -246,7 +241,6 @@ public class Heroes extends JavaPlugin {
         heroManager = new HeroManager(this);
         damageManager = new DamageManager(this);
         inventoryChecker = new InventoryChecker(this);
-        spoutUI = new SpoutUI(this);
         // Check for BukkitContrib
         setupSpout();
 

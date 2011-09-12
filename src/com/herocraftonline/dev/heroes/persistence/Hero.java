@@ -30,6 +30,7 @@ import com.herocraftonline.dev.heroes.effects.Effect;
 import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.party.HeroParty;
 import com.herocraftonline.dev.heroes.skill.Skill;
+import com.herocraftonline.dev.heroes.spout.SpoutUI;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Properties;
 
@@ -242,12 +243,12 @@ public class Hero {
                     plugin.getHeroManager().saveHero(player);
                 }
                 if (newLevel > currentLevel) {
-                    plugin.getSpoutUI().sendPlayerNotification(player, ChatColor.GOLD + "Level Up!", ChatColor.DARK_RED + "Level - " + String.valueOf(newLevel), Material.DIAMOND_HELMET);
+                    SpoutUI.sendPlayerNotification(player, ChatColor.GOLD + "Level Up!", ChatColor.DARK_RED + "Level - " + String.valueOf(newLevel), Material.DIAMOND_HELMET);
                     Messaging.send(player, "You gained a level! (Lvl $1 $2)", String.valueOf(newLevel), heroClass.getName());
                     setHealth(getMaxHealth());
                     syncHealth();
                 } else {
-                    plugin.getSpoutUI().sendPlayerNotification(player, ChatColor.GOLD + "Level Lost!", ChatColor.DARK_RED + "Level - " + String.valueOf(newLevel), Material.DIAMOND_HELMET);
+                    SpoutUI.sendPlayerNotification(player, ChatColor.GOLD + "Level Lost!", ChatColor.DARK_RED + "Level - " + String.valueOf(newLevel), Material.DIAMOND_HELMET);
                     Messaging.send(player, "You lost a level! (Lvl $1 $2)", String.valueOf(newLevel), heroClass.getName());
                 }
             }

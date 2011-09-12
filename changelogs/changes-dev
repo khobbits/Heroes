@@ -6,6 +6,7 @@ Bug Fixes:
 General/API:
 
 	Added /hero admin level - command to adjust a player's level directly.
+	Fixed SpoutUI implementation
 
 Skills:
 
