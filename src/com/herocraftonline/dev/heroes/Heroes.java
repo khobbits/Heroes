@@ -258,6 +258,14 @@ public class Heroes extends JavaPlugin {
         
         blockListener.init();
 
+        // Call our function to register the events Heroes needs.
+        registerEvents();
+        // Call our function to setup Heroes Commands.
+        registerCommands();
+        // Perform the Permissions check.
+        setupPermissions();
+        log(Level.INFO, "version " + getDescription().getVersion() + " is enabled!");
+
         final Player[] players = getServer().getOnlinePlayers();
         for (Player player : players) {
             if (heroManager.containsPlayer(player)) {
@@ -267,15 +275,7 @@ public class Heroes extends JavaPlugin {
             heroManager.loadHero(player);
             getInventoryChecker().checkInventory(player);
         }
-
-        // Call our function to register the events Heroes needs.
-        registerEvents();
-        // Call our function to setup Heroes Commands.
-        registerCommands();
-        // Perform the Permissions check.
-        setupPermissions();
-        log(Level.INFO, "version " + getDescription().getVersion() + " is enabled!");
-
+        
         // Set the Party UI map to a nice splash screen.
         if (getConfigManager().getProperties().mapUI) {
             MapAPI mapAPI = new MapAPI();
