@@ -153,6 +153,8 @@ public class ChooseCommand extends BasicInteractiveCommand {
             hero.getBinds().clear();
 
             Messaging.send(player, "Welcome to the path of the $1!", newClass.getName());
+            
+            plugin.getHeroManager().saveHero(player);
             return true;
         }
 
