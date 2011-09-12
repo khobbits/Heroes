@@ -101,12 +101,6 @@ public class ConfigManager {
         return true;
     }
 
-    private void addNodeToConfig(Configuration config, ConfigurationNode node, String path) {
-        for (String key : node.getKeys(null)) {
-            config.setProperty(path + "." + key, node.getProperty(key));
-        }
-    }
-
     private void checkForConfig(File config) {
         if (!config.exists()) {
             try {
@@ -137,7 +131,7 @@ public class ConfigManager {
                 Skill skill = (Skill) baseCommand;
                 ConfigurationNode node = config.getNode(skill.getName());
                 if (node == null) {
-                    addNodeToConfig(config, skill.getDefaultConfig(), skill.getName());
+                    config.setProperty(skill.getName(), skill.getDefaultConfig().getAll());
                 } else {
                     ConfigurationNode defaultNode = skill.getDefaultConfig();
                     mergeNodeToConfig(config, defaultNode, skill.getName());
