@@ -1,9 +1,20 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
+import org.bukkit.Material;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event.Priority;
+import org.bukkit.event.Event.Type;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityListener;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.player.PlayerItemHeldEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.config.ConfigurationNode;
 
@@ -14,6 +25,7 @@ import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
+import com.herocraftonline.dev.heroes.skill.skills.SkillFlameshield.HeroesSkillListener;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Setting;
 
@@ -22,8 +34,11 @@ public class SkillDisarm extends TargettedSkill {
 	private String applyText;
 	private String expireText;
 	private HashMap<Hero,ItemStack> ismap = new HashMap<Hero,ItemStack>();
+	private static Set<Material> weapons = new HashSet<Material>();
+
 
 	public SkillDisarm(Heroes plugin) {
+
 		super(plugin, "Disarm");
 		setDescription("Disarm your target");
 		setUsage("/skill disarm");
@@ -32,6 +47,39 @@ public class SkillDisarm extends TargettedSkill {
 		setTypes(SkillType.PHYSICAL, SkillType.DEBUFF);
 
 		setIdentifiers(new String[] { "skill disarm" });
+
+		registerEvent(Type.PLAYER_ITEM_HELD, new PlayerListener(), Priority.Highest);
+		
+		weapons.add(Material.IRON_AXE);
+		weapons.add(Material.IRON_HOE);
+		weapons.add(Material.IRON_PICKAXE);
+		weapons.add(Material.IRON_SPADE);
+		weapons.add(Material.IRON_SWORD);
+
+		weapons.add(Material.STONE_AXE);
+		weapons.add(Material.STONE_HOE);
+		weapons.add(Material.STONE_PICKAXE);
+		weapons.add(Material.STONE_SPADE);
+		weapons.add(Material.STONE_SWORD);
+
+		weapons.add(Material.GOLD_AXE);
+		weapons.add(Material.GOLD_HOE);
+		weapons.add(Material.GOLD_PICKAXE);
+		weapons.add(Material.GOLD_SPADE);
+		weapons.add(Material.GOLD_SWORD);
+
+		weapons.add(Material.WOOD_AXE);
+		weapons.add(Material.WOOD_HOE);
+		weapons.add(Material.WOOD_PICKAXE);
+		weapons.add(Material.WOOD_SPADE);
+		weapons.add(Material.WOOD_SWORD);
+
+		weapons.add(Material.DIAMOND_AXE);
+		weapons.add(Material.DIAMOND_HOE);
+		weapons.add(Material.DIAMOND_PICKAXE);
+		weapons.add(Material.DIAMOND_SPADE);
+		weapons.add(Material.DIAMOND_SWORD);
+
 	}
 
 	@Override
@@ -110,6 +158,21 @@ public class SkillDisarm extends TargettedSkill {
 				ismap.remove(hero);
 			}
 			broadcast(player.getLocation(), expireText, player.getDisplayName());
+		}
+	}
+
+	public class PlayerListener extends EntityListener {
+
+		public void onPlayerItemHeld(PlayerItemHeldEvent event) {
+			
+			Inventory inv = event.getPlayer().getInventory();
+			Material mat = inv.getItem(event.getNewSlot()).getType();
+			if(weapons.contains(mat)){
+				ItemStack carry = inv.getItem(event.getNewSlot());
+				inv.setItem((event.getNewSlot()), inv.getItem(event.getPreviousSlot()));
+				inv.setItem((event.getPreviousSlot()), carry);
+			}
+
 		}
 	}
 
