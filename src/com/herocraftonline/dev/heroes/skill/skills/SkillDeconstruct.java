@@ -171,7 +171,7 @@ public class SkillDeconstruct extends ActiveSkill {
         int xp = getSetting(hero.getHeroClass(), matName + "." + Setting.EXP.node(), 0);
         hero.gainExp(xp, ExperienceType.CRAFTING);
 
-        broadcast(player.getLocation(), getUseText(), new Object[] { player.getDisplayName(), matName.toLowerCase().replace("_", " ") });
+        broadcast(player.getLocation(), getUseText(), player.getDisplayName(), matName.toLowerCase().replace("_", " "));
         return true;
     }
 

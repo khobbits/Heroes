@@ -133,7 +133,7 @@ public class SkillFireArmor extends ActiveSkill {
                 Messaging.getCreatureName((Creature) subEvent.getDamager());
             }
             
-            broadcast(player.getLocation(), igniteText, new Object[] {player.getDisplayName(), name});
+            broadcast(player.getLocation(), igniteText, player.getDisplayName(), name);
         }
     }
 }

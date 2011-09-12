@@ -71,7 +71,7 @@ public class SkillConsume extends ActiveSkill {
                 ItemStack reagent = new ItemStack(mat, amount);
                 if (!hasReagentCost(player, reagent)) {
                     String reagentName = reagent.getType().name().toLowerCase().replace("_", " ");
-                    Messaging.send(player, "Sorry, you need to have $1 $2 to use that skill!", new Object[] {reagent.getAmount(), reagentName});
+                    Messaging.send(player, "Sorry, you need to have $1 $2 to use that skill!", reagent.getAmount(), reagentName);
                     return false;
                 }
                 

@@ -35,7 +35,7 @@ public class SkillMark extends ActiveSkill {
             if (world == null)
                 return false;
             double[] xyzyp = getStoredData(skillSetting);
-            Messaging.send(player, "Your recall is currently marked on $1 at: $2, $3, $4", new Object[] { world.getName(), (int) xyzyp[0], (int) xyzyp[1], (int) xyzyp[2] });
+            Messaging.send(player, "Your recall is currently marked on $1 at: $2, $3, $4", world.getName(), (int) xyzyp[0], (int) xyzyp[1], (int) xyzyp[2]);
             return false;
         } else {
             // Save a new mark

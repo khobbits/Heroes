@@ -129,7 +129,7 @@ public class SkillFlameshield extends ActiveSkill {
                 if (hero.hasEffect("Flameshield")) {
                     String name = event.getDamager().getPlayer().getName();
                     String skillName = event.getSkill().getName().toLowerCase();
-                    broadcast(event.getEntity().getLocation(), skillBlockText, new Object[] { player.getName(), name, skillName });
+                    broadcast(event.getEntity().getLocation(), skillBlockText, player.getName(), name, skillName);
                     event.setCancelled(true);
                 }
             } else if (event.getEntity() instanceof Creature) {
@@ -137,7 +137,7 @@ public class SkillFlameshield extends ActiveSkill {
                 if (plugin.getHeroManager().creatureHasEffect(creature, "Flameshield")) {
                     String name = event.getDamager().getPlayer().getName();
                     String skillName = event.getSkill().getName().toLowerCase();
-                    broadcast(event.getEntity().getLocation(), skillBlockText, new Object[] { Messaging.getCreatureName(creature), name, skillName });
+                    broadcast(event.getEntity().getLocation(), skillBlockText, Messaging.getCreatureName(creature), name, skillName);
                     event.setCancelled(true);
                 }
             }

@@ -159,7 +159,7 @@ public class SkillConstruct extends ActiveSkill {
         hero.gainExp(xp, ExperienceType.CRAFTING);
         
         
-        broadcast(player.getLocation(), getUseText(), new Object[] { player.getDisplayName(), matName.toLowerCase().replace("_", " ") });
+        broadcast(player.getLocation(), getUseText(), player.getDisplayName(), matName.toLowerCase().replace("_", " "));
         return true;
     }
 

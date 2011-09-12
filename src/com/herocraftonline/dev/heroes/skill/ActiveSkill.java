@@ -135,7 +135,7 @@ public abstract class ActiveSkill extends Skill {
         if (itemStack != null) {
             if (itemStack.getAmount() != 0 && !hasReagentCost(player, itemStack)) {
                 reagentName = itemStack.getType().name().toLowerCase().replace("_", " ");
-                Messaging.send(player, "Sorry, you need to have $1 $2 to use that skill!", new Object[] {itemStack.getAmount(), reagentName});
+                Messaging.send(player, "Sorry, you need to have $1 $2 to use that skill!", itemStack.getAmount(), reagentName);
                 return false;
             }
         }

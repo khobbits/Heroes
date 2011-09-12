@@ -123,7 +123,7 @@ public class SkillSoulFire extends ActiveSkill {
                 name = Messaging.getCreatureName((Creature) event.getEntity());
             }
             
-            broadcast(player.getLocation(), igniteText, new Object[] {player.getDisplayName(), name});
+            broadcast(player.getLocation(), igniteText, player.getDisplayName(), name);
         }
     }
 }

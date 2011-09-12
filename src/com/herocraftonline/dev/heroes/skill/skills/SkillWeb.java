@@ -93,7 +93,7 @@ public class SkillWeb extends TargettedSkill {
             }
         }
 
-        broadcast(player.getLocation(), applyText, new Object[] { player.getDisplayName(), name });
+        broadcast(player.getLocation(), applyText, player.getDisplayName(), name);
         int duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 5000);
         WebEffect wEffect = new WebEffect(this, duration, target.getLocation().getBlock().getLocation());
         // Hero can only have one web effect active at a time - prevents issues with blocks never turning back.
