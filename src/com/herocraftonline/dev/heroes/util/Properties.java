@@ -47,7 +47,7 @@ public class Properties {
     public String defClass;
     public int defLevel;
     public boolean resetOnDeath;
-    
+
     // Properties//
     public boolean iConomy;
     public ChatColor cColor;
@@ -65,7 +65,7 @@ public class Properties {
     // Mana stuff
     public int manaRegenPercent;
     public int manaRegenInterval;
-    
+
     // Map Stuffs
     public boolean mapUI;
     public byte mapID;
@@ -76,26 +76,26 @@ public class Properties {
 
     // Stupid Hats...
     public boolean allowHats;
-    
+
     // Prefix ClassName
     public boolean prefixClassName;
 
     // Default Weapon List
     public final static List<String> defaultWeapons;
-    
+
     // Blocks that we consider transparent for skills
     public final static Set<Material> transparentBlocks;
-    
+
     // Byte Set of transparents
     public final static HashSet<Byte> transparentIds;
-    
+
     static {
         defaultWeapons = new ArrayList<String>();
         defaultWeapons.add("WOOD_SWORD");
         defaultWeapons.add("STONE_SWORD");
         defaultWeapons.add("GOLD_SWORD");
         defaultWeapons.add("DIAMOND_SWORD");
-        
+
         transparentBlocks = new HashSet<Material>();
         transparentBlocks.add(Material.AIR);
         transparentBlocks.add(Material.SNOW);
@@ -118,7 +118,7 @@ public class Properties {
         transparentBlocks.add(Material.DETECTOR_RAIL);
         transparentBlocks.add(Material.DIODE_BLOCK_OFF);
         transparentBlocks.add(Material.DIODE_BLOCK_ON);
-        
+
         transparentIds = new HashSet<Byte>();
         transparentIds.add((byte) Material.AIR.getId());
         transparentIds.add((byte) Material.SNOW.getId());
@@ -142,7 +142,7 @@ public class Properties {
         transparentIds.add((byte) Material.DIODE_BLOCK_OFF.getId());
         transparentIds.add((byte) Material.DIODE_BLOCK_ON.getId());
     }
-    
+
     /**
      * Generate experience for the level ArrayList<Integer>
      */
@@ -198,7 +198,7 @@ public class Properties {
         }
         return type;
     }
-    
+
     public static boolean isNearSpawner(Entity entity, int radius)
     {
         Location location = entity.getLocation();
@@ -212,5 +212,40 @@ public class Properties {
             }
         }
         return false;
+    }
+
+    public static boolean isWeapon(Material mat) {
+        switch(mat) {
+        
+        case IRON_AXE :
+        case IRON_HOE :
+        case IRON_PICKAXE :
+        case IRON_SPADE :
+        case IRON_SWORD :
+        case STONE_AXE :
+        case STONE_HOE :
+        case STONE_PICKAXE :
+        case STONE_SPADE :
+        case STONE_SWORD :
+        case GOLD_AXE :
+        case GOLD_HOE :
+        case GOLD_PICKAXE :
+        case GOLD_SPADE :
+        case GOLD_SWORD :
+        case WOOD_AXE :
+        case WOOD_HOE :
+        case WOOD_PICKAXE :
+        case WOOD_SPADE :
+        case WOOD_SWORD :
+        case DIAMOND_AXE :
+        case DIAMOND_HOE :
+        case DIAMOND_PICKAXE :
+        case DIAMOND_SPADE :
+        case DIAMOND_SWORD :
+            return true;
+
+        default: 
+            return false;
+        }
     }
 }
