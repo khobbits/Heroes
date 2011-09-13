@@ -5,7 +5,7 @@ import org.bukkit.entity.Creature;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
 
-public class PeriodicEffect extends ExpirableEffect implements Periodic, Expirable {
+public class PeriodicEffect extends ExpirableEffect implements Periodic {
 
     private final long period;
     protected long lastTickTime;

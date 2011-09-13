@@ -1,6 +1,7 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -15,8 +16,10 @@ import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
+import com.herocraftonline.dev.heroes.effects.CombustEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
+import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Setting;
 
@@ -31,7 +34,7 @@ public class SkillFireball extends ActiveSkill {
 
         setTypes(SkillType.FIRE, SkillType.SILENCABLE, SkillType.DAMAGING);
 
-        registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
+        registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(this), Priority.Normal);
     }
 
     @Override
@@ -56,6 +59,12 @@ public class SkillFireball extends ActiveSkill {
 
     public class SkillEntityListener extends EntityListener {
 
+        private final Skill skill;
+        
+        public SkillEntityListener(Skill skill) {
+            this.skill = skill;
+        }
+        
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
             if (event.isCancelled())
@@ -79,7 +88,11 @@ public class SkillFireball extends ActiveSkill {
                                     return;
                                 // Damage the player and ignite them.
                                 livingEntity.setFireTicks(getSetting(heroClass, "fire-ticks", 100));
-
+                                if (livingEntity instanceof Player) {
+                                    plugin.getHeroManager().getHero((Player) livingEntity).addEffect(new CombustEffect(skill, (Player) dmger));
+                                } else if (livingEntity instanceof Creature) {
+                                    plugin.getHeroManager().addCreatureEffect((Creature) livingEntity, new CombustEffect(skill, (Player) dmger));
+                                }
                                 addSpellTarget(entity, hero);
                                 int damage = getSetting(heroClass, Setting.DAMAGE.node(), 4);
                                 event.setDamage(damage);

@@ -15,6 +15,7 @@ import org.bukkit.event.entity.EntityListener;
 
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
+import com.herocraftonline.dev.heroes.effects.CombustEffect;
 import com.herocraftonline.dev.heroes.effects.Effect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.util.Properties;
@@ -46,13 +47,19 @@ public class HEntityListener extends EntityListener {
 
         Properties prop = plugin.getConfigManager().getProperties();
         if (defender instanceof Player) {
+
             // Incur 5% experience loss to dying player
             // 5% of the next level's experience requirement
             // Experience loss can optionally reduce Level
             Hero heroDefender = plugin.getHeroManager().getHero((Player) defender);
             double exp = heroDefender.getExperience();
             int level = prop.getLevel(exp);
-
+            
+            //check to see if this death was caused by FireTick
+            if (attacker == null && heroDefender.hasEffect("Combust")) {
+                attacker = ((CombustEffect) heroDefender.getEffect("Combust")).getApplier();
+            }
+            
             if(prop.resetOnDeath) {
                 //Wipe xp if we are in hardcore mode
                 heroDefender.gainExp(-heroDefender.getExperience(), ExperienceType.DEATH, false);
@@ -78,6 +85,10 @@ public class HEntityListener extends EntityListener {
                 if (!effect.isPersistent()) {
                     heroDefender.removeEffect(effect);
                 }
+            }
+        } else if (defender instanceof Creature) {
+            if (attacker == null && plugin.getHeroManager().creatureHasEffect((Creature) defender, "Combust")) {
+                attacker = ((CombustEffect) plugin.getHeroManager().getCreatureEffect((Creature) defender, "Combust")).getApplier();
             }
         }
 

@@ -3,6 +3,7 @@ package com.herocraftonline.dev.heroes.skill.skills;
 import java.util.Random;
 
 import org.bukkit.entity.Creature;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
@@ -12,6 +13,7 @@ import org.bukkit.event.entity.EntityListener;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.effects.CombustEffect;
 import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
@@ -39,7 +41,7 @@ public class SkillSoulFire extends ActiveSkill {
         
         setTypes(SkillType.FIRE, SkillType.BUFF, SkillType.SILENCABLE);
         
-        registerEvent(Type.ENTITY_DAMAGE, new SkillDamageListener(), Priority.Monitor);
+        registerEvent(Type.ENTITY_DAMAGE, new SkillDamageListener(this), Priority.Monitor);
     }
     
     @Override
@@ -95,6 +97,12 @@ public class SkillSoulFire extends ActiveSkill {
     
     public class SkillDamageListener extends EntityListener {
         
+        private final Skill skill;
+        
+        public SkillDamageListener (Skill skill) {
+            this.skill = skill;
+        }
+        
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
             if (event.isCancelled() || !(event instanceof EntityDamageByEntityEvent)) 
@@ -114,7 +122,14 @@ public class SkillSoulFire extends ActiveSkill {
                 return;
             
             int fireTicks = getSetting(hero.getHeroClass(), "ignite-duration", 5000) / 50;
-            event.getEntity().setFireTicks(fireTicks);
+            Entity entity = event.getEntity();
+            entity.setFireTicks(fireTicks);
+            
+            if (entity instanceof Player) {
+                plugin.getHeroManager().getHero((Player) entity).addEffect(new CombustEffect(skill, (Player) player));
+            } else if (entity instanceof Creature) {
+                plugin.getHeroManager().addCreatureEffect((Creature) entity, new CombustEffect(skill, (Player) player));
+            }
             
             String name = null;
             if (event.getEntity() instanceof Player) {

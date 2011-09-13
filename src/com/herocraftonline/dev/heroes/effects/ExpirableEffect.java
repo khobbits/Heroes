@@ -41,6 +41,8 @@ public class ExpirableEffect extends Effect implements Expirable {
 
     @Override
     public boolean isExpired() {
+        if (isPersistent())
+            return false;
         return System.currentTimeMillis() >= getExpiry();
     }
 
