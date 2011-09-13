@@ -51,7 +51,7 @@ public class SkillDisarm extends TargettedSkill {
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty(Setting.DURATION.node(), 500);
+        node.setProperty(Setting.DURATION.node(), 3000);
         node.setProperty(Setting.APPLY_TEXT.node(), "%target% was disarmed!");
         node.setProperty(Setting.EXPIRE_TEXT.node(), "%target% has found his weapon again!");
         return node;
