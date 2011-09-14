@@ -70,14 +70,9 @@ public class SkillCurse extends TargettedSkill {
             Messaging.send(player, "You need a target!");
             return false;
         }
-
-        if (target instanceof Player && hero.getParty() != null) {
-            for (Hero h : hero.getParty().getMembers()) {
-                if (target.equals(h.getPlayer())) {
-                    Messaging.send(player, "You need a target!");
-                    return false;
-                }
-            }
+        
+        if (!damageCheck(player, target)) {
+            return false;
         }
 
         HeroClass heroClass = hero.getHeroClass();
