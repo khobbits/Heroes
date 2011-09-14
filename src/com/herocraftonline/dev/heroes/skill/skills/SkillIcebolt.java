@@ -90,9 +90,10 @@ public class SkillIcebolt extends ActiveSkill {
                                 Hero hero = plugin.getHeroManager().getHero((Player) dmger);
                                 HeroClass heroClass = hero.getHeroClass();
                                 LivingEntity livingEntity = (LivingEntity) entity;
-                                
+
                                 if (!damageCheck((Player) dmger, livingEntity)) {
                                     return;
+                                }
 
                                 event.getEntity().setFireTicks(0);
                                 int damage = getSetting(heroClass, Setting.DAMAGE.node(), 3);
@@ -104,5 +105,4 @@ public class SkillIcebolt extends ActiveSkill {
             }
         }
     }
-
 }
