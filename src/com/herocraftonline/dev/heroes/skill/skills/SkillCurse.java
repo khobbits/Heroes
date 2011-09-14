@@ -1,6 +1,7 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
 import java.util.Random;
+import java.util.Set;
 
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.LivingEntity;
@@ -13,6 +14,7 @@ import org.bukkit.util.config.ConfigurationNode;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.HeroesEventListener;
 import com.herocraftonline.dev.heroes.api.WeaponDamageEvent;
+import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.effects.Effect;
 import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
@@ -57,8 +59,8 @@ public class SkillCurse extends TargettedSkill {
     public void init() {
         super.init();
         missText = getSetting(null, "miss-text", "%target% misses an attack!").replace("%target%", "$1");
-        applyText = getSetting(null, Setting.APPLY_TEXT.node(), "%target% has recovered from the curse!").replace("%target%", "$1");
-        expireText = getSetting(null, Setting.EXPIRE_TEXT.node(), "%target% has recovered from the poison!").replace("%target%", "$1");
+        applyText = getSetting(null, Setting.APPLY_TEXT.node(), "%target% has been cursed!").replace("%target%", "$1");
+        expireText = getSetting(null, Setting.EXPIRE_TEXT.node(), "%target% has recovered from the curse!").replace("%target%", "$1");
     }
 
     @Override
@@ -78,8 +80,9 @@ public class SkillCurse extends TargettedSkill {
             }
         }
 
-        long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 5000);
-        double missChance = getSetting(hero.getHeroClass(), "miss-chance", .50);
+        HeroClass heroClass = hero.getHeroClass();
+        long duration = getSetting(heroClass, Setting.DURATION.node(), 5000);
+        double missChance = getSetting(heroClass, "miss-chance", .50);
         CurseEffect cEffect = new CurseEffect(this, duration, missChance);
 
         if (target instanceof Player) {
@@ -146,20 +149,22 @@ public class SkillCurse extends TargettedSkill {
 
             Hero hero = null;
             Creature creature = null;
+            
             if (event.getDamager() instanceof Player) {
                 hero = plugin.getHeroManager().getHero((Player) event.getDamager());
             } else if (event.getDamager() instanceof Creature) {
                 creature = (Creature) event.getDamager();
             } else if (event.getDamager() instanceof Projectile) {
-                Projectile proj = (Projectile) event.getDamager();
-                if (proj.getShooter() == null)
+                LivingEntity shooter = ((Projectile) event.getDamager()).getShooter();
+                if (shooter == null)
                     return;
-                if (proj.getShooter() instanceof Player) {
-                    hero = plugin.getHeroManager().getHero((Player) proj.getShooter());
-                } else if (proj.getShooter() instanceof Creature) {
-                    creature = (Creature) proj.getShooter();
+                if (shooter instanceof Player) {
+                    hero = plugin.getHeroManager().getHero((Player) shooter);
+                } else if (shooter instanceof Creature) {
+                    creature = (Creature) shooter;
                 }
             }
+            
             if (hero != null) {
                 if (hero.getEffect("Curse") != null) {
                     CurseEffect cEffect = (CurseEffect) hero.getEffect("Curse");
@@ -169,9 +174,10 @@ public class SkillCurse extends TargettedSkill {
                     }
                 }
             } else if (creature != null) {
-                if (plugin.getHeroManager().getCreatureEffects(creature) == null)
+                Set<Effect> creatureEffects = plugin.getHeroManager().getCreatureEffects(creature);
+                if (creatureEffects == null)
                     return;
-                for (Effect effect : plugin.getHeroManager().getCreatureEffects(creature)) {
+                for (Effect effect : creatureEffects) {
                     if (effect instanceof CurseEffect) {
                         CurseEffect cEffect = (CurseEffect) effect;
                         if (rand.nextDouble() < cEffect.missChance) {

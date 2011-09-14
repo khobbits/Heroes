@@ -29,7 +29,7 @@ public class SkillPlague extends TargettedSkill {
         setUsage("/skill plague <target>");
         setArgumentRange(0, 1);
         setIdentifiers(new String[] { "skill plague" });
-        
+
         setTypes(SkillType.DARK, SkillType.DAMAGING, SkillType.SILENCABLE);
     }
 
@@ -59,26 +59,19 @@ public class SkillPlague extends TargettedSkill {
             Messaging.send(player, "You need a target!");
             return false;
         }
-        
+
         // PvP test
-        Hero targetHero = null;
-        if (target instanceof Player) {
-            EntityDamageByEntityEvent damageEntityEvent = new EntityDamageByEntityEvent(player, target, DamageCause.CUSTOM, 0);
-            plugin.getServer().getPluginManager().callEvent(damageEntityEvent);
-            if (damageEntityEvent.isCancelled()) {
-                Messaging.send(player, "Invalid target!");
-                return false;
-            }
-            targetHero = plugin.getHeroManager().getHero((Player) target);
+        if (!damageCheck(player, target)) {
+            return false;
         }
-        
+
         long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 21000);
         long period = getSetting(hero.getHeroClass(), Setting.PERIOD.node(), 3000);
         int tickDamage = getSetting(hero.getHeroClass(), "tick-damage", 1);
         PlagueEffect bEffect = new PlagueEffect(this, duration, period, tickDamage, player);
 
-        if (targetHero != null) {
-            targetHero.addEffect(bEffect);
+        if (target instanceof Player) {
+            plugin.getHeroManager().getHero((Player) target).addEffect(bEffect);
         } else if (target instanceof Creature) {
             Creature creature = (Creature) target;
             plugin.getHeroManager().addCreatureEffect(creature, bEffect);
@@ -86,7 +79,7 @@ public class SkillPlague extends TargettedSkill {
             Messaging.send(player, "Invalid target!");
             return false;
         }
-        
+
         broadcastExecuteText(hero, target);
         return true;
     }
@@ -96,14 +89,14 @@ public class SkillPlague extends TargettedSkill {
         public PlagueEffect(Skill skill, long duration, long period, int tickDamage, Player applier) {
             super(skill, "Plague", period, duration, tickDamage, applier);
         }
-        
-        //Clone Constructor
+
+        // Clone Constructor
         private PlagueEffect(PlagueEffect pEffect) {
             super(pEffect.skill, pEffect.name, pEffect.getPeriod(), pEffect.getDuration(), pEffect.tickDamage, pEffect.applier);
             this.types.add(EffectType.DISPELLABLE);
             this.types.add(EffectType.DISEASE);
         }
-        
+
         @Override
         public void apply(Hero hero) {
             super.apply(hero);
@@ -129,19 +122,19 @@ public class SkillPlague extends TargettedSkill {
             super.remove(creature);
             broadcast(creature.getLocation(), expireText, Messaging.getCreatureName(creature).toLowerCase());
         }
-        
+
         @Override
         public void tick(Creature creature) {
             super.tick(creature);
             spreadToNearbyEntities(creature);
         }
-        
+
         @Override
         public void tick(Hero hero) {
             super.tick(hero);
             spreadToNearbyEntities(hero.getPlayer());
         }
-        
+
         /**
          * Attempts to spread the effect to all nearby entities
          * Will not target non-pvpable targets
@@ -154,28 +147,26 @@ public class SkillPlague extends TargettedSkill {
                 if (!(target instanceof LivingEntity) || target.equals(applier) || applyHero.getSummons().contains(target)) {
                     continue;
                 }
-                //PvP Check
+                
+                if (!damageCheck(getApplier(), (LivingEntity) target)) {
+                    continue;
+                }
+                
                 if (target instanceof Player) {
-                    EntityDamageByEntityEvent damageEntityEvent = new EntityDamageByEntityEvent(applier, target, DamageCause.CUSTOM, 0);
-                    plugin.getServer().getPluginManager().callEvent(damageEntityEvent);
-                    if (damageEntityEvent.isCancelled()) {
-                        continue;
-                    }
-                    
                     Hero tHero = plugin.getHeroManager().getHero((Player) target);
-                    //Ignore heroes that already have the plague effect
+                    // Ignore heroes that already have the plague effect
                     if (tHero.hasEffect("Plague"))
                         continue;
-                    
-                    //Apply the effect to the hero creating a copy of the effect
+
+                    // Apply the effect to the hero creating a copy of the effect
                     tHero.addEffect(new PlagueEffect(this));
                 } else if (target instanceof Creature) {
                     Creature creature = (Creature) target;
-                    //Make sure the creature doesn't already have the effect
+                    // Make sure the creature doesn't already have the effect
                     if (plugin.getHeroManager().creatureHasEffect(creature, "Plague"))
                         continue;
-                    
-                    //Apply the effect to the creature, creating a copy of the effect
+
+                    // Apply the effect to the creature, creating a copy of the effect
                     plugin.getHeroManager().addCreatureEffect(creature, new PlagueEffect(this));
                 }
             }

@@ -30,7 +30,7 @@ public class SkillMight extends ActiveSkill {
         setIdentifiers(new String[] { "skill might" });
 
         setTypes(SkillType.BUFF, SkillType.SILENCABLE);
-        
+
         registerEvent(Type.CUSTOM_EVENT, new CustomListener(), Priority.Normal);
     }
 
@@ -50,7 +50,7 @@ public class SkillMight extends ActiveSkill {
         double damageBonus = getSetting(hero.getHeroClass(), "damage-bonus", 1.25);
 
         MightEffect mEffect = new MightEffect(this, duration, damageBonus);
-        if (hero.getParty() == null) {
+        if (!hero.hasParty()) {
             if (hero.hasEffect("Might")) {
                 if (((MightEffect) hero.getEffect("Might")).getDamageBonus() > mEffect.getDamageBonus()) {
                     Messaging.send(player, "You have a more powerful effect already!");
@@ -60,9 +60,10 @@ public class SkillMight extends ActiveSkill {
         } else {
             int rangeSquared = (int) Math.pow(getSetting(hero.getHeroClass(), Setting.RADIUS.node(), 10), 2);
             for (Hero pHero : hero.getParty().getMembers()) {
-                if (!pHero.getPlayer().getWorld().equals(player.getWorld()))
+                Player pPlayer = pHero.getPlayer();
+                if (!pPlayer.getWorld().equals(player.getWorld()))
                     continue;
-                if (pHero.getPlayer().getLocation().distanceSquared(player.getLocation()) > rangeSquared)
+                if (pPlayer.getLocation().distanceSquared(player.getLocation()) > rangeSquared)
                     continue;
                 if (pHero.hasEffect("Might")) {
                     if (((MightEffect) pHero.getEffect("Might")).getDamageBonus() > mEffect.getDamageBonus()) {

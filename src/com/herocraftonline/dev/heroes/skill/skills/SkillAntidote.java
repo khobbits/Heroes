@@ -30,7 +30,7 @@ public class SkillAntidote extends TargettedSkill {
             Hero targetHero = plugin.getHeroManager().getHero((Player) target);
             boolean cured = false;
             for (Effect effect : targetHero.getEffects()) {
-                if (effect.getTypes().contains(EffectType.POISON) && !effect.getTypes().contains(EffectType.BENEFICIAL)) {
+                if (effect.isType(EffectType.POISON) && !effect.isType(EffectType.BENEFICIAL)) {
                     cured = true;
                     targetHero.removeEffect(effect);
                 }

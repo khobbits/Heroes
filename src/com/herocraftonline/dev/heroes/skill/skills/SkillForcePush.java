@@ -20,7 +20,7 @@ public class SkillForcePush extends TargettedSkill {
         setUsage("/skill forcepush <target>");
         setArgumentRange(0, 1);
         setIdentifiers(new String[] { "skill forcepush", "skill fpush" });
-        
+
         setTypes(SkillType.FORCE, SkillType.SILENCABLE, SkillType.DAMAGING);
     }
 
@@ -40,19 +40,19 @@ public class SkillForcePush extends TargettedSkill {
             Messaging.send(player, "Invalid target!");
             return false;
         }
-        
-        //Make sure we can damage the target
+
+        // Make sure we can damage the target
         if (!damageCheck(player, target))
             return false;
-        
+
         int damage = getSetting(hero.getHeroClass(), Setting.DAMAGE.node(), 0);
         if (damage > 0) {
             addSpellTarget(target, hero);
             target.damage(damage, player);
         }
-        
+
         float pitch = player.getEyeLocation().getPitch();
-        
+
         float multiplier = getSetting(hero.getHeroClass(), "horizontal-power", 1) * (90f + pitch) / 40f;
         float vertPower = getSetting(hero.getHeroClass(), "vertical-power", 1);
         Vector v = target.getVelocity().setY(vertPower).add(player.getLocation().getDirection().setY(0).normalize().multiply(multiplier));

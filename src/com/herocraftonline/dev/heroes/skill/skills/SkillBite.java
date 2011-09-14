@@ -39,7 +39,7 @@ public class SkillBite extends TargettedSkill {
         node.setProperty(Setting.DURATION.node(), 15000);
         node.setProperty(Setting.PERIOD.node(), 3000);
         node.setProperty("tick-damage", 1);
-        node.setProperty(Setting.APPLY_TEXT.node(), "%target% is bleeding from a greivous wound!");
+        node.setProperty(Setting.APPLY_TEXT.node(), "%target% is bleeding from a grievous wound!");
         node.setProperty(Setting.EXPIRE_TEXT.node(), "%target% has stopped bleeding!");
         return node;
     }
@@ -47,14 +47,14 @@ public class SkillBite extends TargettedSkill {
     @Override
     public void init() {
         super.init();
-        applyText = getSetting(null, Setting.APPLY_TEXT.node(), "%target% is bleeding from a greivous wound!").replace("%target%", "$1");
+        applyText = getSetting(null, Setting.APPLY_TEXT.node(), "%target% is bleeding from a grievous wound!").replace("%target%", "$1");
         expireText = getSetting(null, Setting.EXPIRE_TEXT.node(), "%target% has stopped bleeding!").replace("%target%", "$1");
     }
     
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
         if (target.equals(player) || hero.getSummons().contains(target)) {
-            Messaging.send(player, "Invalid Target");
+            Messaging.send(player, "Invalid target!");
             return false;
         }
 

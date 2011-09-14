@@ -59,27 +59,20 @@ public class SkillDecay extends TargettedSkill {
         }
         
         // PvP test
-        Hero targetHero = null;
-        if (target instanceof Player) {
-            EntityDamageByEntityEvent damageEntityEvent = new EntityDamageByEntityEvent(player, target, DamageCause.CUSTOM, 0);
-            plugin.getServer().getPluginManager().callEvent(damageEntityEvent);
-            if (damageEntityEvent.isCancelled()) {
-                Messaging.send(player, "Invalid target!");
-                return false;
-            }
-            targetHero = plugin.getHeroManager().getHero((Player) target);
+        if (!damageCheck(player, target)) {
+            return false;
         }
         
         long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 21000);
         long period = getSetting(hero.getHeroClass(), Setting.PERIOD.node(), 3000);
         int tickDamage = getSetting(hero.getHeroClass(), "tick-damage", 1);
-        DecayEffect bEffect = new DecayEffect(this, duration, period, tickDamage, player);
+        DecayEffect decayEffect = new DecayEffect(this, duration, period, tickDamage, player);
 
-        if (targetHero != null) {
-            targetHero.addEffect(bEffect);
+        if (target instanceof Player) {
+            plugin.getHeroManager().getHero((Player) target).addEffect(decayEffect);
         } else if (target instanceof Creature) {
             Creature creature = (Creature) target;
-            plugin.getHeroManager().addCreatureEffect(creature, bEffect);
+            plugin.getHeroManager().addCreatureEffect(creature, decayEffect);
         } else {
             Messaging.send(player, "Invalid target!");
             return false;

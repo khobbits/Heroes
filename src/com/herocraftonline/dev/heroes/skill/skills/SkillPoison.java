@@ -27,7 +27,7 @@ public class SkillPoison extends TargettedSkill {
         setUsage("/skill poison <target>");
         setArgumentRange(0, 1);
         setIdentifiers(new String[] { "skill poison" });
-        
+
         setTypes(SkillType.DAMAGING, SkillType.SILENCABLE);
     }
 
@@ -54,25 +54,17 @@ public class SkillPoison extends TargettedSkill {
             Messaging.send(player, "You need a target!");
             return false;
         }
-        
-        // PvP test
-        Hero targetHero = null;
-        if (target instanceof Player) {
-            EntityDamageByEntityEvent damageEntityEvent = new EntityDamageByEntityEvent(player, target, DamageCause.CUSTOM, 0);
-            plugin.getServer().getPluginManager().callEvent(damageEntityEvent);
-            if (damageEntityEvent.isCancelled()) {
-                Messaging.send(player, "Invalid target!");
-                return false;
-            }
-            targetHero = plugin.getHeroManager().getHero((Player) target);
+
+        if (!damageCheck(player, target)) {
+            return false;
         }
-        
+
         long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 10000);
         long period = getSetting(hero.getHeroClass(), Setting.PERIOD.node(), 2000);
         int tickDamage = getSetting(hero.getHeroClass(), "tick-damage", 1);
         PoisonSkillEffect pEffect = new PoisonSkillEffect(this, "Poison", period, duration, tickDamage, player);
-        if (targetHero != null) {
-            targetHero.addEffect(pEffect);
+        if (target instanceof Player) {
+            plugin.getHeroManager().getHero((Player) target).addEffect(pEffect);
         } else if (target instanceof Creature) {
             Creature creature = (Creature) target;
             plugin.getHeroManager().addCreatureEffect(creature, pEffect);
@@ -80,7 +72,7 @@ public class SkillPoison extends TargettedSkill {
             Messaging.send(player, "Invalid target!");
             return false;
         }
-        
+
         broadcastExecuteText(hero, target);
         return true;
     }

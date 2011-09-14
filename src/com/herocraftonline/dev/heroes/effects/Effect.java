@@ -29,12 +29,9 @@ public class Effect {
         this.persistent = false;
     }
 
-    public void apply(Hero hero) {
-    }
+    public void apply(Hero hero) {}
 
-    public void apply(Creature creature) {
-
-    }
+    public void apply(Creature creature) {}
 
     public void broadcast(Location source, String message, Object... args) {
         skill.broadcast(source, message, args);
@@ -94,7 +91,7 @@ public class Effect {
     public boolean isType(EffectType type) {
         return types.contains(type);
     }
-    
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -105,21 +102,19 @@ public class Effect {
 
     /**
      * Returns if the effect is persistent or not
-     * @return 
+     * 
+     * @return
      */
     public boolean isPersistent() {
         return persistent;
     }
 
-    public void remove(Hero hero) {
-    }
+    public void remove(Hero hero) {}
 
-    public void remove(Creature creature) {
-    }
+    public void remove(Creature creature) {}
 
     /*
      * Sets the effects persistence value
-     * 
      */
     public void setPersistent(boolean persistent) {
         this.persistent = persistent;

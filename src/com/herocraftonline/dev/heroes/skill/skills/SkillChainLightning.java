@@ -15,6 +15,7 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
+import com.herocraftonline.dev.heroes.persistence.HeroManager;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
@@ -71,6 +72,7 @@ public class SkillChainLightning extends TargettedSkill {
         int bounces = getSetting(hero.getHeroClass(), "max-bounces", 3);
         int maxBounce = bounces + 1;
         boolean keepBouncing = true;
+        HeroManager heroManager = plugin.getHeroManager();
         while (bounces > 0 && keepBouncing) {
             for (Entity entity : target.getNearbyEntities(range, range, range)) {
                 keepBouncing = false;
@@ -81,10 +83,10 @@ public class SkillChainLightning extends TargettedSkill {
                     }
                     if (!previousTargets.contains(entity) && checkTarget(target, entity)) {
                         if (target instanceof Player) {
-                            Hero tHero = plugin.getHeroManager().getHero((Player) target);
+                            Hero tHero = heroManager.getHero((Player) target);
                             tHero.addEffect(new DelayedBolt(this, (maxBounce - bounces) * 250, hero, damage));
                         } else if (target instanceof Creature) {
-                            plugin.getHeroManager().addCreatureEffect((Creature) target, new DelayedBolt(this, (maxBounce - bounces) * 500, hero, damage));
+                            heroManager.addCreatureEffect((Creature) target, new DelayedBolt(this, (maxBounce - bounces) * 500, hero, damage));
                         } else {
                             continue;
                         }

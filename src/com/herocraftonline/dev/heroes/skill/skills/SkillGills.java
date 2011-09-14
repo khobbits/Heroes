@@ -30,7 +30,7 @@ public class SkillGills extends ActiveSkill {
         setIdentifiers(new String[] { "skill gills" });
 
         setTypes(SkillType.SILENCABLE, SkillType.BUFF);
-        
+
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
     }
 
@@ -90,6 +90,7 @@ public class SkillGills extends ActiveSkill {
             if (event.isCancelled() || !(event.getCause() == DamageCause.DROWNING)) {
                 return;
             }
+
             if (event.getEntity() instanceof Player) {
                 Player player = (Player) event.getEntity();
                 Hero hero = plugin.getHeroManager().getHero(player);

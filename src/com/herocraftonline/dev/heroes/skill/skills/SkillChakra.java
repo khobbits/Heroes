@@ -4,6 +4,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.effects.Effect;
 import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.persistence.Hero;
@@ -20,8 +21,8 @@ public class SkillChakra extends ActiveSkill {
         setDescription("Dispels and heals party members near you");
         setUsage("/skill chakra");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "skill chakra" } );
-        
+        setIdentifiers(new String[] { "skill chakra" });
+
         setTypes(SkillType.SILENCABLE, SkillType.HEAL, SkillType.LIGHT);
     }
 
@@ -37,13 +38,14 @@ public class SkillChakra extends ActiveSkill {
     @Override
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
+        HeroClass heroClass = hero.getHeroClass();
         Location castLoc = player.getLocation();
-        int radiusSquared = (int) Math.pow(getSetting(hero.getHeroClass(), Setting.RADIUS.node(), 7), 2);
-        int healAmount = getSetting(hero.getHeroClass(), "heal-amount", 10);
-        int removals = getSetting(hero.getHeroClass(), "max-removals", -1);
+        int radiusSquared = (int) Math.pow(getSetting(heroClass, Setting.RADIUS.node(), 7), 2);
+        int healAmount = getSetting(heroClass, "heal-amount", 10);
+        int removals = getSetting(heroClass, "max-removals", -1);
         if (hero.hasParty()) {
             for (Hero p : hero.getParty().getMembers()) {
-                if ( castLoc.distanceSquared(p.getPlayer().getLocation()) <= radiusSquared) {
+                if (castLoc.distanceSquared(p.getPlayer().getLocation()) <= radiusSquared) {
                     healDispel(p, removals, healAmount);
                 }
             }
@@ -68,7 +70,7 @@ public class SkillChakra extends ActiveSkill {
             if (removals == 0)
                 return;
         }
-        
+
         for (Effect effect : hero.getEffects()) {
             if (effect.isType(EffectType.HARMFUL)) {
                 hero.removeEffect(effect);
@@ -78,6 +80,5 @@ public class SkillChakra extends ActiveSkill {
             }
         }
     }
-
 
 }
