@@ -13,7 +13,7 @@ public class HeroParty {
 
     private Hero leader;
     private Set<Hero> members = new HashSet<Hero>();
-    private Boolean pvp = true;
+    private Boolean noPvp = true;
     private Boolean exp = true;
     private LinkedList<String> invites = new LinkedList<String>();
     private boolean updateMapDisplay = true;
@@ -35,10 +35,10 @@ public class HeroParty {
     public void expToggle() {
         if (exp == true) {
             exp = false;
-            messageParty("ExpShare is now disabled!");
+            messageParty("Exp sharing is now disabled!");
         } else {
             exp = true;
-            messageParty("ExpShare is now enabled!");
+            messageParty("Exp sharing is now enabled!");
         }
     }
 
@@ -58,8 +58,8 @@ public class HeroParty {
         return new HashSet<Hero>(members);
     }
 
-    public Boolean getPvp() {
-        return pvp;
+    public Boolean isNoPvp() {
+        return noPvp;
     }
 
     public boolean isInvited(String player) {
@@ -69,6 +69,15 @@ public class HeroParty {
     public boolean isPartyMember(Hero hero) {
         return members.contains(hero);
     }
+    
+    public boolean isPartyMember(Player player) {
+        for (Hero hero : members) {
+            if (hero.getPlayer().equals(player)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     public void messageParty(String msg, Object... params) {
         for (Hero hero : members) {
@@ -77,11 +86,11 @@ public class HeroParty {
     }
 
     public void pvpToggle() {
-        if (pvp == true) {
-            pvp = false;
+        if (noPvp == true) {
+            noPvp = false;
             messageParty("PvP is now enabled!");
         } else {
-            pvp = true;
+            noPvp = true;
             messageParty("PvP is now disabled!");
         }
     }

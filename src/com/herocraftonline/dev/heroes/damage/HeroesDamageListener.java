@@ -31,6 +31,7 @@ import com.herocraftonline.dev.heroes.api.WeaponDamageEvent;
 import com.herocraftonline.dev.heroes.damage.DamageManager.ProjectileType;
 import com.herocraftonline.dev.heroes.effects.CombustEffect;
 import com.herocraftonline.dev.heroes.effects.EffectType;
+import com.herocraftonline.dev.heroes.party.HeroParty;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.util.Properties;
 
@@ -239,7 +240,7 @@ public class HeroesDamageListener extends EntityListener {
             }
             final Hero hero = plugin.getHeroManager().getHero(player);
             
-            //If the defender is a player
+            // If the defender is a player
             if (hero.hasEffectType(EffectType.INVULNERABILITY)) {
                 event.setCancelled(true);
                 return;
@@ -247,13 +248,15 @@ public class HeroesDamageListener extends EntityListener {
             
             // Party damage test
             if (attacker instanceof Player) {
-                if (hero.getParty() != null) {
-                    if (hero.getParty().isPartyMember(plugin.getHeroManager().getHero((Player) attacker))) {
+                HeroParty party = hero.getParty();
+                if (party != null && party.isNoPvp()) {
+                    if (party.isPartyMember((Player) attacker)) {
                         event.setCancelled(true);
                         return;
                     }
                 }
             }
+            
             if (damage == 0) {
                 event.setDamage(0);
                 return;
