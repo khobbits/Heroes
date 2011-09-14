@@ -28,9 +28,9 @@ public class SkillBlight extends TargettedSkill {
         setDescription("Causes your target's flesh to decay rapidly");
         setUsage("/skill blight <target>");
         setArgumentRange(0, 1);
-        
+
         setTypes(SkillType.DARK, SkillType.SILENCABLE, SkillType.DAMAGING);
-        
+
         setIdentifiers(new String[] { "skill blight" });
     }
 
@@ -60,26 +60,18 @@ public class SkillBlight extends TargettedSkill {
             Messaging.send(player, "You need a target!");
             return false;
         }
-        
+
         // PvP test
-        Hero targetHero = null;
-        if (target instanceof Player) {
-            EntityDamageByEntityEvent damageEntityEvent = new EntityDamageByEntityEvent(player, target, DamageCause.CUSTOM, 0);
-            plugin.getServer().getPluginManager().callEvent(damageEntityEvent);
-            if (damageEntityEvent.isCancelled()) {
-                Messaging.send(player, "Invalid target!");
-                return false;
-            }
-            targetHero = plugin.getHeroManager().getHero((Player) target);
-        }
-        
+        if (!damageCheck(player, target))
+            return false;
+
         long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 21000);
         long period = getSetting(hero.getHeroClass(), Setting.PERIOD.node(), 3000);
         int tickDamage = getSetting(hero.getHeroClass(), "tick-damage", 1);
         BlightEffect bEffect = new BlightEffect(this, duration, period, tickDamage, player);
 
-        if (targetHero != null) {
-            targetHero.addEffect(bEffect);
+        if (target instanceof Player) {
+            plugin.getHeroManager().getHero((Player) target).addEffect(bEffect);
         } else if (target instanceof Creature) {
             Creature creature = (Creature) target;
             plugin.getHeroManager().addCreatureEffect(creature, bEffect);
@@ -87,7 +79,7 @@ public class SkillBlight extends TargettedSkill {
             Messaging.send(player, "Invalid target!");
             return false;
         }
-        
+
         broadcastExecuteText(hero, target);
         return true;
     }
@@ -125,44 +117,47 @@ public class SkillBlight extends TargettedSkill {
             super.remove(creature);
             broadcast(creature.getLocation(), expireText, Messaging.getCreatureName(creature).toLowerCase());
         }
-        
+
         @Override
         public void tick(Creature creature) {
             super.tick(creature);
             damageNearby(creature);
         }
-        
+
         @Override
         public void tick(Hero hero) {
             super.tick(hero);
             damageNearby(hero.getPlayer());
         }
-        
+
         private void damageNearby(LivingEntity lEntity) {
             int radius = getSetting(applyHero.getHeroClass(), Setting.RADIUS.node(), 4);
             for (Entity target : lEntity.getNearbyEntities(radius, radius, radius)) {
                 if (!(target instanceof LivingEntity) || target.equals(applier) || applyHero.getSummons().contains(target)) {
                     continue;
                 }
-                //PvP Check
+
+                LivingEntity lTarget = (LivingEntity) target;
+
+                // PvP Check
+                if (!damageCheck(getApplier(), lTarget)) {
+                    continue;
+                }
+
                 if (target instanceof Player) {
-                    EntityDamageByEntityEvent damageEntityEvent = new EntityDamageByEntityEvent(applier, target, DamageCause.CUSTOM, 0);
-                    plugin.getServer().getPluginManager().callEvent(damageEntityEvent);
-                    if (damageEntityEvent.isCancelled()) {
+                    // Also ignore players that already have the blight effect
+                    if (plugin.getHeroManager().getHero((Player) target).hasEffect("Blight")) {
                         continue;
                     }
-                    
-                    //Also ignore players that already have the blight effect - the are already sick, they can't be more sick
-                    if (plugin.getHeroManager().getHero((Player) target).hasEffect("Blight"))
-                        continue;
                 } else if (target instanceof Creature && plugin.getHeroManager().creatureHasEffect((Creature) target, "Blight")) {
                     continue;
                 } else {
-                    //Skip this one if for some reason it's not a creature or player
+                    // Skip this one if for some reason it's not a creature or player
                     continue;
                 }
+
                 addSpellTarget(target, applyHero);
-                ((LivingEntity) target).damage(tickDamage, applier);
+                lTarget.damage(tickDamage, applier);
             }
         }
     }

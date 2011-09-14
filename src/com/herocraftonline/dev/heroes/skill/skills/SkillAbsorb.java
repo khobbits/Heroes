@@ -40,7 +40,7 @@ public class SkillAbsorb extends ActiveSkill {
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
         node.setProperty("mana-amount", 20);
-        node.setProperty(Setting.APPLY_TEXT.node(), "%target% is absorbing damage");
+        node.setProperty(Setting.APPLY_TEXT.node(), "%target% is absorbing damage!");
         node.setProperty(Setting.EXPIRE_TEXT.node(), "Absorb faded from %target%!");
         return node;
     }

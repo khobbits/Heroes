@@ -17,7 +17,7 @@ public class SkillJump extends ActiveSkill {
         setUsage("/skill jump");
         setArgumentRange(0, 0);
         setIdentifiers(new String[] { "skill jump" });
-        
+
         setTypes(SkillType.MOVEMENT, SkillType.PHYSICAL);
     }
 

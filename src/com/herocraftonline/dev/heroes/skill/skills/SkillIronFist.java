@@ -15,14 +15,14 @@ import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillIronFist extends ActiveSkill {
-    
+
     public SkillIronFist(Heroes plugin) {
         super(plugin, "IronFist");
         setDescription("Damages and knocks back nearby enemies");
         setUsage("/skill ironfist");
         setArgumentRange(0, 0);
         setIdentifiers(new String[] { "skill ironfist", "skill ifist" });
-        
+
         setTypes(SkillType.PHYSICAL, SkillType.DAMAGING);
     }
 
@@ -39,7 +39,7 @@ public class SkillIronFist extends ActiveSkill {
     @Override
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
-        
+
         int radius = getSetting(hero.getHeroClass(), Setting.RADIUS.node(), 5);
         List<Entity> entities = hero.getPlayer().getNearbyEntities(radius, radius, radius);
         for (Entity entity : entities) {
@@ -51,23 +51,23 @@ public class SkillIronFist extends ActiveSkill {
                 continue;
             }
 
-            //Check if the target is damagable
+            // Check if the target is damagable
             if (!damageCheck(player, target))
                 continue;
-            
-            //Damage the target
+
+            // Damage the target
             int damage = getSetting(hero.getHeroClass(), "damage", 1);
             addSpellTarget(target, hero);
             target.damage(damage, player);
-            
-            //Do our knockback
+
+            // Do our knockback
             float pitch = player.getEyeLocation().getPitch();
             float multiplier = (float) (getSetting(hero.getHeroClass(), "horizontal-power", .5) * (90f + pitch) / 40f);
             float vertPower = (float) getSetting(hero.getHeroClass(), "vertical-power", .25);
             Vector v = target.getVelocity().setY(vertPower).add(player.getLocation().getDirection().setY(0).normalize().multiply(multiplier));
             target.setVelocity(v);
         }
-        
+
         broadcastExecuteText(hero);
         return true;
     }

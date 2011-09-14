@@ -8,6 +8,7 @@ import org.bukkit.util.Vector;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.effects.PeriodicEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
@@ -69,9 +70,10 @@ public class SkillConfuse extends TargettedSkill {
 
         broadcastExecuteText(hero, target);
 
-        long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 10000);
-        long period = getSetting(hero.getHeroClass(), Setting.PERIOD.node(), 2000);
-        float maxDrift = (float) getSetting(hero.getHeroClass(), "max-drift", 0.35);
+        HeroClass heroClass = hero.getHeroClass();
+        long duration = getSetting(heroClass, Setting.DURATION.node(), 10000);
+        long period = getSetting(heroClass, Setting.PERIOD.node(), 2000);
+        float maxDrift = (float) getSetting(heroClass, "max-drift", 0.35);
         targetHero.addEffect(new ConfuseEffect(this, duration, period, maxDrift));
         return true;
     }

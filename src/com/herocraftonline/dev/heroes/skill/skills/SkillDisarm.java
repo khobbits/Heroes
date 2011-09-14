@@ -29,7 +29,7 @@ public class SkillDisarm extends TargettedSkill {
 
     private String applyText;
     private String expireText;
-    private HashMap<Hero,ItemStack> ismap = new HashMap<Hero,ItemStack>();
+    private HashMap<Hero, ItemStack> ismap = new HashMap<Hero, ItemStack>();
     private PlayerListener pListener;
 
     public SkillDisarm(Heroes plugin) {
@@ -70,21 +70,21 @@ public class SkillDisarm extends TargettedSkill {
         }
 
         Hero tHero = plugin.getHeroManager().getHero((Player) target);
-        
-        //Check if the target is damagable
+
+        // Check if the target is damagable
         if (!damageCheck(player, target))
             return false;
-        
+
         if (!Properties.isWeapon(player.getItemInHand().getType())) {
             Messaging.send(hero.getPlayer(), "You cannot disarm bare hands!");
             return false;
-        } 
-        
+        }
+
         if (ismap.containsKey(tHero)) {
             Messaging.send(hero.getPlayer(), "%target% is already disarmed.");
             return false;
         }
-        
+
         int duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 500);
         tHero.addEffect(new DisarmEffect(this, duration));
         broadcastExecuteText(hero, target);
@@ -103,7 +103,7 @@ public class SkillDisarm extends TargettedSkill {
         public void apply(Hero hero) {
             Player player = hero.getPlayer();
             ItemStack is = player.getItemInHand();
-            if(!ismap.containsKey(hero)){
+            if (!ismap.containsKey(hero)) {
                 ismap.put(hero, is);
                 player.setItemInHand(null);
                 super.apply(hero);
@@ -114,7 +114,7 @@ public class SkillDisarm extends TargettedSkill {
         @Override
         public void remove(Hero hero) {
             Player player = hero.getPlayer();
-            if(ismap.containsKey(hero)){
+            if (ismap.containsKey(hero)) {
                 ItemStack is = ismap.get(hero);
                 player.getInventory().addItem(is);
                 ismap.remove(hero);
@@ -130,27 +130,25 @@ public class SkillDisarm extends TargettedSkill {
             Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
             if (!hero.hasEffectType(EffectType.DISARM))
                 return;
-            
+
             Inventory inv = event.getPlayer().getInventory();
             Material mat = inv.getItem(event.getNewSlot()).getType();
-            //Swap the items back into their original locations
-            if(Properties.isWeapon(mat)){
+            // Swap the items back into their original locations
+            if (Properties.isWeapon(mat)) {
                 ItemStack carry = inv.getItem(event.getNewSlot());
                 inv.setItem((event.getNewSlot()), inv.getItem(event.getPreviousSlot()));
                 inv.setItem((event.getPreviousSlot()), carry);
             }
         }
-        
+
         @Override
         public void onPlayerPickupItem(PlayerPickupItemEvent event) {
             if (event.isCancelled())
                 return;
-            
+
             Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
             if (hero.hasEffectType(EffectType.DISARM) && Properties.isWeapon(event.getItem().getItemStack().getType()))
                 event.setCancelled(true);
         }
     }
 }
-
-

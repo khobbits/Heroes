@@ -37,6 +37,10 @@ public class SkillSyphon extends TargettedSkill {
             Messaging.send(player, "Your need a target!");
             return false;
         }
+        
+        if (!damageCheck(player, target)) {
+            return false;
+        }
 
         Hero targetHero = plugin.getHeroManager().getHero((Player) target);
 

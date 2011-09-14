@@ -58,13 +58,8 @@ public class SkillPiggify extends TargettedSkill {
             return false;
         }
 
-        // Throw a dummy damage event to make it obey PvP restricting plugins
-        if (target instanceof Player) {
-            EntityDamageEvent event = new EntityDamageByEntityEvent(player, target, DamageCause.ENTITY_ATTACK, 0);
-            plugin.getServer().getPluginManager().callEvent(event);
-            if (event.isCancelled()) {
-                return false;
-            }
+        if (!damageCheck(player, target)) {
+            return false;
         }
 
         CreatureType type = CreatureType.PIG;
@@ -88,7 +83,6 @@ public class SkillPiggify extends TargettedSkill {
     }
 
     public class SkillEntityListener extends EntityListener {
-
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
             if (event.isCancelled() || !creatures.contains(event.getEntity()))

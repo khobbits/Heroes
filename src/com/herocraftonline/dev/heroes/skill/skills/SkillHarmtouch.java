@@ -19,7 +19,7 @@ public class SkillHarmtouch extends TargettedSkill {
         setUsage("/skill harmtouch <target>");
         setArgumentRange(0, 1);
         setIdentifiers(new String[] { "skill harmtouch" });
-        
+
         setTypes(SkillType.DARK, SkillType.SILENCABLE, SkillType.DAMAGING);
     }
 
@@ -38,7 +38,7 @@ public class SkillHarmtouch extends TargettedSkill {
             return false;
         }
 
-        //Check if the target is damagable
+        // Check if the target is damagable
         if (!damageCheck(player, target))
             return false;
 

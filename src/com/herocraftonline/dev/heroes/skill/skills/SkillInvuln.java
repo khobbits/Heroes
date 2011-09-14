@@ -13,7 +13,6 @@ import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillInvuln extends ActiveSkill {
 
-
     public SkillInvuln(Heroes plugin) {
         super(plugin, "Invuln");
         setDescription("Grants total damage immunity");

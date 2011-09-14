@@ -40,7 +40,7 @@ public class SkillWeb extends TargettedSkill {
         setUsage("/skill web <target>");
         setArgumentRange(0, 1);
         setIdentifiers(new String[] { "skill web" });
-        
+
         setTypes(SkillType.EARTH, SkillType.SILENCABLE);
 
         registerEvent(Type.BLOCK_BREAK, new WebBlockListener(), Priority.Highest);
@@ -68,29 +68,16 @@ public class SkillWeb extends TargettedSkill {
             Messaging.send(player, "You need a target!");
             return false;
         }
-        String name = "";
 
+        if (!damageCheck(player, target)) {
+            return false;
+        }
+
+        String name = "";
         if (target instanceof Player) {
-            // Party check before allowing the cast
-            if (hero.getParty() != null) {
-                if (hero.getParty().isPartyMember(plugin.getHeroManager().getHero((Player) target))) {
-                    Messaging.send(player, "You need a target!");
-                    return false;
-                }
-            }
             name = ((Player) target).getDisplayName();
         } else if (target instanceof Creature) {
             name = Messaging.getCreatureName((Creature) target).toLowerCase();
-        }
-
-        // Damage check
-        if (target instanceof Player) {
-            EntityDamageByEntityEvent damageCheck = new EntityDamageByEntityEvent(player, target, DamageCause.CUSTOM, 0);
-            plugin.getServer().getPluginManager().callEvent(damageCheck);
-            if (damageCheck.isCancelled()) {
-                Messaging.send(player, "You can't use that skill here!");
-                return false;
-            }
         }
 
         broadcast(player.getLocation(), applyText, player.getDisplayName(), name);

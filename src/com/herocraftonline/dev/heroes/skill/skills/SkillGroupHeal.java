@@ -1,6 +1,7 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
@@ -19,7 +20,7 @@ public class SkillGroupHeal extends ActiveSkill {
         setUsage("/skill groupheal");
         setArgumentRange(0, 0);
         setIdentifiers(new String[] { "skill groupheal", "skill gheal" });
-        
+
         setTypes(SkillType.HEAL, SkillType.SILENCABLE);
     }
 
@@ -33,29 +34,30 @@ public class SkillGroupHeal extends ActiveSkill {
 
     @Override
     public boolean use(Hero hero, String[] args) {
+        Player player = hero.getPlayer();
         int healAmount = getSetting(hero.getHeroClass(), "heal-amount", 2);
         if (hero.getParty() == null) {
             // Heal just the caster if he's not in a party
             HeroRegainHealthEvent hrhEvent = new HeroRegainHealthEvent(hero, healAmount, this);
             plugin.getServer().getPluginManager().callEvent(hrhEvent);
             if (hrhEvent.isCancelled()) {
-                Messaging.send(hero.getPlayer(), "Unable to heal the target at this time!");
+                Messaging.send(player, "Unable to heal the target at this time!");
                 return false;
             }
             hero.setHealth(hero.getHealth() + hrhEvent.getAmount());
             hero.syncHealth();
         } else {
             int radiusSquared = (int) Math.pow(getSetting(hero.getHeroClass(), Setting.RADIUS.node(), 5), 2);
-            Location heroLoc = hero.getPlayer().getLocation();
+            Location heroLoc = player.getLocation();
             // Heal party members near the caster
             for (Hero partyHero : hero.getParty().getMembers()) {
-                if (!hero.getPlayer().getWorld().equals(partyHero.getPlayer().getWorld()))
+                if (!player.getWorld().equals(partyHero.getPlayer().getWorld()))
                     continue;
                 if (partyHero.getPlayer().getLocation().distanceSquared(heroLoc) <= radiusSquared) {
                     HeroRegainHealthEvent hrhEvent = new HeroRegainHealthEvent(partyHero, healAmount, this);
                     plugin.getServer().getPluginManager().callEvent(hrhEvent);
                     if (hrhEvent.isCancelled()) {
-                        Messaging.send(hero.getPlayer(), "Unable to heal the target at this time!");
+                        Messaging.send(player, "Unable to heal the target at this time!");
                         return false;
                     }
                     partyHero.setHealth(partyHero.getHealth() + hrhEvent.getAmount());

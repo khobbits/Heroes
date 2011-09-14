@@ -38,7 +38,7 @@ public class SkillIcebolt extends ActiveSkill {
         setIdentifiers(new String[] { "skill icebolt" });
 
         setTypes(SkillType.ICE, SkillType.SILENCABLE, SkillType.DAMAGING);
-        
+
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
     }
 
@@ -82,23 +82,27 @@ public class SkillIcebolt extends ActiveSkill {
                 if (projectile instanceof Snowball) {
                     if (snowballs.contains(projectile)) {
                         snowballs.remove(projectile);
-                        // Damage Event //
-                        LivingEntity dmger = ((Snowball) subEvent.getDamager()).getShooter();
-                        Hero hero = plugin.getHeroManager().getHero((Player) dmger);
-                        HeroClass heroClass = hero.getHeroClass();
-                        EntityDamageByEntityEvent damageEvent = new EntityDamageByEntityEvent(dmger, event.getEntity(), DamageCause.ENTITY_ATTACK, 0);
-                        Bukkit.getServer().getPluginManager().callEvent(damageEvent);
-                        if (damageEvent.isCancelled()) {
-                            return;
+
+                        Entity entity = subEvent.getEntity();
+                        if (entity instanceof LivingEntity) {
+                            Entity dmger = ((Snowball) subEvent.getDamager()).getShooter();
+                            if (dmger instanceof Player) {
+                                Hero hero = plugin.getHeroManager().getHero((Player) dmger);
+                                HeroClass heroClass = hero.getHeroClass();
+                                LivingEntity livingEntity = (LivingEntity) entity;
+
+                                if (!damageCheck((Player) dmger, livingEntity)) {
+                                    return;
+                                }
+
+                                event.getEntity().setFireTicks(0);
+                                int damage = getSetting(heroClass, Setting.DAMAGE.node(), 3);
+                                event.setDamage(damage);
+                            }
                         }
-                        event.getEntity().setFireTicks(0);
-                        int damage = getSetting(heroClass, Setting.DAMAGE.node(), 3);
-                        event.setDamage(damage);
                     }
                 }
             }
         }
-
     }
-
 }

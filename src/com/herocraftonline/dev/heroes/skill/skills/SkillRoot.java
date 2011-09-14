@@ -44,13 +44,8 @@ public class SkillRoot extends TargettedSkill {
         }
 
         //PvP Check
-        if (target instanceof Player) {
-            EntityDamageByEntityEvent damageEntityEvent = new EntityDamageByEntityEvent(player, target, DamageCause.CUSTOM, 0);
-            plugin.getServer().getPluginManager().callEvent(damageEntityEvent);
-            if (damageEntityEvent.isCancelled()) {
-                Messaging.send(player, "Invalid target!");
-                return false;
-            }
+        if (!damageCheck(player, target)) {
+            return false;
         }
 
         long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 5000);
