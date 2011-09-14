@@ -18,3 +18,11 @@ Skills:
 		- Now also applies a Bleed effect
 	Disarm - (NEW!) - thanks Kostronor!
 		- Disarms your opponent for the duration and prevents them from re-equipping weapons.
+	Herbalism - (NEW!)
+		- Passive skill that gives double-drops for herb related stuff
+		- Also allows players to have a chance to pickup dead shrubs & tall-grass
+	Mining - (NEW!)
+		- Passive skill that has a chance to give double-drops when mining ores
+		- Gives a very small chance to drop a random ore from just stone.
+	Woodcutting - (NEW!)
+		- Passive skill that has a chance to give double-drops when chopping logs
