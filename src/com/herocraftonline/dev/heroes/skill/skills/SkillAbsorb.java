@@ -29,8 +29,7 @@ public class SkillAbsorb extends ActiveSkill {
         setDescription("Converts half the damage you take into mana");
         setUsage("/skill absorb");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "skill absorb" });
-        
+        setIdentifiers("skill absorb");
         setTypes(SkillType.SILENCABLE, SkillType.BUFF, SkillType.MANA);
         
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);

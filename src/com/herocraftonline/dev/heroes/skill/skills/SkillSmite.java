@@ -17,8 +17,7 @@ public class SkillSmite extends TargettedSkill {
         setDescription("Uses smite on a player");
         setUsage("/skill smite");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "skill smite" });
-        
+        setIdentifiers("skill smite");
         setTypes(SkillType.DAMAGING, SkillType.LIGHT, SkillType.SILENCABLE, SkillType.HARMFUL);
     }
 

@@ -27,7 +27,7 @@ public class SkillBlight extends TargettedSkill {
         setUsage("/skill blight <target>");
         setArgumentRange(0, 1);
         setTypes(SkillType.DARK, SkillType.SILENCABLE, SkillType.DAMAGING, SkillType.HARMFUL);
-        setIdentifiers(new String[] { "skill blight" });
+        setIdentifiers("skill blight");
     }
 
     @Override

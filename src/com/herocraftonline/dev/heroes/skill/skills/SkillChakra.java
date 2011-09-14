@@ -21,8 +21,7 @@ public class SkillChakra extends ActiveSkill {
         setDescription("Dispels and heals party members near you");
         setUsage("/skill chakra");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "skill chakra" });
-
+        setIdentifiers("skill chakra");
         setTypes(SkillType.SILENCABLE, SkillType.HEAL, SkillType.LIGHT);
     }
 

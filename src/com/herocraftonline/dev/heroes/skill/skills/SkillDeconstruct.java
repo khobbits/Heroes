@@ -25,7 +25,7 @@ public class SkillDeconstruct extends ActiveSkill {
         setDescription("Deconstructs the object you are holding.");
         setUsage("/skill deconstruct <list|info|item>");
         setArgumentRange(0, 2);
-        setIdentifiers(new String[] { "skill deconstruct", "skill dstruct" });
+        setIdentifiers("skill deconstruct", "skill dstruct");
         
         setTypes(SkillType.ITEM);
     }

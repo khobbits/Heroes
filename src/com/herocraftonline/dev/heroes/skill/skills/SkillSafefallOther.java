@@ -29,7 +29,7 @@ public class SkillSafefallOther extends TargettedSkill {
         setDescription("Stops your target from taking fall damage for a short amount of time");
         setUsage("/skill safefallother <target>");
         setArgumentRange(0, 1);
-        setIdentifiers(new String[] { "skill safefallother" });
+        setIdentifiers("skill safefallother");
 
         setTypes(SkillType.MOVEMENT, SkillType.BUFF, SkillType.SILENCABLE);
 

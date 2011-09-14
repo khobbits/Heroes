@@ -1,7 +1,5 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
-import java.util.Random;
-
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -21,16 +19,14 @@ import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Messaging;
-import com.herocraftonline.dev.heroes.util.Properties;
 import com.herocraftonline.dev.heroes.util.Setting;
+import com.herocraftonline.dev.heroes.util.Util;
 
 public class SkillSoulFire extends ActiveSkill {
     
     private String applyText;
     private String expireText;
     private String igniteText;
-
-    private Random random = new Random();
     
     public SkillSoulFire(Heroes plugin) {
         super(plugin, "SoulFire");
@@ -47,7 +43,7 @@ public class SkillSoulFire extends ActiveSkill {
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty("weapons", Properties.defaultWeapons);
+        node.setProperty("weapons", Util.defaultWeapons);
         node.setProperty(Setting.APPLY_TEXT.node(), "%hero%'s weapon is sheathed in flame!");
         node.setProperty(Setting.EXPIRE_TEXT.node(), "%hero%'s weapon is no longer aflame!");
         node.setProperty(Setting.DURATION.node(), 600000);
@@ -114,11 +110,11 @@ public class SkillSoulFire extends ActiveSkill {
             
             Player player = (Player) subEvent.getDamager();
             Hero hero = plugin.getHeroManager().getHero(player);
-            if (!getSetting(hero.getHeroClass(), "weapons", Properties.defaultWeapons).contains(player.getItemInHand().getType().name()) || !hero.hasEffect("SoulFire"))
+            if (!getSetting(hero.getHeroClass(), "weapons", Util.defaultWeapons).contains(player.getItemInHand().getType().name()) || !hero.hasEffect("SoulFire"))
                 return;
             
             double chance = getSetting(hero.getHeroClass(), "ignite-chance", .2);
-            if (random.nextDouble() >= chance)
+            if (Util.rand.nextDouble() >= chance)
                 return;
             
             int fireTicks = getSetting(hero.getHeroClass(), "ignite-duration", 5000) / 50;

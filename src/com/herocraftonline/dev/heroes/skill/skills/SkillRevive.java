@@ -26,8 +26,7 @@ public class SkillRevive extends ActiveSkill {
         setDescription("Teleports the target to their place of death");
         setUsage("/skill revive <target>");
         setArgumentRange(1, 1);
-        setIdentifiers(new String[] { "skill revive" });
-
+        setIdentifiers("skill revive");
         setTypes(SkillType.HEAL, SkillType.SILENCABLE);
         
         registerEvent(Type.ENTITY_DEATH, new SkillPlayerListener(), Priority.Normal);

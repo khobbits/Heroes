@@ -19,8 +19,7 @@ public class SkillMark extends ActiveSkill {
         setDescription("Marks a location for use with recall");
         setUsage("/skill mark <info>");
         setArgumentRange(0, 1);
-        setIdentifiers(new String[] { "skill mark" });
-        
+        setIdentifiers("skill mark");
         setTypes(SkillType.TELEPORT);
     }
 

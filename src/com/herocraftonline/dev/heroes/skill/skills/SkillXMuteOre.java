@@ -24,8 +24,7 @@ public class SkillXMuteOre extends ActiveSkill {
         setDescription("Transmutes ores into more valuable ones");
         setUsage("/skill xmuteore");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "skill xmuteore" });
-        
+        setIdentifiers("skill xmuteore", "skill xmute");
         setTypes(SkillType.EARTH, SkillType.FIRE);
     }
 

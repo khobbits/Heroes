@@ -30,7 +30,6 @@ public class SkillFireArmor extends ActiveSkill {
     private String applyText;
     private String expireText;
     private String igniteText;
-
     private Random random = new Random();
     private List<String> defaultArmors = new ArrayList<String>();
     
@@ -39,8 +38,7 @@ public class SkillFireArmor extends ActiveSkill {
         setDescription("Gives your armor a chance to ignite your attackers!");
         setUsage("/skill firearmor");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "skill firearmor", "skill farmor" });
-        
+        setIdentifiers("skill firearmor", "skill farmor");
         setTypes(SkillType.FIRE, SkillType.SILENCABLE, SkillType.BUFF);
         
         defaultArmors.add(Material.GOLD_CHESTPLATE.name());

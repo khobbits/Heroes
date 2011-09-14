@@ -50,7 +50,7 @@ public class SkillIcyAura extends ActiveSkill {
         setDescription("Triggers an aura of ice around you.");
         setUsage("/skill icyaura");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "skill icyaura" });
+        setIdentifiers("skill icyaura");
         setTypes(SkillType.BUFF, SkillType.SILENCABLE, SkillType.ICE);
         
         registerEvent(Type.BLOCK_BREAK, new IcyAuraBlockListener(), Priority.Highest);

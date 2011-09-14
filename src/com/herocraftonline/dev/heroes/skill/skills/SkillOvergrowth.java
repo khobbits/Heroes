@@ -9,24 +9,20 @@ import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Setting;
+import com.herocraftonline.dev.heroes.util.Util;
 
-import java.util.Random;
 import org.bukkit.Material;
 import org.bukkit.TreeType;
 import org.bukkit.block.Block;
 
 public class SkillOvergrowth extends ActiveSkill {
 
-    private Random rand;
-
     public SkillOvergrowth(Heroes plugin) {
         super(plugin, "Overgrowth");
         setDescription("Turns a sapling into a full grown tree");
         setUsage("/skill overgrowth");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "skill overgrowth" });
-        rand = new Random();
-        
+        setIdentifiers("skill overgrowth", "skill ogrowth");
         setTypes(SkillType.SILENCABLE, SkillType.EARTH);
     }
 
@@ -47,13 +43,13 @@ public class SkillOvergrowth extends ActiveSkill {
 
             switch (targetBlock.getData()) {
                 case (0x0):
-                    if (rand.nextInt(2) == 0)
+                    if (Util.rand.nextInt(2) == 0)
                         tType = TreeType.TREE;
                     else
                         tType = TreeType.BIG_TREE;
                     break;
                 case (0x1):
-                    if (rand.nextInt(2) == 0)
+                    if (Util.rand.nextInt(2) == 0)
                         tType = TreeType.REDWOOD;
                     else
                         tType = TreeType.TALL_REDWOOD;

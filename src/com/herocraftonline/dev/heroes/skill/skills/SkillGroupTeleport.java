@@ -14,8 +14,7 @@ public class SkillGroupTeleport extends ActiveSkill {
         setDescription("Summons your group to your location");
         setUsage("/skill groupteleport");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "skill groupteleport", "skill gteleport" });
-        
+        setIdentifiers("skill groupteleport", "skill gteleport");
         setTypes(SkillType.TELEPORT, SkillType.SILENCABLE);
     }
 

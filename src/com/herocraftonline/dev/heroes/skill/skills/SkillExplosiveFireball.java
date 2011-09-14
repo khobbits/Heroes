@@ -36,8 +36,7 @@ public class SkillExplosiveFireball extends ActiveSkill {
         setDescription("Shoots an explosive ball of fire");
         setUsage("/skill fireball");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "skill explosivefireball" });
-        
+        setIdentifiers("skill explosivefireball");
         setTypes(SkillType.FIRE, SkillType.SILENCABLE, SkillType.DAMAGING, SkillType.HARMFUL);
 
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(this), Priority.Normal);

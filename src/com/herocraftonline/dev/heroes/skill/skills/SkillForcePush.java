@@ -18,8 +18,7 @@ public class SkillForcePush extends TargettedSkill {
         setDescription("Forces your target backwards");
         setUsage("/skill forcepush <target>");
         setArgumentRange(0, 1);
-        setIdentifiers(new String[] { "skill forcepush", "skill fpush" });
-
+        setIdentifiers("skill forcepush", "skill fpush");
         setTypes(SkillType.FORCE, SkillType.SILENCABLE, SkillType.DAMAGING, SkillType.HARMFUL);
     }
 

@@ -49,8 +49,7 @@ public class SkillSkeleton extends ActiveSkill {
         setDescription("Summons a skeleton to fight by your side");
         setUsage("/skill skeleton");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "skill skeleton" });
-
+        setIdentifiers("skill skeleton");
         setTypes(SkillType.DARK, SkillType.SUMMON, SkillType.SILENCABLE);
         
         eListener = new SummonEntityListener();

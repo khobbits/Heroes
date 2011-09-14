@@ -30,7 +30,7 @@ public class SkillSoulBond extends TargettedSkill {
         setDescription("You share your targets pain.");
         setUsage("/skill soulbond <target>");
         setArgumentRange(0, 1);
-        setIdentifiers(new String[] { "skill soulbond", "skill sbond" });
+        setIdentifiers("skill soulbond", "skill sbond");
         setTypes(SkillType.SILENCABLE, SkillType.LIGHT, SkillType.BUFF);
         
         registerEvent(Type.CUSTOM_EVENT, new SkillHeroesListener(), Priority.Highest);

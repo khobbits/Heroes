@@ -25,7 +25,7 @@ public class SkillDecay extends TargettedSkill {
         setDescription("Causes your target's flesh to decay rapidly");
         setUsage("/skill decay <target>");
         setArgumentRange(0, 1);
-        setIdentifiers(new String[] { "skill decay" });
+        setIdentifiers("skill decay");
         
         setTypes(SkillType.DARK, SkillType.SILENCABLE, SkillType.DAMAGING, SkillType.HARMFUL);
     }

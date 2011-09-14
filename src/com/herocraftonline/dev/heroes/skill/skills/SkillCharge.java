@@ -1,7 +1,6 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
@@ -15,8 +14,7 @@ public class SkillCharge extends TargettedSkill {
         setDescription("Charges towards your target");
         setUsage("/skill charge");
         setArgumentRange(0, 1);
-        setIdentifiers(new String[] { "skill charge" });
-        
+        setIdentifiers("skill charge");
         setTypes(SkillType.PHYSICAL, SkillType.MOVEMENT, SkillType.HARMFUL);
     }
 

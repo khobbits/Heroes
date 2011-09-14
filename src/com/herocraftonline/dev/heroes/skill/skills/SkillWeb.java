@@ -37,8 +37,7 @@ public class SkillWeb extends TargettedSkill {
         setDescription("Catches your target in a web");
         setUsage("/skill web <target>");
         setArgumentRange(0, 1);
-        setIdentifiers(new String[] { "skill web" });
-
+        setIdentifiers("skill web");
         setTypes(SkillType.EARTH, SkillType.SILENCABLE);
 
         registerEvent(Type.BLOCK_BREAK, new WebBlockListener(), Priority.Highest);

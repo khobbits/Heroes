@@ -34,8 +34,7 @@ public class SkillDeepFreeze extends TargettedSkill {
         setDescription("Freezes your target in place. If they take fire damage they will shatter");
         setUsage("/skill deepfreeze <target>");
         setArgumentRange(0, 1);
-        setIdentifiers(new String[] { "skill deepfreeze", "skill dfreeze" });
-
+        setIdentifiers("skill deepfreeze", "skill dfreeze");
         setTypes(SkillType.ICE, SkillType.SILENCABLE, SkillType.DEBUFF, SkillType.DAMAGING, SkillType.HARMFUL);
 
         registerEvent(Type.CUSTOM_EVENT, new SkillHeroListener(), Priority.Monitor);

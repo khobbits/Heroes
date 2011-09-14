@@ -16,8 +16,7 @@ public class SkillDrainsoul extends TargettedSkill {
         setDescription("Absorb health from target");
         setUsage("/skill drainsoul <target>");
         setArgumentRange(0, 1);
-        setIdentifiers(new String[] { "skill drainsoul" });
-        
+        setIdentifiers("skill drainsoul");
         setTypes(SkillType.DARK, SkillType.SILENCABLE, SkillType.DAMAGING, SkillType.HARMFUL);
     }
 

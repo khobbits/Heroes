@@ -18,8 +18,7 @@ public class SkillInvuln extends ActiveSkill {
         setDescription("Grants total damage immunity");
         setUsage("/skill invuln");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "skill invuln" });
-
+        setIdentifiers("skill invuln");
         setTypes(SkillType.FORCE, SkillType.BUFF, SkillType.SILENCABLE, SkillType.COUNTER);
     }
 

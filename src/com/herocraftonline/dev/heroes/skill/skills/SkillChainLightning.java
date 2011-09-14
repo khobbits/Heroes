@@ -19,7 +19,7 @@ import com.herocraftonline.dev.heroes.persistence.HeroManager;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
-import com.herocraftonline.dev.heroes.util.Properties;
+import com.herocraftonline.dev.heroes.util.Util;
 import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillChainLightning extends TargettedSkill {
@@ -29,7 +29,7 @@ public class SkillChainLightning extends TargettedSkill {
         setDescription("Calls down a bolt of lightning that bounces to other targets");
         setUsage("/skill chainl <target>");
         setArgumentRange(0, 1);
-        setIdentifiers(new String[] { "skill chainlightning", "skill clightning", "skill chainl", "skill clight" });
+        setIdentifiers("skill chainlightning", "skill clightning", "skill chainl", "skill clight");
         setTypes(SkillType.LIGHTNING, SkillType.SILENCABLE, SkillType.HARMFUL, SkillType.DAMAGING);
     }
 
@@ -97,7 +97,7 @@ public class SkillChainLightning extends TargettedSkill {
         try {
             BlockIterator iter = new BlockIterator(previousTarget.getWorld(), v1, directional, 0, (int) v1.distance(v2));
             while (iter.hasNext()) {
-                if (!Properties.transparentBlocks.contains(iter.next().getType()))
+                if (!Util.transparentBlocks.contains(iter.next().getType()))
                     return false;
             }
         } catch (IllegalStateException e) {

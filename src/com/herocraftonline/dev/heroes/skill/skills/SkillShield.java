@@ -21,7 +21,6 @@ public class SkillShield extends PassiveSkill {
         super(plugin, "Shield");
         setDescription("Your shield absorbs damage!");
         setArgumentRange(0, 0);
-
         setTypes(SkillType.PHYSICAL);
 
         registerEvent(Type.CUSTOM_EVENT, new CustomListener(), Priority.Highest);

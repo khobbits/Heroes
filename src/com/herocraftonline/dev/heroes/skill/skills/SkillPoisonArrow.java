@@ -31,8 +31,7 @@ public class SkillPoisonArrow extends ActiveSkill {
         setDescription("You fire a poison arrow from your bow");
         setUsage("/skill parrow");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "skill parrow", "skill poisonarrow" });
-
+        setIdentifiers("skill parrow", "skill poisonarrow");
         setTypes(SkillType.BUFF);
         
         registerEvent(Type.ENTITY_DAMAGE, new SkillDamageListener(this), Priority.Monitor);

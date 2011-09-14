@@ -33,8 +33,7 @@ public class SkillBlackjack extends ActiveSkill {
         setDescription("Occasionally stuns your opponent");
         setUsage("/skill blackjack");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "skill blackjack", "skill bjack" });
-
+        setIdentifiers("skill blackjack", "skill bjack");
         setTypes(SkillType.PHYSICAL, SkillType.BUFF);
         
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(this), Priority.Normal);

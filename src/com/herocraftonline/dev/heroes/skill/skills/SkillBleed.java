@@ -26,7 +26,7 @@ public class SkillBleed extends TargettedSkill {
         setUsage("/skill bleed <target>");
         setArgumentRange(0, 1);
         setTypes(SkillType.SILENCABLE, SkillType.DAMAGING, SkillType.HARMFUL);
-        setIdentifiers(new String[] { "skill bleed" });
+        setIdentifiers("skill bleed");
     }
 
     @Override

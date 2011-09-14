@@ -28,8 +28,7 @@ public class SkillManaFreeze extends TargettedSkill {
         setDescription("Stops your target regening mana");
         setUsage("/skill manafreeze");
         setArgumentRange(0, 1);
-        setIdentifiers(new String[] { "skill manafreeze", "skill mfreeze" });
-        
+        setIdentifiers("skill manafreeze", "skill mfreeze");
         setTypes(SkillType.SILENCABLE, SkillType.DEBUFF, SkillType.MANA, SkillType.HARMFUL);
 
         registerEvent(Type.CUSTOM_EVENT, new HeroListener(), Priority.Highest);

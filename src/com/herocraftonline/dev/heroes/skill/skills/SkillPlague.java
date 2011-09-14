@@ -26,8 +26,7 @@ public class SkillPlague extends TargettedSkill {
         setDescription("You infect your target with the plague!");
         setUsage("/skill plague <target>");
         setArgumentRange(0, 1);
-        setIdentifiers(new String[] { "skill plague" });
-
+        setIdentifiers("skill plague");
         setTypes(SkillType.DARK, SkillType.DAMAGING, SkillType.SILENCABLE, SkillType.HARMFUL);
     }
 

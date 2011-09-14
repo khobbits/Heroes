@@ -20,8 +20,7 @@ public class SkillRecall extends ActiveSkill {
         setDescription("Recalls you to your marked Location");
         setUsage("/skill recall");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "skill recall" });
-
+        setIdentifiers("skill recall");
         setTypes(SkillType.SILENCABLE, SkillType.TELEPORT);
     }
 

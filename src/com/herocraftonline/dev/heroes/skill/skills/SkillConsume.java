@@ -22,8 +22,7 @@ public class SkillConsume extends ActiveSkill {
         setDescription("Consumes an item for mana");
         setUsage("/skill consume <item>");
         setArgumentRange(1, 1);
-        setIdentifiers(new String[] { "skill consume" });
-        
+        setIdentifiers("skill consume" );
         setTypes(SkillType.ITEM, SkillType.MANA);
     }
     

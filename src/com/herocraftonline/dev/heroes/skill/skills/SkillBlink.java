@@ -12,7 +12,7 @@ import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Messaging;
-import com.herocraftonline.dev.heroes.util.Properties;
+import com.herocraftonline.dev.heroes.util.Util;
 import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillBlink extends ActiveSkill {
@@ -22,8 +22,7 @@ public class SkillBlink extends ActiveSkill {
         setDescription("Teleports you up to 6 blocks");
         setUsage("/skill blink");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[]{"skill blink"});
-        
+        setIdentifiers("skill blink");
         setTypes(SkillType.SILENCABLE, SkillType.TELEPORT);
     }
     
@@ -49,7 +48,7 @@ public class SkillBlink extends ActiveSkill {
         }
         while (iter.hasNext()) {
             b = iter.next();
-            if (Properties.transparentBlocks.contains(b.getType()) && ( Properties.transparentBlocks.contains(b.getRelative(BlockFace.UP).getType()) || Properties.transparentBlocks.contains(b.getRelative(BlockFace.DOWN).getType()))) {
+            if (Util.transparentBlocks.contains(b.getType()) && ( Util.transparentBlocks.contains(b.getRelative(BlockFace.UP).getType()) || Util.transparentBlocks.contains(b.getRelative(BlockFace.DOWN).getType()))) {
                 prev = b;
             } else {
                 break;

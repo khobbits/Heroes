@@ -27,8 +27,7 @@ public class SkillMight extends ActiveSkill {
         setDescription("You increase your party's damage with weapons!");
         setArgumentRange(0, 0);
         setUsage("/skill might");
-        setIdentifiers(new String[] { "skill might" });
-
+        setIdentifiers("skill might");
         setTypes(SkillType.BUFF, SkillType.SILENCABLE);
 
         registerEvent(Type.CUSTOM_EVENT, new CustomListener(), Priority.Normal);

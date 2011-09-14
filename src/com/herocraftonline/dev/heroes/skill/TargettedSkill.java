@@ -18,8 +18,8 @@ import org.bukkit.util.config.ConfigurationNode;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.util.Messaging;
-import com.herocraftonline.dev.heroes.util.Properties;
 import com.herocraftonline.dev.heroes.util.Setting;
+import com.herocraftonline.dev.heroes.util.Util;
 
 /**
  * A triggered skill that requires a target. TargettedSkills define a maximum distance setting. A target can be supplied
@@ -166,7 +166,7 @@ public abstract class TargettedSkill extends ActiveSkill {
      * @return the player's target or null if no target is found
      */
     public static LivingEntity getPlayerTarget(Player player, int maxDistance) {
-        List<Block> lineOfSight = player.getLineOfSight(Properties.transparentIds, maxDistance);
+        List<Block> lineOfSight = player.getLineOfSight(Util.transparentIds, maxDistance);
         List<Entity> nearbyEntities = player.getNearbyEntities(maxDistance, maxDistance, maxDistance);
         for (Entity entity : nearbyEntities) {
             if (entity instanceof LivingEntity) {

@@ -33,7 +33,7 @@ public class SkillIcebolt extends ActiveSkill {
         setDescription("Fires a snowball that hurts the player and if they're on fire, puts them out");
         setUsage("/skill icebolt");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "skill icebolt" });
+        setIdentifiers("skill icebolt");
         setTypes(SkillType.ICE, SkillType.SILENCABLE, SkillType.DAMAGING, SkillType.HARMFUL);
 
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);

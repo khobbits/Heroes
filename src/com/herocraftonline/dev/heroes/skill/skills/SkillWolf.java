@@ -38,8 +38,7 @@ public class SkillWolf extends ActiveSkill {
         setDescription("Summons and tames a wolf to your side");
         setUsage("/skill wolf <release|summon>");
         setArgumentRange(0, 1);
-        setIdentifiers(new String[] { "skill wolf" });
-
+        setIdentifiers("skill wolf");
         setTypes(SkillType.SUMMON);
         
         SkillEntityListener seListener = new SkillEntityListener(this);

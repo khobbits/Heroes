@@ -1,7 +1,5 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
-import java.util.Random;
-
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -19,17 +17,14 @@ import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.PassiveSkill;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Messaging;
-import com.herocraftonline.dev.heroes.util.Properties;
+import com.herocraftonline.dev.heroes.util.Util;
 
 public class SkillBackstab extends PassiveSkill {
-
-    private Random rand = new Random();
     
     public SkillBackstab(Heroes plugin) {
         super(plugin, "Backstab");
         setDescription("You are more lethal when attacking from behind!");
         setArgumentRange(0, 0);
-        
         setTypes(SkillType.PHYSICAL, SkillType.BUFF);
         
         registerEvent(Type.CUSTOM_EVENT, new CustomListener(), Priority.Normal);
@@ -38,7 +33,7 @@ public class SkillBackstab extends PassiveSkill {
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty("weapons", Properties.defaultWeapons);
+        node.setProperty("weapons", Util.defaultWeapons);
         node.setProperty("attack-bonus", 1.5);
         node.setProperty("attack-chance", .5);
         node.setProperty("sneak-bonus", 2.0); // Alternative bonus if player is sneaking when doing the backstab
@@ -59,15 +54,15 @@ public class SkillBackstab extends PassiveSkill {
                 ItemStack item = player.getItemInHand();
                 Hero hero = plugin.getHeroManager().getHero(player);
                 HeroClass heroClass = hero.getHeroClass();
-                if (!getSetting(heroClass, "weapons", Properties.defaultWeapons).contains(item.getType().name()))
+                if (!getSetting(heroClass, "weapons", Util.defaultWeapons).contains(item.getType().name()))
                     return;
                 if (hero.hasEffect(getName())) {
                     if (subEvent.getEntity().getLocation().getDirection().dot(player.getLocation().getDirection()) <= 0)
                         return;
 
-                    if (hero.hasEffect("Sneak") && rand.nextDouble() < getSetting(heroClass, "sneak-chance", 1.0)) {
+                    if (hero.hasEffect("Sneak") && Util.rand.nextDouble() < getSetting(heroClass, "sneak-chance", 1.0)) {
                         subEvent.setDamage((int) (subEvent.getDamage() * getSetting(heroClass, "sneak-bonus", 2.0)));
-                    } else if (rand.nextDouble() < getSetting(heroClass, "attack-chance", .5)) {
+                    } else if (Util.rand.nextDouble() < getSetting(heroClass, "attack-chance", .5)) {
                         subEvent.setDamage((int) (subEvent.getDamage() * getSetting(heroClass, "attack-bonus", 1.5)));
                     }
                     

@@ -34,9 +34,8 @@ public class SkillSmoke extends ActiveSkill {
         setDescription("You completely disappear from view");
         setUsage("/skill smoke");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "skill smoke" });
-        setNotes(new String[] { "Note: Taking damage removes the effect" });
-        
+        setIdentifiers("skill smoke");
+        setNotes("Note: Taking damage removes the effect");
         setTypes(SkillType.ILLUSION, SkillType.BUFF);
 
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);

@@ -1,7 +1,5 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
-import java.util.Random;
-
 import org.bukkit.block.Block;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockListener;
@@ -13,18 +11,14 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.PassiveSkill;
 import com.herocraftonline.dev.heroes.skill.SkillType;
+import com.herocraftonline.dev.heroes.util.Util;
 
 public class SkillHerbalism extends PassiveSkill {
-
-    
-    private final Random rand = new Random();
     
     public SkillHerbalism(Heroes plugin) {
         super(plugin, "Herbalism");
         setDescription("You know about the things of the earth!");
-        setIdentifiers(new String[] { "skill disarm" });
         setTypes(SkillType.KNOWLEDGE, SkillType.EARTH, SkillType.BUFF);
-
     }
 
     @Override
@@ -67,11 +61,11 @@ public class SkillHerbalism extends PassiveSkill {
             }
             
             Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
-            if (!hero.hasEffect("Herbalism") || rand.nextDouble() > getSetting(hero.getHeroClass(), "chance-per-level", .02) * hero.getLevel())
+            if (!hero.hasEffect("Herbalism") || Util.rand.nextDouble() > getSetting(hero.getHeroClass(), "chance-per-level", .02) * hero.getLevel())
                 return;
             
             if (extraDrops != 0) {
-                extraDrops = rand.nextInt(extraDrops) + 1;
+                extraDrops = Util.rand.nextInt(extraDrops) + 1;
             } else {
                 extraDrops = 1;
             }

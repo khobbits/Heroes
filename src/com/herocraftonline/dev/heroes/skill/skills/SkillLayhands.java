@@ -16,8 +16,7 @@ public class SkillLayhands extends TargettedSkill {
         setDescription("Heals the target to full");
         setUsage("/skill layhands <target>");
         setArgumentRange(0, 1);
-        setIdentifiers(new String[] { "skill layhands" });
-        
+        setIdentifiers("skill layhands");
         setTypes(SkillType.LIGHT, SkillType.HEAL, SkillType.SILENCABLE);
     }
 

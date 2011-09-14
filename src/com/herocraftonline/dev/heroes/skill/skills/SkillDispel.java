@@ -22,7 +22,7 @@ public class SkillDispel extends TargettedSkill {
         setDescription("Removes all magical effects from your target");
         setUsage("/skill dispel");
         setArgumentRange(0, 1);
-        setIdentifiers(new String[] { "skill dispel" });
+        setIdentifiers("skill dispel");
         
         setTypes(SkillType.SILENCABLE);
     }

@@ -10,6 +10,7 @@ package com.herocraftonline.dev.heroes.command;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -17,22 +18,31 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.command.Command;
 import com.herocraftonline.dev.heroes.util.Messaging;
 
 public class CommandHandler {
 
     protected LinkedHashMap<String, Command> commands;
+    protected HashMap<String, Command> identifiers;
 
     public CommandHandler() {
         commands = new LinkedHashMap<String, Command>();
+        identifiers = new HashMap<String, Command>();
     }
 
     public void addCommand(Command command) {
         commands.put(command.getName().toLowerCase(), command);
+        for (String ident : command.getIdentifiers()) {
+            identifiers.put(ident.toLowerCase(), command);
+        }
     }
 
     public void removeCommand(Command command) {
         commands.remove(command);
+        for (String ident : command.getIdentifiers()) {
+            identifiers.remove(ident.toLowerCase());
+        }
     }
 
     public Command getCommand(String name) {
@@ -55,31 +65,31 @@ public class CommandHandler {
                 identifier += " " + args[i];
             }
 
-            for (Command cmd : commands.values()) {
-                if (cmd.isIdentifier(sender, identifier)) {
-                    String[] realArgs = Arrays.copyOfRange(args, argsIncluded, args.length);
+            Command cmd = identifiers.get(identifier);
+            if (cmd == null)
+                continue;
 
-                    if (!cmd.isInProgress(sender)) {
-                        if (realArgs.length < cmd.getMinArguments() || realArgs.length > cmd.getMaxArguments()) {
-                            displayCommandHelp(cmd, sender);
-                            return true;
-                        } else if (realArgs.length > 0 && realArgs[0].equals("?")) {
-                            displayCommandHelp(cmd, sender);
-                            return true;
-                        }
-                    }
+            String[] realArgs = Arrays.copyOfRange(args, argsIncluded, args.length);
 
-                    if (!hasPermission(sender, cmd.getPermission())) {
-                        Messaging.send(sender, "Insufficient permission.");
-                        return true;
-                    }
-
-                    cmd.execute(sender, identifier, realArgs);
+            if (!cmd.isInProgress(sender)) {
+                if (realArgs.length < cmd.getMinArguments() || realArgs.length > cmd.getMaxArguments()) {
+                    displayCommandHelp(cmd, sender);
+                    return true;
+                } else if (realArgs.length > 0 && realArgs[0].equals("?")) {
+                    displayCommandHelp(cmd, sender);
                     return true;
                 }
             }
-        }
 
+            if (!hasPermission(sender, cmd.getPermission())) {
+                Messaging.send(sender, "Insufficient permission.");
+                return true;
+            }
+
+            cmd.execute(sender, identifier, realArgs);
+            return true;
+        }
+        
         return true;
     }
 
@@ -109,5 +119,9 @@ public class CommandHandler {
             return Heroes.Permissions.has(player, permission);
         }
         return false;
+    }
+
+    public Command getCmdFromIdent(String ident) {
+        return identifiers.get(ident.toLowerCase());
     }
 }

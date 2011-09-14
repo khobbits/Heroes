@@ -26,8 +26,7 @@ public class SkillConstruct extends ActiveSkill {
         setDescription("Constructs an object from materials.");
         setUsage("/skill construct <item|list>");
         setArgumentRange(1, 2);
-        setIdentifiers(new String[] { "skill construct" });
-        
+        setIdentifiers("skill construct");
         setTypes(SkillType.ITEM);
     }
 

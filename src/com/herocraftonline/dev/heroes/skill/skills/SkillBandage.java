@@ -21,10 +21,8 @@ public class SkillBandage extends TargettedSkill {
         setDescription("Bandages the target");
         setUsage("/skill bandage <target>");
         setArgumentRange(0, 1);
-        
-        setTypes(SkillType.HEAL);
-        
-        setIdentifiers(new String[] { "skill bandage" });
+        setIdentifiers("skill bandage");
+        setTypes(SkillType.HEAL, SkillType.PHYSICAL);
     }
 
     @Override

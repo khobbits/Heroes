@@ -25,7 +25,7 @@ public class SkillSoulLeech extends TargettedSkill {
         setDescription("You slowly drain the life out of the player.");
         setUsage("/skill soulleech <target>");
         setArgumentRange(0, 1);
-        setIdentifiers(new String[] { "skill soulleech", "skill sleech" });
+        setIdentifiers("skill soulleech", "skill sleech");
         setTypes(SkillType.HEAL, SkillType.DAMAGING, SkillType.SILENCABLE, SkillType.DARK, SkillType.HARMFUL);
    }
 

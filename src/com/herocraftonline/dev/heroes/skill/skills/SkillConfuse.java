@@ -31,7 +31,7 @@ public class SkillConfuse extends TargettedSkill {
         setDescription("Confuses your target");
         setUsage("/skill confuse <target>");
         setArgumentRange(0, 1);
-        setIdentifiers(new String[] { "skill confuse" });
+        setIdentifiers("skill confuse");
         setTypes(SkillType.SILENCABLE, SkillType.ILLUSION, SkillType.HARMFUL);
     }
 

@@ -83,7 +83,7 @@ public abstract class BasicCommand implements Command {
         this.permission = permission;
     }
 
-    public void setNotes(String[] notes) {
+    public void setNotes(String...notes) {
         this.notes = notes;
     }
 
@@ -92,7 +92,7 @@ public abstract class BasicCommand implements Command {
         this.maxArguments = max;
     }
 
-    public void setIdentifiers(String[] identifiers) {
+    public void setIdentifiers(String...identifiers) {
         this.identifiers = identifiers;
     }
 

@@ -24,7 +24,7 @@ public class SkillPoison extends TargettedSkill {
         setDescription("Poisons your target");
         setUsage("/skill poison <target>");
         setArgumentRange(0, 1);
-        setIdentifiers(new String[] { "skill poison" });
+        setIdentifiers("skill poison");
 
         setTypes(SkillType.DAMAGING, SkillType.SILENCABLE, SkillType.HARMFUL);
     }

@@ -17,10 +17,8 @@ public class SkillBattery extends TargettedSkill {
         setDescription("Gives your target mana");
         setUsage("/skill battery");
         setArgumentRange(0, 1);
-        
         setTypes(SkillType.SILENCABLE, SkillType.MANA);
-        
-        setIdentifiers(new String[] { "skill battery" });
+        setIdentifiers("skill battery");
     }
 
     @Override

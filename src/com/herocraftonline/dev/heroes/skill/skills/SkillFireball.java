@@ -28,7 +28,7 @@ public class SkillFireball extends ActiveSkill {
         setDescription("Shoots a dangerous ball of fire");
         setUsage("/skill fireball");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "skill fireball" });
+        setIdentifiers("skill fireball");
 
         setTypes(SkillType.FIRE, SkillType.SILENCABLE, SkillType.DAMAGING, SkillType.HARMFUL);
 

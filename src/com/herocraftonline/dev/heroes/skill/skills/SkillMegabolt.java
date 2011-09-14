@@ -18,8 +18,7 @@ public class SkillMegabolt extends TargettedSkill {
         setDescription("Calls down multiple bolts of lightning centered on the target.");
         setUsage("/skill mbolt <target>");
         setArgumentRange(0, 1);
-        setIdentifiers(new String[] { "skill megabolt", "skill mbolt" });
-        
+        setIdentifiers("skill megabolt", "skill mbolt");
         setTypes(SkillType.LIGHTNING, SkillType.DAMAGING, SkillType.SILENCABLE, SkillType.HARMFUL);
     }
 

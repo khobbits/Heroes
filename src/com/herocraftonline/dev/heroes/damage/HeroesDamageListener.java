@@ -32,7 +32,7 @@ import com.herocraftonline.dev.heroes.damage.DamageManager.ProjectileType;
 import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.party.HeroParty;
 import com.herocraftonline.dev.heroes.persistence.Hero;
-import com.herocraftonline.dev.heroes.util.Properties;
+import com.herocraftonline.dev.heroes.util.Util;
 
 // import org.bukkit.entity.Projectile;
 // import com.herocraftonline.dev.heroes.damage.DamageManager.ProjectileType;
@@ -178,7 +178,7 @@ public class HeroesDamageListener extends EntityListener {
                     // Get the damage this player should deal for the weapon they are using
                     damage = getPlayerDamage((Player) attacker, damage);
                 } else if (attacker instanceof LivingEntity) {
-                    CreatureType type = Properties.getCreatureFromEntity(attacker);
+                    CreatureType type = Util.getCreatureFromEntity(attacker);
                     if (type != null) {
                         if (type == CreatureType.CREEPER && cause == DamageCause.ENTITY_ATTACK) {
                             // Ghetto fix for creepers throwing two damage events
@@ -199,7 +199,7 @@ public class HeroesDamageListener extends EntityListener {
                         damage = getPlayerProjectileDamage((Player) projectile.getShooter(), projectile, damage);
                     } else {
                         attacker = projectile.getShooter();
-                        CreatureType type = Properties.getCreatureFromEntity(projectile.getShooter());
+                        CreatureType type = Util.getCreatureFromEntity(projectile.getShooter());
                         if (type != null) {
                             Integer tmpDamage = damageManager.getCreatureDamage(type);
                             if (tmpDamage != null) {

@@ -36,7 +36,7 @@ public abstract class BasicInteractiveCommand extends BasicCommand implements In
     }
 
     @Override
-    public final void setIdentifiers(String[] identifiers) {
+    public final void setIdentifiers(String...identifiers) {
     }
 
     @Override

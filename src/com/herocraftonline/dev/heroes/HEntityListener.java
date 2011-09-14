@@ -19,6 +19,7 @@ import com.herocraftonline.dev.heroes.effects.CombustEffect;
 import com.herocraftonline.dev.heroes.effects.Effect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.util.Properties;
+import com.herocraftonline.dev.heroes.util.Util;
 
 public class HEntityListener extends EntityListener {
 
@@ -120,11 +121,11 @@ public class HEntityListener extends EntityListener {
             // If the Player killed a Monster/Animal then we check to see if they can earn EXP from KILLING.
             if (defender instanceof LivingEntity && !(defender instanceof Player) && expSources.contains(ExperienceType.KILLING)) {
                 //Check if the kill was near a spawner
-                if (plugin.getConfigManager().getProperties().noSpawnCamp && Properties.isNearSpawner(defender, plugin.getConfigManager().getProperties().spawnCampRadius) ) {
+                if (plugin.getConfigManager().getProperties().noSpawnCamp && Util.isNearSpawner(defender, plugin.getConfigManager().getProperties().spawnCampRadius) ) {
                     return;
                 }
                 // Get the dying entity's CreatureType
-                CreatureType type = Properties.getCreatureFromEntity(defender);
+                CreatureType type = Util.getCreatureFromEntity(defender);
                 if (type != null && !hero.getSummons().contains(defender)) {
                     // If EXP hasn't been assigned for this Entity then we stop here.
                     if (!prop.creatureKillingExp.containsKey(type))

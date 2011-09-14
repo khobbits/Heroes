@@ -12,6 +12,7 @@ public enum EffectType {
     ICE,
     DRAINING, //Prevents/Limits Mana Regen
     FIRE,
+    FORM,
     HARMFUL,
     HEAL,
     INVULNERABILITY,

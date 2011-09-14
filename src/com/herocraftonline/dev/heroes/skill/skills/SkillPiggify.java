@@ -34,8 +34,7 @@ public class SkillPiggify extends TargettedSkill {
         setDescription("Forces your target to ride a pig");
         setUsage("/skill piggify <target>");
         setArgumentRange(0, 1);
-        setIdentifiers(new String[] { "skill piggify" });
-
+        setIdentifiers("skill piggify");
         setTypes(SkillType.DEBUFF, SkillType.SILENCABLE, SkillType.HARMFUL);
         
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);

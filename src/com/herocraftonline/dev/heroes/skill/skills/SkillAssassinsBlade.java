@@ -19,7 +19,7 @@ import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Messaging;
-import com.herocraftonline.dev.heroes.util.Properties;
+import com.herocraftonline.dev.heroes.util.Util;
 import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillAssassinsBlade extends ActiveSkill {
@@ -32,7 +32,7 @@ public class SkillAssassinsBlade extends ActiveSkill {
         setDescription("You dab your blade with deadly poison");
         setUsage("/skill ablade");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "skill ablade", "skill assassinsblade" });
+        setIdentifiers("skill ablade", "skill assassinsblade");
         
         setTypes(SkillType.BUFF);
         
@@ -42,7 +42,7 @@ public class SkillAssassinsBlade extends ActiveSkill {
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty("weapons", Properties.defaultWeapons);
+        node.setProperty("weapons", Util.defaultWeapons);
         node.setProperty("buff-duration", 600000); // 10 minutes in milliseconds
         node.setProperty("poison-duration", 10000); // 10 seconds in milliseconds
         node.setProperty(Setting.PERIOD.node(), 2000); // 2 seconds in milliseconds
@@ -93,7 +93,7 @@ public class SkillAssassinsBlade extends ActiveSkill {
             Player player = (Player) subEvent.getDamager();
             ItemStack item = player.getItemInHand();
             Hero hero = plugin.getHeroManager().getHero(player);
-            if (!getSetting(hero.getHeroClass(), "weapons", Properties.defaultWeapons).contains(item.getType().name()))
+            if (!getSetting(hero.getHeroClass(), "weapons", Util.defaultWeapons).contains(item.getType().name()))
                 return;
             
             if (hero.hasEffect("PoisonBlade")) {

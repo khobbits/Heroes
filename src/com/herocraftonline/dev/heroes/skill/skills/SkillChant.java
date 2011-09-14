@@ -18,8 +18,7 @@ public class SkillChant extends TargettedSkill {
         setDescription("Heals the target");
         setUsage("/skill chant <target>");
         setArgumentRange(0, 1);
-        setIdentifiers(new String[] { "skill chant" });
-        
+        setIdentifiers("skill chant");
         setTypes(SkillType.HEAL, SkillType.SILENCABLE);
     }
 

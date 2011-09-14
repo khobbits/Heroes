@@ -29,8 +29,7 @@ public class SkillReflect extends ActiveSkill {
         setDescription("Reflects all the damage done to you back to your target");
         setUsage("/skill reflect");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "skill reflect" });
-
+        setIdentifiers("skill reflect");
         setTypes(SkillType.FORCE, SkillType.SILENCABLE, SkillType.BUFF);
         
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(this), Priority.Normal);

@@ -20,8 +20,7 @@ public class SkillLickWounds extends ActiveSkill {
         setDescription("Heals your nearby wolves");
         setUsage("/skill lickwounds");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "skill lickwounds", "skill lwounds" });
-        
+        setIdentifiers("skill lickwounds", "skill lwounds");
         setTypes(SkillType.HEAL, SkillType.SILENCABLE);
     }
     @Override

@@ -26,7 +26,7 @@ public class SkillBite extends TargettedSkill {
         setUsage("/skill bite <target>");
         setArgumentRange(0, 1);
         setTypes(SkillType.PHYSICAL, SkillType.DAMAGING, SkillType.HARMFUL);
-        setIdentifiers(new String[] { "skill bite" });
+        setIdentifiers("skill bite");
     }
 
     @Override

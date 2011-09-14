@@ -19,8 +19,8 @@ import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
-import com.herocraftonline.dev.heroes.util.Properties;
 import com.herocraftonline.dev.heroes.util.Setting;
+import com.herocraftonline.dev.heroes.util.Util;
 
 public class SkillMortalWound extends TargettedSkill {
 
@@ -47,7 +47,7 @@ public class SkillMortalWound extends TargettedSkill {
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty("weapons", Properties.defaultWeapons);
+        node.setProperty("weapons", Util.defaultWeapons);
         node.setProperty(Setting.DURATION.node(), 12000);
         node.setProperty(Setting.PERIOD.node(), 3000);
         node.setProperty("heal-multiplier", .5);
@@ -63,7 +63,7 @@ public class SkillMortalWound extends TargettedSkill {
         Player player = hero.getPlayer();
 
         Material item = player.getItemInHand().getType();
-        if (!getSetting(hero.getHeroClass(), "weapons", Properties.defaultWeapons).contains(item.name())) {
+        if (!getSetting(hero.getHeroClass(), "weapons", Util.defaultWeapons).contains(item.name())) {
             Messaging.send(player, "You can't Mortal Strike with that weapon!");
         }
         

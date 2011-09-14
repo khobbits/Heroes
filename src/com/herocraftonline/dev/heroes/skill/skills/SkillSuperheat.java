@@ -30,8 +30,7 @@ public class SkillSuperheat extends ActiveSkill {
         setDescription("Your pickaxe becomes superheated");
         setUsage("/skill superheat");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "skill superheat" });
-        
+        setIdentifiers("skill superheat");
         setTypes(SkillType.FIRE, SkillType.EARTH, SkillType.BUFF, SkillType.SILENCABLE);
 
         registerEvent(Type.BLOCK_BREAK, playerListener, Priority.Normal);

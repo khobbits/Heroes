@@ -19,8 +19,7 @@ public class SkillGroupHeal extends ActiveSkill {
         setDescription("Heals all players around you");
         setUsage("/skill groupheal");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "skill groupheal", "skill gheal" });
-
+        setIdentifiers("skill groupheal", "skill gheal");
         setTypes(SkillType.HEAL, SkillType.SILENCABLE);
     }
 

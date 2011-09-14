@@ -33,7 +33,7 @@ public class SkillFlameshield extends ActiveSkill {
         setDescription("Fire can't hurt you!");
         setUsage("/skill flameshield");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "skill flameshield", "skill fshield" });
+        setIdentifiers("skill flameshield", "skill fshield");
 
         setTypes(SkillType.FIRE, SkillType.SILENCABLE, SkillType.BUFF);
         

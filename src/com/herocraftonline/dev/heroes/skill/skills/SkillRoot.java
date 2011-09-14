@@ -20,8 +20,7 @@ public class SkillRoot extends TargettedSkill {
         setDescription("Roots your target in place");
         setUsage("/skill root <target>");
         setArgumentRange(0, 1);
-        setIdentifiers(new String[] { "skill root" });
-        
+        setIdentifiers("skill root");
         setTypes(SkillType.MOVEMENT, SkillType.DEBUFF, SkillType.SILENCABLE, SkillType.EARTH, SkillType.HARMFUL);
     }
 
@@ -31,7 +30,6 @@ public class SkillRoot extends TargettedSkill {
         node.setProperty(Setting.DURATION.node(), 5000);
         return node;
     }
-
 
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {

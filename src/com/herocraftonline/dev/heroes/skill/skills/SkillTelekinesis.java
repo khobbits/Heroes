@@ -24,8 +24,7 @@ public class SkillTelekinesis extends ActiveSkill {
         setDescription("Activate levers, buttons and other interactable objects from afar!");
         setUsage("/skill telekinesis");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "skill telekinesis" });
-        
+        setIdentifiers("skill telekinesis");
         setTypes(SkillType.FORCE, SkillType.SILENCABLE);
     }
     

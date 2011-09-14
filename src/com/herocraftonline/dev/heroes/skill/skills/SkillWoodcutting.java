@@ -22,9 +22,8 @@ public class SkillWoodcutting extends PassiveSkill {
     public SkillWoodcutting(Heroes plugin) {
         super(plugin, "Woodcutting");
         setDescription("You know about the things of the earth!");
-        setIdentifiers(new String[] { "skill woodcutting" });
+        setIdentifiers("skill woodcutting");
         setTypes(SkillType.KNOWLEDGE, SkillType.EARTH, SkillType.BUFF);
-
     }
 
     @Override

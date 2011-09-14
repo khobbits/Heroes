@@ -21,8 +21,7 @@ public class SkillIronFist extends ActiveSkill {
         setDescription("Damages and knocks back nearby enemies");
         setUsage("/skill ironfist");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "skill ironfist", "skill ifist" });
-
+        setIdentifiers("skill ironfist", "skill ifist");
         setTypes(SkillType.PHYSICAL, SkillType.DAMAGING, SkillType.HARMFUL);
     }
 

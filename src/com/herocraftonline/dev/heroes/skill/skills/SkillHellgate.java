@@ -22,8 +22,7 @@ public class SkillHellgate extends ActiveSkill {
         setDescription("Teleports you and your nearby party to or from the nether");
         setUsage("/skill hellgate");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "skill hellgate" });
-        
+        setIdentifiers("skill hellgate");
         setTypes(SkillType.SILENCABLE, SkillType.TELEPORT);
     }
 

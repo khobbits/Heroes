@@ -1,7 +1,5 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
-import java.util.Random;
-
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -14,18 +12,14 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.PassiveSkill;
 import com.herocraftonline.dev.heroes.skill.SkillType;
+import com.herocraftonline.dev.heroes.util.Util;
 
 public class SkillMining extends PassiveSkill {
-
-    
-    private final Random rand = new Random();
     
     public SkillMining(Heroes plugin) {
-        super(plugin, "Herbalism");
+        super(plugin, "Mining");
         setDescription("You understand mining and ores!");
-        setIdentifiers(new String[] { "skill disarm" });
         setTypes(SkillType.KNOWLEDGE, SkillType.EARTH, SkillType.BUFF);
-
     }
 
     @Override
@@ -72,7 +66,7 @@ public class SkillMining extends PassiveSkill {
             if (!hero.hasEffect("Mining"))
                 return;
             
-            double chance = rand.nextDouble();
+            double chance = Util.rand.nextDouble();
             if (isStone && chance < getSetting(hero.getHeroClass(), "chance-from-stone", .0005) * hero.getLevel()) {
                 block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(getMatFromHeight(block), 1));
                 return;

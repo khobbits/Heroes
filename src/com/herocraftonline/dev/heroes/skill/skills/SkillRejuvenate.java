@@ -24,8 +24,7 @@ public class SkillRejuvenate extends TargettedSkill {
         setDescription("Heals the target over time");
         setUsage("/skill rejuvenate <target>");
         setArgumentRange(0, 1);
-        setIdentifiers(new String[] { "skill rejuvenate" });
-        
+        setIdentifiers("skill rejuvenate", "skill rejuv");
         setTypes(SkillType.BUFF, SkillType.HEAL, SkillType.SILENCABLE);
     }
 

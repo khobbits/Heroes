@@ -18,8 +18,7 @@ public class SkillForcePull extends TargettedSkill {
         setDescription("Forces your target toward you");
         setUsage("/skill forcepull <target>");
         setArgumentRange(0, 1);
-        setIdentifiers(new String[] { "skill forcepull", "skill fpull" });
-
+        setIdentifiers("skill forcepull", "skill fpull");
         setTypes(SkillType.FORCE, SkillType.SILENCABLE, SkillType.DAMAGING, SkillType.HARMFUL);
     }
 

@@ -16,12 +16,10 @@ public class SkillSilence extends TargettedSkill {
     
     public SkillSilence(Heroes plugin) {
         super(plugin, "Silence");
-        
         setDescription("Silences your target, making them unable to use some skills");
         setUsage("/skill silence <target>");
         setArgumentRange(0, 1);
-        setIdentifiers(new String[] { "skill silence" });
-        
+        setIdentifiers("skill silence");
         setTypes(SkillType.DEBUFF, SkillType.SILENCABLE, SkillType.HARMFUL);
     }
     

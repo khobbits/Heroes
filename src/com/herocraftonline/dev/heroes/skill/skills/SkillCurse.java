@@ -37,8 +37,7 @@ public class SkillCurse extends TargettedSkill {
         setDescription("Curses your target causing their attacks to miss");
         setUsage("/skill curse <target>");
         setArgumentRange(0, 1);
-        setIdentifiers(new String[] { "skill curse" });
-
+        setIdentifiers("skill curse");
         setTypes(SkillType.DARK, SkillType.SILENCABLE, SkillType.HARMFUL);
         
         registerEvent(Type.CUSTOM_EVENT, new SkillEventListener(), Priority.Highest);

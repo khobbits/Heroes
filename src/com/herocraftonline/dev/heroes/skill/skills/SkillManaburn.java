@@ -17,7 +17,7 @@ public class SkillManaburn extends TargettedSkill {
         setDescription("Burns the targets mana");
         setUsage("/skill manaburn");
         setArgumentRange(0, 1);
-        setIdentifiers(new String[] { "skill manaburn", "skill mburn" });
+        setIdentifiers("skill manaburn", "skill mburn");
         
         setTypes(SkillType.DAMAGING, SkillType.SILENCABLE, SkillType.MANA, SkillType.HARMFUL);
     }

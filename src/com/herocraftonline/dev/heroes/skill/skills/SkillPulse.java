@@ -23,8 +23,7 @@ public class SkillPulse extends ActiveSkill {
         setDescription("Damages everyone around you");
         setUsage("/skill pulse");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "skill pulse" });
-        
+        setIdentifiers("skill pulse");
         setTypes(SkillType.DAMAGING, SkillType.FORCE, SkillType.SILENCABLE, SkillType.HARMFUL);
     }
 

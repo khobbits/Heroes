@@ -16,8 +16,7 @@ public class SkillReplenish extends ActiveSkill {
         setDescription("Brings your mana back to full");
         setUsage("/skill replenish");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "skill replenish" });
-        
+        setIdentifiers("skill replenish");
         setTypes(SkillType.MANA);
     }
 

@@ -1,6 +1,8 @@
 Version dev
 
 Bug Fixes:
+
+	/bind now properly allows usage of shortened skill name identifiers (ablade, parrow, mshield, etc)
 	
 	
 General/API:
@@ -12,6 +14,8 @@ General/API:
 	TargettedSkills now have built-in - PvP/Party/Summon checking.
 	PeriodicEffect is now PeriodicExpirableEffect - there is now a non-expirable PeriodicEffect
 	All effects now have applyTime
+	setIdentifiers for skills now uses VarArgs, please adjust accordingly (it's unecessary but cleans up the look)
+	FormEffect - like a 'stance' - only 1 active a time, Currently unused.
 
 Skills:
 

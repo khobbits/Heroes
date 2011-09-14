@@ -31,8 +31,7 @@ public class SkillSneak extends ActiveSkill {
         setDescription("You crouch into the shadows");
         setUsage("/skill stealth");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "skill sneak" });
-        
+        setIdentifiers("skill sneak");
         setTypes(SkillType.BUFF, SkillType.PHYSICAL);
 
         registerEvent(Type.PLAYER_TOGGLE_SNEAK, new SneakListener(), Priority.Highest);

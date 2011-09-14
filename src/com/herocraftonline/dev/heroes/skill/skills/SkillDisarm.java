@@ -22,8 +22,8 @@ import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
-import com.herocraftonline.dev.heroes.util.Properties;
 import com.herocraftonline.dev.heroes.util.Setting;
+import com.herocraftonline.dev.heroes.util.Util;
 
 public class SkillDisarm extends TargettedSkill {
 
@@ -38,7 +38,7 @@ public class SkillDisarm extends TargettedSkill {
         setUsage("/skill disarm <target>");
         setArgumentRange(0, 1);
         setTypes(SkillType.PHYSICAL, SkillType.DEBUFF, SkillType.HARMFUL);
-        setIdentifiers(new String[] { "skill disarm" });
+        setIdentifiers("skill disarm");
 
         pListener = new SkillPlayerListener();
         registerEvent(Type.PLAYER_ITEM_HELD, pListener, Priority.Highest);
@@ -71,7 +71,7 @@ public class SkillDisarm extends TargettedSkill {
 
         Hero tHero = plugin.getHeroManager().getHero((Player) target);
 
-        if (!Properties.isWeapon(player.getItemInHand().getType())) {
+        if (!Util.isWeapon(player.getItemInHand().getType())) {
             Messaging.send(hero.getPlayer(), "You cannot disarm bare hands!");
             return false;
         }
@@ -130,7 +130,7 @@ public class SkillDisarm extends TargettedSkill {
             Inventory inv = event.getPlayer().getInventory();
             Material mat = inv.getItem(event.getNewSlot()).getType();
             // Swap the items back into their original locations
-            if (Properties.isWeapon(mat)) {
+            if (Util.isWeapon(mat)) {
                 ItemStack carry = inv.getItem(event.getNewSlot());
                 inv.setItem((event.getNewSlot()), inv.getItem(event.getPreviousSlot()));
                 inv.setItem((event.getPreviousSlot()), carry);
@@ -143,7 +143,7 @@ public class SkillDisarm extends TargettedSkill {
                 return;
 
             Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
-            if (hero.hasEffectType(EffectType.DISARM) && Properties.isWeapon(event.getItem().getItemStack().getType()))
+            if (hero.hasEffectType(EffectType.DISARM) && Util.isWeapon(event.getItem().getItemStack().getType()))
                 event.setCancelled(true);
         }
     }
