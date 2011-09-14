@@ -23,11 +23,14 @@ Skills:
 		- Skills that add FireTicks should now award XP from deaths caused by Fire.
 	Berserk - (NEW!)
 		- Uses new FormEffect
-		- Causes the hero to deal more damage, but take more damage.
+		- Causes the hero to deal more physical damage, but take more damage.
 	Bite
 		- Now also applies a Bleed effect
 	Disarm - (NEW!) - thanks Kostronor!
 		- Disarms your opponent for the duration and prevents them from re-equipping weapons.
+	Endurance - (NEW!)
+		- Uses new FormEffect
+		- causes the hero to take less damage from all sources, and deal less physical damage
 	Herbalism - (NEW!)
 		- Passive skill that gives double-drops for herb related stuff
 		- Also allows players to have a chance to pickup dead shrubs & tall-grass
@@ -40,3 +43,5 @@ Skills:
 		- Allows the caster to absorb some damage from the target, allowing the target to live longer
 	SoulLeech - (NEW!)
 		- Slowly drains your enemies health, when the effect expires it heals you for a percentage of the damage done
+	StealEssence - (NEW!) - thanks Multi
+		- Steals random beneficial effects from the target up to the specified number
