@@ -9,7 +9,6 @@ public class FormEffect extends Effect {
         super(skill, name);
         this.types.add(EffectType.FORM);
         this.types.add(EffectType.BENEFICIAL);
-        this.types.add(EffectType.PHYSICAL);
     }
     
     @Override

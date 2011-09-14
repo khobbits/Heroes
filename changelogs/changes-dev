@@ -15,12 +15,15 @@ General/API:
 	PeriodicEffect is now PeriodicExpirableEffect - there is now a non-expirable PeriodicEffect
 	All effects now have applyTime
 	setIdentifiers for skills now uses VarArgs, please adjust accordingly (it's unecessary but cleans up the look)
-	FormEffect - like a 'stance' - only 1 active a time, Currently unused.
+	FormEffect - only 1 can be active a time.
 
 Skills:
 
 	All:
 		- Skills that add FireTicks should now award XP from deaths caused by Fire.
+	Berserk - (NEW!)
+		- Uses new FormEffect
+		- Causes the hero to deal more damage, but take more damage.
 	Bite
 		- Now also applies a Bleed effect
 	Disarm - (NEW!) - thanks Kostronor!
