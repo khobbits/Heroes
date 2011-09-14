@@ -17,17 +17,11 @@ public class SkillCharge extends TargettedSkill {
         setArgumentRange(0, 1);
         setIdentifiers(new String[] { "skill charge" });
         
-        setTypes(SkillType.PHYSICAL, SkillType.MOVEMENT);
+        setTypes(SkillType.PHYSICAL, SkillType.MOVEMENT, SkillType.HARMFUL);
     }
 
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
-        if (target instanceof Player) {
-            Player p = (Player) target;
-            if (p == hero.getPlayer()) {
-                return false;
-            }
-        }
         hero.getPlayer().teleport(target.getLocation());
         broadcastExecuteText(hero, target);
         return true;

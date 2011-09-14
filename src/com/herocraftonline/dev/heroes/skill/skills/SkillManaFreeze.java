@@ -30,7 +30,7 @@ public class SkillManaFreeze extends TargettedSkill {
         setArgumentRange(0, 1);
         setIdentifiers(new String[] { "skill manafreeze", "skill mfreeze" });
         
-        setTypes(SkillType.SILENCABLE, SkillType.DEBUFF, SkillType.MANA);
+        setTypes(SkillType.SILENCABLE, SkillType.DEBUFF, SkillType.MANA, SkillType.HARMFUL);
 
         registerEvent(Type.CUSTOM_EVENT, new HeroListener(), Priority.Highest);
     }
@@ -55,7 +55,7 @@ public class SkillManaFreeze extends TargettedSkill {
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
         
-        if (target.equals(player) || !(target instanceof Player)) {
+        if (!(target instanceof Player)) {
             Messaging.send(player, "You must target another player!");
             return false;
         }

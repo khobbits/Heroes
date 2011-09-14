@@ -12,6 +12,7 @@ public enum SkillType {
     ITEM,
     EARTH,
     FORCE,
+    HARMFUL,
     HEAL,
     ILLUSION,
     KNOWLEDGE,

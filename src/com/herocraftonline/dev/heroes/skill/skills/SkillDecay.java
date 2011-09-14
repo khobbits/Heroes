@@ -3,8 +3,6 @@ package com.herocraftonline.dev.heroes.skill.skills;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
@@ -29,7 +27,7 @@ public class SkillDecay extends TargettedSkill {
         setArgumentRange(0, 1);
         setIdentifiers(new String[] { "skill decay" });
         
-        setTypes(SkillType.DARK, SkillType.SILENCABLE, SkillType.DAMAGING);
+        setTypes(SkillType.DARK, SkillType.SILENCABLE, SkillType.DAMAGING, SkillType.HARMFUL);
     }
 
     @Override
@@ -53,16 +51,7 @@ public class SkillDecay extends TargettedSkill {
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
-        if (target.equals(player) || hero.getSummons().contains(target)) {
-            Messaging.send(player, "You need a target!");
-            return false;
-        }
-        
-        // PvP test
-        if (!damageCheck(player, target)) {
-            return false;
-        }
-        
+
         long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 21000);
         long period = getSetting(hero.getHeroClass(), Setting.PERIOD.node(), 3000);
         int tickDamage = getSetting(hero.getHeroClass(), "tick-damage", 1);

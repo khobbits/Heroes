@@ -19,8 +19,7 @@ public class SkillBolt extends TargettedSkill {
         setUsage("/skill bolt <target>");
         setArgumentRange(0, 1);
         setIdentifiers(new String[] { "skill bolt" });
-        
-        setTypes(SkillType.LIGHTNING, SkillType.SILENCABLE, SkillType.DAMAGING);
+        setTypes(SkillType.LIGHTNING, SkillType.SILENCABLE, SkillType.DAMAGING, SkillType.HARMFUL);
     }
 
     @Override
@@ -33,15 +32,6 @@ public class SkillBolt extends TargettedSkill {
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
-
-        if (target.equals(player) || hero.getSummons().contains(target)) {
-            Messaging.send(player, "Invalid target!");
-            return false;
-        }
-
-        //Check if the target is damagable
-        if (!damageCheck(player, target))
-            return false;
         
         plugin.getDamageManager().addSpellTarget(target, hero, this);
         target.getWorld().strikeLightningEffect(target.getLocation());

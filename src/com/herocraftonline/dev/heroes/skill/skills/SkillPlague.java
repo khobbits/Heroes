@@ -4,8 +4,6 @@ import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
@@ -30,7 +28,7 @@ public class SkillPlague extends TargettedSkill {
         setArgumentRange(0, 1);
         setIdentifiers(new String[] { "skill plague" });
 
-        setTypes(SkillType.DARK, SkillType.DAMAGING, SkillType.SILENCABLE);
+        setTypes(SkillType.DARK, SkillType.DAMAGING, SkillType.SILENCABLE, SkillType.HARMFUL);
     }
 
     @Override
@@ -55,15 +53,6 @@ public class SkillPlague extends TargettedSkill {
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
-        if (target.equals(player) || hero.getSummons().contains(target)) {
-            Messaging.send(player, "You need a target!");
-            return false;
-        }
-
-        // PvP test
-        if (!damageCheck(player, target)) {
-            return false;
-        }
 
         long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 21000);
         long period = getSetting(hero.getHeroClass(), Setting.PERIOD.node(), 3000);

@@ -32,7 +32,7 @@ public class SkillFirearrow extends ActiveSkill {
         setArgumentRange(0, 0);
         setIdentifiers(new String[] { "skill firearrow", "skill farrow" });
         
-        setTypes(SkillType.FIRE, SkillType.PHYSICAL, SkillType.DAMAGING);
+        setTypes(SkillType.FIRE, SkillType.PHYSICAL, SkillType.DAMAGING, SkillType.HARMFUL);
 
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(this), Priority.Normal);
     }

@@ -9,7 +9,6 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
-import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillForcePush extends TargettedSkill {
@@ -21,7 +20,7 @@ public class SkillForcePush extends TargettedSkill {
         setArgumentRange(0, 1);
         setIdentifiers(new String[] { "skill forcepush", "skill fpush" });
 
-        setTypes(SkillType.FORCE, SkillType.SILENCABLE, SkillType.DAMAGING);
+        setTypes(SkillType.FORCE, SkillType.SILENCABLE, SkillType.DAMAGING, SkillType.HARMFUL);
     }
 
     @Override
@@ -36,14 +35,6 @@ public class SkillForcePush extends TargettedSkill {
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
-        if (target.equals(player) || hero.getSummons().contains(target)) {
-            Messaging.send(player, "Invalid target!");
-            return false;
-        }
-
-        // Make sure we can damage the target
-        if (!damageCheck(player, target))
-            return false;
 
         int damage = getSetting(hero.getHeroClass(), Setting.DAMAGE.node(), 0);
         if (damage > 0) {

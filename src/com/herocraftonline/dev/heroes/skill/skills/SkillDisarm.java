@@ -37,7 +37,7 @@ public class SkillDisarm extends TargettedSkill {
         setDescription("Disarm your target");
         setUsage("/skill disarm <target>");
         setArgumentRange(0, 1);
-        setTypes(SkillType.PHYSICAL, SkillType.DEBUFF);
+        setTypes(SkillType.PHYSICAL, SkillType.DEBUFF, SkillType.HARMFUL);
         setIdentifiers(new String[] { "skill disarm" });
 
         pListener = new SkillPlayerListener();
@@ -62,18 +62,14 @@ public class SkillDisarm extends TargettedSkill {
 
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
-
         Player player = hero.getPlayer();
-        if (target.equals(player) || !(target instanceof Player)) {
+        
+        if (!(target instanceof Player)) {
             Messaging.send(player, "You must target another player!");
             return false;
         }
 
         Hero tHero = plugin.getHeroManager().getHero((Player) target);
-
-        // Check if the target is damagable
-        if (!damageCheck(player, target))
-            return false;
 
         if (!Properties.isWeapon(player.getItemInHand().getType())) {
             Messaging.send(hero.getPlayer(), "You cannot disarm bare hands!");

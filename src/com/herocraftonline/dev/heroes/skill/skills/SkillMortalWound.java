@@ -34,7 +34,7 @@ public class SkillMortalWound extends TargettedSkill {
         setArgumentRange(0, 1);
         setIdentifiers(new String[] { "skill mortalwound", "skill mwound" });
         
-        setTypes(SkillType.PHYSICAL, SkillType.DAMAGING, SkillType.DEBUFF);
+        setTypes(SkillType.PHYSICAL, SkillType.DAMAGING, SkillType.DEBUFF, SkillType.HARMFUL);
     }
 
     @Override
@@ -66,15 +66,6 @@ public class SkillMortalWound extends TargettedSkill {
         if (!getSetting(hero.getHeroClass(), "weapons", Properties.defaultWeapons).contains(item.name())) {
             Messaging.send(player, "You can't Mortal Strike with that weapon!");
         }
-
-        if (hero.getPlayer().equals(target)) {
-            Messaging.send(player, "You need a target!");
-            return false;
-        }
-
-        //Check if the target is damagable
-        if (!damageCheck(player, target))
-            return false;
         
         HeroClass heroClass = hero.getHeroClass();
         int damage = heroClass.getItemDamage(item) == null ? 0 : heroClass.getItemDamage(item);

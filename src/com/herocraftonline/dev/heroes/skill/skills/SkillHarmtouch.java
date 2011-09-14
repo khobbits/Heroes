@@ -8,7 +8,6 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
-import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillHarmtouch extends TargettedSkill {
@@ -20,7 +19,7 @@ public class SkillHarmtouch extends TargettedSkill {
         setArgumentRange(0, 1);
         setIdentifiers(new String[] { "skill harmtouch" });
 
-        setTypes(SkillType.DARK, SkillType.SILENCABLE, SkillType.DAMAGING);
+        setTypes(SkillType.DARK, SkillType.SILENCABLE, SkillType.DAMAGING, SkillType.HARMFUL);
     }
 
     @Override
@@ -33,14 +32,6 @@ public class SkillHarmtouch extends TargettedSkill {
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
-        if (target.equals(player) || hero.getSummons().contains(target)) {
-            Messaging.send(player, "You need a target!");
-            return false;
-        }
-
-        // Check if the target is damagable
-        if (!damageCheck(player, target))
-            return false;
 
         int damage = getSetting(hero.getHeroClass(), Setting.DAMAGE.node(), 10);
         addSpellTarget(target, hero);

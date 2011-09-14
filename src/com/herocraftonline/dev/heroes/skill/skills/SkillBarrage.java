@@ -22,7 +22,7 @@ public class SkillBarrage extends ActiveSkill {
         setUsage("/skill barrage");
         setArgumentRange(0, 0);
         
-        setTypes(SkillType.PHYSICAL, SkillType.DAMAGING);
+        setTypes(SkillType.PHYSICAL, SkillType.DAMAGING, SkillType.HARMFUL);
         
         setIdentifiers(new String[] { "skill barrage" });
     }

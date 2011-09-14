@@ -44,13 +44,13 @@ public class SkillIcyAura extends ActiveSkill {
         allowedBlocks.add(Material.WATER);
         allowedBlocks.add(Material.STATIONARY_WATER);
     }
+    
     public SkillIcyAura(Heroes plugin) {
         super(plugin, "IcyAura");
         setDescription("Triggers an aura of ice around you.");
         setUsage("/skill icyaura");
         setArgumentRange(0, 0);
         setIdentifiers(new String[] { "skill icyaura" });
-
         setTypes(SkillType.BUFF, SkillType.SILENCABLE, SkillType.ICE);
         
         registerEvent(Type.BLOCK_BREAK, new IcyAuraBlockListener(), Priority.Highest);

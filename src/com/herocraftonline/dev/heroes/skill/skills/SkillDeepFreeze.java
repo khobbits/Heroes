@@ -7,8 +7,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
 import org.bukkit.event.entity.EntityCombustEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityListener;
 import org.bukkit.util.config.ConfigurationNode;
 
@@ -38,7 +36,7 @@ public class SkillDeepFreeze extends TargettedSkill {
         setArgumentRange(0, 1);
         setIdentifiers(new String[] { "skill deepfreeze", "skill dfreeze" });
 
-        setTypes(SkillType.ICE, SkillType.SILENCABLE, SkillType.DEBUFF, SkillType.DAMAGING);
+        setTypes(SkillType.ICE, SkillType.SILENCABLE, SkillType.DEBUFF, SkillType.DAMAGING, SkillType.HARMFUL);
 
         registerEvent(Type.CUSTOM_EVENT, new SkillHeroListener(), Priority.Monitor);
         registerEvent(Type.ENTITY_COMBUST, new SkillEntityListener(), Priority.Monitor);
@@ -67,20 +65,6 @@ public class SkillDeepFreeze extends TargettedSkill {
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
-        if (player.equals(target) || hero.getSummons().contains(target)) {
-            Messaging.send(player, "You need a target!");
-            return false;
-        }
-
-        //PvP Check
-        if (target instanceof Player) {
-            EntityDamageByEntityEvent damageEntityEvent = new EntityDamageByEntityEvent(player, target, DamageCause.CUSTOM, 0);
-            plugin.getServer().getPluginManager().callEvent(damageEntityEvent);
-            if (damageEntityEvent.isCancelled()) {
-                Messaging.send(player, "Invalid target!");
-                return false;
-            }
-        }
 
         long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 5000);
         FreezeEffect fEffect = new FreezeEffect(this, duration, hero);

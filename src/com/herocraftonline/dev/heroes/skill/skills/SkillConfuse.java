@@ -2,6 +2,7 @@ package com.herocraftonline.dev.heroes.skill.skills;
 
 import java.util.Random;
 
+import org.bukkit.entity.Creature;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
@@ -31,8 +32,7 @@ public class SkillConfuse extends TargettedSkill {
         setUsage("/skill confuse <target>");
         setArgumentRange(0, 1);
         setIdentifiers(new String[] { "skill confuse" });
-        
-        setTypes(SkillType.SILENCABLE, SkillType.ILLUSION);
+        setTypes(SkillType.SILENCABLE, SkillType.ILLUSION, SkillType.HARMFUL);
     }
 
     @Override
@@ -55,26 +55,20 @@ public class SkillConfuse extends TargettedSkill {
 
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
-        Player player = hero.getPlayer();
-        if (!(target instanceof Player)) {
-            Messaging.send(player, "You need a target!");
-            return false;
-        }
-
-        Player targetPlayer = (Player) target;
-        Hero targetHero = plugin.getHeroManager().getHero(targetPlayer);
-        if (targetHero.equals(hero)) {
-            Messaging.send(player, "You need a target!");
-            return false;
-        }
-
-        broadcastExecuteText(hero, target);
-
+        
         HeroClass heroClass = hero.getHeroClass();
         long duration = getSetting(heroClass, Setting.DURATION.node(), 10000);
         long period = getSetting(heroClass, Setting.PERIOD.node(), 2000);
         float maxDrift = (float) getSetting(heroClass, "max-drift", 0.35);
-        targetHero.addEffect(new ConfuseEffect(this, duration, period, maxDrift));
+        if (target instanceof Player) {
+            plugin.getHeroManager().getHero((Player) target).addEffect(new ConfuseEffect(this, duration, period, maxDrift));
+        } else if (target instanceof Creature) {
+            plugin.getHeroManager().addCreatureEffect((Creature) target, new ConfuseEffect(this, duration, period, maxDrift));
+        } else {
+            return false;
+        }
+        
+        broadcastExecuteText(hero, target);
         return true;
     }
 
@@ -104,11 +98,31 @@ public class SkillConfuse extends TargettedSkill {
         }
 
         @Override
+        public void apply(Creature creature) {
+            super.apply(creature);
+        }
+
+        @Override
+        public void remove(Creature creature) {
+            super.remove(creature);
+            broadcast(creature.getLocation(), expireText, Messaging.getCreatureName(creature));
+        }
+
+        @Override
         public void tick(Hero hero) {
             super.tick(hero);
+            adjustVelocity(hero.getPlayer());
+        }
 
-            Player player = hero.getPlayer();
-            Vector velocity = player.getVelocity();
+        @Override
+        public void tick(Creature creature) {
+            super.tick(creature);
+            adjustVelocity(creature);
+            creature.setTarget(null);
+        }
+
+        public void adjustVelocity(LivingEntity lEntity) {
+            Vector velocity = lEntity.getVelocity();
 
             float angle = random.nextFloat() * 2 * 3.14159f;
             float xAdjustment = maxDrift * net.minecraft.server.MathHelper.cos(angle);
@@ -116,7 +130,7 @@ public class SkillConfuse extends TargettedSkill {
 
             velocity.add(new Vector(xAdjustment, 0f, zAdjustment));
             velocity.setY(0);
-            player.setVelocity(velocity);
+            lEntity.setVelocity(velocity);
         }
     }
 }

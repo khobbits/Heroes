@@ -3,8 +3,6 @@ package com.herocraftonline.dev.heroes.skill.skills;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
@@ -24,7 +22,7 @@ public class SkillRoot extends TargettedSkill {
         setArgumentRange(0, 1);
         setIdentifiers(new String[] { "skill root" });
         
-        setTypes(SkillType.MOVEMENT, SkillType.DEBUFF, SkillType.SILENCABLE, SkillType.EARTH);
+        setTypes(SkillType.MOVEMENT, SkillType.DEBUFF, SkillType.SILENCABLE, SkillType.EARTH, SkillType.HARMFUL);
     }
 
     @Override
@@ -38,15 +36,6 @@ public class SkillRoot extends TargettedSkill {
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
-        if (player.equals(target) || hero.getSummons().contains(target)) {
-            Messaging.send(player, "You need a target!");
-            return false;
-        }
-
-        //PvP Check
-        if (!damageCheck(player, target)) {
-            return false;
-        }
 
         long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 5000);
         RootEffect rEffect = new RootEffect(this, duration);

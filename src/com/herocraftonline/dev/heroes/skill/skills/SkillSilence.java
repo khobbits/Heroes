@@ -22,7 +22,7 @@ public class SkillSilence extends TargettedSkill {
         setArgumentRange(0, 1);
         setIdentifiers(new String[] { "skill silence" });
         
-        setTypes(SkillType.DEBUFF, SkillType.SILENCABLE);
+        setTypes(SkillType.DEBUFF, SkillType.SILENCABLE, SkillType.HARMFUL);
     }
     
     @Override
@@ -37,14 +37,10 @@ public class SkillSilence extends TargettedSkill {
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
         
-        if (!(target instanceof Player) || target.equals(player)) {
+        if (!(target instanceof Player)) {
             Messaging.send(player, "Invalid target!");
             return false;
         }
-        
-        //Check if the target is damagable
-        if (!damageCheck(player, target))
-            return false;
         
         int duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 5000);
         SilenceEffect sEffect = new SilenceEffect(this, duration);

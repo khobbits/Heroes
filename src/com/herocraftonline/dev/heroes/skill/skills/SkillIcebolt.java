@@ -4,7 +4,6 @@ import java.util.HashSet;
 
 import net.minecraft.server.MathHelper;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -14,7 +13,6 @@ import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityListener;
 import org.bukkit.util.Vector;
 import org.bukkit.util.config.ConfigurationNode;
@@ -36,8 +34,7 @@ public class SkillIcebolt extends ActiveSkill {
         setUsage("/skill icebolt");
         setArgumentRange(0, 0);
         setIdentifiers(new String[] { "skill icebolt" });
-
-        setTypes(SkillType.ICE, SkillType.SILENCABLE, SkillType.DAMAGING);
+        setTypes(SkillType.ICE, SkillType.SILENCABLE, SkillType.DAMAGING, SkillType.HARMFUL);
 
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
     }

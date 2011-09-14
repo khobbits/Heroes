@@ -39,7 +39,7 @@ public class SkillCurse extends TargettedSkill {
         setArgumentRange(0, 1);
         setIdentifiers(new String[] { "skill curse" });
 
-        setTypes(SkillType.DARK, SkillType.SILENCABLE);
+        setTypes(SkillType.DARK, SkillType.SILENCABLE, SkillType.HARMFUL);
         
         registerEvent(Type.CUSTOM_EVENT, new SkillEventListener(), Priority.Highest);
     }
@@ -66,14 +66,6 @@ public class SkillCurse extends TargettedSkill {
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
-        if (target.equals(player) || hero.getSummons().contains(target)) {
-            Messaging.send(player, "You need a target!");
-            return false;
-        }
-        
-        if (!damageCheck(player, target)) {
-            return false;
-        }
 
         HeroClass heroClass = hero.getHeroClass();
         long duration = getSetting(heroClass, Setting.DURATION.node(), 5000);

@@ -9,6 +9,7 @@ General/API:
 	Fixed SpoutUI implementation
 	Added CombustEffect - it's used for tracking who last applied FireTicks to a player
 	getRemaingTime added to expirable effects
+	TargettedSkills now have built-in - PvP/Party/Summon checking.
 
 Skills:
 

@@ -11,9 +11,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityListener;
 import org.bukkit.util.config.ConfigurationNode;
 
@@ -38,7 +36,7 @@ public class SkillPiggify extends TargettedSkill {
         setArgumentRange(0, 1);
         setIdentifiers(new String[] { "skill piggify" });
 
-        setTypes(SkillType.DEBUFF, SkillType.SILENCABLE);
+        setTypes(SkillType.DEBUFF, SkillType.SILENCABLE, SkillType.HARMFUL);
         
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
     }
@@ -53,14 +51,6 @@ public class SkillPiggify extends TargettedSkill {
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
-        if (target.equals(player) || creatures.contains(target)) {
-            Messaging.send(player, "You need a target.");
-            return false;
-        }
-
-        if (!damageCheck(player, target)) {
-            return false;
-        }
 
         CreatureType type = CreatureType.PIG;
         if (target.getLocation().getBlock().getType() == Material.WATER) {

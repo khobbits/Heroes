@@ -31,7 +31,7 @@ public class SkillBlaze extends ActiveSkill {
         node.setProperty("fire-length", 3000);
         node.setProperty(Setting.RADIUS.node(), 5);
         
-        setTypes(SkillType.FIRE, SkillType.DAMAGING);
+        setTypes(SkillType.FIRE, SkillType.DAMAGING, SkillType.HARMFUL);
         
         return node;
     }

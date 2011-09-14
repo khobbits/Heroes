@@ -3,8 +3,6 @@ package com.herocraftonline.dev.heroes.skill.skills;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
@@ -28,7 +26,7 @@ public class SkillPoison extends TargettedSkill {
         setArgumentRange(0, 1);
         setIdentifiers(new String[] { "skill poison" });
 
-        setTypes(SkillType.DAMAGING, SkillType.SILENCABLE);
+        setTypes(SkillType.DAMAGING, SkillType.SILENCABLE, SkillType.HARMFUL);
     }
 
     @Override
@@ -50,14 +48,6 @@ public class SkillPoison extends TargettedSkill {
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
-        if (target.equals(player) || hero.getSummons().contains(target)) {
-            Messaging.send(player, "You need a target!");
-            return false;
-        }
-
-        if (!damageCheck(player, target)) {
-            return false;
-        }
 
         long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 10000);
         long period = getSetting(hero.getHeroClass(), Setting.PERIOD.node(), 2000);

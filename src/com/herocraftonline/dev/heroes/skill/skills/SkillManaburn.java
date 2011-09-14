@@ -19,7 +19,7 @@ public class SkillManaburn extends TargettedSkill {
         setArgumentRange(0, 1);
         setIdentifiers(new String[] { "skill manaburn", "skill mburn" });
         
-        setTypes(SkillType.DAMAGING, SkillType.SILENCABLE, SkillType.MANA);
+        setTypes(SkillType.DAMAGING, SkillType.SILENCABLE, SkillType.MANA, SkillType.HARMFUL);
     }
 
     @Override
@@ -32,7 +32,7 @@ public class SkillManaburn extends TargettedSkill {
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
-        if (!(target instanceof Player) || target.equals(player)) {
+        if (!(target instanceof Player)) {
             Messaging.send(player, "You need a target!");
             return false;
         }

@@ -16,8 +16,6 @@ import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockListener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
@@ -63,15 +61,6 @@ public class SkillWeb extends TargettedSkill {
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
-
-        if (target.equals(player)) {
-            Messaging.send(player, "You need a target!");
-            return false;
-        }
-
-        if (!damageCheck(player, target)) {
-            return false;
-        }
 
         String name = "";
         if (target instanceof Player) {

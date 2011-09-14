@@ -3,8 +3,6 @@ package com.herocraftonline.dev.heroes.skill.skills;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
@@ -27,9 +25,7 @@ public class SkillBleed extends TargettedSkill {
         setDescription("Causes your target to bleed");
         setUsage("/skill bleed <target>");
         setArgumentRange(0, 1);
-        
-        setTypes(SkillType.SILENCABLE, SkillType.DAMAGING);
-        
+        setTypes(SkillType.SILENCABLE, SkillType.DAMAGING, SkillType.HARMFUL);
         setIdentifiers(new String[] { "skill bleed" });
     }
 
@@ -59,32 +55,20 @@ public class SkillBleed extends TargettedSkill {
             return false;
         }
         
-        // PvP test
-        Hero targetHero = null;
-        if (target instanceof Player) {
-            EntityDamageByEntityEvent damageEntityEvent = new EntityDamageByEntityEvent(player, target, DamageCause.CUSTOM, 0);
-            plugin.getServer().getPluginManager().callEvent(damageEntityEvent);
-            if (damageEntityEvent.isCancelled()) {
-                Messaging.send(player, "Invalid target!");
-                return false;
-            }
-            targetHero = plugin.getHeroManager().getHero((Player) target);
-        }
-        
         long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 10000);
         long period = getSetting(hero.getHeroClass(), Setting.PERIOD.node(), 2000);
         int tickDamage = getSetting(hero.getHeroClass(), "tick-damage", 1);
         BleedSkillEffect bEffect = new BleedSkillEffect(this, duration, period, tickDamage, player);
 
-        if (targetHero != null) {
-            targetHero.addEffect(bEffect);
+        if (target instanceof Player) {
+            plugin.getHeroManager().getHero((Player) target).addEffect(bEffect);
         } else if (target instanceof Creature) {
-            Creature creature = (Creature) target;
-            plugin.getHeroManager().addCreatureEffect(creature, bEffect);
+            plugin.getHeroManager().addCreatureEffect((Creature) target, bEffect);
         } else {
             Messaging.send(player, "Invalid target!");
             return false;
         }
+        
         broadcastExecuteText(hero, target);
         return true;
     }

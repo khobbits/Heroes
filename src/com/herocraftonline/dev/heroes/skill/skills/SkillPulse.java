@@ -25,7 +25,7 @@ public class SkillPulse extends ActiveSkill {
         setArgumentRange(0, 0);
         setIdentifiers(new String[] { "skill pulse" });
         
-        setTypes(SkillType.DAMAGING, SkillType.FORCE, SkillType.SILENCABLE);
+        setTypes(SkillType.DAMAGING, SkillType.FORCE, SkillType.SILENCABLE, SkillType.HARMFUL);
     }
 
     @Override

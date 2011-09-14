@@ -23,7 +23,7 @@ public class SkillIronFist extends ActiveSkill {
         setArgumentRange(0, 0);
         setIdentifiers(new String[] { "skill ironfist", "skill ifist" });
 
-        setTypes(SkillType.PHYSICAL, SkillType.DAMAGING);
+        setTypes(SkillType.PHYSICAL, SkillType.DAMAGING, SkillType.HARMFUL);
     }
 
     @Override

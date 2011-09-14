@@ -4,8 +4,6 @@ import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
@@ -28,9 +26,7 @@ public class SkillBlight extends TargettedSkill {
         setDescription("Causes your target's flesh to decay rapidly");
         setUsage("/skill blight <target>");
         setArgumentRange(0, 1);
-
-        setTypes(SkillType.DARK, SkillType.SILENCABLE, SkillType.DAMAGING);
-
+        setTypes(SkillType.DARK, SkillType.SILENCABLE, SkillType.DAMAGING, SkillType.HARMFUL);
         setIdentifiers(new String[] { "skill blight" });
     }
 
@@ -56,14 +52,6 @@ public class SkillBlight extends TargettedSkill {
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
-        if (target.equals(player) || hero.getSummons().contains(target)) {
-            Messaging.send(player, "You need a target!");
-            return false;
-        }
-
-        // PvP test
-        if (!damageCheck(player, target))
-            return false;
 
         long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 21000);
         long period = getSetting(hero.getHeroClass(), Setting.PERIOD.node(), 3000);
@@ -73,8 +61,7 @@ public class SkillBlight extends TargettedSkill {
         if (target instanceof Player) {
             plugin.getHeroManager().getHero((Player) target).addEffect(bEffect);
         } else if (target instanceof Creature) {
-            Creature creature = (Creature) target;
-            plugin.getHeroManager().addCreatureEffect(creature, bEffect);
+            plugin.getHeroManager().addCreatureEffect((Creature) target, bEffect);
         } else {
             Messaging.send(player, "Invalid target!");
             return false;
