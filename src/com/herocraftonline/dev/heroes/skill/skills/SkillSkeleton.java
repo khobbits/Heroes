@@ -29,7 +29,7 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.effects.Effect;
 import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
-import com.herocraftonline.dev.heroes.effects.PeriodicEffect;
+import com.herocraftonline.dev.heroes.effects.PeriodicExpirableEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
@@ -134,7 +134,7 @@ public class SkillSkeleton extends ActiveSkill {
         }
     }
 
-    public class FollowEffect extends PeriodicEffect {
+    public class FollowEffect extends PeriodicExpirableEffect {
 
         public FollowEffect(Skill skill, long period, long duration) {
             super(skill, "SkeletonFollow", period, duration);

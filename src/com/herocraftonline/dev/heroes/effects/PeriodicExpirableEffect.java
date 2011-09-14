@@ -5,16 +5,16 @@ import org.bukkit.entity.Creature;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
 
-public class PeriodicEffect extends Effect implements Periodic {
+public class PeriodicExpirableEffect extends ExpirableEffect implements Periodic {
 
     private final long period;
     protected long lastTickTime;
 
-    public PeriodicEffect(Skill skill, String name, long period) {
-        super(skill, name);
+    public PeriodicExpirableEffect(Skill skill, String name, long period, long duration) {
+        super(skill, name, duration);
         this.period = period;
     }
-    
+
     @Override
     public long getPeriod() {
         return period;
@@ -47,13 +47,6 @@ public class PeriodicEffect extends Effect implements Periodic {
     @Override
     public void tick(Creature creature) {
         lastTickTime = System.currentTimeMillis();
-    }
-
-    /**
-     * @return the applyTime
-     */
-    public long getApplyTime() {
-        return applyTime;
     }
 
 }

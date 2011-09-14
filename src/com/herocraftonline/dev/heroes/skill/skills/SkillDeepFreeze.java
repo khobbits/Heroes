@@ -15,7 +15,7 @@ import com.herocraftonline.dev.heroes.api.HeroesEventListener;
 import com.herocraftonline.dev.heroes.api.SkillDamageEvent;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.effects.EffectType;
-import com.herocraftonline.dev.heroes.effects.PeriodicEffect;
+import com.herocraftonline.dev.heroes.effects.PeriodicExpirableEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.SkillType;
@@ -82,7 +82,7 @@ public class SkillDeepFreeze extends TargettedSkill {
         return true;
     }
 
-    public class FreezeEffect extends PeriodicEffect {
+    public class FreezeEffect extends PeriodicExpirableEffect {
 
         private static final long period = 100;
         private final Hero applier;

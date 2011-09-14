@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
 
-public class CombustEffect extends PeriodicEffect {
+public class CombustEffect extends PeriodicExpirableEffect {
     
     private final Player applier;
 

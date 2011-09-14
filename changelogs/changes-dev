@@ -10,6 +10,8 @@ General/API:
 	Added CombustEffect - it's used for tracking who last applied FireTicks to a player
 	getRemaingTime added to expirable effects
 	TargettedSkills now have built-in - PvP/Party/Summon checking.
+	PeriodicEffect is now PeriodicExpirableEffect - there is now a non-expirable PeriodicEffect
+	All effects now have applyTime
 
 Skills:
 
@@ -27,3 +29,7 @@ Skills:
 		- Gives a very small chance to drop a random ore from just stone.
 	Woodcutting - (NEW!)
 		- Passive skill that has a chance to give double-drops when chopping logs
+	SoulBond - (NEW!)
+		- Allows the caster to absorb some damage from the target, allowing the target to live longer
+	SoulLeech - (NEW!)
+		- Slowly drains your enemies health, when the effect expires it heals you for a percentage of the damage done

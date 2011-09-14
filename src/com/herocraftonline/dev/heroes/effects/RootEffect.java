@@ -8,7 +8,7 @@ import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.util.Messaging;
 
-public class RootEffect extends PeriodicEffect {
+public class RootEffect extends PeriodicExpirableEffect {
 
     private static final long period = 100;
     private final String applyText = "$1 was rooted!";

@@ -18,8 +18,7 @@ public class SkillSyphon extends TargettedSkill {
         setUsage("/skill syphon <target> <health>");
         setArgumentRange(0, 2);
         setIdentifiers(new String[] { "skill syphon" });
-        
-        setTypes(SkillType.HEAL, SkillType.DAMAGING, SkillType.SILENCABLE);
+        setTypes(SkillType.HEAL, SkillType.DAMAGING, SkillType.SILENCABLE, SkillType.DARK);
     }
 
     @Override

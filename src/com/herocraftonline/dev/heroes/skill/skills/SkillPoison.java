@@ -52,7 +52,7 @@ public class SkillPoison extends TargettedSkill {
         long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 10000);
         long period = getSetting(hero.getHeroClass(), Setting.PERIOD.node(), 2000);
         int tickDamage = getSetting(hero.getHeroClass(), "tick-damage", 1);
-        PoisonSkillEffect pEffect = new PoisonSkillEffect(this, "Poison", period, duration, tickDamage, player);
+        PoisonSkillEffect pEffect = new PoisonSkillEffect(this, period, duration, tickDamage, player);
         if (target instanceof Player) {
             plugin.getHeroManager().getHero((Player) target).addEffect(pEffect);
         } else if (target instanceof Creature) {
@@ -69,8 +69,8 @@ public class SkillPoison extends TargettedSkill {
 
     public class PoisonSkillEffect extends PeriodicDamageEffect {
 
-        public PoisonSkillEffect(Skill skill, String name, long period, long duration, int tickDamage, Player applier) {
-            super(skill, name, period, duration, tickDamage, applier);
+        public PoisonSkillEffect(Skill skill, long period, long duration, int tickDamage, Player applier) {
+            super(skill, "Poison", period, duration, tickDamage, applier);
             this.types.add(EffectType.POISON);
         }
 

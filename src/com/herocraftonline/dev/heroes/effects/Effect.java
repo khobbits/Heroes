@@ -15,6 +15,7 @@ public class Effect {
     protected final String name;
     protected final Skill skill;
     protected Heroes plugin;
+    protected long applyTime;
     private boolean persistent;
     protected final Set<EffectType> types = EnumSet.noneOf(EffectType.class);
 
@@ -29,9 +30,13 @@ public class Effect {
         this.persistent = false;
     }
 
-    public void apply(Hero hero) {}
+    public void apply(Hero hero) {
+        this.applyTime = System.currentTimeMillis();
+    }
 
-    public void apply(Creature creature) {}
+    public void apply(Creature creature) {
+        this.applyTime = System.currentTimeMillis();
+    }
 
     public void broadcast(Location source, String message, Object... args) {
         skill.broadcast(source, message, args);

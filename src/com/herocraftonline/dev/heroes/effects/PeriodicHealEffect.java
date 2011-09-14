@@ -9,7 +9,7 @@ import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.util.Properties;
 
-public class PeriodicHealEffect extends PeriodicEffect {
+public class PeriodicHealEffect extends PeriodicExpirableEffect {
 
     private int tickHealth;
     private final Player applier;
