@@ -1,15 +1,13 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.api.HeroRegainManaEvent;
 import com.herocraftonline.dev.heroes.api.HeroesEventListener;
-import com.herocraftonline.dev.heroes.api.WeaponDamageEvent;
 import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
 import com.herocraftonline.dev.heroes.persistence.Hero;
@@ -19,18 +17,18 @@ import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Setting;
 
-public class SkillMight extends ActiveSkill {
+public class SkillWisdom extends ActiveSkill {
 
     private String applyText;
     private String expireText;
-    
-    public SkillMight(Heroes plugin) {
-        super(plugin, "Might");
-        setDescription("You increase your party's damage with weapons!");
+
+    public SkillWisdom(Heroes plugin) {
+        super(plugin, "Wisdom");
+        setDescription("You party benefits from increased mana regeneration!");
         setArgumentRange(0, 0);
-        setUsage("/skill might");
-        setIdentifiers("skill might");
-        setTypes(SkillType.BUFF, SkillType.SILENCABLE);
+        setUsage("/skill wisdom");
+        setIdentifiers("skill wisdom");
+        setTypes(SkillType.BUFF, SkillType.MANA, SkillType.SILENCABLE);
 
         registerEvent(Type.CUSTOM_EVENT, new SkillHeroListener(), Priority.Normal);
     }
@@ -38,31 +36,29 @@ public class SkillMight extends ActiveSkill {
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty("damage-bonus", 1.25);
+        node.setProperty("regen-multiplier", 1.2);
         node.setProperty(Setting.RADIUS.node(), 10);
-        node.setProperty(Setting.APPLY_TEXT.node(), "Your muscles bulge with power!");
-        node.setProperty(Setting.EXPIRE_TEXT.node(), "You feel strength leave your body!");
         node.setProperty(Setting.DURATION.node(), 600000); // in Milliseconds - 10 minutes
         return node;
     }
-    
+
     @Override
     public void init() {
         super.init();
-        applyText = getSetting(null, Setting.APPLY_TEXT.node(), "Your muscles bulge with power!");
-        expireText = getSetting(null, Setting.EXPIRE_TEXT.node(), "You feel strength leave your body!");
+        applyText = getSetting(null, Setting.APPLY_TEXT.node(), "Your feel a bit wiser!");
+        expireText = getSetting(null, Setting.EXPIRE_TEXT.node(), "You no longer feel as wise!");
     }
-    
+
     @Override
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
         int duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 600000);
-        double damageBonus = getSetting(hero.getHeroClass(), "damage-bonus", 1.25);
+        double manaMultiplier = getSetting(hero.getHeroClass(), "regen-multiplier", 1.2);
 
-        MightEffect mEffect = new MightEffect(this, duration, damageBonus);
+        WisdomEffect mEffect = new WisdomEffect(this, duration, manaMultiplier);
         if (!hero.hasParty()) {
-            if (hero.hasEffect("Might")) {
-                if (((MightEffect) hero.getEffect("Might")).getDamageBonus() > mEffect.getDamageBonus()) {
+            if (hero.hasEffect("Wisdom")) {
+                if (((WisdomEffect) hero.getEffect("Might")).getManaMultiplier() > mEffect.getManaMultiplier()) {
                     Messaging.send(player, "You have a more powerful effect already!");
                 }
             }
@@ -75,8 +71,8 @@ public class SkillMight extends ActiveSkill {
                     continue;
                 if (pPlayer.getLocation().distanceSquared(player.getLocation()) > rangeSquared)
                     continue;
-                if (pHero.hasEffect("Might")) {
-                    if (((MightEffect) pHero.getEffect("Might")).getDamageBonus() > mEffect.getDamageBonus()) {
+                if (pHero.hasEffect("Wisdom")) {
+                    if (((WisdomEffect) pHero.getEffect("Wisdom")).getManaMultiplier() > mEffect.getManaMultiplier()) {
                         continue;
                     }
                 }
@@ -88,13 +84,13 @@ public class SkillMight extends ActiveSkill {
         return true;
     }
 
-    public class MightEffect extends ExpirableEffect {
+    public class WisdomEffect extends ExpirableEffect {
 
-        private final double damageBonus;
+        private final double manaMultiplier;
 
-        public MightEffect(Skill skill, long duration, double damageBonus) {
-            super(skill, "Might", duration);
-            this.damageBonus = damageBonus;
+        public WisdomEffect(Skill skill, long duration, double manaMultiplier) {
+            super(skill, "Wisdom", duration);
+            this.manaMultiplier = manaMultiplier;
             this.types.add(EffectType.DISPELLABLE);
             this.types.add(EffectType.BENEFICIAL);
         }
@@ -113,36 +109,20 @@ public class SkillMight extends ActiveSkill {
             Messaging.send(player, expireText);
         }
 
-        public double getDamageBonus() {
-            return damageBonus;
+        public double getManaMultiplier() {
+            return manaMultiplier;
         }
     }
 
     public class SkillHeroListener extends HeroesEventListener {
 
         @Override
-        public void onWeaponDamage(WeaponDamageEvent event) {
-            if (event.getCause() != DamageCause.ENTITY_ATTACK)
+        public void onHeroRegainMana(HeroRegainManaEvent event) {
+            if (event.isCancelled())
                 return;
-            
-            if (event.getDamager() instanceof Player) {
-                Player player = (Player) event.getDamager();
-                Hero hero = plugin.getHeroManager().getHero(player);
 
-                if (hero.hasEffect("Might")) {
-                    double damageBonus = ((MightEffect) hero.getEffect("Might")).getDamageBonus();
-                    event.setDamage((int) (event.getDamage() * damageBonus));
-                }
-            } else if (event.getDamager() instanceof Projectile) {
-                if (((Projectile) event.getDamager()).getShooter() instanceof Player) {
-                    Player player = (Player) ((Projectile) event.getDamager()).getShooter();
-                    Hero hero = plugin.getHeroManager().getHero(player);
-
-                    if (hero.hasEffect("Might")) {
-                        double damageBonus = ((MightEffect) hero.getEffect("Might")).getDamageBonus();
-                        event.setDamage((int) (event.getDamage() * damageBonus));
-                    }
-                }
+            if (event.getHero().hasEffect("Wisdom")) {
+                event.setAmount((int) (event.getAmount() *getSetting(event.getHero().getHeroClass(), "regen-multiplier", 1.2))); 
             }
         }
     }
