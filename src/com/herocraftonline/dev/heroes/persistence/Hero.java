@@ -658,6 +658,15 @@ public class Hero {
         }
         settings.put(node, val.toString());
     }
+    
+    /**
+     * Removes the hero specific settings for a skill
+     * 
+     * @param skillName
+     */
+    public void removeSkillSetting(String skillName) {
+        skillSettings.remove(skillName.toLowerCase());
+    }
 
     /**
      * Sets the heros verbosity

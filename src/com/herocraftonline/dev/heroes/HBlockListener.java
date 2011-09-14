@@ -21,7 +21,7 @@ import com.herocraftonline.dev.heroes.util.Properties;
 public class HBlockListener extends BlockListener {
 
     private final Heroes plugin;
-    private Map<Location, Long> placedBlocks;
+    public static Map<Location, Long> placedBlocks;
 
     public HBlockListener(Heroes plugin) {
         this.plugin = plugin;

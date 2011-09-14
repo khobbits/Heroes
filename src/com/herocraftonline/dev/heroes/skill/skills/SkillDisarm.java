@@ -33,14 +33,11 @@ public class SkillDisarm extends TargettedSkill {
     private PlayerListener pListener;
 
     public SkillDisarm(Heroes plugin) {
-
         super(plugin, "Disarm");
         setDescription("Disarm your target");
         setUsage("/skill disarm <target>");
         setArgumentRange(0, 1);
-
         setTypes(SkillType.PHYSICAL, SkillType.DEBUFF);
-
         setIdentifiers(new String[] { "skill disarm" });
 
         pListener = new SkillPlayerListener();
