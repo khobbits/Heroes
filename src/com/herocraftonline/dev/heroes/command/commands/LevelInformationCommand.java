@@ -32,7 +32,7 @@ public class LevelInformationCommand extends BasicCommand {
         Properties prop = this.plugin.getConfigManager().getProperties();
         int exp = (int) hero.getExperience();
         int level = prop.getLevel(exp);
-        int current = (int) prop.getExperience(level);
+        int current = prop.getExperience(level);
 
         sender.sendMessage(ChatColor.RED + "-----[ " + ChatColor.WHITE + "Your Level Information" + ChatColor.RED + " ]-----");
         sender.sendMessage(ChatColor.GREEN + "  Class: " + ChatColor.WHITE + hero.getHeroClass().getName());

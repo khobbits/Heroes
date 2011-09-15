@@ -77,6 +77,17 @@ public class Hero {
     }
 
     /**
+     * Syncs the Hero's current Experience with the minecraft experience
+     */
+    public void syncExperience() {
+        Properties props = plugin.getConfigManager().getProperties();
+        double maxXP = props.getExperience(getLevel() + 1) - props.getExperience(getLevel());
+        double currentXP = getExperience() - props.getExperience(getLevel());
+        int syncedXP = (int) (currentXP / maxXP * (getLevel() + 1) * 10D);
+        player.setExperience(syncedXP);
+    }
+    
+    /**
      * Adds the Effect onto the hero, and calls it's apply method initiating it's first tic.
      * 
      * @param effect
@@ -227,8 +238,10 @@ public class Hero {
         newLevel = prop.getLevel(exp);
         setExperience(exp);
         
+        
         // notify the user
         if (expChange != 0) {
+            syncExperience();
             if (verbose && expChange > 0) {
                 Messaging.send(player, "$1: Gained $2 Exp", heroClass.getName(), decFormat.format(expChange));
             } else if ( verbose && expChange < 0) {

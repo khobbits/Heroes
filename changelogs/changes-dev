@@ -7,6 +7,8 @@ Bug Fixes:
 	
 General/API:
 
+	Now uses CB for 1.8
+	Uses ExperienceBar built into MC
 	Added /hero admin level - command to adjust a player's level directly.
 	Fixed SpoutUI implementation
 	Added CombustEffect - it's used for tracking who last applied FireTicks to a player

@@ -93,7 +93,13 @@ public class Properties {
         levels[maxLevel] = (int) (A * Math.pow(maxLevel, power + 1));
     }
 
-    public double getExperience(int level) {
+    public int getExperience(int level) {
+        if (levels.length > level) {
+            return levels[levels.length - 1];
+        } else if (level < 1) {
+            return levels[0];
+        }
+        
         return levels[level - 1];
     }
 

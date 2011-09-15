@@ -44,6 +44,7 @@ public class HPlayerListener extends PlayerListener {
         Player player = event.getPlayer();
         Hero hero = plugin.getHeroManager().getHero(player);
         hero.setHealth(hero.getMaxHealth());
+        hero.syncExperience();
     }
 
     @Override
@@ -66,11 +67,12 @@ public class HPlayerListener extends PlayerListener {
     @Override
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        plugin.getHeroManager().loadHero(player);
+        Hero hero = plugin.getHeroManager().loadHero(player);
+        hero.syncExperience();
+        hero.syncHealth();
         plugin.switchToHNSH(player);
         this.plugin.getInventoryChecker().checkInventory(player);
         if (plugin.getConfigManager().getProperties().prefixClassName) {
-            Hero hero = plugin.getHeroManager().getHero(player);
             player.setDisplayName("[" + hero.getHeroClass().getName() + "]" + player.getName());
         }
     }
