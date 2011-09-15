@@ -94,7 +94,7 @@ public class Properties {
     }
 
     public int getExperience(int level) {
-        if (levels.length > level) {
+        if (level >= levels.length) {
             return levels[levels.length - 1];
         } else if (level < 1) {
             return levels[0];
