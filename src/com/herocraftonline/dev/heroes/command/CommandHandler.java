@@ -65,10 +65,11 @@ public class CommandHandler {
                 identifier += " " + args[i];
             }
 
-            Command cmd = identifiers.get(identifier);
-            if (cmd == null)
+            Command cmd = getCmdFromIdent(identifier, sender);
+            if (cmd == null) {
                 continue;
-
+            }
+            
             String[] realArgs = Arrays.copyOfRange(args, argsIncluded, args.length);
 
             if (!cmd.isInProgress(sender)) {
@@ -121,7 +122,14 @@ public class CommandHandler {
         return false;
     }
 
-    public Command getCmdFromIdent(String ident) {
+    public Command getCmdFromIdent(String ident, CommandSender executor) {
+        if ( identifiers.get(ident.toLowerCase()) == null) {
+            for (Command cmd : commands.values()) {
+                if (cmd.isIdentifier(executor, ident))
+                    return cmd;
+            }
+        }
         return identifiers.get(ident.toLowerCase());
     }
+    
 }
