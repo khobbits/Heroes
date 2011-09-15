@@ -82,10 +82,11 @@ public class Hero {
     public void syncExperience() {
         Properties props = plugin.getConfigManager().getProperties();
         int level = getLevel();
+        int currentLevelXP = props.getExperience(level);
         
-        double maxXP = props.getExperience(level + 1) - props.getExperience(level);
-        double currentXP = getExperience() - props.getExperience(getLevel());
-        int syncedXP = getMCLevelExp(level) + (int) (currentXP / maxXP * (level + 1) * 10D);
+        double maxLevelXP = props.getExperience(level + 1) - currentLevelXP;
+        double currentXP = getExperience() - currentLevelXP;
+        int syncedXP = getMCLevelExp(level) + (int) (currentXP / maxLevelXP * (level + 1) * 10D);
         
         //Reset values before adding
         player.setExperience(0);
