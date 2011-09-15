@@ -90,6 +90,7 @@ public class Hero {
         
         //Reset values before adding
         player.setExperience(0);
+        player.setTotalExperience(0);
         player.setLevel(0);
         //Sync up the XP
         player.setExperience(syncedXP);
