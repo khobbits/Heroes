@@ -3,7 +3,7 @@ Version dev
 Bug Fixes:
 
 	/bind now properly allows usage of shortened skill name identifiers (ablade, parrow, mshield, etc)
-	
+	Fixed issue with bukkit permissions not being set if Permissions3 wasn't detected
 	
 General/API:
 
