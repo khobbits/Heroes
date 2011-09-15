@@ -88,15 +88,18 @@ public abstract class ActiveSkill extends Skill {
 
         Map<String, Long> cooldowns = hero.getCooldowns();
         long time = System.currentTimeMillis();
+        Long global = cooldowns.get("Global");
+        if (global != null && time < global) {
+            Messaging.send(hero.getPlayer(), "Sorry, you must wait $1 seconds longer before using another skill.", (global - time) / 1000);
+            return false;
+        }
         int cooldown = getSetting(heroClass, Setting.COOLDOWN.node(), 0);
         if (cooldown > 0) {
             Long expiry = cooldowns.get(name);
-            if (expiry != null) {
-                if (time < expiry) {
-                    long remaining = expiry - time;
-                    Messaging.send(hero.getPlayer(), "Sorry, $1 still has $2 seconds left on cooldown!", name, remaining / 1000);
-                    return false;
-                }
+            if (expiry != null && time < expiry) {
+                long remaining = expiry - time;
+                Messaging.send(hero.getPlayer(), "Sorry, $1 still has $2 seconds left on cooldown!", name, remaining / 1000);
+                return false;
             }
         }
         int manaCost = getSetting(heroClass, Setting.MANA.node(), 0);
@@ -110,7 +113,7 @@ public abstract class ActiveSkill extends Skill {
         }
 
         int healthCost = getSetting(heroClass, Setting.HEALTH_COST.node(), 0);
-        
+
         SkillUseEvent skillEvent = new SkillUseEvent(this, player, hero, manaCost, healthCost, itemStack, args);
         plugin.getServer().getPluginManager().callEvent(skillEvent);
         if (skillEvent.isCancelled()) {
@@ -123,14 +126,14 @@ public abstract class ActiveSkill extends Skill {
             Messaging.send(player, "Not enough mana!");
             return false;
         }
-        
+
         //Update healthCost with results of SkillUseEvent
         healthCost = skillEvent.getHealthCost();
         if (healthCost > 0 && hero.getHealth() <= healthCost) {
             Messaging.send(player, "Not enough health!");
             return false;
         }
-        
+
         itemStack = skillEvent.getReagentCost();
         if (itemStack != null) {
             if (itemStack.getAmount() != 0 && !hasReagentCost(player, itemStack)) {
@@ -146,6 +149,10 @@ public abstract class ActiveSkill extends Skill {
                 cooldowns.put(name, time + cooldown);
             }
             
+            if (plugin.getConfigManager().getProperties().globalCooldown > 0) {
+                cooldowns.put("Global", plugin.getConfigManager().getProperties().globalCooldown + time);
+            }
+
             //Award XP for skill usage
             if (this.awardExpOnCast) {
                 this.awardExp(hero);
@@ -156,13 +163,13 @@ public abstract class ActiveSkill extends Skill {
             if (hero.isVerbose() && manaCost > 0) {
                 Messaging.send(hero.getPlayer(), ChatColor.BLUE + "MANA " + Messaging.createManaBar(hero.getMana()));
             }
-            
+
             // Deduct health
             if (healthCost > 0) {
                 plugin.getDamageManager().addSpellTarget(player, hero, this);
                 player.damage(healthCost, player);
             }
-            
+
             //Only charge the item cost if it's non-null
             if (itemStack != null) {
                 player.getInventory().removeItem(itemStack);

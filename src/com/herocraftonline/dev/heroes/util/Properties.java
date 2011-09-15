@@ -44,6 +44,7 @@ public class Properties {
     public String defClass;
     public int defLevel;
     public boolean resetOnDeath;
+    public int globalCooldown = 0;
 
     // Properties//
     public boolean iConomy;
