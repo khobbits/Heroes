@@ -86,10 +86,6 @@ public class OutsourcedSkill extends Skill {
      * @param heroClass the {@link HeroClass} to check for this skill
      */
     public void tryLearningSkill(Hero hero, HeroClass heroClass) {
-        if (Heroes.Permissions == null) {
-            return;
-        }
-
         Player player = hero.getPlayer();
         String world = player.getWorld().getName();
         String playerName = player.getName();
