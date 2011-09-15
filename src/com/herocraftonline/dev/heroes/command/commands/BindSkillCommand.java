@@ -38,7 +38,7 @@ public class BindSkillCommand extends BasicCommand {
             //Command detection - first check if it's a command, then check if it's an identifier
             Command cmd = plugin.getCommandHandler().getCommand(args[0]);
             if (cmd == null) {
-                cmd = plugin.getCommandHandler().getCmdFromIdent("skill " + args[0]);
+                cmd = plugin.getCommandHandler().getCmdFromIdent("skill " + args[0], sender);
             }
             
             if (cmd != null && (heroClass.hasSkill(cmd.getName()) || hero.hasSkill(cmd.getName()))) {
