@@ -31,6 +31,7 @@ default:
     prefixClassName: false
     resetOnDeath: false
     globalCooldown: 1 #Seconds a hero must wait before using a second skill
+    pvpLevelRange: 20 #Level that players must be within to PvP with each other
 mappartyui:
     id: 1 #Map ID number, 0 or 1 is desired
     enabled: true

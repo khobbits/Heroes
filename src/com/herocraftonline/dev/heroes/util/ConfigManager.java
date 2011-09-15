@@ -151,6 +151,7 @@ public class ConfigManager {
         properties.prefixClassName = config.getBoolean(root + "prefixClassName", false);
         properties.resetOnDeath = config.getBoolean(root + "resetOnDeath", false);
         properties.globalCooldown = config.getInt(root + "globalCooldown", 1);
+        properties.pvpLevelRange = config.getInt(root + "pvpLevelRange", 50);
     }
 
     private void loadExperience(Configuration config) {

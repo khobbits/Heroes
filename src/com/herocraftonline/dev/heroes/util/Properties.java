@@ -45,6 +45,7 @@ public class Properties {
     public int defLevel;
     public boolean resetOnDeath;
     public int globalCooldown = 0;
+    public int pvpLevelRange = 50;
 
     // Properties//
     public boolean iConomy;
