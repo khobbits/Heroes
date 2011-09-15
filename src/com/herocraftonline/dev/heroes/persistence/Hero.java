@@ -437,7 +437,7 @@ public class Hero {
     
     public boolean hasEffectType(EffectType type) {
         for (Effect effect : effects) {
-            if (effect.getTypes().contains(type)) {
+            if (effect.isType(type)) {
                 return true;
             }
         }
