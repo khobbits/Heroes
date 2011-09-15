@@ -113,9 +113,8 @@ public abstract class PassiveSkill extends Skill {
      * @param hero the Hero to apply the effect to
      */
     protected void apply(Hero hero) {
-        Effect effect = new Effect(this, getName());
+        Effect effect = new Effect(this, getName(), EffectType.BENEFICIAL);
         effect.setPersistent(true);
-        effect.getTypes().add(EffectType.BENEFICIAL);
         hero.addEffect(effect);
         Player player = hero.getPlayer();
         broadcast(player.getLocation(), applyText, player.getDisplayName(), getName());

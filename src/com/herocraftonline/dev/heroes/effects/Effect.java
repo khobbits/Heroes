@@ -14,10 +14,10 @@ public class Effect {
 
     protected final String name;
     protected final Skill skill;
-    protected Heroes plugin;
+    protected final Heroes plugin;
+    protected final Set<EffectType> types = EnumSet.noneOf(EffectType.class);
     protected long applyTime;
     private boolean persistent;
-    protected final Set<EffectType> types = EnumSet.noneOf(EffectType.class);
 
     public Effect(Skill skill, String name) {
         this.name = name;
@@ -28,6 +28,13 @@ public class Effect {
             this.plugin = null;
         }
         this.persistent = false;
+    }
+
+    public Effect(Skill skill, String name, EffectType... types) {
+        this(skill, name);
+        for (EffectType type : types) {
+            this.types.add(type);
+        }
     }
 
     public void apply(Hero hero) {
@@ -78,13 +85,6 @@ public class Effect {
      */
     public Skill getSkill() {
         return skill;
-    }
-
-    /**
-     * @return the types
-     */
-    public Set<EffectType> getTypes() {
-        return types;
     }
 
     /**
