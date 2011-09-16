@@ -16,7 +16,6 @@ import com.herocraftonline.dev.heroes.command.InteractiveCommandState;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Properties;
-import com.nijikokun.register.payment.Method.MethodAccount;
 
 public class ChooseCommand extends BasicInteractiveCommand {
 
@@ -83,7 +82,7 @@ public class ChooseCommand extends BasicInteractiveCommand {
                 costApplied = false;
             } else if (hero.isMaster(newClass) && !prop.swapMasteryCost) {
                 costApplied = false;
-            } else if (!prop.iConomy || plugin.Method == null || cost <= 0) {
+            } else if (!prop.iConomy || plugin.econ == null || cost <= 0) {
                 costApplied = false;
             }
 
@@ -95,7 +94,7 @@ public class ChooseCommand extends BasicInteractiveCommand {
             skills = skills.substring(1, skills.length() - 1);
             Messaging.send(executor, "$1: $2", "Skills", skills);
             if (costApplied) {
-                Messaging.send(executor, "$1: $2", "Fee", plugin.Method.format(cost));
+                Messaging.send(executor, "$1: $2", "Fee", plugin.econ.format(cost));
             }
             Messaging.send(executor, "Please §8/confirm §7 or §8/cancel §7this selection.");
 
@@ -138,12 +137,11 @@ public class ChooseCommand extends BasicInteractiveCommand {
             int cost = newClass.getCost();
 
             if (pendingClassCostStatus.get(player)) {
-                MethodAccount account = plugin.Method.getAccount(player.getName());
-                if (account.hasEnough(cost)) {
-                    account.subtract(cost);
-                    Messaging.send(hero.getPlayer(), "The Gods are pleased with your offering of $1.", plugin.Method.format(cost));
+                if (plugin.econ.has(player.getName(), cost)) {
+                    plugin.econ.withdraw(player.getName(), cost);
+                    Messaging.send(hero.getPlayer(), "The Gods are pleased with your offering of $1.", plugin.econ.format(cost));
                 } else {
-                    Messaging.send(hero.getPlayer(), "You're unable to meet the offering of $1 to become $2.", plugin.Method.format(cost), newClass.getName());
+                    Messaging.send(hero.getPlayer(), "You're unable to meet the offering of $1 to become $2.", plugin.econ.format(cost), newClass.getName());
                     return false;
                 }
             }

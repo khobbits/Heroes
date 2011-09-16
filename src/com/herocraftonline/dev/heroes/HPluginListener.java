@@ -6,26 +6,24 @@ import org.bukkit.event.server.PluginEnableEvent;
 import org.bukkit.event.server.ServerListener;
 import org.bukkit.plugin.Plugin;
 
-import com.nijikokun.register.payment.Methods;
-
 /**
  * Checks for plugins whenever one is enabled
  */
 public class HPluginListener extends ServerListener {
 
     private Heroes plugin;
-    private Methods Methods = null;
 
     public HPluginListener(Heroes instance) {
         this.plugin = instance;
-        this.Methods = new Methods();
     }
 
     @Override
     public void onPluginDisable(PluginDisableEvent event) {
         Plugin plugin = event.getPlugin();
+        String name = plugin.getDescription().getName();
+        
         // Check if the name is BukkitContrib.
-        if (plugin.getDescription().getName().equals("BukkitContrib")) {
+        if (name.equals("BukkitContrib")) {
             // If BukkitContrib just Disabled then we tell Heroes to stop using BukkitContrib
             Heroes.useSpout = false;
             // Then we swap all the Players NSH to our Custom NSH.
@@ -34,23 +32,18 @@ public class HPluginListener extends ServerListener {
                 this.plugin.switchToHNSH(player);
             }
         }
-
-        // Check to see if the plugin thats being disabled is the one we are using
-        if (this.Methods != null && this.Methods.hasMethod()) {
-            Boolean check = this.Methods.checkDisabled(event.getPlugin());
-
-            if (check) {
-                this.plugin.Method = null;
-            }
+        
+        if (name.equals("iConomy") || name.equals("BOSEconomy") || name.equals("Essentials")) {
+            this.plugin.econ = null;        
         }
     }
 
     @Override
     public void onPluginEnable(PluginEnableEvent event) {
         Plugin plugin = event.getPlugin();
-
+        String name = plugin.getDescription().getName();
         // Check if the name is Permissions.
-        if (plugin.getDescription().getName().equals("Permissions")) {
+        if (name.equals("Permissions")) {
             // Check if we haven't already setup Permissions.
             if (Heroes.Permissions == null) {
                 // Run the Permissions Setup.
@@ -59,17 +52,14 @@ public class HPluginListener extends ServerListener {
         }
 
         // Check if the name is BukkitContrib.
-        if (plugin.getDescription().getName().equals("BukkitContrib")) {
+        if (name.equals("BukkitContrib")) {
             this.plugin.setupSpout();
         }
-
-        // Check to see if we need a payment method
-        if (!this.Methods.hasMethod()) {
-            if (this.Methods.setMethod(event.getPlugin())) {
-                // You might want to make this a public variable inside your MAIN class public Method Method = null;
-                // then reference it through this.plugin.Method so that way you can use it in the rest of your plugin ;)
-                this.plugin.Method = this.Methods.getMethod();
-            }
+        
+        //Check for Econ
+        if (name.equals("iConomy") || name.equals("BOSEconomy") || name.equals("Essentials")) {
+            if (this.plugin.econ == null)
+                this.plugin.setupEconomy();
         }
     }
 }

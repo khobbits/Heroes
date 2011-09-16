@@ -6,10 +6,9 @@
 	<classpathentry kind="lib" path="libs/Essentials.jar"/>
 	<classpathentry kind="lib" path="libs/iCo4.jar"/>
 	<classpathentry kind="lib" path="libs/iCo5.jar"/>
-	<classpathentry kind="lib" path="libs/iConomy.jar"/>
 	<classpathentry kind="lib" path="libs/Permissions.jar"/>
 	<classpathentry kind="lib" path="libs/Spout.jar"/>
-	<classpathentry kind="lib" path="libs/PermissionsBukkit-1.1.jar"/>
 	<classpathentry kind="lib" path="libs/craftbukkit-0.0.1-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="libs/iCo6.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

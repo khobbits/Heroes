@@ -69,9 +69,13 @@ import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.SkillLoader;
 import com.herocraftonline.dev.heroes.util.ConfigManager;
 import com.herocraftonline.dev.heroes.util.DebugLog;
+import com.herocraftonline.economy.economies.BOSE;
+import com.herocraftonline.economy.economies.EssE;
+import com.herocraftonline.economy.economies.iCo4;
+import com.herocraftonline.economy.economies.iCo5;
+import com.herocraftonline.economy.economies.iCo6;
 import com.nijiko.permissions.PermissionHandler;
 import com.nijikokun.bukkit.Permissions.Permissions;
-import com.nijikokun.register.payment.Method;
 
 import javax.imageio.ImageIO;
 
@@ -108,7 +112,7 @@ public class Heroes extends JavaPlugin {
     private DamageManager damageManager;
     // Variable for the Permissions plugin handler.
     public static PermissionHandler Permissions;
-    public Method Method = null;
+    public com.herocraftonline.economy.Economy econ;
 
     // Variable for Spout.
     public static boolean useSpout = false;
@@ -218,7 +222,7 @@ public class Heroes extends JavaPlugin {
             heroManager.getHero(player).clearSummons();
             switchToBNSH(player);
         }
-        this.Method = null; // When it Enables again it performs the checks anyways.
+        this.econ = null; // When it Enables again it performs the checks anyways.
         Heroes.Permissions = null; // When it Enables again it performs the checks anyways.
         log.info(getDescription().getName() + " version " + getDescription().getVersion() + " is disabled!");
         debugLog.close();
@@ -258,6 +262,8 @@ public class Heroes extends JavaPlugin {
         registerCommands();
         // Perform the Permissions check.
         setupPermissions();
+        // Perform Economy Tests
+        setupEconomy();
         log(Level.INFO, "version " + getDescription().getVersion() + " is enabled!");
 
         final Player[] players = getServer().getOnlinePlayers();
@@ -302,7 +308,7 @@ public class Heroes extends JavaPlugin {
     }
 
     /**
-     * Check to see if BukkitContrib is enabled on the server, if so inform Heroes to use BukkitContrib instead.
+     * Check to see if Spout is enabled on the server, if so inform Heroes to use BukkitContrib instead.
      */
     public void setupSpout() {
         Plugin test = this.getServer().getPluginManager().getPlugin("Spout");
@@ -316,6 +322,33 @@ public class Heroes extends JavaPlugin {
         }
     }
 
+    public void setupEconomy() {
+        PluginManager pm = this.getServer().getPluginManager();
+        Plugin test = pm.getPlugin("iConomy");
+        if (test != null) {
+            if (test instanceof com.iCo6.iConomy) {
+                this.econ = new iCo6();
+            } else if (test instanceof com.iConomy.iConomy) {
+                this.econ = new iCo5();
+            } else if (test instanceof com.nijiko.coelho.iConomy.iConomy) {
+                this.econ = new iCo4();
+            }
+        } else {
+            test = pm.getPlugin("Essentials");
+            if (test != null) {
+                this.econ = new EssE();
+            } else {
+                test = pm.getPlugin("BOSEconomy");
+                if (test != null) {
+                    this.econ = new BOSE();
+                }
+            }
+        }
+        
+        if (econ != null) {
+            econ.setPlugin(test);
+        }
+    }
     /**
      * Perform a Permissions check and setup Permissions if found.
      */
