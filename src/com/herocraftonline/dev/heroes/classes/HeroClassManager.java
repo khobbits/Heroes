@@ -216,7 +216,7 @@ public class HeroClassManager {
                         continue;
                     }
                     try {
-                        Skill skill = (Skill) plugin.getCommandHandler().getCommand(skillName);
+                        Skill skill = plugin.getSkillManager().getSkill(skillName);
                         if (skill == null) {
                             Heroes.log(Level.WARNING, "Skill " + skillName + " defined for " + className + " not found.");
                             continue;

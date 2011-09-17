@@ -3,7 +3,12 @@ package com.herocraftonline.dev.heroes;
 import java.util.List;
 
 import com.herocraftonline.dev.heroes.party.HeroParty;
+
+import net.minecraft.server.EntityPlayer;
+
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Result;
 import org.bukkit.event.block.Action;
@@ -42,9 +47,19 @@ public class HPlayerListener extends PlayerListener {
     @Override
     public void onPlayerRespawn(PlayerRespawnEvent event) {
         Player player = event.getPlayer();
-        Hero hero = plugin.getHeroManager().getHero(player);
+        final Hero hero = plugin.getHeroManager().getHero(player);
         hero.setHealth(hero.getMaxHealth());
-        hero.syncExperience();
+        CraftPlayer craftPlayer = (CraftPlayer) player;
+        EntityPlayer entityPlayer = craftPlayer.getHandle();
+        entityPlayer.exp = 0;
+        entityPlayer.expTotal = 0;
+        entityPlayer.expLevel = 0;
+        entityPlayer.d(1);
+        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+            public void run() {
+                hero.syncExperience();
+            }
+        }, 1L);
     }
 
     @Override

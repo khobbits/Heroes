@@ -11,9 +11,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import net.minecraft.server.EntityPlayer;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -93,14 +96,14 @@ public class Hero {
 
         double maxLevelXP = props.getExperience(level + 1) - currentLevelXP;
         double currentXP = getExperience() - currentLevelXP;
-        int syncedXP = getMCLevelExp(level) + (int) (currentXP / maxLevelXP * (level + 1) * 10D);
+        int syncedXP = (int) (currentXP / maxLevelXP * 100);
 
-        // Reset values before adding
-        player.setExperience(0);
-        player.setTotalExperience(0);
-        player.setLevel(0);
-        // Sync up the XP
-        player.setExperience(syncedXP);
+        CraftPlayer craftPlayer = (CraftPlayer) player;
+        EntityPlayer entityPlayer = craftPlayer.getHandle();
+        entityPlayer.exp = 0;
+        entityPlayer.expTotal = 0;
+        entityPlayer.expLevel = 0;
+        entityPlayer.d(450 + syncedXP);
     }
 
     /**
