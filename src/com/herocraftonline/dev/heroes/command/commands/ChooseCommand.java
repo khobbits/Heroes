@@ -149,7 +149,9 @@ public class ChooseCommand extends BasicInteractiveCommand {
             // Cleanup stuff
             plugin.getHeroManager().performSkillChecks(hero);
             hero.getBinds().clear();
-
+            if (plugin.getConfigManager().getProperties().prefixClassName) {
+                player.setDisplayName("[" + hero.getHeroClass().getName() + "]" + player.getName());
+            }
             Messaging.send(player, "Welcome to the path of the $1!", newClass.getName());
             
             plugin.getHeroManager().saveHero(player);
