@@ -19,6 +19,7 @@ General/API:
 	All effects now have applyTime
 	setIdentifiers for skills now uses VarArgs, please adjust accordingly (it's unecessary but cleans up the look)
 	FormEffect - only 1 can be active a time.
+	Added SkillManager - skills are now loaded into the SkillManager rather than the CommandHandler
 
 Skills:
 

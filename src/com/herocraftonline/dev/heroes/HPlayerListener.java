@@ -70,7 +70,6 @@ public class HPlayerListener extends PlayerListener {
         Hero hero = plugin.getHeroManager().loadHero(player);
         hero.syncExperience();
         hero.syncHealth();
-        plugin.switchToHNSH(player);
         this.plugin.getInventoryChecker().checkInventory(player);
         if (plugin.getConfigManager().getProperties().prefixClassName) {
             player.setDisplayName("[" + hero.getHeroClass().getName() + "]" + player.getName());

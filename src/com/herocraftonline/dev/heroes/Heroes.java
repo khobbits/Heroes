@@ -3,11 +3,6 @@ package com.herocraftonline.dev.heroes;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -65,8 +60,7 @@ import com.herocraftonline.dev.heroes.party.PartyManager;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.persistence.HeroManager;
 import com.herocraftonline.dev.heroes.skill.OutsourcedSkill;
-import com.herocraftonline.dev.heroes.skill.Skill;
-import com.herocraftonline.dev.heroes.skill.SkillLoader;
+import com.herocraftonline.dev.heroes.skill.SkillManager;
 import com.herocraftonline.dev.heroes.util.ConfigManager;
 import com.herocraftonline.dev.heroes.util.DebugLog;
 import com.herocraftonline.economy.economies.BOSE;
@@ -104,12 +98,13 @@ public class Heroes extends JavaPlugin {
     
     // Various data managers
     private ConfigManager configManager;
-    private CommandHandler commandHandler = new CommandHandler();
+    private CommandHandler commandHandler = new CommandHandler(this);
     private HeroClassManager heroClassManager;
     
     private HeroManager heroManager;
     private PartyManager partyManager;
     private DamageManager damageManager;
+    private SkillManager skillManager;
     // Variable for the Permissions plugin handler.
     public static PermissionHandler Permissions;
     public com.herocraftonline.economy.Economy econ;
@@ -120,8 +115,6 @@ public class Heroes extends JavaPlugin {
     // Inventory Checker Class -- This class has the methods to check a players inventory and
     // restrictions.
     private InventoryChecker inventoryChecker;
-
-    private Map<String, Skill> skillMap = new HashMap<String, Skill>();
     
     /**
      * Print messages to the Debug Log, if the servers in Debug Mode then we also wan't to print the messages to the
@@ -141,6 +134,10 @@ public class Heroes extends JavaPlugin {
         return heroClassManager;
     }
 
+    public SkillManager getSkillManager() {
+        return skillManager;
+    }
+    
     public CommandHandler getCommandHandler() {
         return commandHandler;
     }
@@ -163,32 +160,6 @@ public class Heroes extends JavaPlugin {
 
     public PartyManager getPartyManager() {
         return partyManager;
-    }
-
-    /**
-     * Load all the external classes.
-     */
-    public void loadSkills() {
-        File dir = new File(getDataFolder(), "skills");
-        ArrayList<String> skNo = new ArrayList<String>();
-        dir.mkdir();
-        boolean added = false;
-        for (String f : dir.list()) {
-            if (f.contains(".jar")) {
-                Skill skill = SkillLoader.loadSkill(new File(dir, f), this);
-                if (skill != null) {
-                    commandHandler.addCommand(skill);
-                    if (!added) {
-                        log(Level.INFO, "Collecting and loading skills");
-                        added = true;
-                    }
-                    skNo.add(skill.getName());
-                    skillMap.put(skill.getName(), skill);
-                    debugLog.log(Level.INFO, "Skill " + skill.getName() + " Loaded");
-                }
-            }
-        }
-        log(Level.INFO, "Skills loaded: " + skNo.toString().replace("[", "").replace("]", ""));
     }
 
     /**
@@ -220,7 +191,6 @@ public class Heroes extends JavaPlugin {
         for (Player player : players) {
             heroManager.saveHero(player);
             heroManager.getHero(player).clearSummons();
-            switchToBNSH(player);
         }
         this.econ = null; // When it Enables again it performs the checks anyways.
         Heroes.Permissions = null; // When it Enables again it performs the checks anyways.
@@ -245,11 +215,12 @@ public class Heroes extends JavaPlugin {
         heroManager = new HeroManager(this);
         damageManager = new DamageManager(this);
         inventoryChecker = new InventoryChecker(this);
+        skillManager = new SkillManager(this);
         // Check for BukkitContrib
         setupSpout();
 
-        // Skills Loader
-        loadSkills();
+        // Load the skills
+        skillManager.loadSkills();
 
         //Load in the rest of the values into their managers
         configManager.loadManagers();
@@ -271,7 +242,7 @@ public class Heroes extends JavaPlugin {
             if (heroManager.containsPlayer(player)) {
                 continue;
             }
-            switchToHNSH(player);
+
             heroManager.loadHero(player);
             getInventoryChecker().checkInventory(player);
         }
@@ -356,13 +327,13 @@ public class Heroes extends JavaPlugin {
         Plugin test = this.getServer().getPluginManager().getPlugin("Permissions");
         if (Heroes.Permissions == null) {
             if (test != null) {
-                if (test.getDescription().getVersion().startsWith("2"))
-                    return;
-                if (this.getServer().getPluginManager().getPlugin("GroupManager") != null || 
+                //Ignore fake permissions or Bukkit Permissions
+                if (test.getDescription().getVersion().startsWith("2") ||
+                        this.getServer().getPluginManager().getPlugin("GroupManager") != null || 
                         this.getServer().getPluginManager().getPlugin("PermissionsBukkit") != null ||
-                        this.getServer().getPluginManager().getPlugin("bPermissions") != null) {
+                        this.getServer().getPluginManager().getPlugin("bPermissions") != null)
                     return;
-                }
+
                 Heroes.Permissions = ((Permissions) test).getHandler();
                 log(Level.INFO, "Permissions found.");
                 final Player[] players = getServer().getOnlinePlayers();
@@ -384,32 +355,6 @@ public class Heroes extends JavaPlugin {
                 }
             }
         }
-    }
-
-    public void switchToBNSH(Player player) {
-        if (!Heroes.useSpout) {
-            // Swap NSH to Bukkit NSH.
-        }
-        // CraftPlayer craftPlayer = (CraftPlayer) player;
-        // CraftServer server = (CraftServer) Bukkit.getServer();
-        //
-        // Location loc = player.getLocation();
-        // NetServerHandler handler = new NetServerHandler(server.getHandle().server,
-        // craftPlayer.getHandle().netServerHandler.networkManager, craftPlayer.getHandle());
-        // handler.a(loc.getX(), loc.getY(), loc.getZ(), loc.getYaw(), loc.getPitch());
-    }
-
-    public void switchToHNSH(Player player) {
-        if (!Heroes.useSpout) {
-            // Swap NSH to Heroes NSH.
-        }
-        // CraftPlayer craftPlayer = (CraftPlayer) player;
-        // CraftServer server = (CraftServer) Bukkit.getServer();
-        //
-        // Location loc = player.getLocation();
-        // HNetServerHandler handler = new HNetServerHandler(server.getHandle().server,
-        // craftPlayer.getHandle().netServerHandler.networkManager, craftPlayer.getHandle());
-        // handler.a(loc.getX(), loc.getY(), loc.getZ(), loc.getYaw(), loc.getPitch());
     }
 
     /**
@@ -490,20 +435,5 @@ public class Heroes extends JavaPlugin {
         pluginManager.registerEvent(Type.ENTITY_REGAIN_HEALTH, partyListener, Priority.Monitor, this);
 
         damageManager.registerEvents();
-    }
-    
-    /**
-     * @return the skillList
-     */
-    public Collection<Skill> getSkillList() {
-        return Collections.unmodifiableCollection(skillMap.values());
-    }
-    
-    /**
-     * 
-     * @return the skillMap
-     */
-    public Map<String, Skill> getSkillMap() {
-        return Collections.unmodifiableMap(skillMap);
     }
 }

@@ -19,14 +19,17 @@ import org.bukkit.entity.Player;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.command.Command;
+import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.util.Messaging;
 
 public class CommandHandler {
 
     protected LinkedHashMap<String, Command> commands;
     protected HashMap<String, Command> identifiers;
+    private Heroes plugin;
 
-    public CommandHandler() {
+    public CommandHandler(Heroes plugin) {
+        this.plugin = plugin;
         commands = new LinkedHashMap<String, Command>();
         identifiers = new HashMap<String, Command>();
     }
@@ -123,6 +126,10 @@ public class CommandHandler {
     }
 
     public Command getCmdFromIdent(String ident, CommandSender executor) {
+        Skill skill = plugin.getSkillManager().getSkillFromIdent(ident, executor);
+        if (skill != null)
+            return skill;
+        
         if ( identifiers.get(ident.toLowerCase()) == null) {
             for (Command cmd : commands.values()) {
                 if (cmd.isIdentifier(executor, ident))
@@ -131,5 +138,4 @@ public class CommandHandler {
         }
         return identifiers.get(ident.toLowerCase());
     }
-    
 }

@@ -1,6 +1,5 @@
 package com.herocraftonline.dev.heroes.command.commands;
 
-import java.util.Map;
 import java.util.Map.Entry;
 
 import org.bukkit.command.CommandSender;
@@ -37,9 +36,8 @@ public class CooldownCommand extends BasicCommand {
             return true;
         }
         long time = System.currentTimeMillis();
-        Map<String, Skill> skillMap = plugin.getSkillMap();
         for (Entry<String, Long> entry : hero.getCooldowns().entrySet()) {
-            Skill skill = skillMap.get(entry.getKey());
+            Skill skill = plugin.getSkillManager().getSkill(entry.getKey());
             long timeLeft = entry.getValue() - time;
             if (timeLeft <= 0)
                 continue;

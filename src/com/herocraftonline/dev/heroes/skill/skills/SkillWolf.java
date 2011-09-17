@@ -48,7 +48,7 @@ public class SkillWolf extends ActiveSkill {
         registerEvent(Type.ENTITY_DEATH, seListener, Priority.Monitor);
         registerEvent(Type.PLAYER_JOIN, spListener, Priority.High);
         registerEvent(Type.PLAYER_QUIT, spListener, Priority.Lowest);
-        registerEvent(Type.CUSTOM_EVENT, new SkillHeroListener(), Priority.Highest);
+        registerEvent(Type.CUSTOM_EVENT, new SkillHeroListener(this), Priority.Highest);
     }
 
     @Override
@@ -242,6 +242,12 @@ public class SkillWolf extends ActiveSkill {
 
     public class SkillHeroListener extends HeroesEventListener {
 
+        private Skill skill;
+
+        public SkillHeroListener(Skill skill) {
+            this.skill = skill;
+        }
+        
         @Override
         public void onWeaponDamage(WeaponDamageEvent event) {
             if (!(event.getDamager() instanceof Wolf) || event.isCancelled())
@@ -255,7 +261,6 @@ public class SkillWolf extends ActiveSkill {
             if (!hero.getSummons().contains(wolf))
                 return;
 
-            Skill skill = plugin.getSkillMap().get("Wolf");
             double damagePerLevel = skill.getSetting(hero.getHeroClass(), "damage-per-level", .1);
             int damage = skill.getSetting(hero.getHeroClass(), Setting.DAMAGE.node(), 3) + (int) (hero.getLevel() * damagePerLevel);
             event.setDamage(damage);

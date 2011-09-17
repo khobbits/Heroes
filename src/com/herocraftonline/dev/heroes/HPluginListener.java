@@ -1,6 +1,5 @@
 package com.herocraftonline.dev.heroes;
 
-import org.bukkit.entity.Player;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.event.server.PluginEnableEvent;
 import org.bukkit.event.server.ServerListener;
@@ -22,15 +21,10 @@ public class HPluginListener extends ServerListener {
         Plugin plugin = event.getPlugin();
         String name = plugin.getDescription().getName();
         
-        // Check if the name is BukkitContrib.
-        if (name.equals("BukkitContrib")) {
+        // Check if the name is Spout
+        if (name.equals("Spout")) {
             // If BukkitContrib just Disabled then we tell Heroes to stop using BukkitContrib
             Heroes.useSpout = false;
-            // Then we swap all the Players NSH to our Custom NSH.
-            final Player[] players = this.plugin.getServer().getOnlinePlayers();
-            for (Player player : players) {
-                this.plugin.switchToHNSH(player);
-            }
         }
         
         if (name.equals("iConomy") || name.equals("BOSEconomy") || name.equals("Essentials")) {
