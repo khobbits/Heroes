@@ -326,11 +326,11 @@ public class Heroes extends JavaPlugin {
         PluginManager pm = this.getServer().getPluginManager();
         Plugin test = pm.getPlugin("iConomy");
         if (test != null) {
-            if (test instanceof com.iCo6.iConomy) {
+            if (test.getClass().getName().equals("com.iCo6.iConomy")) {
                 this.econ = new iCo6();
-            } else if (test instanceof com.iConomy.iConomy) {
+            } else if (test.getClass().getName().equals("com.iConomy.iConomy")) {
                 this.econ = new iCo5();
-            } else if (test instanceof com.nijiko.coelho.iConomy.iConomy) {
+            } else if (test.getClass().getName().equals("com.nijiko.coelho.iConomy.iConomy")) {
                 this.econ = new iCo4();
             }
         } else {
