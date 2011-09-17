@@ -12,7 +12,6 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
@@ -23,9 +22,9 @@ import com.herocraftonline.dev.heroes.Heroes;
 
 public class SkillManager {
     
-    protected LinkedHashMap<String, Skill> skills;
-    protected HashMap<String, Skill> identifiers;
-    private Heroes plugin;
+    private LinkedHashMap<String, Skill> skills;
+    private HashMap<String, Skill> identifiers;
+    private final Heroes plugin;
     
     public SkillManager(Heroes plugin) {
         skills = new LinkedHashMap<String, Skill>();
@@ -73,14 +72,6 @@ public class SkillManager {
      */
     public Collection<Skill> getSkills() {
         return Collections.unmodifiableCollection(skills.values());
-    }
-    
-    /**
-     * 
-     * @return the skillMap
-     */
-    public Map<String, Skill> getSkillMap() {
-        return Collections.unmodifiableMap(skills);
     }
     
     /**

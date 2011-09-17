@@ -91,11 +91,11 @@ public class HeroManager {
 
     public Hero getHero(Player player) {
         for (Hero hero : getHeroes()) {
-            if (hero == null || hero.player == null) {
+            if (hero == null || hero.getPlayer() == null) {
                 removeHero(hero); // Seeing as it's null we might as well remove it.
                 continue;
             }
-            if (player.getName().equalsIgnoreCase(hero.player.getName()))
+            if (player.getName().equalsIgnoreCase(hero.getPlayer().getName()))
                 return hero;
         }
         // If it gets to this stage then clearly the HeroManager doesn't have it so we create it...
@@ -134,7 +134,7 @@ public class HeroManager {
             playerHero.setMana(playerConfig.getInt("mana", 0));
             playerHero.setHealth(playerConfig.getDouble("health", playerClass.getBaseMaxHealth()));
             playerHero.setVerbose(playerConfig.getBoolean("verbose", true));
-            playerHero.suppressedSkills = new HashSet<String>(playerConfig.getStringList("suppressed", null));
+            playerHero.setSuppressedSkills(new HashSet<String>(playerConfig.getStringList("suppressed", null)));
             addHero(playerHero);
             playerHero.syncHealth();
 
@@ -193,7 +193,6 @@ public class HeroManager {
     }
 
     private void loadBinds(Hero hero, Configuration config) {
-        Map<Material, String[]> binds = new HashMap<Material, String[]>();
         List<String> bindKeys = config.getKeys("binds");
         if (bindKeys != null && bindKeys.size() > 0) {
             for (String material : bindKeys) {
@@ -201,7 +200,7 @@ public class HeroManager {
                     Material item = Material.valueOf(material);
                     String bind = config.getString("binds." + material, "");
                     if (bind.length() > 0) {
-                        binds.put(item, bind.split(" "));
+                        hero.bind(item, bind.split(" "));
                     }
                 } catch (IllegalArgumentException e) {
                     this.plugin.debugLog(Level.WARNING, material + " isn't a valid Item to bind a Skill to.");
@@ -209,7 +208,6 @@ public class HeroManager {
                 }
             }
         }
-        hero.binds = binds;
     }
 
     private HeroClass loadClass(Player player, Configuration config) {
@@ -251,14 +249,12 @@ public class HeroManager {
         List<String> storedCooldowns = config.getKeys(path);
         if (storedCooldowns != null) {
             long time = System.currentTimeMillis();
-            Map<String, Long> cooldowns = new HashMap<String, Long>();
             for (String skillName : storedCooldowns) {
                 long cooldown = (long) config.getDouble(path + "." + skillName, 0);
                 if (heroClass.hasSkill(skillName) && cooldown > time) {
-                    cooldowns.put(skillName, cooldown);
+                    hero.setCooldown(skillName, cooldown);
                 }
             }
-            hero.cooldowns = cooldowns;
         }
     }
 
@@ -346,7 +342,7 @@ public class HeroManager {
 
     private void saveSkillSettings(Hero hero, Configuration config) {
         String path = "skill-settings";
-        for (Entry<String, Map<String, String>> entry : hero.skillSettings.entrySet()) {
+        for (Entry<String, Map<String, String>> entry : hero.getSkillSettings().entrySet()) {
             for (Entry<String, String> node : entry.getValue().entrySet()) {
                 config.setProperty(path + "." + entry.getKey() + "." + node.getKey(), node.getValue());
             }
@@ -373,7 +369,8 @@ public class HeroManager {
             return;
 
         String root = "experience";
-        for (Map.Entry<String, Double> entry : hero.experience.entrySet()) {
+        Map<String, Double> expMap = hero.getExperienceMap();
+        for (Map.Entry<String, Double> entry : expMap.entrySet()) {
             config.setProperty(root + "." + entry.getKey(), (double) entry.getValue());
         }
     }
@@ -561,7 +558,7 @@ class ManaUpdater implements Runnable {
 
             hero.setMana(mana + hrmEvent.getAmount());
             if (hero.isVerbose()) {
-                Messaging.send(hero.player, ChatColor.BLUE + "MANA " + Messaging.createManaBar(hero.getMana()));
+                Messaging.send(hero.getPlayer(), ChatColor.BLUE + "MANA " + Messaging.createManaBar(hero.getMana()));
             }
         }
     }
@@ -595,7 +592,7 @@ class PartyUpdater implements Runnable {
                 Player[] players = new Player[party.getMembers().size()];
                 int count = 0;
                 for (Hero heroes : party.getMembers()) {
-                    players[count] = heroes.player;
+                    players[count] = heroes.getPlayer();
                     count++;
                 }
                 updateMapView(players);
@@ -640,7 +637,7 @@ class PartyUpdater implements Runnable {
                 currentHP = hero.getHealth();
                 maxHP = hero.getMaxHealth();
             } else {
-                currentHP = hero.player.getHealth();
+                currentHP = hero.getPlayer().getHealth();
                 maxHP = 20;
             }
             map += " §12;" + players[i].getName() + "\n" + createHealthBar(currentHP, maxHP) + "\n";

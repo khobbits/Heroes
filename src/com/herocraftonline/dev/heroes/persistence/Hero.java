@@ -2,6 +2,7 @@ package com.herocraftonline.dev.heroes.persistence;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -38,32 +39,38 @@ public class Hero {
 
     private static final DecimalFormat decFormat = new DecimalFormat("#0.##");
 
-    protected final Heroes plugin;
-    protected Player player;
-    protected HeroClass heroClass;
-    protected int mana = 0;
-    protected HeroParty party = null;
-    protected boolean verbose = true;
-    protected HeroDamageCause lastDamageCause = null;
-    protected Set<Effect> effects = new HashSet<Effect>();
-    protected Map<String, Double> experience = new HashMap<String, Double>();
-    protected Map<String, Long> cooldowns = new HashMap<String, Long>();
-    protected Set<Creature> summons = new HashSet<Creature>();
-    protected Map<Material, String[]> binds = new HashMap<Material, String[]>();
-    protected List<ItemStack> itemRecovery = new ArrayList<ItemStack>();
-    protected Set<String> suppressedSkills = new HashSet<String>();
-    protected Map<String, Map<String, String>> skillSettings = new HashMap<String, Map<String, String>>();
-    
-    private final PermissionAttachment transientPerms;
-
+    private final Heroes plugin;
+    private Player player;
+    private HeroClass heroClass;
+    private int mana = 0;
+    private HeroParty party = null;
+    private boolean verbose = true;
+    private HeroDamageCause lastDamageCause = null;
+    private Set<Effect> effects = new HashSet<Effect>();
+    private Map<String, Double> experience = new HashMap<String, Double>();
+    private Map<String, Long> cooldowns = new HashMap<String, Long>();
+    private Set<Creature> summons = new HashSet<Creature>();
+    private Map<Material, String[]> binds = new HashMap<Material, String[]>();
+    private List<ItemStack> itemRecovery = new ArrayList<ItemStack>();
+    private Set<String> suppressedSkills = new HashSet<String>();
+    private Map<String, Map<String, String>> skillSettings = new HashMap<String, Map<String, String>>();
     private Map<String, ConfigurationNode> skills = new HashMap<String, ConfigurationNode>();
-    protected double health;
+    private double health;
+    private final PermissionAttachment transientPerms;
 
     public Hero(Heroes plugin, Player player, HeroClass heroClass) {
         this.plugin = plugin;
         this.player = player;
         this.heroClass = heroClass;
         transientPerms = new PermissionAttachment(plugin, player);
+    }
+    
+    public Map<String, Map<String, String>> getSkillSettings() {
+        return Collections.unmodifiableMap(skillSettings);
+    }
+
+    public Map<String, Double> getExperienceMap() {
+        return Collections.unmodifiableMap(experience);
     }
 
     /**
@@ -72,7 +79,7 @@ public class Hero {
     public void syncHealth() {
         if ((player.isDead() || player.getHealth() == 0) && health <= 0)
             return;
-        
+
         player.setHealth((int) (health / getMaxHealth() * 20));
     }
 
@@ -83,19 +90,19 @@ public class Hero {
         Properties props = plugin.getConfigManager().getProperties();
         int level = getLevel();
         int currentLevelXP = props.getExperience(level);
-        
+
         double maxLevelXP = props.getExperience(level + 1) - currentLevelXP;
         double currentXP = getExperience() - currentLevelXP;
         int syncedXP = getMCLevelExp(level) + (int) (currentXP / maxLevelXP * (level + 1) * 10D);
-        
-        //Reset values before adding
+
+        // Reset values before adding
         player.setExperience(0);
         player.setTotalExperience(0);
         player.setLevel(0);
-        //Sync up the XP
+        // Sync up the XP
         player.setExperience(syncedXP);
     }
-    
+
     /**
      * Gets how much XP is required to be a specific level
      * 
@@ -109,7 +116,7 @@ public class Hero {
         }
         return xpTotal;
     }
-    
+
     /**
      * Adds the Effect onto the hero, and calls it's apply method initiating it's first tic.
      * 
@@ -134,7 +141,7 @@ public class Hero {
     public void bind(Material material, String[] skillName) {
         if (material == Material.AIR || material == null)
             return;
-        
+
         binds.put(material, skillName);
     }
 
@@ -186,7 +193,8 @@ public class Hero {
      * Adds the specified experience to the hero before modifiers from the given source.
      * expChange value supports negatives for experience loss.
      * 
-     * @param expChange - amount of base exp to add
+     * @param expChange
+     *            - amount of base exp to add
      * @param source
      * @param boolean - distributeToParty
      */
@@ -195,7 +203,7 @@ public class Hero {
 
         if (prop.disabledWorlds.contains(player.getWorld().getName()))
             return;
-        
+
         if (distributeToParty && party != null && party.getExp() && expChange > 0) {
             Location location = player.getLocation();
 
@@ -221,27 +229,27 @@ public class Hero {
         }
 
         double exp = getExperience();
-        
+
         // adjust exp using the class modifier if it's positive
         if (expChange > 0 && source != ExperienceType.ADMIN) {
             expChange *= heroClass.getExpModifier();
         } else if (source != ExperienceType.ADMIN && isMaster() && (!prop.masteryLoss || !prop.levelsViaExpLoss)) {
             return;
         }
-        
+
         // call event
         ExperienceChangeEvent expEvent = new ExperienceChangeEvent(this, expChange, source);
         plugin.getServer().getPluginManager().callEvent(expEvent);
         if (expEvent.isCancelled()) {
             return;
         }
-        
-        //Lets get our modified xp change value
+
+        // Lets get our modified xp change value
         expChange = expEvent.getExpChange();
-        
+
         int currentLevel = prop.getLevel(exp);
         int newLevel = prop.getLevel(exp + expChange);
-        
+
         if (isMaster()) {
             expChange = 0;
         } else if (currentLevel > newLevel && !prop.levelsViaExpLoss && source != ExperienceType.ADMIN) {
@@ -250,24 +258,23 @@ public class Hero {
 
         // add the experience
         exp += expChange;
-               
-        //If we went negative lets reset our values so that we would hit 0
+
+        // If we went negative lets reset our values so that we would hit 0
         if (exp < 0) {
             expChange = -(expChange + exp);
             exp = 0;
         }
-        
-        //Reset our new level - in case xp adjustement settings actually don't cause us to change
+
+        // Reset our new level - in case xp adjustement settings actually don't cause us to change
         newLevel = prop.getLevel(exp);
         setExperience(exp);
-        
-        
+
         // notify the user
         if (expChange != 0) {
             syncExperience();
             if (verbose && expChange > 0) {
                 Messaging.send(player, "$1: Gained $2 Exp", heroClass.getName(), decFormat.format(expChange));
-            } else if ( verbose && expChange < 0) {
+            } else if (verbose && expChange < 0) {
                 Messaging.send(player, "$1: Lost $2 Exp", heroClass.getName(), decFormat.format(-expChange));
             }
             if (newLevel != currentLevel) {
@@ -290,7 +297,6 @@ public class Hero {
             }
         }
 
-        
         // Save the hero file when the Hero changes levels to prevent rollback issues
         if (newLevel != currentLevel)
             plugin.getHeroManager().saveHero(player);
@@ -302,7 +308,19 @@ public class Hero {
      * @return
      */
     public Map<Material, String[]> getBinds() {
-        return binds;
+        return Collections.unmodifiableMap(binds);
+    }
+    
+    public boolean hasBind(Material mat) {
+        return binds.containsKey(mat);
+    }
+    
+    public String[] getBind(Material mat) {
+        return binds.get(mat);
+    }
+    
+    public void clearBinds() {
+        binds.clear();
     }
 
     /**
@@ -311,7 +329,23 @@ public class Hero {
      * @return
      */
     public Map<String, Long> getCooldowns() {
-        return cooldowns;
+        return Collections.unmodifiableMap(cooldowns);
+    }
+
+    public void clearCooldowns() {
+        cooldowns.clear();
+    }
+
+    public Long getCooldown(String name) {
+        return cooldowns.get(name.toLowerCase());
+    }
+
+    public void setCooldown(String name, long cooldown) {
+        cooldowns.put(name.toLowerCase(), cooldown);
+    }
+
+    public void removeCooldown(String name) {
+        cooldowns.remove(name.toLowerCase());
     }
 
     /**
@@ -374,7 +408,7 @@ public class Hero {
     public int getLevel() {
         return plugin.getConfigManager().getProperties().getLevel(getExperience());
     }
-    
+
     public int getLevel(HeroClass heroClass) {
         return plugin.getConfigManager().getProperties().getLevel(getExperience(heroClass));
     }
@@ -424,7 +458,7 @@ public class Hero {
     }
 
     public List<ItemStack> getRecoveryItems() {
-        return this.itemRecovery;
+        return Collections.unmodifiableList(itemRecovery);
     }
 
     /**
@@ -453,7 +487,11 @@ public class Hero {
      * @return
      */
     public Set<String> getSuppressedSkills() {
-        return new HashSet<String>(suppressedSkills);
+        return Collections.unmodifiableSet(suppressedSkills);
+    }
+    
+    public void setSuppressedSkills(Set<String> suppressedSkills) {
+        this.suppressedSkills = suppressedSkills;
     }
 
     /**
@@ -470,7 +508,7 @@ public class Hero {
         }
         return false;
     }
-    
+
     public boolean hasEffectType(EffectType type) {
         for (Effect effect : effects) {
             if (effect.isType(type)) {
@@ -562,7 +600,7 @@ public class Hero {
     public void setExperience(double experience) {
         setExperience(heroClass, experience);
     }
-    
+
     /**
      * Sets the hero's experience for the given class to the given value,
      * this method will circumvent the ExpChangeEvent
@@ -739,7 +777,7 @@ public class Hero {
     public boolean hasSkill(String name) {
         return this.heroClass.hasSkill(name) || skills.containsKey(name);
     }
-    
+
     /**
      * Checks if the hero has access to the given Skill
      * 
@@ -757,7 +795,7 @@ public class Hero {
     public void addSkill(String skill) {
         skills.put(skill, Configuration.getEmptyNode());
     }
-    
+
     public void removeSkill(String skill) {
         skills.remove(skill);
     }
@@ -775,14 +813,14 @@ public class Hero {
     public void setLastDamageCause(HeroDamageCause lastDamageCause) {
         this.lastDamageCause = lastDamageCause;
     }
-    
+
     /**
      * Clears all set Permissions on the hero's permission attachment
      */
     public void clearPermissions() {
         transientPerms.getPermissions().clear();
     }
-    
+
     /**
      * Removes the given permission from the hero
      * 
@@ -791,7 +829,7 @@ public class Hero {
     public void removePermission(String permission) {
         transientPerms.unsetPermission(permission);
     }
-    
+
     /**
      * Adds the given permission to the hero
      * 

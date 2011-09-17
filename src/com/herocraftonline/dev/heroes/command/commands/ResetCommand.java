@@ -89,9 +89,9 @@ public class ResetCommand extends BasicInteractiveCommand {
             // Reset Everything
             hero.clearEffects();
             hero.clearExperience();
-            hero.getCooldowns().clear();
+            hero.clearCooldowns();
             hero.clearSummons();
-            hero.getBinds().clear();
+            hero.clearBinds();
 
             hero.setHeroClass(defaultClass); // Set the hero to the default class
             hero.syncHealth(); // re-sync health just in-case the display isn't 100% accurate

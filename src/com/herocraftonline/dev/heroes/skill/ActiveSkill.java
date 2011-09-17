@@ -1,7 +1,5 @@
 package com.herocraftonline.dev.heroes.skill;
 
-import java.util.Map;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -86,16 +84,15 @@ public abstract class ActiveSkill extends Skill {
             return false;
         }
 
-        Map<String, Long> cooldowns = hero.getCooldowns();
         long time = System.currentTimeMillis();
-        Long global = cooldowns.get("Global");
+        Long global = hero.getCooldown("Global");
         if (global != null && time < global) {
             Messaging.send(hero.getPlayer(), "Sorry, you must wait $1 seconds longer before using another skill.", (global - time) / 1000);
             return false;
         }
         int cooldown = getSetting(heroClass, Setting.COOLDOWN.node(), 0);
         if (cooldown > 0) {
-            Long expiry = cooldowns.get(name);
+            Long expiry = hero.getCooldown(name);
             if (expiry != null && time < expiry) {
                 long remaining = expiry - time;
                 Messaging.send(hero.getPlayer(), "Sorry, $1 still has $2 seconds left on cooldown!", name, remaining / 1000);
@@ -146,11 +143,11 @@ public abstract class ActiveSkill extends Skill {
         if (use(hero, args)) {
             // Set cooldown
             if (cooldown > 0) {
-                cooldowns.put(name, time + cooldown);
+                hero.setCooldown(name, time + cooldown);
             }
             
             if (plugin.getConfigManager().getProperties().globalCooldown > 0) {
-                cooldowns.put("Global", plugin.getConfigManager().getProperties().globalCooldown + time);
+                hero.setCooldown("Global", plugin.getConfigManager().getProperties().globalCooldown + time);
             }
 
             //Award XP for skill usage
