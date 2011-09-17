@@ -54,12 +54,11 @@ public class HPlayerListener extends PlayerListener {
         entityPlayer.exp = 0;
         entityPlayer.expTotal = 0;
         entityPlayer.expLevel = 0;
-        entityPlayer.d(1);
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
             public void run() {
                 hero.syncExperience();
             }
-        }, 1L);
+        }, 20L);
     }
 
     @Override
