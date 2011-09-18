@@ -212,7 +212,7 @@ public class HeroClassManager {
                 for (String skillName : skillNames) {
                     if (skillName.equals("*") || skillName.toLowerCase().equals("all")) {
                         allSkills = true;
-                        break;
+                        continue;
                     }
                     Skill skill = plugin.getSkillManager().getSkill(skillName);
                     if (skill == null) {
