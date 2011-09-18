@@ -107,20 +107,6 @@ public class Hero {
     }
 
     /**
-     * Gets how much XP is required to be a specific level
-     * 
-     * @param level
-     * @return
-     */
-    private int getMCLevelExp(int level) {
-        int xpTotal = 0;
-        for (int i = 0; i < level; i++) {
-            xpTotal += i * 10;
-        }
-        return xpTotal;
-    }
-
-    /**
      * Adds the Effect onto the hero, and calls it's apply method initiating it's first tic.
      * 
      * @param effect
