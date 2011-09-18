@@ -4,6 +4,8 @@ import org.bukkit.Material;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event.Priority;
+import org.bukkit.event.Event.Type;
 import org.bukkit.event.entity.EntityListener;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.util.config.ConfigurationNode;
@@ -34,6 +36,9 @@ public class SkillMortalWound extends TargettedSkill {
         setArgumentRange(0, 1);
         setIdentifiers("skill mortalwound", "skill mwound");
         setTypes(SkillType.PHYSICAL, SkillType.DAMAGING, SkillType.DEBUFF, SkillType.HARMFUL);
+        
+        registerEvent(Type.CUSTOM_EVENT, new SkillHeroListener(), Priority.Highest);
+        registerEvent(Type.ENTITY_REGAIN_HEALTH, new SkillEntityListener(), Priority.Highest);
     }
 
     @Override

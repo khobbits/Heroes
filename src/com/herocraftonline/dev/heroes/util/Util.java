@@ -20,6 +20,9 @@ public final class Util {
     // Default Axe List
     public final static List<String> axes;
     
+    // Default Shovel List
+    public final static List<String> shovels;
+    
     // Blocks that we consider transparent for skills
     public final static Set<Material> transparentBlocks;
 
@@ -41,6 +44,12 @@ public final class Util {
         axes.add("STONE_AXE");
         axes.add("GOLD_AXE");
         axes.add("DIAMOND_AXE");
+        
+        shovels = new ArrayList<String>();
+        shovels.add("WOODEN_SPADE");
+        shovels.add("STONE_SPADE");
+        shovels.add("GOLD_SPADE");
+        shovels.add("DIAMOND_SPADE");
         
         transparentBlocks = new HashSet<Material>();
         transparentBlocks.add(Material.AIR);
