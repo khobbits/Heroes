@@ -14,9 +14,12 @@ import org.bukkit.entity.LivingEntity;
 
 public final class Util {
     
-    // Default Weapon List
-    public final static List<String> defaultWeapons;
+    // Default Sword List
+    public final static List<String> swords;
 
+    // Default Axe List
+    public final static List<String> axes;
+    
     // Blocks that we consider transparent for skills
     public final static Set<Material> transparentBlocks;
 
@@ -27,12 +30,18 @@ public final class Util {
     public final static Random rand = new Random();
     
     static {
-        defaultWeapons = new ArrayList<String>();
-        defaultWeapons.add("WOOD_SWORD");
-        defaultWeapons.add("STONE_SWORD");
-        defaultWeapons.add("GOLD_SWORD");
-        defaultWeapons.add("DIAMOND_SWORD");
+        swords = new ArrayList<String>();
+        swords.add("WOOD_SWORD");
+        swords.add("STONE_SWORD");
+        swords.add("GOLD_SWORD");
+        swords.add("DIAMOND_SWORD");
 
+        axes = new ArrayList<String>();
+        axes.add("WOOD_AXE");
+        axes.add("STONE_AXE");
+        axes.add("GOLD_AXE");
+        axes.add("DIAMOND_AXE");
+        
         transparentBlocks = new HashSet<Material>();
         transparentBlocks.add(Material.AIR);
         transparentBlocks.add(Material.SNOW);

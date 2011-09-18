@@ -32,8 +32,7 @@ public class SkillMortalWound extends TargettedSkill {
         setDescription("Prevents the target from healing, and applies a minor bleed effect");
         setUsage("/skill mortalwound <target>");
         setArgumentRange(0, 1);
-        setIdentifiers(new String[] { "skill mortalwound", "skill mwound" });
-        
+        setIdentifiers("skill mortalwound", "skill mwound");
         setTypes(SkillType.PHYSICAL, SkillType.DAMAGING, SkillType.DEBUFF, SkillType.HARMFUL);
     }
 
@@ -47,7 +46,7 @@ public class SkillMortalWound extends TargettedSkill {
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty("weapons", Util.defaultWeapons);
+        node.setProperty("weapons", Util.swords);
         node.setProperty(Setting.DURATION.node(), 12000);
         node.setProperty(Setting.PERIOD.node(), 3000);
         node.setProperty("heal-multiplier", .5);
@@ -63,7 +62,7 @@ public class SkillMortalWound extends TargettedSkill {
         Player player = hero.getPlayer();
 
         Material item = player.getItemInHand().getType();
-        if (!getSetting(hero.getHeroClass(), "weapons", Util.defaultWeapons).contains(item.name())) {
+        if (!getSetting(hero.getHeroClass(), "weapons", Util.swords).contains(item.name())) {
             Messaging.send(player, "You can't Mortal Strike with that weapon!");
         }
         

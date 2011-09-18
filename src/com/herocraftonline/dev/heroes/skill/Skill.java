@@ -312,7 +312,6 @@ public abstract class Skill extends BasicCommand {
         EntityDamageByEntityEvent damageEntityEvent = new EntityDamageByEntityEvent(player, target, DamageCause.CUSTOM, 0);
         plugin.getServer().getPluginManager().callEvent(damageEntityEvent);
         if (damageEntityEvent.isCancelled()) {
-            Messaging.send(player, "Invalid target!");
             return false;
         }
         return true;

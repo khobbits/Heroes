@@ -42,7 +42,7 @@ public class SkillAssassinsBlade extends ActiveSkill {
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty("weapons", Util.defaultWeapons);
+        node.setProperty("weapons", Util.swords);
         node.setProperty("buff-duration", 600000); // 10 minutes in milliseconds
         node.setProperty("poison-duration", 10000); // 10 seconds in milliseconds
         node.setProperty(Setting.PERIOD.node(), 2000); // 2 seconds in milliseconds
@@ -93,7 +93,7 @@ public class SkillAssassinsBlade extends ActiveSkill {
             Player player = (Player) subEvent.getDamager();
             ItemStack item = player.getItemInHand();
             Hero hero = plugin.getHeroManager().getHero(player);
-            if (!getSetting(hero.getHeroClass(), "weapons", Util.defaultWeapons).contains(item.getType().name()))
+            if (!getSetting(hero.getHeroClass(), "weapons", Util.swords).contains(item.getType().name()))
                 return;
             
             if (hero.hasEffect("PoisonBlade")) {

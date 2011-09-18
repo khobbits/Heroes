@@ -33,7 +33,7 @@ public class SkillBackstab extends PassiveSkill {
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty("weapons", Util.defaultWeapons);
+        node.setProperty("weapons", Util.swords);
         node.setProperty("attack-bonus", 1.5);
         node.setProperty("attack-chance", .5);
         node.setProperty("sneak-bonus", 2.0); // Alternative bonus if player is sneaking when doing the backstab
@@ -54,7 +54,7 @@ public class SkillBackstab extends PassiveSkill {
                 ItemStack item = player.getItemInHand();
                 Hero hero = plugin.getHeroManager().getHero(player);
                 HeroClass heroClass = hero.getHeroClass();
-                if (!getSetting(heroClass, "weapons", Util.defaultWeapons).contains(item.getType().name()))
+                if (!getSetting(heroClass, "weapons", Util.swords).contains(item.getType().name()))
                     return;
                 if (hero.hasEffect(getName())) {
                     if (subEvent.getEntity().getLocation().getDirection().dot(player.getLocation().getDirection()) <= 0)

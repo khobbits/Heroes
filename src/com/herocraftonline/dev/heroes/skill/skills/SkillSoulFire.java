@@ -43,7 +43,7 @@ public class SkillSoulFire extends ActiveSkill {
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty("weapons", Util.defaultWeapons);
+        node.setProperty("weapons", Util.swords);
         node.setProperty(Setting.APPLY_TEXT.node(), "%hero%'s weapon is sheathed in flame!");
         node.setProperty(Setting.EXPIRE_TEXT.node(), "%hero%'s weapon is no longer aflame!");
         node.setProperty(Setting.DURATION.node(), 600000);
@@ -110,7 +110,7 @@ public class SkillSoulFire extends ActiveSkill {
             
             Player player = (Player) subEvent.getDamager();
             Hero hero = plugin.getHeroManager().getHero(player);
-            if (!getSetting(hero.getHeroClass(), "weapons", Util.defaultWeapons).contains(player.getItemInHand().getType().name()) || !hero.hasEffect("SoulFire"))
+            if (!getSetting(hero.getHeroClass(), "weapons", Util.swords).contains(player.getItemInHand().getType().name()) || !hero.hasEffect("SoulFire"))
                 return;
             
             double chance = getSetting(hero.getHeroClass(), "ignite-chance", .2);

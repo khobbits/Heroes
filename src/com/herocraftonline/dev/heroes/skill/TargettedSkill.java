@@ -132,10 +132,8 @@ public abstract class TargettedSkill extends ActiveSkill {
         
         //Do a PvP check automatically for any harmful skill
         if (this.isType(SkillType.HARMFUL)) {
-            if (player.equals(target) || hero.getSummons().contains(target)) {
+            if (player.equals(target) || hero.getSummons().contains(target) || !damageCheck(player, target)) {
                 Messaging.send(player, "Invalid Target!");
-                return false;
-            } else if (!damageCheck(player, target)) {
                 return false;
             }
         }

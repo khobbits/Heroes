@@ -30,6 +30,9 @@ Skills:
 		- Causes the hero to deal more physical damage, but take more damage.
 	Bite
 		- Now also applies a Bleed effect
+	Cleave - (NEW!)
+		- Short range melee attack, that requires a weapon.
+		- Damages all enemies near your target for weapon damage * multiplier
 	Disarm - (NEW!) - thanks Kostronor!
 		- Disarms your opponent for the duration and prevents them from re-equipping weapons.
 	Endurance - (NEW!)
