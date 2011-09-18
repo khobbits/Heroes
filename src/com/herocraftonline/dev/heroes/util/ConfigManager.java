@@ -19,7 +19,6 @@ import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClassManager;
-import com.herocraftonline.dev.heroes.command.Command;
 import com.herocraftonline.dev.heroes.skill.Skill;
 
 public class ConfigManager {
@@ -64,7 +63,7 @@ public class ConfigManager {
         loadWorldConfig(primaryConfig);
         primaryConfig.save();
     }
-    
+
     public void loadManagers() {
         Configuration damageConfig = new Configuration(damageConfigFile);
         damageConfig.load();
@@ -76,7 +75,7 @@ public class ConfigManager {
 
         Configuration skillConfig = new Configuration(skillConfigFile);
         skillConfig.load();
-        generateSkills(skillConfig);
+        generateSkillConfigs(skillConfig);
 
         HeroClassManager heroClassManager = new HeroClassManager(plugin);
         heroClassManager.loadClasses(classConfigFile);
@@ -125,22 +124,18 @@ public class ConfigManager {
         }
     }
 
-    private void generateSkills(Configuration config) {
-        for (Command baseCommand : plugin.getCommandHandler().getCommands()) {
-            if (baseCommand instanceof Skill) {
-                Skill skill = (Skill) baseCommand;
-                ConfigurationNode node = config.getNode(skill.getName());
-                if (node == null) {
-                    config.setProperty(skill.getName(), skill.getDefaultConfig().getAll());
-                } else {
-                    ConfigurationNode defaultNode = skill.getDefaultConfig();
-                    mergeNodeToConfig(config, defaultNode, skill.getName());
-                }
+    private void generateSkillConfigs(Configuration config) {
+        for (Skill skill : plugin.getSkillManager().getSkills()) {
+            ConfigurationNode node = config.getNode(skill.getName());
+            if (node == null) {
+                config.setProperty(skill.getName(), skill.getDefaultConfig().getAll());
+            } else {
+                ConfigurationNode defaultNode = skill.getDefaultConfig();
+                mergeNodeToConfig(config, defaultNode, skill.getName());
             }
-
         }
         config.save();
-        loadSkills(config);
+        loadSkillConfigs(config);
     }
 
     private void loadDefaultConfig(Configuration config) {
@@ -238,7 +233,7 @@ public class ConfigManager {
         if (properties.manaRegenPercent > 100 || properties.manaRegenPercent < 0)
             properties.manaRegenPercent = 5;
     }
-    
+
     private void loadMapConfig(Configuration config) {
         String root = "mappartyui.";
         properties.mapUI = config.getBoolean(root + "enabled", false);
@@ -252,21 +247,16 @@ public class ConfigManager {
         properties.disabledWorlds.addAll(worlds);
     }
 
-    private void loadSkills(Configuration config) {
+    private void loadSkillConfigs(Configuration config) {
         config.load();
-        for (Command baseCommand : plugin.getCommandHandler().getCommands()) {
-            if (baseCommand instanceof Skill) {
-                Skill skill = (Skill) baseCommand;
-                ConfigurationNode node = config.getNode(skill.getName());
-                if (node != null) {
-                    // System.out.println(skill.getName());
-                    // print(node.getAll(), "  ");
-                    skill.setConfig(node);
-                } else {
-                    skill.setConfig(Configuration.getEmptyNode());
-                }
-                skill.init();
+        for (Skill skill : plugin.getSkillManager().getSkills()) {
+            ConfigurationNode node = config.getNode(skill.getName());
+            if (node != null) {
+                skill.setConfig(node);
+            } else {
+                skill.setConfig(Configuration.getEmptyNode());
             }
+            skill.init();
         }
     }
 

@@ -9,9 +9,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.CustomEventListener;
 import org.bukkit.event.Event;
 
-import com.herocraftonline.dev.heroes.command.Command;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.OutsourcedSkill;
+import com.herocraftonline.dev.heroes.skill.Skill;
 import com.nijiko.permissions.StorageReloadEvent;
 import com.nijiko.permissions.WorldConfigLoadEvent;
 
@@ -60,12 +60,10 @@ public class HPermissionsListener extends CustomEventListener {
             }
             // Grab Hero.
             Hero hero = this.plugin.getHeroManager().getHero(player);
-            // Grab Commands so we can parse them for Skills, seeing as Skills are still set as Commands.
-            List<Command> sortCommands = plugin.getCommandHandler().getCommands();
-            for (Command command : sortCommands) {
+            for (Skill skill : plugin.getSkillManager().getSkills()) {
                 // We're only interested in Permission based Skills.
-                if (command instanceof OutsourcedSkill) {
-                    ((OutsourcedSkill) command).tryLearningSkill(hero);
+                if (skill instanceof OutsourcedSkill) {
+                    ((OutsourcedSkill) skill).tryLearningSkill(hero);
                 }
             }
         }

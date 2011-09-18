@@ -17,7 +17,6 @@ import com.herocraftonline.dev.heroes.classes.HeroClass.ArmorType;
 import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
 import com.herocraftonline.dev.heroes.classes.HeroClass.WeaponItems;
 import com.herocraftonline.dev.heroes.classes.HeroClass.WeaponType;
-import com.herocraftonline.dev.heroes.command.Command;
 import com.herocraftonline.dev.heroes.damage.DamageManager.ProjectileType;
 import com.herocraftonline.dev.heroes.skill.OutsourcedSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
@@ -194,7 +193,7 @@ public class HeroClassManager {
                 for (String projectileName : projectileDamages) {
                     try {
                         ProjectileType type = ProjectileType.matchProjectile(projectileName);
-                        
+
                         int damage = config.getInt("classes." + className + ".projectile-damage." + projectileName, 0);
                         newClass.setProjectileDamage(type, damage);
                     } catch (IllegalArgumentException e) {
@@ -236,26 +235,20 @@ public class HeroClassManager {
                 }
                 // Load all skills onto the Class if we found ALL
                 if (allSkills) {
-                    for (Command command : plugin.getCommandHandler().getCommands()) {
-                        if (!(command instanceof Skill))
+                    for (Skill skill : plugin.getSkillManager().getSkills()) {
+                        // Ignore this skill if it was already loaded onto the class (we don't want to overwrite defined skills as they have settings)
+                        if (newClass.hasSkill(skill.getName()))
                             continue;
-                        try {
-                            Skill skill = (Skill) command;
-                            // Ignore this skill if it was already loaded onto the class (we don't want to overwrite defined skills as they have settings)
-                            if (newClass.hasSkill(skill.getName()))
-                                continue;
 
-                            ConfigurationNode skillSettings = Configuration.getEmptyNode();
-                            List<String> settings = config.getKeys("classes." + className + ".permitted-skills." + skill.getName());
-                            if (settings != null) {
-                                for (String key : settings) {
-                                    skillSettings.setProperty(key, config.getProperty("classes." + className + ".permitted-skills." + skill.getName() + "." + key));
-                                }
+                        ConfigurationNode skillSettings = Configuration.getEmptyNode();
+                        List<String> settings = config.getKeys("classes." + className + ".permitted-skills." + skill.getName());
+                        if (settings != null) {
+                            for (String key : settings) {
+                                skillSettings.setProperty(key, config.getProperty("classes." + className + ".permitted-skills." + skill.getName() + "." + key));
                             }
-                            newClass.addSkill(skill.getName(), skillSettings);
-                        } catch (IllegalArgumentException e) {
-                            continue;
                         }
+                        newClass.addSkill(skill.getName(), skillSettings);
+
                     }
                 }
             }
@@ -277,7 +270,7 @@ public class HeroClassManager {
                         String usage = config.getString("classes." + className + ".permission-skills." + skill + ".usage", "");
                         String[] permissions = config.getStringList("classes." + className + ".permission-skills." + skill + ".permissions", null).toArray(new String[0]);
                         OutsourcedSkill oSkill = new OutsourcedSkill(plugin, skill, permissions, usage);
-                        plugin.getCommandHandler().addCommand(oSkill);
+                        plugin.getSkillManager().addSkill(oSkill);
                     } catch (IllegalArgumentException e) {
                         Heroes.log(Level.WARNING, "Invalid permission skill (" + skill + ") defined for " + className + ". Skipping this skill.");
                     }
@@ -292,7 +285,7 @@ public class HeroClassManager {
             // Get the class expLoss
             double expLoss = config.getDouble("classes." + className + ".expLoss", -1);
             newClass.setExpLoss(expLoss);
-            
+
             // Get experience for each class
             List<String> experienceNames = config.getStringList("classes." + className + ".experience-sources", null);
             Set<ExperienceType> experienceSources = new HashSet<ExperienceType>();
@@ -311,7 +304,7 @@ public class HeroClassManager {
                 }
             }
             newClass.setExperienceSources(experienceSources);
-            
+
             // Get the maximum level or use the default if it's not specified
             int defaultMaxLevel = plugin.getConfigManager().getProperties().maxLevel;
             int maxLevel = config.getInt("classes." + className + ".max-level", defaultMaxLevel);
@@ -323,7 +316,7 @@ public class HeroClassManager {
                 maxLevel = defaultMaxLevel;
             }
             newClass.setMaxLevel(maxLevel);
-            
+
             int defaultCost = plugin.getConfigManager().getProperties().swapCost;
             int cost = config.getInt("classes." + className + ".cost", defaultCost);
             if (cost < 0) {
@@ -331,7 +324,7 @@ public class HeroClassManager {
                 cost = 0;
             }
             newClass.setCost(cost);
-            
+
 
             // Attempt to add the class
             boolean added = addClass(newClass);

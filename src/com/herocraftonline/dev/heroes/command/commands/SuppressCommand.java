@@ -7,7 +7,6 @@ import org.bukkit.entity.Player;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.command.BasicCommand;
-import com.herocraftonline.dev.heroes.command.Command;
 import com.herocraftonline.dev.heroes.persistence.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.util.Messaging;
@@ -47,12 +46,11 @@ public class SuppressCommand extends BasicCommand {
 
             Messaging.send(player, list);
         } else {
-            Command cmd = plugin.getCommandHandler().getCommand(args[0]);
-            if (cmd == null || !(cmd instanceof Skill)) {
+            Skill skill = plugin.getSkillManager().getSkill(args[0]);
+            if (skill == null) {
                 Messaging.send(player, "Skill not found.");
                 return false;
             }
-            Skill skill = (Skill) cmd;
             if (hero.isSuppressing(skill)) {
                 hero.setSuppressed(skill, false);
                 Messaging.send(player, "Messages from $1 are no longer suppressed.", skill.getName());

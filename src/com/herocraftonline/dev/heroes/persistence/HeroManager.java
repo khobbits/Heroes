@@ -29,13 +29,13 @@ import org.bukkit.util.config.Configuration;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.HeroRegainManaEvent;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
-import com.herocraftonline.dev.heroes.command.Command;
 import com.herocraftonline.dev.heroes.command.CommandHandler;
 import com.herocraftonline.dev.heroes.effects.Effect;
 import com.herocraftonline.dev.heroes.effects.Expirable;
 import com.herocraftonline.dev.heroes.effects.Periodic;
 import com.herocraftonline.dev.heroes.skill.OutsourcedSkill;
 import com.herocraftonline.dev.heroes.skill.PassiveSkill;
+import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.util.Messaging;
 
 /**
@@ -304,24 +304,19 @@ public class HeroManager {
     public void performSkillChecks(Hero hero) {
         HeroClass playerClass = hero.getHeroClass();
 
-        List<Command> commands = plugin.getCommandHandler().getCommands();
-
-        for (Command cmd : commands) {
+        for (Skill skill : plugin.getSkillManager().getSkills()) {
             // Never try to learn * or ALL as skills, can happen if the nodes are added incorrectly
-            if (cmd.getName().equals("*") || cmd.getName().toLowerCase().equals("ALL"))
+            if (skill.getName().equals("*") || skill.getName().toLowerCase().equals("ALL"))
                 continue;
 
-            if (cmd instanceof OutsourcedSkill) {
-                OutsourcedSkill skill = (OutsourcedSkill) cmd;
+            if (skill instanceof OutsourcedSkill) {
                 if (playerClass.hasSkill(skill.getName())) {
-                    skill.tryLearningSkill(hero);
+                    ((OutsourcedSkill) skill).tryLearningSkill(hero);
                 }
             }
-
-            if (cmd instanceof PassiveSkill) {
-                PassiveSkill skill = (PassiveSkill) cmd;
+            if (skill instanceof PassiveSkill) {
                 if (playerClass.hasSkill(skill.getName())) {
-                    skill.tryApplying(hero);
+                    ((PassiveSkill) skill).tryApplying(hero);
                 }
             }
         }
