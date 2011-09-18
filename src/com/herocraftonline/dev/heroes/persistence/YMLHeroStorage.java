@@ -126,7 +126,8 @@ public class YMLHeroStorage extends HeroStorage {
                 
                 hero.setExperience(heroClass, exp);
                 if (!heroClass.isPrimary() && exp > 0) {
-                    hero.setExperience(heroClass.getParent(), plugin.getConfigManager().getProperties().maxExp);
+                    HeroClass parent = heroClass.getParent();
+                    hero.setExperience(parent, plugin.getConfigManager().getProperties().levels[parent.getMaxLevel()]);
                 }
             }
         }

@@ -30,7 +30,6 @@ public class SkillManager {
     private Set<String> skillFiles;
     private final Heroes plugin;
     private final File dir;
-    private boolean allSkills = false;
     
     public SkillManager(Heroes plugin) {
         skills = new LinkedHashMap<String, Skill>();
@@ -201,6 +200,5 @@ public class SkillManager {
                 }
             }
         }
-        Heroes.log(Level.INFO, "Skills loaded: " + loadedSkills.toString().replace("[", "").replace("]", ""));
     }
 }
