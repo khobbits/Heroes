@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.CustomEventListener;
 import org.bukkit.event.Event;
 
-import com.herocraftonline.dev.heroes.persistence.Hero;
+import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.OutsourcedSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.nijiko.permissions.StorageReloadEvent;

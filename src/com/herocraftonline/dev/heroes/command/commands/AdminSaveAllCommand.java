@@ -5,7 +5,7 @@ import org.bukkit.command.CommandSender;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.command.BasicCommand;
 import com.herocraftonline.dev.heroes.command.CommandHandler;
-import com.herocraftonline.dev.heroes.persistence.Hero;
+import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.util.Messaging;
 
 public class AdminSaveAllCommand extends BasicCommand {
@@ -31,7 +31,7 @@ public class AdminSaveAllCommand extends BasicCommand {
         
 
         for (Hero hero : plugin.getHeroManager().getHeroes()) {
-            plugin.getHeroManager().saveHero(hero.getPlayer());
+            plugin.getHeroManager().saveHero(hero);
         }
         Messaging.send(sender, "You have saved all loaded Heroes.");
         return true;

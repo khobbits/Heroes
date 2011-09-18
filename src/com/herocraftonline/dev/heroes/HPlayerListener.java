@@ -26,8 +26,8 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.command.Command;
 import com.herocraftonline.dev.heroes.effects.PeriodicEffect;
-import com.herocraftonline.dev.heroes.persistence.Hero;
-import com.herocraftonline.dev.heroes.persistence.HeroManager;
+import com.herocraftonline.dev.heroes.hero.Hero;
+import com.herocraftonline.dev.heroes.hero.HeroManager;
 import com.herocraftonline.dev.heroes.skill.OutsourcedSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
 
@@ -81,7 +81,7 @@ public class HPlayerListener extends PlayerListener {
     @Override
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        Hero hero = plugin.getHeroManager().loadHero(player);
+        Hero hero = plugin.getHeroManager().getHero(player);
         hero.syncExperience();
         hero.syncHealth();
         this.plugin.getInventoryChecker().checkInventory(player);
@@ -118,9 +118,10 @@ public class HPlayerListener extends PlayerListener {
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
         HeroManager heroManager = plugin.getHeroManager();
-        heroManager.getHero(event.getPlayer()).clearEffects();
-        heroManager.saveHero(player);
-        heroManager.removeHero(heroManager.getHero(player));
+        Hero hero = heroManager.getHero(player);
+        hero.clearEffects();
+        heroManager.saveHero(hero);
+        heroManager.removeHero(hero);
         for (Command command : plugin.getCommandHandler().getCommands()) {
             if (command.isInteractive()) {
                 command.cancelInteraction(player);

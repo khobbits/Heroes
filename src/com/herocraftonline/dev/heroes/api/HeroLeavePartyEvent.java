@@ -2,8 +2,8 @@ package com.herocraftonline.dev.heroes.api;
 
 import org.bukkit.event.Event;
 
+import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.party.HeroParty;
-import com.herocraftonline.dev.heroes.persistence.Hero;
 
 @SuppressWarnings("serial")
 public class HeroLeavePartyEvent extends Event {

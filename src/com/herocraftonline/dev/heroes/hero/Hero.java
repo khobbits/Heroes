@@ -1,4 +1,4 @@
-package com.herocraftonline.dev.heroes.persistence;
+package com.herocraftonline.dev.heroes.hero;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -275,7 +275,7 @@ public class Hero {
                 if (newLevel >= heroClass.getMaxLevel()) {
                     setExperience(prop.getExperience(heroClass.getMaxLevel()));
                     Messaging.broadcast(plugin, "$1 has become a master $2!", player.getName(), heroClass.getName());
-                    plugin.getHeroManager().saveHero(player);
+                    plugin.getHeroManager().saveHero(this);
                 }
                 if (newLevel > currentLevel) {
                     SpoutUI.sendPlayerNotification(player, ChatColor.GOLD + "Level Up!", ChatColor.DARK_RED + "Level - " + String.valueOf(newLevel), Material.DIAMOND_HELMET);

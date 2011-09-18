@@ -4,7 +4,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 
-import com.herocraftonline.dev.heroes.persistence.Hero;
+import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
 
 @SuppressWarnings("serial")

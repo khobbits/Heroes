@@ -2,7 +2,7 @@ package com.herocraftonline.dev.heroes.effects;
 
 import org.bukkit.entity.Creature;
 
-import com.herocraftonline.dev.heroes.persistence.Hero;
+import com.herocraftonline.dev.heroes.hero.Hero;
 
 public interface Periodic {
 

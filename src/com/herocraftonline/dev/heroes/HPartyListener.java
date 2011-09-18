@@ -1,7 +1,7 @@
 package com.herocraftonline.dev.heroes;
 
+import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.party.HeroParty;
-import com.herocraftonline.dev.heroes.persistence.Hero;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityListener;

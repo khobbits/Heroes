@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.HeroJoinPartyEvent;
 import com.herocraftonline.dev.heroes.command.BasicCommand;
-import com.herocraftonline.dev.heroes.persistence.Hero;
+import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.util.Messaging;
 
 public class PartyAcceptCommand extends BasicCommand {

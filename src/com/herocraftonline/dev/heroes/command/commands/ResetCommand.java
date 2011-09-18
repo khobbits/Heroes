@@ -12,7 +12,7 @@ import com.herocraftonline.dev.heroes.command.BasicInteractiveCommand;
 import com.herocraftonline.dev.heroes.command.BasicInteractiveCommandState;
 import com.herocraftonline.dev.heroes.command.CommandHandler;
 import com.herocraftonline.dev.heroes.command.InteractiveCommandState;
-import com.herocraftonline.dev.heroes.persistence.Hero;
+import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.util.Messaging;
 
 public class ResetCommand extends BasicInteractiveCommand {
@@ -101,7 +101,7 @@ public class ResetCommand extends BasicInteractiveCommand {
             }
             
             Messaging.send(player, "Welcome to the path of the $1!", defaultClass.getName());
-            plugin.getHeroManager().saveHero(player);
+            plugin.getHeroManager().saveHero(hero);
             return true;
         }
 

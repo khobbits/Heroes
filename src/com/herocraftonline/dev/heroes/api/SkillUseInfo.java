@@ -1,6 +1,6 @@
 package com.herocraftonline.dev.heroes.api;
 
-import com.herocraftonline.dev.heroes.persistence.Hero;
+import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
 
 public class SkillUseInfo {

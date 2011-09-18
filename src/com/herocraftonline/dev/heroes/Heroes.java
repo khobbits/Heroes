@@ -54,11 +54,11 @@ import com.herocraftonline.dev.heroes.command.commands.ToolsCommand;
 import com.herocraftonline.dev.heroes.command.commands.VerboseCommand;
 import com.herocraftonline.dev.heroes.command.commands.WhoCommand;
 import com.herocraftonline.dev.heroes.damage.DamageManager;
+import com.herocraftonline.dev.heroes.hero.Hero;
+import com.herocraftonline.dev.heroes.hero.HeroManager;
 import com.herocraftonline.dev.heroes.inventory.SpoutInventoryListener;
 import com.herocraftonline.dev.heroes.inventory.InventoryChecker;
 import com.herocraftonline.dev.heroes.party.PartyManager;
-import com.herocraftonline.dev.heroes.persistence.Hero;
-import com.herocraftonline.dev.heroes.persistence.HeroManager;
 import com.herocraftonline.dev.heroes.skill.OutsourcedSkill;
 import com.herocraftonline.dev.heroes.skill.SkillManager;
 import com.herocraftonline.dev.heroes.util.ConfigManager;
@@ -242,8 +242,9 @@ public class Heroes extends JavaPlugin {
             if (heroManager.containsPlayer(player)) {
                 continue;
             }
-
-            heroManager.loadHero(player);
+            
+            //Make sure all the hero's are loaded
+            heroManager.getHero(player);
             getInventoryChecker().checkInventory(player);
         }
         

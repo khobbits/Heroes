@@ -2,7 +2,7 @@ package com.herocraftonline.dev.heroes.api;
 
 import org.bukkit.event.Event;
 
-import com.herocraftonline.dev.heroes.persistence.Hero;
+import com.herocraftonline.dev.heroes.hero.Hero;
 
 @SuppressWarnings("serial")
 public class HeroChangeLevelEvent extends Event {

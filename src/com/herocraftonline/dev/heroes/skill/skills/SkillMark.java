@@ -7,7 +7,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.persistence.Hero;
+import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Messaging;
@@ -48,7 +48,7 @@ public class SkillMark extends ActiveSkill {
             Object[] obj = new Object[] { loc.getWorld().getName(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ() };
             Messaging.send(player, "You have marked a new location on $1 at: $2, $3, $4", obj);
 
-            plugin.getHeroManager().saveHero(player);
+            plugin.getHeroManager().saveHero(hero);
             return true;
         }
     }

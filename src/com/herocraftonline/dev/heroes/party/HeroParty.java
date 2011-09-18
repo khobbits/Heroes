@@ -6,7 +6,7 @@ import java.util.Set;
 
 import org.bukkit.entity.Player;
 
-import com.herocraftonline.dev.heroes.persistence.Hero;
+import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.util.Messaging;
 
 public class HeroParty {

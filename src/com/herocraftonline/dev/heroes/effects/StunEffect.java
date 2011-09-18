@@ -3,7 +3,7 @@ package com.herocraftonline.dev.heroes.effects;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import com.herocraftonline.dev.heroes.persistence.Hero;
+import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
 
 public class StunEffect extends PeriodicExpirableEffect {

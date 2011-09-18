@@ -113,10 +113,7 @@ public class CommandHandler {
             return true;
         }
         Player player = (Player) sender;
-        if (player.isOp()) {
-            return true;
-        }
-        if (player.hasPermission(permission)) {
+        if (player.isOp() || player.hasPermission(permission)) {
             return true;
         }
         if (Heroes.Permissions != null) {

@@ -70,6 +70,9 @@ public class Properties {
     public byte mapID;
     public int mapPacketInterval;
 
+    // Storage Stuffs
+    public String storageType;
+    
     // Worlds
     public Set<String> disabledWorlds = new HashSet<String>();
 

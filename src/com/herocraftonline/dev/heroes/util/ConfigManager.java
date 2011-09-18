@@ -60,6 +60,7 @@ public class ConfigManager {
         loadBedConfig(primaryConfig);
         loadManaConfig(primaryConfig);
         loadMapConfig(primaryConfig);
+        loadStorageConfig(primaryConfig);
         loadWorldConfig(primaryConfig);
         primaryConfig.save();
     }
@@ -224,7 +225,12 @@ public class ConfigManager {
         properties.healInterval = config.getInt(root + "healInterval", 30);
         properties.healPercent = config.getInt(root + "healPercent", 5);
     }
-
+    
+    private void loadStorageConfig(Configuration config) {
+        String root = "storage.";
+        properties.storageType = config.getString(root + "type", "yml");
+    }
+    
     private void loadManaConfig(Configuration config) {
         String root = "mana.";
         properties.manaRegenInterval = config.getInt(root + "regenInterval", 5);
