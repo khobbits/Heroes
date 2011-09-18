@@ -112,6 +112,9 @@ public class Hero {
      * @param effect
      */
     public void addEffect(Effect effect) {
+        if (hasEffect(effect.getName())) {
+            removeEffect(getEffect(effect.getName()));
+        }
         effects.add(effect);
         effect.apply(this);
     }
