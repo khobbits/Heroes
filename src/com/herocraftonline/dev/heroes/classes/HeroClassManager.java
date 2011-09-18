@@ -214,27 +214,27 @@ public class HeroClassManager {
                         allSkills = true;
                         continue;
                     }
-                    try {
-                        Skill skill = plugin.getSkillManager().getSkill(skillName);
-                        if (skill == null) {
-                            Heroes.log(Level.WARNING, "Skill " + skillName + " defined for " + className + " not found.");
-                            continue;
-                        }
-
-                        ConfigurationNode skillSettings = Configuration.getEmptyNode();
-                        List<String> settings = config.getKeys("classes." + className + ".permitted-skills." + skillName);
-                        if (settings != null) {
-                            for (String key : settings) {
-                                skillSettings.setProperty(key, config.getProperty("classes." + className + ".permitted-skills." + skillName + "." + key));
-                            }
-                        }
-                        newClass.addSkill(skillName, skillSettings);
-                    } catch (IllegalArgumentException e) {
-                        Heroes.log(Level.WARNING, "Invalid skill (" + skillName + ") defined for " + className + ". Skipping this skill.");
+                    Skill skill = plugin.getSkillManager().getSkill(skillName);
+                    if (skill == null) {
+                        Heroes.log(Level.WARNING, "Skill " + skillName + " defined for " + className + " not found.");
+                        continue;
                     }
+
+                    ConfigurationNode skillSettings = Configuration.getEmptyNode();
+                    List<String> settings = config.getKeys("classes." + className + ".permitted-skills." + skillName);
+                    if (settings != null) {
+                        for (String key : settings) {
+                            skillSettings.setProperty(key, config.getProperty("classes." + className + ".permitted-skills." + skillName + "." + key));
+                        }
+                    }
+                    newClass.addSkill(skillName, skillSettings);
+
                 }
+                
                 // Load all skills onto the Class if we found ALL
                 if (allSkills) {
+                    //Make sure all the skills are loaded first
+                    plugin.getSkillManager().loadSkills();
                     for (Skill skill : plugin.getSkillManager().getSkills()) {
                         // Ignore this skill if it was already loaded onto the class (we don't want to overwrite defined skills as they have settings)
                         if (newClass.hasSkill(skill.getName()))
@@ -248,7 +248,6 @@ public class HeroClassManager {
                             }
                         }
                         newClass.addSkill(skill.getName(), skillSettings);
-
                     }
                 }
             }

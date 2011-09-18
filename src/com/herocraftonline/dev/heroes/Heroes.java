@@ -219,9 +219,6 @@ public class Heroes extends JavaPlugin {
         // Check for BukkitContrib
         setupSpout();
 
-        // Load the skills
-        skillManager.loadSkills();
-
         //Load in the rest of the values into their managers
         configManager.loadManagers();
         
