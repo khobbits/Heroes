@@ -74,10 +74,6 @@ public class ConfigManager {
         expConfig.load();
         loadExperience(expConfig);
 
-        Configuration skillConfig = new Configuration(skillConfigFile);
-        skillConfig.load();
-        generateSkillConfigs(skillConfig);
-
         HeroClassManager heroClassManager = new HeroClassManager(plugin);
         heroClassManager.loadClasses(classConfigFile);
         plugin.setClassManager(heroClassManager);
@@ -124,19 +120,22 @@ public class ConfigManager {
             }
         }
     }
-
-    private void generateSkillConfigs(Configuration config) {
-        for (Skill skill : plugin.getSkillManager().getSkills()) {
-            ConfigurationNode node = config.getNode(skill.getName());
-            if (node == null) {
-                config.setProperty(skill.getName(), skill.getDefaultConfig().getAll());
-            } else {
-                ConfigurationNode defaultNode = skill.getDefaultConfig();
-                mergeNodeToConfig(config, defaultNode, skill.getName());
-            }
+    
+    public void loadSkillConfig(Skill skill) {
+        Configuration config = new Configuration(skillConfigFile);
+        config.load();
+        
+        ConfigurationNode node = config.getNode(skill.getName());
+        ConfigurationNode defaultNode = skill.getDefaultConfig();
+        if (node == null) {
+            config.setProperty(skill.getName(), defaultNode.getAll());
+            skill.setConfig(defaultNode);
+        } else {
+            mergeNodeToConfig(config, defaultNode, skill.getName());
+            skill.setConfig(config.getNode(skill.getName()));
         }
         config.save();
-        loadSkillConfigs(config);
+        skill.init();
     }
 
     private void loadDefaultConfig(Configuration config) {
@@ -251,19 +250,6 @@ public class ConfigManager {
         String root = "worlds.";
         List<String> worlds = config.getStringList(root + "disabledWorlds", new ArrayList<String>());
         properties.disabledWorlds.addAll(worlds);
-    }
-
-    private void loadSkillConfigs(Configuration config) {
-        config.load();
-        for (Skill skill : plugin.getSkillManager().getSkills()) {
-            ConfigurationNode node = config.getNode(skill.getName());
-            if (node != null) {
-                skill.setConfig(node);
-            } else {
-                skill.setConfig(Configuration.getEmptyNode());
-            }
-            skill.init();
-        }
     }
 
     private void mergeNodeToConfig(Configuration config, ConfigurationNode node, String path) {

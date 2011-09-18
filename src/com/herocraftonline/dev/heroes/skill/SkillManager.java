@@ -137,7 +137,9 @@ public class SkillManager {
                 }
                 Class<? extends Skill> skillClass = clazz.asSubclass(Skill.class);
                 Constructor<? extends Skill> ctor = skillClass.getConstructor(plugin.getClass());
-                return ctor.newInstance(plugin);
+                Skill skill = ctor.newInstance(plugin);
+                plugin.getConfigManager().loadSkillConfig(skill);
+                return skill;
             } else {
                 throw new Exception();
             }
@@ -158,7 +160,8 @@ public class SkillManager {
         if (isLoaded(name))
             return true;
         
-        if (skillFiles.contains(name.toLowerCase())) {
+        name = "skill" + name.toLowerCase();
+        if (skillFiles.contains(name)) {
             Skill skill = loadSkill(new File(dir, name + ".jar"));
             if (skill == null)
                 return false;
