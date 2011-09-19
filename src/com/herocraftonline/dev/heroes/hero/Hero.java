@@ -82,8 +82,8 @@ public class Hero {
     public void syncHealth() {
         if ((player.isDead() || player.getHealth() == 0) && health <= 0)
             return;
-
-        player.setHealth((int) (health / getMaxHealth() * 20));
+        
+        player.setHealth((int) Math.ceil((health / getMaxHealth() * 20)));
     }
 
     /**

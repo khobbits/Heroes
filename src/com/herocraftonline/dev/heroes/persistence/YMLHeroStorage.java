@@ -52,8 +52,7 @@ public class YMLHeroStorage extends HeroStorage {
             playerHero.setHealth(playerConfig.getDouble("health", playerClass.getBaseMaxHealth()));
             playerHero.setVerbose(playerConfig.getBoolean("verbose", true));
             playerHero.setSuppressedSkills(new HashSet<String>(playerConfig.getStringList("suppressed", null)));
-            playerHero.syncHealth();
-
+            
             Heroes.log(Level.INFO, "Loaded hero: " + player.getName());
             return playerHero;
         } else {
