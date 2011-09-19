@@ -31,7 +31,7 @@ public class SkillBolt extends TargettedSkill {
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
-        
+
         plugin.getDamageManager().addSpellTarget(target, hero, this);
         target.getWorld().strikeLightningEffect(target.getLocation());
         target.damage(getSetting(hero.getHeroClass(), Setting.DAMAGE.node(), 4), player);

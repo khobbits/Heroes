@@ -6,10 +6,8 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.herocraftonline.dev.heroes.command.commands.PartyUICommand;
-import com.herocraftonline.dev.heroes.ui.ColorMap;
-import com.herocraftonline.dev.heroes.ui.MapAPI;
-import com.herocraftonline.dev.heroes.ui.MapInfo;
+import javax.imageio.ImageIO;
+
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
@@ -44,6 +42,7 @@ import com.herocraftonline.dev.heroes.command.commands.PartyChatCommand;
 import com.herocraftonline.dev.heroes.command.commands.PartyInviteCommand;
 import com.herocraftonline.dev.heroes.command.commands.PartyLeaveCommand;
 import com.herocraftonline.dev.heroes.command.commands.PartyModeCommand;
+import com.herocraftonline.dev.heroes.command.commands.PartyUICommand;
 import com.herocraftonline.dev.heroes.command.commands.PartyWhoCommand;
 import com.herocraftonline.dev.heroes.command.commands.PathsCommand;
 import com.herocraftonline.dev.heroes.command.commands.RecoverItemsCommand;
@@ -57,11 +56,14 @@ import com.herocraftonline.dev.heroes.command.commands.WhoCommand;
 import com.herocraftonline.dev.heroes.damage.DamageManager;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.hero.HeroManager;
-import com.herocraftonline.dev.heroes.inventory.SpoutInventoryListener;
 import com.herocraftonline.dev.heroes.inventory.InventoryChecker;
+import com.herocraftonline.dev.heroes.inventory.SpoutInventoryListener;
 import com.herocraftonline.dev.heroes.party.PartyManager;
 import com.herocraftonline.dev.heroes.skill.OutsourcedSkill;
 import com.herocraftonline.dev.heroes.skill.SkillManager;
+import com.herocraftonline.dev.heroes.ui.ColorMap;
+import com.herocraftonline.dev.heroes.ui.MapAPI;
+import com.herocraftonline.dev.heroes.ui.MapInfo;
 import com.herocraftonline.dev.heroes.util.ConfigManager;
 import com.herocraftonline.dev.heroes.util.DebugLog;
 import com.herocraftonline.economy.economies.BOSE;
@@ -71,8 +73,6 @@ import com.herocraftonline.economy.economies.iCo5;
 import com.herocraftonline.economy.economies.iCo6;
 import com.nijiko.permissions.PermissionHandler;
 import com.nijikokun.bukkit.Permissions.Permissions;
-
-import javax.imageio.ImageIO;
 
 /**
  * Heroes Plugin for Herocraft
@@ -96,12 +96,12 @@ public class Heroes extends JavaPlugin {
     private final HBlockListener blockListener = new HBlockListener(this);
     private final HPartyListener partyListener = new HPartyListener(this);
     private final HEventListener hEventListener = new HEventListener(this);
-    
+
     // Various data managers
     private ConfigManager configManager;
     private CommandHandler commandHandler = new CommandHandler(this);
     private HeroClassManager heroClassManager;
-    
+
     private HeroManager heroManager;
     private PartyManager partyManager;
     private DamageManager damageManager;
@@ -116,7 +116,7 @@ public class Heroes extends JavaPlugin {
     // Inventory Checker Class -- This class has the methods to check a players inventory and
     // restrictions.
     private InventoryChecker inventoryChecker;
-    
+
     /**
      * Print messages to the Debug Log, if the servers in Debug Mode then we also wan't to print the messages to the
      * standard Server Console.
@@ -135,10 +135,6 @@ public class Heroes extends JavaPlugin {
         return heroClassManager;
     }
 
-    public SkillManager getSkillManager() {
-        return skillManager;
-    }
-    
     public CommandHandler getCommandHandler() {
         return commandHandler;
     }
@@ -163,16 +159,8 @@ public class Heroes extends JavaPlugin {
         return partyManager;
     }
 
-    /**
-     * Print messages to the server Log as well as to our DebugLog. 'debugLog' is used to seperate Heroes information
-     * from the Servers Log Output.
-     * 
-     * @param level
-     * @param msg
-     */
-    public static void log(Level level, String msg) {
-        log.log(level, "[Heroes] " + msg);
-        debugLog.log(level, "[Heroes] " + msg);
+    public SkillManager getSkillManager() {
+        return skillManager;
     }
 
     /**
@@ -186,6 +174,7 @@ public class Heroes extends JavaPlugin {
     /**
      * What to do during the Disabling of Heroes -- Likely save data and close connections.
      */
+    @Override
     public void onDisable() {
         heroManager.stopTimers();
         final Player[] players = getServer().getOnlinePlayers();
@@ -199,9 +188,10 @@ public class Heroes extends JavaPlugin {
         debugLog.close();
     }
 
+    @Override
     public void onEnable() {
         configManager = new ConfigManager(this);
-        
+
         // Attempt to load the Configuration file.
         try {
             configManager.load();
@@ -211,7 +201,7 @@ public class Heroes extends JavaPlugin {
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
-        
+
         partyManager = new PartyManager(this);
         heroManager = new HeroManager(this);
         damageManager = new DamageManager(this);
@@ -220,9 +210,9 @@ public class Heroes extends JavaPlugin {
         // Check for BukkitContrib
         setupSpout();
 
-        //Load in the rest of the values into their managers
+        // Load in the rest of the values into their managers
         configManager.loadManagers();
-        
+
         blockListener.init();
 
         // Call our function to register the events Heroes needs.
@@ -240,12 +230,12 @@ public class Heroes extends JavaPlugin {
             if (heroManager.containsPlayer(player)) {
                 continue;
             }
-            
-            //Make sure all the hero's are loaded
+
+            // Make sure all the hero's are loaded
             heroManager.getHero(player);
             getInventoryChecker().checkInventory(player);
         }
-        
+
         // Set the Party UI map to a nice splash screen.
         if (getConfigManager().getProperties().mapUI) {
             MapAPI mapAPI = new MapAPI();
@@ -277,21 +267,6 @@ public class Heroes extends JavaPlugin {
         this.heroClassManager = heroClassManager;
     }
 
-    /**
-     * Check to see if Spout is enabled on the server, if so inform Heroes to use BukkitContrib instead.
-     */
-    public void setupSpout() {
-        Plugin test = this.getServer().getPluginManager().getPlugin("Spout");
-        SpoutInventoryListener spoutInventoryListener;
-        if (test != null) {
-            Heroes.useSpout = true;
-            spoutInventoryListener = new SpoutInventoryListener(this);
-            Bukkit.getServer().getPluginManager().registerEvent(Type.CUSTOM_EVENT, spoutInventoryListener, Priority.Monitor, this);
-        } else {
-            Heroes.useSpout = false;
-        }
-    }
-
     public void setupEconomy() {
         PluginManager pm = this.getServer().getPluginManager();
         Plugin test = pm.getPlugin("iConomy");
@@ -314,11 +289,12 @@ public class Heroes extends JavaPlugin {
                 }
             }
         }
-        
+
         if (econ != null) {
             econ.setPlugin(test);
         }
     }
+
     /**
      * Perform a Permissions check and setup Permissions if found.
      */
@@ -326,11 +302,8 @@ public class Heroes extends JavaPlugin {
         Plugin test = this.getServer().getPluginManager().getPlugin("Permissions");
         if (Heroes.Permissions == null) {
             if (test != null) {
-                //Ignore fake permissions or Bukkit Permissions
-                if (test.getDescription().getVersion().startsWith("2") ||
-                        this.getServer().getPluginManager().getPlugin("GroupManager") != null || 
-                        this.getServer().getPluginManager().getPlugin("PermissionsBukkit") != null ||
-                        this.getServer().getPluginManager().getPlugin("bPermissions") != null)
+                // Ignore fake permissions or Bukkit Permissions
+                if (test.getDescription().getVersion().startsWith("2") || this.getServer().getPluginManager().getPlugin("GroupManager") != null || this.getServer().getPluginManager().getPlugin("PermissionsBukkit") != null || this.getServer().getPluginManager().getPlugin("bPermissions") != null)
                     return;
 
                 Heroes.Permissions = ((Permissions) test).getHandler();
@@ -357,6 +330,21 @@ public class Heroes extends JavaPlugin {
     }
 
     /**
+     * Check to see if Spout is enabled on the server, if so inform Heroes to use BukkitContrib instead.
+     */
+    public void setupSpout() {
+        Plugin test = this.getServer().getPluginManager().getPlugin("Spout");
+        SpoutInventoryListener spoutInventoryListener;
+        if (test != null) {
+            Heroes.useSpout = true;
+            spoutInventoryListener = new SpoutInventoryListener(this);
+            Bukkit.getServer().getPluginManager().registerEvent(Type.CUSTOM_EVENT, spoutInventoryListener, Priority.Monitor, this);
+        } else {
+            Heroes.useSpout = false;
+        }
+    }
+
+    /**
      * Register Heroes commands to DThielke's Command Manager.
      */
     private void registerCommands() {
@@ -379,7 +367,6 @@ public class Heroes extends JavaPlugin {
         commandHandler.addCommand(new PartyAcceptCommand(this));
         commandHandler.addCommand(new PartyInviteCommand(this));
         commandHandler.addCommand(new PartyWhoCommand(this));
-        
 
         // Page 3
         commandHandler.addCommand(new PartyLeaveCommand(this));
@@ -390,7 +377,6 @@ public class Heroes extends JavaPlugin {
         commandHandler.addCommand(new ConfigReloadCommand(this));
         commandHandler.addCommand(new HelpCommand(this));
         commandHandler.addCommand(new AdminExpCommand(this));
-
 
         // Page 4
         commandHandler.addCommand(new AdminLevelCommand(this));
@@ -435,5 +421,17 @@ public class Heroes extends JavaPlugin {
         pluginManager.registerEvent(Type.ENTITY_REGAIN_HEALTH, partyListener, Priority.Monitor, this);
 
         damageManager.registerEvents();
+    }
+
+    /**
+     * Print messages to the server Log as well as to our DebugLog. 'debugLog' is used to seperate Heroes information
+     * from the Servers Log Output.
+     * 
+     * @param level
+     * @param msg
+     */
+    public static void log(Level level, String msg) {
+        log.log(level, "[Heroes] " + msg);
+        debugLog.log(level, "[Heroes] " + msg);
     }
 }

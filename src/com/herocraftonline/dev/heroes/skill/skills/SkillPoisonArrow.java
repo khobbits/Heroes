@@ -33,7 +33,7 @@ public class SkillPoisonArrow extends ActiveSkill {
         setArgumentRange(0, 0);
         setIdentifiers("skill parrow", "skill poisonarrow");
         setTypes(SkillType.BUFF);
-        
+
         registerEvent(Type.ENTITY_DAMAGE, new SkillDamageListener(this), Priority.Monitor);
     }
 
@@ -44,24 +44,91 @@ public class SkillPoisonArrow extends ActiveSkill {
         node.setProperty(Setting.DURATION.node(), 60000); // milliseconds
         node.setProperty(Setting.PERIOD.node(), 2000); // 2 seconds in milliseconds
         node.setProperty("tick-damage", 2);
-        node.setProperty("attacks", 1); //How many attacks the buff lasts for.
+        node.setProperty("attacks", 1); // How many attacks the buff lasts for.
         node.setProperty(Setting.APPLY_TEXT.node(), "%target% is poisoned!");
         node.setProperty(Setting.EXPIRE_TEXT.node(), "%target% has recovered from the poison!");
         return node;
     }
 
+    @Override
     public void init() {
         super.init();
         applyText = getSetting(null, Setting.APPLY_TEXT.node(), "%target% is poisoned!").replace("%target%", "$1");
         expireText = getSetting(null, Setting.EXPIRE_TEXT.node(), "%target% has recovered from the poison!").replace("%target%", "$1");
     }
 
+    @Override
     public boolean use(Hero hero, String[] args) {
         long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 600000);
         int numAttacks = getSetting(hero.getHeroClass(), "attacks", 1);
         hero.addEffect(new PoisonArrowBuff(this, duration, numAttacks));
         broadcastExecuteText(hero);
         return true;
+    }
+
+    public class ArrowPoison extends PeriodicDamageEffect {
+
+        public ArrowPoison(Skill skill, long period, long duration, int tickDamage, Player applier) {
+            super(skill, "ArrowPoison", period, duration, tickDamage, applier);
+            this.types.add(EffectType.POISON);
+
+        }
+
+        @Override
+        public void apply(Creature creature) {
+            super.apply(creature);
+            broadcast(creature.getLocation(), applyText, Messaging.getCreatureName(creature).toLowerCase());
+        }
+
+        @Override
+        public void apply(Hero hero) {
+            super.apply(hero);
+            broadcast(hero.getPlayer().getLocation(), applyText, hero.getPlayer().getDisplayName());
+        }
+
+        @Override
+        public void remove(Creature creature) {
+            super.remove(creature);
+            broadcast(creature.getLocation(), expireText, Messaging.getCreatureName(creature).toLowerCase());
+        }
+
+        @Override
+        public void remove(Hero hero) {
+            super.remove(hero);
+            broadcast(hero.getPlayer().getLocation(), expireText, hero.getPlayer().getDisplayName());
+        }
+    }
+
+    public class PoisonArrowBuff extends ExpirableEffect {
+
+        private int applicationsLeft = 1;
+
+        public PoisonArrowBuff(Skill skill, long duration, int numAttacks) {
+            super(skill, "PoisonArrowBuff", duration);
+            this.applicationsLeft = numAttacks;
+            this.types.add(EffectType.BENEFICIAL);
+            this.types.add(EffectType.POISON);
+        }
+
+        /**
+         * @return the applicationsLeft
+         */
+        public int getApplicationsLeft() {
+            return applicationsLeft;
+        }
+
+        @Override
+        public void remove(Hero hero) {
+            Messaging.send(hero.getPlayer(), "Your arrows are no longer poisoned");
+        }
+
+        /**
+         * @param applicationsLeft
+         *            the applicationsLeft to set
+         */
+        public void setApplicationsLeft(int applicationsLeft) {
+            this.applicationsLeft = applicationsLeft;
+        }
     }
 
     public class SkillDamageListener extends EntityListener {
@@ -72,6 +139,7 @@ public class SkillPoisonArrow extends ActiveSkill {
             this.skill = skill;
         }
 
+        @Override
         public void onEntityDamage(EntityDamageEvent event) {
             if (event.isCancelled() || !(event instanceof EntityDamageByEntityEvent))
                 return;
@@ -79,11 +147,11 @@ public class SkillPoisonArrow extends ActiveSkill {
             EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
             if (!(subEvent.getDamager() instanceof Arrow))
                 return;
-            
+
             Arrow arrow = (Arrow) subEvent.getDamager();
             if (!(arrow.getShooter() instanceof Player))
                 return;
-            
+
             Player player = (Player) arrow.getShooter();
             Hero hero = plugin.getHeroManager().getHero(player);
 
@@ -92,7 +160,7 @@ public class SkillPoisonArrow extends ActiveSkill {
                 long period = getSetting(hero.getHeroClass(), Setting.PERIOD.node(), 2000);
                 int tickDamage = getSetting(hero.getHeroClass(), "tick-damage", 2);
                 ArrowPoison apEffect = new ArrowPoison(skill, period, duration, tickDamage, player);
-                
+
                 if (event.getEntity() instanceof Creature) {
                     plugin.getHeroManager().addCreatureEffect((Creature) event.getEntity(), apEffect);
                     checkBuff(hero);
@@ -103,72 +171,13 @@ public class SkillPoisonArrow extends ActiveSkill {
                 }
             }
         }
-        
+
         private void checkBuff(Hero hero) {
             PoisonArrowBuff paBuff = (PoisonArrowBuff) hero.getEffect("PoisonArrowBuff");
             paBuff.applicationsLeft -= 1;
-            if (paBuff.applicationsLeft < 1)
+            if (paBuff.applicationsLeft < 1) {
                 hero.removeEffect(paBuff);
-        }
-    }
-    
-    public class PoisonArrowBuff extends ExpirableEffect {
-        
-        private int applicationsLeft = 1;
-        
-        public PoisonArrowBuff(Skill skill, long duration, int numAttacks) {
-            super(skill, "PoisonArrowBuff", duration);
-            this.applicationsLeft = numAttacks;
-            this.types.add(EffectType.BENEFICIAL);
-            this.types.add(EffectType.POISON);
-        }
-        
-        /**
-         * @return the applicationsLeft
-         */
-        public int getApplicationsLeft() {
-            return applicationsLeft;
-        }
-
-        /**
-         * @param applicationsLeft the applicationsLeft to set
-         */
-        public void setApplicationsLeft(int applicationsLeft) {
-            this.applicationsLeft = applicationsLeft;
-        }
-
-        @Override
-        public void remove(Hero hero) {
-            Messaging.send(hero.getPlayer(), "Your arrows are no longer poisoned");
-        }
-    }
-    
-    public class ArrowPoison extends PeriodicDamageEffect {
-
-        public ArrowPoison(Skill skill, long period, long duration, int tickDamage, Player applier) {
-            super(skill, "ArrowPoison", period, duration, tickDamage, applier);
-            this.types.add(EffectType.POISON);
-
-        }
-
-        public void apply(Hero hero) {
-            super.apply(hero);
-            broadcast(hero.getPlayer().getLocation(), applyText, hero.getPlayer().getDisplayName());
-        }
-
-        public void apply(Creature creature) {
-            super.apply(creature);
-            broadcast(creature.getLocation(), applyText, Messaging.getCreatureName(creature).toLowerCase());
-        }
-
-        public void remove(Hero hero) {
-            super.remove(hero);
-            broadcast(hero.getPlayer().getLocation(), expireText, hero.getPlayer().getDisplayName());
-        }
-
-        public void remove(Creature creature) {
-            super.remove(creature);
-            broadcast(creature.getLocation(), expireText, Messaging.getCreatureName(creature).toLowerCase());
+            }
         }
     }
 }

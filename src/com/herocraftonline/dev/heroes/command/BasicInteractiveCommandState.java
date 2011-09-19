@@ -11,18 +11,18 @@ public abstract class BasicInteractiveCommandState implements InteractiveCommand
     }
 
     @Override
+    public int getMaxArguments() {
+        return maxArguments;
+    }
+
+    @Override
     public int getMinArguments() {
         return minArguments;
     }
 
     @Override
-    public int getMaxArguments() {
-        return maxArguments;
-    }
-
-    public void setArgumentRange(int min, int max) {
-        this.minArguments = min;
-        this.maxArguments = max;
+    public boolean isIdentifier(String input) {
+        return input.equalsIgnoreCase(identifier);
     }
 
     /*
@@ -32,9 +32,9 @@ public abstract class BasicInteractiveCommandState implements InteractiveCommand
      * }
      */
 
-    @Override
-    public boolean isIdentifier(String input) {
-        return input.equalsIgnoreCase(identifier);
+    public void setArgumentRange(int min, int max) {
+        this.minArguments = min;
+        this.maxArguments = max;
     }
 
 }

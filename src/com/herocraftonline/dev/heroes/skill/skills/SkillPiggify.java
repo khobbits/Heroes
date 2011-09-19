@@ -36,7 +36,7 @@ public class SkillPiggify extends TargettedSkill {
         setArgumentRange(0, 1);
         setIdentifiers("skill piggify");
         setTypes(SkillType.DEBUFF, SkillType.SILENCABLE, SkillType.HARMFUL);
-        
+
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
     }
 
@@ -71,16 +71,6 @@ public class SkillPiggify extends TargettedSkill {
         return true;
     }
 
-    public class SkillEntityListener extends EntityListener {
-        @Override
-        public void onEntityDamage(EntityDamageEvent event) {
-            if (event.isCancelled() || !creatures.contains(event.getEntity()))
-                return;
-
-            event.setCancelled(true);
-        }
-    }
-
     public class PigEffect extends ExpirableEffect {
 
         private final Creature creature;
@@ -94,6 +84,13 @@ public class SkillPiggify extends TargettedSkill {
         }
 
         @Override
+        public void apply(Creature rider) {
+            super.apply(rider);
+            creature.setPassenger(rider);
+            creatures.add(creature);
+        }
+
+        @Override
         public void apply(Hero hero) {
             super.apply(hero);
             Player player = hero.getPlayer();
@@ -102,10 +99,10 @@ public class SkillPiggify extends TargettedSkill {
         }
 
         @Override
-        public void apply(Creature rider) {
-            super.apply(rider);
-            creature.setPassenger(rider);
-            creatures.add(creature);
+        public void remove(Creature rider) {
+            super.remove(rider);
+            creatures.remove(creature);
+            creature.remove();
         }
 
         @Override
@@ -114,12 +111,15 @@ public class SkillPiggify extends TargettedSkill {
             creatures.remove(creature);
             creature.remove();
         }
+    }
 
+    public class SkillEntityListener extends EntityListener {
         @Override
-        public void remove(Creature rider) {
-            super.remove(rider);
-            creatures.remove(creature);
-            creature.remove();
+        public void onEntityDamage(EntityDamageEvent event) {
+            if (event.isCancelled() || !creatures.contains(event.getEntity()))
+                return;
+
+            event.setCancelled(true);
         }
     }
 }

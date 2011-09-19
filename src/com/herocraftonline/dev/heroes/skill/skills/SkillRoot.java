@@ -37,7 +37,7 @@ public class SkillRoot extends TargettedSkill {
 
         long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 5000);
         RootEffect rEffect = new RootEffect(this, duration);
-        
+
         if (target instanceof Player) {
             plugin.getHeroManager().getHero((Player) target).addEffect(rEffect);
         } else if (target instanceof Creature) {
@@ -46,7 +46,7 @@ public class SkillRoot extends TargettedSkill {
             Messaging.send(player, "Invalid target!");
             return false;
         }
-        
+
         broadcastExecuteText(hero, target);
         return true;
     }

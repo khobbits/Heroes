@@ -2,8 +2,6 @@ package com.herocraftonline.dev.heroes;
 
 import java.util.List;
 
-import com.herocraftonline.dev.heroes.party.HeroParty;
-
 import net.minecraft.server.EntityPlayer;
 
 import org.bukkit.Bukkit;
@@ -28,6 +26,7 @@ import com.herocraftonline.dev.heroes.command.Command;
 import com.herocraftonline.dev.heroes.effects.PeriodicEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.hero.HeroManager;
+import com.herocraftonline.dev.heroes.party.HeroParty;
 import com.herocraftonline.dev.heroes.skill.OutsourcedSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
 
@@ -45,20 +44,25 @@ public class HPlayerListener extends PlayerListener {
     }
 
     @Override
-    public void onPlayerRespawn(PlayerRespawnEvent event) {
-        Player player = event.getPlayer();
-        final Hero hero = plugin.getHeroManager().getHero(player);
-        hero.setHealth(hero.getMaxHealth());
-        CraftPlayer craftPlayer = (CraftPlayer) player;
-        EntityPlayer entityPlayer = craftPlayer.getHandle();
-        entityPlayer.exp = 0;
-        entityPlayer.expTotal = 0;
-        entityPlayer.expLevel = 0;
-        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-            public void run() {
-                hero.syncExperience();
-            }
-        }, 20L);
+    public void onPlayerBedEnter(PlayerBedEnterEvent event) {
+        if (event.isCancelled() || !plugin.getConfigManager().getProperties().bedHeal)
+            return;
+
+        Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
+        long period = plugin.getConfigManager().getProperties().healInterval * 1000;
+        double tickHealPercent = plugin.getConfigManager().getProperties().healPercent / 100.0;
+        BedHealEffect bhEffect = new BedHealEffect(period, tickHealPercent);
+        hero.addEffect(bhEffect);
+    }
+
+    @Override
+    public void onPlayerBedLeave(PlayerBedLeaveEvent event) {
+        if (!plugin.getConfigManager().getProperties().bedHeal)
+            return;
+
+        // This player is no longer in bed so remove them from the bedHealer set
+        Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
+        hero.removeEffect(hero.getEffect("BedHeal"));
     }
 
     @Override
@@ -92,12 +96,12 @@ public class HPlayerListener extends PlayerListener {
 
     @Override
     public void onPlayerPickupItem(PlayerPickupItemEvent event) {
-        if (event.isCancelled()) {
+        if (event.isCancelled())
             return;
-        }
 
         final Player player = event.getPlayer();
         plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+            @Override
             public void run() {
                 plugin.getInventoryChecker().checkInventory(player.getName());
             }
@@ -105,9 +109,8 @@ public class HPlayerListener extends PlayerListener {
 
         Hero hero = plugin.getHeroManager().getHero(player);
 
-        if (!hero.hasParty()) {
+        if (!hero.hasParty())
             return;
-        }
         HeroParty party = hero.getParty();
         if (!party.updateMapDisplay() && event.getItem().getItemStack().getType().toString().equalsIgnoreCase("MAP")) {
             party.setUpdateMapDisplay(true);
@@ -127,6 +130,24 @@ public class HPlayerListener extends PlayerListener {
                 command.cancelInteraction(player);
             }
         }
+    }
+
+    @Override
+    public void onPlayerRespawn(PlayerRespawnEvent event) {
+        Player player = event.getPlayer();
+        final Hero hero = plugin.getHeroManager().getHero(player);
+        hero.setHealth(hero.getMaxHealth());
+        CraftPlayer craftPlayer = (CraftPlayer) player;
+        EntityPlayer entityPlayer = craftPlayer.getHandle();
+        entityPlayer.exp = 0;
+        entityPlayer.expTotal = 0;
+        entityPlayer.expLevel = 0;
+        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+            @Override
+            public void run() {
+                hero.syncExperience();
+            }
+        }, 20L);
     }
 
     @Override
@@ -150,30 +171,6 @@ public class HPlayerListener extends PlayerListener {
             }
         }
 
-    }
-
-    @Override
-    public void onPlayerBedEnter(PlayerBedEnterEvent event) {
-        if (event.isCancelled() || !plugin.getConfigManager().getProperties().bedHeal) {
-            return;
-        }
-
-        Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
-        long period = plugin.getConfigManager().getProperties().healInterval * 1000;
-        double tickHealPercent = plugin.getConfigManager().getProperties().healPercent / 100.0;
-        BedHealEffect bhEffect = new BedHealEffect(period, tickHealPercent);
-        hero.addEffect(bhEffect);
-    }
-
-    @Override
-    public void onPlayerBedLeave(PlayerBedLeaveEvent event) {
-        if (!plugin.getConfigManager().getProperties().bedHeal) {
-            return;
-        }
-
-        // This player is no longer in bed so remove them from the bedHealer set
-        Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
-        hero.removeEffect(hero.getEffect("BedHeal"));
     }
 
     public class BedHealEffect extends PeriodicEffect {

@@ -20,7 +20,8 @@ import com.herocraftonline.dev.heroes.util.Setting;
 /**
  * A skill that provides a passive bonus to a {@link Hero}. The skill's effects are automatically applied when a Hero of
  * the appropriate class reaches the level specified in classes.yml. Because this skill is passive, there is no need to
- * override the {@link #execute(CommandSender, String[]) execute} nor {@link com.herocraftonline.dev.heroes.command.BaseCommand#setUsage(String) use}. Messages displayed when the passive
+ * override the {@link #execute(CommandSender, String[]) execute} nor
+ * {@link com.herocraftonline.dev.heroes.command.BaseCommand#setUsage(String) use}. Messages displayed when the passive
  * effect is applied or removed are automatically pulled from the configs. By default, the effect applied is simply the
  * name of the skill. This can be changed by overriding {@link #apply(Hero) apply} and {@link #unapply(Hero) unapply}.
  * </br>
@@ -44,7 +45,8 @@ public abstract class PassiveSkill extends Skill {
      * not be changed for normal use. There should be no identifiers defined as a passive skill is not meant to be
      * executed.
      * 
-     * @param plugin the active Heroes instance
+     * @param plugin
+     *            the active Heroes instance
      */
     public PassiveSkill(Heroes plugin, String name) {
         super(plugin, name);
@@ -91,7 +93,8 @@ public abstract class PassiveSkill extends Skill {
     /**
      * Attempts to apply this skill's effect to the provided {@link Hero} if the it is the correct class and level.
      * 
-     * @param hero the Hero to try applying the effect to
+     * @param hero
+     *            the Hero to try applying the effect to
      */
     public void tryApplying(Hero hero) {
         HeroClass heroClass = hero.getHeroClass();
@@ -110,7 +113,8 @@ public abstract class PassiveSkill extends Skill {
     /**
      * Applies the effect to the provided {@link Hero}.
      * 
-     * @param hero the Hero to apply the effect to
+     * @param hero
+     *            the Hero to apply the effect to
      */
     protected void apply(Hero hero) {
         Effect effect = new Effect(this, getName(), EffectType.BENEFICIAL);
@@ -123,7 +127,8 @@ public abstract class PassiveSkill extends Skill {
     /**
      * Removes the effect from the provided {@link Hero}.
      * 
-     * @param hero the Hero to remove the effect from
+     * @param hero
+     *            the Hero to remove the effect from
      */
     protected void unapply(Hero hero) {
         if (hero.hasEffect(getName())) {
@@ -138,7 +143,6 @@ public abstract class PassiveSkill extends Skill {
      */
     public class SkillCustomEventListener extends HeroesEventListener {
 
-        
         @Override
         public void onClassChange(ClassChangeEvent event) {
             tryApplying(event.getHero());

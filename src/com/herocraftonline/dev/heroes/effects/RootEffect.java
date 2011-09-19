@@ -13,7 +13,7 @@ public class RootEffect extends PeriodicExpirableEffect {
     private static final long period = 100;
     private final String applyText = "$1 was rooted!";
     private final String expireText = "Root faded from $1!";
-    
+
     private double x, y, z;
 
     public RootEffect(Skill skill, long duration) {
@@ -33,7 +33,7 @@ public class RootEffect extends PeriodicExpirableEffect {
 
         broadcast(location, applyText, Messaging.getCreatureName(creature));
     }
-    
+
     @Override
     public void apply(Hero hero) {
         super.apply(hero);
@@ -48,17 +48,17 @@ public class RootEffect extends PeriodicExpirableEffect {
     }
 
     @Override
+    public void remove(Creature creature) {
+        super.remove(creature);
+        broadcast(creature.getLocation(), expireText, Messaging.getCreatureName(creature));
+    }
+
+    @Override
     public void remove(Hero hero) {
         super.remove(hero);
 
         Player player = hero.getPlayer();
         broadcast(player.getLocation(), expireText, player.getDisplayName());
-    }
-    
-    @Override
-    public void remove(Creature creature) {
-        super.remove(creature);
-        broadcast(creature.getLocation(), expireText, Messaging.getCreatureName(creature));
     }
 
     @Override

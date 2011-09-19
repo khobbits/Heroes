@@ -31,7 +31,7 @@ public class SkillReflect extends ActiveSkill {
         setArgumentRange(0, 0);
         setIdentifiers("skill reflect");
         setTypes(SkillType.FORCE, SkillType.SILENCABLE, SkillType.BUFF);
-        
+
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(this), Priority.Normal);
     }
 
@@ -95,9 +95,8 @@ public class SkillReflect extends ActiveSkill {
 
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
-            if (event.isCancelled() || !(event instanceof EntityDamageByEntityEvent)) {
+            if (event.isCancelled() || !(event instanceof EntityDamageByEntityEvent))
                 return;
-            }
 
             EntityDamageByEntityEvent edbe = (EntityDamageByEntityEvent) event;
             Entity defender = edbe.getEntity();
@@ -115,7 +114,7 @@ public class SkillReflect extends ActiveSkill {
                     }
                     LivingEntity attEntity = (LivingEntity) attacker;
                     int damage = (int) (event.getDamage() * getSetting(hero.getHeroClass(), "reflected-amount", 0.5));
-                    plugin.getDamageManager().addSpellTarget((Entity) attacker, hero, skill);
+                    plugin.getDamageManager().addSpellTarget(attacker, hero, skill);
                     attEntity.damage(damage, defender);
                 }
             }

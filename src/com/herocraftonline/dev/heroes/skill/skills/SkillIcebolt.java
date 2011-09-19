@@ -88,9 +88,8 @@ public class SkillIcebolt extends ActiveSkill {
                                 HeroClass heroClass = hero.getHeroClass();
                                 LivingEntity livingEntity = (LivingEntity) entity;
 
-                                if (!damageCheck((Player) dmger, livingEntity)) {
+                                if (!damageCheck((Player) dmger, livingEntity))
                                     return;
-                                }
 
                                 event.getEntity().setFireTicks(0);
                                 int damage = getSetting(heroClass, Setting.DAMAGE.node(), 3);

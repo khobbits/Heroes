@@ -32,7 +32,7 @@ public class SkillBoltstorm extends ActiveSkill {
         setArgumentRange(0, 0);
         setIdentifiers("skill boltstorm");
         setTypes(SkillType.LIGHTNING, SkillType.SILENCABLE, SkillType.DAMAGING);
-        
+
         rand = new Random();
     }
 
@@ -49,19 +49,19 @@ public class SkillBoltstorm extends ActiveSkill {
     }
 
     @Override
+    public void init() {
+        super.init();
+        applyText = getSetting(null, Setting.APPLY_TEXT.node(), "%hero% has summoned a boltstorm!").replace("%hero%", "$1");
+        expireText = getSetting(null, Setting.EXPIRE_TEXT.node(), "%hero%'s boltstorm has subsided!").replace("%hero%", "$1");
+    }
+
+    @Override
     public boolean use(Hero hero, String[] args) {
         HeroClass heroClass = hero.getHeroClass();
         int period = getSetting(heroClass, Setting.PERIOD.node(), 1000);
         int duration = getSetting(heroClass, Setting.DURATION.node(), 10000);
         hero.addEffect(new BoltStormEffect(this, period, duration));
         return true;
-    }
-
-    @Override
-    public void init() {
-        super.init();
-        applyText = getSetting(null, Setting.APPLY_TEXT.node(), "%hero% has summoned a boltstorm!").replace("%hero%", "$1");
-        expireText = getSetting(null, Setting.EXPIRE_TEXT.node(), "%hero%'s boltstorm has subsided!").replace("%hero%", "$1");
     }
 
     public class BoltStormEffect extends PeriodicExpirableEffect {
@@ -96,26 +96,28 @@ public class SkillBoltstorm extends ActiveSkill {
 
             List<LivingEntity> targets = new ArrayList<LivingEntity>();
             for (Entity entity : player.getNearbyEntities(range, range, range)) {
-                if (!(entity instanceof LivingEntity))
-                    continue;
-                
-                LivingEntity target = (LivingEntity) entity;
-                
-                // never target the caster
-                if (target.equals(player) || hero.getSummons().contains(target)) { 
+                if (!(entity instanceof LivingEntity)) {
                     continue;
                 }
-                
-                // check if the target is damagable
-                if (!damageCheck(player, target))
+
+                LivingEntity target = (LivingEntity) entity;
+
+                // never target the caster
+                if (target.equals(player) || hero.getSummons().contains(target)) {
                     continue;
-                
+                }
+
+                // check if the target is damagable
+                if (!damageCheck(player, target)) {
+                    continue;
+                }
+
                 targets.add(target);
             }
-            
+
             if (targets.isEmpty())
                 return;
-            
+
             int damage = getSetting(heroClass, Setting.DAMAGE.node(), 4);
             LivingEntity target = targets.get(rand.nextInt(targets.size()));
             addSpellTarget(target, hero);

@@ -6,7 +6,7 @@ public interface Expirable {
 
     public long getExpiry();
 
-    public boolean isExpired();
-    
     public long getRemainingTime();
+
+    public boolean isExpired();
 }

@@ -31,7 +31,7 @@ public class SkillBladegrasp extends ActiveSkill {
         setArgumentRange(0, 0);
         setIdentifiers("skill bladegrasp", "skill bgrasp");
         setTypes(SkillType.PHYSICAL, SkillType.BUFF);
-        
+
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
     }
 

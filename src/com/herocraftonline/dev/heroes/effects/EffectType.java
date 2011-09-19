@@ -10,7 +10,7 @@ public enum EffectType {
     DISEASE,
     DISPELLABLE,
     ICE,
-    DRAINING, //Prevents/Limits Mana Regen
+    DRAINING, // Prevents/Limits Mana Regen
     FIRE,
     FORM,
     HARMFUL,
@@ -24,5 +24,5 @@ public enum EffectType {
     SILENCE,
     STUN,
     WATER,
-    WOUNDING, //Prevents/Limits Healing
+    WOUNDING, // Prevents/Limits Healing
 }

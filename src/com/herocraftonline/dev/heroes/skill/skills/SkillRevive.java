@@ -28,7 +28,7 @@ public class SkillRevive extends ActiveSkill {
         setArgumentRange(1, 1);
         setIdentifiers("skill revive");
         setTypes(SkillType.HEAL, SkillType.SILENCABLE);
-        
+
         registerEvent(Type.ENTITY_DEATH, new SkillPlayerListener(), Priority.Normal);
 
         deaths = new LinkedHashMap<String, Location>() {

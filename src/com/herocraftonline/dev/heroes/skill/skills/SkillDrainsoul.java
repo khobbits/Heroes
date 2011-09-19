@@ -33,7 +33,7 @@ public class SkillDrainsoul extends TargettedSkill {
 
         int absorbAmount = getSetting(hero.getHeroClass(), "absorb-amount", 4);
 
-        hero.setHealth(hero.getHealth() + (double) absorbAmount);
+        hero.setHealth(hero.getHealth() + absorbAmount);
         hero.syncHealth();
         addSpellTarget(target, hero);
         target.damage(absorbAmount, player);

@@ -69,7 +69,7 @@ public class SkillRecall extends ActiveSkill {
             return null;
         }
         // Get the world and make sure it's still available to return to
-        World world = plugin.getServer().getWorld((String) skillSetting.get("world"));
+        World world = plugin.getServer().getWorld(skillSetting.get("world"));
         if (world == null) {
             Messaging.send(player, "You have an invalid recall location marked!");
             return null;

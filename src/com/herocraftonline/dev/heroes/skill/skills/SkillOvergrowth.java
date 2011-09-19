@@ -1,5 +1,8 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
+import org.bukkit.Material;
+import org.bukkit.TreeType;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.util.config.ConfigurationNode;
 
@@ -10,10 +13,6 @@ import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Setting;
 import com.herocraftonline.dev.heroes.util.Util;
-
-import org.bukkit.Material;
-import org.bukkit.TreeType;
-import org.bukkit.block.Block;
 
 public class SkillOvergrowth extends ActiveSkill {
 
@@ -42,19 +41,21 @@ public class SkillOvergrowth extends ActiveSkill {
             TreeType tType = null;
 
             switch (targetBlock.getData()) {
-                case (0x0):
-                    if (Util.rand.nextInt(2) == 0)
+                case 0x0:
+                    if (Util.rand.nextInt(2) == 0) {
                         tType = TreeType.TREE;
-                    else
+                    } else {
                         tType = TreeType.BIG_TREE;
+                    }
                     break;
-                case (0x1):
-                    if (Util.rand.nextInt(2) == 0)
+                case 0x1:
+                    if (Util.rand.nextInt(2) == 0) {
                         tType = TreeType.REDWOOD;
-                    else
+                    } else {
                         tType = TreeType.TALL_REDWOOD;
+                    }
                     break;
-                case (0x2):
+                case 0x2:
                     tType = TreeType.BIRCH;
                     break;
                 default:

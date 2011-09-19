@@ -23,7 +23,7 @@ public class SkillDispel extends TargettedSkill {
         setUsage("/skill dispel");
         setArgumentRange(0, 1);
         setIdentifiers("skill dispel");
-        
+
         setTypes(SkillType.SILENCABLE);
     }
 
@@ -49,8 +49,9 @@ public class SkillDispel extends TargettedSkill {
                         hero.removeEffect(effect);
                         removed = true;
                         maxRemovals--;
-                        if (maxRemovals == 0)
+                        if (maxRemovals == 0) {
                             break;
+                        }
                     }
                 }
             } else {
@@ -68,14 +69,16 @@ public class SkillDispel extends TargettedSkill {
                             targetHero.removeEffect(effect);
                             removed = true;
                             maxRemovals--;
-                            if (maxRemovals == 0)
+                            if (maxRemovals == 0) {
                                 break;
+                            }
                         } else if (!removeHarmful && effect.isType(EffectType.BENEFICIAL)) {
                             targetHero.removeEffect(effect);
                             removed = true;
                             maxRemovals--;
-                            if (maxRemovals == 0)
+                            if (maxRemovals == 0) {
                                 break;
+                            }
                         }
                     }
                 }
@@ -93,14 +96,16 @@ public class SkillDispel extends TargettedSkill {
                             plugin.getHeroManager().removeCreatureEffect((Creature) target, effect);
                             removed = true;
                             maxRemovals--;
-                            if (maxRemovals == 0)
+                            if (maxRemovals == 0) {
                                 break;
+                            }
                         } else if (!removeHarmful && effect.isType(EffectType.BENEFICIAL)) {
                             plugin.getHeroManager().removeCreatureEffect((Creature) target, effect);
                             removed = true;
                             maxRemovals--;
-                            if (maxRemovals == 0)
+                            if (maxRemovals == 0) {
                                 break;
+                            }
                         }
                     }
                 }

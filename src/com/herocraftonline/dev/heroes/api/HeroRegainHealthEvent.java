@@ -29,13 +29,6 @@ public class HeroRegainHealthEvent extends Event implements Cancellable {
     }
 
     /**
-     * @param amount the amount to set
-     */
-    public void setAmount(int amount) {
-        this.amount = amount;
-    }
-
-    /**
      * @return the hero
      */
     public Hero getHero() {
@@ -54,6 +47,14 @@ public class HeroRegainHealthEvent extends Event implements Cancellable {
     @Override
     public boolean isCancelled() {
         return cancelled;
+    }
+
+    /**
+     * @param amount
+     *            the amount to set
+     */
+    public void setAmount(int amount) {
+        this.amount = amount;
     }
 
     @Override

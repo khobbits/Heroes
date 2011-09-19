@@ -42,16 +42,15 @@ public class HBlockListener extends BlockListener {
 
     @Override
     public void onBlockBreak(BlockBreakEvent event) {
-        if (event.isCancelled()) {
+        if (event.isCancelled())
             return;
-        }
 
         Block block = event.getBlock();
         Player player = event.getPlayer();
-        
-        if(plugin.getConfigManager().getProperties().disabledWorlds.contains(player.getWorld().getName()))
+
+        if (plugin.getConfigManager().getProperties().disabledWorlds.contains(player.getWorld().getName()))
             return;
-        
+
         // Get the Hero representing the player
         Hero hero = plugin.getHeroManager().getHero(player);
         // Get the player's class definition
@@ -89,13 +88,12 @@ public class HBlockListener extends BlockListener {
 
     @Override
     public void onBlockPlace(BlockPlaceEvent event) {
-        if (event.isCancelled()) {
+        if (event.isCancelled())
             return;
-        }
 
         Block block = event.getBlock();
         Material material = block.getType();
-        
+
         Properties prop = plugin.getConfigManager().getProperties();
         if (prop.disabledWorlds.contains(block.getWorld().getName()))
             return;
@@ -114,9 +112,9 @@ public class HBlockListener extends BlockListener {
 
         if (placedBlocks.containsKey(loc)) {
             long timePlaced = placedBlocks.get(loc);
-            if (timePlaced + blockTrackingDuration > System.currentTimeMillis()) {
+            if (timePlaced + blockTrackingDuration > System.currentTimeMillis())
                 return true;
-            } else {
+            else {
                 placedBlocks.remove(block.getLocation());
                 return false;
             }

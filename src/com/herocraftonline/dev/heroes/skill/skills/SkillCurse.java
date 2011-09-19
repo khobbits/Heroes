@@ -39,7 +39,7 @@ public class SkillCurse extends TargettedSkill {
         setArgumentRange(0, 1);
         setIdentifiers("skill curse");
         setTypes(SkillType.DARK, SkillType.SILENCABLE, SkillType.HARMFUL);
-        
+
         registerEvent(Type.CUSTOM_EVENT, new SkillEventListener(), Priority.Highest);
     }
 
@@ -95,24 +95,20 @@ public class SkillCurse extends TargettedSkill {
         }
 
         @Override
-        public void apply(Hero hero) {
-            super.apply(hero);
-            Player player = hero.getPlayer();
-            broadcast(player.getLocation(), applyText, player.getDisplayName());
-        }
-
-        @Override
         public void apply(Creature creature) {
             super.apply(creature);
             broadcast(creature.getLocation(), applyText, Messaging.getCreatureName(creature).toLowerCase());
         }
 
         @Override
-        public void remove(Hero hero) {
-            super.remove(hero);
-
+        public void apply(Hero hero) {
+            super.apply(hero);
             Player player = hero.getPlayer();
-            broadcast(player.getLocation(), expireText, player.getDisplayName());
+            broadcast(player.getLocation(), applyText, player.getDisplayName());
+        }
+
+        public double getMissChance() {
+            return missChance;
         }
 
         @Override
@@ -121,8 +117,12 @@ public class SkillCurse extends TargettedSkill {
             broadcast(creature.getLocation(), expireText, Messaging.getCreatureName(creature).toLowerCase());
         }
 
-        public double getMissChance() {
-            return missChance;
+        @Override
+        public void remove(Hero hero) {
+            super.remove(hero);
+
+            Player player = hero.getPlayer();
+            broadcast(player.getLocation(), expireText, player.getDisplayName());
         }
     }
 
@@ -135,7 +135,7 @@ public class SkillCurse extends TargettedSkill {
 
             Hero hero = null;
             Creature creature = null;
-            
+
             if (event.getDamager() instanceof Player) {
                 hero = plugin.getHeroManager().getHero((Player) event.getDamager());
             } else if (event.getDamager() instanceof Creature) {
@@ -150,7 +150,7 @@ public class SkillCurse extends TargettedSkill {
                     creature = (Creature) shooter;
                 }
             }
-            
+
             if (hero != null) {
                 if (hero.getEffect("Curse") != null) {
                     CurseEffect cEffect = (CurseEffect) hero.getEffect("Curse");

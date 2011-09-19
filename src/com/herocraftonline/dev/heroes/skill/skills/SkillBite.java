@@ -1,5 +1,10 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
+import org.bukkit.entity.Creature;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.util.config.ConfigurationNode;
+
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.effects.PeriodicDamageEffect;
@@ -10,16 +15,11 @@ import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Setting;
 
-import org.bukkit.entity.Creature;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.util.config.ConfigurationNode;
-
 public class SkillBite extends TargettedSkill {
-    
+
     private String applyText;
     private String expireText;
-    
+
     public SkillBite(Heroes plugin) {
         super(plugin, "Bite");
         setDescription("Deals physical damage to the target");
@@ -41,23 +41,24 @@ public class SkillBite extends TargettedSkill {
         node.setProperty(Setting.EXPIRE_TEXT.node(), "%target% has stopped bleeding!");
         return node;
     }
-    
+
     @Override
     public void init() {
         super.init();
         applyText = getSetting(null, Setting.APPLY_TEXT.node(), "%target% is bleeding from a grievous wound!").replace("%target%", "$1");
         expireText = getSetting(null, Setting.EXPIRE_TEXT.node(), "%target% has stopped bleeding!").replace("%target%", "$1");
     }
-    
+
+    @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
 
-        //Damage the target
+        // Damage the target
         int damage = getSetting(hero.getHeroClass(), Setting.DAMAGE.node(), 10);
         addSpellTarget(target, hero);
         target.damage(damage, player);
-        
-        //Apply our effect
+
+        // Apply our effect
         long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 15000);
         long period = getSetting(hero.getHeroClass(), Setting.PERIOD.node(), 3000);
         int tickDamage = getSetting(hero.getHeroClass(), "tick-damage", 1);
@@ -67,23 +68,16 @@ public class SkillBite extends TargettedSkill {
         } else if (target instanceof Creature) {
             plugin.getHeroManager().addCreatureEffect((Creature) target, bbEffect);
         }
-        
+
         broadcastExecuteText(hero, target);
         return true;
     }
-    
+
     public class BiteBleedEffect extends PeriodicDamageEffect {
 
         public BiteBleedEffect(Skill skill, long period, long duration, int tickDamage, Player applier) {
             super(skill, "BiteBleed", period, duration, tickDamage, applier);
             this.types.add(EffectType.BLEED);
-        }
-        
-        @Override
-        public void apply(Hero hero) {
-            super.apply(hero);
-            Player player = hero.getPlayer();
-            broadcast(player.getLocation(), applyText, player.getDisplayName());
         }
 
         @Override
@@ -92,17 +86,24 @@ public class SkillBite extends TargettedSkill {
         }
 
         @Override
-        public void remove(Hero hero) {
-            super.remove(hero);
-
+        public void apply(Hero hero) {
+            super.apply(hero);
             Player player = hero.getPlayer();
-            broadcast(player.getLocation(), expireText, player.getDisplayName());
+            broadcast(player.getLocation(), applyText, player.getDisplayName());
         }
 
         @Override
         public void remove(Creature creature) {
             super.remove(creature);
             broadcast(creature.getLocation(), expireText, Messaging.getCreatureName(creature).toLowerCase());
+        }
+
+        @Override
+        public void remove(Hero hero) {
+            super.remove(hero);
+
+            Player player = hero.getPlayer();
+            broadcast(player.getLocation(), expireText, player.getDisplayName());
         }
     }
 }

@@ -39,7 +39,7 @@ public class LevelInformationCommand extends BasicCommand {
         sender.sendMessage(ChatColor.GREEN + "  Level: " + ChatColor.WHITE + level + ChatColor.GREEN + "/" + ChatColor.WHITE + hero.getHeroClass().getMaxLevel());
         sender.sendMessage(ChatColor.GREEN + "  Total Exp: " + ChatColor.WHITE + exp);
         if (!hero.isMaster()) {
-            int next = (int) prop.getExperience(level + 1);
+            int next = prop.getExperience(level + 1);
             sender.sendMessage(ChatColor.DARK_GREEN + "  EXP.  " + createExperienceBar(exp, current, next));
         } else {
             sender.sendMessage(ChatColor.YELLOW + "  MASTERED!");

@@ -22,16 +22,16 @@ public class PeriodicHealEffect extends PeriodicExpirableEffect {
         this.types.add(EffectType.HEAL);
     }
 
-    @Override
-    public void tick(Hero hero) {
-        super.tick(hero);
-        HeroRegainHealthEvent hrhEvent = new HeroRegainHealthEvent(hero, tickHealth, skill);
-        plugin.getServer().getPluginManager().callEvent(hrhEvent);
-        if (hrhEvent.isCancelled())
-            return;
+    public Player getApplier() {
+        return applier;
+    }
 
-        hero.setHealth(hero.getHealth() + hrhEvent.getAmount());
-        hero.syncHealth();
+    public int getTickDamage() {
+        return tickHealth;
+    }
+
+    public void setTickHealth(int tickHealth) {
+        this.tickHealth = tickHealth;
     }
 
     @Override
@@ -48,16 +48,16 @@ public class PeriodicHealEffect extends PeriodicExpirableEffect {
         }
     }
 
-    public void setTickHealth(int tickHealth) {
-        this.tickHealth = tickHealth;
-    }
+    @Override
+    public void tick(Hero hero) {
+        super.tick(hero);
+        HeroRegainHealthEvent hrhEvent = new HeroRegainHealthEvent(hero, tickHealth, skill);
+        plugin.getServer().getPluginManager().callEvent(hrhEvent);
+        if (hrhEvent.isCancelled())
+            return;
 
-    public int getTickDamage() {
-        return tickHealth;
-    }
-
-    public Player getApplier() {
-        return applier;
+        hero.setHealth(hero.getHealth() + hrhEvent.getAmount());
+        hero.syncHealth();
     }
 
 }

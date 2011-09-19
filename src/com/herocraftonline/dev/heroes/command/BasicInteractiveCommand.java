@@ -16,15 +16,6 @@ public abstract class BasicInteractiveCommand extends BasicCommand implements In
         super(name);
     }
 
-    public final void setStates(InteractiveCommandState[] states) {
-        if (states.length == 0) {
-            throw new IllegalArgumentException("An interactive command must have at least one state.");
-        }
-
-        this.states = states;
-        super.setArgumentRange(states[0].getMinArguments(), states[0].getMaxArguments());
-    }
-
     @Override
     public final void cancelInteraction(CommandSender executor) {
         userStates.remove(executor);
@@ -32,45 +23,9 @@ public abstract class BasicInteractiveCommand extends BasicCommand implements In
     }
 
     @Override
-    public final void setArgumentRange(int min, int max) {
-    }
-
-    @Override
-    public final void setIdentifiers(String...identifiers) {
-    }
-
-    @Override
-    public final boolean isInProgress(CommandSender executor) {
-        return userStates.containsKey(executor);
-    }
-
-    @Override
-    public final boolean isIdentifier(CommandSender executor, String input) {
-        int stateIndex = 0;
-        if (userStates.containsKey(executor)) {
-            stateIndex = userStates.get(executor);
-        }
-
-        if (stateIndex > 0) {
-            if (this.getCancelIdentifier().equalsIgnoreCase(input)) {
-                return true;
-            }
-        }
-
-        InteractiveCommandState state = states[stateIndex];
-        return state.isIdentifier(input);
-    }
-
-    @Override
-    public final boolean isInteractive() {
-        return true;
-    }
-
-    @Override
     public final boolean execute(CommandSender executor, String identifier, String[] args) {
-        if (states.length == 0) {
+        if (states.length == 0)
             throw new IllegalArgumentException("An interactive command must have at least one state.");
-        }
 
         int stateIndex = 0;
         if (userStates.containsKey(executor)) {
@@ -102,6 +57,46 @@ public abstract class BasicInteractiveCommand extends BasicCommand implements In
         }
 
         return true;
+    }
+
+    @Override
+    public final boolean isIdentifier(CommandSender executor, String input) {
+        int stateIndex = 0;
+        if (userStates.containsKey(executor)) {
+            stateIndex = userStates.get(executor);
+        }
+
+        if (stateIndex > 0) {
+            if (this.getCancelIdentifier().equalsIgnoreCase(input))
+                return true;
+        }
+
+        InteractiveCommandState state = states[stateIndex];
+        return state.isIdentifier(input);
+    }
+
+    @Override
+    public final boolean isInProgress(CommandSender executor) {
+        return userStates.containsKey(executor);
+    }
+
+    @Override
+    public final boolean isInteractive() {
+        return true;
+    }
+
+    @Override
+    public final void setArgumentRange(int min, int max) {}
+
+    @Override
+    public final void setIdentifiers(String... identifiers) {}
+
+    public final void setStates(InteractiveCommandState[] states) {
+        if (states.length == 0)
+            throw new IllegalArgumentException("An interactive command must have at least one state.");
+
+        this.states = states;
+        super.setArgumentRange(states[0].getMinArguments(), states[0].getMaxArguments());
     }
 
 }

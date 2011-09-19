@@ -30,7 +30,7 @@ public class SkillSafefall extends ActiveSkill {
         setArgumentRange(0, 0);
         setIdentifiers("skill safefall");
         setTypes(SkillType.MOVEMENT, SkillType.BUFF, SkillType.SILENCABLE);
-        
+
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
     }
 
@@ -87,9 +87,8 @@ public class SkillSafefall extends ActiveSkill {
 
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
-            if (event.isCancelled() || event.getCause() != DamageCause.FALL) {
+            if (event.isCancelled() || event.getCause() != DamageCause.FALL)
                 return;
-            }
 
             Entity defender = event.getEntity();
             if (defender instanceof Player) {

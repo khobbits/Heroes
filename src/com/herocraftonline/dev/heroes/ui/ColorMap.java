@@ -16,53 +16,77 @@ public final class ColorMap {
      * The actual RGB values are retrieved using String.split();
      */
     private static final String[] colors = {
-            // ID 0-3
-            "", "", "", "",
-            // ID 4-7
-            "89,125,39", "109,153,48", "27,178,56", "109,153,48",
-            // ID 8-11
-            "174,164,115", "213,201,140", "247,233,163", "213,201,140",
-            // ID 12-15
-            "117,117,117", "144,144,144", "167,167,167", "144,144,144",
-            // ID 16-19
-            "180,0,0", "220,0,0", "255,0,0", "220,0,0",
-            // ID 20-23
-            "112,112,180", "138,138,220", "160,160,255", "138,138,220",
-            // ID 24-27
-            "117,117,117", "144,144,144", "167,167,167", "144,144,144",
-            // ID 28-31
-            "0,87,0", "0,106,0", "0,124,0", "0,106,0",
-            // ID 32-35
-            "180,180,180", "220,220,220", "255,255,255", "220,220,220",
-            // ID 36-39
-            "115,118,129", "141,144,158", "164,168,184", "141,144,158",
-            // ID 40-43
-            "129,74,33", "157,91,40", "183,106,47", "157,91,40",
-            // ID 44-47
-            "79,79,79", "96,96,96", "112,112,112", "96,96,96",
-            // ID 48-51
-            "45,45,180", "55,55,220", "64,64,255", "55,55,220",
-            // ID 52-55
-            "73,58,35", "89,71,43", "104,83,50", "89,71,43", };
+                                            // ID 0-3
+                                            "", "", "", "",
+                                            // ID 4-7
+                                            "89,125,39", "109,153,48", "27,178,56", "109,153,48",
+                                            // ID 8-11
+                                            "174,164,115", "213,201,140", "247,233,163", "213,201,140",
+                                            // ID 12-15
+                                            "117,117,117", "144,144,144", "167,167,167", "144,144,144",
+                                            // ID 16-19
+                                            "180,0,0", "220,0,0", "255,0,0", "220,0,0",
+                                            // ID 20-23
+                                            "112,112,180", "138,138,220", "160,160,255", "138,138,220",
+                                            // ID 24-27
+                                            "117,117,117", "144,144,144", "167,167,167", "144,144,144",
+                                            // ID 28-31
+                                            "0,87,0", "0,106,0", "0,124,0", "0,106,0",
+                                            // ID 32-35
+                                            "180,180,180", "220,220,220", "255,255,255", "220,220,220",
+                                            // ID 36-39
+                                            "115,118,129", "141,144,158", "164,168,184", "141,144,158",
+                                            // ID 40-43
+                                            "129,74,33", "157,91,40", "183,106,47", "157,91,40",
+                                            // ID 44-47
+                                            "79,79,79", "96,96,96", "112,112,112", "96,96,96",
+                                            // ID 48-51
+                                            "45,45,180", "55,55,220", "64,64,255", "55,55,220",
+                                            // ID 52-55
+                                            "73,58,35", "89,71,43", "104,83,50", "89,71,43", };
 
     /**
-     * Resize an image to fit on a map.
+     * Convert a byte[] to an Image using the palette.
      * 
-     * @param image The image to resize.
-     * @return The resized image.
+     * @param bytes
+     *            The byte[128 * 128] to convert.
+     * @return A BufferedImage containing the pixels from bytes.
      */
-    public static BufferedImage resizeImage(Image image) {
+    public static BufferedImage bytesToImage(byte[] bytes) {
+        int[] pixels = new int[128 * 128];
+        for (int i = 0; i < pixels.length; i++) {
+            pixels[i] = get(bytes[i]).getRGB();
+        }
+
         BufferedImage result = new BufferedImage(128, 128, BufferedImage.TYPE_INT_RGB);
-        Graphics2D graphics = result.createGraphics();
-        graphics.drawImage(image, 0, 0, 128, 128, null);
-        graphics.dispose();
+        result.setRGB(0, 0, 128, 128, pixels, 0, 128);
         return result;
+    }
+
+    /**
+     * Get the value of the given color in the palette.
+     * 
+     * @param index
+     *            The index in the palette.
+     * @return The Color of the palette entry.
+     */
+    public static Color get(byte index) {
+        if (index < 4)
+            return new Color(0, 0, 0, 0);
+        else if (index >= colors.length)
+            throw new IndexOutOfBoundsException();
+        String[] colorString = colors[index].split(",");
+        int r = Integer.parseInt(colorString[0]);
+        int g = Integer.parseInt(colorString[1]);
+        int b = Integer.parseInt(colorString[2]);
+        return new Color(r, g, b);
     }
 
     /**
      * Convert an Image to a byte[] using the palette.
      * 
-     * @param originalImage The image to convert.
+     * @param originalImage
+     *            The image to convert.
      * @return A byte[128 * 128] containing the pixels of the image.
      */
     public static byte[] imageToBytes(Image originalImage) {
@@ -89,28 +113,27 @@ public final class ColorMap {
     }
 
     /**
-     * Convert a byte[] to an Image using the palette.
+     * Get the index of the closest matching color in the palette to the given color.
      * 
-     * @param bytes The byte[128 * 128] to convert.
-     * @return A BufferedImage containing the pixels from bytes.
+     * @param color
+     *            The Color to match.
+     * @return The index in the palette.
      */
-    public static BufferedImage bytesToImage(byte[] bytes) {
-        int[] pixels = new int[128 * 128];
-        for (int i = 0; i < pixels.length; i++) {
-            pixels[i] = get(bytes[i]).getRGB();
-        }
-
-        BufferedImage result = new BufferedImage(128, 128, BufferedImage.TYPE_INT_RGB);
-        result.setRGB(0, 0, 128, 128, pixels, 0, 128);
-        return result;
+    public static byte indexOf(Color color) {
+        if (color.getAlpha() < 128)
+            return 0;
+        return indexOf(color.getRed(), color.getGreen(), color.getBlue());
     }
 
     /**
      * Get the index of the closest matching color in the palette to the given color.
      * 
-     * @param r The red component of the color.
-     * @param b The blue component of the color.
-     * @param g The green component of the color.
+     * @param r
+     *            The red component of the color.
+     * @param b
+     *            The blue component of the color.
+     * @param g
+     *            The green component of the color.
      * @return The index in the palette.
      */
     public static byte indexOf(int r, int g, int b) {
@@ -141,34 +164,18 @@ public final class ColorMap {
     }
 
     /**
-     * Get the index of the closest matching color in the palette to the given color.
+     * Resize an image to fit on a map.
      * 
-     * @param color The Color to match.
-     * @return The index in the palette.
+     * @param image
+     *            The image to resize.
+     * @return The resized image.
      */
-    public static byte indexOf(Color color) {
-        if (color.getAlpha() < 128)
-            return 0;
-        return indexOf(color.getRed(), color.getGreen(), color.getBlue());
-    }
-
-    /**
-     * Get the value of the given color in the palette.
-     * 
-     * @param index The index in the palette.
-     * @return The Color of the palette entry.
-     */
-    public static Color get(byte index) {
-        if (index < 4) {
-            return new Color(0, 0, 0, 0);
-        } else if (index >= colors.length) {
-            throw new IndexOutOfBoundsException();
-        }
-        String[] colorString = colors[index].split(",");
-        int r = Integer.parseInt(colorString[0]);
-        int g = Integer.parseInt(colorString[1]);
-        int b = Integer.parseInt(colorString[2]);
-        return new Color(r, g, b);
+    public static BufferedImage resizeImage(Image image) {
+        BufferedImage result = new BufferedImage(128, 128, BufferedImage.TYPE_INT_RGB);
+        Graphics2D graphics = result.createGraphics();
+        graphics.drawImage(image, 0, 0, 128, 128, null);
+        graphics.dispose();
+        return result;
     }
 
 }

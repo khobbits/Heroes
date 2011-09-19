@@ -37,11 +37,11 @@ public class Effect {
         }
     }
 
-    public void apply(Hero hero) {
+    public void apply(Creature creature) {
         this.applyTime = System.currentTimeMillis();
     }
 
-    public void apply(Creature creature) {
+    public void apply(Hero hero) {
         this.applyTime = System.currentTimeMillis();
     }
 
@@ -51,23 +51,18 @@ public class Effect {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) {
+        if (this == obj)
             return true;
-        }
-        if (obj == null) {
+        if (obj == null)
             return false;
-        }
-        if (getClass() != obj.getClass()) {
+        if (getClass() != obj.getClass())
             return false;
-        }
         Effect other = (Effect) obj;
         if (name == null) {
-            if (other.name != null) {
+            if (other.name != null)
                 return false;
-            }
-        } else if (!name.equals(other.name)) {
+        } else if (!name.equals(other.name))
             return false;
-        }
         return true;
     }
 
@@ -87,16 +82,6 @@ public class Effect {
         return skill;
     }
 
-    /**
-     * Returns if this Effect is the type specified
-     * 
-     * @param type
-     * @return
-     */
-    public boolean isType(EffectType type) {
-        return types.contains(type);
-    }
-
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -114,9 +99,19 @@ public class Effect {
         return persistent;
     }
 
-    public void remove(Hero hero) {}
+    /**
+     * Returns if this Effect is the type specified
+     * 
+     * @param type
+     * @return
+     */
+    public boolean isType(EffectType type) {
+        return types.contains(type);
+    }
 
     public void remove(Creature creature) {}
+
+    public void remove(Hero hero) {}
 
     /*
      * Sets the effects persistence value

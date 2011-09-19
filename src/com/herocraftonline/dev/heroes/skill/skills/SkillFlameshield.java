@@ -36,7 +36,7 @@ public class SkillFlameshield extends ActiveSkill {
         setIdentifiers("skill flameshield", "skill fshield");
 
         setTypes(SkillType.FIRE, SkillType.SILENCABLE, SkillType.BUFF);
-        
+
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
         registerEvent(Type.CUSTOM_EVENT, new HeroesSkillListener(), Priority.Highest);
     }
@@ -93,27 +93,6 @@ public class SkillFlameshield extends ActiveSkill {
 
     }
 
-    public class SkillEntityListener extends EntityListener {
-
-        @Override
-        public void onEntityDamage(EntityDamageEvent event) {
-            if (event.isCancelled())
-                return;
-
-            if (event.getCause() != DamageCause.FIRE && event.getCause() != DamageCause.FIRE_TICK && event.getCause() != DamageCause.LAVA)
-                return;
-
-            Entity defender = event.getEntity();
-            if (defender instanceof Player) {
-                Player player = (Player) defender;
-                Hero hero = plugin.getHeroManager().getHero(player);
-                if (hero.hasEffect(getName())) {
-                    event.setCancelled(true);
-                }
-            }
-        }
-    }
-
     public class HeroesSkillListener extends HeroesEventListener {
 
         @Override
@@ -138,6 +117,27 @@ public class SkillFlameshield extends ActiveSkill {
                     String name = event.getDamager().getPlayer().getName();
                     String skillName = event.getSkill().getName().toLowerCase();
                     broadcast(event.getEntity().getLocation(), skillBlockText, Messaging.getCreatureName(creature), name, skillName);
+                    event.setCancelled(true);
+                }
+            }
+        }
+    }
+
+    public class SkillEntityListener extends EntityListener {
+
+        @Override
+        public void onEntityDamage(EntityDamageEvent event) {
+            if (event.isCancelled())
+                return;
+
+            if (event.getCause() != DamageCause.FIRE && event.getCause() != DamageCause.FIRE_TICK && event.getCause() != DamageCause.LAVA)
+                return;
+
+            Entity defender = event.getEntity();
+            if (defender instanceof Player) {
+                Player player = (Player) defender;
+                Hero hero = plugin.getHeroManager().getHero(player);
+                if (hero.hasEffect(getName())) {
                     event.setCancelled(true);
                 }
             }

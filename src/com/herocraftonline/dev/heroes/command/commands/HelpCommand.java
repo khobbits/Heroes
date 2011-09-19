@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2011 DThielke <dave.thielke@gmail.com>
- *
+ * 
  * This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.
  * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/ or send a letter to
  * Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
@@ -38,8 +38,7 @@ public class HelpCommand extends BasicCommand {
         if (args.length != 0) {
             try {
                 page = Integer.parseInt(args[0]) - 1;
-            } catch (NumberFormatException e) {
-            }
+            } catch (NumberFormatException e) {}
         }
 
         List<Command> sortCommands = plugin.getCommandHandler().getCommands();
@@ -48,8 +47,9 @@ public class HelpCommand extends BasicCommand {
         // Filter out Skills from the command list.
         for (Command command : sortCommands) {
             if (command.isShownOnHelpMenu()) {
-                if (CommandHandler.hasPermission(sender, command.getPermission()))
+                if (CommandHandler.hasPermission(sender, command.getPermission())) {
                     commands.add(command);
+                }
             }
         }
 

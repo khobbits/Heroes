@@ -10,46 +10,6 @@ import com.earth2me.essentials.api.UserDoesNotExistException;
 public class EssE implements com.herocraftonline.economy.Economy {
 
     private Essentials econ;
-    
-    @Override
-    public String getName() {
-        return "Essentials";
-    }
-
-    @Override
-    public Plugin getPlugin() {
-        return econ;
-    }
-
-    @Override
-    public double getHoldings(String name) {
-        try {
-            return Economy.getMoney(name);
-        } catch (UserDoesNotExistException e) {
-            System.out.println("[Essentials] Failed to grab economy balance for: " + name);
-        }
-        
-        return 0.0;
-    }
-
-    @Override
-    public double withdraw(String name, double amount) {
-        double initial = amount;
-        if (getHoldings(name) < amount)
-            amount = getHoldings(name);
-        
-        try {
-            Economy.subtract(name, amount);
-        } catch (UserDoesNotExistException e) {
-            System.out.println("[Essentials] Failed to grab economy balance for: " + name);
-            return initial;
-        } catch (NoLoanPermittedException e) {
-            System.out.println("[Essentials] No Loan Permitted in economy for: " + name);
-            return initial;
-        }
-        
-        return initial - amount;
-    }
 
     @Override
     public boolean deposit(String name, double amount) {
@@ -66,6 +26,32 @@ public class EssE implements com.herocraftonline.economy.Economy {
     }
 
     @Override
+    public String format(double amount) {
+        return Economy.format(amount);
+    }
+
+    @Override
+    public double getHoldings(String name) {
+        try {
+            return Economy.getMoney(name);
+        } catch (UserDoesNotExistException e) {
+            System.out.println("[Essentials] Failed to grab economy balance for: " + name);
+        }
+
+        return 0.0;
+    }
+
+    @Override
+    public String getName() {
+        return "Essentials";
+    }
+
+    @Override
+    public Plugin getPlugin() {
+        return econ;
+    }
+
+    @Override
     public boolean has(String name, double amount) {
         try {
             return Economy.hasEnough(name, amount);
@@ -75,27 +61,42 @@ public class EssE implements com.herocraftonline.economy.Economy {
     }
 
     @Override
-    public boolean transfer(String from, String to, double amount) {
-        if (!has(from, amount) || !Economy.playerExists(to))
-            return false;
-        
-        //Try the deposit
-        if (!deposit(to, amount))
-            return false;
-        
-        //Try the Withdraw
-        withdraw(from, amount);
-        return true;
-    }
-
-    @Override
     public void setPlugin(Plugin plugin) {
         this.econ = (Essentials) plugin;
     }
 
     @Override
-    public String format(double amount) {
-        return Economy.format(amount);
+    public boolean transfer(String from, String to, double amount) {
+        if (!has(from, amount) || !Economy.playerExists(to))
+            return false;
+
+        // Try the deposit
+        if (!deposit(to, amount))
+            return false;
+
+        // Try the Withdraw
+        withdraw(from, amount);
+        return true;
+    }
+
+    @Override
+    public double withdraw(String name, double amount) {
+        double initial = amount;
+        if (getHoldings(name) < amount) {
+            amount = getHoldings(name);
+        }
+
+        try {
+            Economy.subtract(name, amount);
+        } catch (UserDoesNotExistException e) {
+            System.out.println("[Essentials] Failed to grab economy balance for: " + name);
+            return initial;
+        } catch (NoLoanPermittedException e) {
+            System.out.println("[Essentials] No Loan Permitted in economy for: " + name);
+            return initial;
+        }
+
+        return initial - amount;
     }
 
 }

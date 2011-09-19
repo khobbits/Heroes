@@ -75,13 +75,19 @@ public class SkillPoison extends TargettedSkill {
         }
 
         @Override
+        public void apply(Creature creature) {
+            super.apply(creature);
+        }
+
+        @Override
         public void apply(Hero hero) {
             super.apply(hero);
         }
 
         @Override
-        public void apply(Creature creature) {
-            super.apply(creature);
+        public void remove(Creature creature) {
+            super.remove(creature);
+            broadcast(creature.getLocation(), expireText, Messaging.getCreatureName(creature).toLowerCase());
         }
 
         @Override
@@ -90,12 +96,6 @@ public class SkillPoison extends TargettedSkill {
 
             Player player = hero.getPlayer();
             broadcast(player.getLocation(), expireText, player.getDisplayName());
-        }
-
-        @Override
-        public void remove(Creature creature) {
-            super.remove(creature);
-            broadcast(creature.getLocation(), expireText, Messaging.getCreatureName(creature).toLowerCase());
         }
     }
 }

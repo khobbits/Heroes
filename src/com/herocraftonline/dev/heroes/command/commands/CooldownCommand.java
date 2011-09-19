@@ -15,7 +15,7 @@ import com.herocraftonline.dev.heroes.util.Messaging;
 public class CooldownCommand extends BasicCommand {
 
     private Heroes plugin;
-    
+
     public CooldownCommand(Heroes plugin) {
         super("Cooldowns");
         this.plugin = plugin;
@@ -29,7 +29,7 @@ public class CooldownCommand extends BasicCommand {
     public boolean execute(CommandSender sender, String identifier, String[] args) {
         if (!(sender instanceof Player))
             return false;
-        
+
         Player player = (Player) sender;
         Hero hero = plugin.getHeroManager().getHero(player);
         Map<String, Long> cooldowns = hero.getCooldowns();
@@ -41,12 +41,13 @@ public class CooldownCommand extends BasicCommand {
         for (Entry<String, Long> entry : cooldowns.entrySet()) {
             Skill skill = plugin.getSkillManager().getSkill(entry.getKey());
             long timeLeft = entry.getValue() - time;
-            if (timeLeft <= 0)
+            if (timeLeft <= 0) {
                 continue;
-            
+            }
+
             Messaging.send(hero.getPlayer(), "$1 has $2 seconds left on cooldown!", skill.getName(), timeLeft / 1000);
         }
-        
+
         return true;
     }
 

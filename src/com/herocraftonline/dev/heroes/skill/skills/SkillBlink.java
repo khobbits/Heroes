@@ -12,11 +12,11 @@ import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Messaging;
-import com.herocraftonline.dev.heroes.util.Util;
 import com.herocraftonline.dev.heroes.util.Setting;
+import com.herocraftonline.dev.heroes.util.Util;
 
 public class SkillBlink extends ActiveSkill {
-    
+
     public SkillBlink(Heroes plugin) {
         super(plugin, "Blink");
         setDescription("Teleports you up to 6 blocks");
@@ -25,14 +25,14 @@ public class SkillBlink extends ActiveSkill {
         setIdentifiers("skill blink");
         setTypes(SkillType.SILENCABLE, SkillType.TELEPORT);
     }
-    
+
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
         node.setProperty(Setting.MAX_DISTANCE.node(), 6);
         return node;
     }
-    
+
     @Override
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
@@ -48,7 +48,7 @@ public class SkillBlink extends ActiveSkill {
         }
         while (iter.hasNext()) {
             b = iter.next();
-            if (Util.transparentBlocks.contains(b.getType()) && ( Util.transparentBlocks.contains(b.getRelative(BlockFace.UP).getType()) || Util.transparentBlocks.contains(b.getRelative(BlockFace.DOWN).getType()))) {
+            if (Util.transparentBlocks.contains(b.getType()) && (Util.transparentBlocks.contains(b.getRelative(BlockFace.UP).getType()) || Util.transparentBlocks.contains(b.getRelative(BlockFace.DOWN).getType()))) {
                 prev = b;
             } else {
                 break;
@@ -56,7 +56,7 @@ public class SkillBlink extends ActiveSkill {
         }
         if (prev != null) {
             Location teleport = prev.getLocation().clone();
-            //Set the blink location yaw/pitch to that of the player
+            // Set the blink location yaw/pitch to that of the player
             teleport.setPitch(player.getLocation().getPitch());
             teleport.setYaw(player.getLocation().getYaw());
             player.teleport(teleport);

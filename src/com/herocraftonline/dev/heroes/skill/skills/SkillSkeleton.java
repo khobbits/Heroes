@@ -51,7 +51,7 @@ public class SkillSkeleton extends ActiveSkill {
         setArgumentRange(0, 0);
         setIdentifiers("skill skeleton");
         setTypes(SkillType.DARK, SkillType.SUMMON, SkillType.SILENCABLE);
-        
+
         eListener = new SummonEntityListener();
         pListener = new SummonPlayerListener();
         registerEvent(Type.ENTITY_DEATH, eListener, Priority.Monitor);
@@ -96,6 +96,55 @@ public class SkillSkeleton extends ActiveSkill {
         return false;
     }
 
+    public class FollowEffect extends PeriodicExpirableEffect {
+
+        public FollowEffect(Skill skill, long period, long duration) {
+            super(skill, "SkeletonFollow", period, duration);
+        }
+
+        @Override
+        public void apply(Hero hero) {
+            super.apply(hero);
+        }
+
+        @Override
+        public void remove(Hero hero) {
+            super.remove(hero);
+        }
+
+        @Override
+        public void tick(Hero hero) {
+            super.tick(hero);
+            for (Creature creature : hero.getSummons()) {
+                if (creature instanceof Skeleton) {
+                    if (creature.getTarget() != null && creature.getTarget() instanceof LivingEntity)
+                        return;
+
+                    moveSkeleton(creature, hero);
+                }
+            }
+        }
+
+        /**
+         * Moves the skeleton toward the player
+         * 
+         * @param creature
+         * @param hero
+         */
+        private void moveSkeleton(Creature creature, Hero hero) {
+
+            // If the skeleton is far away lets teleport them to the player
+            if (creature.getLocation().distanceSquared(hero.getPlayer().getLocation()) > 400) {
+                creature.teleport(hero.getPlayer());
+            }
+
+            // Initiate pathing to the player
+            EntityCreature cEntity = ((CraftCreature) creature).getHandle();
+            cEntity.pathEntity = cEntity.world.findPath(cEntity, ((CraftPlayer) hero.getPlayer()).getHandle(), 16.0F);
+
+        }
+    }
+
     public class SummonEffect extends ExpirableEffect {
 
         private Hero summoner;
@@ -124,77 +173,15 @@ public class SkillSkeleton extends ActiveSkill {
 
             // Check if the summoner has anymore skeletons
             for (Creature c : summoner.getSummons()) {
-                if (c instanceof Skeleton) {
+                if (c instanceof Skeleton)
                     return;
-                }
             }
             // If there are no more summoned skeletons lets remove the follow effect
             summoner.removeEffect(summoner.getEffect("SkeletonFollow"));
         }
     }
 
-    public class FollowEffect extends PeriodicExpirableEffect {
-
-        public FollowEffect(Skill skill, long period, long duration) {
-            super(skill, "SkeletonFollow", period, duration);
-        }
-
-        @Override
-        public void apply(Hero hero) {
-            super.apply(hero);
-        }
-
-        @Override
-        public void remove(Hero hero) {
-            super.remove(hero);
-        }
-
-        @Override
-        public void tick(Hero hero) {
-            super.tick(hero);
-            for (Creature creature : hero.getSummons()) {
-                if (creature instanceof Skeleton) {
-                    if (creature.getTarget() != null && creature.getTarget() instanceof LivingEntity) 
-                            return;
-                    
-                    moveSkeleton(creature, hero);
-                }
-            }
-        }
-
-        /**
-         * Moves the skeleton toward the player
-         * 
-         * @param creature
-         * @param hero
-         */
-        private void moveSkeleton(Creature creature, Hero hero) {
-            
-            //If the skeleton is far away lets teleport them to the player
-            if(creature.getLocation().distanceSquared(hero.getPlayer().getLocation()) > 400)
-                creature.teleport(hero.getPlayer());
-            
-            //Initiate pathing to the player
-            EntityCreature cEntity = ((CraftCreature) creature).getHandle();
-            cEntity.pathEntity = cEntity.world.findPath(cEntity, ((CraftPlayer) hero.getPlayer()).getHandle(), 16.0F);
-            
-        }
-    }
-
     public class SummonEntityListener extends EntityListener {
-
-        @Override
-        public void onEntityDeath(EntityDeathEvent event) {
-            if (!(event.getEntity() instanceof Creature))
-                return;
-            Creature defender = (Creature) event.getEntity();
-            Set<Hero> heroes = plugin.getHeroManager().getHeroes();
-            for (Hero hero : heroes) {
-                if (hero.getSummons().contains(defender) && defender instanceof Skeleton) {
-                    hero.getSummons().remove(defender);
-                }
-            }
-        }
 
         @Override
         public void onEntityCombust(EntityCombustEvent event) {
@@ -202,29 +189,8 @@ public class SkillSkeleton extends ActiveSkill {
                 return;
             Creature creature = (Creature) event.getEntity();
             // Don't allow summoned creatures to combust
-            if (plugin.getHeroManager().creatureHasEffect(creature, "Summon"))
+            if (plugin.getHeroManager().creatureHasEffect(creature, "Summon")) {
                 event.setCancelled(true);
-        }
-
-        @Override
-        public void onEntityTarget(EntityTargetEvent event) {
-            if (event.isCancelled() || !(event.getEntity() instanceof Creature))
-                return;
-            if (event.getTarget() instanceof Player) {
-                for (Hero hero : plugin.getHeroManager().getHeroes()) {
-                    if (hero.getSummons().contains((Creature) event.getEntity())) {
-                        if (hero.getParty() != null) {
-                            // Don't target party members either
-                            for (Hero pHero : hero.getParty().getMembers()) {
-                                if (pHero.getPlayer().equals(event.getTarget())) {
-                                    event.setCancelled(true);
-                                }
-                            }
-                        } else if (hero.getPlayer().equals(event.getTarget())) {
-                            event.setCancelled(true);
-                        }
-                    }
-                }
             }
         }
 
@@ -251,12 +217,14 @@ public class SkillSkeleton extends ActiveSkill {
 
                 // Loop through the hero's summons and set the target
                 for (Creature creature : hero.getSummons()) {
-                    if (!(creature instanceof Skeleton))
+                    if (!(creature instanceof Skeleton)) {
                         continue;
+                    }
                     creature.setTarget(damager);
                 }
             } else if (event.getEntity() instanceof LivingEntity) {
-                // If a creature is being damaged, lets see if a player is dealing the damage to see if we need to make the summon aggro
+                // If a creature is being damaged, lets see if a player is dealing the damage to see if we need to make
+                // the summon aggro
                 EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
                 Player player = null;
                 if (subEvent.getDamager() instanceof Player) {
@@ -273,9 +241,45 @@ public class SkillSkeleton extends ActiveSkill {
                 if (hero.getSummons().isEmpty())
                     return;
                 for (Creature creature : hero.getSummons()) {
-                    if (!(creature instanceof Skeleton))
+                    if (!(creature instanceof Skeleton)) {
                         continue;
+                    }
                     creature.setTarget((LivingEntity) event.getEntity());
+                }
+            }
+        }
+
+        @Override
+        public void onEntityDeath(EntityDeathEvent event) {
+            if (!(event.getEntity() instanceof Creature))
+                return;
+            Creature defender = (Creature) event.getEntity();
+            Set<Hero> heroes = plugin.getHeroManager().getHeroes();
+            for (Hero hero : heroes) {
+                if (hero.getSummons().contains(defender) && defender instanceof Skeleton) {
+                    hero.getSummons().remove(defender);
+                }
+            }
+        }
+
+        @Override
+        public void onEntityTarget(EntityTargetEvent event) {
+            if (event.isCancelled() || !(event.getEntity() instanceof Creature))
+                return;
+            if (event.getTarget() instanceof Player) {
+                for (Hero hero : plugin.getHeroManager().getHeroes()) {
+                    if (hero.getSummons().contains(event.getEntity())) {
+                        if (hero.getParty() != null) {
+                            // Don't target party members either
+                            for (Hero pHero : hero.getParty().getMembers()) {
+                                if (pHero.getPlayer().equals(event.getTarget())) {
+                                    event.setCancelled(true);
+                                }
+                            }
+                        } else if (hero.getPlayer().equals(event.getTarget())) {
+                            event.setCancelled(true);
+                        }
+                    }
                 }
             }
         }

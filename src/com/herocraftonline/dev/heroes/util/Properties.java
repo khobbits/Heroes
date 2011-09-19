@@ -24,7 +24,7 @@ public class Properties {
     public double expLoss;
     public boolean levelsViaExpLoss = false;
     public boolean masteryLoss = false;
-    
+
     // Experience//
     public double partyBonus = 0;
     public boolean resetExpOnClassChange = true;
@@ -72,7 +72,7 @@ public class Properties {
 
     // Storage Stuffs
     public String storageType;
-    
+
     // Worlds
     public Set<String> disabledWorlds = new HashSet<String>();
 
@@ -97,12 +97,11 @@ public class Properties {
     }
 
     public int getExperience(int level) {
-        if (level >= levels.length) {
+        if (level >= levels.length)
             return levels[levels.length - 1];
-        } else if (level < 1) {
+        else if (level < 1)
             return levels[0];
-        }
-        
+
         return levels[level - 1];
     }
 
@@ -114,9 +113,8 @@ public class Properties {
      */
     public int getLevel(double exp) {
         for (int i = maxLevel - 1; i >= 0; i--) {
-            if (exp >= levels[i]) {
+            if (exp >= levels[i])
                 return i + 1;
-            }
         }
         return -1;
     }

@@ -26,10 +26,10 @@ public class HeroClass {
     private Set<String> allowedArmor = new LinkedHashSet<String>();
     private Set<String> allowedWeapons = new LinkedHashSet<String>();
     private Set<ExperienceType> experienceSources = new LinkedHashSet<ExperienceType>();
-    private Map<Material, Integer> itemDamage  = new HashMap<Material, Integer>();
+    private Map<Material, Integer> itemDamage = new HashMap<Material, Integer>();
     private Map<ProjectileType, Integer> projectileDamage = new HashMap<ProjectileType, Integer>();
     private Map<String, ConfigurationNode> skills = new LinkedHashMap<String, ConfigurationNode>();
-    
+
     // private Map<String, SkillData> skillData;
     private int maxLevel;
     private int cost;
@@ -65,29 +65,32 @@ public class HeroClass {
         skills.put(name.toLowerCase(), settings);
     }
 
-    public Set<String> getSkillNames() {
-        return new TreeSet<String>(skills.keySet());
+    public void addSpecialization(HeroClass heroClass) {
+        specializations.add(heroClass);
+    }
+
+    public void addStrongParent(HeroClass parent) {
+        strongParents.add(parent);
+    }
+
+    public void addWeakParent(HeroClass parent) {
+        weakParents.add(parent);
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) {
+        if (this == obj)
             return true;
-        }
-        if (obj == null) {
+        if (obj == null)
             return false;
-        }
-        if (getClass() != obj.getClass()) {
+        if (getClass() != obj.getClass())
             return false;
-        }
         HeroClass other = (HeroClass) obj;
         if (name == null) {
-            if (other.name != null) {
+            if (other.name != null)
                 return false;
-            }
-        } else if (!name.equals(other.name)) {
+        } else if (!name.equals(other.name))
             return false;
-        }
         return true;
     }
 
@@ -99,12 +102,27 @@ public class HeroClass {
         return this.allowedWeapons;
     }
 
+    public double getBaseMaxHealth() {
+        return baseMaxHealth;
+    }
+
+    public int getCost() {
+        return cost;
+    }
+
     public String getDescription() {
         return description;
     }
 
     public Set<ExperienceType> getExperienceSources() {
         return experienceSources;
+    }
+
+    /**
+     * @return the expLoss
+     */
+    public double getExpLoss() {
+        return expLoss;
     }
 
     public double getExpModifier() {
@@ -115,46 +133,46 @@ public class HeroClass {
         return itemDamage.get(material);
     }
 
-    public String getName() {
-        return name;
-    }
-
     public double getMaxHealthPerLevel() {
         return maxHealthPerLevel;
     }
 
-    public double getBaseMaxHealth() {
-        return baseMaxHealth;
+    public int getMaxLevel() {
+        return maxLevel;
     }
-    
+
+    public String getName() {
+        return name;
+    }
+
     public List<HeroClass> getParents() {
         List<HeroClass> parents = new ArrayList<HeroClass>(strongParents);
         parents.addAll(weakParents);
         return Collections.unmodifiableList(parents);
     }
 
-    public Set<HeroClass> getStrongParents() {
-        return Collections.unmodifiableSet(strongParents);
-    }
-    
-    public Set<HeroClass> getWeakParents() {
-        return Collections.unmodifiableSet(weakParents);
-    }
-    
     public Integer getProjectileDamage(ProjectileType type) {
         return projectileDamage.get(type);
+    }
+
+    public Set<String> getSkillNames() {
+        return new TreeSet<String>(skills.keySet());
     }
 
     public ConfigurationNode getSkillSettings(String name) {
         return skills.get(name.toLowerCase());
     }
 
-    public void addSpecialization(HeroClass heroClass) {
-        specializations.add(heroClass);
-    }
-    
     public Set<HeroClass> getSpecializations() {
         return Collections.unmodifiableSet(specializations);
+    }
+
+    public Set<HeroClass> getStrongParents() {
+        return Collections.unmodifiableSet(strongParents);
+    }
+
+    public Set<HeroClass> getWeakParents() {
+        return Collections.unmodifiableSet(weakParents);
     }
 
     @Override
@@ -165,7 +183,7 @@ public class HeroClass {
     public boolean hasSkill(String name) {
         return skills.containsKey(name.toLowerCase());
     }
-    
+
     public boolean isPrimary() {
         return strongParents.isEmpty() && weakParents.isEmpty();
     }
@@ -178,12 +196,28 @@ public class HeroClass {
         skills.remove(name.toLowerCase());
     }
 
+    public void setBaseMaxHealth(double baseMaxHealth) {
+        this.baseMaxHealth = baseMaxHealth;
+    }
+
+    public void setCost(int cost) {
+        this.cost = cost;
+    }
+
     public void setDescription(String description) {
         this.description = description;
     }
 
     public void setExperienceSources(Set<ExperienceType> experienceSources) {
         this.experienceSources = experienceSources;
+    }
+
+    /**
+     * @param expLoss
+     *            the expLoss to set
+     */
+    public void setExpLoss(double expLoss) {
+        this.expLoss = expLoss;
     }
 
     public void setExpModifier(double modifier) {
@@ -194,24 +228,16 @@ public class HeroClass {
         itemDamage.put(material, damage);
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setBaseMaxHealth(double baseMaxHealth) {
-        this.baseMaxHealth = baseMaxHealth;
-    }
-
     public void setMaxHealthPerLevel(double maxHealthPerLevel) {
         this.maxHealthPerLevel = maxHealthPerLevel;
     }
 
-    public void addStrongParent(HeroClass parent) {
-        strongParents.add(parent);
+    public void setMaxLevel(int maxLevel) {
+        this.maxLevel = maxLevel;
     }
-    
-    public void addWeakParent(HeroClass parent) {
-        weakParents.add(parent);
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void setProjectileDamage(ProjectileType type, int damage) {
@@ -225,36 +251,6 @@ public class HeroClass {
     @Override
     public String toString() {
         return name;
-    }
-
-    /**
-     * @param expLoss the expLoss to set
-     */
-    public void setExpLoss(double expLoss) {
-        this.expLoss = expLoss;
-    }
-
-    /**
-     * @return the expLoss
-     */
-    public double getExpLoss() {
-        return expLoss;
-    }
-
-    public void setMaxLevel(int maxLevel) {
-        this.maxLevel = maxLevel;
-    }
-
-    public int getMaxLevel() {
-        return maxLevel;
-    }
-
-    public void setCost(int cost) {
-        this.cost = cost;
-    }
-
-    public int getCost() {
-        return cost;
     }
 
     public static enum ArmorItems {

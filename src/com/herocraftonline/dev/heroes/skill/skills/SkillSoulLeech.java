@@ -19,7 +19,7 @@ import com.herocraftonline.dev.heroes.util.Setting;
 public class SkillSoulLeech extends TargettedSkill {
 
     private String expireText;
-    
+
     public SkillSoulLeech(Heroes plugin) {
         super(plugin, "SoulLeech");
         setDescription("You slowly drain the life out of the player.");
@@ -27,7 +27,24 @@ public class SkillSoulLeech extends TargettedSkill {
         setArgumentRange(0, 1);
         setIdentifiers("skill soulleech", "skill sleech");
         setTypes(SkillType.HEAL, SkillType.DAMAGING, SkillType.SILENCABLE, SkillType.DARK, SkillType.HARMFUL);
-   }
+    }
+
+    @Override
+    public ConfigurationNode getDefaultConfig() {
+        ConfigurationNode node = super.getDefaultConfig();
+        node.setProperty(Setting.DURATION.node(), 10000); // in milliseconds
+        node.setProperty(Setting.PERIOD.node(), 2000); // in milliseconds
+        node.setProperty("tick-damage", 1);
+        node.setProperty("heal-multiplier", 1);
+        node.setProperty(Setting.EXPIRE_TEXT.node(), "%hero% is no longer draining %target%'s soul!");
+        return node;
+    }
+
+    @Override
+    public void init() {
+        super.init();
+        expireText = getSetting(null, Setting.EXPIRE_TEXT.node(), "%hero% looks healthier from draining %target%'s soul!").replace("%hero%", "$1").replace("%target%", "$2");
+    }
 
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
@@ -36,9 +53,9 @@ public class SkillSoulLeech extends TargettedSkill {
         long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 10000);
         long period = getSetting(hero.getHeroClass(), Setting.PERIOD.node(), 2000);
         int tickDamage = getSetting(hero.getHeroClass(), "tick-damage", 1);
-        
+
         SoulLeechEffect slEffect = new SoulLeechEffect(this, period, duration, tickDamage, player);
-        
+
         if (target instanceof Player) {
             plugin.getHeroManager().getHero((Player) target).addEffect(slEffect);
         } else if (target instanceof Creature) {
@@ -52,37 +69,16 @@ public class SkillSoulLeech extends TargettedSkill {
         broadcastExecuteText(hero, target);
         return true;
     }
-    
-    @Override
-    public ConfigurationNode getDefaultConfig() {
-        ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty(Setting.DURATION.node(), 10000); // in milliseconds
-        node.setProperty(Setting.PERIOD.node(), 2000); // in milliseconds
-        node.setProperty("tick-damage", 1);
-        node.setProperty("heal-multiplier", 1);
-        node.setProperty(Setting.EXPIRE_TEXT.node(), "%hero% is no longer draining %target%'s soul!");
-        return node;
-    }
-    @Override
-    public void init() {
-        super.init();
-        expireText = getSetting(null, Setting.EXPIRE_TEXT.node(), "%hero% looks healthier from draining %target%'s soul!").replace("%hero%", "$1").replace("%target%", "$2");
-    }
-    
+
     public class SoulLeechEffect extends PeriodicDamageEffect {
 
         private int totalDamage = 0;
-        
+
         public SoulLeechEffect(Skill skill, long period, long duration, int tickDamage, Player applier) {
             super(skill, "SoulLeech", period, duration, tickDamage, applier);
             this.types.add(EffectType.HARMFUL);
             this.types.add(EffectType.DARK);
             this.types.add(EffectType.DISPELLABLE);
-        }
-        
-        @Override
-        public void apply(Hero hero) {
-            super.apply(hero);
         }
 
         @Override
@@ -91,17 +87,17 @@ public class SkillSoulLeech extends TargettedSkill {
         }
 
         @Override
-        public void tick(Hero hero) {
-            super.tick(hero);
-            totalDamage += tickDamage;
+        public void apply(Hero hero) {
+            super.apply(hero);
         }
-        
+
         @Override
-        public void tick(Creature creature) {
-            super.tick(creature);
-            totalDamage += tickDamage;
+        public void remove(Creature creature) {
+            super.remove(creature);
+            healApplier();
+            broadcast(creature.getLocation(), expireText, applier.getDisplayName(), Messaging.getCreatureName(creature).toLowerCase());
         }
-        
+
         @Override
         public void remove(Hero hero) {
             super.remove(hero);
@@ -111,23 +107,27 @@ public class SkillSoulLeech extends TargettedSkill {
         }
 
         @Override
-        public void remove(Creature creature) {
-            super.remove(creature);
-            healApplier();
-            broadcast(creature.getLocation(), expireText, applier.getDisplayName(), Messaging.getCreatureName(creature).toLowerCase());
+        public void tick(Creature creature) {
+            super.tick(creature);
+            totalDamage += tickDamage;
         }
-        
+
+        @Override
+        public void tick(Hero hero) {
+            super.tick(hero);
+            totalDamage += tickDamage;
+        }
+
         private void healApplier() {
             Hero hero = plugin.getHeroManager().getHero(applier);
-            int healAmount = (int) totalDamage * getSetting(hero.getHeroClass(), "heal-multiplier", 1);
-            
-            //Fire our heal event
+            int healAmount = totalDamage * getSetting(hero.getHeroClass(), "heal-multiplier", 1);
+
+            // Fire our heal event
             HeroRegainHealthEvent hrhEvent = new HeroRegainHealthEvent(hero, healAmount, skill);
             plugin.getServer().getPluginManager().callEvent(hrhEvent);
-            if (hrhEvent.isCancelled()) {
+            if (hrhEvent.isCancelled())
                 return;
-            }
-            
+
             hero.setHealth(hero.getHealth() + hrhEvent.getAmount());
             hero.syncHealth();
         }

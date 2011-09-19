@@ -80,6 +80,11 @@ public class SkillBlight extends TargettedSkill {
         }
 
         @Override
+        public void apply(Creature creature) {
+            super.apply(creature);
+        }
+
+        @Override
         public void apply(Hero hero) {
             super.apply(hero);
             Player player = hero.getPlayer();
@@ -87,8 +92,9 @@ public class SkillBlight extends TargettedSkill {
         }
 
         @Override
-        public void apply(Creature creature) {
-            super.apply(creature);
+        public void remove(Creature creature) {
+            super.remove(creature);
+            broadcast(creature.getLocation(), expireText, Messaging.getCreatureName(creature).toLowerCase());
         }
 
         @Override
@@ -97,12 +103,6 @@ public class SkillBlight extends TargettedSkill {
 
             Player player = hero.getPlayer();
             broadcast(player.getLocation(), expireText, player.getDisplayName());
-        }
-
-        @Override
-        public void remove(Creature creature) {
-            super.remove(creature);
-            broadcast(creature.getLocation(), expireText, Messaging.getCreatureName(creature).toLowerCase());
         }
 
         @Override

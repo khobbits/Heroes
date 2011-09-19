@@ -67,44 +67,6 @@ public class Hero {
         this.heroClass = heroClass;
         transientPerms = new PermissionAttachment(plugin, player);
     }
-    
-    public Map<String, Map<String, String>> getSkillSettings() {
-        return Collections.unmodifiableMap(skillSettings);
-    }
-
-    public Map<String, Double> getExperienceMap() {
-        return Collections.unmodifiableMap(experience);
-    }
-
-    /**
-     * Syncs the Heros current health with the Minecraft HealthBar
-     */
-    public void syncHealth() {
-        if ((player.isDead() || player.getHealth() == 0) && health <= 0)
-            return;
-        
-        player.setHealth((int) Math.ceil((health / getMaxHealth() * 20)));
-    }
-
-    /**
-     * Syncs the Hero's current Experience with the minecraft experience
-     */
-    public void syncExperience() {
-        Properties props = plugin.getConfigManager().getProperties();
-        int level = getLevel();
-        int currentLevelXP = props.getExperience(level);
-
-        double maxLevelXP = props.getExperience(level + 1) - currentLevelXP;
-        double currentXP = getExperience() - currentLevelXP;
-        int syncedXP = (int) (currentXP / maxLevelXP * 100);
-
-        CraftPlayer craftPlayer = (CraftPlayer) player;
-        EntityPlayer entityPlayer = craftPlayer.getHandle();
-        entityPlayer.exp = 0;
-        entityPlayer.expTotal = 0;
-        entityPlayer.expLevel = 0;
-        entityPlayer.d(450 + syncedXP);
-    }
 
     /**
      * Adds the Effect onto the hero, and calls it's apply method initiating it's first tic.
@@ -119,8 +81,21 @@ public class Hero {
         effect.apply(this);
     }
 
+    /**
+     * Adds the given permission to the hero
+     * 
+     * @param permission
+     */
+    public void addPermission(String permission) {
+        transientPerms.setPermission(permission, true);
+    }
+
     public void addRecoveryItem(ItemStack item) {
         this.itemRecovery.add(item);
+    }
+
+    public void addSkill(String skill) {
+        skills.put(skill, Configuration.getEmptyNode());
     }
 
     /**
@@ -148,25 +123,68 @@ public class Hero {
         binds.clear();
     }
 
+    public void clearBinds() {
+        binds.clear();
+    }
+
+    public void clearCooldowns() {
+        cooldowns.clear();
+    }
+
+    /**
+     * Iterates over the effects this Hero has and removes them
+     * 
+     */
+    public void clearEffects() {
+        Iterator<Effect> iter = effects.iterator();
+        while (iter.hasNext()) {
+            iter.next().remove(this);
+            iter.remove();
+        }
+    }
+
+    /**
+     * Clears all experience for all classes on the hero
+     * 
+     */
+    public void clearExperience() {
+        for (Entry<String, Double> entry : experience.entrySet()) {
+            entry.setValue(0.0);
+        }
+    }
+
+    /**
+     * Clears all set Permissions on the hero's permission attachment
+     */
+    public void clearPermissions() {
+        transientPerms.getPermissions().clear();
+    }
+
+    /**
+     * Removes the summons from the game world - then removes them from the set
+     * 
+     */
+    public void clearSummons() {
+        for (Creature summon : summons) {
+            summon.remove();
+        }
+        summons.clear();
+    }
+
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) {
+        if (this == obj)
             return true;
-        }
-        if (obj == null) {
+        if (obj == null)
             return false;
-        }
-        if (getClass() != obj.getClass()) {
+        if (getClass() != obj.getClass())
             return false;
-        }
         Hero other = (Hero) obj;
         if (player == null) {
-            if (other.player != null) {
+            if (other.player != null)
                 return false;
-            }
-        } else if (!player.getName().equals(other.player.getName())) {
+        } else if (!player.getName().equals(other.player.getName()))
             return false;
-        }
         return true;
     }
 
@@ -202,8 +220,9 @@ public class Hero {
             Set<Hero> partyMembers = party.getMembers();
             Set<Hero> inRangeMembers = new HashSet<Hero>();
             for (Hero partyMember : partyMembers) {
-                if (!location.getWorld().equals(partyMember.player.getLocation().getWorld()))
+                if (!location.getWorld().equals(partyMember.player.getLocation().getWorld())) {
                     continue;
+                }
 
                 if (location.distanceSquared(partyMember.player.getLocation()) <= 2500) {
                     inRangeMembers.add(partyMember);
@@ -225,16 +244,14 @@ public class Hero {
         // adjust exp using the class modifier if it's positive
         if (expChange > 0 && source != ExperienceType.ADMIN) {
             expChange *= heroClass.getExpModifier();
-        } else if (source != ExperienceType.ADMIN && isMaster() && (!prop.masteryLoss || !prop.levelsViaExpLoss)) {
+        } else if (source != ExperienceType.ADMIN && isMaster() && (!prop.masteryLoss || !prop.levelsViaExpLoss))
             return;
-        }
 
         // call event
         ExperienceChangeEvent expEvent = new ExperienceChangeEvent(this, expChange, source);
         plugin.getServer().getPluginManager().callEvent(expEvent);
-        if (expEvent.isCancelled()) {
+        if (expEvent.isCancelled())
             return;
-        }
 
         // Lets get our modified xp change value
         expChange = expEvent.getExpChange();
@@ -289,8 +306,13 @@ public class Hero {
         }
 
         // Save the hero file when the Hero changes levels to prevent rollback issues
-        if (newLevel != currentLevel)
+        if (newLevel != currentLevel) {
             plugin.getHeroManager().saveHero(this);
+        }
+    }
+
+    public String[] getBind(Material mat) {
+        return binds.get(mat);
     }
 
     /**
@@ -301,17 +323,9 @@ public class Hero {
     public Map<Material, String[]> getBinds() {
         return Collections.unmodifiableMap(binds);
     }
-    
-    public boolean hasBind(Material mat) {
-        return binds.containsKey(mat);
-    }
-    
-    public String[] getBind(Material mat) {
-        return binds.get(mat);
-    }
-    
-    public void clearBinds() {
-        binds.clear();
+
+    public Long getCooldown(String name) {
+        return cooldowns.get(name.toLowerCase());
     }
 
     /**
@@ -323,22 +337,6 @@ public class Hero {
         return Collections.unmodifiableMap(cooldowns);
     }
 
-    public void clearCooldowns() {
-        cooldowns.clear();
-    }
-
-    public Long getCooldown(String name) {
-        return cooldowns.get(name.toLowerCase());
-    }
-
-    public void setCooldown(String name, long cooldown) {
-        cooldowns.put(name.toLowerCase(), cooldown);
-    }
-
-    public void removeCooldown(String name) {
-        cooldowns.remove(name.toLowerCase());
-    }
-
     /**
      * Attempts to find the effect from the given name
      * 
@@ -347,9 +345,8 @@ public class Hero {
      */
     public Effect getEffect(String name) {
         for (Effect effect : effects) {
-            if (effect.getName().equalsIgnoreCase(name)) {
+            if (effect.getName().equalsIgnoreCase(name))
                 return effect;
-            }
         }
         return null;
     }
@@ -383,6 +380,18 @@ public class Hero {
         return exp == null ? 0 : exp;
     }
 
+    public Map<String, Double> getExperienceMap() {
+        return Collections.unmodifiableMap(experience);
+    }
+
+    /**
+     * 
+     * @return the hero's current health - double
+     */
+    public double getHealth() {
+        return health;
+    }
+
     /**
      * Returns the hero's currently selected heroclass
      * 
@@ -390,6 +399,10 @@ public class Hero {
      */
     public HeroClass getHeroClass() {
         return heroClass;
+    }
+
+    public HeroDamageCause getLastDamageCause() {
+        return lastDamageCause;
     }
 
     /**
@@ -405,11 +418,12 @@ public class Hero {
     }
 
     /**
+     * All mana is in percentages.
      * 
-     * @return the hero's current health - double
+     * @return Hero's current amount of mana
      */
-    public double getHealth() {
-        return health;
+    public int getMana() {
+        return mana;
     }
 
     /**
@@ -420,15 +434,6 @@ public class Hero {
     public double getMaxHealth() {
         int level = plugin.getConfigManager().getProperties().getLevel(getExperience());
         return heroClass.getBaseMaxHealth() + (level - 1) * heroClass.getMaxHealthPerLevel();
-    }
-
-    /**
-     * All mana is in percentages.
-     * 
-     * @return Hero's current amount of mana
-     */
-    public int getMana() {
-        return mana;
     }
 
     /**
@@ -452,23 +457,43 @@ public class Hero {
         return Collections.unmodifiableList(itemRecovery);
     }
 
+    public Map<String, ConfigurationNode> getSkills() {
+        return skills;
+    }
+
+    public Map<String, Map<String, String>> getSkillSettings() {
+        return Collections.unmodifiableMap(skillSettings);
+    }
+
+    /**
+     * gets Mapping of the persistence SkillSettings for the given skill
+     * 
+     * @param skill
+     * @return
+     */
+    public Map<String, String> getSkillSettings(Skill skill) {
+        return skill == null ? null : getSkillSettings(skill.getName());
+    }
+
+    /**
+     * gets Mapping of the persistence SkillSettings for the given skillName
+     * 
+     * @param skill
+     * @return
+     */
+    public Map<String, String> getSkillSettings(String skillName) {
+        if (!heroClass.hasSkill(skillName))
+            return null;
+
+        return skillSettings.get(skillName.toLowerCase());
+    }
+
     /**
      * 
      * @return set of all summons the hero currently has
      */
     public Set<Creature> getSummons() {
         return summons;
-    }
-
-    /**
-     * Removes the summons from the game world - then removes them from the set
-     * 
-     */
-    public void clearSummons() {
-        for (Creature summon : summons) {
-            summon.remove();
-        }
-        summons.clear();
     }
 
     /**
@@ -480,9 +505,9 @@ public class Hero {
     public Set<String> getSuppressedSkills() {
         return Collections.unmodifiableSet(suppressedSkills);
     }
-    
-    public void setSuppressedSkills(Set<String> suppressedSkills) {
-        this.suppressedSkills = suppressedSkills;
+
+    public boolean hasBind(Material mat) {
+        return binds.containsKey(mat);
     }
 
     /**
@@ -493,18 +518,16 @@ public class Hero {
      */
     public boolean hasEffect(String name) {
         for (Effect effect : effects) {
-            if (effect.getName().equalsIgnoreCase(name)) {
+            if (effect.getName().equalsIgnoreCase(name))
                 return true;
-            }
         }
         return false;
     }
 
     public boolean hasEffectType(EffectType type) {
         for (Effect effect : effects) {
-            if (effect.isType(type)) {
+            if (effect.isType(type))
                 return true;
-            }
         }
         return false;
     }
@@ -520,6 +543,26 @@ public class Hero {
      */
     public boolean hasParty() {
         return party != null;
+    }
+
+    /**
+     * Checks if the hero has access to the given Skill
+     * 
+     * @param skill
+     * @return
+     */
+    public boolean hasSkill(Skill skill) {
+        return hasSkill(skill.getName());
+    }
+
+    /**
+     * Checks if the hero has access to the given Skill
+     * 
+     * @param name
+     * @return
+     */
+    public boolean hasSkill(String name) {
+        return this.heroClass.hasSkill(name) || skills.containsKey(name);
     }
 
     /**
@@ -559,16 +602,8 @@ public class Hero {
         return verbose;
     }
 
-    /**
-     * Iterates over the effects this Hero has and removes them
-     * 
-     */
-    public void clearEffects() {
-        Iterator<Effect> iter = effects.iterator();
-        while (iter.hasNext()) {
-            iter.next().remove(this);
-            iter.remove();
-        }
+    public void removeCooldown(String name) {
+        cooldowns.remove(name.toLowerCase());
     }
 
     /**
@@ -581,6 +616,23 @@ public class Hero {
         if (effect != null) {
             effect.remove(this);
         }
+    }
+
+    /**
+     * Removes the given permission from the hero
+     * 
+     * @param permission
+     */
+    public void removePermission(String permission) {
+        transientPerms.unsetPermission(permission);
+    }
+
+    public void removeSkill(String skill) {
+        skills.remove(skill);
+    }
+
+    public void setCooldown(String name, long cooldown) {
+        cooldowns.put(name.toLowerCase(), cooldown);
     }
 
     /**
@@ -604,12 +656,19 @@ public class Hero {
     }
 
     /**
-     * Clears all experience for all classes on the hero
+     * Sets the heros health, This method circumvents the HeroRegainHealth event
+     * if you use it to regain health on a hero please make sure to call the regain health event prior to setHealth.
      * 
+     * @param health
      */
-    public void clearExperience() {
-        for (Entry<String, Double> entry : experience.entrySet()) {
-            entry.setValue(0.0);
+    public void setHealth(Double health) {
+        double maxHealth = getMaxHealth();
+        if (health > maxHealth) {
+            this.health = maxHealth;
+        } else if (health < 0) {
+            this.health = 0;
+        } else {
+            this.health = health;
         }
     }
 
@@ -629,6 +688,16 @@ public class Hero {
 
         // Check the Players inventory now that they have changed class.
         this.plugin.getInventoryChecker().checkInventory(player);
+    }
+
+    /**
+     * Sets the hero's last damage cause the the given value
+     * Generally this should never be called through API as it is updated internally through the heroesdamagelistener
+     * 
+     * @param lastDamageCause
+     */
+    public void setLastDamageCause(HeroDamageCause lastDamageCause) {
+        this.lastDamageCause = lastDamageCause;
     }
 
     /**
@@ -660,44 +729,6 @@ public class Hero {
     }
 
     /**
-     * Adds or removes the given Skill from the set of suppressed skills
-     * 
-     * @param skill
-     * @param suppressed
-     */
-    public void setSuppressed(Skill skill, boolean suppressed) {
-        if (suppressed) {
-            suppressedSkills.add(skill.getName());
-        } else {
-            suppressedSkills.remove(skill.getName());
-        }
-    }
-
-    /**
-     * gets Mapping of the persistence SkillSettings for the given skill
-     * 
-     * @param skill
-     * @return
-     */
-    public Map<String, String> getSkillSettings(Skill skill) {
-        return skill == null ? null : getSkillSettings(skill.getName());
-    }
-
-    /**
-     * gets Mapping of the persistence SkillSettings for the given skillName
-     * 
-     * @param skill
-     * @return
-     */
-    public Map<String, String> getSkillSettings(String skillName) {
-        if (!heroClass.hasSkill(skillName)) {
-            return null;
-        }
-
-        return skillSettings.get(skillName.toLowerCase());
-    }
-
-    /**
      * sets a single setting in the persistence skill-settings map
      * 
      * @param skill
@@ -725,6 +756,24 @@ public class Hero {
     }
 
     /**
+     * Adds or removes the given Skill from the set of suppressed skills
+     * 
+     * @param skill
+     * @param suppressed
+     */
+    public void setSuppressed(Skill skill, boolean suppressed) {
+        if (suppressed) {
+            suppressedSkills.add(skill.getName());
+        } else {
+            suppressedSkills.remove(skill.getName());
+        }
+    }
+
+    public void setSuppressedSkills(Set<String> suppressedSkills) {
+        this.suppressedSkills = suppressedSkills;
+    }
+
+    /**
      * Sets the heros verbosity
      * 
      * @param verbose
@@ -734,99 +783,41 @@ public class Hero {
     }
 
     /**
+     * Syncs the Hero's current Experience with the minecraft experience
+     */
+    public void syncExperience() {
+        Properties props = plugin.getConfigManager().getProperties();
+        int level = getLevel();
+        int currentLevelXP = props.getExperience(level);
+
+        double maxLevelXP = props.getExperience(level + 1) - currentLevelXP;
+        double currentXP = getExperience() - currentLevelXP;
+        int syncedXP = (int) (currentXP / maxLevelXP * 100);
+
+        CraftPlayer craftPlayer = (CraftPlayer) player;
+        EntityPlayer entityPlayer = craftPlayer.getHandle();
+        entityPlayer.exp = 0;
+        entityPlayer.expTotal = 0;
+        entityPlayer.expLevel = 0;
+        entityPlayer.d(450 + syncedXP);
+    }
+
+    /**
+     * Syncs the Heros current health with the Minecraft HealthBar
+     */
+    public void syncHealth() {
+        if ((player.isDead() || player.getHealth() == 0) && health <= 0)
+            return;
+
+        player.setHealth((int) Math.ceil((health / getMaxHealth() * 20)));
+    }
+
+    /**
      * Unbinds the material from a skill.
      * 
      * @param material
      */
     public void unbind(Material material) {
         binds.remove(material);
-    }
-
-    /**
-     * Sets the heros health, This method circumvents the HeroRegainHealth event
-     * if you use it to regain health on a hero please make sure to call the regain health event prior to setHealth.
-     * 
-     * @param health
-     */
-    public void setHealth(Double health) {
-        double maxHealth = getMaxHealth();
-        if (health > maxHealth) {
-            this.health = maxHealth;
-        } else if (health < 0) {
-            this.health = 0;
-        } else {
-            this.health = health;
-        }
-    }
-
-    /**
-     * Checks if the hero has access to the given Skill
-     * 
-     * @param name
-     * @return
-     */
-    public boolean hasSkill(String name) {
-        return this.heroClass.hasSkill(name) || skills.containsKey(name);
-    }
-
-    /**
-     * Checks if the hero has access to the given Skill
-     * 
-     * @param skill
-     * @return
-     */
-    public boolean hasSkill(Skill skill) {
-        return hasSkill(skill.getName());
-    }
-
-    public Map<String, ConfigurationNode> getSkills() {
-        return skills;
-    }
-
-    public void addSkill(String skill) {
-        skills.put(skill, Configuration.getEmptyNode());
-    }
-
-    public void removeSkill(String skill) {
-        skills.remove(skill);
-    }
-
-    public HeroDamageCause getLastDamageCause() {
-        return lastDamageCause;
-    }
-
-    /**
-     * Sets the hero's last damage cause the the given value
-     * Generally this should never be called through API as it is updated internally through the heroesdamagelistener
-     * 
-     * @param lastDamageCause
-     */
-    public void setLastDamageCause(HeroDamageCause lastDamageCause) {
-        this.lastDamageCause = lastDamageCause;
-    }
-
-    /**
-     * Clears all set Permissions on the hero's permission attachment
-     */
-    public void clearPermissions() {
-        transientPerms.getPermissions().clear();
-    }
-
-    /**
-     * Removes the given permission from the hero
-     * 
-     * @param permission
-     */
-    public void removePermission(String permission) {
-        transientPerms.unsetPermission(permission);
-    }
-
-    /**
-     * Adds the given permission to the hero
-     * 
-     * @param permission
-     */
-    public void addPermission(String permission) {
-        transientPerms.setPermission(permission, true);
     }
 }

@@ -20,15 +20,15 @@ public class HPluginListener extends ServerListener {
     public void onPluginDisable(PluginDisableEvent event) {
         Plugin plugin = event.getPlugin();
         String name = plugin.getDescription().getName();
-        
+
         // Check if the name is Spout
         if (name.equals("Spout")) {
             // If BukkitContrib just Disabled then we tell Heroes to stop using BukkitContrib
             Heroes.useSpout = false;
         }
-        
+
         if (name.equals("iConomy") || name.equals("BOSEconomy") || name.equals("Essentials")) {
-            this.plugin.econ = null;        
+            this.plugin.econ = null;
         }
     }
 
@@ -49,11 +49,12 @@ public class HPluginListener extends ServerListener {
         if (name.equals("BukkitContrib")) {
             this.plugin.setupSpout();
         }
-        
-        //Check for Econ
+
+        // Check for Econ
         if (name.equals("iConomy") || name.equals("BOSEconomy") || name.equals("Essentials")) {
-            if (this.plugin.econ == null)
+            if (this.plugin.econ == null) {
                 this.plugin.setupEconomy();
+            }
         }
     }
 }

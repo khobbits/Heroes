@@ -26,13 +26,13 @@ import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillFireArmor extends ActiveSkill {
-    
+
     private String applyText;
     private String expireText;
     private String igniteText;
     private Random random = new Random();
     private List<String> defaultArmors = new ArrayList<String>();
-    
+
     public SkillFireArmor(Heroes plugin) {
         super(plugin, "FireArmor");
         setDescription("Gives your armor a chance to ignite your attackers!");
@@ -40,12 +40,12 @@ public class SkillFireArmor extends ActiveSkill {
         setArgumentRange(0, 0);
         setIdentifiers("skill firearmor", "skill farmor");
         setTypes(SkillType.FIRE, SkillType.SILENCABLE, SkillType.BUFF);
-        
+
         defaultArmors.add(Material.GOLD_CHESTPLATE.name());
-        
+
         registerEvent(Type.ENTITY_DAMAGE, new SkillDamageListener(), Priority.Monitor);
     }
-    
+
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
@@ -58,7 +58,7 @@ public class SkillFireArmor extends ActiveSkill {
         node.setProperty("ignite-text", "%hero% ignited %target% with firearmor!");
         return node;
     }
-    
+
     @Override
     public void init() {
         super.init();
@@ -66,7 +66,7 @@ public class SkillFireArmor extends ActiveSkill {
         expireText = getSetting(null, Setting.EXPIRE_TEXT.node(), "%hero%'s armor is no longer aflame!").replace("%hero%", "$1");
         igniteText = getSetting(null, "ignite-text", "%hero% ignited %target% with firearmor!").replace("%hero%", "$1").replace("%target%", "$2");
     }
-    
+
     @Override
     public boolean use(Hero hero, String[] args) {
         int duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 20000);
@@ -82,7 +82,7 @@ public class SkillFireArmor extends ActiveSkill {
             this.types.add(EffectType.DISPELLABLE);
             this.types.add(EffectType.FIRE);
         }
-        
+
         @Override
         public void apply(Hero hero) {
             super.apply(hero);
@@ -96,41 +96,41 @@ public class SkillFireArmor extends ActiveSkill {
             broadcast(player.getLocation(), expireText, player.getDisplayName());
         }
     }
-    
+
     public class SkillDamageListener extends EntityListener {
-        
+
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
-            if (event.isCancelled() || !(event.getEntity() instanceof Player) || !(event instanceof EntityDamageByEntityEvent) ) 
+            if (event.isCancelled() || !(event.getEntity() instanceof Player) || !(event instanceof EntityDamageByEntityEvent))
                 return;
-            
+
             Player player = (Player) event.getEntity();
             Hero hero = plugin.getHeroManager().getHero(player);
-            
+
             if (!hero.hasEffect("FireArmor") || !getSetting(hero.getHeroClass(), "armors", defaultArmors).contains(player.getInventory().getChestplate().getType().name()))
                 return;
-            
+
             EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
-            //Dont set Projectiles on fire
+            // Dont set Projectiles on fire
             if (!(subEvent.getDamager() instanceof LivingEntity))
                 return;
-            
-            //Check our ignite chance
+
+            // Check our ignite chance
             double chance = getSetting(hero.getHeroClass(), "ignite-chance", .2);
             if (random.nextDouble() >= chance)
                 return;
-            
-            //Set the damager on fire if it was successful
+
+            // Set the damager on fire if it was successful
             int fireTicks = getSetting(hero.getHeroClass(), "ignite-duration", 5000) / 200;
             subEvent.getDamager().setFireTicks(fireTicks);
-            
+
             String name = null;
             if (subEvent.getDamager() instanceof Player) {
                 name = ((Player) subEvent.getDamager()).getName();
             } else if (subEvent.getDamager() instanceof Creature) {
                 Messaging.getCreatureName((Creature) subEvent.getDamager());
             }
-            
+
             broadcast(player.getLocation(), igniteText, player.getDisplayName(), name);
         }
     }

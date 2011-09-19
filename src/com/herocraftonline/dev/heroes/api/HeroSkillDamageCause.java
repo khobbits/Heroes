@@ -9,7 +9,7 @@ public class HeroSkillDamageCause extends HeroDamageCause {
 
     private final Entity attacker;
     private final Skill skill;
-    
+
     public HeroSkillDamageCause(int damage, DamageCause cause, Entity attacker, Skill skill) {
         super(damage, cause);
         this.attacker = attacker;

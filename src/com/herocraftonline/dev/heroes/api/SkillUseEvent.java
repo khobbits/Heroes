@@ -32,45 +32,10 @@ public class SkillUseEvent extends Event implements Cancellable {
     }
 
     /**
-     * @return the player
-     */
-    public Player getPlayer() {
-        return player;
-    }
-
-    /**
-     * @return the skill
-     */
-    public Skill getSkill() {
-        return skill;
-    }
-
-    /**
      * @return the args
      */
     public String[] getArgs() {
         return args;
-    }
-
-    /**
-     * @param args the args to set
-     */
-    public void setArgs(String[] args) {
-        this.args = args;
-    }
-
-    /**
-     * @return the manaCost
-     */
-    public int getManaCost() {
-        return manaCost;
-    }
-
-    /**
-     * @param manaCost the manaCost to set
-     */
-    public void setManaCost(int manaCost) {
-        this.manaCost = manaCost;
     }
 
     /**
@@ -81,14 +46,24 @@ public class SkillUseEvent extends Event implements Cancellable {
     }
 
     /**
-     * @param healthCost the healthCost to set
+     * @return the hero
      */
-    public void setHealthCost(int healthCost) {
-        this.healthCost = healthCost;
+    public Hero getHero() {
+        return hero;
     }
 
-    public void setReagentCost(ItemStack reagentCost) {
-        this.reagentCost = reagentCost;
+    /**
+     * @return the manaCost
+     */
+    public int getManaCost() {
+        return manaCost;
+    }
+
+    /**
+     * @return the player
+     */
+    public Player getPlayer() {
+        return player;
     }
 
     public ItemStack getReagentCost() {
@@ -96,10 +71,10 @@ public class SkillUseEvent extends Event implements Cancellable {
     }
 
     /**
-     * @return the hero
+     * @return the skill
      */
-    public Hero getHero() {
-        return hero;
+    public Skill getSkill() {
+        return skill;
     }
 
     @Override
@@ -107,9 +82,37 @@ public class SkillUseEvent extends Event implements Cancellable {
         return cancelled;
     }
 
+    /**
+     * @param args
+     *            the args to set
+     */
+    public void setArgs(String[] args) {
+        this.args = args;
+    }
+
     @Override
     public void setCancelled(boolean val) {
         cancelled = val;
+    }
+
+    /**
+     * @param healthCost
+     *            the healthCost to set
+     */
+    public void setHealthCost(int healthCost) {
+        this.healthCost = healthCost;
+    }
+
+    /**
+     * @param manaCost
+     *            the manaCost to set
+     */
+    public void setManaCost(int manaCost) {
+        this.manaCost = manaCost;
+    }
+
+    public void setReagentCost(ItemStack reagentCost) {
+        this.reagentCost = reagentCost;
     }
 
 }

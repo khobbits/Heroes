@@ -36,14 +36,19 @@ public class OutsourcedSkill extends Skill {
     private String[] permissions;
 
     /**
-     * Constructor which defines the parameters required of any {@link com.herocraftonline.dev.heroes.command.BaseCommand} as well as the permissions to be managed by this faux
+     * Constructor which defines the parameters required of any
+     * {@link com.herocraftonline.dev.heroes.command.BaseCommand} as well as the permissions to be managed by this faux
      * skill. The description is automatically set to be the same as the usage so that the usage is readily displayed in
      * the skills list. No arguments are allowed for such a skill as it has no identifier to be executed with.
      * 
-     * @param plugin the active Heroes instance
-     * @param name the name of the skill
-     * @param permissions the permissions to be managed by this skill
-     * @param usage the usage text defined in the classes.yml config
+     * @param plugin
+     *            the active Heroes instance
+     * @param name
+     *            the name of the skill
+     * @param permissions
+     *            the permissions to be managed by this skill
+     * @param usage
+     *            the usage text defined in the classes.yml config
      */
     public OutsourcedSkill(Heroes plugin, String name, String[] permissions, String usage) {
         super(plugin, name);
@@ -66,13 +71,13 @@ public class OutsourcedSkill extends Skill {
      * Serves no purpose for an outsourced skill.
      */
     @Override
-    public void init() {
-    }
+    public void init() {}
 
     /**
      * Grants this skill's associated permissions to the provided {@link Hero} if it is the correct class and level.
      * 
-     * @param hero the <code>Hero</code> attempting to learn the skill
+     * @param hero
+     *            the <code>Hero</code> attempting to learn the skill
      */
     public void tryLearningSkill(Hero hero) {
         tryLearningSkill(hero, hero.getHeroClass());
@@ -82,8 +87,10 @@ public class OutsourcedSkill extends Skill {
      * Grants this skill's associated permissions to the provided {@link Hero} if it is the level and the provided class
      * has the skill.
      * 
-     * @param hero the <code>Hero</code> attempting to learn the skill
-     * @param heroClass the {@link HeroClass} to check for this skill
+     * @param hero
+     *            the <code>Hero</code> attempting to learn the skill
+     * @param heroClass
+     *            the {@link HeroClass} to check for this skill
      */
     public void tryLearningSkill(Hero hero, HeroClass heroClass) {
         Player player = hero.getPlayer();
@@ -100,7 +107,7 @@ public class OutsourcedSkill extends Skill {
                 }
             } else {
                 for (String permission : permissions) {
-                    if (Heroes.Permissions != null && hasPermission(world, playerName, permission) ) {
+                    if (Heroes.Permissions != null && hasPermission(world, playerName, permission)) {
                         removePermission(world, playerName, permission);
                     }
                     hero.removePermission(permission);

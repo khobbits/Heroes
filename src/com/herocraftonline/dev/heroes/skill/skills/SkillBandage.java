@@ -42,14 +42,14 @@ public class SkillBandage extends TargettedSkill {
             Messaging.send(player, "Invalid target!");
             return false;
         }
-        
+
         Hero targetHero = plugin.getHeroManager().getHero((Player) target);
         int hpPlus = getSetting(hero.getHeroClass(), "health", 5);
         double targetHealth = targetHero.getHealth();
 
         if (targetHealth >= targetHero.getMaxHealth()) {
             if (player.equals(targetHero.getPlayer())) {
-                Messaging.send(player, "You are already at full health.");  
+                Messaging.send(player, "You are already at full health.");
             } else {
                 Messaging.send(player, "Target is already fully healed.");
             }
@@ -68,8 +68,9 @@ public class SkillBandage extends TargettedSkill {
 
         // Bandage cures Bleeding!
         for (Effect effect : targetHero.getEffects()) {
-            if (effect.isType(EffectType.BLEED))
+            if (effect.isType(EffectType.BLEED)) {
                 targetHero.removeEffect(effect);
+            }
         }
 
         broadcastExecuteText(hero, target);

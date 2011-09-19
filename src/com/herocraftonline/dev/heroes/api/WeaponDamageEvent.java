@@ -23,36 +23,20 @@ public class WeaponDamageEvent extends Event implements Cancellable {
         this.cause = event.getCause();
     }
 
-    public void setDamage(int damage) {
-        this.damage = damage;
+    public DamageCause getCause() {
+        return cause;
     }
 
     public int getDamage() {
         return damage;
     }
 
-    public void setCause(DamageCause cause) {
-        this.cause = cause;
-    }
-
-    public DamageCause getCause() {
-        return cause;
-    }
-
-    public void setEntity(Entity entity) {
-        this.entity = entity;
+    public Entity getDamager() {
+        return damager;
     }
 
     public Entity getEntity() {
         return entity;
-    }
-
-    public void setDamager(Entity damager) {
-        this.damager = damager;
-    }
-
-    public Entity getDamager() {
-        return damager;
     }
 
     @Override
@@ -63,6 +47,22 @@ public class WeaponDamageEvent extends Event implements Cancellable {
     @Override
     public void setCancelled(boolean val) {
         this.cancelled = val;
+    }
+
+    public void setCause(DamageCause cause) {
+        this.cause = cause;
+    }
+
+    public void setDamage(int damage) {
+        this.damage = damage;
+    }
+
+    public void setDamager(Entity damager) {
+        this.damager = damager;
+    }
+
+    public void setEntity(Entity entity) {
+        this.entity = entity;
     }
 
 }

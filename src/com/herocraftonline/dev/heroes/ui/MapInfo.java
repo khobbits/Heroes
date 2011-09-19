@@ -25,18 +25,6 @@ public final class MapInfo {
         this.data = data;
     }
 
-    public int getX() {
-        return xCenter;
-    }
-
-    public int getZ() {
-        return zCenter;
-    }
-
-    public byte getScale() {
-        return scale;
-    }
-
     public byte[] getData() {
         return data;
     }
@@ -47,23 +35,25 @@ public final class MapInfo {
         return data[row * 128 + col];
     }
 
-    public void setPosition(int x, int z) {
-        xCenter = x;
-        zCenter = z;
+    public byte getDimension() {
+        return this.dimension;
     }
 
-    public void setScale(byte scale) {
-        if (scale < 0)
-            scale = 0;
-        if (scale > 4)
-            scale = 4;
-        this.scale = scale;
+    public byte getScale() {
+        return scale;
+    }
+
+    public int getX() {
+        return xCenter;
+    }
+
+    public int getZ() {
+        return zCenter;
     }
 
     public void setData(byte[] data) {
-        if (data.length != 128 * 128) {
+        if (data.length != 128 * 128)
             throw new IllegalArgumentException();
-        }
         this.data = data;
     }
 
@@ -77,7 +67,18 @@ public final class MapInfo {
         this.dimension = dimension;
     }
 
-    public byte getDimension() {
-        return this.dimension;
+    public void setPosition(int x, int z) {
+        xCenter = x;
+        zCenter = z;
+    }
+
+    public void setScale(byte scale) {
+        if (scale < 0) {
+            scale = 0;
+        }
+        if (scale > 4) {
+            scale = 4;
+        }
+        this.scale = scale;
     }
 }

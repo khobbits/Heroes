@@ -79,6 +79,35 @@ public class ConfigManager {
         plugin.setClassManager(heroClassManager);
     }
 
+    public void loadSkillConfig(Skill skill) {
+        Configuration config = new Configuration(skillConfigFile);
+        config.load();
+
+        ConfigurationNode node = config.getNode(skill.getName());
+        ConfigurationNode defaultNode = skill.getDefaultConfig();
+        if (node == null) {
+            config.setProperty(skill.getName(), defaultNode.getAll());
+            skill.setConfig(defaultNode);
+        } else {
+            mergeNodeToConfig(config, defaultNode, skill.getName());
+            skill.setConfig(config.getNode(skill.getName()));
+        }
+        config.save();
+        skill.init();
+    }
+
+    @SuppressWarnings({ "unchecked" })
+    public void print(Map<String, Object> map, String indent) {
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            if (entry.getValue() instanceof Map) {
+                plugin.debugLog(Level.INFO, indent + entry.getKey());
+                print((Map<String, Object>) entry.getValue(), indent + "  ");
+            } else {
+                plugin.debugLog(Level.INFO, indent + entry.getKey() + ": " + entry.getValue());
+            }
+        }
+    }
+
     public boolean reload() {
         try {
             final Player[] players = plugin.getServer().getOnlinePlayers();
@@ -120,22 +149,12 @@ public class ConfigManager {
             }
         }
     }
-    
-    public void loadSkillConfig(Skill skill) {
-        Configuration config = new Configuration(skillConfigFile);
-        config.load();
-        
-        ConfigurationNode node = config.getNode(skill.getName());
-        ConfigurationNode defaultNode = skill.getDefaultConfig();
-        if (node == null) {
-            config.setProperty(skill.getName(), defaultNode.getAll());
-            skill.setConfig(defaultNode);
-        } else {
-            mergeNodeToConfig(config, defaultNode, skill.getName());
-            skill.setConfig(config.getNode(skill.getName()));
-        }
-        config.save();
-        skill.init();
+
+    private void loadBedConfig(Configuration config) {
+        String root = "bed.";
+        properties.bedHeal = config.getBoolean(root + "bedHeal", true);
+        properties.healInterval = config.getInt(root + "healInterval", 30);
+        properties.healPercent = config.getInt(root + "healPercent", 5);
     }
 
     private void loadDefaultConfig(Configuration config) {
@@ -190,6 +209,23 @@ public class ConfigManager {
         properties.calcExp();
     }
 
+    private void loadManaConfig(Configuration config) {
+        String root = "mana.";
+        properties.manaRegenInterval = config.getInt(root + "regenInterval", 5);
+        properties.manaRegenPercent = config.getInt(root + "regenPercent", 5);
+        // Out of bounds check
+        if (properties.manaRegenPercent > 100 || properties.manaRegenPercent < 0) {
+            properties.manaRegenPercent = 5;
+        }
+    }
+
+    private void loadMapConfig(Configuration config) {
+        String root = "mappartyui.";
+        properties.mapUI = config.getBoolean(root + "enabled", false);
+        properties.mapID = (byte) config.getInt(root + "id", 0);
+        properties.mapPacketInterval = config.getInt(root + "packetinterval", 20);
+    }
+
     private Map<Material, Double> loadMaterialExperience(ConfigurationNode config, String path) {
         Map<Material, Double> expMap = new HashMap<Material, Double>();
         List<String> keys = config.getKeys(path);
@@ -218,32 +254,9 @@ public class ConfigManager {
         properties.damageSystem = config.getBoolean(root + "useDamageSystem", false);
     }
 
-    private void loadBedConfig(Configuration config) {
-        String root = "bed.";
-        properties.bedHeal = config.getBoolean(root + "bedHeal", true);
-        properties.healInterval = config.getInt(root + "healInterval", 30);
-        properties.healPercent = config.getInt(root + "healPercent", 5);
-    }
-    
     private void loadStorageConfig(Configuration config) {
         String root = "storage.";
         properties.storageType = config.getString(root + "type", "yml");
-    }
-    
-    private void loadManaConfig(Configuration config) {
-        String root = "mana.";
-        properties.manaRegenInterval = config.getInt(root + "regenInterval", 5);
-        properties.manaRegenPercent = config.getInt(root + "regenPercent", 5);
-        //Out of bounds check
-        if (properties.manaRegenPercent > 100 || properties.manaRegenPercent < 0)
-            properties.manaRegenPercent = 5;
-    }
-
-    private void loadMapConfig(Configuration config) {
-        String root = "mappartyui.";
-        properties.mapUI = config.getBoolean(root + "enabled", false);
-        properties.mapID = (byte) config.getInt(root + "id", 0);
-        properties.mapPacketInterval = config.getInt(root + "packetinterval", 20);
     }
 
     private void loadWorldConfig(Configuration config) {
@@ -260,18 +273,6 @@ public class ConfigManager {
                 if (value == null) {
                     config.setProperty(path + "." + key, node.getProperty(key));
                 }
-            }
-        }
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    public void print(Map<String, Object> map, String indent) {
-        for (Map.Entry<String, Object> entry : map.entrySet()) {
-            if (entry.getValue() instanceof Map) {
-                plugin.debugLog(Level.INFO, indent + entry.getKey());
-                print((Map<String, Object>) entry.getValue(), indent + "  ");
-            } else {
-                plugin.debugLog(Level.INFO, indent + entry.getKey() + ": " + entry.getValue());
             }
         }
     }

@@ -64,13 +64,14 @@ public class SkillPort extends ActiveSkill {
                 player.teleport(loc);
                 return true;
             }
-            
+
             Location castLocation = player.getLocation();
             for (Hero pHero : hero.getParty().getMembers()) {
-                if (!castLocation.getWorld().equals(player.getWorld()))
+                if (!castLocation.getWorld().equals(player.getWorld())) {
                     continue;
+                }
                 double distance = castLocation.distanceSquared(pHero.getPlayer().getLocation());
-                if ( distance <= range) {
+                if (distance <= range) {
                     pHero.getPlayer().teleport(loc);
                 }
             }

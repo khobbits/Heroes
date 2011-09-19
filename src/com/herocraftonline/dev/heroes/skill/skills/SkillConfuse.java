@@ -55,7 +55,7 @@ public class SkillConfuse extends TargettedSkill {
 
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
-        
+
         HeroClass heroClass = hero.getHeroClass();
         long duration = getSetting(heroClass, Setting.DURATION.node(), 10000);
         long period = getSetting(heroClass, Setting.PERIOD.node(), 2000);
@@ -64,10 +64,9 @@ public class SkillConfuse extends TargettedSkill {
             plugin.getHeroManager().getHero((Player) target).addEffect(new ConfuseEffect(this, duration, period, maxDrift));
         } else if (target instanceof Creature) {
             plugin.getHeroManager().addCreatureEffect((Creature) target, new ConfuseEffect(this, duration, period, maxDrift));
-        } else {
+        } else
             return false;
-        }
-        
+
         broadcastExecuteText(hero, target);
         return true;
     }
@@ -83,44 +82,6 @@ public class SkillConfuse extends TargettedSkill {
             this.types.add(EffectType.DISPELLABLE);
         }
 
-        @Override
-        public void apply(Hero hero) {
-            super.apply(hero);
-            Player player = hero.getPlayer();
-            broadcast(player.getLocation(), applyText, player.getDisplayName());
-        }
-
-        @Override
-        public void remove(Hero hero) {
-            super.remove(hero);
-            Player player = hero.getPlayer();
-            broadcast(player.getLocation(), expireText, player.getDisplayName());
-        }
-
-        @Override
-        public void apply(Creature creature) {
-            super.apply(creature);
-        }
-
-        @Override
-        public void remove(Creature creature) {
-            super.remove(creature);
-            broadcast(creature.getLocation(), expireText, Messaging.getCreatureName(creature));
-        }
-
-        @Override
-        public void tick(Hero hero) {
-            super.tick(hero);
-            adjustVelocity(hero.getPlayer());
-        }
-
-        @Override
-        public void tick(Creature creature) {
-            super.tick(creature);
-            adjustVelocity(creature);
-            creature.setTarget(null);
-        }
-
         public void adjustVelocity(LivingEntity lEntity) {
             Vector velocity = lEntity.getVelocity();
 
@@ -131,6 +92,44 @@ public class SkillConfuse extends TargettedSkill {
             velocity.add(new Vector(xAdjustment, 0f, zAdjustment));
             velocity.setY(0);
             lEntity.setVelocity(velocity);
+        }
+
+        @Override
+        public void apply(Creature creature) {
+            super.apply(creature);
+        }
+
+        @Override
+        public void apply(Hero hero) {
+            super.apply(hero);
+            Player player = hero.getPlayer();
+            broadcast(player.getLocation(), applyText, player.getDisplayName());
+        }
+
+        @Override
+        public void remove(Creature creature) {
+            super.remove(creature);
+            broadcast(creature.getLocation(), expireText, Messaging.getCreatureName(creature));
+        }
+
+        @Override
+        public void remove(Hero hero) {
+            super.remove(hero);
+            Player player = hero.getPlayer();
+            broadcast(player.getLocation(), expireText, player.getDisplayName());
+        }
+
+        @Override
+        public void tick(Creature creature) {
+            super.tick(creature);
+            adjustVelocity(creature);
+            creature.setTarget(null);
+        }
+
+        @Override
+        public void tick(Hero hero) {
+            super.tick(hero);
+            adjustVelocity(hero.getPlayer());
         }
     }
 }

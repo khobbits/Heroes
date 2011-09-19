@@ -15,9 +15,9 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
+import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.event.Listener;
 import org.bukkit.util.config.Configuration;
 import org.bukkit.util.config.ConfigurationNode;
 
@@ -29,7 +29,8 @@ import com.herocraftonline.dev.heroes.util.Messaging;
 
 /**
  * The root class of the skill heirarchy. This class implements the basic functionality of every Heroes skill including
- * configuration handling, area-based player notifications and event registration. Because this class extends {@link com.herocraftonline.dev.heroes.command.BaseCommand}, the constructor of every skill should define a name,
+ * configuration handling, area-based player notifications and event registration. Because this class extends
+ * {@link com.herocraftonline.dev.heroes.command.BaseCommand}, the constructor of every skill should define a name,
  * description, usage, min and max arguments and at least one identifier. Any registered events must provide an event
  * listener, usually created as an inner class.
  * </br>
@@ -49,7 +50,7 @@ public abstract class Skill extends BasicCommand {
     private ConfigurationNode config;
 
     private final Set<SkillType> types = EnumSet.noneOf(SkillType.class);
-    
+
     /**
      * The constructor of every skill must define:
      * <ul>
@@ -62,27 +63,34 @@ public abstract class Skill extends BasicCommand {
      * <li><code>notes</code> (optional)</li>
      * </ul>
      * 
-     * @param plugin the active Heroes instance
+     * @param plugin
+     *            the active Heroes instance
      */
     public Skill(Heroes plugin, String name) {
         super(name);
         this.plugin = plugin;
     }
 
+    public void addSpellTarget(Entity o, Hero hero) {
+        plugin.getDamageManager().addSpellTarget(o, hero, this);
+    }
+
     /**
      * Helper method that broadcasts a message to all players within 30 blocks of the specified source. These messages
      * can be suppressed by players on an individual basis.
      * 
-     * @param source the <code>Location</code> to measure from
-     * @param message the content of the message
-     * @param args any text in the message of the format $<i>n</i> where <i>n</i>
-     *        is an integer will be replaced with the <i>n</i>th element of
-     *        this array
+     * @param source
+     *            the <code>Location</code> to measure from
+     * @param message
+     *            the content of the message
+     * @param args
+     *            any text in the message of the format $<i>n</i> where <i>n</i>
+     *            is an integer will be replaced with the <i>n</i>th element of
+     *            this array
      */
     public void broadcast(Location source, String message, Object... args) {
-        if (message.isEmpty()) {
+        if (message.isEmpty())
             return;
-        }
 
         final Player[] players = plugin.getServer().getOnlinePlayers();
         for (Player player : players) {
@@ -100,14 +108,37 @@ public abstract class Skill extends BasicCommand {
     }
 
     /**
+     * Tests if the target is damagable from a source. Also adds a last-damage cause to the target which allows proper
+     * xp.
+     * Returns if the damage check was successful.
+     * 
+     * @param player
+     * @param target
+     * @return
+     */
+    public boolean damageCheck(Player player, LivingEntity target) {
+        EntityDamageByEntityEvent damageEntityEvent = new EntityDamageByEntityEvent(player, target, DamageCause.CUSTOM, 0);
+        plugin.getServer().getPluginManager().callEvent(damageEntityEvent);
+        if (damageEntityEvent.isCancelled())
+            return false;
+        return true;
+    }
+
+    /**
      * The end of the execution path of a skill, this method is called whenever a command with a registered identifier
      * is used.
      * 
-     * @param sender the <code>CommandSender</code> issuing the command
-     * @param args the arguments provided with the command
+     * @param sender
+     *            the <code>CommandSender</code> issuing the command
+     * @param args
+     *            the arguments provided with the command
      */
     @Override
     public abstract boolean execute(CommandSender sender, String identifier, String[] args);
+
+    public ConfigurationNode getConfig() {
+        return config;
+    }
 
     /**
      * Creates and returns a <code>ConfigurationNode</code> containing all the default data for the skill. By default,
@@ -119,137 +150,136 @@ public abstract class Skill extends BasicCommand {
         return Configuration.getEmptyNode();
     }
 
-    public ConfigurationNode getConfig() {
-        return config;
+    public Heroes getPlugin() {
+        return plugin;
     }
 
     /**
-     * Retrieves a <code>double</code> value from the skill's configuration. Data from the provided <code>HeroClass</code> will be preferred over the skill's own data, if found. If the setting is found in neither
+     * Retrieves a <code>Boolean</code> value from the skill's configuration. Data from the provided
+     * <code>HeroClass</code> will be preferred over the skill's own data, if found. If the setting is found in neither
      * of these sources, the default value is returned.
      * 
-     * @param heroClass the class to search for skill data
-     * @param setting the name of the data entry to retrieve
-     * @param def the default value to be used if no entry is found
-     * @return the stored setting
-     */
-    public double getSetting(HeroClass heroClass, String setting, double def) {
-        if (hasSetting(heroClass, setting)) {
-            return heroClass.getSkillSettings(getName()).getDouble(setting, def);
-        } else {
-            return config.getDouble(setting, def);
-        }
-    }
-
-    /**
-     * Retrieves a <code>int</code> value from the skill's configuration. Data from the provided <code>HeroClass</code> will be preferred over the skill's own data, if found. If the setting is found in neither of these sources, the
-     * default value is returned.
-     * 
-     * @param heroClass the class to search for skill data
-     * @param setting the name of the data entry to retrieve
-     * @param def the default value to be used if no entry is found
-     * @return the stored setting
-     */
-    public int getSetting(HeroClass heroClass, String setting, int def) {
-        if (hasSetting(heroClass, setting)) {
-            return heroClass.getSkillSettings(getName()).getInt(setting, def);
-        } else {
-            return config.getInt(setting, def);
-        }
-    }
-
-    /**
-     * Retrieves a <code>String</code> value from the skill's configuration. Data from the provided <code>HeroClass</code> will be preferred over the skill's own data, if found. If the setting is found in neither
-     * of these sources, the default value is returned.
-     * 
-     * @param heroClass the class to search for skill data
-     * @param setting the name of the data entry to retrieve
-     * @param def the default value to be used if no entry is found
-     * @return the stored setting
-     */
-    public String getSetting(HeroClass heroClass, String setting, String def) {
-        if (hasSetting(heroClass, setting)) {
-            return heroClass.getSkillSettings(getName()).getString(setting, def);  
-        } else {
-            return config.getString(setting, def);
-        }
-    }
-    
-    /**
-     * Retrieves a <code>List of String</code> values from the skill's configuration. Data from the provided <code>HeroClass</code> will be preferred over the skill's own data, if found. If the setting is found in neither
-     * of these sources, the default value is returned.
-     * 
-     * @param heroClass the class to search for skill data
-     * @param setting the name of the data entry to retrieve
-     * @param def the default value to be used if no entry is found
-     * @return the stored setting
-     */
-    public List<String> getSetting(HeroClass heroClass, String setting, List<String> def) {
-        if (hasSetting(heroClass, setting)) {
-            return heroClass.getSkillSettings(getName()).getStringList(setting, def);
-        } else {
-            return config.getStringList(setting, def);
-        }
-    }
-
-    /**
-     * Retrieves a <code>Boolean</code> value from the skill's configuration. Data from the provided <code>HeroClass</code> will be preferred over the skill's own data, if found. If the setting is found in neither
-     * of these sources, the default value is returned.
-     * 
-     * @param heroClass the class to search for skill data
-     * @param setting the name of the data entry to retrieve
-     * @param def the default value to be used if no entry is found
+     * @param heroClass
+     *            the class to search for skill data
+     * @param setting
+     *            the name of the data entry to retrieve
+     * @param def
+     *            the default value to be used if no entry is found
      * @return the stored setting
      */
     public boolean getSetting(HeroClass heroClass, String setting, boolean def) {
-        if (hasSetting(heroClass, setting)) {
+        if (hasSetting(heroClass, setting))
             return heroClass.getSkillSettings(getName()).getBoolean(setting, def);
-        } else {
+        else
             return config.getBoolean(setting, def);
-        }
     }
-    
-    private boolean hasSetting(HeroClass heroClass, String setting) {
-        if (heroClass == null)
-            return false;
-        if (heroClass.getSkillSettings(getName()) == null)
-            return false;
-        
-        return heroClass.getSkillSettings(getName()).getString(setting) != null;
-    }
-    
-    public boolean hasNode(HeroClass heroClass, String setting) {
-        if (heroClass == null)
-            return false;
-        if (heroClass.getSkillSettings(getName()) == null)
-            return false;
-        if (setting == null) 
-            return !heroClass.getSkillSettings(getName()).getKeys().isEmpty();
-        
-        return heroClass.getSkillSettings(getName()).getNode(setting) != null;
-    }
-    
+
     /**
-     * Retrieves all <code>String</code> keys from the skill's configuration. Data from the provided <code>HeroClass</code> and
+     * Retrieves a <code>double</code> value from the skill's configuration. Data from the provided
+     * <code>HeroClass</code> will be preferred over the skill's own data, if found. If the setting is found in neither
+     * of these sources, the default value is returned.
+     * 
+     * @param heroClass
+     *            the class to search for skill data
+     * @param setting
+     *            the name of the data entry to retrieve
+     * @param def
+     *            the default value to be used if no entry is found
+     * @return the stored setting
+     */
+    public double getSetting(HeroClass heroClass, String setting, double def) {
+        if (hasSetting(heroClass, setting))
+            return heroClass.getSkillSettings(getName()).getDouble(setting, def);
+        else
+            return config.getDouble(setting, def);
+    }
+
+    /**
+     * Retrieves a <code>int</code> value from the skill's configuration. Data from the provided <code>HeroClass</code>
+     * will be preferred over the skill's own data, if found. If the setting is found in neither of these sources, the
+     * default value is returned.
+     * 
+     * @param heroClass
+     *            the class to search for skill data
+     * @param setting
+     *            the name of the data entry to retrieve
+     * @param def
+     *            the default value to be used if no entry is found
+     * @return the stored setting
+     */
+    public int getSetting(HeroClass heroClass, String setting, int def) {
+        if (hasSetting(heroClass, setting))
+            return heroClass.getSkillSettings(getName()).getInt(setting, def);
+        else
+            return config.getInt(setting, def);
+    }
+
+    /**
+     * Retrieves a <code>List of String</code> values from the skill's configuration. Data from the provided
+     * <code>HeroClass</code> will be preferred over the skill's own data, if found. If the setting is found in neither
+     * of these sources, the default value is returned.
+     * 
+     * @param heroClass
+     *            the class to search for skill data
+     * @param setting
+     *            the name of the data entry to retrieve
+     * @param def
+     *            the default value to be used if no entry is found
+     * @return the stored setting
+     */
+    public List<String> getSetting(HeroClass heroClass, String setting, List<String> def) {
+        if (hasSetting(heroClass, setting))
+            return heroClass.getSkillSettings(getName()).getStringList(setting, def);
+        else
+            return config.getStringList(setting, def);
+    }
+
+    /**
+     * Retrieves a <code>String</code> value from the skill's configuration. Data from the provided
+     * <code>HeroClass</code> will be preferred over the skill's own data, if found. If the setting is found in neither
+     * of these sources, the default value is returned.
+     * 
+     * @param heroClass
+     *            the class to search for skill data
+     * @param setting
+     *            the name of the data entry to retrieve
+     * @param def
+     *            the default value to be used if no entry is found
+     * @return the stored setting
+     */
+    public String getSetting(HeroClass heroClass, String setting, String def) {
+        if (hasSetting(heroClass, setting))
+            return heroClass.getSkillSettings(getName()).getString(setting, def);
+        else
+            return config.getString(setting, def);
+    }
+
+    /**
+     * Retrieves all <code>String</code> keys from the skill's configuration. Data from the provided
+     * <code>HeroClass</code> and
      * the main configuration will be returned
      * 
-     * @param heroClass the class to search for skill data
+     * @param heroClass
+     *            the class to search for skill data
      * @return the stored setting
      */
     public List<String> getSettingKeys(HeroClass heroClass) {
         Set<String> keys = new HashSet<String>();
         keys.addAll(config.getKeys());
-        
+
         if (hasNode(heroClass, null)) {
             keys.addAll(heroClass.getSkillSettings(getName()).getKeys());
         }
         return new ArrayList<String>(keys);
     }
-    
+
     /**
-     * Retrieves all <code>String</code> keys from the skill's configuration. Data from the provided <code>HeroClass</code> and
+     * Retrieves all <code>String</code> keys from the skill's configuration. Data from the provided
+     * <code>HeroClass</code> and
      * the main configuration will be returned
      * 
-     * @param heroClass the class to search for skill data
+     * @param heroClass
+     *            the class to search for skill data
      * @return the stored setting
      */
     public List<String> getSettingKeys(HeroClass heroClass, String setting) {
@@ -260,72 +290,71 @@ public abstract class Skill extends BasicCommand {
         }
         return new ArrayList<String>(keys);
     }
-    
+
+    public Set<SkillType> getTypes() {
+        return Collections.unmodifiableSet(this.types);
+    }
+
+    public boolean hasNode(HeroClass heroClass, String setting) {
+        if (heroClass == null)
+            return false;
+        if (heroClass.getSkillSettings(getName()) == null)
+            return false;
+        if (setting == null)
+            return !heroClass.getSkillSettings(getName()).getKeys().isEmpty();
+
+        return heroClass.getSkillSettings(getName()).getNode(setting) != null;
+    }
+
     /**
      * An initialization method called after all configuration data is loaded.
      */
     public abstract void init();
 
+    @Override
+    public boolean isShownOnHelpMenu() {
+        return false;
+    }
+
+    public boolean isType(SkillType type) {
+        return types.contains(type);
+    }
+
     /**
      * Sets the configuration containing all settings related to the skill. This should only be used by the skill loader
      * in most cases.
      * 
-     * @param config the new skill configuration
+     * @param config
+     *            the new skill configuration
      */
     public void setConfig(ConfigurationNode config) {
         this.config = config;
     }
 
+    private boolean hasSetting(HeroClass heroClass, String setting) {
+        if (heroClass == null)
+            return false;
+        if (heroClass.getSkillSettings(getName()) == null)
+            return false;
+
+        return heroClass.getSkillSettings(getName()).getString(setting) != null;
+    }
+
     /**
      * Helper method to make registering an event a little easier.
      * 
-     * @param type the type of event
-     * @param listener the listener used to handle the event
-     * @param priority the priority given to the event handler
+     * @param type
+     *            the type of event
+     * @param listener
+     *            the listener used to handle the event
+     * @param priority
+     *            the priority given to the event handler
      */
     protected void registerEvent(Type type, Listener listener, Priority priority) {
         plugin.getServer().getPluginManager().registerEvent(type, listener, priority, plugin);
     }
 
-    @Override
-    public boolean isShownOnHelpMenu() {
-        return false;
-    }
-    
-    public void addSpellTarget(Entity o, Hero hero) {
-        plugin.getDamageManager().addSpellTarget(o, hero, this);
-    }
-
-    public Heroes getPlugin() {
-        return plugin;
-    }
-    
-    /**
-     * Tests if the target is damagable from a source.  Also adds a last-damage cause to the target which allows proper xp.
-     * Returns if the damage check was successful.
-     * 
-     * @param player
-     * @param target
-     * @return
-     */
-    public boolean damageCheck(Player player, LivingEntity target) {
-        EntityDamageByEntityEvent damageEntityEvent = new EntityDamageByEntityEvent(player, target, DamageCause.CUSTOM, 0);
-        plugin.getServer().getPluginManager().callEvent(damageEntityEvent);
-        if (damageEntityEvent.isCancelled()) {
-            return false;
-        }
-        return true;
-    }
-
-    protected void setTypes(SkillType...types) {
+    protected void setTypes(SkillType... types) {
         this.types.addAll(Arrays.asList(types));
-    }
-    
-    public Set<SkillType> getTypes() {
-        return Collections.unmodifiableSet(this.types);
-    }
-    
-    public boolean isType(SkillType type) {
-        return types.contains(type);
     }
 }

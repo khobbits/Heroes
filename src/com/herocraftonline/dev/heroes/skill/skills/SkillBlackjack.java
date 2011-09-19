@@ -35,7 +35,7 @@ public class SkillBlackjack extends ActiveSkill {
         setArgumentRange(0, 0);
         setIdentifiers("skill blackjack", "skill bjack");
         setTypes(SkillType.PHYSICAL, SkillType.BUFF);
-        
+
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(this), Priority.Normal);
     }
 
@@ -97,19 +97,16 @@ public class SkillBlackjack extends ActiveSkill {
 
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
-            if (event.isCancelled() || !(event.getEntity() instanceof Player)) {
+            if (event.isCancelled() || !(event.getEntity() instanceof Player))
                 return;
-            }
             if (event instanceof EntityDamageByEntityEvent) {
                 EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
-                if (subEvent.getCause() != DamageCause.ENTITY_ATTACK || !(subEvent.getDamager() instanceof Player)) {
+                if (subEvent.getCause() != DamageCause.ENTITY_ATTACK || !(subEvent.getDamager() instanceof Player))
                     return;
-                }
 
                 Hero attackingHero = plugin.getHeroManager().getHero((Player) subEvent.getDamager());
-                if (!attackingHero.hasEffect("Blackjack")) {
+                if (!attackingHero.hasEffect("Blackjack"))
                     return;
-                }
                 Hero defendingHero = plugin.getHeroManager().getHero((Player) event.getEntity());
 
                 double chance = getSetting(attackingHero.getHeroClass(), "stun-chance", 0.20);

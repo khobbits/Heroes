@@ -50,34 +50,6 @@ public class SkillExplosiveFireball extends ActiveSkill {
         return node;
     }
 
-    @Override
-    public boolean use(Hero hero, String[] args) {
-        Player player = hero.getPlayer();
-
-        Block target = player.getTargetBlock(null, 100);
-        Location playerLoc = player.getLocation();
-
-        double dx = target.getX() - playerLoc.getX();
-        double height = 1;
-        double dy = (target.getY() + (double) (height / 2.0F)) - (playerLoc.getY() + (double) (height / 2.0F));
-        double dz = target.getZ() - playerLoc.getZ();
-
-        CraftPlayer craftPlayer = (CraftPlayer) player;
-        EntityLiving playerEntity = craftPlayer.getHandle();
-        EntityFireball fireball = new EntityFireball(((CraftWorld) player.getWorld()).getHandle(), playerEntity, dx, dy, dz);
-        fireball.isIncendiary = false;
-        double d8 = 4D;
-        Vec3D vec3d = getLocation(player, 1.0F);
-        fireball.locX = playerLoc.getX() + vec3d.a * d8;
-        fireball.locY = playerLoc.getY() + (double) (height / 2.0F) + 0.5D;
-        fireball.locZ = playerLoc.getZ() + vec3d.c * d8;
-
-        ((CraftWorld) player.getWorld()).getHandle().addEntity(fireball);
-
-        broadcastExecuteText(hero);
-        return true;
-    }
-
     public Vec3D getLocation(Player player, float f) {
         Location playerLoc = player.getLocation();
         float rotationYaw = playerLoc.getYaw();
@@ -101,14 +73,42 @@ public class SkillExplosiveFireball extends ActiveSkill {
         }
     }
 
+    @Override
+    public boolean use(Hero hero, String[] args) {
+        Player player = hero.getPlayer();
+
+        Block target = player.getTargetBlock(null, 100);
+        Location playerLoc = player.getLocation();
+
+        double dx = target.getX() - playerLoc.getX();
+        double height = 1;
+        double dy = target.getY() + (height / 2.0F) - (playerLoc.getY() + (height / 2.0F));
+        double dz = target.getZ() - playerLoc.getZ();
+
+        CraftPlayer craftPlayer = (CraftPlayer) player;
+        EntityLiving playerEntity = craftPlayer.getHandle();
+        EntityFireball fireball = new EntityFireball(((CraftWorld) player.getWorld()).getHandle(), playerEntity, dx, dy, dz);
+        fireball.isIncendiary = false;
+        double d8 = 4D;
+        Vec3D vec3d = getLocation(player, 1.0F);
+        fireball.locX = playerLoc.getX() + vec3d.a * d8;
+        fireball.locY = playerLoc.getY() + (height / 2.0F) + 0.5D;
+        fireball.locZ = playerLoc.getZ() + vec3d.c * d8;
+
+        ((CraftWorld) player.getWorld()).getHandle().addEntity(fireball);
+
+        broadcastExecuteText(hero);
+        return true;
+    }
+
     public class SkillEntityListener extends EntityListener {
 
         private final Skill skill;
-        
+
         public SkillEntityListener(Skill skill) {
             this.skill = skill;
         }
-        
+
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
             if (event.isCancelled())
@@ -128,9 +128,9 @@ public class SkillExplosiveFireball extends ActiveSkill {
                         addSpellTarget(entity, hero);
                         entity.setFireTicks(getSetting(heroClass, "fire-ticks", 100));
                         if (entity instanceof Player) {
-                            plugin.getHeroManager().getHero((Player) entity).addEffect(new CombustEffect(skill, (Player) shooter));
+                            plugin.getHeroManager().getHero((Player) entity).addEffect(new CombustEffect(skill, shooter));
                         } else if (entity instanceof Creature) {
-                            plugin.getHeroManager().addCreatureEffect((Creature) entity, new CombustEffect(skill, (Player) shooter));
+                            plugin.getHeroManager().addCreatureEffect((Creature) entity, new CombustEffect(skill, shooter));
                         }
                         event.setDamage(damage);
                     }

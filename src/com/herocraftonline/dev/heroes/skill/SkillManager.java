@@ -22,13 +22,13 @@ import org.bukkit.command.CommandSender;
 import com.herocraftonline.dev.heroes.Heroes;
 
 public class SkillManager {
-    
+
     private Map<String, Skill> skills;
     private Map<String, Skill> identifiers;
     private Map<String, File> skillFiles;
     private final Heroes plugin;
     private final File dir;
-    
+
     public SkillManager(Heroes plugin) {
         skills = new LinkedHashMap<String, Skill>();
         identifiers = new HashMap<String, Skill>();
@@ -37,8 +37,9 @@ public class SkillManager {
         dir = new File(plugin.getDataFolder(), "skills");
         dir.mkdir();
         for (String skillFile : dir.list()) {
-            if (skillFile.contains(".jar"))
+            if (skillFile.contains(".jar")) {
                 skillFiles.put(skillFile.toLowerCase().replace(".jar", "").replace("skill", ""), new File(dir, skillFile));
+            }
         }
     }
 
@@ -55,18 +56,6 @@ public class SkillManager {
     }
 
     /**
-     * Removes a skill from the skill mapping
-     * 
-     * @param command
-     */
-    public void removeSkill(Skill command) {
-        skills.remove(command);
-        for (String ident : command.getIdentifiers()) {
-            identifiers.remove(ident.toLowerCase());
-        }
-    }
-
-    /**
      * Returns a skill from it's name
      * If the skill is not in the skill mapping it will attempt to load it from file
      * 
@@ -76,22 +65,13 @@ public class SkillManager {
     public Skill getSkill(String name) {
         if (name == null)
             return null;
-        //Only attempt to load files that exist
+        // Only attempt to load files that exist
         else if (!isLoaded(name) && skillFiles.containsKey(name.toLowerCase())) {
             loadSkill(name);
         }
         return skills.get(name.toLowerCase());
     }
-    
-    /**
-     * 
-     * Returns a collection of all skills loaded in the skill manager
-     * @return
-     */
-    public Collection<Skill> getSkills() {
-        return Collections.unmodifiableCollection(skills.values());
-    }
-    
+
     /**
      * Gets a skill from it's identifiers
      * 
@@ -100,13 +80,33 @@ public class SkillManager {
      * @return
      */
     public Skill getSkillFromIdent(String ident, CommandSender executor) {
-        if ( identifiers.get(ident.toLowerCase()) == null) {
+        if (identifiers.get(ident.toLowerCase()) == null) {
             for (Skill skill : skills.values()) {
                 if (skill.isIdentifier(executor, ident))
                     return skill;
             }
         }
         return identifiers.get(ident.toLowerCase());
+    }
+
+    /**
+     * 
+     * Returns a collection of all skills loaded in the skill manager
+     * 
+     * @return
+     */
+    public Collection<Skill> getSkills() {
+        return Collections.unmodifiableCollection(skills.values());
+    }
+
+    /**
+     * Checks if a skill has already been loaded
+     * 
+     * @param name
+     * @return
+     */
+    public boolean isLoaded(String name) {
+        return skills.containsKey(name.toLowerCase());
     }
 
     /**
@@ -141,9 +141,8 @@ public class SkillManager {
                 Skill skill = ctor.newInstance(plugin);
                 plugin.getConfigManager().loadSkillConfig(skill);
                 return skill;
-            } else {
+            } else
                 throw new Exception();
-            }
         } catch (Exception e) {
             e.printStackTrace();
             Heroes.log(Level.INFO, "The skill " + file.getName() + " failed to load");
@@ -152,46 +151,17 @@ public class SkillManager {
     }
 
     /**
-     * loads a Skill from file
-     * 
-     * @param name
-     * @return
-     */
-    private boolean loadSkill(String name) {
-        //If the skill is already loaded, don't try to load it
-        if (isLoaded(name))
-            return true;
-        
-        //Lets try loading the skill file
-        Skill skill = loadSkill(skillFiles.get(name.toLowerCase()));
-        if (skill == null)
-            return false;
-        
-        addSkill(skill);
-        return true;
-    }
-    
-    /**
-     * Checks if a skill has already been loaded
-     * 
-     * @param name
-     * @return
-     */
-    public boolean isLoaded(String name) {
-        return skills.containsKey(name.toLowerCase());
-    }
-    
-    /**
      * Load all the skills.
      */
-    public void loadSkills() {       
+    public void loadSkills() {
         ArrayList<String> loadedSkills = new ArrayList<String>();
         for (String f : dir.list()) {
             if (f.contains(".jar")) {
-                //if the Skill is already loaded, skip it
-                if (isLoaded(f.replace(".jar", "")))
+                // if the Skill is already loaded, skip it
+                if (isLoaded(f.replace(".jar", ""))) {
                     continue;
-                
+                }
+
                 Skill skill = loadSkill(new File(dir, f));
                 if (skill != null) {
                     addSkill(skill);
@@ -203,5 +173,37 @@ public class SkillManager {
                 }
             }
         }
+    }
+
+    /**
+     * Removes a skill from the skill mapping
+     * 
+     * @param command
+     */
+    public void removeSkill(Skill command) {
+        skills.remove(command);
+        for (String ident : command.getIdentifiers()) {
+            identifiers.remove(ident.toLowerCase());
+        }
+    }
+
+    /**
+     * loads a Skill from file
+     * 
+     * @param name
+     * @return
+     */
+    private boolean loadSkill(String name) {
+        // If the skill is already loaded, don't try to load it
+        if (isLoaded(name))
+            return true;
+
+        // Lets try loading the skill file
+        Skill skill = loadSkill(skillFiles.get(name.toLowerCase()));
+        if (skill == null)
+            return false;
+
+        addSkill(skill);
+        return true;
     }
 }

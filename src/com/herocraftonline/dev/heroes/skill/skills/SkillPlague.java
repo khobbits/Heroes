@@ -86,6 +86,11 @@ public class SkillPlague extends TargettedSkill {
         }
 
         @Override
+        public void apply(Creature creature) {
+            super.apply(creature);
+        }
+
+        @Override
         public void apply(Hero hero) {
             super.apply(hero);
             Player player = hero.getPlayer();
@@ -93,8 +98,9 @@ public class SkillPlague extends TargettedSkill {
         }
 
         @Override
-        public void apply(Creature creature) {
-            super.apply(creature);
+        public void remove(Creature creature) {
+            super.remove(creature);
+            broadcast(creature.getLocation(), expireText, Messaging.getCreatureName(creature).toLowerCase());
         }
 
         @Override
@@ -103,12 +109,6 @@ public class SkillPlague extends TargettedSkill {
 
             Player player = hero.getPlayer();
             broadcast(player.getLocation(), expireText, player.getDisplayName());
-        }
-
-        @Override
-        public void remove(Creature creature) {
-            super.remove(creature);
-            broadcast(creature.getLocation(), expireText, Messaging.getCreatureName(creature).toLowerCase());
         }
 
         @Override
@@ -135,24 +135,26 @@ public class SkillPlague extends TargettedSkill {
                 if (!(target instanceof LivingEntity) || target.equals(applier) || applyHero.getSummons().contains(target)) {
                     continue;
                 }
-                
+
                 if (!damageCheck(getApplier(), (LivingEntity) target)) {
                     continue;
                 }
-                
+
                 if (target instanceof Player) {
                     Hero tHero = plugin.getHeroManager().getHero((Player) target);
                     // Ignore heroes that already have the plague effect
-                    if (tHero.hasEffect("Plague"))
+                    if (tHero.hasEffect("Plague")) {
                         continue;
+                    }
 
                     // Apply the effect to the hero creating a copy of the effect
                     tHero.addEffect(new PlagueEffect(this));
                 } else if (target instanceof Creature) {
                     Creature creature = (Creature) target;
                     // Make sure the creature doesn't already have the effect
-                    if (plugin.getHeroManager().creatureHasEffect(creature, "Plague"))
+                    if (plugin.getHeroManager().creatureHasEffect(creature, "Plague")) {
                         continue;
+                    }
 
                     // Apply the effect to the creature, creating a copy of the effect
                     plugin.getHeroManager().addCreatureEffect(creature, new PlagueEffect(this));

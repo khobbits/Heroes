@@ -52,7 +52,7 @@ public class YMLHeroStorage extends HeroStorage {
             playerHero.setHealth(playerConfig.getDouble("health", playerClass.getBaseMaxHealth()));
             playerHero.setVerbose(playerConfig.getBoolean("verbose", true));
             playerHero.setSuppressedSkills(new HashSet<String>(playerConfig.getStringList("suppressed", null)));
-            
+
             Heroes.log(Level.INFO, "Loaded hero: " + player.getName());
             return playerHero;
         } else {
@@ -62,24 +62,77 @@ public class YMLHeroStorage extends HeroStorage {
         }
     }
 
+    @Override
+    public boolean saveHero(Hero hero) {
+        String name = hero.getPlayer().getName();
+        File playerFile = new File(playerFolder, name + ".yml");
+        Configuration playerConfig = new Configuration(playerFile);
+
+        playerConfig.setProperty("class", hero.getHeroClass().toString());
+        playerConfig.setProperty("verbose", hero.isVerbose());
+        playerConfig.setProperty("suppressed", new ArrayList<String>(hero.getSuppressedSkills()));
+        playerConfig.setProperty("mana", hero.getMana());
+        playerConfig.removeProperty("itemrecovery");
+        playerConfig.setProperty("health", hero.getHealth());
+
+        saveSkillSettings(hero, playerConfig);
+        saveCooldowns(hero, playerConfig);
+        saveExperience(hero, playerConfig);
+        saveRecoveryItems(hero, playerConfig);
+        saveBinds(hero, playerConfig);
+
+        playerConfig.save();
+        return true;
+    }
+
     /**
-     * Loads hero-specific Skill settings
+     * Loads a hero's bindings
      * 
      * @param hero
      * @param config
      */
-    private void loadSkillSettings(Hero hero, Configuration config) {
-        String path = "skill-settings";
-
-        if (config.getKeys(path) != null) {
-            for (String skill : config.getKeys(path)) {
-                if (config.getNode(path).getKeys(skill) != null) {
-                    for (String node : config.getNode(path).getKeys(skill)) {
-                        hero.setSkillSetting(skill, node, config.getNode(path).getNode(skill).getString(node));
+    private void loadBinds(Hero hero, Configuration config) {
+        List<String> bindKeys = config.getKeys("binds");
+        if (bindKeys != null && bindKeys.size() > 0) {
+            for (String material : bindKeys) {
+                try {
+                    Material item = Material.valueOf(material);
+                    String bind = config.getString("binds." + material, "");
+                    if (bind.length() > 0) {
+                        hero.bind(item, bind.split(" "));
                     }
+                } catch (IllegalArgumentException e) {
+                    this.plugin.debugLog(Level.WARNING, material + " isn't a valid Item to bind a Skill to.");
+                    continue;
                 }
             }
         }
+    }
+
+    /**
+     * Loads a players class, checks to make sure the class still exists and the player still has permission for the
+     * class
+     * 
+     * @param player
+     * @param config
+     * @return
+     */
+    private HeroClass loadClass(Player player, Configuration config) {
+        HeroClass playerClass = null;
+        HeroClass defaultClass = plugin.getClassManager().getDefaultClass();
+
+        if (config.getString("class") != null) {
+            playerClass = plugin.getClassManager().getClass(config.getString("class"));
+
+            if (playerClass == null) {
+                playerClass = defaultClass;
+            } else if (!CommandHandler.hasPermission(player, "heroes.classes." + playerClass.getName().toLowerCase())) {
+                playerClass = defaultClass;
+            }
+        } else {
+            playerClass = defaultClass;
+        }
+        return playerClass;
     }
 
     /**
@@ -120,18 +173,19 @@ public class YMLHeroStorage extends HeroStorage {
             for (String className : expList) {
                 double exp = config.getDouble(root + "." + className, 0);
                 HeroClass heroClass = plugin.getClassManager().getClass(className);
-                if (heroClass == null || hero.getExperience(heroClass) != 0)
+                if (heroClass == null || hero.getExperience(heroClass) != 0) {
                     continue;
-                
+                }
+
                 hero.setExperience(heroClass, exp);
                 /*
                  * We shouldn't be needing to alter XP values when a player loads back
                  * this causes confusion/issues on how XP is determined.
-                if (!heroClass.isPrimary() && exp > 0) {
-                    HeroClass parent = heroClass.getParent();
-                    hero.setExperience(parent, plugin.getConfigManager().getProperties().levels[parent.getMaxLevel()]);
-                }
-                */
+                 * if (!heroClass.isPrimary() && exp > 0) {
+                 * HeroClass parent = heroClass.getParent();
+                 * hero.setExperience(parent, plugin.getConfigManager().getProperties().levels[parent.getMaxLevel()]);
+                 * }
+                 */
             }
         }
     }
@@ -160,75 +214,23 @@ public class YMLHeroStorage extends HeroStorage {
     }
 
     /**
-     * Loads a hero's bindings
+     * Loads hero-specific Skill settings
      * 
      * @param hero
      * @param config
      */
-    private void loadBinds(Hero hero, Configuration config) {
-        List<String> bindKeys = config.getKeys("binds");
-        if (bindKeys != null && bindKeys.size() > 0) {
-            for (String material : bindKeys) {
-                try {
-                    Material item = Material.valueOf(material);
-                    String bind = config.getString("binds." + material, "");
-                    if (bind.length() > 0) {
-                        hero.bind(item, bind.split(" "));
+    private void loadSkillSettings(Hero hero, Configuration config) {
+        String path = "skill-settings";
+
+        if (config.getKeys(path) != null) {
+            for (String skill : config.getKeys(path)) {
+                if (config.getNode(path).getKeys(skill) != null) {
+                    for (String node : config.getNode(path).getKeys(skill)) {
+                        hero.setSkillSetting(skill, node, config.getNode(path).getNode(skill).getString(node));
                     }
-                } catch (IllegalArgumentException e) {
-                    this.plugin.debugLog(Level.WARNING, material + " isn't a valid Item to bind a Skill to.");
-                    continue;
                 }
             }
         }
-    }
-    
-    /**
-     * Loads a players class, checks to make sure the class still exists and the player still has permission for the class
-     * 
-     * @param player
-     * @param config
-     * @return
-     */
-    private HeroClass loadClass(Player player, Configuration config) {
-        HeroClass playerClass = null;
-        HeroClass defaultClass = plugin.getClassManager().getDefaultClass();
-        
-        if (config.getString("class") != null) {
-            playerClass = plugin.getClassManager().getClass(config.getString("class"));
-
-            if (playerClass == null) {
-                playerClass = defaultClass;
-            } else if (!CommandHandler.hasPermission(player, "heroes.classes." + playerClass.getName().toLowerCase())) {
-                playerClass = defaultClass;
-            }
-        } else {
-            playerClass = defaultClass;
-        }
-        return playerClass;
-    }
-
-    @Override
-    public boolean saveHero(Hero hero) {
-        String name = hero.getPlayer().getName();
-        File playerFile = new File(playerFolder, name + ".yml");
-        Configuration playerConfig = new Configuration(playerFile);
-
-        playerConfig.setProperty("class", hero.getHeroClass().toString());
-        playerConfig.setProperty("verbose", hero.isVerbose());
-        playerConfig.setProperty("suppressed", new ArrayList<String>(hero.getSuppressedSkills()));
-        playerConfig.setProperty("mana", hero.getMana());
-        playerConfig.removeProperty("itemrecovery");
-        playerConfig.setProperty("health", hero.getHealth());
-
-        saveSkillSettings(hero, playerConfig);
-        saveCooldowns(hero, playerConfig);
-        saveExperience(hero, playerConfig);
-        saveRecoveryItems(hero, playerConfig);
-        saveBinds(hero, playerConfig);
-
-        playerConfig.save();
-        return true;
     }
 
     private void saveBinds(Hero hero, Configuration config) {
@@ -242,16 +244,6 @@ public class YMLHeroStorage extends HeroStorage {
             }
             config.setProperty("binds." + material.toString(), bind.toString().substring(0, bind.toString().length() - 1));
         }
-    }
-
-    private void saveSkillSettings(Hero hero, Configuration config) {
-        String path = "skill-settings";
-        for (Entry<String, Map<String, String>> entry : hero.getSkillSettings().entrySet()) {
-            for (Entry<String, String> node : entry.getValue().entrySet()) {
-                config.setProperty(path + "." + entry.getKey() + "." + node.getKey(), node.getValue());
-            }
-        }
-
     }
 
     private void saveCooldowns(Hero hero, Configuration config) {
@@ -284,5 +276,15 @@ public class YMLHeroStorage extends HeroStorage {
             String durability = Short.toString(item.getDurability());
             config.setProperty("itemrecovery." + item.getType().toString(), durability);
         }
+    }
+
+    private void saveSkillSettings(Hero hero, Configuration config) {
+        String path = "skill-settings";
+        for (Entry<String, Map<String, String>> entry : hero.getSkillSettings().entrySet()) {
+            for (Entry<String, String> node : entry.getValue().entrySet()) {
+                config.setProperty(path + "." + entry.getKey() + "." + node.getKey(), node.getValue());
+            }
+        }
+
     }
 }

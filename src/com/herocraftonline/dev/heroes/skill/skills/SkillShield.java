@@ -43,9 +43,8 @@ public class SkillShield extends PassiveSkill {
                 return;
 
             WeaponDamageEvent subEvent = (WeaponDamageEvent) event;
-            if (subEvent.getCause() != DamageCause.ENTITY_ATTACK || subEvent.getDamage() == 0) {
+            if (subEvent.getCause() != DamageCause.ENTITY_ATTACK || subEvent.getDamage() == 0)
                 return;
-            }
             if (subEvent.getEntity() instanceof Player) {
                 Player player = (Player) subEvent.getEntity();
                 Hero hero = plugin.getHeroManager().getHero(player);

@@ -54,8 +54,8 @@ public class SkillConstruct extends ActiveSkill {
     @Override
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
-        
-        //List all items this hero can make with construct
+
+        // List all items this hero can make with construct
         Set<String> itemSet = new HashSet<String>(getSettingKeys(hero.getHeroClass()));
         itemSet.remove("require-workbench");
         for (Setting set : Setting.values()) {
@@ -66,32 +66,33 @@ public class SkillConstruct extends ActiveSkill {
             Messaging.send(player, "You can craft these items: " + itemSet.toString().replace("[", "").replace("]", ""));
             return false;
         } else if (args[0].toLowerCase().equals("info")) {
-            //Usage Checks if the player passed in arguments
+            // Usage Checks if the player passed in arguments
             if (args.length < 2) {
                 Messaging.send(player, "Proper usage is /skill construct info item");
                 return false;
             } else if (!itemSet.contains(args[1])) {
                 Messaging.send(player, "You can't construct that item!");
                 return false;
-            } else { 
-                //Iterate over the construct recipe and get all the items/amounts it turns into
+            } else {
+                // Iterate over the construct recipe and get all the items/amounts it turns into
                 Messaging.send(player, args[1] + " requires the following items to craft: ");
                 for (String s : getSettingKeys(hero.getHeroClass(), args[1])) {
-                    if (s.equals(Setting.LEVEL.node()) || s.equals(Setting.EXP.node())  || s.equals(Setting.AMOUNT.node()))
+                    if (s.equals(Setting.LEVEL.node()) || s.equals(Setting.EXP.node()) || s.equals(Setting.AMOUNT.node())) {
                         continue;
-                    
+                    }
+
                     int amount = getSetting(hero.getHeroClass(), args[1] + "." + s, 1);
                     Messaging.send(player, s.toLowerCase().replace("_", " ") + ": " + amount);
                 }
                 return false;
             }
         }
-        
+
         if (player.getTargetBlock(null, 3).getType() != Material.WORKBENCH && getSetting(hero.getHeroClass(), "require-workbench", true)) {
             Messaging.send(player, "You must have a workbench targetted to construct an item!");
             return false;
         }
-        
+
         if (player.getInventory().firstEmpty() == -1) {
             Messaging.send(player, "You need at least 1 free inventory spot to construct an item!");
             return false;
@@ -111,9 +112,8 @@ public class SkillConstruct extends ActiveSkill {
         }
 
         Material mat = Material.matchMaterial(matName);
-        if (mat == null) {
+        if (mat == null)
             throw new IllegalArgumentException("Invalid Material definition for skill construct: " + matName);
-        }
 
         List<String> returned = getSettingKeys(hero.getHeroClass(), matName);
         if (returned == null) {
@@ -123,17 +123,16 @@ public class SkillConstruct extends ActiveSkill {
 
         List<ItemStack> items = new ArrayList<ItemStack>();
         for (String s : returned) {
-            if (s.equals(Setting.LEVEL.node()) || s.equals(Setting.EXP.node()) || s.equals(Setting.AMOUNT.node()))
+            if (s.equals(Setting.LEVEL.node()) || s.equals(Setting.EXP.node()) || s.equals(Setting.AMOUNT.node())) {
                 continue;
+            }
 
             Material m = Material.matchMaterial(s);
-            if (m == null) {
+            if (m == null)
                 throw new IllegalArgumentException("Error with skill " + getName() + ": bad item definition " + s);
-            }
             int amount = getSetting(hero.getHeroClass(), matName + "." + s, 1);
-            if (amount < 1) {
+            if (amount < 1)
                 throw new IllegalArgumentException("Error with skill " + getName() + ": bad amount definition for " + s + ": " + amount);
-            }
 
             ItemStack stack = new ItemStack(m, amount);
             if (!hasReagentCost(player, stack)) {
@@ -142,28 +141,27 @@ public class SkillConstruct extends ActiveSkill {
             }
             items.add(stack);
         }
-        //Remove the item costs from the player
+        // Remove the item costs from the player
         player.getInventory().removeItem(items.toArray(new ItemStack[0]));
         int amount = getSetting(hero.getHeroClass(), matName + "." + Setting.AMOUNT.node(), 1);
         Map<Integer, ItemStack> leftOvers = player.getInventory().addItem(normalizeItemStack(mat, amount));
-        
-        //Drop any leftovers we couldn't add to the players inventory
+
+        // Drop any leftovers we couldn't add to the players inventory
         for (ItemStack leftOver : leftOvers.values()) {
             player.getWorld().dropItemNaturally(player.getLocation(), leftOver);
         }
         player.updateInventory();
-        
-        //Give/Take experience from the hero
+
+        // Give/Take experience from the hero
         int xp = getSetting(hero.getHeroClass(), matName + "." + Setting.EXP.node(), 0);
         hero.gainExp(xp, ExperienceType.CRAFTING);
-        
-        
+
         broadcast(player.getLocation(), getUseText(), player.getDisplayName(), matName.toLowerCase().replace("_", " "));
         return true;
     }
 
     private ItemStack[] normalizeItemStack(Material mat, int amount) {
-        List<ItemStack> items = new ArrayList<ItemStack>(); 
+        List<ItemStack> items = new ArrayList<ItemStack>();
         while (amount > 0) {
             if (amount > mat.getMaxStackSize()) {
                 items.add(new ItemStack(mat, mat.getMaxStackSize()));

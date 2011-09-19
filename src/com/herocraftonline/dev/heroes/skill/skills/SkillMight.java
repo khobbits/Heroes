@@ -23,7 +23,7 @@ public class SkillMight extends ActiveSkill {
 
     private String applyText;
     private String expireText;
-    
+
     public SkillMight(Heroes plugin) {
         super(plugin, "Might");
         setDescription("You increase your party's damage with weapons!");
@@ -45,14 +45,14 @@ public class SkillMight extends ActiveSkill {
         node.setProperty(Setting.DURATION.node(), 600000); // in Milliseconds - 10 minutes
         return node;
     }
-    
+
     @Override
     public void init() {
         super.init();
         applyText = getSetting(null, Setting.APPLY_TEXT.node(), "Your muscles bulge with power!");
         expireText = getSetting(null, Setting.EXPIRE_TEXT.node(), "You feel strength leave your body!");
     }
-    
+
     @Override
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
@@ -71,10 +71,12 @@ public class SkillMight extends ActiveSkill {
             int rangeSquared = (int) Math.pow(getSetting(hero.getHeroClass(), Setting.RADIUS.node(), 10), 2);
             for (Hero pHero : hero.getParty().getMembers()) {
                 Player pPlayer = pHero.getPlayer();
-                if (!pPlayer.getWorld().equals(player.getWorld()))
+                if (!pPlayer.getWorld().equals(player.getWorld())) {
                     continue;
-                if (pPlayer.getLocation().distanceSquared(player.getLocation()) > rangeSquared)
+                }
+                if (pPlayer.getLocation().distanceSquared(player.getLocation()) > rangeSquared) {
                     continue;
+                }
                 if (pHero.hasEffect("Might")) {
                     if (((MightEffect) pHero.getEffect("Might")).getDamageBonus() > mEffect.getDamageBonus()) {
                         continue;
@@ -106,15 +108,15 @@ public class SkillMight extends ActiveSkill {
             Messaging.send(player, applyText);
         }
 
+        public double getDamageBonus() {
+            return damageBonus;
+        }
+
         @Override
         public void remove(Hero hero) {
             super.remove(hero);
             Player player = hero.getPlayer();
             Messaging.send(player, expireText);
-        }
-
-        public double getDamageBonus() {
-            return damageBonus;
         }
     }
 
@@ -124,7 +126,7 @@ public class SkillMight extends ActiveSkill {
         public void onWeaponDamage(WeaponDamageEvent event) {
             if (event.getCause() != DamageCause.ENTITY_ATTACK)
                 return;
-            
+
             if (event.getDamager() instanceof Player) {
                 Player player = (Player) event.getDamager();
                 Hero hero = plugin.getHeroManager().getHero(player);

@@ -28,7 +28,6 @@ public class AdminSaveAllCommand extends BasicCommand {
             Messaging.send(sender, "Insufficient permission.");
             return false;
         }
-        
 
         for (Hero hero : plugin.getHeroManager().getHeroes()) {
             plugin.getHeroManager().saveHero(hero);

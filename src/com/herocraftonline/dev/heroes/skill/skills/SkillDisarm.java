@@ -54,6 +54,7 @@ public class SkillDisarm extends TargettedSkill {
         return node;
     }
 
+    @Override
     public void init() {
         super.init();
         applyText = getSetting(null, Setting.APPLY_TEXT.node(), "%target% has stopped regenerating mana!").replace("%target%", "$1");
@@ -63,7 +64,7 @@ public class SkillDisarm extends TargettedSkill {
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
-        
+
         if (!(target instanceof Player)) {
             Messaging.send(player, "You must target another player!");
             return false;
@@ -132,8 +133,8 @@ public class SkillDisarm extends TargettedSkill {
             // Swap the items back into their original locations
             if (Util.isWeapon(mat)) {
                 ItemStack carry = inv.getItem(event.getNewSlot());
-                inv.setItem((event.getNewSlot()), inv.getItem(event.getPreviousSlot()));
-                inv.setItem((event.getPreviousSlot()), carry);
+                inv.setItem(event.getNewSlot(), inv.getItem(event.getPreviousSlot()));
+                inv.setItem(event.getPreviousSlot(), carry);
             }
         }
 
@@ -143,8 +144,9 @@ public class SkillDisarm extends TargettedSkill {
                 return;
 
             Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
-            if (hero.hasEffectType(EffectType.DISARM) && Util.isWeapon(event.getItem().getItemStack().getType()))
+            if (hero.hasEffectType(EffectType.DISARM) && Util.isWeapon(event.getItem().getItemStack().getType())) {
                 event.setCancelled(true);
+            }
         }
     }
 }

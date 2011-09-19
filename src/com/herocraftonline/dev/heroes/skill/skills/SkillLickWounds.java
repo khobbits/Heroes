@@ -23,11 +23,12 @@ public class SkillLickWounds extends ActiveSkill {
         setIdentifiers("skill lickwounds", "skill lwounds");
         setTypes(SkillType.HEAL, SkillType.SILENCABLE);
     }
+
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
         node.setProperty(Setting.RADIUS.node(), 10);
-        node.setProperty("heal-amount", .25); //% heal of maximum health
+        node.setProperty("heal-amount", .25); // % heal of maximum health
         return node;
     }
 
@@ -36,9 +37,8 @@ public class SkillLickWounds extends ActiveSkill {
         Player player = hero.getPlayer();
         int rangeSquared = (int) Math.pow(getSetting(hero.getHeroClass(), Setting.RADIUS.node(), 10), 2);
         Skill skill = plugin.getSkillManager().getSkill("Wolf");
-        if (skill == null) {
+        if (skill == null)
             return false;
-        }
 
         if (!hero.hasSkill(skill) || skill.getSetting(hero.getHeroClass(), Setting.LEVEL.node(), 1) > hero.getLevel()) {
             Messaging.send(player, "You don't have the proper skills to do that!");
@@ -49,9 +49,10 @@ public class SkillLickWounds extends ActiveSkill {
         double healed = healthMax * getSetting(hero.getHeroClass(), "heal-amount", .25);
         boolean used = false;
         for (Creature creature : hero.getSummons()) {
-            if (!(creature instanceof Wolf) || creature.getLocation().distanceSquared(player.getLocation()) > rangeSquared ) 
+            if (!(creature instanceof Wolf) || creature.getLocation().distanceSquared(player.getLocation()) > rangeSquared) {
                 continue;
-            
+            }
+
             if (creature.getHealth() + healed > healthMax) {
                 creature.setHealth(healthMax);
             } else {
@@ -59,12 +60,12 @@ public class SkillLickWounds extends ActiveSkill {
             }
             used = true;
         }
-        
+
         if (!used) {
             Messaging.send(player, "There are no nearby wolves to heal!");
             return false;
         }
-        
+
         broadcastExecuteText(hero);
         return true;
     }

@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2011 DThielke <dave.thielke@gmail.com>
- *
+ * 
  * This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.
  * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/ or send a letter to
  * Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
@@ -18,7 +18,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.command.Command;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.util.Messaging;
 
@@ -41,21 +40,6 @@ public class CommandHandler {
         }
     }
 
-    public void removeCommand(Command command) {
-        commands.remove(command);
-        for (String ident : command.getIdentifiers()) {
-            identifiers.remove(ident.toLowerCase());
-        }
-    }
-
-    public Command getCommand(String name) {
-        return commands.get(name.toLowerCase());
-    }
-
-    public List<Command> getCommands() {
-        return new ArrayList<Command>(commands.values());
-    }
-
     public boolean dispatch(CommandSender sender, String label, String[] args) {
         String input = label + " ";
         for (String s : args) {
@@ -72,7 +56,7 @@ public class CommandHandler {
             if (cmd == null) {
                 continue;
             }
-            
+
             String[] realArgs = Arrays.copyOfRange(args, argsIncluded, args.length);
 
             if (!cmd.isInProgress(sender)) {
@@ -93,8 +77,37 @@ public class CommandHandler {
             cmd.execute(sender, identifier, realArgs);
             return true;
         }
-        
+
         return true;
+    }
+
+    public Command getCmdFromIdent(String ident, CommandSender executor) {
+        Skill skill = plugin.getSkillManager().getSkillFromIdent(ident, executor);
+        if (skill != null)
+            return skill;
+
+        if (identifiers.get(ident.toLowerCase()) == null) {
+            for (Command cmd : commands.values()) {
+                if (cmd.isIdentifier(executor, ident))
+                    return cmd;
+            }
+        }
+        return identifiers.get(ident.toLowerCase());
+    }
+
+    public Command getCommand(String name) {
+        return commands.get(name.toLowerCase());
+    }
+
+    public List<Command> getCommands() {
+        return new ArrayList<Command>(commands.values());
+    }
+
+    public void removeCommand(Command command) {
+        commands.remove(command);
+        for (String ident : command.getIdentifiers()) {
+            identifiers.remove(ident.toLowerCase());
+        }
     }
 
     private void displayCommandHelp(Command cmd, CommandSender sender) {
@@ -109,30 +122,13 @@ public class CommandHandler {
     }
 
     public static boolean hasPermission(CommandSender sender, String permission) {
-        if (!(sender instanceof Player) || permission == null || permission.isEmpty()) {
+        if (!(sender instanceof Player) || permission == null || permission.isEmpty())
             return true;
-        }
         Player player = (Player) sender;
-        if (player.isOp() || player.hasPermission(permission)) {
+        if (player.isOp() || player.hasPermission(permission))
             return true;
-        }
-        if (Heroes.Permissions != null) {
+        if (Heroes.Permissions != null)
             return Heroes.Permissions.has(player, permission);
-        }
         return false;
-    }
-
-    public Command getCmdFromIdent(String ident, CommandSender executor) {
-        Skill skill = plugin.getSkillManager().getSkillFromIdent(ident, executor);
-        if (skill != null)
-            return skill;
-        
-        if ( identifiers.get(ident.toLowerCase()) == null) {
-            for (Command cmd : commands.values()) {
-                if (cmd.isIdentifier(executor, ident))
-                    return cmd;
-            }
-        }
-        return identifiers.get(ident.toLowerCase());
     }
 }

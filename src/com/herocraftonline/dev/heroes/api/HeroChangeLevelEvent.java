@@ -22,12 +22,12 @@ public class HeroChangeLevelEvent extends Event {
         return from;
     }
 
-    public final int getTo() {
-        return to;
-    }
-
     public Hero getHero() {
         return hero;
+    }
+
+    public final int getTo() {
+        return to;
     }
 
 }

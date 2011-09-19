@@ -9,13 +9,17 @@ public class HeroAttackDamageCause extends HeroDamageCause {
 
     private ItemStack weapon = null;
     private final Entity attacker;
-    
+
     public HeroAttackDamageCause(int damage, DamageCause cause, Entity attacker) {
         super(damage, cause);
         this.attacker = attacker;
         if (attacker instanceof Player) {
-            weapon = ((Player ) attacker).getItemInHand();
+            weapon = ((Player) attacker).getItemInHand();
         }
+    }
+
+    public Entity getAttacker() {
+        return attacker;
     }
 
     /**
@@ -25,9 +29,5 @@ public class HeroAttackDamageCause extends HeroDamageCause {
      */
     public ItemStack getWeapon() {
         return weapon == null ? null : weapon.clone();
-    }
-
-    public Entity getAttacker() {
-        return attacker;
     }
 }

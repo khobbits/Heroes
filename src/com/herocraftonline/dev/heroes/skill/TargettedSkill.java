@@ -47,7 +47,8 @@ public abstract class TargettedSkill extends ActiveSkill {
      * identifier fields as defined in {@link com.herocraftonline.dev.heroes.command.BaseCommand}. Remember that each
      * identifier must begin with <i>skill</i>.
      * 
-     * @param plugin the active Heroes instance
+     * @param plugin
+     *            the active Heroes instance
      */
     public TargettedSkill(Heroes plugin, String name) {
         super(plugin, name);
@@ -83,8 +84,10 @@ public abstract class TargettedSkill extends ActiveSkill {
     /**
      * The heart of any TargettedSkill, this method defines what actually happens when the skill is used.
      * 
-     * @param hero the {@link Hero} using the skill
-     * @param args the arguments provided with the command
+     * @param hero
+     *            the {@link Hero} using the skill
+     * @param args
+     *            the arguments provided with the command
      * @return <code>true</code> if the skill executed properly, <code>false</code> otherwise
      */
     public abstract boolean use(Hero hero, LivingEntity target, String[] args);
@@ -92,8 +95,10 @@ public abstract class TargettedSkill extends ActiveSkill {
     /**
      * Handles target acquisition before calling {@link #use(Hero, LivingEntity, String[])}.
      * 
-     * @param hero the {@link Hero} using the skill
-     * @param args the arguments provided with the command
+     * @param hero
+     *            the {@link Hero} using the skill
+     * @param args
+     *            the arguments provided with the command
      * @return <code>true</code> if the skill executed properly, <code>false</code> otherwise
      */
     @Override
@@ -115,9 +120,8 @@ public abstract class TargettedSkill extends ActiveSkill {
                 Messaging.send(player, "Sorry, target is not in your line of sight!");
                 return false;
             }
-            if (target.isDead() || target.getHealth() == 0) {
+            if (target.isDead() || target.getHealth() == 0)
                 return false;
-            }
         }
         if (target == null) {
             target = getPlayerTarget(player, maxDistance);
@@ -129,15 +133,15 @@ public abstract class TargettedSkill extends ActiveSkill {
         if (target == null) {
             target = player;
         }
-        
-        //Do a PvP check automatically for any harmful skill
+
+        // Do a PvP check automatically for any harmful skill
         if (this.isType(SkillType.HARMFUL)) {
             if (player.equals(target) || hero.getSummons().contains(target) || !damageCheck(player, target)) {
                 Messaging.send(player, "Invalid Target!");
                 return false;
             }
         }
-        
+
         return use(hero, target, args);
     }
 
@@ -149,7 +153,8 @@ public abstract class TargettedSkill extends ActiveSkill {
     /**
      * Returns the pretty name of a <code>LivingEntity</code>.
      * 
-     * @param entity the entity
+     * @param entity
+     *            the entity
      * @return the pretty name of the entity
      */
     public static String getEntityName(LivingEntity entity) {
@@ -159,8 +164,10 @@ public abstract class TargettedSkill extends ActiveSkill {
     /**
      * Returns the first LivingEntity in the line of sight of a Player.
      * 
-     * @param player the player being checked
-     * @param maxDistance the maximum distance to search for a target
+     * @param player
+     *            the player being checked
+     * @param maxDistance
+     *            the maximum distance to search for a target
      * @return the player's target or null if no target is found
      */
     public static LivingEntity getPlayerTarget(Player player, int maxDistance) {
@@ -171,9 +178,8 @@ public abstract class TargettedSkill extends ActiveSkill {
                 Location eLoc = entity.getLocation();
                 for (Block block : lineOfSight) {
                     Location bLoc = block.getLocation();
-                    if (eLoc.getBlockX() == bLoc.getBlockX() && eLoc.getBlockZ() == bLoc.getBlockZ() && Math.abs(eLoc.getBlockY() - bLoc.getBlockY()) < 2) {
+                    if (eLoc.getBlockX() == bLoc.getBlockX() && eLoc.getBlockZ() == bLoc.getBlockZ() && Math.abs(eLoc.getBlockY() - bLoc.getBlockY()) < 2)
                         return (LivingEntity) entity;
-                    }
                 }
             }
         }
@@ -183,29 +189,28 @@ public abstract class TargettedSkill extends ActiveSkill {
     /**
      * Helper method to check whether a player is in another player's line of sight.
      * 
-     * @param a the source
-     * @param b the target
+     * @param a
+     *            the source
+     * @param b
+     *            the target
      * @return <code>true</code> if <code>b</code> is in <code>a</code>'s line of sight; <code>false</code> otherwise
      */
     public static boolean inLineOfSight(Player a, Player b) {
-        if (a == b) {
+        if (a == b)
             return true;
-        }
 
         Location aLoc = a.getEyeLocation();
         Location bLoc = b.getEyeLocation();
         int distance = Location.locToBlock(aLoc.toVector().distance(bLoc.toVector())) - 1;
-        if (distance > 120) {
+        if (distance > 120)
             return false;
-        }
         Vector ab = new Vector(bLoc.getX() - aLoc.getX(), bLoc.getY() - aLoc.getY(), bLoc.getZ() - aLoc.getZ());
         Iterator<Block> iterator = new BlockIterator(a.getWorld(), aLoc.toVector(), ab, 0, distance + 1);
         while (iterator.hasNext()) {
             Block block = iterator.next();
             Material type = block.getType();
-            if (type != Material.AIR && type != Material.WATER) {
+            if (type != Material.AIR && type != Material.WATER)
                 return false;
-            }
         }
         return true;
     }

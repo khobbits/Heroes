@@ -31,7 +31,7 @@ public class SkillManaShield extends ActiveSkill {
         setArgumentRange(0, 0);
         setIdentifiers("skill manashield", "skill mshield");
         setTypes(SkillType.BUFF, SkillType.SILENCABLE, SkillType.MANA);
-        
+
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
     }
 
@@ -89,9 +89,8 @@ public class SkillManaShield extends ActiveSkill {
 
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
-            if (event.isCancelled()) {
+            if (event.isCancelled())
                 return;
-            }
 
             Entity defender = event.getEntity();
             if (defender instanceof Player) {

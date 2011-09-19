@@ -20,13 +20,13 @@ import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Util;
 
 public class SkillBackstab extends PassiveSkill {
-    
+
     public SkillBackstab(Heroes plugin) {
         super(plugin, "Backstab");
         setDescription("You are more lethal when attacking from behind!");
         setArgumentRange(0, 0);
         setTypes(SkillType.PHYSICAL, SkillType.BUFF);
-        
+
         registerEvent(Type.CUSTOM_EVENT, new CustomListener(), Priority.Normal);
     }
 
@@ -65,11 +65,11 @@ public class SkillBackstab extends PassiveSkill {
                     } else if (Util.rand.nextDouble() < getSetting(heroClass, "attack-chance", .5)) {
                         subEvent.setDamage((int) (subEvent.getDamage() * getSetting(heroClass, "attack-bonus", 1.5)));
                     }
-                    
+
                     String name = "";
                     Entity target = subEvent.getEntity();
-                    
-                    if (target instanceof Player) { 
+
+                    if (target instanceof Player) {
                         name = ((Player) target).getName();
                         Messaging.send((Player) target, player.getName() + " has backstabbed you!");
                     } else if (target instanceof Creature) {

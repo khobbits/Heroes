@@ -51,8 +51,9 @@ public class SkillIronFist extends ActiveSkill {
             }
 
             // Check if the target is damagable
-            if (!damageCheck(player, target))
+            if (!damageCheck(player, target)) {
                 continue;
+            }
 
             // Damage the target
             int damage = getSetting(hero.getHeroClass(), "damage", 1);

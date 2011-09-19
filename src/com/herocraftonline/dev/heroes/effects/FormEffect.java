@@ -10,14 +10,15 @@ public class FormEffect extends Effect {
         this.types.add(EffectType.FORM);
         this.types.add(EffectType.BENEFICIAL);
     }
-    
+
     @Override
     public void apply(Hero hero) {
         super.apply(hero);
         for (Effect effect : hero.getEffects()) {
-            if (effect.equals(this))
+            if (effect.equals(this)) {
                 continue;
-            
+            }
+
             if (effect.isType(EffectType.FORM)) {
                 hero.removeEffect(effect);
             }

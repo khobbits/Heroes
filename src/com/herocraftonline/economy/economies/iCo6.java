@@ -10,11 +10,27 @@ public class iCo6 implements Economy {
 
     private iConomy econ;
     private Accounts accounts;
-    
+
     public iCo6() {
         accounts = new Accounts();
     }
-    
+
+    @Override
+    public boolean deposit(String name, double amount) {
+        accounts.get(name).getHoldings().add(amount);
+        return true;
+    }
+
+    @Override
+    public String format(double amount) {
+        return iConomy.format(amount);
+    }
+
+    @Override
+    public double getHoldings(String name) {
+        return accounts.get(name).getHoldings().getBalance();
+    }
+
     @Override
     public String getName() {
         return "iCo6";
@@ -26,39 +42,8 @@ public class iCo6 implements Economy {
     }
 
     @Override
-    public double getHoldings(String name) {
-        return accounts.get(name).getHoldings().getBalance();
-    }
-
-    @Override
-    public double withdraw(String name, double amount) {
-        double initial = amount;
-        if (getHoldings(name) < amount)
-            amount = getHoldings(name);
-        
-        accounts.get(name).getHoldings().subtract(amount);
-        return initial - amount;
-    }
-
-    @Override
-    public boolean deposit(String name, double amount) {
-        accounts.get(name).getHoldings().add(amount);
-        return true;
-    }
-
-    @Override
     public boolean has(String name, double amount) {
         return accounts.get(name).getHoldings().hasEnough(amount);
-    }
-
-    @Override
-    public boolean transfer(String from, String to, double amount) {
-        if (!has(from, amount))
-            return false;
-        
-        withdraw(from, amount);
-        deposit(to, amount);
-        return true;
     }
 
     @Override
@@ -67,7 +52,23 @@ public class iCo6 implements Economy {
     }
 
     @Override
-    public String format(double amount) {
-        return iConomy.format(amount);
+    public boolean transfer(String from, String to, double amount) {
+        if (!has(from, amount))
+            return false;
+
+        withdraw(from, amount);
+        deposit(to, amount);
+        return true;
+    }
+
+    @Override
+    public double withdraw(String name, double amount) {
+        double initial = amount;
+        if (getHoldings(name) < amount) {
+            amount = getHoldings(name);
+        }
+
+        accounts.get(name).getHoldings().subtract(amount);
+        return initial - amount;
     }
 }

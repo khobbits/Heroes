@@ -9,14 +9,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Level;
 
-import com.herocraftonline.dev.heroes.party.HeroParty;
-import com.herocraftonline.dev.heroes.party.PartyManager;
-import com.herocraftonline.dev.heroes.persistence.HeroStorage;
-import com.herocraftonline.dev.heroes.persistence.YMLHeroStorage;
-import com.herocraftonline.dev.heroes.ui.MapAPI;
-import com.herocraftonline.dev.heroes.ui.MapInfo;
-import com.herocraftonline.dev.heroes.ui.TextRenderer;
-import com.herocraftonline.dev.heroes.ui.TextRenderer.CharacterSprite;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Creature;
@@ -28,9 +20,17 @@ import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.effects.Effect;
 import com.herocraftonline.dev.heroes.effects.Expirable;
 import com.herocraftonline.dev.heroes.effects.Periodic;
+import com.herocraftonline.dev.heroes.party.HeroParty;
+import com.herocraftonline.dev.heroes.party.PartyManager;
+import com.herocraftonline.dev.heroes.persistence.HeroStorage;
+import com.herocraftonline.dev.heroes.persistence.YMLHeroStorage;
 import com.herocraftonline.dev.heroes.skill.OutsourcedSkill;
 import com.herocraftonline.dev.heroes.skill.PassiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
+import com.herocraftonline.dev.heroes.ui.MapAPI;
+import com.herocraftonline.dev.heroes.ui.MapInfo;
+import com.herocraftonline.dev.heroes.ui.TextRenderer;
+import com.herocraftonline.dev.heroes.ui.TextRenderer.CharacterSprite;
 import com.herocraftonline.dev.heroes.util.Messaging;
 
 /**
@@ -68,8 +68,40 @@ public class HeroManager {
         plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, partyUpdater, 0, partyUpdateInterval);
     }
 
+    /**
+     * Adds a new effect to the specific creature
+     * 
+     * @param creature
+     * @param effect
+     */
+    public void addCreatureEffect(Creature creature, Effect effect) {
+        Set<Effect> cEffects = creatureEffects.get(creature);
+        if (cEffects == null) {
+            cEffects = new HashSet<Effect>();
+            creatureEffects.put(creature, cEffects);
+        }
+        cEffects.add(effect);
+        effect.apply(creature);
+    }
+
     public boolean addHero(Hero hero) {
         return heroes.add(hero);
+    }
+
+    /**
+     * Clears all effects from the creature
+     * 
+     * @param creature
+     */
+    public void clearCreatureEffects(Creature creature) {
+        if (creatureEffects.containsKey(creature)) {
+            Iterator<Effect> iter = creatureEffects.get(creature).iterator();
+            while (iter.hasNext()) {
+                iter.next().remove(creature);
+                iter.remove();
+            }
+            creatureEffects.remove(creature);
+        }
     }
 
     public boolean containsPlayer(Player player) {
@@ -77,7 +109,46 @@ public class HeroManager {
     }
 
     /**
-     * Gets a hero Object from the hero mapping, if the hero does not exist then it loads in the Hero object for the player
+     * Checks if a creature has the effect
+     * 
+     * @param creature
+     * @param effect
+     * @return
+     */
+    public boolean creatureHasEffect(Creature creature, String name) {
+        if (!creatureEffects.containsKey(creature))
+            return false;
+        for (Effect effect : creatureEffects.get(creature)) {
+            if (effect.getName().equalsIgnoreCase(name))
+                return true;
+        }
+        return false;
+    }
+
+    public Effect getCreatureEffect(Creature creature, String name) {
+        if (creatureEffects.get(creature) == null)
+            return null;
+
+        for (Effect effect : creatureEffects.get(creature)) {
+            if (effect.getName().equals(name))
+                return effect;
+        }
+        return null;
+    }
+
+    /**
+     * Gets a set view of all effects currently applied to the specified creature
+     * 
+     * @param creature
+     * @return
+     */
+    public Set<Effect> getCreatureEffects(Creature creature) {
+        return creatureEffects.get(creature);
+    }
+
+    /**
+     * Gets a hero Object from the hero mapping, if the hero does not exist then it loads in the Hero object for the
+     * player
      * 
      * @param player
      * @return
@@ -89,7 +160,8 @@ public class HeroManager {
                 continue;
             }
             if (player.getName().equalsIgnoreCase(hero.getPlayer().getName())) {
-                //If the entity ID's don't match for some reason then the player object is invalid and we need to re-load the hero object
+                // If the entity ID's don't match for some reason then the player object is invalid and we need to
+                // re-load the hero object
                 if (hero.getPlayer().getEntityId() != player.getEntityId()) {
                     removeHero(hero);
                     break;
@@ -107,48 +179,15 @@ public class HeroManager {
     public Set<Hero> getHeroes() {
         return new HashSet<Hero>(heroes);
     }
-    
-    public boolean removeHero(Hero hero) {
-        if (hero != null && hero.hasParty()) {
-            HeroParty party = hero.getParty();
-            party.removeMember(hero);
-            if (party.getMembers().size() == 0) {
-                this.plugin.getPartyManager().removeParty(party);
-            }
-        }
-
-        return heroes.remove(hero);
-    }
-
-    /**
-     * Save the given Players Data to a file.
-     * 
-     * @param player
-     */
-    public void saveHero(Hero hero) {
-        if (heroStorage.saveHero(hero))
-            Heroes.log(Level.INFO, "Saved hero: " + hero.getPlayer().getName());
-    }
-    
-    public void saveHero(Player player) {
-        saveHero(getHero(player));
-    }
-
-    public void stopTimers() {
-        plugin.getServer().getScheduler().cancelTasks(plugin);
-    }
-
-    HashMap<Creature, Set<Effect>> getCreatureEffects() {
-        return new HashMap<Creature, Set<Effect>>(creatureEffects);
-    }
 
     public void performSkillChecks(Hero hero) {
         HeroClass playerClass = hero.getHeroClass();
 
         for (Skill skill : plugin.getSkillManager().getSkills()) {
             // Never try to learn * or ALL as skills, can happen if the nodes are added incorrectly
-            if (skill.getName().equals("*") || skill.getName().toLowerCase().equals("ALL"))
+            if (skill.getName().equals("*") || skill.getName().toLowerCase().equals("ALL")) {
                 continue;
+            }
 
             if (skill instanceof OutsourcedSkill) {
                 if (playerClass.hasSkill(skill.getName())) {
@@ -161,22 +200,6 @@ public class HeroManager {
                 }
             }
         }
-    }
-
-    /**
-     * Adds a new effect to the specific creature
-     * 
-     * @param creature
-     * @param effect
-     */
-    public void addCreatureEffect(Creature creature, Effect effect) {
-        Set<Effect> cEffects = creatureEffects.get(creature);
-        if (cEffects == null) {
-            cEffects = new HashSet<Effect>();
-            creatureEffects.put(creature, cEffects);
-        }
-        cEffects.add(effect);
-        effect.apply(creature);
     }
 
     /**
@@ -197,60 +220,39 @@ public class HeroManager {
         }
     }
 
-    /**
-     * Clears all effects from the creature
-     * 
-     * @param creature
-     */
-    public void clearCreatureEffects(Creature creature) {
-        if (creatureEffects.containsKey(creature)) {
-            Iterator<Effect> iter = creatureEffects.get(creature).iterator();
-            while (iter.hasNext()) {
-                iter.next().remove(creature);
-                iter.remove();
+    public boolean removeHero(Hero hero) {
+        if (hero != null && hero.hasParty()) {
+            HeroParty party = hero.getParty();
+            party.removeMember(hero);
+            if (party.getMembers().size() == 0) {
+                this.plugin.getPartyManager().removeParty(party);
             }
-            creatureEffects.remove(creature);
         }
+
+        return heroes.remove(hero);
     }
 
     /**
-     * Checks if a creature has the effect
+     * Save the given Players Data to a file.
      * 
-     * @param creature
-     * @param effect
-     * @return
+     * @param player
      */
-    public boolean creatureHasEffect(Creature creature, String name) {
-        if (!creatureEffects.containsKey(creature))
-            return false;
-        for (Effect effect : creatureEffects.get(creature)) {
-            if (effect.getName().equalsIgnoreCase(name)) {
-                return true;
-            }
+    public void saveHero(Hero hero) {
+        if (heroStorage.saveHero(hero)) {
+            Heroes.log(Level.INFO, "Saved hero: " + hero.getPlayer().getName());
         }
-        return false;
     }
 
-    /**
-     * Gets a set view of all effects currently applied to the specified creature
-     * 
-     * @param creature
-     * @return
-     */
-    public Set<Effect> getCreatureEffects(Creature creature) {
-        return creatureEffects.get(creature);
+    public void saveHero(Player player) {
+        saveHero(getHero(player));
     }
 
-    public Effect getCreatureEffect(Creature creature, String name) {
-        if (creatureEffects.get(creature) == null)
-            return null;
+    public void stopTimers() {
+        plugin.getServer().getScheduler().cancelTasks(plugin);
+    }
 
-        for (Effect effect : creatureEffects.get(creature)) {
-            if (effect.getName().equals(name)) {
-                return effect;
-            }
-        }
-        return null;
+    HashMap<Creature, Set<Effect>> getCreatureEffects() {
+        return new HashMap<Creature, Set<Effect>>(creatureEffects);
     }
 }
 
@@ -262,6 +264,7 @@ class EffectUpdater implements Runnable {
         this.heroManager = heroManager;
     }
 
+    @Override
     public void run() {
         for (Hero hero : heroManager.getHeroes()) {
             for (Effect effect : hero.getEffects()) {
@@ -315,11 +318,11 @@ class ManaUpdater implements Runnable {
         this.manaPercent = manaPercent;
     }
 
+    @Override
     public void run() {
         long time = System.currentTimeMillis();
-        if (time < lastUpdate + updateInterval) {
+        if (time < lastUpdate + updateInterval)
             return;
-        }
         lastUpdate = time;
 
         Set<Hero> heroes = manager.getHeroes();
@@ -329,13 +332,15 @@ class ManaUpdater implements Runnable {
             }
 
             int mana = hero.getMana();
-            if (mana == 100)
+            if (mana == 100) {
                 continue;
+            }
 
             HeroRegainManaEvent hrmEvent = new HeroRegainManaEvent(hero, manaPercent, null);
             manager.plugin.getServer().getPluginManager().callEvent(hrmEvent);
-            if (hrmEvent.isCancelled())
+            if (hrmEvent.isCancelled()) {
                 continue;
+            }
 
             hero.setMana(mana + hrmEvent.getAmount());
             if (hero.isVerbose()) {
@@ -357,6 +362,7 @@ class PartyUpdater implements Runnable {
         this.partyManager = partyManager;
     }
 
+    @Override
     public void run() {
         if (!this.plugin.getConfigManager().getProperties().mapUI)
             return;
@@ -404,8 +410,8 @@ class PartyUpdater implements Runnable {
 
         String map = "§22;Party Members -\n";
 
-        for (int i = 0; i < players.length; i++) {
-            Hero hero = this.manager.getHero(players[i]);
+        for (Player player : players) {
+            Hero hero = this.manager.getHero(player);
             if (hero.getParty().getLeader().equals(hero)) {
                 map += "§42;\u0001";
             } else {
@@ -421,13 +427,13 @@ class PartyUpdater implements Runnable {
                 currentHP = hero.getPlayer().getHealth();
                 maxHP = 20;
             }
-            map += " §12;" + players[i].getName() + "\n" + createHealthBar(currentHP, maxHP) + "\n";
+            map += " §12;" + player.getName() + "\n" + createHealthBar(currentHP, maxHP) + "\n";
         }
 
         text.fancyRender(info, 10, 3, map);
 
-        for (int i = 0; i < players.length; i++) {
-            mapAPI.sendMap(players[i], mapId, info.getData(), this.plugin.getConfigManager().getProperties().mapPacketInterval);
+        for (Player player : players) {
+            mapAPI.sendMap(player, mapId, info.getData(), this.plugin.getConfigManager().getProperties().mapPacketInterval);
         }
     }
 
@@ -443,7 +449,7 @@ class PartyUpdater implements Runnable {
             manaBar += "|";
         }
         manaBar += com.herocraftonline.dev.heroes.ui.MapColor.RED + "]";
-        double percent = (health / maxHealth * 100);
+        double percent = health / maxHealth * 100;
         DecimalFormat df = new DecimalFormat("#.##");
         return manaBar + " - " + com.herocraftonline.dev.heroes.ui.MapColor.GREEN + df.format(percent) + "%";
     }

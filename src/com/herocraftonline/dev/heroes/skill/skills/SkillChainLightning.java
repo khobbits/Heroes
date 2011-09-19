@@ -19,8 +19,8 @@ import com.herocraftonline.dev.heroes.hero.HeroManager;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
-import com.herocraftonline.dev.heroes.util.Util;
 import com.herocraftonline.dev.heroes.util.Setting;
+import com.herocraftonline.dev.heroes.util.Util;
 
 public class SkillChainLightning extends TargettedSkill {
 
@@ -46,15 +46,15 @@ public class SkillChainLightning extends TargettedSkill {
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
-        
+
         int damage = getSetting(hero.getHeroClass(), Setting.DAMAGE.node(), 6);
 
-        //Damage the first target
+        // Damage the first target
         addSpellTarget(target, hero);
         target.getWorld().strikeLightningEffect(target.getLocation());
         target.damage(damage, player);
-        
-        //Try to bounce
+
+        // Try to bounce
         Set<Entity> previousTargets = new HashSet<Entity>();
         previousTargets.add(target);
         int range = getSetting(hero.getHeroClass(), Setting.RADIUS.node(), 7);
@@ -66,7 +66,7 @@ public class SkillChainLightning extends TargettedSkill {
             for (Entity entity : target.getNearbyEntities(range, range, range)) {
                 keepBouncing = false;
                 if (entity instanceof LivingEntity) {
-                    //never bounce back to the player
+                    // never bounce back to the player
                     if (entity.equals(player)) {
                         continue;
                     }
@@ -109,8 +109,8 @@ public class SkillChainLightning extends TargettedSkill {
     public class DelayedBolt extends ExpirableEffect {
 
         private final Hero applier;
-        private final int bounceDamage ;
-        
+        private final int bounceDamage;
+
         public DelayedBolt(Skill skill, long duration, Hero applier, int bounceDamage) {
             super(skill, "DelayedBolt", duration);
             this.applier = applier;
@@ -119,14 +119,9 @@ public class SkillChainLightning extends TargettedSkill {
             this.types.add(EffectType.LIGHTNING);
         }
 
-        @Override
-        public void remove(Hero hero) {
-            super.remove(hero);
-            Player target = hero.getPlayer();
-            addSpellTarget(target, applier);
-            target.damage(bounceDamage, applier.getPlayer());
-            target.getWorld().strikeLightningEffect(target.getLocation());
-        }  
+        public Hero getApplier() {
+            return applier;
+        }
 
         @Override
         public void remove(Creature creature) {
@@ -136,8 +131,13 @@ public class SkillChainLightning extends TargettedSkill {
             creature.getWorld().strikeLightningEffect(creature.getLocation());
         }
 
-        public Hero getApplier() {
-            return applier;
+        @Override
+        public void remove(Hero hero) {
+            super.remove(hero);
+            Player target = hero.getPlayer();
+            addSpellTarget(target, applier);
+            target.damage(bounceDamage, applier.getPlayer());
+            target.getWorld().strikeLightningEffect(target.getLocation());
         }
     }
 }

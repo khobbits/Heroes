@@ -18,6 +18,7 @@ public class UIUpdater extends Thread {
         this.interval = interval;
     }
 
+    @Override
     public void run() {
         // for (int i = 0; i < 128; i++) {
         for (int i = 127; 0 <= i; --i) {
@@ -26,7 +27,8 @@ public class UIUpdater extends Thread {
             for (int j = 0; j < 128; j++) {
                 abyte[j + 3] = bytes[j * 128 + i];
             }
-            Packet packet = new Packet131((short) net.minecraft.server.Item.MAP.id, (short) mapid, abyte); // Hard coded for Map ID 0 atm.
+            Packet packet = new Packet131((short) net.minecraft.server.Item.MAP.id, mapid, abyte); // Hard coded for Map
+                                                                                                   // ID 0 atm.
             if (packet != null) {
                 player.netServerHandler.sendPacket(packet);
                 try {

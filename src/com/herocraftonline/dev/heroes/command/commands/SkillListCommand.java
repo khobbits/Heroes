@@ -45,8 +45,7 @@ public class SkillListCommand extends BasicCommand {
         if (args.length != 0) {
             try {
                 page = Integer.parseInt(args[0]) - 1;
-            } catch (NumberFormatException e) {
-            }
+            } catch (NumberFormatException e) {}
         }
 
         Map<Skill, Integer> skills = new HashMap<Skill, Integer>();
@@ -99,11 +98,10 @@ public class SkillListCommand extends BasicCommand {
             @Override
             public int compare(Map.Entry<Skill, Integer> e1, Map.Entry<Skill, Integer> e2) {
                 int res = e1.getValue().compareTo(e2.getValue());
-                if (res == 0) {
+                if (res == 0)
                     return e1.getKey().getName().compareTo(e2.getKey().getName());
-                } else {
+                else
                     return res;
-                }
             }
         });
 

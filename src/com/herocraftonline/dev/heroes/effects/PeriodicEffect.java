@@ -14,14 +14,22 @@ public class PeriodicEffect extends Effect implements Periodic {
         super(skill, name);
         this.period = period;
     }
-    
+
+    /**
+     * @return the applyTime
+     */
+    public long getApplyTime() {
+        return applyTime;
+    }
+
+    @Override
+    public long getLastTickTime() {
+        return lastTickTime;
+    }
+
     @Override
     public long getPeriod() {
         return period;
-    }
-
-    public long getLastTickTime() {
-        return lastTickTime;
     }
 
     @Override
@@ -30,18 +38,13 @@ public class PeriodicEffect extends Effect implements Periodic {
     }
 
     @Override
-    public void remove(Hero hero) {
-
-    }
-
-    @Override
     public void remove(Creature creature) {
 
     }
 
     @Override
-    public void tick(Hero hero) {
-        lastTickTime = System.currentTimeMillis();
+    public void remove(Hero hero) {
+
     }
 
     @Override
@@ -49,11 +52,9 @@ public class PeriodicEffect extends Effect implements Periodic {
         lastTickTime = System.currentTimeMillis();
     }
 
-    /**
-     * @return the applyTime
-     */
-    public long getApplyTime() {
-        return applyTime;
+    @Override
+    public void tick(Hero hero) {
+        lastTickTime = System.currentTimeMillis();
     }
 
 }

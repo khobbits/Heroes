@@ -1,6 +1,7 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
 import java.util.HashSet;
+
 import net.minecraft.server.EntityHuman;
 
 import org.bukkit.Material;
@@ -27,14 +28,14 @@ public class SkillTelekinesis extends ActiveSkill {
         setIdentifiers("skill telekinesis");
         setTypes(SkillType.FORCE, SkillType.SILENCABLE);
     }
-    
+
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
         node.setProperty(Setting.MAX_DISTANCE.node(), 15);
         return node;
     }
-    
+
     @Override
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();

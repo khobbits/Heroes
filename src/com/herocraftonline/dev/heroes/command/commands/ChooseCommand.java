@@ -36,6 +36,14 @@ public class ChooseCommand extends BasicInteractiveCommand {
         return "cancel";
     }
 
+    @Override
+    public void onCommandCancelled(CommandSender executor) {
+        if (!(executor instanceof Player))
+            return;
+        pendingClassSelections.remove(executor);
+        pendingClassCostStatus.remove(executor);
+    }
+
     class StateA extends BasicInteractiveCommandState {
 
         public StateA() {
@@ -45,7 +53,8 @@ public class ChooseCommand extends BasicInteractiveCommand {
 
         @Override
         public boolean execute(CommandSender executor, String identifier, String[] args) {
-            if (!(executor instanceof Player)) return false;
+            if (!(executor instanceof Player))
+                return false;
 
             Player player = (Player) executor;
             Hero hero = plugin.getHeroManager().getHero(player);
@@ -77,14 +86,14 @@ public class ChooseCommand extends BasicInteractiveCommand {
                         break;
                     }
                 }
-                
+
                 if (!masteredOne && !newClass.getWeakParents().isEmpty()) {
                     Messaging.send(player, "$1 requires you to master one of: $2", newClass.getName(), newClass.getWeakParents().toString().replace("[", "").replace("]", ""));
                     return false;
                 }
             }
 
-            if ( newClass != plugin.getClassManager().getDefaultClass() && !CommandHandler.hasPermission(player, "heroes.classes." + newClass.getName().toLowerCase())) {
+            if (newClass != plugin.getClassManager().getDefaultClass() && !CommandHandler.hasPermission(player, "heroes.classes." + newClass.getName().toLowerCase())) {
                 Messaging.send(player, "You don't have permission for $1.", newClass.getName());
                 return false;
             }
@@ -126,7 +135,8 @@ public class ChooseCommand extends BasicInteractiveCommand {
 
         @Override
         public boolean execute(CommandSender executor, String identifier, String[] args) {
-            if (!(executor instanceof Player)) return false;
+            if (!(executor instanceof Player))
+                return false;
 
             Player player = (Player) executor;
             Hero hero = plugin.getHeroManager().getHero(player);
@@ -136,7 +146,8 @@ public class ChooseCommand extends BasicInteractiveCommand {
 
             ClassChangeEvent event = new ClassChangeEvent(hero, currentClass, newClass);
             plugin.getServer().getPluginManager().callEvent(event);
-            if (event.isCancelled()) return false;
+            if (event.isCancelled())
+                return false;
 
             hero.clearEffects(); // clear any leftover/passive effects
             hero.setHeroClass(newClass);
@@ -171,13 +182,6 @@ public class ChooseCommand extends BasicInteractiveCommand {
             return true;
         }
 
-    }
-
-    @Override
-    public void onCommandCancelled(CommandSender executor) {
-        if (!(executor instanceof Player)) return;
-        pendingClassSelections.remove((Player) executor);
-        pendingClassCostStatus.remove((Player) executor);
     }
 
 }

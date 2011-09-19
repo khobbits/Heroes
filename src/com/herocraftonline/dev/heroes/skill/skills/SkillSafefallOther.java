@@ -63,9 +63,8 @@ public class SkillSafefallOther extends TargettedSkill {
             targetHero.addEffect(new SafefallEffect(this, duration));
 
             return true;
-        } else {
+        } else
             return false;
-        }
     }
 
     public class SafefallEffect extends ExpirableEffect {
@@ -95,9 +94,8 @@ public class SkillSafefallOther extends TargettedSkill {
 
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
-            if (event.isCancelled() || event.getCause() != DamageCause.FALL) {
+            if (event.isCancelled() || event.getCause() != DamageCause.FALL)
                 return;
-            }
 
             Entity defender = event.getEntity();
             if (defender instanceof Player) {

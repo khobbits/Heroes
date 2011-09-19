@@ -1,6 +1,6 @@
 package com.herocraftonline.dev.heroes.ui;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,6 +28,10 @@ public enum MapColor {
         this.code = code;
     }
 
+    public int getBlue() {
+        return this.blue;
+    }
+
     /**
      * Gets the data value associated with this color
      * 
@@ -37,16 +41,12 @@ public enum MapColor {
         return code;
     }
 
-    public int getRed() {
-        return this.red;
-    }
-
     public int getGreen() {
         return this.green;
     }
 
-    public int getBlue() {
-        return this.blue;
+    public int getRed() {
+        return this.red;
     }
 
     @Override
@@ -54,30 +54,37 @@ public enum MapColor {
         return "\u00A7" + getCode() + ";";
     }
 
+    static {
+        for (MapColor color : MapColor.values()) {
+            // System.out.print("Code - " + color.getCode() + " - " + color.getRed() + "," + color.getGreen() + "," +
+            // color.getBlue());
+            colors.put(color.getCode(), color);
+        }
+    }
+
     /**
      * Gets the color represented by the specified color code
      * 
-     * @param code Code to check
+     * @param code
+     *            Code to check
      * @return Associative Color with the given code, or null if it doesn't exist
      */
     public static MapColor getByCode(final int code) {
         return colors.get(code);
     }
 
-    public static MapColor getByRGB(final int red, final int green, final int blue) {
+    public static MapColor getByColor(final Color c) {
         for (MapColor color : MapColor.values()) {
-            if (red == color.getRed() && green == color.getGreen() && blue == color.getBlue()) {
+            if (c.getRed() == color.getRed() && c.getRed() == color.getGreen() && c.getBlue() == color.getBlue())
                 return color;
-            }
         }
         return null;
     }
 
-    public static MapColor getByColor(final Color c) {
+    public static MapColor getByRGB(final int red, final int green, final int blue) {
         for (MapColor color : MapColor.values()) {
-            if (c.getRed() == color.getRed() && c.getRed() == color.getGreen() && c.getBlue() == color.getBlue()) {
+            if (red == color.getRed() && green == color.getGreen() && blue == color.getBlue())
                 return color;
-            }
         }
         return null;
     }
@@ -94,21 +101,14 @@ public enum MapColor {
     /**
      * Strips the given message of all color codes
      * 
-     * @param input String to strip of color
+     * @param input
+     *            String to strip of color
      * @return A copy of the input string, without any coloring
      */
     public static String stripColor(final String input) {
-        if (input == null) {
+        if (input == null)
             return null;
-        }
 
         return input.replaceAll("(?i)\u00A7[0-F]", "");
-    }
-
-    static {
-        for (MapColor color : MapColor.values()) {
-            // System.out.print("Code - " + color.getCode() + " - " + color.getRed() + "," + color.getGreen() + "," + color.getBlue());
-            colors.put(color.getCode(), color);
-        }
     }
 }

@@ -8,14 +8,10 @@ import com.herocraftonline.dev.heroes.hero.Hero;
 public abstract class HeroStorage {
 
     protected Heroes plugin;
-    
+
     public HeroStorage(Heroes plugin) {
         this.plugin = plugin;
     }
-    
-    public abstract Hero loadHero(Player player);
-    
-    public abstract boolean saveHero(Hero hero);
 
     public Hero createNewHero(Player player) {
         Hero hero = new Hero(plugin, player, plugin.getClassManager().getDefaultClass());
@@ -24,4 +20,8 @@ public abstract class HeroStorage {
         hero.syncHealth();
         return hero;
     }
+
+    public abstract Hero loadHero(Player player);
+
+    public abstract boolean saveHero(Hero hero);
 }

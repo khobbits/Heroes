@@ -4,13 +4,13 @@ import org.bukkit.command.CommandSender;
 
 public interface InteractiveCommandState {
 
-    public int getMinArguments();
+    public boolean execute(CommandSender executor, String identifier, String[] args);
 
     public int getMaxArguments();
 
+    public int getMinArguments();
+
     // public String getIdentifier();
     public boolean isIdentifier(String input);
-
-    public boolean execute(CommandSender executor, String identifier, String[] args);
 
 }

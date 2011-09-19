@@ -26,7 +26,7 @@ public class SkillReplenish extends ActiveSkill {
         node.setProperty("mana-bonus", 100);
         return node;
     }
-    
+
     @Override
     public boolean use(Hero hero, String[] args) {
         int manaBonus = getSetting(hero.getHeroClass(), "mana-bonus", 100);
@@ -34,7 +34,7 @@ public class SkillReplenish extends ActiveSkill {
         plugin.getServer().getPluginManager().callEvent(hrmEvent);
         if (hrmEvent.isCancelled())
             return false;
-        
+
         hero.setMana(hrmEvent.getAmount() + hero.getMana());
         Messaging.send(hero.getPlayer(), "Your mana has been replenished!");
         if (hero.isVerbose()) {

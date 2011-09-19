@@ -30,8 +30,7 @@ public class PathsCommand extends BasicCommand {
         if (args.length != 0) {
             try {
                 page = Integer.parseInt(args[0]) - 1;
-            } catch (NumberFormatException ignored) {
-            }
+            } catch (NumberFormatException ignored) {}
         }
 
         Set<HeroClass> classes = plugin.getClassManager().getClasses();
@@ -59,10 +58,11 @@ public class PathsCommand extends BasicCommand {
         }
         for (int c = start; c < end; c++) {
             HeroClass heroClass = paths[c];
-            
-            if (heroClass != plugin.getClassManager().getDefaultClass() && !CommandHandler.hasPermission(sender, "heroes.classes." + heroClass.getName().toLowerCase()))
+
+            if (heroClass != plugin.getClassManager().getDefaultClass() && !CommandHandler.hasPermission(sender, "heroes.classes." + heroClass.getName().toLowerCase())) {
                 continue;
-            
+            }
+
             String description = heroClass.getDescription();
             if (description == null || description.isEmpty()) {
                 sender.sendMessage("  §a" + heroClass.getName());

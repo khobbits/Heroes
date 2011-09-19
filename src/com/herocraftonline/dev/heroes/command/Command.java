@@ -4,32 +4,32 @@ import org.bukkit.command.CommandSender;
 
 public interface Command {
 
-    public String getName();
+    public void cancelInteraction(CommandSender executor);
+
+    public boolean execute(CommandSender executor, String identifier, String[] args);
 
     public String getDescription();
 
-    public String getUsage();
-
-    public String getPermission();
-
-    public String[] getNotes();
-
     public String[] getIdentifiers();
-
-    public int getMinArguments();
 
     public int getMaxArguments();
 
-    public void cancelInteraction(CommandSender executor);
+    public int getMinArguments();
 
-    public boolean isInProgress(CommandSender executor);
+    public String getName();
 
-    public boolean isShownOnHelpMenu();
+    public String[] getNotes();
 
-    public boolean isInteractive();
+    public String getPermission();
+
+    public String getUsage();
 
     public boolean isIdentifier(CommandSender executor, String input);
 
-    public boolean execute(CommandSender executor, String identifier, String[] args);
+    public boolean isInProgress(CommandSender executor);
+
+    public boolean isInteractive();
+
+    public boolean isShownOnHelpMenu();
 
 }

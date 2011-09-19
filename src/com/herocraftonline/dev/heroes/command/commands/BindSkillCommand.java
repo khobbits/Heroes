@@ -35,21 +35,21 @@ public class BindSkillCommand extends BasicCommand {
         HeroClass heroClass = hero.getHeroClass();
         Material material = player.getItemInHand().getType();
         if (args.length > 0) {
-            //Skill detection - first check if it's a skill, then check if it's an identifier
+            // Skill detection - first check if it's a skill, then check if it's an identifier
             Skill skill = plugin.getSkillManager().getSkill(args[0]);
             if (skill == null) {
                 skill = plugin.getSkillManager().getSkillFromIdent("skill " + args[0], sender);
             }
-            
+
             if (skill != null && (heroClass.hasSkill(skill.getName()) || hero.hasSkill(skill.getName()))) {
                 if (material == Material.AIR) {
                     Messaging.send(sender, "You must be holding an item to bind a skill!");
                     return false;
                 }
-                
-                //Adjust the first argument to make sure we're binding the command name not the identifier.
+
+                // Adjust the first argument to make sure we're binding the command name not the identifier.
                 args[0] = skill.getName();
-                
+
                 hero.bind(material, args);
                 Messaging.send(sender, "$1 has been bound to $2.", MaterialUtil.getFriendlyName(material), skill.getName());
             } else {

@@ -78,7 +78,7 @@ public class SkillSuperheat extends ActiveSkill {
                     case GOLD_ORE:
                         event.setCancelled(true);
                         block.setType(Material.AIR);
-                        block.getWorld().dropItem(block.getLocation(), new ItemStack(Material.GOLD_INGOT,1 ));
+                        block.getWorld().dropItem(block.getLocation(), new ItemStack(Material.GOLD_INGOT, 1));
                         break;
                     case SAND:
                         event.setCancelled(true);

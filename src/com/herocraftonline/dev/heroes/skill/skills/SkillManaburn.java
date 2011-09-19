@@ -18,7 +18,7 @@ public class SkillManaburn extends TargettedSkill {
         setUsage("/skill manaburn");
         setArgumentRange(0, 1);
         setIdentifiers("skill manaburn", "skill mburn");
-        
+
         setTypes(SkillType.DAMAGING, SkillType.SILENCABLE, SkillType.MANA, SkillType.HARMFUL);
     }
 
@@ -36,9 +36,9 @@ public class SkillManaburn extends TargettedSkill {
             Messaging.send(player, "You need a target!");
             return false;
         }
-        
+
         Hero tHero = plugin.getHeroManager().getHero((Player) target);
-        
+
         int transferamount = getSetting(hero.getHeroClass(), "transfer-amount", 20);
         if (tHero.getMana() > transferamount) {
             if (hero.getMana() + transferamount > 100) {

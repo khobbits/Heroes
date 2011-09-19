@@ -76,28 +76,6 @@ public class SkillBerserk extends ActiveSkill {
     public class SkillHeroListener extends HeroesEventListener {
 
         @Override
-        public void onWeaponDamage(WeaponDamageEvent event) {
-            if (event.isCancelled())
-                return;
-
-            if (event.getEntity() instanceof Player ) {
-                Hero hero = plugin.getHeroManager().getHero((Player) event.getEntity());
-                if (hero.hasEffect(getName())) {
-                    event.setDamage((int) (event.getDamage() * getSetting(hero.getHeroClass(), "incoming-multiplier", 1.1)));
-                }
-            }
-
-            if ((event.getDamager() instanceof Player)) {
-                Hero hero = plugin.getHeroManager().getHero((Player) event.getDamager());
-                if (hero.hasEffect(getName())) {
-                    double levelMult = getSetting(hero.getHeroClass(), "multiplier-per-level", .005) * hero.getLevel();
-                    int newDamage = (int) (event.getDamage() * (getSetting(hero.getHeroClass(), "outgoing-multiplier", 1.1) + levelMult));
-                    event.setDamage(newDamage);
-                }
-            }
-        }
-
-        @Override
         public void onSkillDamage(SkillDamageEvent event) {
             if (event.isCancelled())
                 return;
@@ -109,7 +87,29 @@ public class SkillBerserk extends ActiveSkill {
                 }
             }
 
-            if ((event.getDamager() instanceof Player) && event.getSkill().isType(SkillType.PHYSICAL)) {
+            if (event.getDamager() instanceof Player && event.getSkill().isType(SkillType.PHYSICAL)) {
+                Hero hero = plugin.getHeroManager().getHero((Player) event.getDamager());
+                if (hero.hasEffect(getName())) {
+                    double levelMult = getSetting(hero.getHeroClass(), "multiplier-per-level", .005) * hero.getLevel();
+                    int newDamage = (int) (event.getDamage() * (getSetting(hero.getHeroClass(), "outgoing-multiplier", 1.1) + levelMult));
+                    event.setDamage(newDamage);
+                }
+            }
+        }
+
+        @Override
+        public void onWeaponDamage(WeaponDamageEvent event) {
+            if (event.isCancelled())
+                return;
+
+            if (event.getEntity() instanceof Player) {
+                Hero hero = plugin.getHeroManager().getHero((Player) event.getEntity());
+                if (hero.hasEffect(getName())) {
+                    event.setDamage((int) (event.getDamage() * getSetting(hero.getHeroClass(), "incoming-multiplier", 1.1)));
+                }
+            }
+
+            if (event.getDamager() instanceof Player) {
                 Hero hero = plugin.getHeroManager().getHero((Player) event.getDamager());
                 if (hero.hasEffect(getName())) {
                     double levelMult = getSetting(hero.getHeroClass(), "multiplier-per-level", .005) * hero.getLevel();

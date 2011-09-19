@@ -23,7 +23,7 @@ public class SkillCleave extends TargettedSkill {
         setUsage("/skill cleave <target>");
         setArgumentRange(0, 1);
         setIdentifiers("skill cleave");
-        
+
         setTypes(SkillType.PHYSICAL, SkillType.DAMAGING, SkillType.HARMFUL);
     }
 
@@ -40,24 +40,25 @@ public class SkillCleave extends TargettedSkill {
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
-        
+
         Material item = player.getItemInHand().getType();
         if (!getSetting(hero.getHeroClass(), "weapons", Util.axes).contains(item.name())) {
             Messaging.send(player, "You can't cleave with that weapon!");
         }
-        
+
         HeroClass heroClass = hero.getHeroClass();
         int damage = heroClass.getItemDamage(item) == null ? 0 : heroClass.getItemDamage(item);
         damage *= getSetting(heroClass, "damage-multiplier", 1);
         target.damage(damage, player);
         int radius = getSetting(heroClass, Setting.RADIUS.node(), 3);
         for (Entity entity : target.getNearbyEntities(radius, radius, radius)) {
-            if (!(entity instanceof LivingEntity) && !damageCheck(player, (LivingEntity) entity))
+            if (!(entity instanceof LivingEntity) && !damageCheck(player, (LivingEntity) entity)) {
                 continue;
+            }
 
             ((LivingEntity) entity).damage(damage, player);
         }
-        
+
         broadcastExecuteText(hero, target);
         return true;
     }

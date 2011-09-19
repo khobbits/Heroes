@@ -72,6 +72,36 @@ public class SkillSneak extends ActiveSkill {
         return true;
     }
 
+    public class SneakDamageListener extends EntityListener {
+
+        @Override
+        public void onEntityDamage(EntityDamageEvent event) {
+            if (event.isCancelled() || !damageCancels)
+                return;
+            Player player = null;
+            if (event.getEntity() instanceof Player) {
+                player = (Player) event.getEntity();
+            } else if (attackCancels && event instanceof EntityDamageByEntityEvent) {
+                EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
+                if (subEvent.getDamager() instanceof Player) {
+                    player = (Player) subEvent.getDamager();
+                } else if (subEvent.getDamager() instanceof Projectile) {
+                    if (((Projectile) subEvent.getDamager()).getShooter() instanceof Player) {
+                        player = (Player) ((Projectile) subEvent.getDamager()).getShooter();
+                    }
+                }
+            }
+            if (player == null)
+                return;
+
+            Hero hero = plugin.getHeroManager().getHero(player);
+            if (hero.hasEffect("Sneak")) {
+                player.setSneaking(false);
+                hero.removeEffect(hero.getEffect("Sneak"));
+            }
+        }
+    }
+
     public class SneakEffect extends PeriodicExpirableEffect {
 
         public SneakEffect(Skill skill, long period, long duration) {
@@ -110,36 +140,6 @@ public class SkillSneak extends ActiveSkill {
             if (hero.hasEffect("Sneak")) {
                 event.getPlayer().setSneaking(true);
                 event.setCancelled(true);
-            }
-        }
-    }
-
-    public class SneakDamageListener extends EntityListener {
-
-        @Override
-        public void onEntityDamage(EntityDamageEvent event) {
-            if (event.isCancelled() || !damageCancels)
-                return;
-            Player player = null;
-            if (event.getEntity() instanceof Player) {
-                player = (Player) event.getEntity();
-            } else if (attackCancels && event instanceof EntityDamageByEntityEvent) {
-                EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
-                if (subEvent.getDamager() instanceof Player) {
-                    player = (Player) subEvent.getDamager();
-                } else if (subEvent.getDamager() instanceof Projectile) {
-                    if (((Projectile) subEvent.getDamager()).getShooter() instanceof Player) {
-                        player = (Player) ((Projectile) subEvent.getDamager()).getShooter();
-                    }
-                }
-            }
-            if (player == null)
-                return;
-
-            Hero hero = plugin.getHeroManager().getHero(player);
-            if (hero.hasEffect("Sneak")) {
-                player.setSneaking(false);
-                hero.removeEffect(hero.getEffect("Sneak"));
             }
         }
     }

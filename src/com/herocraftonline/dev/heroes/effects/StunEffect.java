@@ -11,7 +11,7 @@ public class StunEffect extends PeriodicExpirableEffect {
     private static final long period = 100;
     private final String stunApplyText = "$1 is stunned!";
     private final String stunExpireText = "$1 is no longer stunned!";
-    
+
     private Location loc;
 
     public StunEffect(Skill skill, long duration) {

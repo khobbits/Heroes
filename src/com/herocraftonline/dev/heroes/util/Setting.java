@@ -3,10 +3,10 @@ package com.herocraftonline.dev.heroes.util;
 /**
  * Stores node identifiers for settings
  * 
- *
+ * 
  */
 public enum Setting {
-    
+
     AMOUNT("amount"),
     APPLY_TEXT("apply-text"),
     COOLDOWN("cooldown"),
@@ -28,11 +28,11 @@ public enum Setting {
     DEATH_TEXT("death-text");
 
     private final String node;
-    
+
     Setting(String node) {
         this.node = node;
     }
-    
+
     public String node() {
         return this.node;
     }

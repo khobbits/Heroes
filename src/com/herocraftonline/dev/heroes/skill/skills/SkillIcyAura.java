@@ -31,20 +31,7 @@ public class SkillIcyAura extends ActiveSkill {
     private String expireText;
     private static Map<Hero, Map<Location, Material>> changedBlocks = new HashMap<Hero, Map<Location, Material>>();
     private static final Set<Material> allowedBlocks;
-    static {
-        allowedBlocks = new HashSet<Material>();
-        allowedBlocks.add(Material.STONE);
-        allowedBlocks.add(Material.SAND);
-        allowedBlocks.add(Material.SNOW);
-        allowedBlocks.add(Material.SNOW_BLOCK);
-        allowedBlocks.add(Material.DIRT);
-        allowedBlocks.add(Material.GRASS);
-        allowedBlocks.add(Material.SOIL);
-        allowedBlocks.add(Material.CLAY);
-        allowedBlocks.add(Material.WATER);
-        allowedBlocks.add(Material.STATIONARY_WATER);
-    }
-    
+
     public SkillIcyAura(Heroes plugin) {
         super(plugin, "IcyAura");
         setDescription("Triggers an aura of ice around you.");
@@ -52,7 +39,7 @@ public class SkillIcyAura extends ActiveSkill {
         setArgumentRange(0, 0);
         setIdentifiers("skill icyaura");
         setTypes(SkillType.BUFF, SkillType.SILENCABLE, SkillType.ICE);
-        
+
         registerEvent(Type.BLOCK_BREAK, new IcyAuraBlockListener(), Priority.Highest);
     }
 
@@ -85,6 +72,37 @@ public class SkillIcyAura extends ActiveSkill {
         int range = getSetting(hero.getHeroClass(), Setting.RADIUS.node(), 10);
         hero.addEffect(new IcyAuraEffect(this, duration, period, tickDamage, range));
         return true;
+    }
+
+    static {
+        allowedBlocks = new HashSet<Material>();
+        allowedBlocks.add(Material.STONE);
+        allowedBlocks.add(Material.SAND);
+        allowedBlocks.add(Material.SNOW);
+        allowedBlocks.add(Material.SNOW_BLOCK);
+        allowedBlocks.add(Material.DIRT);
+        allowedBlocks.add(Material.GRASS);
+        allowedBlocks.add(Material.SOIL);
+        allowedBlocks.add(Material.CLAY);
+        allowedBlocks.add(Material.WATER);
+        allowedBlocks.add(Material.STATIONARY_WATER);
+    }
+
+    public class IcyAuraBlockListener extends BlockListener {
+
+        @Override
+        public void onBlockBreak(BlockBreakEvent event) {
+            if (event.isCancelled())
+                return;
+
+            // Check out mappings to see if this block was a changed block, if so lets deny breaking it.
+            for (Map<Location, Material> blockMap : changedBlocks.values()) {
+                for (Location loc : blockMap.keySet())
+                    if (event.getBlock().getLocation().equals(loc)) {
+                        event.setCancelled(true);
+                    }
+            }
+        }
     }
 
     public class IcyAuraEffect extends PeriodicExpirableEffect {
@@ -133,11 +151,12 @@ public class SkillIcyAura extends ActiveSkill {
             for (Entity entity : player.getNearbyEntities(range, range, range)) {
                 if (entity instanceof LivingEntity) {
                     LivingEntity lEntity = (LivingEntity) entity;
-                    
-                    //Check if the target is damagable
-                    if (!damageCheck(player, lEntity))
+
+                    // Check if the target is damagable
+                    if (!damageCheck(player, lEntity)) {
                         continue;
-                    
+                    }
+
                     addSpellTarget(lEntity, hero);
                     lEntity.damage(tickDamage, player);
                     loc = lEntity.getLocation().clone();
@@ -157,21 +176,6 @@ public class SkillIcyAura extends ActiveSkill {
                 changedBlocks.get(hero).put(loc, loc.getBlock().getType());
                 loc.getBlock().setType(Material.ICE);
             }
-        }
-    }
-
-    public class IcyAuraBlockListener extends BlockListener {
-
-        @Override
-        public void onBlockBreak(BlockBreakEvent event) {
-            if (event.isCancelled())
-                return;
-
-            // Check out mappings to see if this block was a changed block, if so lets deny breaking it.
-            for (Map<Location, Material> blockMap : changedBlocks.values())
-                for (Location loc : blockMap.keySet())
-                    if (event.getBlock().getLocation().equals(loc))
-                        event.setCancelled(true);
         }
     }
 }

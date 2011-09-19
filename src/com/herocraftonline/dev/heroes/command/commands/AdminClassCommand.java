@@ -45,7 +45,7 @@ public class AdminClassCommand extends BasicCommand {
         }
         // Change the Players HeroClass and reset their Bindings.
         hero.changeHeroClass(heroClass);
-        //Recheck hero skills
+        // Recheck hero skills
         plugin.getHeroManager().performSkillChecks(hero);
         // Alert both the Admin and the Player of the change.
         Messaging.send(sender, "You have successfully changed $1 HeroClass to $2.", player.getName(), heroClass.getName());

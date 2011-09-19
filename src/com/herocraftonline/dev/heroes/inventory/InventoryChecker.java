@@ -121,9 +121,8 @@ public class InventoryChecker {
     public int firstEmpty(Player p) {
         ItemStack[] inventory = p.getInventory().getContents();
         for (int i = 9; i < inventory.length; i++) {
-            if (inventory[i] == null) {
+            if (inventory[i] == null)
                 return i;
-            }
         }
         return -1;
     }
@@ -166,6 +165,7 @@ public class InventoryChecker {
     public void syncInventory(final Player player) {
         plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 
+            @Override
             @SuppressWarnings("deprecation")
             public void run() {
                 player.updateInventory();

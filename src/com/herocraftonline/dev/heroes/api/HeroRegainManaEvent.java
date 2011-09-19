@@ -13,26 +13,20 @@ public class HeroRegainManaEvent extends Event implements Cancellable {
     private final Hero hero;
     private final Skill skill;
     private boolean cancelled = false;
-    
+
     public HeroRegainManaEvent(Hero hero, int amount, Skill skill) {
         super("HeroRegainManaEvent");
         this.hero = hero;
         this.amount = amount;
         this.skill = skill;
-        
+
     }
+
     /**
      * @return the amount
      */
     public int getAmount() {
         return amount;
-    }
-
-    /**
-     * @param amount the amount to set
-     */
-    public void setAmount(int amount) {
-        this.amount = amount;
     }
 
     /**
@@ -50,10 +44,18 @@ public class HeroRegainManaEvent extends Event implements Cancellable {
     public Skill getSkill() {
         return skill;
     }
-    
+
     @Override
     public boolean isCancelled() {
         return cancelled;
+    }
+
+    /**
+     * @param amount
+     *            the amount to set
+     */
+    public void setAmount(int amount) {
+        this.amount = amount;
     }
 
     @Override

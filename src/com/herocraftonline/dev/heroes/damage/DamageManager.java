@@ -42,14 +42,6 @@ public class DamageManager {
         listener = new HeroesDamageListener(plugin, this);
     }
 
-    public Map<Entity, SkillUseInfo> getSpellTargets() {
-        return spellTargs;
-    }
-
-    public void removeSpellTarget(Entity o) {
-        spellTargs.remove(o);
-    }
-
     public void addSpellTarget(Entity o, Hero hero, Skill skill) {
         SkillUseInfo skillInfo = new SkillUseInfo(hero, skill);
         spellTargs.put(o, skillInfo);
@@ -63,9 +55,8 @@ public class DamageManager {
         if (creatureHealth.containsKey(type)) {
             int health = creatureHealth.get(type);
             return health > 200 ? 200 : health < 0 ? 0 : health;
-        } else {
+        } else
             return null;
-        }
     }
 
     public Integer getEnvironmentalDamage(DamageCause cause) {
@@ -76,9 +67,8 @@ public class DamageManager {
         if (entity != null && entity instanceof Player) {
             HeroClass heroClass = plugin.getHeroManager().getHero((Player) entity).getHeroClass();
             Integer classDamage = heroClass.getItemDamage(item);
-            if (classDamage != null) {
+            if (classDamage != null)
                 return classDamage;
-            }
         }
         return itemDamage.get(item);
     }
@@ -87,11 +77,14 @@ public class DamageManager {
         if (entity != null && entity instanceof Player) {
             HeroClass heroClass = plugin.getHeroManager().getHero((Player) entity).getHeroClass();
             Integer classDamage = heroClass.getProjectileDamage(type);
-            if (classDamage != null) {
+            if (classDamage != null)
                 return classDamage;
-            }
         }
         return projectileDamage.get(type);
+    }
+
+    public Map<Entity, SkillUseInfo> getSpellTargets() {
+        return spellTargs;
     }
 
     public void load(Configuration config) {
@@ -141,8 +134,7 @@ public class DamageManager {
                     DamageCause cause = DamageCause.valueOf(key.toUpperCase());
                     int damage = config.getInt("environmental-damage." + key, 0);
                     environmentalDamage.put(cause, damage);
-                } catch (IllegalArgumentException e) {
-                }
+                } catch (IllegalArgumentException e) {}
             }
         }
 
@@ -154,8 +146,7 @@ public class DamageManager {
                     ProjectileType type = ProjectileType.valueOf(key.toUpperCase());
                     int damage = config.getInt("projectile-damage." + key, 0);
                     projectileDamage.put(type, damage);
-                } catch (IllegalArgumentException e) {
-                }
+                } catch (IllegalArgumentException e) {}
             }
         }
     }
@@ -173,33 +164,35 @@ public class DamageManager {
         }
     }
 
+    public void removeSpellTarget(Entity o) {
+        spellTargs.remove(o);
+    }
+
     public enum ProjectileType {
         ARROW,
         SNOWBALL,
         EGG;
 
-        public static ProjectileType valueOf(Entity entity) {
-            if (entity instanceof Arrow) {
-                return ARROW;
-            } else if (entity instanceof Snowball) {
-                return SNOWBALL;
-            } else if (entity instanceof Egg) {
-                return EGG;
-            } else {
-                throw new IllegalArgumentException(entity.getClass().getSimpleName() + " is not a projectile.");
-            }
-        }
-        
         public static ProjectileType matchProjectile(final String name) {
-            if (name.toLowerCase().equals("arrow")) {
+            if (name.toLowerCase().equals("arrow"))
                 return ARROW;
-            } else if (name.toLowerCase().equals("snowball")) {
+            else if (name.toLowerCase().equals("snowball"))
                 return SNOWBALL;
-            } else if (name.toLowerCase().equals("egg")) {
+            else if (name.toLowerCase().equals("egg"))
                 return EGG;
-            } else {
+            else
                 throw new IllegalArgumentException(name + " is not a projectiletype.");
-            }
+        }
+
+        public static ProjectileType valueOf(Entity entity) {
+            if (entity instanceof Arrow)
+                return ARROW;
+            else if (entity instanceof Snowball)
+                return SNOWBALL;
+            else if (entity instanceof Egg)
+                return EGG;
+            else
+                throw new IllegalArgumentException(entity.getClass().getSimpleName() + " is not a projectile.");
         }
     }
 

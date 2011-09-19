@@ -30,9 +30,9 @@ public class SkillBlaze extends ActiveSkill {
         ConfigurationNode node = super.getDefaultConfig();
         node.setProperty("fire-length", 3000);
         node.setProperty(Setting.RADIUS.node(), 5);
-        
+
         setTypes(SkillType.FIRE, SkillType.DAMAGING, SkillType.HARMFUL);
-        
+
         return node;
     }
 
@@ -48,9 +48,8 @@ public class SkillBlaze extends ActiveSkill {
             LivingEntity livingEntity = (LivingEntity) entity;
             EntityDamageEvent damageEvent = new EntityDamageEvent(hero.getPlayer(), DamageCause.ENTITY_ATTACK, 0);
             Bukkit.getServer().getPluginManager().callEvent(damageEvent);
-            if (damageEvent.isCancelled()) {
+            if (damageEvent.isCancelled())
                 return false;
-            }
             livingEntity.setFireTicks(fireTicks);
         }
         broadcastExecuteText(hero);

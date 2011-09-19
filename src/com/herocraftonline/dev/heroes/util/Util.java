@@ -13,25 +13,25 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 
 public final class Util {
-    
+
     // Default Sword List
     public final static List<String> swords;
 
     // Default Axe List
     public final static List<String> axes;
-    
+
     // Default Shovel List
     public final static List<String> shovels;
-    
+
     // Blocks that we consider transparent for skills
     public final static Set<Material> transparentBlocks;
 
     // Byte Set of transparents
     public final static HashSet<Byte> transparentIds;
 
-    //Random number generator
+    // Random number generator
     public final static Random rand = new Random();
-    
+
     static {
         swords = new ArrayList<String>();
         swords.add("WOOD_SWORD");
@@ -44,13 +44,13 @@ public final class Util {
         axes.add("STONE_AXE");
         axes.add("GOLD_AXE");
         axes.add("DIAMOND_AXE");
-        
+
         shovels = new ArrayList<String>();
         shovels.add("WOODEN_SPADE");
         shovels.add("STONE_SPADE");
         shovels.add("GOLD_SPADE");
         shovels.add("DIAMOND_SPADE");
-        
+
         transparentBlocks = new HashSet<Material>();
         transparentBlocks.add(Material.AIR);
         transparentBlocks.add(Material.SNOW);
@@ -97,48 +97,29 @@ public final class Util {
         transparentIds.add((byte) Material.DIODE_BLOCK_OFF.getId());
         transparentIds.add((byte) Material.DIODE_BLOCK_ON.getId());
     }
-    
+
     /**
-     * Checks if the material is a Weapon/Tool
+     * Converts an entity into its CreatureType
      * 
-     * @param mat
+     * @param entity
      * @return
      */
-    public static boolean isWeapon(Material mat) {
-        switch(mat) {
-        
-        case IRON_AXE :
-        case IRON_HOE :
-        case IRON_PICKAXE :
-        case IRON_SPADE :
-        case IRON_SWORD :
-        case STONE_AXE :
-        case STONE_HOE :
-        case STONE_PICKAXE :
-        case STONE_SPADE :
-        case STONE_SWORD :
-        case GOLD_AXE :
-        case GOLD_HOE :
-        case GOLD_PICKAXE :
-        case GOLD_SPADE :
-        case GOLD_SWORD :
-        case WOOD_AXE :
-        case WOOD_HOE :
-        case WOOD_PICKAXE :
-        case WOOD_SPADE :
-        case WOOD_SWORD :
-        case DIAMOND_AXE :
-        case DIAMOND_HOE :
-        case DIAMOND_PICKAXE :
-        case DIAMOND_SPADE :
-        case DIAMOND_SWORD :
-            return true;
-
-        default: 
-            return false;
-        }
+    public static CreatureType getCreatureFromEntity(Entity entity) {
+        CreatureType type = null;
+        if (entity == null)
+            return type;
+        try {
+            Class<?>[] interfaces = entity.getClass().getInterfaces();
+            for (Class<?> c : interfaces) {
+                if (LivingEntity.class.isAssignableFrom(c)) {
+                    type = CreatureType.fromName(c.getSimpleName());
+                    break;
+                }
+            }
+        } catch (IllegalArgumentException e) {}
+        return type;
     }
-    
+
     /**
      * Tests whether the entity is nearby a spawner
      * 
@@ -159,27 +140,45 @@ public final class Util {
         }
         return false;
     }
-    
+
     /**
-     * Converts an entity into its CreatureType
+     * Checks if the material is a Weapon/Tool
      * 
-     * @param entity
+     * @param mat
      * @return
      */
-    public static CreatureType getCreatureFromEntity(Entity entity) {
-        CreatureType type = null;
-        if (entity == null)
-            return type;
-        try {
-            Class<?>[] interfaces = entity.getClass().getInterfaces();
-            for (Class<?> c : interfaces) {
-                if (LivingEntity.class.isAssignableFrom(c)) {
-                    type = CreatureType.fromName(c.getSimpleName());
-                    break;
-                }
-            }
-        } catch (IllegalArgumentException e) {
+    public static boolean isWeapon(Material mat) {
+        switch (mat) {
+
+            case IRON_AXE:
+            case IRON_HOE:
+            case IRON_PICKAXE:
+            case IRON_SPADE:
+            case IRON_SWORD:
+            case STONE_AXE:
+            case STONE_HOE:
+            case STONE_PICKAXE:
+            case STONE_SPADE:
+            case STONE_SWORD:
+            case GOLD_AXE:
+            case GOLD_HOE:
+            case GOLD_PICKAXE:
+            case GOLD_SPADE:
+            case GOLD_SWORD:
+            case WOOD_AXE:
+            case WOOD_HOE:
+            case WOOD_PICKAXE:
+            case WOOD_SPADE:
+            case WOOD_SWORD:
+            case DIAMOND_AXE:
+            case DIAMOND_HOE:
+            case DIAMOND_PICKAXE:
+            case DIAMOND_SPADE:
+            case DIAMOND_SWORD:
+                return true;
+
+            default:
+                return false;
         }
-        return type;
     }
 }

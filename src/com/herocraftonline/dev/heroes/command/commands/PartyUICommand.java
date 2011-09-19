@@ -1,13 +1,14 @@
 package com.herocraftonline.dev.heroes.command.commands;
 
-import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.command.BasicCommand;
-import com.herocraftonline.dev.heroes.hero.Hero;
-import com.herocraftonline.dev.heroes.util.Messaging;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+
+import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.command.BasicCommand;
+import com.herocraftonline.dev.heroes.hero.Hero;
+import com.herocraftonline.dev.heroes.util.Messaging;
 
 public class PartyUICommand extends BasicCommand {
     private final Heroes plugin;

@@ -1,5 +1,6 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.util.config.ConfigurationNode;
 
@@ -11,8 +12,6 @@ import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Setting;
-
-import org.bukkit.Location;
 
 public class SkillChakra extends ActiveSkill {
 
@@ -74,8 +73,9 @@ public class SkillChakra extends ActiveSkill {
             if (effect.isType(EffectType.HARMFUL)) {
                 hero.removeEffect(effect);
                 removals--;
-                if (removals == 0)
+                if (removals == 0) {
                     break;
+                }
             }
         }
     }

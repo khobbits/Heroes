@@ -18,9 +18,7 @@ public abstract class BasicCommand implements Command {
     }
 
     @Override
-    public String getName() {
-        return name;
-    }
+    public void cancelInteraction(CommandSender executor) {}
 
     @Override
     public String getDescription() {
@@ -28,23 +26,8 @@ public abstract class BasicCommand implements Command {
     }
 
     @Override
-    public String getUsage() {
-        return usage;
-    }
-
-    @Override
-    public String getPermission() {
-        return permission;
-    }
-
-    @Override
-    public String[] getNotes() {
-        return notes;
-    }
-
-    @Override
-    public int getMinArguments() {
-        return minArguments;
+    public String[] getIdentifiers() {
+        return identifiers;
     }
 
     @Override
@@ -53,17 +36,42 @@ public abstract class BasicCommand implements Command {
     }
 
     @Override
-    public boolean isInProgress(CommandSender executor) {
+    public int getMinArguments() {
+        return minArguments;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public String[] getNotes() {
+        return notes;
+    }
+
+    @Override
+    public String getPermission() {
+        return permission;
+    }
+
+    @Override
+    public String getUsage() {
+        return usage;
+    }
+
+    @Override
+    public boolean isIdentifier(CommandSender executor, String input) {
+        for (String identifier : identifiers) {
+            if (input.equalsIgnoreCase(identifier))
+                return true;
+        }
         return false;
     }
 
     @Override
-    public void cancelInteraction(CommandSender executor) {
-    }
-
-    @Override
-    public boolean isShownOnHelpMenu() {
-        return true;
+    public boolean isInProgress(CommandSender executor) {
+        return false;
     }
 
     @Override
@@ -71,20 +79,9 @@ public abstract class BasicCommand implements Command {
         return false;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setUsage(String usage) {
-        this.usage = usage;
-    }
-
-    public void setPermission(String permission) {
-        this.permission = permission;
-    }
-
-    public void setNotes(String...notes) {
-        this.notes = notes;
+    @Override
+    public boolean isShownOnHelpMenu() {
+        return true;
     }
 
     public void setArgumentRange(int min, int max) {
@@ -92,23 +89,24 @@ public abstract class BasicCommand implements Command {
         this.maxArguments = max;
     }
 
-    public void setIdentifiers(String...identifiers) {
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setIdentifiers(String... identifiers) {
         this.identifiers = identifiers;
     }
 
-    @Override
-    public boolean isIdentifier(CommandSender executor, String input) {
-        for (String identifier : identifiers) {
-            if (input.equalsIgnoreCase(identifier)) {
-                return true;
-            }
-        }
-        return false;
+    public void setNotes(String... notes) {
+        this.notes = notes;
     }
 
-    @Override
-    public String[] getIdentifiers() {
-        return identifiers;
+    public void setPermission(String permission) {
+        this.permission = permission;
+    }
+
+    public void setUsage(String usage) {
+        this.usage = usage;
     }
 
 }

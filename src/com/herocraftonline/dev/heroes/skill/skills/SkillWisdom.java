@@ -67,10 +67,12 @@ public class SkillWisdom extends ActiveSkill {
             int rangeSquared = (int) Math.pow(getSetting(hero.getHeroClass(), Setting.RADIUS.node(), 10), 2);
             for (Hero pHero : hero.getParty().getMembers()) {
                 Player pPlayer = pHero.getPlayer();
-                if (!pPlayer.getWorld().equals(player.getWorld()))
+                if (!pPlayer.getWorld().equals(player.getWorld())) {
                     continue;
-                if (pPlayer.getLocation().distanceSquared(player.getLocation()) > rangeSquared)
+                }
+                if (pPlayer.getLocation().distanceSquared(player.getLocation()) > rangeSquared) {
                     continue;
+                }
                 if (pHero.hasEffect("Wisdom")) {
                     if (((WisdomEffect) pHero.getEffect("Wisdom")).getManaMultiplier() > mEffect.getManaMultiplier()) {
                         continue;
@@ -82,6 +84,19 @@ public class SkillWisdom extends ActiveSkill {
 
         broadcastExecuteText(hero);
         return true;
+    }
+
+    public class SkillHeroListener extends HeroesEventListener {
+
+        @Override
+        public void onHeroRegainMana(HeroRegainManaEvent event) {
+            if (event.isCancelled())
+                return;
+
+            if (event.getHero().hasEffect("Wisdom")) {
+                event.setAmount((int) (event.getAmount() * getSetting(event.getHero().getHeroClass(), "regen-multiplier", 1.2)));
+            }
+        }
     }
 
     public class WisdomEffect extends ExpirableEffect {
@@ -102,28 +117,15 @@ public class SkillWisdom extends ActiveSkill {
             Messaging.send(player, applyText);
         }
 
+        public double getManaMultiplier() {
+            return manaMultiplier;
+        }
+
         @Override
         public void remove(Hero hero) {
             super.remove(hero);
             Player player = hero.getPlayer();
             Messaging.send(player, expireText);
-        }
-
-        public double getManaMultiplier() {
-            return manaMultiplier;
-        }
-    }
-
-    public class SkillHeroListener extends HeroesEventListener {
-
-        @Override
-        public void onHeroRegainMana(HeroRegainManaEvent event) {
-            if (event.isCancelled())
-                return;
-
-            if (event.getHero().hasEffect("Wisdom")) {
-                event.setAmount((int) (event.getAmount() *getSetting(event.getHero().getHeroClass(), "regen-multiplier", 1.2))); 
-            }
         }
     }
 }

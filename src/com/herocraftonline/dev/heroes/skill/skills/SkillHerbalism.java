@@ -14,7 +14,7 @@ import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Util;
 
 public class SkillHerbalism extends PassiveSkill {
-    
+
     public SkillHerbalism(Heroes plugin) {
         super(plugin, "Herbalism");
         setDescription("You know about the things of the earth!");
@@ -34,42 +34,42 @@ public class SkillHerbalism extends PassiveSkill {
         public void onBlockBreak(BlockBreakEvent event) {
             if (event.isCancelled())
                 return;
-            
+
             Block block = event.getBlock();
             if (HBlockListener.placedBlocks.containsKey(block.getLocation()))
                 return;
-            
+
             int extraDrops = 0;
             switch (block.getType()) {
-            case CROPS :
-                extraDrops = 3;
-                break;
-            case SUGAR_CANE_BLOCK :
-            case SAPLING :
-            case LEAVES :
-            case YELLOW_FLOWER :
-            case RED_ROSE :
-            case BROWN_MUSHROOM :
-            case RED_MUSHROOM :
-            case CACTUS :
-            case JACK_O_LANTERN :
-            case LONG_GRASS :
-            case DEAD_BUSH :
-                break;
-            default:
-                return;
+                case CROPS:
+                    extraDrops = 3;
+                    break;
+                case SUGAR_CANE_BLOCK:
+                case SAPLING:
+                case LEAVES:
+                case YELLOW_FLOWER:
+                case RED_ROSE:
+                case BROWN_MUSHROOM:
+                case RED_MUSHROOM:
+                case CACTUS:
+                case JACK_O_LANTERN:
+                case LONG_GRASS:
+                case DEAD_BUSH:
+                    break;
+                default:
+                    return;
             }
-            
+
             Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
             if (!hero.hasEffect("Herbalism") || Util.rand.nextDouble() > getSetting(hero.getHeroClass(), "chance-per-level", .02) * hero.getLevel())
                 return;
-            
+
             if (extraDrops != 0) {
                 extraDrops = Util.rand.nextInt(extraDrops) + 1;
             } else {
                 extraDrops = 1;
             }
-            
+
             block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(block.getType(), extraDrops, (short) 0, block.getData()));
         }
     }

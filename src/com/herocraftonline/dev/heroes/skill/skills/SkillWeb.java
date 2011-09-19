@@ -79,6 +79,20 @@ public class SkillWeb extends TargettedSkill {
         return true;
     }
 
+    public class WebBlockListener extends BlockListener {
+
+        @Override
+        public void onBlockBreak(BlockBreakEvent event) {
+            if (event.isCancelled())
+                return;
+
+            // Check out mappings to see if this block was a changed block, if so lets deny breaking it.
+            if (changedBlocks.contains(event.getBlock().getLocation())) {
+                event.setCancelled(true);
+            }
+        }
+    }
+
     public class WebEffect extends ExpirableEffect {
 
         private List<Location> locations = new ArrayList<Location>();
@@ -94,11 +108,16 @@ public class SkillWeb extends TargettedSkill {
             super.apply(hero);
             changeBlock(loc, hero);
             for (BlockFace face : BlockFace.values()) {
-                if (face.toString().contains("_") || face == BlockFace.UP || face == BlockFace.DOWN)
+                if (face.toString().contains("_") || face == BlockFace.UP || face == BlockFace.DOWN) {
                     continue;
+                }
                 Location blockLoc = loc.getBlock().getRelative(face).getLocation();
                 changeBlock(blockLoc, hero);
             }
+        }
+
+        public Location getLocation() {
+            return this.loc;
         }
 
         @Override
@@ -111,10 +130,6 @@ public class SkillWeb extends TargettedSkill {
             locations.clear();
         }
 
-        public Location getLocation() {
-            return this.loc;
-        }
-
         private void changeBlock(Location location, Hero hero) {
             Block block = location.getBlock();
 
@@ -122,20 +137,6 @@ public class SkillWeb extends TargettedSkill {
                 changedBlocks.add(location);
                 locations.add(location);
                 location.getBlock().setType(Material.WEB);
-            }
-        }
-    }
-
-    public class WebBlockListener extends BlockListener {
-
-        @Override
-        public void onBlockBreak(BlockBreakEvent event) {
-            if (event.isCancelled())
-                return;
-
-            // Check out mappings to see if this block was a changed block, if so lets deny breaking it.
-            if (changedBlocks.contains(event.getBlock().getLocation())) {
-                event.setCancelled(true);
             }
         }
     }

@@ -20,17 +20,20 @@ public class PeriodicDamageEffect extends PeriodicExpirableEffect {
         this.types.add(EffectType.HARMFUL);
     }
 
-    @Override
-    public void tick(Hero hero) {
-        super.tick(hero);
-        Player player = hero.getPlayer();
-        
-        //Check if the target is damagable
-        if (!skill.damageCheck(applier, player))
-            return;
-        
-        skill.addSpellTarget(player, applyHero);
-        player.damage(tickDamage, applier);
+    public Player getApplier() {
+        return applier;
+    }
+
+    public Hero getApplierHero() {
+        return applyHero;
+    }
+
+    public int getTickDamage() {
+        return tickDamage;
+    }
+
+    public void setTickDamage(int tickDamage) {
+        this.tickDamage = tickDamage;
     }
 
     @Override
@@ -40,20 +43,17 @@ public class PeriodicDamageEffect extends PeriodicExpirableEffect {
         creature.damage(tickDamage, applier);
     }
 
-    public void setTickDamage(int tickDamage) {
-        this.tickDamage = tickDamage;
-    }
+    @Override
+    public void tick(Hero hero) {
+        super.tick(hero);
+        Player player = hero.getPlayer();
 
-    public int getTickDamage() {
-        return tickDamage;
-    }
+        // Check if the target is damagable
+        if (!skill.damageCheck(applier, player))
+            return;
 
-    public Player getApplier() {
-        return applier;
-    }
-    
-    public Hero getApplierHero() {
-        return applyHero;
+        skill.addSpellTarget(player, applyHero);
+        player.damage(tickDamage, applier);
     }
 
 }

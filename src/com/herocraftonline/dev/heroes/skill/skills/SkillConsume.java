@@ -22,10 +22,10 @@ public class SkillConsume extends ActiveSkill {
         setDescription("Consumes an item for mana");
         setUsage("/skill consume <item>");
         setArgumentRange(1, 1);
-        setIdentifiers("skill consume" );
+        setIdentifiers("skill consume");
         setTypes(SkillType.ITEM, SkillType.MANA);
     }
-    
+
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
@@ -43,57 +43,53 @@ public class SkillConsume extends ActiveSkill {
             Messaging.send(player, "Your mana is already full!");
             return false;
         }
-        
+
         List<String> keys = getSettingKeys(hero.getHeroClass());
-        if (keys == null || keys.isEmpty()) {
+        if (keys == null || keys.isEmpty())
             return false;
-        }
-        
+
         for (String key : keys) {
             if (key.toUpperCase().equals(args[0].toUpperCase())) {
                 Material mat = Material.matchMaterial(key);
-                if (mat == null) {
+                if (mat == null)
                     throw new IllegalArgumentException("Invalid Configuration for Skill Consume: " + key + " is not a valid Material");
-                }
-                
+
                 int amount = getSetting(hero.getHeroClass(), key + "." + Setting.AMOUNT.node(), 1);
-                if (amount < 1) {
+                if (amount < 1)
                     throw new IllegalArgumentException("Invalid Configuration for Skill Consume: " + key + " has invalid amount defined");
-                }
-                
+
                 int level = getSetting(hero.getHeroClass(), key + "." + Setting.LEVEL.node(), 1);
                 if (hero.getLevel() < level) {
                     Messaging.send(player, "You must be level $1 before you can consume that item", level);
                     return false;
                 }
-                
+
                 ItemStack reagent = new ItemStack(mat, amount);
                 if (!hasReagentCost(player, reagent)) {
                     String reagentName = reagent.getType().name().toLowerCase().replace("_", " ");
                     Messaging.send(player, "Sorry, you need to have $1 $2 to use that skill!", reagent.getAmount(), reagentName);
                     return false;
                 }
-                
+
                 player.getInventory().removeItem(reagent);
                 int mana = getSetting(hero.getHeroClass(), key + "." + Setting.MANA.node(), 20);
                 HeroRegainManaEvent hrmEvent = new HeroRegainManaEvent(hero, mana, this);
                 plugin.getServer().getPluginManager().callEvent(hrmEvent);
-                if (hrmEvent.isCancelled()) {
+                if (hrmEvent.isCancelled())
                     return false;
-                }
-                
-                hero.setMana(hrmEvent.getAmount() + hero.getMana()); 
+
+                hero.setMana(hrmEvent.getAmount() + hero.getMana());
                 if (hero.isVerbose()) {
                     Messaging.send(player, Messaging.createManaBar(100));
                 } else {
                     Messaging.send(player, "You regain " + mana + " mana");
                 }
-                
+
                 broadcastExecuteText(hero);
                 return true;
             }
         }
-        
+
         Messaging.send(player, "You can't consume that item!");
         return false;
     }

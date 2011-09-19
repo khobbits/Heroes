@@ -24,20 +24,16 @@ public class SkillDamageEvent extends Event implements Cancellable {
         this.entity = entity;
     }
 
-    public void setDamage(int damage) {
-        this.damage = damage;
-    }
-
     public int getDamage() {
         return damage;
     }
 
-    public Entity getEntity() {
-        return entity;
-    }
-
     public Hero getDamager() {
         return damager;
+    }
+
+    public Entity getEntity() {
+        return entity;
     }
 
     public Skill getSkill() {
@@ -52,6 +48,10 @@ public class SkillDamageEvent extends Event implements Cancellable {
     @Override
     public void setCancelled(boolean val) {
         this.cancelled = val;
+    }
+
+    public void setDamage(int damage) {
+        this.damage = damage;
     }
 
 }

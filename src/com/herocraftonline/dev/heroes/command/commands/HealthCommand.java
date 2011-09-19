@@ -1,11 +1,12 @@
 package com.herocraftonline.dev.heroes.command.commands;
 
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.command.BasicCommand;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.util.Messaging;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 public class HealthCommand extends BasicCommand {
 

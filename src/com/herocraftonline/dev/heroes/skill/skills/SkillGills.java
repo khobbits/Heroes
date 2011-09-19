@@ -86,9 +86,8 @@ public class SkillGills extends ActiveSkill {
 
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
-            if (event.isCancelled() || !(event.getCause() == DamageCause.DROWNING)) {
+            if (event.isCancelled() || !(event.getCause() == DamageCause.DROWNING))
                 return;
-            }
 
             if (event.getEntity() instanceof Player) {
                 Player player = (Player) event.getEntity();

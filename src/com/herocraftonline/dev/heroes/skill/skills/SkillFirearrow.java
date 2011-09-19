@@ -56,11 +56,11 @@ public class SkillFirearrow extends ActiveSkill {
     public class SkillEntityListener extends EntityListener {
 
         private final Skill skill;
-        
+
         public SkillEntityListener(Skill skill) {
             this.skill = skill;
         }
-        
+
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
             if (event.isCancelled())
@@ -77,11 +77,10 @@ public class SkillFirearrow extends ActiveSkill {
                                 Hero hero = plugin.getHeroManager().getHero((Player) dmger);
                                 HeroClass heroClass = hero.getHeroClass();
                                 LivingEntity livingEntity = (LivingEntity) entity;
-                                
-                                if (!damageCheck((Player) dmger, livingEntity)) {
+
+                                if (!damageCheck((Player) dmger, livingEntity))
                                     return;
-                                }
-                                
+
                                 // Damage the player and ignite them.
                                 livingEntity.setFireTicks(getSetting(heroClass, "fire-ticks", 100));
                                 if (livingEntity instanceof Player) {
@@ -90,7 +89,7 @@ public class SkillFirearrow extends ActiveSkill {
                                     plugin.getHeroManager().addCreatureEffect((Creature) livingEntity, new CombustEffect(skill, (Player) dmger));
                                 }
                                 int damage = getSetting(heroClass, Setting.DAMAGE.node(), 4);
-                                addSpellTarget((Entity) entity, hero);
+                                addSpellTarget(entity, hero);
                                 event.setDamage(damage);
                             }
                         }

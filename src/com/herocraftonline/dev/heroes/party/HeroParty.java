@@ -58,23 +58,22 @@ public class HeroParty {
         return new HashSet<Hero>(members);
     }
 
-    public Boolean isNoPvp() {
-        return noPvp;
-    }
-
     public boolean isInvited(String player) {
         return invites.contains(player);
+    }
+
+    public Boolean isNoPvp() {
+        return noPvp;
     }
 
     public boolean isPartyMember(Hero hero) {
         return members.contains(hero);
     }
-    
+
     public boolean isPartyMember(Player player) {
         for (Hero hero : members) {
-            if (hero.getPlayer().equals(player)) {
+            if (hero.getPlayer().equals(player))
                 return true;
-            }
         }
         return false;
     }
@@ -124,12 +123,12 @@ public class HeroParty {
         this.leader = leader;
     }
 
-    public boolean updateMapDisplay() {
-        return updateMapDisplay;
-    }
-
     public void setUpdateMapDisplay(boolean updateMapDisplay) {
         this.updateMapDisplay = updateMapDisplay;
+    }
+
+    public boolean updateMapDisplay() {
+        return updateMapDisplay;
     }
 
 }

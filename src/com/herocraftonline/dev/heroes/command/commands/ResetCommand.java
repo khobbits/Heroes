@@ -37,7 +37,7 @@ public class ResetCommand extends BasicInteractiveCommand {
     public void onCommandCancelled(CommandSender executor) {
         if (!(executor instanceof Player))
             return;
-        pendingResets.remove((Player) executor);
+        pendingResets.remove(executor);
     }
 
     class StateA extends BasicInteractiveCommandState {
@@ -81,7 +81,6 @@ public class ResetCommand extends BasicInteractiveCommand {
                 Messaging.send(player, "You don't have permission to reset your hero");
                 return false;
             }
-            
 
             Hero hero = plugin.getHeroManager().getHero(player);
             HeroClass defaultClass = plugin.getClassManager().getDefaultClass();
@@ -95,11 +94,11 @@ public class ResetCommand extends BasicInteractiveCommand {
 
             hero.setHeroClass(defaultClass); // Set the hero to the default class
             hero.syncHealth(); // re-sync health just in-case the display isn't 100% accurate
-            
+
             if (plugin.getConfigManager().getProperties().prefixClassName) {
                 player.setDisplayName("[" + hero.getHeroClass().getName() + "]" + player.getName());
             }
-            
+
             Messaging.send(player, "Welcome to the path of the $1!", defaultClass.getName());
             plugin.getHeroManager().saveHero(hero);
             return true;

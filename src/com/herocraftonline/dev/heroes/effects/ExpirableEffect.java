@@ -16,20 +16,15 @@ public class ExpirableEffect extends Effect implements Expirable {
     }
 
     @Override
-    public void apply(Hero hero) {
-        super.apply(hero);
-        this.expireTime = applyTime + duration;
-    }
-
-    @Override
     public void apply(Creature creature) {
         super.apply(creature);
         this.expireTime = applyTime + duration;
     }
 
     @Override
-    public long getDuration() {
-        return duration;
+    public void apply(Hero hero) {
+        super.apply(hero);
+        this.expireTime = applyTime + duration;
     }
 
     public long getApplyTime() {
@@ -37,8 +32,18 @@ public class ExpirableEffect extends Effect implements Expirable {
     }
 
     @Override
+    public long getDuration() {
+        return duration;
+    }
+
+    @Override
     public long getExpiry() {
         return expireTime;
+    }
+
+    @Override
+    public long getRemainingTime() {
+        return expireTime - System.currentTimeMillis();
     }
 
     @Override
@@ -49,17 +54,12 @@ public class ExpirableEffect extends Effect implements Expirable {
     }
 
     @Override
-    public void remove(Hero hero) {
-
-    }
-
-    @Override
     public void remove(Creature creature) {
 
     }
 
     @Override
-    public long getRemainingTime() {
-        return expireTime - System.currentTimeMillis();
+    public void remove(Hero hero) {
+
     }
 }

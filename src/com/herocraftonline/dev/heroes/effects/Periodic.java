@@ -7,22 +7,23 @@ import com.herocraftonline.dev.heroes.hero.Hero;
 public interface Periodic {
 
     /**
+     * Returns the last time the effect ticked
+     * 
+     * @return
+     */
+    public long getLastTickTime();
+
+    /**
      * @return the period
      */
     public long getPeriod();
 
     /**
      * Returns whether the effect is ready for ticking
+     * 
      * @return
      */
     public boolean isReady();
-
-    /**
-     * runs the effect on the specified hero
-     * 
-     * @param hero
-     */
-    public void tick(Hero hero);
 
     /**
      * runs the effect on the specified creature
@@ -30,11 +31,11 @@ public interface Periodic {
      * @param creature
      */
     public void tick(Creature creature);
-    
+
     /**
-     * Returns the last time the effect ticked
+     * runs the effect on the specified hero
      * 
-     * @return
+     * @param hero
      */
-    public long getLastTickTime();
+    public void tick(Hero hero);
 }

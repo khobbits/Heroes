@@ -27,7 +27,7 @@ public class SkillMark extends ActiveSkill {
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
         Map<String, String> skillSetting = hero.getSkillSettings("Recall");
-        
+
         if (args.length > 0) {
             // Display the info about the current mark
             World world = validateLocation(skillSetting, player);
@@ -77,7 +77,7 @@ public class SkillMark extends ActiveSkill {
             return null;
         }
         // Get the world and make sure it's still available to return to
-        World world = plugin.getServer().getWorld((String) skillSetting.get("world"));
+        World world = plugin.getServer().getWorld(skillSetting.get("world"));
         if (world == null) {
             Messaging.send(player, "You have an invalid recall location marked!");
             return null;

@@ -16,9 +16,8 @@ import com.herocraftonline.dev.heroes.skill.SkillType;
 
 public class SkillWoodcutting extends PassiveSkill {
 
-    
     private final Random rand = new Random();
-    
+
     public SkillWoodcutting(Heroes plugin) {
         super(plugin, "Woodcutting");
         setDescription("You know about the things of the earth!");
@@ -39,29 +38,29 @@ public class SkillWoodcutting extends PassiveSkill {
         public void onBlockBreak(BlockBreakEvent event) {
             if (event.isCancelled())
                 return;
-            
+
             Block block = event.getBlock();
             if (HBlockListener.placedBlocks.containsKey(block.getLocation()))
                 return;
-            
+
             int extraDrops = 0;
             switch (block.getType()) {
-            case LOG :
-                break;
-            default:
-                return;
+                case LOG:
+                    break;
+                default:
+                    return;
             }
-            
+
             Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
             if (!hero.hasEffect("Woodcutting") || rand.nextDouble() > getSetting(hero.getHeroClass(), "chance-per-level", .02) * hero.getLevel())
                 return;
-            
+
             if (extraDrops != 0) {
                 extraDrops = rand.nextInt(extraDrops) + 1;
             } else {
                 extraDrops = 1;
             }
-            
+
             block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(block.getType(), extraDrops, (short) 0, block.getData()));
         }
     }

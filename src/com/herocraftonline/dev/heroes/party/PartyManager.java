@@ -19,12 +19,12 @@ public class PartyManager {
         parties.add(party);
     }
 
-    public void removeParty(HeroParty party) {
-        parties.remove(party);
-    }
-
     public Set<HeroParty> getParties() {
         return this.parties;
+    }
+
+    public void removeParty(HeroParty party) {
+        parties.remove(party);
     }
 
 }

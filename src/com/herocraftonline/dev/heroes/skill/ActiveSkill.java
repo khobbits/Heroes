@@ -19,7 +19,8 @@ import com.herocraftonline.dev.heroes.util.Setting;
 /**
  * A skill that performs an action in direct response to a user command. All skill identifiers <i>must</i>
  * begin with <i>skill</i>, e.g. "skill fireball", in order to be recognized. ActiveSkills define four default settings:
- * mana, cooldown, experience and usage text. Mana is deducted and a cooldown is activated when the {@link #use(Hero, String[]) use} method returns <code>true</code>. The {@link #execute(CommandSender, String[])
+ * mana, cooldown, experience and usage text. Mana is deducted and a cooldown is activated when the
+ * {@link #use(Hero, String[]) use} method returns <code>true</code>. The {@link #execute(CommandSender, String[])
  * execute} automatically handles class, level, mana and cooldown checks on a player attempting to use a skill and
  * should not be overridden. If all of these checks pass, the <code>use</code> method is called, which should contain
  * the heart of the skill's behavior that is unique to each skill.
@@ -39,13 +40,13 @@ public abstract class ActiveSkill extends Skill {
     private String useText;
     private boolean awardExpOnCast = true;
 
-
     /**
      * When defining your own constructor, be sure to assign the name, description, usage, argument bounds and
      * identifier fields as defined in {@link com.herocraftonline.dev.heroes.command.BaseCommand}. Remember that each
      * identifier must begin with <i>skill</i>.
      * 
-     * @param plugin the active Heroes instance
+     * @param plugin
+     *            the active Heroes instance
      */
     public ActiveSkill(Heroes plugin, String name) {
         super(plugin, name);
@@ -54,11 +55,14 @@ public abstract class ActiveSkill extends Skill {
     /**
      * Called whenever a command with an identifier registered to this skill is used. This implementation performs all
      * necessary class, level, mana and cooldown checks. This method should <i>not</i> be overridden unless you really
-     * know what you're doing. If all checks pass, this method calls {@link #use(Hero, String[]) use}. If <code>use</code> returns <code>true</code>, this method automatically deducts mana, awards experience and sets a
+     * know what you're doing. If all checks pass, this method calls {@link #use(Hero, String[]) use}. If
+     * <code>use</code> returns <code>true</code>, this method automatically deducts mana, awards experience and sets a
      * cooldown.
      * 
-     * @param sender the <code>CommandSender</code> issuing the command
-     * @param args the arguments provided with the command
+     * @param sender
+     *            the <code>CommandSender</code> issuing the command
+     * @param args
+     *            the arguments provided with the command
      */
     @SuppressWarnings("deprecation")
     @Override
@@ -113,18 +117,17 @@ public abstract class ActiveSkill extends Skill {
 
         SkillUseEvent skillEvent = new SkillUseEvent(this, player, hero, manaCost, healthCost, itemStack, args);
         plugin.getServer().getPluginManager().callEvent(skillEvent);
-        if (skillEvent.isCancelled()) {
+        if (skillEvent.isCancelled())
             return false;
-        }
 
-        //Update manaCost with result of SkillUseEvent
+        // Update manaCost with result of SkillUseEvent
         manaCost = skillEvent.getManaCost();
         if (manaCost > hero.getMana()) {
             Messaging.send(player, "Not enough mana!");
             return false;
         }
 
-        //Update healthCost with results of SkillUseEvent
+        // Update healthCost with results of SkillUseEvent
         healthCost = skillEvent.getHealthCost();
         if (healthCost > 0 && hero.getHealth() <= healthCost) {
             Messaging.send(player, "Not enough health!");
@@ -145,17 +148,17 @@ public abstract class ActiveSkill extends Skill {
             if (cooldown > 0) {
                 hero.setCooldown(name, time + cooldown);
             }
-            
+
             if (plugin.getConfigManager().getProperties().globalCooldown > 0) {
                 hero.setCooldown("Global", plugin.getConfigManager().getProperties().globalCooldown + time);
             }
 
-            //Award XP for skill usage
+            // Award XP for skill usage
             if (this.awardExpOnCast) {
                 this.awardExp(hero);
             }
 
-            //Deduct mana
+            // Deduct mana
             hero.setMana(hero.getMana() - manaCost);
             if (hero.isVerbose() && manaCost > 0) {
                 Messaging.send(hero.getPlayer(), ChatColor.BLUE + "MANA " + Messaging.createManaBar(hero.getMana()));
@@ -167,31 +170,15 @@ public abstract class ActiveSkill extends Skill {
                 player.damage(healthCost, player);
             }
 
-            //Only charge the item cost if it's non-null
+            // Only charge the item cost if it's non-null
             if (itemStack != null) {
                 player.getInventory().removeItem(itemStack);
                 player.updateInventory();
             }
 
             return true;
-        } else {
+        } else
             return false;
-        }
-    }
-
-    /**
-     * Checks if the player has enough of the specified reagent in their inventory
-     * 
-     * @param player
-     * @param itemStack
-     * @return
-     */
-    protected boolean hasReagentCost(Player player, ItemStack itemStack) {
-        int amount = 0;
-        for (ItemStack stack : player.getInventory().all(itemStack.getType()).values()) {
-            amount += stack.getAmount();
-        }
-        return amount >= itemStack.getAmount();
     }
 
     /**
@@ -208,7 +195,8 @@ public abstract class ActiveSkill extends Skill {
     }
 
     /**
-     * Returns the text to be displayed when the skill is successfully used. This text is pulled from the {@link #SETTING_USETEXT} entry in the skill's configuration during initialization.
+     * Returns the text to be displayed when the skill is successfully used. This text is pulled from the
+     * {@link #SETTING_USETEXT} entry in the skill's configuration during initialization.
      * 
      * @return the usage text
      */
@@ -230,17 +218,21 @@ public abstract class ActiveSkill extends Skill {
     /**
      * Changes the stored usage text. This can be used to override the message found in the skill's configuration.
      * 
-     * @param useText the new usage text
+     * @param useText
+     *            the new usage text
      */
     public void setUseText(String useText) {
         this.useText = useText;
     }
 
     /**
-     * The heart of any ActiveSkill, this method defines what actually happens when the skill is used. See {@link #execute(CommandSender, String[]) execute} for a brief explanation of the execution process.
+     * The heart of any ActiveSkill, this method defines what actually happens when the skill is used. See
+     * {@link #execute(CommandSender, String[]) execute} for a brief explanation of the execution process.
      * 
-     * @param hero the {@link Hero} using the skill
-     * @param args the arguments provided with the command
+     * @param hero
+     *            the {@link Hero} using the skill
+     * @param args
+     *            the arguments provided with the command
      * @return <code>true</code> if the skill executed properly, <code>false</code> otherwise
      */
     public abstract boolean use(Hero hero, String[] args);
@@ -255,5 +247,20 @@ public abstract class ActiveSkill extends Skill {
     protected void broadcastExecuteText(Hero hero) {
         Player player = hero.getPlayer();
         broadcast(player.getLocation(), getUseText(), player.getDisplayName(), getName());
+    }
+
+    /**
+     * Checks if the player has enough of the specified reagent in their inventory
+     * 
+     * @param player
+     * @param itemStack
+     * @return
+     */
+    protected boolean hasReagentCost(Player player, ItemStack itemStack) {
+        int amount = 0;
+        for (ItemStack stack : player.getInventory().all(itemStack.getType()).values()) {
+            amount += stack.getAmount();
+        }
+        return amount >= itemStack.getAmount();
     }
 }

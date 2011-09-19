@@ -54,7 +54,7 @@ public class SkillBleed extends TargettedSkill {
             Messaging.send(player, "You need a target!");
             return false;
         }
-        
+
         long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 10000);
         long period = getSetting(hero.getHeroClass(), Setting.PERIOD.node(), 2000);
         int tickDamage = getSetting(hero.getHeroClass(), "tick-damage", 1);
@@ -68,7 +68,7 @@ public class SkillBleed extends TargettedSkill {
             Messaging.send(player, "Invalid target!");
             return false;
         }
-        
+
         broadcastExecuteText(hero, target);
         return true;
     }
@@ -81,6 +81,11 @@ public class SkillBleed extends TargettedSkill {
         }
 
         @Override
+        public void apply(Creature creature) {
+            super.apply(creature);
+        }
+
+        @Override
         public void apply(Hero hero) {
             super.apply(hero);
             Player player = hero.getPlayer();
@@ -88,8 +93,9 @@ public class SkillBleed extends TargettedSkill {
         }
 
         @Override
-        public void apply(Creature creature) {
-            super.apply(creature);
+        public void remove(Creature creature) {
+            super.remove(creature);
+            broadcast(creature.getLocation(), expireText, Messaging.getCreatureName(creature).toLowerCase());
         }
 
         @Override
@@ -98,12 +104,6 @@ public class SkillBleed extends TargettedSkill {
 
             Player player = hero.getPlayer();
             broadcast(player.getLocation(), expireText, player.getDisplayName());
-        }
-
-        @Override
-        public void remove(Creature creature) {
-            super.remove(creature);
-            broadcast(creature.getLocation(), expireText, Messaging.getCreatureName(creature).toLowerCase());
         }
     }
 }

@@ -55,31 +55,30 @@ public class HEntityListener extends EntityListener {
             Hero heroDefender = plugin.getHeroManager().getHero((Player) defender);
             double exp = heroDefender.getExperience();
             int level = prop.getLevel(exp);
-            
-            //check to see if this death was caused by FireTick
+
+            // check to see if this death was caused by FireTick
             if (attacker == null && heroDefender.hasEffect("Combust")) {
                 attacker = ((CombustEffect) heroDefender.getEffect("Combust")).getApplier();
             }
-            
-            if(prop.resetOnDeath) {
-                //Wipe xp if we are in hardcore mode
+
+            if (prop.resetOnDeath) {
+                // Wipe xp if we are in hardcore mode
                 heroDefender.gainExp(-heroDefender.getExperience(), ExperienceType.DEATH, false);
                 heroDefender.changeHeroClass(plugin.getClassManager().getDefaultClass());
             } else {
-                //otherwise just do standard loss
-                int currentLevelExp = (int) prop.getExperience(level);
-                int nextLevelExp = (int) prop.getExperience(level + 1);
+                // otherwise just do standard loss
+                int currentLevelExp = prop.getExperience(level);
+                int nextLevelExp = prop.getExperience(level + 1);
                 double expLossPercent = prop.expLoss;
-                if(heroDefender.getHeroClass().getExpLoss() != -1) {
+                if (heroDefender.getHeroClass().getExpLoss() != -1) {
                     expLossPercent = heroDefender.getHeroClass().getExpLoss();
                 }
                 double expLoss = (nextLevelExp - currentLevelExp) * expLossPercent;
                 heroDefender.gainExp(-expLoss, ExperienceType.DEATH, false);
             }
-            
-            //Always reset mana on death
-            heroDefender.setMana(0);
 
+            // Always reset mana on death
+            heroDefender.setMana(0);
 
             // Remove any nonpersistent effects
             for (Effect effect : heroDefender.getEffects()) {
@@ -107,23 +106,22 @@ public class HEntityListener extends EntityListener {
             // If the Player killed another Player we check to see if they can earn EXP from PVP.
             if (defender instanceof Player && expSources.contains(ExperienceType.PVP)) {
                 // Don't award XP for Players killing themselves
-                if (!(defender.equals(attacker))) {
+                if (!defender.equals(attacker)) {
                     prop.playerDeaths.put((Player) defender, defender.getLocation());
                     addedExp = prop.playerKillingExp;
                     experienceType = ExperienceType.PVP;
                 }
             }
 
-            //If this entity is on the summon map, don't award XP!
+            // If this entity is on the summon map, don't award XP!
             if (hero.getSummons().contains(defender))
                 return;
 
             // If the Player killed a Monster/Animal then we check to see if they can earn EXP from KILLING.
             if (defender instanceof LivingEntity && !(defender instanceof Player) && expSources.contains(ExperienceType.KILLING)) {
-                //Check if the kill was near a spawner
-                if (plugin.getConfigManager().getProperties().noSpawnCamp && Util.isNearSpawner(defender, plugin.getConfigManager().getProperties().spawnCampRadius) ) {
+                // Check if the kill was near a spawner
+                if (plugin.getConfigManager().getProperties().noSpawnCamp && Util.isNearSpawner(defender, plugin.getConfigManager().getProperties().spawnCampRadius))
                     return;
-                }
                 // Get the dying entity's CreatureType
                 CreatureType type = Util.getCreatureFromEntity(defender);
                 if (type != null && !hero.getSummons().contains(defender)) {
