@@ -377,8 +377,6 @@ public class HeroClassManager {
         for (HeroClass unlinkedClass : classes) {
             String className = unlinkedClass.getName();
 
-            Set<String> strongParents = new HashSet<String>(config.getStringList("classes." + className + ".parents.strong", new ArrayList<String>()));
-
             String oldStyleParentName = config.getString("classes." + className + ".parent");
             if (oldStyleParentName != null) {
                 HeroClass parent = getClass(oldStyleParentName);
@@ -389,6 +387,7 @@ public class HeroClassManager {
                     Heroes.log(Level.WARNING, "Cannot assign " + className + " a parent class as " + oldStyleParentName + " does not exist.");
                 }
             } else {
+                Set<String> strongParents = new HashSet<String>(config.getStringList("classes." + className + ".parents.strong", new ArrayList<String>()));
                 for (String cName : strongParents) {
                     HeroClass parent = getClass(cName);
                     if (parent != null) {
