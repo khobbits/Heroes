@@ -66,7 +66,7 @@ public class ChooseCommand extends BasicInteractiveCommand {
             if (!newClass.isPrimary()) {
                 for (HeroClass parentClass : newClass.getRequireAllParents()) {
                     if (!hero.isMaster(parentClass)) {
-                        Messaging.send(player, "$1 requires you to master: ", newClass.getName(), newClass.getRequireAllParents().toString().replace("[", "").replace("]", ""));
+                        Messaging.send(player, "$1 requires you to master: $2", newClass.getName(), newClass.getRequireAllParents().toString().replace("[", "").replace("]", ""));
                         return false;
                     }
                 }
@@ -79,7 +79,7 @@ public class ChooseCommand extends BasicInteractiveCommand {
                 }
                 
                 if (!masteredOne && !newClass.getRequireOneParents().isEmpty()) {
-                    Messaging.send(player, "$1 requires you to master one of: ", newClass.getName(), newClass.getRequireOneParents().toString().replace("[", "").replace("]", ""));
+                    Messaging.send(player, "$1 requires you to master one of: $2", newClass.getName(), newClass.getRequireOneParents().toString().replace("[", "").replace("]", ""));
                     return false;
                 }
             }
