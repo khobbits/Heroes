@@ -64,9 +64,22 @@ public class ChooseCommand extends BasicInteractiveCommand {
             }
 
             if (!newClass.isPrimary()) {
-                HeroClass parentClass = newClass.getParent();
-                if (!hero.isMaster(parentClass)) {
-                    Messaging.send(player, "You must master $1 before specializing!", parentClass.getName());
+                for (HeroClass parentClass : newClass.getRequireAllParents()) {
+                    if (!hero.isMaster(parentClass)) {
+                        Messaging.send(player, "$1 requires you to master: ", newClass.getName(), newClass.getRequireAllParents().toString().replace("[", "").replace("]", ""));
+                        return false;
+                    }
+                }
+                boolean masteredOne = false;
+                for (HeroClass parentClass : newClass.getRequireOneParents()) {
+                    if (hero.isMaster(parentClass)) {
+                        masteredOne = true;
+                        break;
+                    }
+                }
+                
+                if (!masteredOne && !newClass.getRequireOneParents().isEmpty()) {
+                    Messaging.send(player, "$1 requires you to master one of: ", newClass.getName(), newClass.getRequireOneParents().toString().replace("[", "").replace("]", ""));
                     return false;
                 }
             }
@@ -153,7 +166,7 @@ public class ChooseCommand extends BasicInteractiveCommand {
                 player.setDisplayName("[" + hero.getHeroClass().getName() + "]" + player.getName());
             }
             Messaging.send(player, "Welcome to the path of the $1!", newClass.getName());
-            
+
             plugin.getHeroManager().saveHero(hero);
             return true;
         }

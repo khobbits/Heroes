@@ -125,10 +125,14 @@ public class YMLHeroStorage extends HeroStorage {
                     continue;
                 
                 hero.setExperience(heroClass, exp);
+                /*
+                 * We shouldn't be needing to alter XP values when a player loads back
+                 * this causes confusion/issues on how XP is determined.
                 if (!heroClass.isPrimary() && exp > 0) {
                     HeroClass parent = heroClass.getParent();
                     hero.setExperience(parent, plugin.getConfigManager().getProperties().levels[parent.getMaxLevel()]);
                 }
+                */
             }
         }
     }

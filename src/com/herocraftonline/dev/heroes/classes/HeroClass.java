@@ -1,8 +1,11 @@
 package com.herocraftonline.dev.heroes.classes;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -16,14 +19,15 @@ public class HeroClass {
 
     private String name;
     private String description;
-    private HeroClass parent;
-    private Set<HeroClass> specializations;
-    private Set<String> allowedArmor;
-    private Set<String> allowedWeapons;
-    private Set<ExperienceType> experienceSources;
-    private Map<Material, Integer> itemDamage;
-    private Map<ProjectileType, Integer> projectileDamage;
-    private Map<String, ConfigurationNode> skills;
+    private List<HeroClass> requireAllOfParents = new ArrayList<HeroClass>();
+    private List<HeroClass> requireOneOfParents = new ArrayList<HeroClass>();
+    private Set<HeroClass> specializations = new LinkedHashSet<HeroClass>();
+    private Set<String> allowedArmor = new LinkedHashSet<String>();
+    private Set<String> allowedWeapons = new LinkedHashSet<String>();
+    private Set<ExperienceType> experienceSources = new LinkedHashSet<ExperienceType>();
+    private Map<Material, Integer> itemDamage  = new HashMap<Material, Integer>();
+    private Map<ProjectileType, Integer> projectileDamage = new HashMap<ProjectileType, Integer>();
+    private Map<String, ConfigurationNode> skills = new LinkedHashMap<String, ConfigurationNode>();
     // private Map<String, SkillData> skillData;
     private int maxLevel;
     private int cost;
@@ -35,14 +39,7 @@ public class HeroClass {
     public HeroClass() {
         name = "";
         description = "";
-        allowedArmor = new LinkedHashSet<String>();
-        allowedWeapons = new LinkedHashSet<String>();
-        itemDamage = new HashMap<Material, Integer>();
-        projectileDamage = new HashMap<ProjectileType, Integer>();
-        experienceSources = new LinkedHashSet<ExperienceType>();
         expModifier = 1.0D;
-        specializations = new LinkedHashSet<HeroClass>();
-        skills = new LinkedHashMap<String, ConfigurationNode>();
         baseMaxHealth = 20;
         maxHealthPerLevel = 0;
         maxLevel = 1;
@@ -127,11 +124,21 @@ public class HeroClass {
     public double getBaseMaxHealth() {
         return baseMaxHealth;
     }
-
-    public HeroClass getParent() {
-        return parent == null ? null : parent;
+    
+    public List<HeroClass> getParents() {
+        List<HeroClass> parents = new ArrayList<HeroClass>(requireAllOfParents);
+        parents.addAll(requireOneOfParents);
+        return Collections.unmodifiableList(parents);
     }
 
+    public List<HeroClass> getRequireAllParents() {
+        return Collections.unmodifiableList(requireAllOfParents);
+    }
+    
+    public List<HeroClass> getRequireOneParents() {
+        return Collections.unmodifiableList(requireOneOfParents);
+    }
+    
     public Integer getProjectileDamage(ProjectileType type) {
         return projectileDamage.get(type);
     }
@@ -140,8 +147,12 @@ public class HeroClass {
         return skills.get(name.toLowerCase());
     }
 
+    public void addSpecialization(HeroClass heroClass) {
+        specializations.add(heroClass);
+    }
+    
     public Set<HeroClass> getSpecializations() {
-        return specializations;
+        return Collections.unmodifiableSet(specializations);
     }
 
     @Override
@@ -154,7 +165,7 @@ public class HeroClass {
     }
     
     public boolean isPrimary() {
-        return parent == null;
+        return requireAllOfParents.isEmpty() && requireOneOfParents.isEmpty();
     }
 
     public void removeDamageValue(Material material) {
@@ -193,8 +204,12 @@ public class HeroClass {
         this.maxHealthPerLevel = maxHealthPerLevel;
     }
 
-    public void setParent(HeroClass parent) {
-        this.parent = parent;
+    public void addRequiredParent(HeroClass parent) {
+        requireAllOfParents.add(parent);
+    }
+    
+    public void addRequiredOneOfParent(HeroClass parent) {
+        requireOneOfParents.add(parent);
     }
 
     public void setProjectileDamage(ProjectileType type, int damage) {
