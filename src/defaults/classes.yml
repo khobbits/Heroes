@@ -24,6 +24,54 @@ classes:
         projectile-damages:
             Arrow: 3
         expLoss: 0
+    Shaman:
+        default: false
+        description: This is a PARENT
+        permitted-armor:
+        - LEATHER
+        permitted-weapon:
+        - WOOD
+        - STONE
+        permitted-skills:
+            Dispel:
+                level: 1
+                mana: 25
+                cooldown: 30000
+            Piggify:
+                level: 5
+                mana: 75
+                cooldown: 30000
+        experience-sources:
+        - KILLING
+        - MINING
+        - PVP
+        - CRAFTING
+        - LOGGING
+        - SKILL
+        expmodifier: 1.5
+        expLoss: 0.05
+    Cleric:
+        default: false
+        description: This is a PARENT
+        permitted-armor:
+        - LEATHER
+        permitted-weapon:
+        - WOOD
+        - STONE
+        permitted-skills:
+            Pray:
+                level: 5
+                mana: 75
+                cooldown: 30000
+        experience-sources:
+        - KILLING
+        - MINING
+        - PVP
+        - CRAFTING
+        - LOGGING
+        - SKILL
+        expmodifier: 1.5
+        expLoss: 0.05
     Warrior:
         default: false
         description: This is a PARENT
@@ -85,6 +133,49 @@ classes:
                 mana: 100
                 cooldown: 60000
             Taunt:
+                level: 1
+                mana: 20
+                cooldown: 3000
+            Dispel:
+                level: 1
+                mana: 5
+                cooldown: 2000
+        experience-sources:
+        - KILLING
+        - PVP
+        - SKILL
+        expmodifier: 1.0
+        expLoss: 0.1
+    Paladin:
+        default: false
+        parents:
+            strong: [Knight]
+            weak: [Cleric, Shaman]
+        description: You must be a master Knight+Cleric or Knight+Shaman to pick this class.
+        permitted-armor:
+        - IRON
+        - CHAINMAIL
+        - GOLD
+        permitted-weapon:
+        - WOOD
+        - GOLD
+        - STONE
+        - IRON_PICKAXE
+        permitted-skills:
+            Layhands:
+                level: 10
+                mana: 100
+                cooldown: 30000
+                exp: 5
+            Invuln:
+                level: 40
+                mana: 100
+                cooldown: 500000
+            Revive:
+                level: 50
+                mana: 100
+                cooldown: 60000
+            Pray:
                 level: 1
                 mana: 20
                 cooldown: 3000
