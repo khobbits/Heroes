@@ -149,10 +149,10 @@ public class HeroClassManager {
         }
         plugin.debugLog(Level.INFO, "Allowed Weapons - " + wLimits.toString());
     }
-    
+
     public void loadDamages(HeroClass newClass, ConfigurationNode config) {
         String className = newClass.getName();
-        
+
         // Load in item/weapon damages for this class
         List<String> itemDamages = config.getKeys("item-damage");
         if (itemDamages == null || itemDamages.isEmpty()) {
@@ -168,7 +168,7 @@ public class HeroClassManager {
                 }
             }
         }
-        
+
         // Load in Projectile Damages for the class
         List<String> projectileDamages = config.getKeys("projectile-damage");
         if (projectileDamages == null || projectileDamages.isEmpty()) {
@@ -186,7 +186,7 @@ public class HeroClassManager {
             }
         }
     }
-    
+
     private void loadPermittedSkills(HeroClass newClass, ConfigurationNode config) {
         String className = newClass.getName();
         // Load in Permitted Skills for the class
@@ -220,10 +220,11 @@ public class HeroClassManager {
 
             // Load all skills onto the Class if we found ALL
             if (allSkills) {
-                //Make sure all the skills are loaded first
+                // Make sure all the skills are loaded first
                 plugin.getSkillManager().loadSkills();
                 for (Skill skill : plugin.getSkillManager().getSkills()) {
-                    // Ignore this skill if it was already loaded onto the class (we don't want to overwrite defined skills as they have settings)
+                    // Ignore this skill if it was already loaded onto the class (we don't want to overwrite defined
+                    // skills as they have settings)
                     if (newClass.hasSkill(skill.getName()))
                         continue;
 
@@ -239,7 +240,7 @@ public class HeroClassManager {
             }
         }
     }
-    
+
     private void loadPermissionSkills(HeroClass newClass, ConfigurationNode config) {
         String className = newClass.getName();
         // Load in the Permission-Skills
@@ -266,7 +267,7 @@ public class HeroClassManager {
             }
         }
     }
-    
+
     private void loadExperienceTypes(HeroClass newClass, ConfigurationNode config) {
         String className = newClass.getName();
         // Get experience for each class
@@ -288,7 +289,7 @@ public class HeroClassManager {
         }
         newClass.setExperienceSources(experienceSources);
     }
-    
+
     public void loadClasses(File file) {
         Configuration config = new Configuration(file);
         config.load();
@@ -301,19 +302,19 @@ public class HeroClassManager {
         for (String className : classNames) {
             HeroClass newClass = new HeroClass(className);
             ConfigurationNode classConfig = config.getNode("classes." + className);
-            
+
             newClass.setDescription(classConfig.getString("description", ""));
             newClass.setExpModifier(classConfig.getDouble("expmodifier", 1.0D));
 
             // Load class allowed Armor + Weapons
-            
+
             loadArmor(newClass, classConfig);
             loadWeapons(newClass, classConfig);
             loadDamages(newClass, classConfig);
             loadPermittedSkills(newClass, classConfig);
             loadPermissionSkills(newClass, classConfig);
             loadExperienceTypes(newClass, classConfig);
-            
+
             Double baseMaxHealth = classConfig.getDouble("base-max-health", 20);
             Double maxHealthPerLevel = classConfig.getDouble("max-health-per-level", 0);
             newClass.setBaseMaxHealth(baseMaxHealth);
@@ -355,7 +356,7 @@ public class HeroClassManager {
             }
         }
 
-        //After all classes are loaded we need to link them all together
+        // After all classes are loaded we need to link them all together
         checkClassHeirarchy(config);
 
         if (defaultClass == null) {
@@ -363,7 +364,8 @@ public class HeroClassManager {
         }
 
         // Save the Configuration setup to file, we do this so that any defaults values loaded are saved to file.
-        // config.save(); <-- removing this because it adds things like cost and max level to each class, rendering the defaults in config.yml useless
+        // config.save(); <-- removing this because it adds things like cost and max level to each class, rendering the
+        // defaults in config.yml useless
     }
 
     /**
@@ -374,33 +376,36 @@ public class HeroClassManager {
     private void checkClassHeirarchy(Configuration config) {
         for (HeroClass unlinkedClass : classes) {
             String className = unlinkedClass.getName();
-            String parentName = config.getString("classes." + className + ".parent");
-            plugin.debugLog(Level.INFO, "classes." + className + ".parent: " + parentName);
-            if (parentName != null && (!parentName.isEmpty() || parentName.equals("null"))) {
-                HeroClass parent = getClass(parentName);
+
+            Set<String> strongParents = new HashSet<String>(config.getStringList("classes." + className + ".parents.strong", new ArrayList<String>()));
+
+            String oldStyleParentName = config.getString("classes." + className + ".parent");
+            if (oldStyleParentName != null) {
+                HeroClass parent = getClass(oldStyleParentName);
                 if (parent != null) {
                     parent.addSpecialization(unlinkedClass);
-                    unlinkedClass.addRequiredParent(parent);
+                    unlinkedClass.addStrongParent(parent);
                 } else {
-                    Heroes.log(Level.WARNING, "Cannot assign " + className + " a parent class as " + parentName + " does not exist.");
+                    Heroes.log(Level.WARNING, "Cannot assign " + className + " a parent class as " + oldStyleParentName + " does not exist.");
                 }
-            }
-            List<String> requireAllParents = config.getStringList("classes." + className + "parents.requireAllOf", new ArrayList<String>());
-            for (String cName : requireAllParents) {
-                HeroClass parent = getClass(cName);
-                if (parent != null) {
-                    parent.addSpecialization(unlinkedClass);
-                    unlinkedClass.addRequiredParent(parent);
-                } else {
-                    Heroes.log(Level.WARNING, "Cannot assign " + className + " a parent class as " + parentName + " does not exist.");
+            } else {
+                for (String cName : strongParents) {
+                    HeroClass parent = getClass(cName);
+                    if (parent != null) {
+                        parent.addSpecialization(unlinkedClass);
+                        unlinkedClass.addStrongParent(parent);
+                    } else {
+                        Heroes.log(Level.WARNING, "Cannot assign " + className + " a parent class as " + cName + " does not exist.");
+                    }
                 }
-            }
-            List<String> requireOneOfParents = config.getStringList("classes." + className + "parents.requireOneOf", new ArrayList<String>());
-            for (String cName : requireOneOfParents) {
-                HeroClass parent = getClass(cName);
-                if (parent != null) {
-                    parent.addSpecialization(unlinkedClass);
-                    unlinkedClass.addRequiredOneOfParent(parent);
+
+                Set<String> weakParents = new HashSet<String>(config.getStringList("classes." + className + ".parents.weak", new ArrayList<String>()));
+                for (String cName : weakParents) {
+                    HeroClass parent = getClass(cName);
+                    if (parent != null) {
+                        parent.addSpecialization(unlinkedClass);
+                        unlinkedClass.addWeakParent(parent);
+                    }
                 }
             }
         }

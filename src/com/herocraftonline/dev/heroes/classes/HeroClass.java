@@ -3,6 +3,7 @@ package com.herocraftonline.dev.heroes.classes;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -19,8 +20,8 @@ public class HeroClass {
 
     private String name;
     private String description;
-    private List<HeroClass> requireAllOfParents = new ArrayList<HeroClass>();
-    private List<HeroClass> requireOneOfParents = new ArrayList<HeroClass>();
+    private Set<HeroClass> strongParents = new HashSet<HeroClass>();
+    private Set<HeroClass> weakParents = new HashSet<HeroClass>();
     private Set<HeroClass> specializations = new LinkedHashSet<HeroClass>();
     private Set<String> allowedArmor = new LinkedHashSet<String>();
     private Set<String> allowedWeapons = new LinkedHashSet<String>();
@@ -127,17 +128,17 @@ public class HeroClass {
     }
     
     public List<HeroClass> getParents() {
-        List<HeroClass> parents = new ArrayList<HeroClass>(requireAllOfParents);
-        parents.addAll(requireOneOfParents);
+        List<HeroClass> parents = new ArrayList<HeroClass>(strongParents);
+        parents.addAll(weakParents);
         return Collections.unmodifiableList(parents);
     }
 
-    public List<HeroClass> getRequireAllParents() {
-        return Collections.unmodifiableList(requireAllOfParents);
+    public Set<HeroClass> getStrongParents() {
+        return Collections.unmodifiableSet(strongParents);
     }
     
-    public List<HeroClass> getRequireOneParents() {
-        return Collections.unmodifiableList(requireOneOfParents);
+    public Set<HeroClass> getWeakParents() {
+        return Collections.unmodifiableSet(weakParents);
     }
     
     public Integer getProjectileDamage(ProjectileType type) {
@@ -166,7 +167,7 @@ public class HeroClass {
     }
     
     public boolean isPrimary() {
-        return requireAllOfParents.isEmpty() && requireOneOfParents.isEmpty();
+        return strongParents.isEmpty() && weakParents.isEmpty();
     }
 
     public void removeDamageValue(Material material) {
@@ -205,12 +206,12 @@ public class HeroClass {
         this.maxHealthPerLevel = maxHealthPerLevel;
     }
 
-    public void addRequiredParent(HeroClass parent) {
-        requireAllOfParents.add(parent);
+    public void addStrongParent(HeroClass parent) {
+        strongParents.add(parent);
     }
     
-    public void addRequiredOneOfParent(HeroClass parent) {
-        requireOneOfParents.add(parent);
+    public void addWeakParent(HeroClass parent) {
+        weakParents.add(parent);
     }
 
     public void setProjectileDamage(ProjectileType type, int damage) {
