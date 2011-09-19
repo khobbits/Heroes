@@ -20,7 +20,8 @@ General/API:
 	setIdentifiers for skills now uses VarArgs, please adjust accordingly (it's unecessary but cleans up the look)
 	FormEffect - only 1 can be active a time.
 	Added SkillManager - skills are now loaded into the SkillManager rather than the CommandHandler
-	Skills are now loaded on Demand (only if a class has them) - and 
+	Skills are now loaded on Demand (only if a class has them)
+	Classes can now have multiple parents via RequireOneof or RequireAllOf settings
 
 Skills:
 

@@ -11,10 +11,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
@@ -27,32 +25,32 @@ public class SkillManager {
     
     private Map<String, Skill> skills;
     private Map<String, Skill> identifiers;
-    private Set<String> skillFiles;
+    private Map<String, File> skillFiles;
     private final Heroes plugin;
     private final File dir;
     
     public SkillManager(Heroes plugin) {
         skills = new LinkedHashMap<String, Skill>();
         identifiers = new HashMap<String, Skill>();
-        skillFiles = new HashSet<String>();
+        skillFiles = new HashMap<String, File>();
         this.plugin = plugin;
         dir = new File(plugin.getDataFolder(), "skills");
         dir.mkdir();
-        for (String skillName : dir.list()) {
-            if (skillName.contains(".jar"))
-                skillFiles.add(skillName.replace(".jar", "").toLowerCase());
+        for (String skillFile : dir.list()) {
+            if (skillFile.contains(".jar"))
+                skillFiles.put(skillFile.toLowerCase().replace(".jar", "").replace("skill", ""), new File(dir, skillFile));
         }
     }
 
     /**
      * Adds a skill to the skill mapping
      * 
-     * @param command
+     * @param skill
      */
-    public void addSkill(Skill command) {
-        skills.put(command.getName().toLowerCase(), command);
-        for (String ident : command.getIdentifiers()) {
-            identifiers.put(ident.toLowerCase(), command);
+    public void addSkill(Skill skill) {
+        skills.put(skill.getName().toLowerCase(), skill);
+        for (String ident : skill.getIdentifiers()) {
+            identifiers.put(ident.toLowerCase(), skill);
         }
     }
 
@@ -76,7 +74,10 @@ public class SkillManager {
      * @return
      */
     public Skill getSkill(String name) {
-        if (!isLoaded(name)) {
+        if (name == null)
+            return null;
+        //Only attempt to load files that exist
+        else if (!isLoaded(name) && skillFiles.containsKey(name.toLowerCase())) {
             loadSkill(name);
         }
         return skills.get(name.toLowerCase());
@@ -144,8 +145,8 @@ public class SkillManager {
                 throw new Exception();
             }
         } catch (Exception e) {
-            Heroes.log(Level.INFO, "The skill " + file.getName() + " failed to load");
             e.printStackTrace();
+            Heroes.log(Level.INFO, "The skill " + file.getName() + " failed to load");
             return null;
         }
     }
@@ -156,18 +157,17 @@ public class SkillManager {
      * @param name
      * @return
      */
-    public boolean loadSkill(String name) {
+    private boolean loadSkill(String name) {
+        //If the skill is already loaded, don't try to load it
         if (isLoaded(name))
             return true;
         
-        name = "skill" + name.toLowerCase();
-        if (skillFiles.contains(name)) {
-            Skill skill = loadSkill(new File(dir, name + ".jar"));
-            if (skill == null)
-                return false;
-            
-            addSkill(skill);
-        }
+        //Lets try loading the skill file
+        Skill skill = loadSkill(skillFiles.get(name.toLowerCase()));
+        if (skill == null)
+            return false;
+        
+        addSkill(skill);
         return true;
     }
     
