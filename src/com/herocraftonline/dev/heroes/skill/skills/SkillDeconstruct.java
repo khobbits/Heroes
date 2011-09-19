@@ -59,7 +59,8 @@ public class SkillDeconstruct extends ActiveSkill {
         for (Setting set : Setting.values()) {
             items.remove(set.node());
         }
-
+        int slot = -1;
+        
         ItemStack item = null;
         if (args.length > 0) {
             if (args[0].toLowerCase().equals("list")) {
@@ -97,16 +98,16 @@ public class SkillDeconstruct extends ActiveSkill {
                 Messaging.send(player, "Invalid item to deconstruct, or bad command!");
                 return false;
             }
-        }
-
-        if (player.getTargetBlock(null, 3).getType() != Material.WORKBENCH && getSetting(hero.getHeroClass(), "require-workbench", true)) {
-            Messaging.send(player, "You must have a workbench targetted to deconstruct an item!");
-            return false;
-        }
-
-        if (item == null) {
+        } else {
+            //if no args attempt to deconstruct item in hand
             item = player.getItemInHand().clone();
             item.setAmount(1);
+            slot = player.getInventory().getHeldItemSlot();
+        }
+        
+        if (getSetting(hero.getHeroClass(), "require-workbench", true) && player.getTargetBlock(null, 3).getType() != Material.WORKBENCH) {
+            Messaging.send(player, "You must have a workbench targetted to deconstruct an item!");
+            return false;
         }
 
         if (item.getType() == Material.AIR) {
@@ -126,15 +127,28 @@ public class SkillDeconstruct extends ActiveSkill {
             Messaging.send(player, "You must be level " + level + " to deconstruct that item!");
             return false;
         }
-
+        double minDurability = 0;
         if (item.getType().getMaxDurability() > 16) {
-            double minDurability = item.getType().getMaxDurability() * (1D - getSetting(hero.getHeroClass(), matName + ".min-durability", .5));
-            if (item.getDurability() > minDurability) {
-                Messaging.send(player, "The item is too damaged to deconstruct!");
-                return false;
+            minDurability = item.getType().getMaxDurability() * (1D - getSetting(hero.getHeroClass(), matName + ".min-durability", .5));
+        }
+        
+        if (slot == -1) {
+            ItemStack[] contents = player.getInventory().getContents();
+            for (int i = 0; i < contents.length; i++) {
+                if (contents[i].getType() != item.getType())
+                    continue;
+                else if (contents[i].getType().getMaxDurability() > 16 && contents[i].getDurability() < minDurability)
+                    continue;
+                else if (contents[i].getType().getMaxDurability() > 16 && slot != -1 && contents[i].getDurability() > player.getInventory().getContents()[slot].getDurability())
+                    continue;
+                slot = i;
             }
         }
-
+        if (slot == -1) {
+            Messaging.send(player, "That item does not have enough durability remaining!");
+            return false;
+        }
+        
         List<String> returned = getSettingKeys(hero.getHeroClass(), matName);
         if (returned == null) {
             Messaging.send(player, "Unable to deconstruct that item!");
@@ -163,8 +177,12 @@ public class SkillDeconstruct extends ActiveSkill {
                 }
             }
         }
-
-        player.getInventory().removeItem(item);
+        int amount = player.getInventory().getContents()[slot].getAmount() - 1;
+        if (amount == 0) {
+            player.getInventory().getContents()[slot] = new ItemStack(null);
+        } else {
+            player.getInventory().getContents()[slot].setAmount(amount);
+        }
         player.updateInventory();
 
         //Grant the hero experience
@@ -174,5 +192,4 @@ public class SkillDeconstruct extends ActiveSkill {
         broadcast(player.getLocation(), getUseText(), player.getDisplayName(), matName.toLowerCase().replace("_", " "));
         return true;
     }
-
 }
