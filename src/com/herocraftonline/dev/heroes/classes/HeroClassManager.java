@@ -314,17 +314,17 @@ public class HeroClassManager {
             loadPermissionSkills(newClass, classConfig);
             loadExperienceTypes(newClass, classConfig);
             
-            Double baseMaxHealth = config.getDouble("base-max-health", 20);
-            Double maxHealthPerLevel = config.getDouble("max-health-per-level", 0);
+            Double baseMaxHealth = classConfig.getDouble("base-max-health", 20);
+            Double maxHealthPerLevel = classConfig.getDouble("max-health-per-level", 0);
             newClass.setBaseMaxHealth(baseMaxHealth);
             newClass.setMaxHealthPerLevel(maxHealthPerLevel);
 
             // Get the class expLoss
-            newClass.setExpLoss(config.getDouble("expLoss", -1));
+            newClass.setExpLoss(classConfig.getDouble("expLoss", -1));
 
             // Get the maximum level or use the default if it's not specified
             int defaultMaxLevel = plugin.getConfigManager().getProperties().maxLevel;
-            int maxLevel = config.getInt("max-level", defaultMaxLevel);
+            int maxLevel = classConfig.getInt("max-level", defaultMaxLevel);
             if (maxLevel < 1) {
                 Heroes.log(Level.WARNING, "Class (" + className + ") max level is too low. Setting max level to 1.");
                 maxLevel = 1;
@@ -335,7 +335,7 @@ public class HeroClassManager {
             newClass.setMaxLevel(maxLevel);
 
             int defaultCost = plugin.getConfigManager().getProperties().swapCost;
-            int cost = config.getInt("cost", defaultCost);
+            int cost = classConfig.getInt("cost", defaultCost);
             if (cost < 0) {
                 Heroes.log(Level.WARNING, "Class (" + className + ") cost is too low. Setting cost to 0.");
                 cost = 0;

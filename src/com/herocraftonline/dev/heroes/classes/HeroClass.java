@@ -28,6 +28,7 @@ public class HeroClass {
     private Map<Material, Integer> itemDamage  = new HashMap<Material, Integer>();
     private Map<ProjectileType, Integer> projectileDamage = new HashMap<ProjectileType, Integer>();
     private Map<String, ConfigurationNode> skills = new LinkedHashMap<String, ConfigurationNode>();
+    
     // private Map<String, SkillData> skillData;
     private int maxLevel;
     private int cost;
