@@ -275,7 +275,6 @@ public class Hero {
                 if (newLevel >= heroClass.getMaxLevel()) {
                     setExperience(prop.getExperience(heroClass.getMaxLevel()));
                     Messaging.broadcast(plugin, "$1 has become a master $2!", player.getName(), heroClass.getName());
-                    plugin.getHeroManager().saveHero(this);
                 }
                 if (newLevel > currentLevel) {
                     SpoutUI.sendPlayerNotification(player, ChatColor.GOLD + "Level Up!", ChatColor.DARK_RED + "Level - " + String.valueOf(newLevel), Material.DIAMOND_HELMET);
@@ -291,7 +290,7 @@ public class Hero {
 
         // Save the hero file when the Hero changes levels to prevent rollback issues
         if (newLevel != currentLevel)
-            plugin.getHeroManager().saveHero(player);
+            plugin.getHeroManager().saveHero(this);
     }
 
     /**

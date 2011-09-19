@@ -229,7 +229,6 @@ public class YMLHeroStorage extends HeroStorage {
         saveBinds(hero, playerConfig);
 
         playerConfig.save();
-        Heroes.log(Level.INFO, "Saved hero: " + name);
         return true;
     }
 
