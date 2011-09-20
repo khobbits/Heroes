@@ -12,6 +12,7 @@ import com.herocraftonline.dev.heroes.command.BasicCommand;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.util.MaterialUtil;
 import com.herocraftonline.dev.heroes.util.Messaging;
+import com.herocraftonline.dev.heroes.util.Util;
 
 public class RecoverItemsCommand extends BasicCommand {
     private final Heroes plugin;
@@ -30,31 +31,31 @@ public class RecoverItemsCommand extends BasicCommand {
         if (!(sender instanceof Player))
             return false;
 
-        Player p = (Player) sender;
-        Hero h = this.plugin.getHeroManager().getHero(p);
+        Player player = (Player) sender;
+        Hero hero = this.plugin.getHeroManager().getHero(player);
 
-        List<ItemStack> items = h.getRecoveryItems();
+        List<ItemStack> items = hero.getRecoveryItems();
         List<ItemStack> newItems = new ArrayList<ItemStack>();
 
         if (!(items.size() > 0)) {
-            Messaging.send(p, "You have no items to recover");
+            Messaging.send(player, "You have no items to recover");
             return false;
         }
 
         for (int i = 0; i < items.size(); i++) {
-            int slot = this.plugin.getInventoryChecker().firstEmpty(p);
+            int slot = Util.firstEmpty(player);
             if (slot == -1) {
                 newItems.add(items.get(i));
                 continue;
             }
-            p.getInventory().setItem(slot, items.get(i));
-            Messaging.send(p, "Recovered Item $1 - $2", "#" + (i + 1), MaterialUtil.getFriendlyName(items.get(i).getType()));
+            player.getInventory().setItem(slot, items.get(i));
+            Messaging.send(player, "Recovered Item $1 - $2", "#" + (i + 1), MaterialUtil.getFriendlyName(items.get(i).getType()));
         }
 
         if (newItems.size() > 0) {
-            Messaging.send(p, "You have $1 left to recover.", newItems.size() + " Items");
+            Messaging.send(player, "You have $1 left to recover.", newItems.size() + " Items");
         }
-        h.setRecoveryItems(newItems);
+        hero.setRecoveryItems(newItems);
 
         return true;
     }

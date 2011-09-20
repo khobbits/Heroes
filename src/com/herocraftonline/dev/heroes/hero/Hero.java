@@ -21,6 +21,7 @@ import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.util.config.Configuration;
 import org.bukkit.util.config.ConfigurationNode;
@@ -31,6 +32,7 @@ import com.herocraftonline.dev.heroes.api.HeroChangeLevelEvent;
 import com.herocraftonline.dev.heroes.api.HeroDamageCause;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
+import com.herocraftonline.dev.heroes.classes.HeroClass.WeaponItems;
 import com.herocraftonline.dev.heroes.effects.Effect;
 import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.party.HeroParty;
@@ -38,6 +40,7 @@ import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.spout.SpoutUI;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Properties;
+import com.herocraftonline.dev.heroes.util.Util;
 
 public class Hero {
 
@@ -688,7 +691,7 @@ public class Hero {
         }
 
         // Check the Players inventory now that they have changed class.
-        this.plugin.getInventoryChecker().checkInventory(player);
+        this.checkInventory();
     }
 
     /**
@@ -820,5 +823,81 @@ public class Hero {
      */
     public void unbind(Material material) {
         binds.remove(material);
+    }
+    
+    public void checkInventory() {
+        int removedCount = checkArmorSlots();
+        
+        for (int i = 0; i < 9; i++) {
+            if (canEquipItem(i))
+                continue;
+            
+            removedCount++;
+        }
+        // If items were removed from the Players inventory then we need to alert them of such event and re-sync their inventory
+        if (removedCount > 0) {
+            Messaging.send(player, "$1 have been removed from your inventory due to class restrictions.", removedCount + " Items");
+            Messaging.send(player, "Please make space in your inventory then type '$1'", "/heroes recoveritems");
+            Util.syncInventory(player, plugin);
+        }        
+    }
+    
+    public int checkArmorSlots() {
+        PlayerInventory inv = player.getInventory();
+        String item;
+        int removedCount = 0;
+        
+        if (inv.getHelmet() != null && inv.getHelmet().getTypeId() != 0 && !plugin.getConfigManager().getProperties().allowHats) {
+            item = inv.getHelmet().getType().toString();
+            if (!heroClass.getAllowedArmor().contains(item) && !heroClass.getAllowedArmor().contains("*")) {
+                Util.moveItem(this, -1, inv.getHelmet());
+                inv.setHelmet(null);
+                removedCount++;
+           
+            }
+        }
+        if (inv.getChestplate() != null && inv.getChestplate().getTypeId() != 0) {
+            item = inv.getChestplate().getType().toString();
+            if (!heroClass.getAllowedArmor().contains(item) && !heroClass.getAllowedArmor().contains("*")) {
+                Util.moveItem(this, -1, inv.getChestplate());
+                inv.setChestplate(null);
+                removedCount++;
+            }
+        }
+        
+        if (inv.getLeggings() != null && inv.getLeggings().getTypeId() != 0) {
+            item = inv.getLeggings().getType().toString();
+            if (!heroClass.getAllowedArmor().contains(item) && !heroClass.getAllowedArmor().contains("*")) {
+                Util.moveItem(this, -1, inv.getLeggings());
+                inv.setLeggings(null);
+                removedCount++;
+            }
+        }
+        if (inv.getBoots() != null && inv.getBoots().getTypeId() != 0) {
+            item = inv.getBoots().getType().toString();
+            if (!heroClass.getAllowedArmor().contains(item) && !heroClass.getAllowedArmor().contains("*")) {
+                Util.moveItem(this, -1, inv.getBoots());
+                inv.setBoots(null);
+                removedCount++;
+            }
+        }
+        return removedCount;
+    }
+    
+    public boolean canEquipItem(int slot) {
+        ItemStack itemStack = player.getInventory().getItem(slot);
+        String itemType = itemStack.getType().toString();
+        if (!itemType.equalsIgnoreCase("BOW")) {
+            try {
+                WeaponItems.valueOf(itemType.substring(itemType.indexOf("_") + 1, itemType.length()));
+            } catch (IllegalArgumentException e1) {
+                return true;
+            }
+        }
+        if (!heroClass.getAllowedWeapons().contains(itemType) && !heroClass.getAllowedWeapons().contains("*")) {
+            Util.moveItem(this, slot, itemStack);
+            return false;
+        }
+        return true;
     }
 }

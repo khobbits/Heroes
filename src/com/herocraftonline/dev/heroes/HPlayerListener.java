@@ -40,7 +40,7 @@ public class HPlayerListener extends PlayerListener {
 
     @Override
     public void onItemHeldChange(PlayerItemHeldEvent event) {
-        this.plugin.getInventoryChecker().checkInventory(event.getPlayer());
+        plugin.getHeroManager().getHero(event.getPlayer()).checkInventory();
     }
 
     @Override
@@ -73,7 +73,7 @@ public class HPlayerListener extends PlayerListener {
         Player player = event.getPlayer();
         Material material = player.getItemInHand().getType();
         Hero hero = plugin.getHeroManager().getHero(player);
-
+        hero.canEquipItem(player.getInventory().getHeldItemSlot());
         if (hero.hasBind(material)) {
             if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 String[] args = hero.getBind(material);
@@ -88,7 +88,7 @@ public class HPlayerListener extends PlayerListener {
         Hero hero = plugin.getHeroManager().getHero(player);
         hero.syncExperience();
         hero.syncHealth();
-        this.plugin.getInventoryChecker().checkInventory(player);
+        hero.checkInventory();
         if (plugin.getConfigManager().getProperties().prefixClassName) {
             player.setDisplayName("[" + hero.getHeroClass().getName() + "]" + player.getName());
         }
@@ -99,15 +99,14 @@ public class HPlayerListener extends PlayerListener {
         if (event.isCancelled())
             return;
 
-        final Player player = event.getPlayer();
+        final Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
+        
         plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
             @Override
             public void run() {
-                plugin.getInventoryChecker().checkInventory(player.getName());
+                hero.checkInventory();
             }
         });
-
-        Hero hero = plugin.getHeroManager().getHero(player);
 
         if (!hero.hasParty())
             return;
@@ -170,7 +169,6 @@ public class HPlayerListener extends PlayerListener {
                 }
             }
         }
-
     }
 
     public class BedHealEffect extends PeriodicEffect {

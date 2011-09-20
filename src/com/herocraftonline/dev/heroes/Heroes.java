@@ -8,7 +8,6 @@ import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 
-import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -56,8 +55,6 @@ import com.herocraftonline.dev.heroes.command.commands.WhoCommand;
 import com.herocraftonline.dev.heroes.damage.DamageManager;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.hero.HeroManager;
-import com.herocraftonline.dev.heroes.inventory.InventoryChecker;
-import com.herocraftonline.dev.heroes.inventory.SpoutInventoryListener;
 import com.herocraftonline.dev.heroes.party.PartyManager;
 import com.herocraftonline.dev.heroes.skill.OutsourcedSkill;
 import com.herocraftonline.dev.heroes.skill.SkillManager;
@@ -113,10 +110,6 @@ public class Heroes extends JavaPlugin {
     // Variable for Spout.
     public static boolean useSpout = false;
 
-    // Inventory Checker Class -- This class has the methods to check a players inventory and
-    // restrictions.
-    private InventoryChecker inventoryChecker;
-
     /**
      * Print messages to the Debug Log, if the servers in Debug Mode then we also wan't to print the messages to the
      * standard Server Console.
@@ -150,11 +143,7 @@ public class Heroes extends JavaPlugin {
     public HeroManager getHeroManager() {
         return heroManager;
     }
-
-    public InventoryChecker getInventoryChecker() {
-        return inventoryChecker;
-    }
-
+    
     public PartyManager getPartyManager() {
         return partyManager;
     }
@@ -205,7 +194,6 @@ public class Heroes extends JavaPlugin {
         partyManager = new PartyManager(this);
         heroManager = new HeroManager(this);
         damageManager = new DamageManager(this);
-        inventoryChecker = new InventoryChecker(this);
         skillManager = new SkillManager(this);
         // Check for BukkitContrib
         setupSpout();
@@ -231,9 +219,8 @@ public class Heroes extends JavaPlugin {
                 continue;
             }
 
-            // Make sure all the hero's are loaded
-            heroManager.getHero(player);
-            getInventoryChecker().checkInventory(player);
+            // Make sure all the hero's are loaded and that we check inventories
+            heroManager.getHero(player).checkInventory();
         }
 
         // Set the Party UI map to a nice splash screen.
@@ -333,15 +320,7 @@ public class Heroes extends JavaPlugin {
      * Check to see if Spout is enabled on the server, if so inform Heroes to use BukkitContrib instead.
      */
     public void setupSpout() {
-        Plugin test = this.getServer().getPluginManager().getPlugin("Spout");
-        SpoutInventoryListener spoutInventoryListener;
-        if (test != null) {
-            Heroes.useSpout = true;
-            spoutInventoryListener = new SpoutInventoryListener(this);
-            Bukkit.getServer().getPluginManager().registerEvent(Type.CUSTOM_EVENT, spoutInventoryListener, Priority.Monitor, this);
-        } else {
-            Heroes.useSpout = false;
-        }
+        Heroes.useSpout = this.getServer().getPluginManager().getPlugin("Spout") != null;
     }
 
     /**

@@ -11,6 +11,12 @@ import org.bukkit.Material;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
+
+import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.hero.Hero;
 
 public final class Util {
 
@@ -141,6 +147,67 @@ public final class Util {
         return false;
     }
 
+    /**
+     * Grab the first empty INVENTORY SLOT, skips the Hotbar.
+     * 
+     * @param player
+     * @return
+     */
+    public static int firstEmpty(Player player) {
+        ItemStack[] inventory = player.getInventory().getContents();
+        for (int i = 9; i < inventory.length; i++) {
+            if (inventory[i] == null)
+                return i;
+        }
+        return -1;
+    }
+
+    /**
+     * Move the selected Item to an available slot, if a slot does not exist then we remove it from the inventory.
+     * 
+     * @param player
+     * @param slot
+     * @param item
+     * @return
+     */
+    public static boolean moveItem(Hero hero, int slot, ItemStack item) {
+        Player player = hero.getPlayer();
+        PlayerInventory inv = player.getInventory();
+        int empty = firstEmpty(player);
+        if (empty == -1) {
+            hero.addRecoveryItem(item);
+            if (slot != -1) {
+                inv.setItem(slot, null);
+            }
+            return true;
+        } else {
+            inv.setItem(empty, item);
+            if (slot != -1) {
+                inv.setItem(slot, null);
+            }
+            Messaging.send(player, "You are not trained to use a $1.", MaterialUtil.getFriendlyName(item.getType()));
+            return false;
+        }
+    }
+
+    /**
+     * Synchronize the Clients Inventory with the Server. This is dealt during a scheduler so it happens after ANY
+     * changes are made.
+     * Synchronizing during changes often results in the client losing Sync.
+     * 
+     * @param player
+     */
+    public static void syncInventory(final Player player, Heroes plugin) {
+        plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+
+            @Override
+            @SuppressWarnings("deprecation")
+            public void run() {
+                player.updateInventory();
+            }
+        });
+    }
+    
     /**
      * Checks if the material is a Weapon/Tool
      * 
