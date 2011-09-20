@@ -136,6 +136,7 @@ public class HPlayerListener extends PlayerListener {
         Player player = event.getPlayer();
         final Hero hero = plugin.getHeroManager().getHero(player);
         hero.setHealth(hero.getMaxHealth());
+        hero.setMana(0);
         CraftPlayer craftPlayer = (CraftPlayer) player;
         EntityPlayer entityPlayer = craftPlayer.getHandle();
         entityPlayer.exp = 0;

@@ -18,6 +18,7 @@ import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
 import com.herocraftonline.dev.heroes.effects.CombustEffect;
 import com.herocraftonline.dev.heroes.effects.Effect;
 import com.herocraftonline.dev.heroes.hero.Hero;
+import com.herocraftonline.dev.heroes.hero.HeroManager;
 import com.herocraftonline.dev.heroes.util.Properties;
 import com.herocraftonline.dev.heroes.util.Util;
 
@@ -29,30 +30,73 @@ public class HEntityListener extends EntityListener {
         this.plugin = plugin;
     }
 
-    @Override
-    public void onEntityDeath(EntityDeathEvent event) {
-        Entity defender = event.getEntity();
-        Player attacker = null;
-        EntityDamageEvent lastDamage = defender.getLastDamageCause();
-        if (lastDamage instanceof EntityDamageByEntityEvent) {
-            Entity damager = ((EntityDamageByEntityEvent) lastDamage).getDamager();
+    private Player getAttacker(EntityDamageEvent event) {
+        if (event instanceof EntityDamageByEntityEvent) {
+            Entity damager = ((EntityDamageByEntityEvent) event).getDamager();
             if (damager instanceof Player) {
-                attacker = (Player) damager;
+                return (Player) damager;
             } else if (damager instanceof Projectile) {
                 Projectile projectile = (Projectile) damager;
                 if (projectile.getShooter() instanceof Player) {
-                    attacker = (Player) projectile.getShooter();
+                    return (Player) projectile.getShooter();
                 }
             }
         }
+        return null;
+    }
+
+    private void awardKillExp(Hero attacker, Entity defender) {
+        Properties prop = plugin.getConfigManager().getProperties();
+
+        HeroClass playerClass = attacker.getHeroClass();
+        Set<ExperienceType> expSources = playerClass.getExperienceSources();
+
+        double addedExp = 0;
+        ExperienceType experienceType = null;
+
+        // If this entity is on the summon map, don't award XP!
+        if (attacker.getSummons().contains(defender))
+            return;
+
+        if (defender instanceof Player && expSources.contains(ExperienceType.PVP)) {
+            // Don't award XP for Players killing themselves
+            if (!defender.equals(attacker)) {
+                prop.playerDeaths.put((Player) defender, defender.getLocation());
+                addedExp = prop.playerKillingExp;
+                experienceType = ExperienceType.PVP;
+            }
+        } else if (defender instanceof LivingEntity && !(defender instanceof Player) && expSources.contains(ExperienceType.KILLING)) {
+            // Check if the kill was near a spawner
+            if (prop.noSpawnCamp && Util.isNearSpawner(defender, prop.spawnCampRadius))
+                return;
+            
+            // Get the dying entity's CreatureType
+            CreatureType type = Util.getCreatureFromEntity(defender);
+            if (type != null) {
+                // If EXP hasn't been assigned for this Entity then we stop here.
+                if (!prop.creatureKillingExp.containsKey(type))
+                    return;
+                
+                addedExp = prop.creatureKillingExp.get(type);
+                experienceType = ExperienceType.KILLING;
+            }
+        }
+
+        if (experienceType != null && addedExp > 0) {
+            attacker.gainExp(addedExp, experienceType);
+        }
+    }
+
+    @Override
+    public void onEntityDeath(EntityDeathEvent event) {
+        Entity defender = event.getEntity();
+        Player attacker = getAttacker(defender.getLastDamageCause());
 
         Properties prop = plugin.getConfigManager().getProperties();
-        if (defender instanceof Player) {
+        HeroManager heroManager = plugin.getHeroManager();
 
-            // Incur 5% experience loss to dying player
-            // 5% of the next level's experience requirement
-            // Experience loss can optionally reduce Level
-            Hero heroDefender = plugin.getHeroManager().getHero((Player) defender);
+        if (defender instanceof Player) {
+            Hero heroDefender = heroManager.getHero((Player) defender);
             double exp = heroDefender.getExperience();
             int level = prop.getLevel(exp);
 
@@ -77,9 +121,6 @@ public class HEntityListener extends EntityListener {
                 heroDefender.gainExp(-expLoss, ExperienceType.DEATH, false);
             }
 
-            // Always reset mana on death
-            heroDefender.setMana(0);
-
             // Remove any nonpersistent effects
             for (Effect effect : heroDefender.getEffects()) {
                 if (!effect.isPersistent()) {
@@ -87,58 +128,16 @@ public class HEntityListener extends EntityListener {
                 }
             }
         } else if (defender instanceof Creature) {
-            if (attacker == null && plugin.getHeroManager().creatureHasEffect((Creature) defender, "Combust")) {
-                attacker = ((CombustEffect) plugin.getHeroManager().getCreatureEffect((Creature) defender, "Combust")).getApplier();
+            Creature creatureDefender = (Creature) defender;
+            heroManager.clearCreatureEffects(creatureDefender);
+            if (attacker == null && heroManager.creatureHasEffect(creatureDefender, "Combust")) {
+                attacker = ((CombustEffect) heroManager.getCreatureEffect(creatureDefender, "Combust")).getApplier();
             }
         }
-
+        
         if (attacker != null) {
-            // Get the Hero representing the player
-            Hero hero = plugin.getHeroManager().getHero(attacker);
-            // Get the player's class definition
-            HeroClass playerClass = hero.getHeroClass();
-            // Get the sources of experience for the player's class
-            Set<ExperienceType> expSources = playerClass.getExperienceSources();
-
-            double addedExp = 0;
-            ExperienceType experienceType = null;
-
-            // If the Player killed another Player we check to see if they can earn EXP from PVP.
-            if (defender instanceof Player && expSources.contains(ExperienceType.PVP)) {
-                // Don't award XP for Players killing themselves
-                if (!defender.equals(attacker)) {
-                    prop.playerDeaths.put((Player) defender, defender.getLocation());
-                    addedExp = prop.playerKillingExp;
-                    experienceType = ExperienceType.PVP;
-                }
-            }
-
-            // If this entity is on the summon map, don't award XP!
-            if (hero.getSummons().contains(defender))
-                return;
-
-            // If the Player killed a Monster/Animal then we check to see if they can earn EXP from KILLING.
-            if (defender instanceof LivingEntity && !(defender instanceof Player) && expSources.contains(ExperienceType.KILLING)) {
-                // Check if the kill was near a spawner
-                if (plugin.getConfigManager().getProperties().noSpawnCamp && Util.isNearSpawner(defender, plugin.getConfigManager().getProperties().spawnCampRadius))
-                    return;
-                // Get the dying entity's CreatureType
-                CreatureType type = Util.getCreatureFromEntity(defender);
-                if (type != null && !hero.getSummons().contains(defender)) {
-                    // If EXP hasn't been assigned for this Entity then we stop here.
-                    if (!prop.creatureKillingExp.containsKey(type))
-                        return;
-                    addedExp = prop.creatureKillingExp.get(type);
-                    experienceType = ExperienceType.KILLING;
-                }
-            }
-            if (experienceType != null && addedExp > 0) {
-                hero.gainExp(addedExp, experienceType);
-            }
-            // Make sure to remove any effects this creature may have had from the creatureEffect map
-            if (defender instanceof Creature) {
-                plugin.getHeroManager().clearCreatureEffects((Creature) defender);
-            }
+            Hero hero = heroManager.getHero(attacker);
+            awardKillExp(hero, defender);
         }
     }
 }

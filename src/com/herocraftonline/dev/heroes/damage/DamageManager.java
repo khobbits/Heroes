@@ -47,6 +47,14 @@ public class DamageManager {
         SkillUseInfo skillInfo = new SkillUseInfo(hero, skill);
         spellTargs.put(o, skillInfo);
     }
+    
+    public boolean isSpellTarget(Entity o) {
+        return spellTargs.containsKey(o);
+    }
+    
+    public SkillUseInfo getSpellTargetInfo(Entity o) {
+        return spellTargs.get(o);
+    }
 
     public Integer getCreatureDamage(CreatureType type) {
         return creatureDamage.get(type);
@@ -82,10 +90,6 @@ public class DamageManager {
                 return classDamage;
         }
         return projectileDamage.get(type);
-    }
-
-    public Map<Entity, SkillUseInfo> getSpellTargets() {
-        return spellTargs;
     }
 
     public void load(Configuration config) {
