@@ -2,6 +2,7 @@ package com.herocraftonline.dev.heroes.classes;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -319,7 +320,7 @@ public class HeroClassManager {
         String className = newClass.getName();
         // Get experience for each class
         List<String> experienceNames = config.getStringList("experience-sources", null);
-        Set<ExperienceType> experienceSources = new HashSet<ExperienceType>();
+        Set<ExperienceType> experienceSources = EnumSet.noneOf(ExperienceType.class);
         if (experienceNames == null) {
             plugin.debugLog(Level.WARNING, className + " has no experience-sources section");
         } else {
