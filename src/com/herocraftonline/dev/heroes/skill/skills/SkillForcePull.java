@@ -1,5 +1,6 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
+import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
@@ -37,16 +38,20 @@ public class SkillForcePull extends TargettedSkill {
         if (damage > 0) {
             addSpellTarget(target, hero);
             target.damage(damage, player);
-        }
-
-        float pitch = player.getEyeLocation().getPitch();
-        float distance = (float) player.getLocation().distanceSquared(target.getLocation());
-        float multiplier = (float) Math.sqrt(distance) / 10f * (90f + pitch) / 40f;
-        float xDir = (float) player.getLocation().getDirection().getX();
-        float zDir = (float) player.getLocation().getDirection().getZ();
-        float magnitude = (float) Math.sqrt(xDir * xDir + zDir * zDir);
-        Vector v = new Vector(-xDir / magnitude * multiplier, 1, -zDir / magnitude * multiplier);
-        target.setVelocity(v);
+        }        
+        
+        Location playerLoc = player.getLocation();
+        Location targetLoc = target.getLocation();
+        
+        double distance = player.getLocation().distanceSquared(target.getLocation());
+        double xDir = playerLoc.getX() - targetLoc.getX();
+        double zDir = playerLoc.getZ() - targetLoc.getZ();
+        double magnitude = Math.sqrt(xDir * xDir + zDir * zDir);
+        double multiplier = Math.sqrt(distance) / 8;
+        xDir = xDir / magnitude * multiplier;
+        zDir = zDir / magnitude * multiplier;
+        
+        target.setVelocity(new Vector(xDir, 1, zDir));
 
         broadcastExecuteText(hero, target);
         return true;

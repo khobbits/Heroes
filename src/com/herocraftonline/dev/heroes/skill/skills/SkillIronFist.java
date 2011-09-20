@@ -2,6 +2,7 @@ package com.herocraftonline.dev.heroes.skill.skills;
 
 import java.util.List;
 
+import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -61,11 +62,17 @@ public class SkillIronFist extends ActiveSkill {
             target.damage(damage, player);
 
             // Do our knockback
-            float pitch = player.getEyeLocation().getPitch();
-            float multiplier = (float) (getSetting(hero.getHeroClass(), "horizontal-power", .5) * (90f + pitch) / 40f);
-            float vertPower = (float) getSetting(hero.getHeroClass(), "vertical-power", .25);
-            Vector v = target.getVelocity().setY(vertPower).add(player.getLocation().getDirection().setY(0).normalize().multiply(multiplier));
-            target.setVelocity(v);
+            Location playerLoc = player.getLocation();
+            Location targetLoc = target.getLocation();
+            
+            double xDir =  targetLoc.getX() - playerLoc.getX();
+            double zDir =  targetLoc.getZ() - playerLoc.getZ();
+            double magnitude = Math.sqrt(xDir * xDir + zDir * zDir);
+            double multiplier = this.getSetting(hero.getHeroClass(), "horizontal-power", .5);
+            xDir = xDir / magnitude * multiplier;
+            zDir = zDir / magnitude * multiplier;
+            
+            target.setVelocity(new Vector(xDir, getSetting(hero.getHeroClass(), "vertical-power", .25), zDir));
         }
 
         broadcastExecuteText(hero);
