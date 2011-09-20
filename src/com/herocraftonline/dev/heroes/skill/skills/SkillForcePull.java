@@ -25,8 +25,6 @@ public class SkillForcePull extends TargettedSkill {
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty("horizontal-power", 1);
-        node.setProperty("vertical-power", 1);
         node.setProperty(Setting.DAMAGE.node(), 0);
         return node;
     }
@@ -42,9 +40,12 @@ public class SkillForcePull extends TargettedSkill {
         }
 
         float pitch = player.getEyeLocation().getPitch();
-        float multiplier = getSetting(hero.getHeroClass(), "horizontal-power", 1) * (90f + pitch) / 40f;
-        float vertPower = getSetting(hero.getHeroClass(), "vertical-power", 1);
-        Vector v = target.getVelocity().setY(vertPower).add(player.getLocation().getDirection().setY(0).normalize().multiply(-multiplier));
+        float distance = (float) player.getLocation().distanceSquared(target.getLocation());
+        float multiplier = (float) Math.sqrt(distance) / 10f * (90f + pitch) / 40f;
+        float xDir = (float) player.getLocation().getDirection().getX();
+        float zDir = (float) player.getLocation().getDirection().getZ();
+        float magnitude = (float) Math.sqrt(xDir * xDir + zDir * zDir);
+        Vector v = new Vector(-xDir / magnitude * multiplier, 1, -zDir / magnitude * multiplier);
         target.setVelocity(v);
 
         broadcastExecuteText(hero, target);

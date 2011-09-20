@@ -42,7 +42,6 @@ public class SkillForcePush extends TargettedSkill {
         }
 
         float pitch = player.getEyeLocation().getPitch();
-
         float multiplier = getSetting(hero.getHeroClass(), "horizontal-power", 1) * (90f + pitch) / 40f;
         float vertPower = getSetting(hero.getHeroClass(), "vertical-power", 1);
         Vector v = target.getVelocity().setY(vertPower).add(player.getLocation().getDirection().setY(0).normalize().multiply(multiplier));
