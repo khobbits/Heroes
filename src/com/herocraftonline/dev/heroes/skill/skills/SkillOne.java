@@ -15,6 +15,7 @@ import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
+import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillOne extends ActiveSkill {
 
@@ -26,7 +27,7 @@ public class SkillOne extends ActiveSkill {
         setDescription("Provides a short burst of speed");
         setUsage("/skill one");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[]{"skill one"});
+        setIdentifiers("skill one");
         setTypes(SkillType.BUFF, SkillType.MOVEMENT, SkillType.SILENCABLE);
     }
 
@@ -34,7 +35,7 @@ public class SkillOne extends ActiveSkill {
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
         node.setProperty("speed-multiplier", 2);
-        node.setProperty("duration", 15000);
+        node.setProperty(Setting.DURATION.node(), 15000);
         node.setProperty("apply-text", "%hero% gained a burst of speed!");
         node.setProperty("expire-text", "%hero% returned to normal speed!");
         return node;
@@ -51,7 +52,7 @@ public class SkillOne extends ActiveSkill {
     public boolean use(Hero hero, String[] args) {
         broadcastExecuteText(hero);
 
-        int duration = getSetting(hero.getHeroClass(), "duration", 5000);
+        int duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 15000);
         int multiplier = getSetting(hero.getHeroClass(), "speed-multiplier", 2);
         if (multiplier > 20) {
             multiplier = 20;
@@ -63,14 +64,15 @@ public class SkillOne extends ActiveSkill {
 
     public class OneEffect extends ExpirableEffect {
 
-        int amplifier = 0;
-        int duration = 0;
+        private int amplifier = 0;
+        private int duration = 0;
 
-        MobEffect mobEffect = new MobEffect(1, 0, 0);
+        private MobEffect mobEffect = new MobEffect(1, 0, 0);
 
         public OneEffect(Skill skill, long duration, int amplifier) {
             super(skill, "One", duration);
             this.types.add(EffectType.DISPELLABLE);
+            this.types.add(EffectType.BENEFICIAL);
             this.amplifier = amplifier;
             this.duration = (int) (duration / 1000) * 20;
         }

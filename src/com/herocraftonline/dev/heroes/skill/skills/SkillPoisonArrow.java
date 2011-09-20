@@ -1,5 +1,11 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
+import net.minecraft.server.EntityPlayer;
+import net.minecraft.server.MobEffect;
+import net.minecraft.server.Packet41MobEffect;
+import net.minecraft.server.Packet42RemoveMobEffect;
+
+import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Player;
@@ -68,10 +74,11 @@ public class SkillPoisonArrow extends ActiveSkill {
 
     public class ArrowPoison extends PeriodicDamageEffect {
 
+        private MobEffect mobEffect = new MobEffect(19, 0, 0);
+        
         public ArrowPoison(Skill skill, long period, long duration, int tickDamage, Player applier) {
             super(skill, "ArrowPoison", period, duration, tickDamage, applier);
             this.types.add(EffectType.POISON);
-
         }
 
         @Override
@@ -83,7 +90,10 @@ public class SkillPoisonArrow extends ActiveSkill {
         @Override
         public void apply(Hero hero) {
             super.apply(hero);
-            broadcast(hero.getPlayer().getLocation(), applyText, hero.getPlayer().getDisplayName());
+            Player player = hero.getPlayer();
+            EntityPlayer entityPlayer = ((CraftPlayer) player).getHandle();
+            entityPlayer.netServerHandler.sendPacket(new Packet41MobEffect(entityPlayer.id, this.mobEffect));
+            broadcast(player.getLocation(), applyText, player.getDisplayName());
         }
 
         @Override
@@ -95,7 +105,10 @@ public class SkillPoisonArrow extends ActiveSkill {
         @Override
         public void remove(Hero hero) {
             super.remove(hero);
-            broadcast(hero.getPlayer().getLocation(), expireText, hero.getPlayer().getDisplayName());
+            Player player = hero.getPlayer();
+            EntityPlayer entityPlayer = ((CraftPlayer) player).getHandle();
+            entityPlayer.netServerHandler.sendPacket(new Packet42RemoveMobEffect(entityPlayer.id, this.mobEffect));
+            broadcast(player.getLocation(), expireText, player.getDisplayName());
         }
     }
 

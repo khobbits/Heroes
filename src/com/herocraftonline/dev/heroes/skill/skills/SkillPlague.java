@@ -1,5 +1,11 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
+import net.minecraft.server.EntityPlayer;
+import net.minecraft.server.MobEffect;
+import net.minecraft.server.Packet41MobEffect;
+import net.minecraft.server.Packet42RemoveMobEffect;
+
+import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -74,6 +80,8 @@ public class SkillPlague extends TargettedSkill {
 
     public class PlagueEffect extends PeriodicDamageEffect {
 
+        private MobEffect mobEffect = new MobEffect(19, 0, 0);
+        
         public PlagueEffect(Skill skill, long duration, long period, int tickDamage, Player applier) {
             super(skill, "Plague", period, duration, tickDamage, applier);
         }
@@ -94,6 +102,8 @@ public class SkillPlague extends TargettedSkill {
         public void apply(Hero hero) {
             super.apply(hero);
             Player player = hero.getPlayer();
+            EntityPlayer entityPlayer = ((CraftPlayer) player).getHandle();
+            entityPlayer.netServerHandler.sendPacket(new Packet41MobEffect(entityPlayer.id, this.mobEffect));
             broadcast(player.getLocation(), applyText, player.getDisplayName());
         }
 
@@ -108,6 +118,8 @@ public class SkillPlague extends TargettedSkill {
             super.remove(hero);
 
             Player player = hero.getPlayer();
+            EntityPlayer entityPlayer = ((CraftPlayer) player).getHandle();
+            entityPlayer.netServerHandler.sendPacket(new Packet42RemoveMobEffect(entityPlayer.id, this.mobEffect));
             broadcast(player.getLocation(), expireText, player.getDisplayName());
         }
 
