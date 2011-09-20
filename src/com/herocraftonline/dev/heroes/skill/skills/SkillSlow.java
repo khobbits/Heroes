@@ -39,7 +39,7 @@ public class SkillSlow extends TargettedSkill {
         ConfigurationNode node = super.getDefaultConfig();
         node.setProperty("speed-multiplier", 2);
         node.setProperty(Setting.DURATION.node(), 15000);
-        node.setProperty("apply-text", "%hero% gained a burst of speed!");
+        node.setProperty("apply-text", "%hero% has been slowed!");
         node.setProperty("expire-text", "%hero% returned to normal speed!");
         return node;
     }
@@ -47,7 +47,7 @@ public class SkillSlow extends TargettedSkill {
     @Override
     public void init() {
         super.init();
-        applyText = getSetting(null, "apply-text", "%hero% gained a burst of speed!").replace("%hero%", "$1");
+        applyText = getSetting(null, "apply-text", "%hero% has been slowed!").replace("%hero%", "$1");
         expireText = getSetting(null, "expire-text", "%hero% returned to normal speed!").replace("%hero%", "$1");
     }
 
