@@ -17,6 +17,7 @@ import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Setting;
+import com.herocraftonline.dev.heroes.util.Util;
 
 public class SkillDeconstruct extends ActiveSkill {
 
@@ -174,8 +175,9 @@ public class SkillDeconstruct extends ActiveSkill {
             // Just dump any leftover stacks onto the ground
             if (!leftOvers.isEmpty()) {
                 for (ItemStack leftOver : leftOvers.values()) {
-                    player.getWorld().dropItemNaturally(player.getLocation(), leftOver);
+                    hero.addRecoveryItem(leftOver);
                 }
+                Messaging.send(player, "Please make space in your inventory then type '$1'", "/heroes recoveritems");
             }
         }
         int amount = player.getInventory().getContents()[slot].getAmount() - 1;
@@ -184,7 +186,7 @@ public class SkillDeconstruct extends ActiveSkill {
         } else {
             player.getInventory().getContents()[slot].setAmount(amount);
         }
-        player.updateInventory();
+        Util.syncInventory(player, plugin);
 
         // Grant the hero experience
         int xp = getSetting(hero.getHeroClass(), matName + "." + Setting.EXP.node(), 0);
