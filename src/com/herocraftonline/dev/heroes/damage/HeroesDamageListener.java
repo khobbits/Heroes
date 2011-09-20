@@ -69,22 +69,24 @@ public class HeroesDamageListener extends EntityListener {
             }
         }
 
-        Entity entity = event.getEntity();
+        Entity defender = event.getEntity();
         Entity attacker = null;
         HeroDamageCause heroLastDamage = null;
         DamageCause cause = event.getCause();
         int damage = event.getDamage();
-        if (damageManager.getSpellTargets().containsKey(entity)) { // Start of skill -> listener communication
-            SkillUseInfo skillInfo = damageManager.getSpellTargets().remove(entity);
+        
+        if (damageManager.isSpellTarget(defender)) {
+            SkillUseInfo skillInfo = damageManager.getSpellTargetInfo(defender);
+            damageManager.removeSpellTarget(defender);
             if (event instanceof EntityDamageByEntityEvent) {
-                SkillDamageEvent spellDamageEvent = new SkillDamageEvent(damage, entity, skillInfo);
+                SkillDamageEvent spellDamageEvent = new SkillDamageEvent(damage, defender, skillInfo);
                 plugin.getServer().getPluginManager().callEvent(spellDamageEvent);
                 if (spellDamageEvent.isCancelled()) {
                     event.setCancelled(true);
                     return;
                 }
                 damage = spellDamageEvent.getDamage();
-                if (entity instanceof Player) {
+                if (defender instanceof Player) {
                     heroLastDamage = new HeroSkillDamageCause(damage, cause, skillInfo.getHero().getPlayer(), skillInfo.getSkill());
                 }
             }
@@ -146,10 +148,10 @@ public class HeroesDamageListener extends EntityListener {
             } else {
                 heroLastDamage = new HeroDamageCause(damage, cause);
             }
-        } // End of skill -> listener communication
+        }
 
-        if (entity instanceof Player) {
-            Player player = (Player) entity;
+        if (defender instanceof Player) {
+            Player player = (Player) defender;
             if (player.getNoDamageTicks() > player.getMaximumNoDamageTicks() / 2.0f || player.isDead() || player.getHealth() <= 0) {
                 event.setCancelled(true);
                 return;
@@ -221,7 +223,7 @@ public class HeroesDamageListener extends EntityListener {
                     }
                 }, 1);
             }
-        } else if (entity instanceof LivingEntity) {
+        } else if (defender instanceof LivingEntity) {
             event.setDamage(damage);
         }
     }
