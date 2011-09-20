@@ -87,6 +87,7 @@ public class SkillConfuse extends TargettedSkill {
             this.maxDrift = maxDrift;
             this.types.add(EffectType.HARMFUL);
             this.types.add(EffectType.DISPELLABLE);
+            this.mobEffect = new MobEffect(9, (int) (duration / 1000) * 20, 127);
         }
 
         public void adjustVelocity(LivingEntity lEntity) {

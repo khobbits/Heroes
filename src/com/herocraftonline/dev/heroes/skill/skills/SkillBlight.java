@@ -85,6 +85,7 @@ public class SkillBlight extends TargettedSkill {
             super(skill, "Blight", period, duration, tickDamage, applier);
             this.types.add(EffectType.DISEASE);
             this.types.add(EffectType.DISPELLABLE);
+            this.mobEffect = new MobEffect(19, (int) (duration / 1000) * 20, 0);
         }
 
         @Override

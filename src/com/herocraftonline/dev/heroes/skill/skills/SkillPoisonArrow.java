@@ -79,6 +79,7 @@ public class SkillPoisonArrow extends ActiveSkill {
         public ArrowPoison(Skill skill, long period, long duration, int tickDamage, Player applier) {
             super(skill, "ArrowPoison", period, duration, tickDamage, applier);
             this.types.add(EffectType.POISON);
+            this.mobEffect = new MobEffect(19, (int) (duration / 1000) * 20, 0);
         }
 
         @Override

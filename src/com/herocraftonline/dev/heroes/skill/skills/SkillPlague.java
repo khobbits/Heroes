@@ -84,6 +84,7 @@ public class SkillPlague extends TargettedSkill {
         
         public PlagueEffect(Skill skill, long duration, long period, int tickDamage, Player applier) {
             super(skill, "Plague", period, duration, tickDamage, applier);
+            this.mobEffect = new MobEffect(19, (int) (duration / 1000) * 20, 0);
         }
 
         // Clone Constructor
@@ -91,6 +92,7 @@ public class SkillPlague extends TargettedSkill {
             super(pEffect.getSkill(), pEffect.getName(), pEffect.getPeriod(), pEffect.getDuration(), pEffect.tickDamage, pEffect.applier);
             this.types.add(EffectType.DISPELLABLE);
             this.types.add(EffectType.DISEASE);
+            this.mobEffect = new MobEffect(19, (int) (pEffect.getDuration() / 1000) * 20, 0);
         }
 
         @Override
