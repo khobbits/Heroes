@@ -2,7 +2,7 @@ package com.herocraftonline.dev.heroes.classes;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -25,9 +25,9 @@ public class HeroClass {
     private Set<HeroClass> specializations = new LinkedHashSet<HeroClass>();
     private Set<String> allowedArmor = new LinkedHashSet<String>();
     private Set<String> allowedWeapons = new LinkedHashSet<String>();
-    private Set<ExperienceType> experienceSources = new LinkedHashSet<ExperienceType>();
-    private Map<Material, Integer> itemDamage = new HashMap<Material, Integer>();
-    private Map<ProjectileType, Integer> projectileDamage = new HashMap<ProjectileType, Integer>();
+    private Set<ExperienceType> experienceSources = null;
+    private Map<Material, Integer> itemDamage = new EnumMap<Material, Integer>(Material.class);
+    private Map<ProjectileType, Integer> projectileDamage = new EnumMap<ProjectileType, Integer>(ProjectileType.class);
     private Map<String, ConfigurationNode> skills = new LinkedHashMap<String, ConfigurationNode>();
 
     // private Map<String, SkillData> skillData;

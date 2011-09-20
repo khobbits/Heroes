@@ -1,5 +1,6 @@
 package com.herocraftonline.dev.heroes.damage;
 
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -90,43 +91,43 @@ public class DamageManager {
     public void load(Configuration config) {
         List<String> keys;
 
-        creatureHealth = new HashMap<CreatureType, Integer>();
+        creatureHealth = new EnumMap<CreatureType, Integer>(CreatureType.class);
         keys = config.getKeys("creature-health");
         if (keys != null) {
             for (String key : keys) {
                 CreatureType type = CreatureType.fromName(key);
-                int health = config.getInt("creature-health." + key, 10);
-                if (type != null) {
-                    creatureHealth.put(type, health);
-                }
+                if (type == null)
+                    continue;
+                
+                creatureHealth.put(type, config.getInt("creature-health." + key, 10));
             }
         }
 
-        creatureDamage = new HashMap<CreatureType, Integer>();
+        creatureDamage = new EnumMap<CreatureType, Integer>(CreatureType.class);
         keys = config.getKeys("creature-damage");
         if (keys != null) {
             for (String key : keys) {
                 CreatureType type = CreatureType.fromName(key);
-                int damage = config.getInt("creature-damage." + key, 10);
-                if (type != null) {
-                    creatureDamage.put(type, damage);
-                }
+                if (type == null)
+                    continue;
+                
+                creatureDamage.put(type, config.getInt("creature-damage." + key, 10));
             }
         }
 
-        itemDamage = new HashMap<Material, Integer>();
+        itemDamage = new EnumMap<Material, Integer>(Material.class);
         keys = config.getKeys("item-damage");
         if (keys != null) {
             for (String key : keys) {
                 Material item = Material.matchMaterial(key);
-                int damage = config.getInt("item-damage." + key, 2);
-                if (item != null) {
-                    itemDamage.put(item, damage);
-                }
+                if (item == null)
+                    continue;
+
+                itemDamage.put(item, config.getInt("item-damage." + key, 2));
             }
         }
 
-        environmentalDamage = new HashMap<DamageCause, Integer>();
+        environmentalDamage = new EnumMap<DamageCause, Integer>(DamageCause.class);
         keys = config.getKeys("environmental-damage");
         if (keys != null) {
             for (String key : keys) {
@@ -138,15 +139,15 @@ public class DamageManager {
             }
         }
 
-        projectileDamage = new HashMap<ProjectileType, Integer>();
+        projectileDamage = new EnumMap<ProjectileType, Integer>(ProjectileType.class);
         keys = config.getKeys("projectile-damage");
         if (keys != null) {
             for (String key : keys) {
-                try {
-                    ProjectileType type = ProjectileType.valueOf(key.toUpperCase());
-                    int damage = config.getInt("projectile-damage." + key, 0);
-                    projectileDamage.put(type, damage);
-                } catch (IllegalArgumentException e) {}
+                ProjectileType type = ProjectileType.valueOf(key.toUpperCase());
+                if (type == null)
+                    continue;
+                
+                projectileDamage.put(type, config.getInt("projectile-damage." + key, 0));
             }
         }
     }
@@ -181,7 +182,7 @@ public class DamageManager {
             else if (name.toLowerCase().equals("egg"))
                 return EGG;
             else
-                throw new IllegalArgumentException(name + " is not a projectiletype.");
+                return null;
         }
 
         public static ProjectileType valueOf(Entity entity) {
@@ -192,8 +193,7 @@ public class DamageManager {
             else if (entity instanceof Egg)
                 return EGG;
             else
-                throw new IllegalArgumentException(entity.getClass().getSimpleName() + " is not a projectile.");
+                return null;
         }
     }
-
 }

@@ -3,6 +3,7 @@ package com.herocraftonline.dev.heroes.hero;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -53,7 +54,7 @@ public class Hero {
     private Map<String, Double> experience = new HashMap<String, Double>();
     private Map<String, Long> cooldowns = new HashMap<String, Long>();
     private Set<Creature> summons = new HashSet<Creature>();
-    private Map<Material, String[]> binds = new HashMap<Material, String[]>();
+    private Map<Material, String[]> binds = new EnumMap<Material, String[]>(Material.class);
     private List<ItemStack> itemRecovery = new ArrayList<ItemStack>();
     private Set<String> suppressedSkills = new HashSet<String>();
     private Map<String, Map<String, String>> skillSettings = new HashMap<String, Map<String, String>>();

@@ -149,36 +149,64 @@ public final class Util {
      */
     public static boolean isWeapon(Material mat) {
         switch (mat) {
+        case IRON_AXE:
+        case IRON_HOE:
+        case IRON_PICKAXE:
+        case IRON_SPADE:
+        case IRON_SWORD:
+        case STONE_AXE:
+        case STONE_HOE:
+        case STONE_PICKAXE:
+        case STONE_SPADE:
+        case STONE_SWORD:
+        case GOLD_AXE:
+        case GOLD_HOE:
+        case GOLD_PICKAXE:
+        case GOLD_SPADE:
+        case GOLD_SWORD:
+        case WOOD_AXE:
+        case WOOD_HOE:
+        case WOOD_PICKAXE:
+        case WOOD_SPADE:
+        case WOOD_SWORD:
+        case DIAMOND_AXE:
+        case DIAMOND_HOE:
+        case DIAMOND_PICKAXE:
+        case DIAMOND_SPADE:
+        case DIAMOND_SWORD:
+            return true;
+        default:
+            return false;
+        }
+    }
 
-            case IRON_AXE:
-            case IRON_HOE:
-            case IRON_PICKAXE:
-            case IRON_SPADE:
-            case IRON_SWORD:
-            case STONE_AXE:
-            case STONE_HOE:
-            case STONE_PICKAXE:
-            case STONE_SPADE:
-            case STONE_SWORD:
-            case GOLD_AXE:
-            case GOLD_HOE:
-            case GOLD_PICKAXE:
-            case GOLD_SPADE:
-            case GOLD_SWORD:
-            case WOOD_AXE:
-            case WOOD_HOE:
-            case WOOD_PICKAXE:
-            case WOOD_SPADE:
-            case WOOD_SWORD:
-            case DIAMOND_AXE:
-            case DIAMOND_HOE:
-            case DIAMOND_PICKAXE:
-            case DIAMOND_SPADE:
-            case DIAMOND_SWORD:
-                return true;
-
-            default:
-                return false;
+    /**
+     * Checks if the material given is an armor item
+     * 
+     * @param mat
+     * @return
+     */
+    public static boolean isArmor(Material mat) {
+        switch (mat) {
+        case LEATHER_HELMET:
+        case LEATHER_LEGGINGS:
+        case LEATHER_BOOTS:
+        case LEATHER_CHESTPLATE:
+        case IRON_HELMET:
+        case IRON_LEGGINGS:
+        case IRON_CHESTPLATE:
+        case IRON_BOOTS:
+        case CHAINMAIL_HELMET:
+        case CHAINMAIL_LEGGINGS:
+        case CHAINMAIL_BOOTS:
+        case CHAINMAIL_CHESTPLATE:
+        case GOLD_HELMET:
+        case GOLD_LEGGINGS:
+        case GOLD_CHESTPLATE:
+        case GOLD_BOOTS:
+            return true;
+        default:
+            return false;
         }
     }
 }
