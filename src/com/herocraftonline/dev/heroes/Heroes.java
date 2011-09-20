@@ -58,6 +58,7 @@ import com.herocraftonline.dev.heroes.hero.HeroManager;
 import com.herocraftonline.dev.heroes.party.PartyManager;
 import com.herocraftonline.dev.heroes.skill.OutsourcedSkill;
 import com.herocraftonline.dev.heroes.skill.SkillManager;
+import com.herocraftonline.dev.heroes.spout.SpoutInventoryListener;
 import com.herocraftonline.dev.heroes.ui.ColorMap;
 import com.herocraftonline.dev.heroes.ui.MapAPI;
 import com.herocraftonline.dev.heroes.ui.MapInfo;
@@ -323,7 +324,7 @@ public class Heroes extends JavaPlugin {
         Heroes.useSpout = this.getServer().getPluginManager().getPlugin("Spout") != null;
         //If it was found, then lets register our custom event for spout
         if (useSpout) {
-            getServer().getPluginManager().registerEvent(Type.CUSTOM_EVENT, new HSpoutInventoryListener(this), Priority.Monitor, this);
+            getServer().getPluginManager().registerEvent(Type.CUSTOM_EVENT, new SpoutInventoryListener(this), Priority.Monitor, this);
         }
     }
 

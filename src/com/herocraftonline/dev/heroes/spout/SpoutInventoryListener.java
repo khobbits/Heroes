@@ -1,18 +1,19 @@
-package com.herocraftonline.dev.heroes;
+package com.herocraftonline.dev.heroes.spout;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.getspout.spoutapi.event.inventory.InventoryCraftEvent;
 import org.getspout.spoutapi.event.inventory.InventoryListener;
 
+import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
 import com.herocraftonline.dev.heroes.hero.Hero;
 
-public class HSpoutInventoryListener extends InventoryListener {
+public class SpoutInventoryListener extends InventoryListener {
 
     private Heroes plugin;
 
-    public HSpoutInventoryListener(Heroes heroes) {
+    public SpoutInventoryListener(Heroes heroes) {
         plugin = heroes;
     }
     
