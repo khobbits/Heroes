@@ -317,10 +317,14 @@ public class Heroes extends JavaPlugin {
     }
 
     /**
-     * Check to see if Spout is enabled on the server, if so inform Heroes to use BukkitContrib instead.
+     * Check to see if Spout is enabled on the server, if so inform Heroes to use it for Craftin XP.
      */
     public void setupSpout() {
         Heroes.useSpout = this.getServer().getPluginManager().getPlugin("Spout") != null;
+        //If it was found, then lets register our custom event for spout
+        if (useSpout) {
+            getServer().getPluginManager().registerEvent(Type.CUSTOM_EVENT, new HSpoutInventoryListener(this), Priority.Monitor, this);
+        }
     }
 
     /**

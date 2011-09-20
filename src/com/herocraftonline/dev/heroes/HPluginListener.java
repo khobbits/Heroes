@@ -23,7 +23,7 @@ public class HPluginListener extends ServerListener {
 
         // Check if the name is Spout
         if (name.equals("Spout")) {
-            // If BukkitContrib just Disabled then we tell Heroes to stop using BukkitContrib
+            // If Spout just Disabled then we tell Heroes to stop using Spout
             Heroes.useSpout = false;
         }
 
