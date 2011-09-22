@@ -45,12 +45,10 @@ public class SkillBlaze extends ActiveSkill {
             if (!(entity instanceof LivingEntity)) {
                 continue;
             }
-            LivingEntity livingEntity = (LivingEntity) entity;
-            EntityDamageEvent damageEvent = new EntityDamageEvent(hero.getPlayer(), DamageCause.ENTITY_ATTACK, 0);
-            Bukkit.getServer().getPluginManager().callEvent(damageEvent);
-            if (damageEvent.isCancelled())
-                return false;
-            livingEntity.setFireTicks(fireTicks);
+            LivingEntity lEntity = (LivingEntity) entity;
+            if (damageCheck(hero.getPlayer(), lEntity))
+                continue;
+            lEntity.setFireTicks(fireTicks);
         }
         broadcastExecuteText(hero);
         return true;

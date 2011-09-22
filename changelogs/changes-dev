@@ -30,13 +30,14 @@ Skills:
 	All:
 		- Skills that add FireTicks should now award XP from deaths caused by Fire.
 		- Stun effects now cause the victim's screen to wobble
+		- Poison & Disease effects now turn the victims health-bar yellow
 	Berserk - (NEW!)
 		- Uses new FormEffect
 		- Causes the hero to deal more physical damage, but take more damage.
 	Bite
 		- Now also applies a Bleed effect
-	Blight
-		- Health bar now turns yellow when under this skill's effect
+	Blaze
+		- Will no longer skip targeting all enemies if one of them can't be targetted.
 	Cleave - (NEW!)
 		- Short range melee attack, that requires a weapon.
 		- Damages all enemies near your target for weapon damage * multiplier
@@ -60,14 +61,8 @@ Skills:
 	Mining - (NEW!)
 		- Passive skill that has a chance to give double-drops when mining ores
 		- Gives a very small chance to drop a random ore from just stone.
-	One - (NEW!)
+	One - (READDED!)
 		- Provides a speed boost to the caster
-	Plague
-		- Health bar now turns yellow when under this skill's effect
-	Poison
-		- Health bar now turns yellow when under this skill's effect
-	PoisonArrow
-		- Health bar now turns yellow when under this skill's effect
 	Slow - (NEW!)
 		- Slows down the target's movement speed
 	SoulBond - (NEW!)
