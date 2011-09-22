@@ -52,7 +52,7 @@ public class SkillCleave extends TargettedSkill {
         target.damage(damage, player);
         int radius = getSetting(heroClass, Setting.RADIUS.node(), 3);
         for (Entity entity : target.getNearbyEntities(radius, radius, radius)) {
-            if (!(entity instanceof LivingEntity) && !damageCheck(player, (LivingEntity) entity)) {
+            if (!(entity instanceof LivingEntity) || !damageCheck(player, (LivingEntity) entity)) {
                 continue;
             }
 
