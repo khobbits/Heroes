@@ -21,6 +21,7 @@ public enum EffectType {
     PHYSICAL,
     POISON,
     ROOT,
+    SAFEFALL,
     SILENCE,
     STUN,
     WATER,

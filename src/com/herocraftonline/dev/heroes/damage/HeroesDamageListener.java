@@ -162,6 +162,9 @@ public class HeroesDamageListener extends EntityListener {
             if (hero.hasEffectType(EffectType.INVULNERABILITY)) {
                 event.setCancelled(true);
                 return;
+            } else if (cause == DamageCause.FALL && hero.hasEffectType(EffectType.SAFEFALL)) {
+                event.setCancelled(true);
+                return;
             }
 
             // Party damage & PvPable test
