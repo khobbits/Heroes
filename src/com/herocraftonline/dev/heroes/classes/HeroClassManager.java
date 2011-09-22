@@ -110,8 +110,7 @@ public class HeroClassManager {
             newClass.setCost(cost);
 
             // Attempt to add the class
-            boolean added = addClass(newClass);
-            if (!added) {
+            if (!addClass(newClass)) {
                 Heroes.log(Level.WARNING, "Duplicate class (" + className + ") found. Skipping this class.");
             } else {
                 Heroes.log(Level.INFO, "Loaded class: " + className);

@@ -13,6 +13,7 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.SkillType;
+import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillBlaze extends ActiveSkill {
@@ -38,20 +39,29 @@ public class SkillBlaze extends ActiveSkill {
 
     @Override
     public boolean use(Hero hero, String[] args) {
+        Player player = hero.getPlayer();
         int range = getSetting(hero.getHeroClass(), Setting.RADIUS.node(), 5);
         List<Entity> entities = hero.getPlayer().getNearbyEntities(range, range, range);
         int fireTicks = getSetting(hero.getHeroClass(), "fire-length", 3000);
+        boolean damaged = false;
         for (Entity entity : entities) {
             if (!(entity instanceof LivingEntity)) {
                 continue;
             }
-            LivingEntity livingEntity = (LivingEntity) entity;
-            EntityDamageEvent damageEvent = new EntityDamageEvent(hero.getPlayer(), DamageCause.ENTITY_ATTACK, 0);
-            Bukkit.getServer().getPluginManager().callEvent(damageEvent);
-            if (damageEvent.isCancelled())
-                return false;
-            livingEntity.setFireTicks(fireTicks);
+            LivingEntity lEntity = (LivingEntity) entity;
+            
+            if (!damageCheck(player, lEntity))
+                continue;
+            
+            damaged = true;
+            lEntity.setFireTicks(fireTicks);
         }
+        
+        if (!damaged) {
+            Messaging.send(player, "No targets in range!");
+            return false;
+        }
+        
         broadcastExecuteText(hero);
         return true;
     }
