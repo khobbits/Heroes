@@ -119,11 +119,27 @@ public class CommandHandler {
     public static boolean hasPermission(CommandSender sender, String permission) {
         if (!(sender instanceof Player) || permission == null || permission.isEmpty())
             return true;
+        
         Player player = (Player) sender;
-        if (player.isOp() || player.hasPermission(permission))
+        
+        if (player.isOp()) {
             return true;
+        }
+        
         if (Heroes.Permissions != null)
             return Heroes.Permissions.has(player, permission);
+        
+        do {
+            if (player.hasPermission(permission))
+                return true;
+            
+            permission = permission.replace(".*", "");
+            int i = permission.lastIndexOf(".");
+            if (i == -1)
+                return false;
+            permission = permission.substring(0, i) + ".*";
+        } while (permission.contains("."));
+        
         return false;
     }
 }

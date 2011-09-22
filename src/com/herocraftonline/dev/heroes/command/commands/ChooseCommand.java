@@ -92,8 +92,10 @@ public class ChooseCommand extends BasicInteractiveCommand {
                     return false;
                 }
             }
+            
+            HeroClass defaultClass = plugin.getClassManager().getDefaultClass();
 
-            if (newClass != plugin.getClassManager().getDefaultClass() && !CommandHandler.hasPermission(player, "heroes.classes." + newClass.getName().toLowerCase())) {
+            if (newClass != defaultClass && !CommandHandler.hasPermission(player, "heroes.classes." + newClass.getName().toLowerCase())) {
                 Messaging.send(player, "You don't have permission for $1.", newClass.getName());
                 return false;
             }
