@@ -1,6 +1,6 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
-import java.util.Set;
+import java.util.Collection;
 
 import net.minecraft.server.EntityCreature;
 
@@ -254,7 +254,7 @@ public class SkillSkeleton extends ActiveSkill {
             if (!(event.getEntity() instanceof Creature))
                 return;
             Creature defender = (Creature) event.getEntity();
-            Set<Hero> heroes = plugin.getHeroManager().getHeroes();
+            Collection<Hero> heroes = plugin.getHeroManager().getHeroes();
             for (Hero hero : heroes) {
                 if (hero.getSummons().contains(defender) && defender instanceof Skeleton) {
                     hero.getSummons().remove(defender);

@@ -1,6 +1,8 @@
 package com.herocraftonline.dev.heroes.hero;
 
 import java.text.DecimalFormat;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -40,9 +42,9 @@ import com.herocraftonline.dev.heroes.util.Messaging;
  */
 public class HeroManager {
 
-    protected Heroes plugin;
-    private Set<Hero> heroes;
-    protected Map<Creature, Set<Effect>> creatureEffects;
+    private Heroes plugin;
+    private Map<String, Hero> heroes;
+    private Map<Creature, Set<Effect>> creatureEffects;
     private HeroStorage heroStorage;
     private final static int effectInterval = 2;
     private final static int manaInterval = 5;
@@ -50,7 +52,7 @@ public class HeroManager {
 
     public HeroManager(Heroes plugin) {
         this.plugin = plugin;
-        this.heroes = new HashSet<Hero>();
+        this.heroes = new HashMap<String, Hero>();
         this.creatureEffects = new HashMap<Creature, Set<Effect>>();
 
         // if (plugin.getConfigManager().getProperties().storageType.toLowerCase().equals("yml"))
@@ -84,8 +86,8 @@ public class HeroManager {
         effect.apply(creature);
     }
 
-    public boolean addHero(Hero hero) {
-        return heroes.add(hero);
+    public void addHero(Hero hero) {
+        heroes.put(hero.getPlayer().getName().toLowerCase(), hero);
     }
 
     /**
@@ -154,30 +156,26 @@ public class HeroManager {
      * @return
      */
     public Hero getHero(Player player) {
-        for (Hero hero : getHeroes()) {
-            if (hero == null || hero.getPlayer() == null) {
-                removeHero(hero); // Seeing as it's null we might as well remove it.
-                continue;
-            }
-            if (player.getName().equalsIgnoreCase(hero.getPlayer().getName())) {
-                // If the entity ID's don't match for some reason then the player object is invalid and we need to
-                // re-load the hero object
-                if (hero.getPlayer().getEntityId() != player.getEntityId()) {
-                    removeHero(hero);
-                    break;
-                }
+        String key = player.getName().toLowerCase();
+        Hero hero = heroes.get(key);
+        if (hero != null) {
+            if (hero.getPlayer().getEntityId() != player.getEntityId()) {
+                heroes.remove(key);
+            } else {
                 return hero;
             }
         }
+
         // If it gets to this stage then clearly the HeroManager doesn't have it so we create it...
-        Hero hero = heroStorage.loadHero(player);
+        hero = heroStorage.loadHero(player);
         addHero(hero);
         performSkillChecks(hero);
+
         return hero;
     }
 
-    public Set<Hero> getHeroes() {
-        return new HashSet<Hero>(heroes);
+    public Collection<Hero> getHeroes() {
+        return Collections.unmodifiableCollection(heroes.values());
     }
 
     public void performSkillChecks(Hero hero) {
@@ -194,6 +192,7 @@ public class HeroManager {
                     ((OutsourcedSkill) skill).tryLearningSkill(hero);
                 }
             }
+
             if (skill instanceof PassiveSkill) {
                 if (playerClass.hasSkill(skill.getName())) {
                     ((PassiveSkill) skill).tryApplying(hero);
@@ -220,7 +219,7 @@ public class HeroManager {
         }
     }
 
-    public boolean removeHero(Hero hero) {
+    public void removeHero(Hero hero) {
         if (hero != null && hero.hasParty()) {
             HeroParty party = hero.getParty();
             party.removeMember(hero);
@@ -229,7 +228,7 @@ public class HeroManager {
             }
         }
 
-        return heroes.remove(hero);
+        heroes.remove(hero.getPlayer().getName());
     }
 
     /**
@@ -325,7 +324,7 @@ class ManaUpdater implements Runnable {
             return;
         lastUpdate = time;
 
-        Set<Hero> heroes = manager.getHeroes();
+        Collection<Hero> heroes = manager.getHeroes();
         for (Hero hero : heroes) {
             if (hero == null) {
                 continue;
@@ -337,7 +336,7 @@ class ManaUpdater implements Runnable {
             }
 
             HeroRegainManaEvent hrmEvent = new HeroRegainManaEvent(hero, manaPercent, null);
-            manager.plugin.getServer().getPluginManager().callEvent(hrmEvent);
+            Bukkit.getServer().getPluginManager().callEvent(hrmEvent);
             if (hrmEvent.isCancelled()) {
                 continue;
             }
@@ -366,9 +365,6 @@ class PartyUpdater implements Runnable {
     public void run() {
         if (!this.plugin.getConfigManager().getProperties().mapUI)
             return;
-
-        // System.out.print("Size - " + partyManager.getParties().size() + " Tick - " +
-        // Bukkit.getServer().getWorlds().get(0).getTime());
 
         if (partyManager.getParties().size() == 0)
             return;

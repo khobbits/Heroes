@@ -1,6 +1,6 @@
 package com.herocraftonline.dev.heroes.command.commands;
 
-import java.util.Set;
+import java.util.Collection;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -38,7 +38,7 @@ public class WhoCommand extends BasicCommand {
             sender.sendMessage("  §aLevel : " + level);
         } else if (searchedClass != null) {
             Properties prop = this.plugin.getConfigManager().getProperties();
-            Set<Hero> heroes = plugin.getHeroManager().getHeroes();
+            Collection<Hero> heroes = plugin.getHeroManager().getHeroes();
             sender.sendMessage("§c-----[ " + "§f" + searchedClass.getName() + "§c ]-----");
             for (Hero hero : heroes) {
                 if (hero == null) {
