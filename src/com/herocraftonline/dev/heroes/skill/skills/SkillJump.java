@@ -25,7 +25,7 @@ public class SkillJump extends ActiveSkill {
         float pitch = player.getEyeLocation().getPitch();
         int jumpForwards = 1;
         if (pitch > 45) {
-            jumpForwards = -1;
+            jumpForwards = 1;
         }
         if (pitch > 0) {
             pitch = -pitch;
@@ -35,6 +35,7 @@ public class SkillJump extends ActiveSkill {
         player.setVelocity(v);
         player.setFallDistance(-8f);
         broadcastExecuteText(hero);
+        
         return true;
     }
 }
