@@ -1,11 +1,13 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
+import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
@@ -34,17 +36,26 @@ public class SkillForcePush extends TargettedSkill {
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
+        HeroClass heroClass = hero.getHeroClass();
 
-        int damage = getSetting(hero.getHeroClass(), Setting.DAMAGE.node(), 0);
+        int damage = getSetting(heroClass, Setting.DAMAGE.node(), 0);
         if (damage > 0) {
             addSpellTarget(target, hero);
             target.damage(damage, player);
         }
-
-        float pitch = player.getEyeLocation().getPitch();
-        float multiplier = getSetting(hero.getHeroClass(), "horizontal-power", 1) * (90f + pitch) / 40f;
-        float vertPower = getSetting(hero.getHeroClass(), "vertical-power", 1);
-        Vector v = target.getVelocity().setY(vertPower).add(player.getLocation().getDirection().setY(0).normalize().multiply(multiplier));
+        
+        Location playerLoc = player.getLocation();
+        Location targetLoc = target.getLocation();
+        
+        double distance = player.getLocation().distanceSquared(target.getLocation());
+        double distAdjustment = 1.0 - distance / getSetting(heroClass, Setting.MAX_DISTANCE.node(), 15);
+        double xDir = targetLoc.getX() - playerLoc.getX();
+        double zDir = targetLoc.getZ() - playerLoc.getZ();
+        double magnitude = Math.sqrt(xDir * xDir + zDir * zDir);
+        double hPower = getSetting(heroClass, "horizontal-power", 1d) * distAdjustment;
+        double vPower = getSetting(heroClass, "vertical-power", 1d);
+        
+        Vector v = new Vector(xDir / magnitude * hPower, vPower, zDir / magnitude * hPower);
         target.setVelocity(v);
 
         broadcastExecuteText(hero, target);

@@ -10,7 +10,6 @@ import com.herocraftonline.dev.heroes.skill.SkillType;
 
 public class SkillJump extends ActiveSkill {
 
-    // TODO: Register this command in Heroes
     public SkillJump(Heroes plugin) {
         super(plugin, "Jump");
         setDescription("Launches you into the air");

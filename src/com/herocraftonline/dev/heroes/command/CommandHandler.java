@@ -41,11 +41,6 @@ public class CommandHandler {
     }
 
     public boolean dispatch(CommandSender sender, String label, String[] args) {
-        String input = label + " ";
-        for (String s : args) {
-            input += s + " ";
-        }
-
         for (int argsIncluded = args.length; argsIncluded >= 0; argsIncluded--) {
             String identifier = label;
             for (int i = 0; i < argsIncluded; i++) {

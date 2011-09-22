@@ -95,7 +95,7 @@ public class HEntityListener extends EntityListener {
         Properties prop = plugin.getConfigManager().getProperties();
         HeroManager heroManager = plugin.getHeroManager();
 
-        if (prop.orbExp == false) 
+        if (!prop.orbExp)
             event.setDroppedExp(0);
 
         if (defender instanceof Player) {
