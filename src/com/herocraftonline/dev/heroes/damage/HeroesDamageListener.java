@@ -223,6 +223,10 @@ public class HeroesDamageListener extends EntityListener {
                     }
                 }, 1);
             }
+            HeroParty party = hero.getParty();
+            if (party != null && event.getDamage() > 0 && !party.updateMapDisplay()) {
+                party.setUpdateMapDisplay(true);
+            }
         } else if (defender instanceof LivingEntity) {
             event.setDamage(damage);
         }

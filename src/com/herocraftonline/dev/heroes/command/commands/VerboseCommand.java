@@ -28,9 +28,8 @@ public class VerboseCommand extends BasicCommand {
         Player player = (Player) sender;
         Hero hero = plugin.getHeroManager().getHero(player);
         boolean verbose = hero.isVerbose();
-        verbose = !verbose;
-        hero.setVerbose(verbose);
-        if (verbose) {
+        hero.setVerbose(!verbose);
+        if (hero.isVerbose()) {
             Messaging.send(player, "Now displaying mana and exp gains.");
         } else {
             Messaging.send(player, "No longer displaying mana and exp gains.");

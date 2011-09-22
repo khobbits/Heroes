@@ -30,6 +30,7 @@ default:
     allowHatsPlugin: false
     prefixClassName: false
     resetOnDeath: false
+    orbExp: false
     globalCooldown: 1 #Seconds a hero must wait before using a second skill
     pvpLevelRange: 20 #Level that players must be within to PvP with each other
 mappartyui:

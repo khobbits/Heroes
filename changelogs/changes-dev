@@ -23,6 +23,7 @@ General/API:
 	Added SkillManager - skills are now loaded into the SkillManager rather than the CommandHandler
 	Skills are now loaded on Demand (only if a class has them)
 	Classes can now have multiple parents via Strong and Weak parent settings
+	ExperienceOrbs will no longer drop by default - they can be turned back on in the config, but they wont do anything while heroes is active
 
 Skills:
 

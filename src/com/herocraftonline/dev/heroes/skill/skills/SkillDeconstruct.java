@@ -52,7 +52,6 @@ public class SkillDeconstruct extends ActiveSkill {
         setUseText(getSetting(null, Setting.USE_TEXT.node(), "%hero% has deconstructed a %item%").replace("%hero%", "$1").replace("%item%", "$2"));
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();

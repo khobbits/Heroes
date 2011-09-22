@@ -1,7 +1,6 @@
 package com.herocraftonline.dev.heroes;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityListener;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 
@@ -14,22 +13,6 @@ public class HPartyListener extends EntityListener {
 
     public HPartyListener(Heroes plugin) {
         this.plugin = plugin;
-    }
-
-    @Override
-    public void onEntityDamage(EntityDamageEvent event) {
-        if (!(event.getEntity() instanceof Player) || event.isCancelled())
-            return;
-
-        Player player = (Player) event.getEntity();
-        Hero hero = this.plugin.getHeroManager().getHero(player);
-
-        if (!hero.hasParty())
-            return;
-        HeroParty party = hero.getParty();
-        if (event.getDamage() > 0 && !party.updateMapDisplay()) {
-            party.setUpdateMapDisplay(true);
-        }
     }
 
     @Override

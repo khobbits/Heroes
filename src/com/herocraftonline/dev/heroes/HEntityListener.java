@@ -69,14 +69,14 @@ public class HEntityListener extends EntityListener {
             // Check if the kill was near a spawner
             if (prop.noSpawnCamp && Util.isNearSpawner(defender, prop.spawnCampRadius))
                 return;
-            
+
             // Get the dying entity's CreatureType
             CreatureType type = Util.getCreatureFromEntity(defender);
             if (type != null) {
                 // If EXP hasn't been assigned for this Entity then we stop here.
                 if (!prop.creatureKillingExp.containsKey(type))
                     return;
-                
+
                 addedExp = prop.creatureKillingExp.get(type);
                 experienceType = ExperienceType.KILLING;
             }
@@ -94,6 +94,9 @@ public class HEntityListener extends EntityListener {
 
         Properties prop = plugin.getConfigManager().getProperties();
         HeroManager heroManager = plugin.getHeroManager();
+
+        if (prop.orbExp == false) 
+            event.setDroppedExp(0);
 
         if (defender instanceof Player) {
             Hero heroDefender = heroManager.getHero((Player) defender);
@@ -134,7 +137,7 @@ public class HEntityListener extends EntityListener {
                 attacker = ((CombustEffect) heroManager.getCreatureEffect(creatureDefender, "Combust")).getApplier();
             }
         }
-        
+
         if (attacker != null) {
             Hero hero = heroManager.getHero(attacker);
             awardKillExp(hero, defender);

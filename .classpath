@@ -8,7 +8,7 @@
 	<classpathentry kind="lib" path="libs/iCo5.jar"/>
 	<classpathentry kind="lib" path="libs/Permissions.jar"/>
 	<classpathentry kind="lib" path="libs/Spout.jar"/>
-	<classpathentry kind="lib" path="libs/craftbukkit-0.0.1-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="libs/iCo6.jar"/>
+	<classpathentry kind="lib" path="libs/craftbukkit-0.0.1-SNAPSHOT.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
