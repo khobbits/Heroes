@@ -129,17 +129,6 @@ public class CommandHandler {
         if (Heroes.Permissions != null)
             return Heroes.Permissions.has(player, permission);
         
-        do {
-            if (player.hasPermission(permission))
-                return true;
-            
-            permission = permission.replace(".*", "");
-            int i = permission.lastIndexOf(".");
-            if (i == -1)
-                return false;
-            permission = permission.substring(0, i) + ".*";
-        } while (permission.contains("."));
-        
-        return false;
+        return player.hasPermission(permission);
     }
 }

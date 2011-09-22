@@ -3,12 +3,15 @@ package com.herocraftonline.dev.heroes.classes;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 
 import org.bukkit.Material;
+import org.bukkit.permissions.Permission;
 import org.bukkit.util.config.Configuration;
 import org.bukkit.util.config.ConfigurationNode;
 
@@ -126,9 +129,16 @@ public class HeroClassManager {
             Heroes.log(Level.SEVERE, "You are missing a default class, this will cause A LOT of issues!");
         }
 
-        // Save the Configuration setup to file, we do this so that any defaults values loaded are saved to file.
-        // config.save(); <-- removing this because it adds things like cost and max level to each class, rendering the
-        // defaults in config.yml useless
+        registerClassPermissions();
+    }
+
+    private void registerClassPermissions() {
+        Map<String, Boolean> classPermissions = new HashMap<String, Boolean>();
+        for (HeroClass heroClass : classes) {
+            classPermissions.put("heroes.classes." + heroClass.getName().toLowerCase(), true);
+        }
+        Permission wildcardClassPermission = new Permission("heroes.classes.*", "Grants access to all classes.", classPermissions);
+        plugin.getServer().getPluginManager().addPermission(wildcardClassPermission);
     }
 
     public void loadDamages(HeroClass newClass, ConfigurationNode config) {
