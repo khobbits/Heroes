@@ -2,7 +2,6 @@ package com.herocraftonline.dev.heroes.skill.skills;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
@@ -55,17 +54,7 @@ public class SkillShield extends PassiveSkill {
                     multiplier = getSetting(hero.getHeroClass(), "trapdoor", 0.60);
                 }
                 event.setDamage((int) (event.getDamage() * multiplier));
-
             }
-        }
-
-        @Override
-        public void onCustomEvent(Event event) {
-            if (!(event instanceof WeaponDamageEvent))
-                return;
-
-            WeaponDamageEvent subEvent = (WeaponDamageEvent) event;
-
         }
     }
 }
