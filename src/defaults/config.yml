@@ -12,6 +12,7 @@ leveling:
     masteryLoss: false #allow mastery loss when players lose xp
     noSpawnCamp: false #allow xp gain when near a spawner if false
     spawnCampRadius: 7 #how close to the spawner the creature needs to be to deny xp
+    spawnCampExpMult: .5 #if noSpawnCamp is true, all xp gained from killing is multiplied by this number. setting to 0 gives no xp.
 properties:
     iConomy: false #use of the cost system
     swapcost: 0 #cost to swap

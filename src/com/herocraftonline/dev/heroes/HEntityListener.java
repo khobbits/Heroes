@@ -66,9 +66,6 @@ public class HEntityListener extends EntityListener {
                 experienceType = ExperienceType.PVP;
             }
         } else if (defender instanceof LivingEntity && !(defender instanceof Player) && expSources.contains(ExperienceType.KILLING)) {
-            // Check if the kill was near a spawner
-            if (prop.noSpawnCamp && Util.isNearSpawner(defender, prop.spawnCampRadius))
-                return;
 
             // Get the dying entity's CreatureType
             CreatureType type = Util.getCreatureFromEntity(defender);
@@ -79,6 +76,10 @@ public class HEntityListener extends EntityListener {
 
                 addedExp = prop.creatureKillingExp.get(type);
                 experienceType = ExperienceType.KILLING;
+                
+                // Check if the kill was near a spawner
+                if (prop.noSpawnCamp && Util.isNearSpawner(defender, prop.spawnCampRadius)) 
+                    addedExp *= prop.spawnCampExpMult;
             }
         }
 

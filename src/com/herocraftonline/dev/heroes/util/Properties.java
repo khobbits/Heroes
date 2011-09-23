@@ -33,6 +33,7 @@ public class Properties {
     public double playerKillingExp = 0;
     public boolean noSpawnCamp = false;
     public int spawnCampRadius;
+    public double spawnCampExpMult;
     public Map<CreatureType, Double> creatureKillingExp = new HashMap<CreatureType, Double>();
     public Map<Material, Double> miningExp = new HashMap<Material, Double>();
     public Map<Material, Double> loggingExp = new HashMap<Material, Double>();

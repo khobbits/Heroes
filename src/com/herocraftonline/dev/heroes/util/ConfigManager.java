@@ -207,6 +207,7 @@ public class ConfigManager {
         properties.masteryLoss = config.getBoolean(root + "mastery-loss", false);
         properties.noSpawnCamp = config.getBoolean(root + "noSpawnCamp", false);
         properties.spawnCampRadius = config.getInt(root + "spawnCampRadius", 7);
+        properties.spawnCampExpMult = config.getDouble(root + "spawnCampExpMult", .5);
         properties.calcExp();
     }
 

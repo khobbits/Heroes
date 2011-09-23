@@ -6,6 +6,7 @@ Bug Fixes:
 	Fixed issue with bukkit permissions not being set if Permissions3 wasn't detected
 	Player's displaynames will be updated properly when they choose a new path or reset.
 	Player HP is now ceiled when synced preventing high HP classes from dying before they actually hit 0 HP.
+	creatures added in 1.8 will no longer crash the effect system
 	
 General/API:
 
