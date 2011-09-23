@@ -21,8 +21,9 @@ public enum EffectType {
     PHYSICAL,
     POISON,
     ROOT,
+    SAFEFALL,
     SILENCE,
     STUN,
     WATER,
-    WOUNDING, // Prevents/Limits Healing
+    WOUNDING; // Prevents/Limits Healing
 }
