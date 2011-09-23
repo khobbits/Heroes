@@ -14,6 +14,7 @@ General/API:
 	Added /hero admin level - command to adjust a player's level directly.
 	Fixed SpoutUI implementation
 	Added CombustEffect - it's used for tracking who last applied FireTicks to a player
+	SafeFallEffect is now universal - the damagemanager now checks if the hero has the effect before allowing fall damage
 	getRemaingTime added to expirable effects
 	TargettedSkills now have built-in - PvP/Party/Summon checking.
 	PeriodicEffect is now PeriodicExpirableEffect - there is now a non-expirable PeriodicEffect

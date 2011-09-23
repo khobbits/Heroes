@@ -53,7 +53,7 @@ public class Hero {
     private HeroParty party = null;
     private boolean verbose = true;
     private HeroDamageCause lastDamageCause = null;
-    private Set<Effect> effects = new HashSet<Effect>();
+    private Map<String, Effect> effects = new HashMap<String, Effect>();
     private Map<String, Double> experience = new HashMap<String, Double>();
     private Map<String, Long> cooldowns = new HashMap<String, Long>();
     private Set<Creature> summons = new HashSet<Creature>();
@@ -81,7 +81,7 @@ public class Hero {
         if (hasEffect(effect.getName())) {
             removeEffect(getEffect(effect.getName()));
         }
-        effects.add(effect);
+        effects.put(effect.getName().toLowerCase(), effect);
         effect.apply(this);
     }
 
@@ -140,7 +140,7 @@ public class Hero {
      * 
      */
     public void clearEffects() {
-        Iterator<Effect> iter = effects.iterator();
+        Iterator<Effect> iter = effects.values().iterator();
         while (iter.hasNext()) {
             iter.next().remove(this);
             iter.remove();
@@ -348,11 +348,7 @@ public class Hero {
      * @return the Effect with the name - or null if not found
      */
     public Effect getEffect(String name) {
-        for (Effect effect : effects) {
-            if (effect.getName().equalsIgnoreCase(name))
-                return effect;
-        }
-        return null;
+        return effects.get(name.toLowerCase());
     }
 
     /**
@@ -361,7 +357,7 @@ public class Hero {
      * @return
      */
     public Set<Effect> getEffects() {
-        return new HashSet<Effect>(effects);
+        return new HashSet<Effect>(effects.values());
     }
 
     /**
@@ -521,15 +517,11 @@ public class Hero {
      * @return boolean
      */
     public boolean hasEffect(String name) {
-        for (Effect effect : effects) {
-            if (effect.getName().equalsIgnoreCase(name))
-                return true;
-        }
-        return false;
+        return effects.containsKey(name.toLowerCase());
     }
 
     public boolean hasEffectType(EffectType type) {
-        for (Effect effect : effects) {
+        for (Effect effect : effects.values()) {
             if (effect.isType(type))
                 return true;
         }
@@ -616,7 +608,7 @@ public class Hero {
      * @param effect
      */
     public void removeEffect(Effect effect) {
-        effects.remove(effect);
+        effects.remove(effect.getName().toLowerCase());
         if (effect != null) {
             effect.remove(this);
         }

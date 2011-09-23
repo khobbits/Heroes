@@ -1,10 +1,10 @@
 package com.herocraftonline.dev.heroes.command.commands;
 
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.TreeMap;
 
 import org.bukkit.command.CommandSender;
@@ -29,7 +29,7 @@ public class LeaderboardCommand extends BasicCommand {
 
     @Override
     public boolean execute(CommandSender sender, String identifier, String[] args) {
-        Set<Hero> heroes = plugin.getHeroManager().getHeroes();
+        Collection<Hero> heroes = plugin.getHeroManager().getHeroes();
         Map<Hero, Double> leaderboard = new TreeMap<Hero, Double>(new Comparator<Hero>() {
             @Override
             public int compare(Hero h1, Hero h2) {

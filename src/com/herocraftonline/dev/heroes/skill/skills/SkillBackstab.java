@@ -51,12 +51,15 @@ public class SkillBackstab extends PassiveSkill {
             WeaponDamageEvent subEvent = (WeaponDamageEvent) event;
             if (subEvent.getDamager() instanceof Player) {
                 Player player = (Player) subEvent.getDamager();
-                ItemStack item = player.getItemInHand();
                 Hero hero = plugin.getHeroManager().getHero(player);
-                HeroClass heroClass = hero.getHeroClass();
-                if (!getSetting(heroClass, "weapons", Util.swords).contains(item.getType().name()))
-                    return;
+                
                 if (hero.hasEffect(getName())) {
+                    HeroClass heroClass = hero.getHeroClass();
+                    ItemStack item = player.getItemInHand();
+                    
+                    if (!getSetting(heroClass, "weapons", Util.swords).contains(item.getType().name()))
+                        return;
+                    
                     if (subEvent.getEntity().getLocation().getDirection().dot(player.getLocation().getDirection()) <= 0)
                         return;
 
