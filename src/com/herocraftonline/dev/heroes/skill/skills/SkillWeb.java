@@ -38,8 +38,8 @@ public class SkillWeb extends TargettedSkill {
         setUsage("/skill web <target>");
         setArgumentRange(0, 1);
         setIdentifiers("skill web");
-        setTypes(SkillType.EARTH, SkillType.SILENCABLE);
-
+        setTypes(SkillType.EARTH, SkillType.SILENCABLE, SkillType.HARMFUL);
+        
         registerEvent(Type.BLOCK_BREAK, new WebBlockListener(), Priority.Highest);
     }
 
@@ -60,7 +60,7 @@ public class SkillWeb extends TargettedSkill {
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
-
+        
         String name = "";
         if (target instanceof Player) {
             name = ((Player) target).getDisplayName();
