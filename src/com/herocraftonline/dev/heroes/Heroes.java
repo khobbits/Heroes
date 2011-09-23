@@ -106,7 +106,7 @@ public class Heroes extends JavaPlugin {
     private SkillManager skillManager;
     // Variable for the Permissions plugin handler.
     public static PermissionHandler Permissions;
-    public com.herocraftonline.economy.Economy econ;
+    public static com.herocraftonline.economy.Economy econ;
 
     // Variable for Spout.
     public static boolean useSpout = false;
@@ -172,7 +172,7 @@ public class Heroes extends JavaPlugin {
             heroManager.saveHero(player);
             heroManager.getHero(player).clearSummons();
         }
-        this.econ = null; // When it Enables again it performs the checks anyways.
+        Heroes.econ = null; // When it Enables again it performs the checks anyways.
         Heroes.Permissions = null; // When it Enables again it performs the checks anyways.
         log.info(getDescription().getName() + " version " + getDescription().getVersion() + " is disabled!");
         debugLog.close();
@@ -260,20 +260,20 @@ public class Heroes extends JavaPlugin {
         Plugin test = pm.getPlugin("iConomy");
         if (test != null) {
             if (test.getClass().getName().equals("com.iCo6.iConomy")) {
-                this.econ = new iCo6();
+                Heroes.econ = new iCo6();
             } else if (test.getClass().getName().equals("com.iConomy.iConomy")) {
-                this.econ = new iCo5();
+                Heroes.econ = new iCo5();
             } else if (test.getClass().getName().equals("com.nijiko.coelho.iConomy.iConomy")) {
-                this.econ = new iCo4();
+                Heroes.econ = new iCo4();
             }
         } else {
             test = pm.getPlugin("Essentials");
             if (test != null) {
-                this.econ = new EssE();
+                Heroes.econ = new EssE();
             } else {
                 test = pm.getPlugin("BOSEconomy");
                 if (test != null) {
-                    this.econ = new BOSE();
+                    Heroes.econ = new BOSE();
                 }
             }
         }
