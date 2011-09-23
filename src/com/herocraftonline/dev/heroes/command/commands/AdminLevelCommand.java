@@ -19,7 +19,7 @@ public class AdminLevelCommand extends BasicCommand {
         setDescription("Changes a users level");
         setUsage("/hero admin level §9<player> <level>");
         setArgumentRange(2, 2);
-        setIdentifiers(new String[] { "hero admin level" });
+        setIdentifiers("hero admin level");
         setPermission("heroes.admin.level");
     }
 

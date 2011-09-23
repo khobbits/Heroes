@@ -29,7 +29,7 @@ public class SkillListCommand extends BasicCommand {
         setDescription("Displays a list of your class skills");
         setUsage("/skills §8[page#]");
         setArgumentRange(0, 1);
-        setIdentifiers(new String[] { "skills", "hero skills" });
+        setIdentifiers("skills", "hero skills");
     }
 
     @Override

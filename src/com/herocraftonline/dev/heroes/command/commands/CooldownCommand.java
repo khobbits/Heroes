@@ -22,7 +22,7 @@ public class CooldownCommand extends BasicCommand {
         setDescription("Displays your cooldowns");
         setUsage("/cd");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "cooldowns", "cd" });
+        setIdentifiers("cooldowns", "cd");
     }
 
     @Override

@@ -21,7 +21,7 @@ public class PartyWhoCommand extends BasicCommand {
         setDescription("Lists your party members");
         setUsage("/party who");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "party who" });
+        setIdentifiers("party who");
     }
 
     @Override

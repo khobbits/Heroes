@@ -20,7 +20,7 @@ public class SuppressCommand extends BasicCommand {
         setDescription("Toggles the suppression of skill messages");
         setUsage("/hero stfu §9<skill>");
         setArgumentRange(1, 1);
-        setIdentifiers(new String[] { "hero stfu", "hero suppress" });
+        setIdentifiers("hero stfu", "hero suppress");
     }
 
     @Override

@@ -21,7 +21,7 @@ public class ArmorCommand extends BasicCommand {
         setDescription("Displays armor available for your class");
         setUsage("/hero armor");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "hero armor" });
+        setIdentifiers("hero armor");
     }
 
     @Override

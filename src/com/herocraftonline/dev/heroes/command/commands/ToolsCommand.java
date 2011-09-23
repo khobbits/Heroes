@@ -20,7 +20,7 @@ public class ToolsCommand extends BasicCommand {
         setDescription("Displays tools available for your class");
         setUsage("/hero tools");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "hero tools" });
+        setIdentifiers("hero tools");
     }
 
     @Override

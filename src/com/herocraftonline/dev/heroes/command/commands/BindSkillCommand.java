@@ -22,7 +22,7 @@ public class BindSkillCommand extends BasicCommand {
         setDescription("Binds a skill with an item");
         setUsage("/bind §9<skill> §8[args]");
         setArgumentRange(0, 1000);
-        setIdentifiers(new String[] { "bind" });
+        setIdentifiers("bind");
     }
 
     @Override

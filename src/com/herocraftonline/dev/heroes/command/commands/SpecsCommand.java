@@ -21,7 +21,7 @@ public class SpecsCommand extends BasicCommand {
         setDescription("Lists all specializations available to your path");
         setUsage("/hero specs §8[page#]");
         setArgumentRange(0, 1);
-        setIdentifiers(new String[] { "hero specs" });
+        setIdentifiers("hero specs");
     }
 
     @Override

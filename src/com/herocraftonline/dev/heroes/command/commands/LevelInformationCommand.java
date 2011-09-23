@@ -19,7 +19,7 @@ public class LevelInformationCommand extends BasicCommand {
         setDescription("Displays hero information");
         setUsage("/hero level");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "hero level", "level", "lvl" });
+        setIdentifiers("hero level", "level", "lvl");
     }
 
     @Override

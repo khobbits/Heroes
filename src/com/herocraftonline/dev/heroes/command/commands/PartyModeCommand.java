@@ -18,7 +18,7 @@ public class PartyModeCommand extends BasicCommand {
         setDescription("Toggles exp sharing or party pvp");
         setUsage("/party mode §9<pvp|exp>");
         setArgumentRange(1, 1);
-        setIdentifiers(new String[] { "party mode" });
+        setIdentifiers("party mode");
     }
 
     @Override

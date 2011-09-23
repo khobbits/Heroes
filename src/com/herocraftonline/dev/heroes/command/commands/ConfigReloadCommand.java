@@ -16,7 +16,7 @@ public class ConfigReloadCommand extends BasicCommand {
         setDescription("Reloads the heroes config file");
         setUsage("/hero admin reload");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "hero admin reload" });
+        setIdentifiers("hero admin reload");
         setPermission("heroes.admin.reload");
     }
 

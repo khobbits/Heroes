@@ -23,7 +23,7 @@ public class LeaderboardCommand extends BasicCommand {
         setDescription("Displays Hero rankings");
         setUsage("/hero leaderboard");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "hero leaderboard" });
+        setIdentifiers("hero leaderboard");
         setPermission("heroes.leaderboard");
     }
 

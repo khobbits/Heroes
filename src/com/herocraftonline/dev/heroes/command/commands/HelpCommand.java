@@ -29,7 +29,7 @@ public class HelpCommand extends BasicCommand {
         setDescription("Displays the help menu");
         setUsage("/hero help §8[page#]");
         setArgumentRange(0, 1);
-        setIdentifiers(new String[] { "hero", "hero help" });
+        setIdentifiers("hero", "hero help");
     }
 
     @Override

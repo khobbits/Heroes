@@ -17,7 +17,7 @@ public class HeroSaveCommand extends BasicCommand {
         setDescription("Saves your hero file");
         setUsage("/hero save");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "hero save" });
+        setIdentifiers("hero save");
     }
 
     @Override
