@@ -34,6 +34,9 @@ public class BindSkillCommand extends BasicCommand {
         Hero hero = plugin.getHeroManager().getHero(player);
         HeroClass heroClass = hero.getHeroClass();
         Material material = player.getItemInHand().getType();
+        if (!hero.canEquipItem(player.getInventory().getHeldItemSlot())) {
+            return false;
+        }
         if (args.length > 0) {
             // Skill detection - first check if it's a skill, then check if it's an identifier
             Skill skill = plugin.getSkillManager().getSkill(args[0]);

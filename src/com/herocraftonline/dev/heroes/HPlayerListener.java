@@ -73,7 +73,11 @@ public class HPlayerListener extends PlayerListener {
         Player player = event.getPlayer();
         Material material = player.getItemInHand().getType();
         Hero hero = plugin.getHeroManager().getHero(player);
-        hero.canEquipItem(player.getInventory().getHeldItemSlot());
+        if (!hero.canEquipItem(player.getInventory().getHeldItemSlot())) {
+            event.setCancelled(true);
+            return;
+        }
+        
         if (hero.hasBind(material)) {
             if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 String[] args = hero.getBind(material);
