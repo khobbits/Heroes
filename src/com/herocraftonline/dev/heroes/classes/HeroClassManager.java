@@ -127,8 +127,10 @@ public class HeroClassManager {
         if (defaultClass == null) {
             Heroes.log(Level.SEVERE, "You are missing a default class, this will cause A LOT of issues!");
         }
-
-        registerClassPermissions();
+        
+        //Only register the permissions once
+        if (plugin.getServer().getPluginManager().getPermission("heroes.classes.*") == null)
+            registerClassPermissions();
     }
 
     private void registerClassPermissions() {
