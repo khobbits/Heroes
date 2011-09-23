@@ -2,15 +2,18 @@ package com.herocraftonline.dev.heroes.util;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.CaveSpider;
 import org.bukkit.entity.Chicken;
 import org.bukkit.entity.Cow;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Creeper;
+import org.bukkit.entity.Enderman;
 import org.bukkit.entity.Ghast;
 import org.bukkit.entity.Giant;
 import org.bukkit.entity.Pig;
 import org.bukkit.entity.PigZombie;
 import org.bukkit.entity.Sheep;
+import org.bukkit.entity.Silverfish;
 import org.bukkit.entity.Skeleton;
 import org.bukkit.entity.Slime;
 import org.bukkit.entity.Spider;
@@ -59,12 +62,16 @@ public final class Messaging {
     }
 
     public static String getCreatureName(Creature creature) {
-        if (creature instanceof Cow)
+        if (creature instanceof CaveSpider)
+            return "Cave Spider";
+        else if (creature instanceof Cow)
             return "Cow";
         else if (creature instanceof Chicken)
             return "Chicken";
         else if (creature instanceof Creeper)
             return "Creeper";
+        else if (creature instanceof Enderman)
+            return "Enderman";
         else if (creature instanceof Ghast)
             return "Ghast";
         else if (creature instanceof Giant)
@@ -77,6 +84,8 @@ public final class Messaging {
             return "Sheep";
         else if (creature instanceof Skeleton)
             return "Skeleton";
+        else if (creature instanceof Silverfish)
+            return "Silverfish";
         else if (creature instanceof Slime)
             return "Slime";
         else if (creature instanceof Spider)

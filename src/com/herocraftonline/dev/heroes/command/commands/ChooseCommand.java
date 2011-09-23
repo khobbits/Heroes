@@ -183,7 +183,5 @@ public class ChooseCommand extends BasicInteractiveCommand {
             plugin.getHeroManager().saveHero(hero);
             return true;
         }
-
     }
-
 }
