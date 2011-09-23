@@ -181,7 +181,7 @@ public class SkillDeconstruct extends ActiveSkill {
         }
         int amount = player.getInventory().getContents()[slot].getAmount() - 1;
         if (amount == 0) {
-            player.getInventory().getContents()[slot] = new ItemStack(null);
+            player.getInventory().getContents()[slot] = null;
         } else {
             player.getInventory().getContents()[slot].setAmount(amount);
         }
