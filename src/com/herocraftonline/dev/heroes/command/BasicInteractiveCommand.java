@@ -33,16 +33,25 @@ public abstract class BasicInteractiveCommand extends BasicCommand implements In
         }
 
         InteractiveCommandState state = states[stateIndex];
-
+        
         if (stateIndex > 0) {
             if (this.getCancelIdentifier().equalsIgnoreCase(identifier)) {
                 Messaging.send(executor, "Exiting command.");
                 userStates.remove(executor);
                 onCommandCancelled(executor);
                 return true;
+            } else {
+                //If the player re-typed a different state command for this, lets go ahead and re-do the command
+                for (InteractiveCommandState s : states) {
+                    if (s.isIdentifier(identifier)) {
+                        userStates.remove(executor);
+                        s.execute(executor, identifier, args);
+                        return true;
+                    }
+                }
             }
         }
-
+        
         if (args.length < state.getMinArguments() || args.length > state.getMaxArguments() || !state.execute(executor, identifier, args)) {
             if (stateIndex > 0) {
                 Messaging.send(executor, "Invalid input - try again or type $1 to exit.", "/" + this.getCancelIdentifier());
