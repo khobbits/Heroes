@@ -2,12 +2,12 @@ package com.herocraftonline.dev.heroes.command;
 
 public abstract class BasicInteractiveCommandState implements InteractiveCommandState {
 
-    private String identifier;
+    private String[] identifiers;
     private int minArguments = 0;
     private int maxArguments = 0;
 
-    public BasicInteractiveCommandState(String identifier) {
-        this.identifier = identifier;
+    public BasicInteractiveCommandState(String...identifiers) {
+        this.identifiers = identifiers;
     }
 
     @Override
@@ -22,7 +22,11 @@ public abstract class BasicInteractiveCommandState implements InteractiveCommand
 
     @Override
     public boolean isIdentifier(String input) {
-        return input.equalsIgnoreCase(identifier);
+        for (String ident : identifiers) {
+            if (input.equalsIgnoreCase(ident))
+                return true;
+        }
+        return false;
     }
 
     /*

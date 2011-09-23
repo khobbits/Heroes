@@ -28,7 +28,7 @@ public class HPluginListener extends ServerListener {
         }
 
         if (name.equals("iConomy") || name.equals("BOSEconomy") || name.equals("Essentials")) {
-            this.plugin.econ = null;
+            Heroes.econ = null;
         }
     }
 
@@ -52,7 +52,7 @@ public class HPluginListener extends ServerListener {
 
         // Check for Econ
         if (name.equals("iConomy") || name.equals("BOSEconomy") || name.equals("Essentials")) {
-            if (this.plugin.econ == null) {
+            if (Heroes.econ == null) {
                 this.plugin.setupEconomy();
             }
         }

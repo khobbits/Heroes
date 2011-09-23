@@ -40,16 +40,7 @@ public abstract class BasicInteractiveCommand extends BasicCommand implements In
                 userStates.remove(executor);
                 onCommandCancelled(executor);
                 return true;
-            } else {
-                //If the player re-typed a different state command for this, lets go ahead and re-do the command
-                for (InteractiveCommandState s : states) {
-                    if (s.isIdentifier(identifier)) {
-                        userStates.remove(executor);
-                        s.execute(executor, identifier, args);
-                        return true;
-                    }
-                }
-            }
+            } 
         }
         
         if (args.length < state.getMinArguments() || args.length > state.getMaxArguments() || !state.execute(executor, identifier, args)) {

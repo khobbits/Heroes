@@ -30,7 +30,7 @@ public class ResetCommand extends BasicInteractiveCommand {
 
     @Override
     public String getCancelIdentifier() {
-        return "cancel";
+        return "hero cancel";
     }
 
     @Override
@@ -56,7 +56,7 @@ public class ResetCommand extends BasicInteractiveCommand {
             HeroClass defaultClass = plugin.getClassManager().getDefaultClass();
 
             Messaging.send(executor, "This will reset all earned XP and reset your class to: " + defaultClass.getName());
-            Messaging.send(executor, "Please §8/confirm §7 or §8/cancel §7this selection.");
+            Messaging.send(executor, "Please §8/hero confirm §7 or §8/hero cancel §7this selection.");
 
             pendingResets.add(player);
             return true;
@@ -67,7 +67,7 @@ public class ResetCommand extends BasicInteractiveCommand {
     class StateB extends BasicInteractiveCommandState {
 
         public StateB() {
-            super("confirm");
+            super("hero confirm");
             this.setArgumentRange(0, 0);
         }
 

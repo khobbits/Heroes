@@ -33,7 +33,7 @@ public class ChooseCommand extends BasicInteractiveCommand {
 
     @Override
     public String getCancelIdentifier() {
-        return "cancel";
+        return "hero cancel";
     }
 
     @Override
@@ -120,7 +120,7 @@ public class ChooseCommand extends BasicInteractiveCommand {
             if (costApplied) {
                 Messaging.send(executor, "$1: $2", "Fee", Heroes.econ.format(cost));
             }
-            Messaging.send(executor, "Please §8/confirm §7 or §8/cancel §7this selection.");
+            Messaging.send(executor, "Please §8/hero confirm §7 or §8/hero cancel §7this selection.");
 
             pendingClassSelections.put(player, newClass);
             return true;
@@ -131,7 +131,7 @@ public class ChooseCommand extends BasicInteractiveCommand {
     class StateB extends BasicInteractiveCommandState {
 
         public StateB() {
-            super("confirm");
+            super("hero confirm");
             this.setArgumentRange(0, 0);
         }
 
