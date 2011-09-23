@@ -138,9 +138,9 @@ public class SkillDeconstruct extends ActiveSkill {
             for (int i = 0; i < contents.length; i++) {
                 if (contents[i].getType() != item.getType()) {
                     continue;
-                } else if (contents[i].getType().getMaxDurability() > 16 && contents[i].getDurability() < minDurability) {
+                } else if (contents[i].getType().getMaxDurability() > 16 && contents[i].getDurability() > minDurability) {
                     continue;
-                } else if (contents[i].getType().getMaxDurability() > 16 && slot != -1 && contents[i].getDurability() > player.getInventory().getContents()[slot].getDurability()) {
+                } else if (contents[i].getType().getMaxDurability() > 16 && slot != -1 && contents[i].getDurability() <= player.getInventory().getContents()[slot].getDurability()) {
                     continue;
                 }
                 slot = i;
@@ -181,7 +181,7 @@ public class SkillDeconstruct extends ActiveSkill {
         }
         int amount = player.getInventory().getContents()[slot].getAmount() - 1;
         if (amount == 0) {
-            player.getInventory().getContents()[slot] = null;
+            player.getInventory().clear(slot);
         } else {
             player.getInventory().getContents()[slot].setAmount(amount);
         }
