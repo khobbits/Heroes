@@ -62,7 +62,9 @@ public class HPlayerListener extends PlayerListener {
 
         // This player is no longer in bed so remove them from the bedHealer set
         Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
-        hero.removeEffect(hero.getEffect("BedHeal"));
+        if (hero.hasEffect("BedHeal")) {
+            hero.removeEffect(hero.getEffect("BedHeal"));
+        }
     }
 
     @Override
@@ -77,7 +79,7 @@ public class HPlayerListener extends PlayerListener {
             event.setCancelled(true);
             return;
         }
-        
+
         if (hero.hasBind(material)) {
             if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 String[] args = hero.getBind(material);
@@ -104,7 +106,7 @@ public class HPlayerListener extends PlayerListener {
             return;
 
         final Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
-        
+
         plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
             @Override
             public void run() {

@@ -85,6 +85,7 @@ public class SkillSlow extends TargettedSkill {
             super(skill, "Slow", duration);
             this.types.add(EffectType.DISPELLABLE);
             this.types.add(EffectType.HARMFUL);
+            this.types.add(EffectType.SLOW);
             this.amplifier = amplifier;
             this.duration = (int) (duration / 1000) * 20;
         }

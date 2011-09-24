@@ -23,6 +23,7 @@ public enum EffectType {
     ROOT,
     SAFEFALL,
     SILENCE,
+    SLOW,
     STUN,
     WATER,
     WOUNDING; // Prevents/Limits Healing

@@ -33,7 +33,7 @@ public class ChooseCommand extends BasicInteractiveCommand {
 
     @Override
     public String getCancelIdentifier() {
-        return "cancel";
+        return "hero cancel";
     }
 
     @Override
@@ -47,7 +47,7 @@ public class ChooseCommand extends BasicInteractiveCommand {
     class StateA extends BasicInteractiveCommandState {
 
         public StateA() {
-            super("choose");
+            super("hero choose");
             this.setArgumentRange(1, 1);
         }
 
@@ -131,7 +131,7 @@ public class ChooseCommand extends BasicInteractiveCommand {
     class StateB extends BasicInteractiveCommandState {
 
         public StateB() {
-            super("confirm");
+            super("hero confirm");
             this.setArgumentRange(0, 0);
         }
 
