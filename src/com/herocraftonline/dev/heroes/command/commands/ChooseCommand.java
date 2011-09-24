@@ -154,8 +154,8 @@ public class ChooseCommand extends BasicInteractiveCommand {
             hero.clearEffects(); // clear any leftover/passive effects
             hero.setHeroClass(newClass);
 
-            if (prop.resetExpOnClassChange) {
-                if (!hero.isMaster(currentClass)) {
+            if (prop.resetExpOnClassChange || prop.resetMasteryOnClassChange) {
+                if (!hero.isMaster(currentClass) || (prop.resetMasteryOnClassChange)) {
                     hero.setExperience(currentClass, 0);
                 }
             }

@@ -28,6 +28,7 @@ public class Properties {
     // Experience//
     public double partyBonus = 0;
     public boolean resetExpOnClassChange = true;
+    public boolean resetMasteryOnClassChange = false;
     public int blockTrackingDuration;
     public int maxTrackedBlocks;
     public double playerKillingExp = 0;
