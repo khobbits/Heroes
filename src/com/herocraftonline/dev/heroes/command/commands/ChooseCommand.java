@@ -92,7 +92,7 @@ public class ChooseCommand extends BasicInteractiveCommand {
                     return false;
                 }
             }
-            
+
             HeroClass defaultClass = plugin.getClassManager().getDefaultClass();
 
             if (newClass != defaultClass && !CommandHandler.hasPermission(player, "heroes.classes." + newClass.getName().toLowerCase())) {
@@ -151,9 +151,6 @@ public class ChooseCommand extends BasicInteractiveCommand {
             if (event.isCancelled())
                 return false;
 
-            hero.clearEffects(); // clear any leftover/passive effects
-            hero.setHeroClass(newClass);
-
             if (prop.resetExpOnClassChange || prop.resetMasteryOnClassChange) {
                 if (!hero.isMaster(currentClass) || (prop.resetMasteryOnClassChange)) {
                     hero.setExperience(currentClass, 0);
@@ -173,8 +170,11 @@ public class ChooseCommand extends BasicInteractiveCommand {
             }
 
             // Cleanup stuff
-            plugin.getHeroManager().performSkillChecks(hero);
+            hero.clearEffects();
             hero.clearBinds();
+            hero.setHeroClass(newClass);
+
+            plugin.getHeroManager().performSkillChecks(hero);
             if (plugin.getConfigManager().getProperties().prefixClassName) {
                 player.setDisplayName("[" + hero.getHeroClass().getName() + "]" + player.getName());
             }
