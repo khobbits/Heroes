@@ -91,11 +91,14 @@ public class HEntityListener extends EntityListener {
     @Override
     public void onEntityDeath(EntityDeathEvent event) {
         Entity defender = event.getEntity();
-        Player attacker = getAttacker(defender.getLastDamageCause());
-
         Properties prop = plugin.getConfigManager().getProperties();
+        //If this is a disabled world ignore it
+        if (prop.disabledWorlds.contains(defender.getWorld().getName()))
+            return;
+        
+        Player attacker = getAttacker(defender.getLastDamageCause());
         HeroManager heroManager = plugin.getHeroManager();
-
+        
         if (!prop.orbExp)
             event.setDroppedExp(0);
 

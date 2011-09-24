@@ -44,12 +44,13 @@ public class HBlockListener extends BlockListener {
     public void onBlockBreak(BlockBreakEvent event) {
         if (event.isCancelled())
             return;
-
-        Block block = event.getBlock();
+        Properties prop = plugin.getConfigManager().getProperties();
         Player player = event.getPlayer();
 
-        if (plugin.getConfigManager().getProperties().disabledWorlds.contains(player.getWorld().getName()))
+        if (prop.disabledWorlds.contains(player.getWorld().getName()))
             return;
+        
+        Block block = event.getBlock();
 
         // Get the Hero representing the player
         Hero hero = plugin.getHeroManager().getHero(player);
@@ -57,7 +58,7 @@ public class HBlockListener extends BlockListener {
         HeroClass playerClass = hero.getHeroClass();
         // Get the sources of experience for the player's class
         Set<ExperienceType> expSources = playerClass.getExperienceSources();
-        Properties prop = plugin.getConfigManager().getProperties();
+
 
         double addedExp = 0;
 

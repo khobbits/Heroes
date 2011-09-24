@@ -29,6 +29,7 @@ import com.herocraftonline.dev.heroes.hero.HeroManager;
 import com.herocraftonline.dev.heroes.party.HeroParty;
 import com.herocraftonline.dev.heroes.skill.OutsourcedSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
+import com.herocraftonline.dev.heroes.util.Properties;
 
 public class HPlayerListener extends PlayerListener {
 
@@ -45,12 +46,13 @@ public class HPlayerListener extends PlayerListener {
 
     @Override
     public void onPlayerBedEnter(PlayerBedEnterEvent event) {
-        if (event.isCancelled() || !plugin.getConfigManager().getProperties().bedHeal)
+        Properties props = plugin.getConfigManager().getProperties();
+        if (event.isCancelled() || !props.bedHeal || props.disabledWorlds.contains(event.getPlayer().getWorld().getName()))
             return;
 
         Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
-        long period = plugin.getConfigManager().getProperties().healInterval * 1000;
-        double tickHealPercent = plugin.getConfigManager().getProperties().healPercent / 100.0;
+        long period = props.healInterval * 1000;
+        double tickHealPercent = props.healPercent / 100.0;
         BedHealEffect bhEffect = new BedHealEffect(period, tickHealPercent);
         hero.addEffect(bhEffect);
     }
@@ -69,10 +71,10 @@ public class HPlayerListener extends PlayerListener {
 
     @Override
     public void onPlayerInteract(PlayerInteractEvent event) {
-        if (event.useItemInHand() == Result.DENY)
+        Player player = event.getPlayer();
+        if (event.useItemInHand() == Result.DENY || plugin.getConfigManager().getProperties().disabledWorlds.contains(player.getWorld().getName()))
             return;
 
-        Player player = event.getPlayer();
         Material material = player.getItemInHand().getType();
         Hero hero = plugin.getHeroManager().getHero(player);
         if (!hero.canEquipItem(player.getInventory().getHeldItemSlot())) {
@@ -94,7 +96,9 @@ public class HPlayerListener extends PlayerListener {
         Hero hero = plugin.getHeroManager().getHero(player);
         hero.syncExperience();
         hero.syncHealth();
-        hero.checkInventory();
+        if (!plugin.getConfigManager().getProperties().disabledWorlds.contains(player.getWorld().getName())) {
+            hero.checkInventory();
+        }
         if (plugin.getConfigManager().getProperties().prefixClassName) {
             player.setDisplayName("[" + hero.getHeroClass().getName() + "]" + player.getName());
         }
@@ -102,7 +106,7 @@ public class HPlayerListener extends PlayerListener {
 
     @Override
     public void onPlayerPickupItem(PlayerPickupItemEvent event) {
-        if (event.isCancelled())
+        if (event.isCancelled() || plugin.getConfigManager().getProperties().disabledWorlds.contains(event.getPlayer().getWorld().getName()))
             return;
 
         final Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
@@ -163,7 +167,7 @@ public class HPlayerListener extends PlayerListener {
 
         Player player = event.getPlayer();
         if (event.getFrom().getWorld() != event.getTo().getWorld()) {
-            Hero hero = plugin.getHeroManager().getHero(player);
+            final Hero hero = plugin.getHeroManager().getHero(player);
             HeroClass heroClass = hero.getHeroClass();
 
             List<Command> commands = plugin.getCommandHandler().getCommands();
@@ -174,6 +178,14 @@ public class HPlayerListener extends PlayerListener {
                         skill.tryLearningSkill(hero);
                     }
                 }
+            }
+            if (plugin.getConfigManager().getProperties().disabledWorlds.contains(event.getTo().getWorld().getName())) {
+                plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+                    @Override
+                    public void run() {
+                        hero.checkInventory();
+                    }
+                });
             }
         }
     }
