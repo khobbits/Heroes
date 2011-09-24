@@ -26,6 +26,7 @@ General/API:
 	Skills are now loaded on Demand (only if a class has them)
 	Classes can now have multiple parents via Strong and Weak parent settings
 	ExperienceOrbs will no longer drop by default - they can be turned back on in the config, but they wont do anything while heroes is active
+	ImbueEffect - like FormEffects but are weapon related to prevent classes from stacking multiple weapon buffs at one time
 
 Skills:
 
@@ -57,6 +58,8 @@ Skills:
 	Herbalism - (NEW!)
 		- Passive skill that gives double-drops for herb related stuff
 		- Also allows players to have a chance to pickup dead shrubs & tall-grass
+	IceArrow - (NEW!) - thanks jetfan
+		- Imbues your arrows with ice, causing them to deal weapon damage + slow your enemy for a limited time.
 	Impale - (NEW!)
 		- Does weapon damage to the target at medium range
 		- Launches the target into the air.

@@ -18,7 +18,7 @@ import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.effects.EffectType;
-import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
+import com.herocraftonline.dev.heroes.effects.ImbueEffect;
 import com.herocraftonline.dev.heroes.effects.PeriodicDamageEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
@@ -113,35 +113,12 @@ public class SkillPoisonArrow extends ActiveSkill {
         }
     }
 
-    public class PoisonArrowBuff extends ExpirableEffect {
-
-        private int applicationsLeft = 1;
+    public class PoisonArrowBuff extends ImbueEffect {
 
         public PoisonArrowBuff(Skill skill, long duration, int numAttacks) {
-            super(skill, "PoisonArrowBuff", duration);
-            this.applicationsLeft = numAttacks;
-            this.types.add(EffectType.BENEFICIAL);
+            super(skill, "PoisonArrowBuff", duration, numAttacks);
             this.types.add(EffectType.POISON);
-        }
-
-        /**
-         * @return the applicationsLeft
-         */
-        public int getApplicationsLeft() {
-            return applicationsLeft;
-        }
-
-        @Override
-        public void remove(Hero hero) {
-            Messaging.send(hero.getPlayer(), "Your arrows are no longer poisoned");
-        }
-
-        /**
-         * @param applicationsLeft
-         *            the applicationsLeft to set
-         */
-        public void setApplicationsLeft(int applicationsLeft) {
-            this.applicationsLeft = applicationsLeft;
+            setDescription("poison");
         }
     }
 
@@ -188,10 +165,8 @@ public class SkillPoisonArrow extends ActiveSkill {
 
         private void checkBuff(Hero hero) {
             PoisonArrowBuff paBuff = (PoisonArrowBuff) hero.getEffect("PoisonArrowBuff");
-            paBuff.applicationsLeft -= 1;
-            if (paBuff.applicationsLeft < 1) {
+            if (paBuff.hasNoApplications())
                 hero.removeEffect(paBuff);
-            }
         }
     }
 }

@@ -15,6 +15,7 @@ public enum EffectType {
     FORM,
     HARMFUL,
     HEAL,
+    IMBUE, // Players can only have 1 imbue - they are skills that trigger from weapons
     INVULNERABILITY,
     LIGHT,
     LIGHTNING,
