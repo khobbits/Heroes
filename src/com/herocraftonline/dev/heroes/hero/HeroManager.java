@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Level;
 
@@ -145,7 +144,7 @@ public class HeroManager {
      * @return
      */
     public Set<Effect> getCreatureEffects(Creature creature) {
-        return creatureEffects.get(creature);
+        return new HashSet<Effect>(creatureEffects.get(creature));
     }
 
     /**
@@ -250,9 +249,14 @@ public class HeroManager {
         plugin.getServer().getScheduler().cancelTasks(plugin);
     }
 
-    HashMap<Creature, Set<Effect>> getCreatureEffects() {
+    public HashMap<Creature, Set<Effect>> getCreatureEffects() {
         return new HashMap<Creature, Set<Effect>>(creatureEffects);
     }
+    
+    public Set<Creature> getCreaturesWithEffect() {
+        return new HashSet<Creature>(creatureEffects.keySet());
+    }
+    
 }
 
 class EffectUpdater implements Runnable {
@@ -283,20 +287,19 @@ class EffectUpdater implements Runnable {
                 }
             }
         }
-
-        for (Entry<Creature, Set<Effect>> cEntry : heroManager.getCreatureEffects().entrySet()) {
-            for (Effect effect : cEntry.getValue()) {
+        for (Creature creature : heroManager.getCreaturesWithEffect()) {
+            for (Effect effect : heroManager.getCreatureEffects(creature)) {
                 if (effect instanceof Expirable) {
                     Expirable expirable = (Expirable) effect;
                     if (expirable.isExpired()) {
-                        heroManager.removeCreatureEffect(cEntry.getKey(), effect);
+                        heroManager.removeCreatureEffect(creature, effect);
                         continue;
                     }
                 }
                 if (effect instanceof Periodic) {
                     Periodic periodic = (Periodic) effect;
                     if (periodic.isReady()) {
-                        periodic.tick(cEntry.getKey());
+                        periodic.tick(creature);
                     }
                 }
             }

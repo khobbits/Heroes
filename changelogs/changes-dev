@@ -8,6 +8,7 @@ Bug Fixes:
 	Player HP is now ceiled when synced preventing high HP classes from dying before they actually hit 0 HP.
 	creatures added in 1.8 will no longer crash the effect system
 	Player's no longer get XP for killing themselves
+	Creature effects should no longer crash the effect manager
 	
 General/API:
 
