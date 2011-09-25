@@ -43,7 +43,7 @@ public class SkillPurge extends TargettedSkill {
                 return false;
             }
         }
-        
+
         int radius = getSetting(hero.getHeroClass(), Setting.RADIUS.node(), 10);
         int removalsLeft = getSetting(hero.getHeroClass(), "max-removals", -1);
         int maxRemovals = removalsLeft;
@@ -65,8 +65,12 @@ public class SkillPurge extends TargettedSkill {
             return false;
         }
     }  
-    
+
     private int purge(Creature creature, int removalsLeft, Hero hero) {
+        //Return immediately if this creature has no effects
+        if (plugin.getHeroManager().getCreatureEffects(creature) == null)
+            return removalsLeft;
+        
         boolean removeHarmful = false;
         if (hero.getSummons().contains(creature))
             removeHarmful = true;
@@ -84,7 +88,7 @@ public class SkillPurge extends TargettedSkill {
         }
         return removalsLeft;
     }
-    
+
     private int purge(Hero tHero, int removalsLeft, Hero hero) {
         boolean removeHarmful = false;
         if (tHero.equals(hero) || (hero.hasParty() && hero.getParty().isPartyMember(tHero))) {

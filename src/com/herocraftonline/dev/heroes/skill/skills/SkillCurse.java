@@ -1,7 +1,6 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
 import java.util.Random;
-import java.util.Set;
 
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.LivingEntity;
@@ -160,10 +159,9 @@ public class SkillCurse extends TargettedSkill {
                     }
                 }
             } else if (creature != null) {
-                Set<Effect> creatureEffects = plugin.getHeroManager().getCreatureEffects(creature);
-                if (creatureEffects == null)
+                if (plugin.getHeroManager().getCreatureEffects(creature) == null)
                     return;
-                for (Effect effect : creatureEffects) {
+                for (Effect effect : plugin.getHeroManager().getCreatureEffects(creature)) {
                     if (effect instanceof CurseEffect) {
                         CurseEffect cEffect = (CurseEffect) effect;
                         if (rand.nextDouble() < cEffect.missChance) {

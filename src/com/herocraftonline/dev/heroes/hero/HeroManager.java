@@ -144,7 +144,7 @@ public class HeroManager {
      * @return
      */
     public Set<Effect> getCreatureEffects(Creature creature) {
-        return new HashSet<Effect>(creatureEffects.get(creature));
+        return creatureEffects.get(creature) != null ? new HashSet<Effect>(creatureEffects.get(creature)) : null;
     }
 
     /**
