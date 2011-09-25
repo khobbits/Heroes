@@ -136,7 +136,7 @@ public class Effect {
         this.persistent = persistent;
     }
 
-    public void setMobEffect(int id, int strength, int ticks) {
+    public void setMobEffect(int id, int ticks, int strength) {
         this.mobEffect = new MobEffect(id, ticks, strength);
     }
 
