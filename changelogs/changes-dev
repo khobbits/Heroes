@@ -68,6 +68,9 @@ Skills:
 		- Gives a very small chance to drop a random ore from just stone.
 	One - (READDED!)
 		- Provides a speed boost to the caster
+	Purge - (NEW!)
+		- Acts as an Area of effect targetted purge.
+		- Still requires a target like dispel, or will target self if cast with no target
 	Slow - (NEW!)
 		- Slows down the target's movement speed
 	SoulBond - (NEW!)
