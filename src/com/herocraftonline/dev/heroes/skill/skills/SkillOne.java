@@ -75,6 +75,7 @@ public class SkillOne extends ActiveSkill {
 
         @Override
         public void remove(Hero hero) {
+            super.remove(hero);
             Player player = hero.getPlayer();
             broadcast(player.getLocation(), expireText, player.getDisplayName());
         }
