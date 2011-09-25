@@ -33,8 +33,7 @@ public class SkillSoulFire extends ActiveSkill {
         setDescription("Gives your attacks a chance to ignite the opponent");
         setUsage("/skill soulfire");
         setArgumentRange(0, 0);
-        setIdentifiers(new String[] { "skill soulfire" });
-
+        setIdentifiers("skill soulfire");
         setTypes(SkillType.FIRE, SkillType.BUFF, SkillType.SILENCABLE);
 
         registerEvent(Type.ENTITY_DAMAGE, new SkillDamageListener(this), Priority.Monitor);
