@@ -3,7 +3,13 @@ package com.herocraftonline.dev.heroes.effects;
 import java.util.EnumSet;
 import java.util.Set;
 
+import net.minecraft.server.EntityPlayer;
+import net.minecraft.server.MobEffect;
+import net.minecraft.server.Packet41MobEffect;
+import net.minecraft.server.Packet42RemoveMobEffect;
+
 import org.bukkit.Location;
+import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Creature;
 
 import com.herocraftonline.dev.heroes.Heroes;
@@ -18,6 +24,7 @@ public class Effect {
     protected final Set<EffectType> types = EnumSet.noneOf(EffectType.class);
     protected long applyTime;
     private boolean persistent;
+    private MobEffect mobEffect = null;
 
     public Effect(Skill skill, String name) {
         this.name = name;
@@ -43,6 +50,10 @@ public class Effect {
 
     public void apply(Hero hero) {
         this.applyTime = System.currentTimeMillis();
+        if (mobEffect != null) {
+            EntityPlayer ePlayer = ((CraftPlayer) hero.getPlayer()).getHandle();
+            ePlayer.netServerHandler.sendPacket(new Packet41MobEffect(ePlayer.id, this.mobEffect));
+        }
     }
 
     public void broadcast(Location source, String message, Object... args) {
@@ -111,7 +122,12 @@ public class Effect {
 
     public void remove(Creature creature) {}
 
-    public void remove(Hero hero) {}
+    public void remove(Hero hero) {
+        if (mobEffect != null) {
+            EntityPlayer ePlayer = ((CraftPlayer) hero.getPlayer()).getHandle();
+            ePlayer.netServerHandler.sendPacket(new Packet42RemoveMobEffect(ePlayer.id, this.mobEffect));
+        }
+    }
 
     /*
      * Sets the effects persistence value
@@ -120,4 +136,11 @@ public class Effect {
         this.persistent = persistent;
     }
 
+    public void setMobEffect(int id, int strength, int ticks) {
+        this.mobEffect = new MobEffect(id, ticks, strength);
+    }
+
+    public MobEffect getMobEffect() {
+        return mobEffect;
+    }
 }

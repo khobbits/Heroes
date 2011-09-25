@@ -7,10 +7,10 @@ Bug Fixes:
 	Player's displaynames will be updated properly when they choose a new path or reset.
 	Player HP is now ceiled when synced preventing high HP classes from dying before they actually hit 0 HP.
 	creatures added in 1.8 will no longer crash the effect system
+	Player's no longer get XP for killing themselves
 	
 General/API:
 
-	Now uses CB for 1.8
 	Uses ExperienceBar built into MC
 	Added /hero admin level - command to adjust a player's level directly.
 	Fixed SpoutUI implementation

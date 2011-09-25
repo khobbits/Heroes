@@ -94,7 +94,8 @@ public class Heroes extends JavaPlugin {
     private final HBlockListener blockListener = new HBlockListener(this);
     private final HPartyListener partyListener = new HPartyListener(this);
     private final HEventListener hEventListener = new HEventListener(this);
-
+    private SpoutInventoryListener siListener = null;
+    
     // Various data managers
     private ConfigManager configManager;
     private CommandHandler commandHandler = new CommandHandler(this);
@@ -324,7 +325,8 @@ public class Heroes extends JavaPlugin {
         Heroes.useSpout = this.getServer().getPluginManager().getPlugin("Spout") != null;
         //If it was found, then lets register our custom event for spout
         if (useSpout) {
-            getServer().getPluginManager().registerEvent(Type.CUSTOM_EVENT, new SpoutInventoryListener(this), Priority.Monitor, this);
+            siListener = new SpoutInventoryListener(this);
+            getServer().getPluginManager().registerEvent(Type.CUSTOM_EVENT, siListener, Priority.Monitor, this);
         }
     }
 

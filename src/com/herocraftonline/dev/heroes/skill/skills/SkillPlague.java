@@ -1,11 +1,5 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
-import net.minecraft.server.EntityPlayer;
-import net.minecraft.server.MobEffect;
-import net.minecraft.server.Packet41MobEffect;
-import net.minecraft.server.Packet42RemoveMobEffect;
-
-import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -79,12 +73,10 @@ public class SkillPlague extends TargettedSkill {
     }
 
     public class PlagueEffect extends PeriodicDamageEffect {
-
-        private MobEffect mobEffect = new MobEffect(19, 0, 0);
         
         public PlagueEffect(Skill skill, long duration, long period, int tickDamage, Player applier) {
             super(skill, "Plague", period, duration, tickDamage, applier);
-            this.mobEffect = new MobEffect(19, (int) (duration / 1000) * 20, 0);
+            setMobEffect(19, (int) (duration / 1000) * 20, 0);
         }
 
         // Clone Constructor
@@ -92,7 +84,7 @@ public class SkillPlague extends TargettedSkill {
             super(pEffect.getSkill(), pEffect.getName(), pEffect.getPeriod(), pEffect.getDuration(), pEffect.tickDamage, pEffect.applier);
             this.types.add(EffectType.DISPELLABLE);
             this.types.add(EffectType.DISEASE);
-            this.mobEffect = new MobEffect(19, (int) (pEffect.getDuration() / 1000) * 20, 0);
+            setMobEffect(19, (int) (pEffect.getDuration() / 1000) * 20, 0);
         }
 
         @Override
@@ -104,8 +96,6 @@ public class SkillPlague extends TargettedSkill {
         public void apply(Hero hero) {
             super.apply(hero);
             Player player = hero.getPlayer();
-            EntityPlayer entityPlayer = ((CraftPlayer) player).getHandle();
-            entityPlayer.netServerHandler.sendPacket(new Packet41MobEffect(entityPlayer.id, this.mobEffect));
             broadcast(player.getLocation(), applyText, player.getDisplayName());
         }
 
@@ -118,10 +108,7 @@ public class SkillPlague extends TargettedSkill {
         @Override
         public void remove(Hero hero) {
             super.remove(hero);
-
             Player player = hero.getPlayer();
-            EntityPlayer entityPlayer = ((CraftPlayer) player).getHandle();
-            entityPlayer.netServerHandler.sendPacket(new Packet42RemoveMobEffect(entityPlayer.id, this.mobEffect));
             broadcast(player.getLocation(), expireText, player.getDisplayName());
         }
 

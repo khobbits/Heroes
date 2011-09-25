@@ -1,11 +1,5 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
-import net.minecraft.server.EntityPlayer;
-import net.minecraft.server.MobEffect;
-import net.minecraft.server.Packet41MobEffect;
-import net.minecraft.server.Packet42RemoveMobEffect;
-
-import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Priority;
@@ -71,29 +65,17 @@ public class SkillIceArrow extends ActiveSkill {
 
     public class ArrowSlow extends ExpirableEffect {
 
-        private MobEffect mobEffect = new MobEffect(2, 0, 0);
-        private int duration = 0;
-        private int amplifier = 0;
-
         public ArrowSlow(Skill skill, long duration, int amplifier) {
             super(skill, "ArrowSlow", duration);
             this.types.add(EffectType.DISPELLABLE);
             this.types.add(EffectType.HARMFUL);
-            this.amplifier = amplifier;
-            this.duration = (int) (duration / 1000) * 20;
-
+            setMobEffect(2, (int) (duration / 1000) * 20, amplifier);
         }
 
         @Override
         public void apply(Hero hero) {
             super.apply(hero);
-
-            this.mobEffect = new MobEffect(2, this.duration, this.amplifier);
-
             Player player = hero.getPlayer();
-            EntityPlayer entityPlayer = ((CraftPlayer) player).getHandle();
-            entityPlayer.netServerHandler.sendPacket(new Packet41MobEffect(entityPlayer.id, this.mobEffect));
-
             broadcast(player.getLocation(), applyText, player.getDisplayName());
         }
 
@@ -101,8 +83,6 @@ public class SkillIceArrow extends ActiveSkill {
         public void remove(Hero hero) {
             super.remove(hero);
             Player player = hero.getPlayer();
-            EntityPlayer entityPlayer = ((CraftPlayer) player).getHandle();
-            entityPlayer.netServerHandler.sendPacket(new Packet42RemoveMobEffect(entityPlayer.id, this.mobEffect));
             broadcast(player.getLocation(), expireText, player.getDisplayName());
         }
     }

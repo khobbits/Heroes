@@ -2,12 +2,6 @@ package com.herocraftonline.dev.heroes.skill.skills;
 
 import java.util.Random;
 
-import net.minecraft.server.EntityPlayer;
-import net.minecraft.server.MobEffect;
-import net.minecraft.server.Packet41MobEffect;
-import net.minecraft.server.Packet42RemoveMobEffect;
-
-import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -80,14 +74,13 @@ public class SkillConfuse extends TargettedSkill {
     public class ConfuseEffect extends PeriodicExpirableEffect {
 
         private final float maxDrift;
-        private MobEffect mobEffect = new MobEffect(9, 0, 0);
 
         public ConfuseEffect(Skill skill, long duration, long period, float maxDrift) {
             super(skill, "Confuse", period, duration);
             this.maxDrift = maxDrift;
             this.types.add(EffectType.HARMFUL);
             this.types.add(EffectType.DISPELLABLE);
-            this.mobEffect = new MobEffect(9, (int) (duration / 1000) * 20, 127);
+            setMobEffect(9, (int) (duration / 1000) * 20, 127);
         }
 
         public void adjustVelocity(LivingEntity lEntity) {
@@ -111,8 +104,6 @@ public class SkillConfuse extends TargettedSkill {
         public void apply(Hero hero) {
             super.apply(hero);
             Player player = hero.getPlayer();
-            EntityPlayer entityPlayer = ((CraftPlayer) player).getHandle();
-            entityPlayer.netServerHandler.sendPacket(new Packet41MobEffect(entityPlayer.id, this.mobEffect));
             broadcast(player.getLocation(), applyText, player.getDisplayName());
         }
 
@@ -126,8 +117,6 @@ public class SkillConfuse extends TargettedSkill {
         public void remove(Hero hero) {
             super.remove(hero);
             Player player = hero.getPlayer();
-            EntityPlayer entityPlayer = ((CraftPlayer) player).getHandle();
-            entityPlayer.netServerHandler.sendPacket(new Packet42RemoveMobEffect(entityPlayer.id, this.mobEffect));
             broadcast(player.getLocation(), expireText, player.getDisplayName());
         }
 
