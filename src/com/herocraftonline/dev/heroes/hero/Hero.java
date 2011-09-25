@@ -608,8 +608,8 @@ public class Hero {
      * @param effect
      */
     public void removeEffect(Effect effect) {
-        effects.remove(effect.getName().toLowerCase());
         if (effect != null) {
+            effects.remove(effect.getName().toLowerCase());
             effect.remove(this);
         }
     }
