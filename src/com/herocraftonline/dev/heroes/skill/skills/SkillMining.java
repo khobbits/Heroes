@@ -69,11 +69,13 @@ public class SkillMining extends PassiveSkill {
             }
 
             Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
-            if (!hero.hasEffect("Mining"))
+            if (!hero.hasEffect("Mining") || dropMaterial == null)
                 return;
 
-            double chance = Util.rand.nextDouble();
-            if (isStone && chance < getSetting(hero.getHeroClass(), "chance-from-stone", .0005) * hero.getLevel()) {
+            if (Util.rand.nextDouble() >= getSetting(hero.getHeroClass(), "chance-from-stone", .0005) * hero.getLevel())
+                return;
+            
+            if (isStone) {
                 block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(getMatFromHeight(block), 1));
                 return;
             } else if (dropMaterial == Material.INK_SACK) {
