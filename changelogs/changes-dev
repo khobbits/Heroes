@@ -29,6 +29,7 @@ General/API:
 	ExperienceOrbs will no longer drop by default - they can be turned back on in the config, but they wont do anything while heroes is active
 	ImbueEffect - like FormEffects but are weapon related to prevent classes from stacking multiple weapon buffs at one time
 	Effects can have mobEffects (potion effects) use addMobEffect(id, ticks, amplitute) 
+	Tamed Pets & Summons will now award Experience for their kills
 
 Skills:
 

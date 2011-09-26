@@ -8,6 +8,8 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
+import org.bukkit.entity.Skeleton;
+import org.bukkit.entity.Tameable;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -17,6 +19,7 @@ import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
 import com.herocraftonline.dev.heroes.effects.CombustEffect;
 import com.herocraftonline.dev.heroes.effects.Effect;
+import com.herocraftonline.dev.heroes.effects.SummonEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.hero.HeroManager;
 import com.herocraftonline.dev.heroes.util.Properties;
@@ -39,6 +42,19 @@ public class HEntityListener extends EntityListener {
                 Projectile projectile = (Projectile) damager;
                 if (projectile.getShooter() instanceof Player) {
                     return (Player) projectile.getShooter();
+                } else if (projectile.getShooter() instanceof Skeleton && plugin.getHeroManager().creatureHasEffect((Creature) damager, "Summon")) {
+                    SummonEffect sEffect = (SummonEffect) plugin.getHeroManager().getCreatureEffect((Skeleton) projectile.getShooter(), "Summon");
+                    return sEffect.getSummoner().getPlayer();
+                }
+            } else if (damager instanceof Creature) {
+                if (damager instanceof Tameable) {
+                    Tameable tamed = (Tameable) damager;
+                    if (tamed.isTamed() && tamed.getOwner() instanceof Player)
+                        return (Player) tamed.getOwner();
+                }
+                if (plugin.getHeroManager().creatureHasEffect((Creature) damager, "Summon")) {
+                    SummonEffect sEffect = (SummonEffect) plugin.getHeroManager().getCreatureEffect((Creature) damager, "Summon");
+                    return sEffect.getSummoner().getPlayer();
                 }
             }
         }
@@ -76,7 +92,7 @@ public class HEntityListener extends EntityListener {
 
                 addedExp = prop.creatureKillingExp.get(type);
                 experienceType = ExperienceType.KILLING;
-                
+
                 // Check if the kill was near a spawner
                 if (prop.noSpawnCamp && Util.isNearSpawner(defender, prop.spawnCampRadius)) 
                     addedExp *= prop.spawnCampExpMult;
@@ -95,10 +111,10 @@ public class HEntityListener extends EntityListener {
         //If this is a disabled world ignore it
         if (prop.disabledWorlds.contains(defender.getWorld().getName()))
             return;
-        
+
         Player attacker = getAttacker(defender.getLastDamageCause());
         HeroManager heroManager = plugin.getHeroManager();
-        
+
         if (!prop.orbExp)
             event.setDroppedExp(0);
 
@@ -106,7 +122,7 @@ public class HEntityListener extends EntityListener {
             Hero heroDefender = heroManager.getHero((Player) defender);
             double exp = heroDefender.getExperience();
             int level = prop.getLevel(exp);
-            
+
             // check to see if this death was caused by FireTick
             if (attacker == null && heroDefender.hasEffect("Combust")) {
                 attacker = ((CombustEffect) heroDefender.getEffect("Combust")).getApplier();

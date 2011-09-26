@@ -2,11 +2,7 @@ package com.herocraftonline.dev.heroes.skill.skills;
 
 import java.util.Collection;
 
-import net.minecraft.server.EntityCreature;
-
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.entity.CraftCreature;
-import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.LivingEntity;
@@ -27,12 +23,9 @@ import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.effects.Effect;
-import com.herocraftonline.dev.heroes.effects.EffectType;
-import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
-import com.herocraftonline.dev.heroes.effects.PeriodicExpirableEffect;
+import com.herocraftonline.dev.heroes.effects.SummonEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
-import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Setting;
@@ -86,7 +79,7 @@ public class SkillSkeleton extends ActiveSkill {
             Location castLoc = player.getTargetBlock(null, distance).getLocation();
             Creature skeleton = (Creature) player.getWorld().spawnCreature(castLoc, CreatureType.SKELETON);
             long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 60000);
-            plugin.getHeroManager().addCreatureEffect(skeleton, new SummonEffect(this, duration, hero));
+            plugin.getHeroManager().addCreatureEffect(skeleton, new SummonEffect(this, duration, hero, expireText));
             broadcastExecuteText(hero);
             Messaging.send(player, "You have succesfully summoned a skeleton to fight for you.");
             return true;
@@ -94,91 +87,6 @@ public class SkillSkeleton extends ActiveSkill {
 
         Messaging.send(player, "You can't control anymore skeletons!");
         return false;
-    }
-
-    public class FollowEffect extends PeriodicExpirableEffect {
-
-        public FollowEffect(Skill skill, long period, long duration) {
-            super(skill, "SkeletonFollow", period, duration);
-        }
-
-        @Override
-        public void apply(Hero hero) {
-            super.apply(hero);
-        }
-
-        @Override
-        public void remove(Hero hero) {
-            super.remove(hero);
-        }
-
-        @Override
-        public void tick(Hero hero) {
-            super.tick(hero);
-            for (Creature creature : hero.getSummons()) {
-                if (creature instanceof Skeleton) {
-                    if (creature.getTarget() != null && creature.getTarget() instanceof LivingEntity)
-                        return;
-
-                    moveSkeleton(creature, hero);
-                }
-            }
-        }
-
-        /**
-         * Moves the skeleton toward the player
-         * 
-         * @param creature
-         * @param hero
-         */
-        private void moveSkeleton(Creature creature, Hero hero) {
-
-            // If the skeleton is far away lets teleport them to the player
-            if (creature.getLocation().distanceSquared(hero.getPlayer().getLocation()) > 400) {
-                creature.teleport(hero.getPlayer());
-            }
-
-            // Initiate pathing to the player
-            EntityCreature cEntity = ((CraftCreature) creature).getHandle();
-            cEntity.pathEntity = cEntity.world.findPath(cEntity, ((CraftPlayer) hero.getPlayer()).getHandle(), 16.0F);
-
-        }
-    }
-
-    public class SummonEffect extends ExpirableEffect {
-
-        private Hero summoner;
-
-        public SummonEffect(Skill skill, long duration, Hero summoner) {
-            super(skill, "Summon", duration);
-            this.summoner = summoner;
-            this.types.add(EffectType.DISPELLABLE);
-            this.types.add(EffectType.BENEFICIAL);
-        }
-
-        @Override
-        public void apply(Creature creature) {
-            super.apply(creature);
-            summoner.getSummons().add(creature);
-            FollowEffect fEffect = new FollowEffect(skill, 1500, getDuration());
-            summoner.addEffect(fEffect);
-        }
-
-        @Override
-        public void remove(Creature creature) {
-            super.remove(creature);
-            summoner.getSummons().remove(creature);
-            broadcast(creature.getLocation(), expireText);
-            creature.remove();
-
-            // Check if the summoner has anymore skeletons
-            for (Creature c : summoner.getSummons()) {
-                if (c instanceof Skeleton)
-                    return;
-            }
-            // If there are no more summoned skeletons lets remove the follow effect
-            summoner.removeEffect(summoner.getEffect("SkeletonFollow"));
-        }
     }
 
     public class SummonEntityListener extends EntityListener {
