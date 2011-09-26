@@ -1,11 +1,6 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event.Priority;
-import org.bukkit.event.Event.Type;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.event.entity.EntityListener;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
@@ -29,8 +24,6 @@ public class SkillGills extends ActiveSkill {
         setArgumentRange(0, 0);
         setIdentifiers("skill gills");
         setTypes(SkillType.SILENCABLE, SkillType.BUFF);
-
-        registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
     }
 
     @Override
@@ -63,6 +56,7 @@ public class SkillGills extends ActiveSkill {
 
         public GillsEffect(Skill skill, long duration) {
             super(skill, "Gills", duration);
+            setMobEffect(13, (int) (duration / 1000) * 20, 0);
             this.types.add(EffectType.DISPELLABLE);
             this.types.add(EffectType.BENEFICIAL);
         }
@@ -81,22 +75,5 @@ public class SkillGills extends ActiveSkill {
             broadcast(player.getLocation(), expireText, player.getDisplayName());
         }
 
-    }
-
-    public class SkillEntityListener extends EntityListener {
-
-        @Override
-        public void onEntityDamage(EntityDamageEvent event) {
-            if (event.isCancelled() || !(event.getCause() == DamageCause.DROWNING))
-                return;
-
-            if (event.getEntity() instanceof Player) {
-                Player player = (Player) event.getEntity();
-                Hero hero = plugin.getHeroManager().getHero(player);
-                if (hero.hasEffect("Gills")) {
-                    event.setCancelled(true);
-                }
-            }
-        }
     }
 }
