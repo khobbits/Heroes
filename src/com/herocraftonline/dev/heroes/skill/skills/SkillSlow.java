@@ -22,7 +22,7 @@ public class SkillSlow extends TargettedSkill {
 
     public SkillSlow(Heroes plugin) {
         super(plugin, "Slow");
-        setDescription("Slows the target's movement speed");
+        setDescription("Slows the target's movement speed & attack speed");
         setUsage("/skill slow");
         setArgumentRange(0, 1);
         setIdentifiers("skill slow");
@@ -72,7 +72,8 @@ public class SkillSlow extends TargettedSkill {
             this.types.add(EffectType.DISPELLABLE);
             this.types.add(EffectType.HARMFUL);
             this.types.add(EffectType.SLOW);
-            setMobEffect(2, (int) (duration / 1000) * 20, amplifier);
+            addMobEffect(2, (int) (duration / 1000) * 20, amplifier);
+            addMobEffect(4, (int) (duration / 1000) * 20, amplifier);
         }
 
         @Override

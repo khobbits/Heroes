@@ -69,7 +69,7 @@ public class SkillIceArrow extends ActiveSkill {
             super(skill, "ArrowSlow", duration);
             this.types.add(EffectType.DISPELLABLE);
             this.types.add(EffectType.HARMFUL);
-            setMobEffect(2, (int) (duration / 1000) * 20, amplifier);
+            addMobEffect(2, (int) (duration / 1000) * 20, amplifier);
         }
 
         @Override

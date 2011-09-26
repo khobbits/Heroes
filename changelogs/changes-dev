@@ -28,6 +28,7 @@ General/API:
 	Classes can now have multiple parents via Strong and Weak parent settings
 	ExperienceOrbs will no longer drop by default - they can be turned back on in the config, but they wont do anything while heroes is active
 	ImbueEffect - like FormEffects but are weapon related to prevent classes from stacking multiple weapon buffs at one time
+	Effects can have mobEffects (potion effects) use addMobEffect(id, ticks, amplitute) 
 
 Skills:
 
@@ -74,6 +75,7 @@ Skills:
 		- Still requires a target like dispel, or will target self if cast with no target
 	Slow - (NEW!)
 		- Slows down the target's movement speed
+		- Also slows the targets's swing speed
 	SoulBond - (NEW!)
 		- Allows the caster to absorb some damage from the target, allowing the target to live longer
 	SoulLeech - (NEW!)

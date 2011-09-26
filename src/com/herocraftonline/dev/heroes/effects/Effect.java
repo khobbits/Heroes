@@ -1,14 +1,17 @@
 package com.herocraftonline.dev.heroes.effects;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Set;
 
+import net.minecraft.server.EntityCreature;
 import net.minecraft.server.EntityPlayer;
 import net.minecraft.server.MobEffect;
-import net.minecraft.server.Packet41MobEffect;
-import net.minecraft.server.Packet42RemoveMobEffect;
 
 import org.bukkit.Location;
+import org.bukkit.craftbukkit.entity.CraftCreature;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Creature;
 
@@ -24,7 +27,7 @@ public class Effect {
     protected final Set<EffectType> types = EnumSet.noneOf(EffectType.class);
     protected long applyTime;
     private boolean persistent;
-    private MobEffect mobEffect = null;
+    private List<MobEffect> mobEffects = new ArrayList<MobEffect>();
 
     public Effect(Skill skill, String name) {
         this.name = name;
@@ -46,16 +49,41 @@ public class Effect {
 
     public void apply(Creature creature) {
         this.applyTime = System.currentTimeMillis();
+        if (!mobEffects.isEmpty()) {
+            EntityCreature eCreature = ((CraftCreature) creature).getHandle();
+            for (MobEffect mobEffect : mobEffects) {
+                eCreature.addEffect(mobEffect);
+            }
+        }
     }
 
     public void apply(Hero hero) {
         this.applyTime = System.currentTimeMillis();
-        if (mobEffect != null) {
+        if (!mobEffects.isEmpty()) {
             EntityPlayer ePlayer = ((CraftPlayer) hero.getPlayer()).getHandle();
-            ePlayer.netServerHandler.sendPacket(new Packet41MobEffect(ePlayer.id, this.mobEffect));
+            for (MobEffect mobEffect : mobEffects) {
+                ePlayer.addEffect(mobEffect);
+            }
         }
     }
 
+    public void remove(Creature creature) {
+        if (!mobEffects.isEmpty()) {
+            EntityCreature eCreature = ((CraftCreature) creature).getHandle();
+            for (MobEffect mobEffect : mobEffects) {
+                eCreature.addEffect(new MobEffect(mobEffect.getEffectId(), 0, 0));
+            }
+        }
+    }
+
+    public void remove(Hero hero) {
+        if (!mobEffects.isEmpty()) {
+            EntityPlayer ePlayer = ((CraftPlayer) hero.getPlayer()).getHandle();
+            for (MobEffect mobEffect : mobEffects) {
+                ePlayer.addEffect(new MobEffect(mobEffect.getEffectId(), 0, 0));
+            }
+        }
+    }
     public void broadcast(Location source, String message, Object... args) {
         skill.broadcast(source, message, args);
     }
@@ -120,15 +148,6 @@ public class Effect {
         return types.contains(type);
     }
 
-    public void remove(Creature creature) {}
-
-    public void remove(Hero hero) {
-        if (mobEffect != null) {
-            EntityPlayer ePlayer = ((CraftPlayer) hero.getPlayer()).getHandle();
-            ePlayer.netServerHandler.sendPacket(new Packet42RemoveMobEffect(ePlayer.id, this.mobEffect));
-        }
-    }
-
     /*
      * Sets the effects persistence value
      */
@@ -136,11 +155,15 @@ public class Effect {
         this.persistent = persistent;
     }
 
-    public void setMobEffect(int id, int ticks, int strength) {
-        this.mobEffect = new MobEffect(id, ticks, strength);
+    public void addMobEffect(int id, int duration, int strength) {
+        mobEffects.add(new MobEffect(id, duration, strength));
     }
-
-    public MobEffect getMobEffect() {
-        return mobEffect;
+    
+    public void addMobEffect(MobEffect mobEffect) {
+        mobEffects.add(mobEffect);
+    }
+    
+    public List<MobEffect> getMobEffects() {
+        return Collections.unmodifiableList(mobEffects);
     }
 }
