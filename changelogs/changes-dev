@@ -56,6 +56,10 @@ Skills:
 	Endurance - (NEW!)
 		- Uses new FormEffect
 		- causes the hero to take less damage from all sources, and deal less physical damage
+	Forage - (NEW!) - thanks jetfan
+		- Player can forage for items
+		- items retrieved will be based on biome type the player is currently in
+		- default items will be added to all biomes
 	ForcePull
 		- Pulls the target to the ground right in front of the caster, rather than a fixed amount of distance
 	Herbalism - (NEW!)
