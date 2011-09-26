@@ -10,6 +10,7 @@ import org.bukkit.util.config.ConfigurationNode;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.HeroesEventListener;
 import com.herocraftonline.dev.heroes.api.WeaponDamageEvent;
+import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.PassiveSkill;
 import com.herocraftonline.dev.heroes.skill.SkillType;
@@ -20,6 +21,7 @@ public class SkillShield extends PassiveSkill {
         super(plugin, "Shield");
         setDescription("Your shield absorbs damage!");
         setArgumentRange(0, 0);
+        setEffectTypes(EffectType.BENEFICIAL, EffectType.PHYSICAL);
         setTypes(SkillType.PHYSICAL);
 
         registerEvent(Type.CUSTOM_EVENT, new CustomListener(), Priority.Highest);

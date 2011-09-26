@@ -3,6 +3,8 @@ package com.herocraftonline.dev.heroes.skill.skills;
 import java.util.Random;
 
 import org.bukkit.block.Block;
+import org.bukkit.event.Event.Priority;
+import org.bukkit.event.Event.Type;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockListener;
 import org.bukkit.inventory.ItemStack;
@@ -10,6 +12,7 @@ import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.HBlockListener;
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.PassiveSkill;
 import com.herocraftonline.dev.heroes.skill.SkillType;
@@ -21,8 +24,10 @@ public class SkillWoodcutting extends PassiveSkill {
     public SkillWoodcutting(Heroes plugin) {
         super(plugin, "Woodcutting");
         setDescription("You know about the things of the earth!");
-        setIdentifiers("skill woodcutting");
+        setEffectTypes(EffectType.BENEFICIAL);
         setTypes(SkillType.KNOWLEDGE, SkillType.EARTH, SkillType.BUFF);
+        
+        registerEvent(Type.BLOCK_BREAK, new SkillBlockListener(), Priority.Monitor);
     }
 
     @Override

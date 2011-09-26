@@ -13,6 +13,7 @@ import org.bukkit.util.config.ConfigurationNode;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.WeaponDamageEvent;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
+import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.PassiveSkill;
 import com.herocraftonline.dev.heroes.skill.SkillType;
@@ -26,7 +27,8 @@ public class SkillBackstab extends PassiveSkill {
         setDescription("You are more lethal when attacking from behind!");
         setArgumentRange(0, 0);
         setTypes(SkillType.PHYSICAL, SkillType.BUFF);
-
+        setEffectTypes(EffectType.BENEFICIAL, EffectType.PHYSICAL);
+        
         registerEvent(Type.CUSTOM_EVENT, new CustomListener(), Priority.Normal);
     }
 

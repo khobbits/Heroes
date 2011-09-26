@@ -9,6 +9,7 @@ import java.util.Set;
 import net.minecraft.server.EntityCreature;
 import net.minecraft.server.EntityPlayer;
 import net.minecraft.server.MobEffect;
+import net.minecraft.server.Packet42RemoveMobEffect;
 
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.entity.CraftCreature;
@@ -42,8 +43,10 @@ public class Effect {
 
     public Effect(Skill skill, String name, EffectType... types) {
         this(skill, name);
-        for (EffectType type : types) {
-            this.types.add(type);
+        if (types != null) {
+            for (EffectType type : types) {
+                this.types.add(type);
+            }
         }
     }
 
@@ -80,6 +83,7 @@ public class Effect {
         if (!mobEffects.isEmpty()) {
             EntityPlayer ePlayer = ((CraftPlayer) hero.getPlayer()).getHandle();
             for (MobEffect mobEffect : mobEffects) {
+                ePlayer.netServerHandler.sendPacket(new Packet42RemoveMobEffect(ePlayer.id, mobEffect));
                 ePlayer.addEffect(new MobEffect(mobEffect.getEffectId(), 0, 0));
             }
         }
@@ -158,11 +162,11 @@ public class Effect {
     public void addMobEffect(int id, int duration, int strength) {
         mobEffects.add(new MobEffect(id, duration, strength));
     }
-    
+
     public void addMobEffect(MobEffect mobEffect) {
         mobEffects.add(mobEffect);
     }
-    
+
     public List<MobEffect> getMobEffects() {
         return Collections.unmodifiableList(mobEffects);
     }

@@ -1,5 +1,9 @@
 package com.herocraftonline.dev.heroes.skill;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Priority;
@@ -39,7 +43,8 @@ public abstract class PassiveSkill extends Skill {
 
     private String applyText = null;
     private String unapplyText = null;
-
+    private EffectType[] effectTypes = null;
+    
     /**
      * Typical skill constructor, except that it automatically sets the usage text to <i>Passive Skill</i>, which should
      * not be changed for normal use. There should be no identifiers defined as a passive skill is not meant to be
@@ -51,7 +56,7 @@ public abstract class PassiveSkill extends Skill {
     public PassiveSkill(Heroes plugin, String name) {
         super(plugin, name);
         setUsage("Passive Skill");
-
+        
         registerEvent(Type.CUSTOM_EVENT, new SkillCustomEventListener(), Priority.Monitor);
     }
 
@@ -90,6 +95,10 @@ public abstract class PassiveSkill extends Skill {
         unapplyText = unapplyText.replace("%hero%", "$1").replace("%skill%", "$2");
     }
 
+    public void setEffectTypes(EffectType...effectTypes) {
+        this.effectTypes = effectTypes;
+    }
+    
     /**
      * Attempts to apply this skill's effect to the provided {@link Hero} if the it is the correct class and level.
      * 
@@ -117,7 +126,7 @@ public abstract class PassiveSkill extends Skill {
      *            the Hero to apply the effect to
      */
     protected void apply(Hero hero) {
-        Effect effect = new Effect(this, getName(), EffectType.BENEFICIAL);
+        Effect effect = new Effect(this, getName(), effectTypes);
         effect.setPersistent(true);
         hero.addEffect(effect);
         Player player = hero.getPlayer();
