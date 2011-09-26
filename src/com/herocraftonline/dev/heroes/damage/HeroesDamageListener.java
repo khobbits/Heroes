@@ -247,10 +247,9 @@ public class HeroesDamageListener extends EntityListener {
             Player player = (Player) entity;
             Hero hero = plugin.getHeroManager().getHero(player);
             double newHeroHealth = hero.getHealth() + amount;
-            int newHealth = (int) (newHeroHealth / hero.getMaxHealth() * 20);
-            int newAmount = newHealth - player.getHealth();
+            int newPlayerHealth = (int) Math.ceil(newHeroHealth / hero.getMaxHealth() * 20);
             hero.setHealth(newHeroHealth);
-            event.setAmount(newAmount);
+            event.setAmount(newPlayerHealth - player.getHealth());
         }
     }
 
