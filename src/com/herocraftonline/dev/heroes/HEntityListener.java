@@ -42,7 +42,7 @@ public class HEntityListener extends EntityListener {
                 Projectile projectile = (Projectile) damager;
                 if (projectile.getShooter() instanceof Player) {
                     return (Player) projectile.getShooter();
-                } else if (projectile.getShooter() instanceof Skeleton && plugin.getHeroManager().creatureHasEffect((Creature) damager, "Summon")) {
+                } else if (projectile.getShooter() instanceof Skeleton && plugin.getHeroManager().creatureHasEffect((Creature) projectile.getShooter(), "Summon")) {
                     SummonEffect sEffect = (SummonEffect) plugin.getHeroManager().getCreatureEffect((Skeleton) projectile.getShooter(), "Summon");
                     return sEffect.getSummoner().getPlayer();
                 }
