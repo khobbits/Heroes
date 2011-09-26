@@ -110,6 +110,7 @@ public class SkillDisarm extends TargettedSkill {
 
         @Override
         public void remove(Hero hero) {
+            super.remove(hero);
             Player player = hero.getPlayer();
             if (ismap.containsKey(hero)) {
                 ItemStack is = ismap.get(hero);

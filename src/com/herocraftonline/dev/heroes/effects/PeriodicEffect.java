@@ -39,12 +39,12 @@ public class PeriodicEffect extends Effect implements Periodic {
 
     @Override
     public void remove(Creature creature) {
-
+        super.remove(creature);
     }
 
     @Override
     public void remove(Hero hero) {
-
+        super.remove(hero);
     }
 
     @Override

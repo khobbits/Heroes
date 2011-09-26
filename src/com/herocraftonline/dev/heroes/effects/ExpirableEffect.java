@@ -55,11 +55,11 @@ public class ExpirableEffect extends Effect implements Expirable {
 
     @Override
     public void remove(Creature creature) {
-
+        super.remove(creature);
     }
 
     @Override
     public void remove(Hero hero) {
-
+        super.remove(hero);
     }
 }

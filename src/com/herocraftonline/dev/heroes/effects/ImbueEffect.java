@@ -34,6 +34,7 @@ public class ImbueEffect extends ExpirableEffect {
     
     @Override
     public void remove(Hero hero) {
+        super.remove(hero);
         Messaging.send(hero.getPlayer(), "Your weapon is no longer imbued with $1", description);
     }
     

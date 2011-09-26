@@ -119,6 +119,7 @@ public class SkillSneak extends ActiveSkill {
 
         @Override
         public void remove(Hero hero) {
+            super.remove(hero);
             Player player = hero.getPlayer();
             player.setSneaking(false);
             Messaging.send(player, "You are no longer sneaking!");

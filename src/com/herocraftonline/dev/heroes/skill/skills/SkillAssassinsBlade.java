@@ -89,6 +89,7 @@ public class SkillAssassinsBlade extends ActiveSkill {
 
         @Override
         public void remove(Hero hero) {
+            super.remove(hero);
             Messaging.send(hero.getPlayer(), "Your blade is no longer poisoned!");
         }
 
