@@ -70,6 +70,8 @@ Skills:
 	Impale - (NEW!)
 		- Does weapon damage to the target at medium range
 		- Launches the target into the air.
+	Jump - (NEW!)
+		- Now requires the player to be on Solid ground when used - this also means they can't be in a vehicle
 	Mining - (NEW!)
 		- Passive skill that has a chance to give double-drops when mining ores
 		- Gives a very small chance to drop a random ore from just stone.
