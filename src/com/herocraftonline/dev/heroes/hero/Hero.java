@@ -877,6 +877,9 @@ public class Hero {
     }
     
     public boolean canEquipItem(int slot) {
+        if (plugin.getConfigManager().getProperties().disabledWorlds.contains(player.getWorld().getName()))
+            return true;
+        
         ItemStack itemStack = player.getInventory().getItem(slot);
         String itemType = itemStack.getType().toString();
         if (!itemType.equalsIgnoreCase("BOW")) {

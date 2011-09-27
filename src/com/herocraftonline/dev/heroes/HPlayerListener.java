@@ -72,7 +72,7 @@ public class HPlayerListener extends PlayerListener {
     @Override
     public void onPlayerInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
-        if (event.useItemInHand() == Result.DENY || plugin.getConfigManager().getProperties().disabledWorlds.contains(player.getWorld().getName()))
+        if (event.useItemInHand() == Result.DENY)
             return;
 
         Material material = player.getItemInHand().getType();
@@ -96,9 +96,7 @@ public class HPlayerListener extends PlayerListener {
         Hero hero = plugin.getHeroManager().getHero(player);
         hero.syncExperience();
         hero.syncHealth();
-        if (!plugin.getConfigManager().getProperties().disabledWorlds.contains(player.getWorld().getName())) {
-            hero.checkInventory();
-        }
+        hero.checkInventory();
         if (plugin.getConfigManager().getProperties().prefixClassName) {
             player.setDisplayName("[" + hero.getHeroClass().getName() + "]" + player.getName());
         }
