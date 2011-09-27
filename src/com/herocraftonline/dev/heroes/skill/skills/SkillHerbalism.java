@@ -1,5 +1,6 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
@@ -46,9 +47,11 @@ public class SkillHerbalism extends PassiveSkill {
                 return;
 
             int extraDrops = 0;
+            Material mat = null;
             switch (block.getType()) {
                 case CROPS:
                     extraDrops = 3;
+                    mat = Material.WHEAT;
                     break;
                 case SUGAR_CANE_BLOCK:
                 case SAPLING:
@@ -75,8 +78,10 @@ public class SkillHerbalism extends PassiveSkill {
             } else {
                 extraDrops = 1;
             }
-
-            block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(block.getType(), extraDrops, (short) 0, block.getData()));
+            if (mat != null)
+                block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(mat, extraDrops));
+            else
+                block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(block.getType(), extraDrops, (short) 0, block.getData()));
         }
     }
 }
