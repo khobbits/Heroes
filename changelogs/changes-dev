@@ -62,6 +62,8 @@ Skills:
 		- default items will be added to all biomes
 	ForcePull
 		- Pulls the target to the ground right in front of the caster, rather than a fixed amount of distance
+	Gift - (NEW!)
+		- Sends an item you're holding to another player
 	Herbalism - (NEW!)
 		- Passive skill that gives double-drops for herb related stuff
 		- Also allows players to have a chance to pickup dead shrubs & tall-grass
