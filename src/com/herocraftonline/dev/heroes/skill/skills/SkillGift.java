@@ -16,8 +16,8 @@ public class SkillGift extends ActiveSkill{
 
     private String sendText;
 
-    public SkillGift(Heroes plugin, String name) {
-        super(plugin, name);
+    public SkillGift(Heroes plugin) {
+        super(plugin, "Gift");
         setDescription("Teleports an item to your target");
         setUsage("/skill gift <player> [amount]");
         setArgumentRange(0, 3);
