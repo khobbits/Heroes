@@ -54,15 +54,13 @@ public class SkillEntityPort extends ActiveSkill{
         }
         
         player.getInventory().remove(item);
-        Map<Integer, ItemStack> leftOvers = player.getInventory().addItem(item);
+        Map<Integer, ItemStack> leftOvers = reciever.getInventory().addItem(item);
 
         if (!leftOvers.isEmpty()) {
             for (ItemStack leftOver : leftOvers.values()) {
-                hero.addRecoveryItem(leftOver);
+                reciever.getWorld().dropItem(reciever.getLocation(), leftOver);
             }
-            Messaging.send(player, "Please make space in your inventory then type '$1'", "/heroes recoveritems");
         }
-        Util.syncInventory(player, plugin);
         broadcastExecuteText(hero);
 
         return true;
