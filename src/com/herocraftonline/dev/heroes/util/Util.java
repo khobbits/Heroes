@@ -175,7 +175,7 @@ public final class Util {
         PlayerInventory inv = player.getInventory();
         int empty = firstEmpty(player);
         if (empty == -1) {
-            hero.addRecoveryItem(item);
+            player.getWorld().dropItemNaturally(player.getLocation(), item);
             if (slot != -1) {
                 inv.setItem(slot, null);
             }

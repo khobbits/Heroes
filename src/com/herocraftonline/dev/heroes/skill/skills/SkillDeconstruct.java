@@ -171,12 +171,12 @@ public class SkillDeconstruct extends ActiveSkill {
 
             ItemStack stack = new ItemStack(m, amount);
             Map<Integer, ItemStack> leftOvers = player.getInventory().addItem(stack);
-            // Just dump any leftover stacks onto the ground
+            // Drop any leftovers we couldn't add to the players inventory
             if (!leftOvers.isEmpty()) {
                 for (ItemStack leftOver : leftOvers.values()) {
-                    hero.addRecoveryItem(leftOver);
+                    player.getWorld().dropItemNaturally(player.getLocation(), leftOver);
                 }
-                Messaging.send(player, "Please make space in your inventory then type '$1'", "/heroes recoveritems");
+                Messaging.send(player, "Items have been dropped at your feet!");
             }
         }
         int amount = player.getInventory().getContents()[slot].getAmount() - 1;

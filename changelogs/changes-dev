@@ -30,6 +30,7 @@ General/API:
 	ImbueEffect - like FormEffects but are weapon related to prevent classes from stacking multiple weapon buffs at one time
 	Effects can have mobEffects (potion effects) use addMobEffect(id, ticks, amplitute) 
 	Tamed Pets & Summons will now award Experience for their kills
+	Hero recovery items have been removed - all items are now dropped to the world instead
 
 Skills:
 

@@ -149,9 +149,9 @@ public class SkillConstruct extends ActiveSkill {
         // Drop any leftovers we couldn't add to the players inventory
         if (!leftOvers.isEmpty()) {
             for (ItemStack leftOver : leftOvers.values()) {
-                hero.addRecoveryItem(leftOver);
+                player.getWorld().dropItemNaturally(player.getLocation(), leftOver);
             }
-            Messaging.send(player, "Please make space in your inventory then type '$1'", "/heroes recoveritems");
+            Messaging.send(player, "Items have been dropped at your feet!");
         }
         Util.syncInventory(player, plugin);
 

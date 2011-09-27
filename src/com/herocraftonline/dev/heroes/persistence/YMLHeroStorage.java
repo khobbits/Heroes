@@ -10,7 +10,6 @@ import java.util.logging.Level;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.config.Configuration;
 
 import com.herocraftonline.dev.heroes.Heroes;
@@ -45,7 +44,6 @@ public class YMLHeroStorage extends HeroStorage {
 
             loadCooldowns(playerHero, playerConfig);
             loadExperience(playerHero, playerConfig);
-            loadRecoveryItems(playerHero, playerConfig);
             loadBinds(playerHero, playerConfig);
             loadSkillSettings(playerHero, playerConfig);
             playerHero.setMana(playerConfig.getInt("mana", 0));
@@ -78,7 +76,6 @@ public class YMLHeroStorage extends HeroStorage {
         saveSkillSettings(hero, playerConfig);
         saveCooldowns(hero, playerConfig);
         saveExperience(hero, playerConfig);
-        saveRecoveryItems(hero, playerConfig);
         saveBinds(hero, playerConfig);
 
         playerConfig.save();
@@ -191,29 +188,6 @@ public class YMLHeroStorage extends HeroStorage {
     }
 
     /**
-     * Loads the hero's recovery items
-     * 
-     * @param hero
-     * @param config
-     */
-    private void loadRecoveryItems(Hero hero, Configuration config) {
-        List<ItemStack> itemRecovery = new ArrayList<ItemStack>();
-        List<String> itemKeys = config.getKeys("itemrecovery");
-        if (itemKeys != null && itemKeys.size() > 0) {
-            for (String item : itemKeys) {
-                try {
-                    Short durability = Short.valueOf(config.getString("itemrecovery." + item, "0"));
-                    Material type = Material.valueOf(item);
-                    itemRecovery.add(new ItemStack(type, 1, durability));
-                } catch (IllegalArgumentException e) {
-                    this.plugin.debugLog(Level.WARNING, "Either '" + item + "' doesn't exist or the durability is of an incorrect value!");
-                }
-            }
-        }
-        hero.setRecoveryItems(itemRecovery);
-    }
-
-    /**
      * Loads hero-specific Skill settings
      * 
      * @param hero
@@ -268,13 +242,6 @@ public class YMLHeroStorage extends HeroStorage {
         Map<String, Double> expMap = hero.getExperienceMap();
         for (Map.Entry<String, Double> entry : expMap.entrySet()) {
             config.setProperty(root + "." + entry.getKey(), (double) entry.getValue());
-        }
-    }
-
-    private void saveRecoveryItems(Hero hero, Configuration config) {
-        for (ItemStack item : hero.getRecoveryItems()) {
-            String durability = Short.toString(item.getDurability());
-            config.setProperty("itemrecovery." + item.getType().toString(), durability);
         }
     }
 

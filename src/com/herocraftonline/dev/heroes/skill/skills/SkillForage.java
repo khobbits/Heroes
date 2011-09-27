@@ -144,12 +144,13 @@ public class SkillForage extends ActiveSkill{
         for (int i = 0; i < numItems; i++) {
             ItemStack item = new ItemStack(materials.get(Util.rand.nextInt(materials.size())), 1);
             
-            //If it doesn't fit in the players inventory add it as a recovery item
             Map<Integer, ItemStack> leftOvers = player.getInventory().addItem(item);
+            // Drop any leftovers we couldn't add to the players inventory
             if (!leftOvers.isEmpty()) {
                 for (ItemStack leftOver : leftOvers.values()) {
-                    hero.addRecoveryItem(leftOver);
+                    player.getWorld().dropItemNaturally(player.getLocation(), leftOver);
                 }
+                Messaging.send(player, "Items have been dropped at your feet!");
             }
         }
         broadcastExecuteText(hero);

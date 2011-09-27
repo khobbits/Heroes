@@ -1,13 +1,11 @@
 package com.herocraftonline.dev.heroes.hero;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -58,7 +56,6 @@ public class Hero {
     private Map<String, Long> cooldowns = new HashMap<String, Long>();
     private Set<Creature> summons = new HashSet<Creature>();
     private Map<Material, String[]> binds = new EnumMap<Material, String[]>(Material.class);
-    private List<ItemStack> itemRecovery = new ArrayList<ItemStack>();
     private Set<String> suppressedSkills = new HashSet<String>();
     private Map<String, Map<String, String>> skillSettings = new HashMap<String, Map<String, String>>();
     private Map<String, ConfigurationNode> skills = new HashMap<String, ConfigurationNode>();
@@ -92,10 +89,6 @@ public class Hero {
      */
     public void addPermission(String permission) {
         transientPerms.setPermission(permission, true);
-    }
-
-    public void addRecoveryItem(ItemStack item) {
-        this.itemRecovery.add(item);
     }
 
     public void addSkill(String skill) {
@@ -453,10 +446,6 @@ public class Hero {
         return player;
     }
 
-    public List<ItemStack> getRecoveryItems() {
-        return Collections.unmodifiableList(itemRecovery);
-    }
-
     public Map<String, ConfigurationNode> getSkills() {
         return skills;
     }
@@ -718,10 +707,6 @@ public class Hero {
      */
     public void setParty(HeroParty party) {
         this.party = party;
-    }
-
-    public void setRecoveryItems(List<ItemStack> items) {
-        this.itemRecovery = items;
     }
 
     /**
