@@ -78,8 +78,11 @@ Skills:
 	One - (READDED!)
 		- Provides a speed boost to the caster
 	Purge - (NEW!)
-		- Acts as an Area of effect targetted purge.
+		- Acts as an Area of effect targeted purge.
 		- Still requires a target like dispel, or will target self if cast with no target
+	Quicken - (NEW!)
+		- Long duration movement speed increase
+		- Removes/Cancels when the player takes damage
 	Slow - (NEW!)
 		- Slows down the target's movement speed
 		- Also slows the targets's swing speed
