@@ -179,24 +179,19 @@ public class HeroManager {
 
     public void performSkillChecks(Hero hero) {
         HeroClass playerClass = hero.getHeroClass();
-
-        for (Skill skill : plugin.getSkillManager().getSkills()) {
-            // Never try to learn * or ALL as skills, can happen if the nodes are added incorrectly
-            if (skill.getName().equals("*") || skill.getName().toLowerCase().equals("ALL")) {
+        
+        for (String skillName : playerClass.getSkillNames()) {
+            if (skillName.equals("*") || skillName.equals("ALL"))
                 continue;
-            }
+            Skill skill = plugin.getSkillManager().getSkill(skillName);
+            if (skill == null)
+                continue;
+            if (skill instanceof OutsourcedSkill)
+                ((OutsourcedSkill) skill).tryLearningSkill(hero);
 
-            if (skill instanceof OutsourcedSkill) {
-                if (playerClass.hasSkill(skill.getName())) {
-                    ((OutsourcedSkill) skill).tryLearningSkill(hero);
-                }
-            }
+            if (skill instanceof PassiveSkill)
+                ((PassiveSkill) skill).tryApplying(hero);
 
-            if (skill instanceof PassiveSkill) {
-                if (playerClass.hasSkill(skill.getName())) {
-                    ((PassiveSkill) skill).tryApplying(hero);
-                }
-            }
         }
     }
 
