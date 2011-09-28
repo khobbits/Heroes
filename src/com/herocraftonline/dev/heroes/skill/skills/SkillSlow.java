@@ -72,8 +72,8 @@ public class SkillSlow extends TargettedSkill {
             this.types.add(EffectType.DISPELLABLE);
             this.types.add(EffectType.HARMFUL);
             this.types.add(EffectType.SLOW);
-            addMobEffect(2, (int) (duration / 1000) * 20, amplifier);
-            addMobEffect(4, (int) (duration / 1000) * 20, amplifier);
+            addMobEffect(2, (int) (duration / 1000) * 20, amplifier, false);
+            addMobEffect(4, (int) (duration / 1000) * 20, amplifier, false);
         }
 
         @Override

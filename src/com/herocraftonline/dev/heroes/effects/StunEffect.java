@@ -20,7 +20,7 @@ public class StunEffect extends PeriodicExpirableEffect {
         this.types.add(EffectType.HARMFUL);
         this.types.add(EffectType.PHYSICAL);
         this.types.add(EffectType.DISABLE);
-        addMobEffect(9, (int) (duration / 1000) * 20, 127);
+        addMobEffect(9, (int) (duration / 1000) * 20, 127, false);
     }
 
     @Override

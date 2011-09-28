@@ -1,14 +1,16 @@
 package com.herocraftonline.dev.heroes.effects;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import net.minecraft.server.EntityCreature;
 import net.minecraft.server.EntityPlayer;
 import net.minecraft.server.MobEffect;
+import net.minecraft.server.Packet41MobEffect;
 import net.minecraft.server.Packet42RemoveMobEffect;
 
 import org.bukkit.Location;
@@ -28,7 +30,7 @@ public class Effect {
     protected final Set<EffectType> types = EnumSet.noneOf(EffectType.class);
     protected long applyTime;
     private boolean persistent;
-    private List<MobEffect> mobEffects = new ArrayList<MobEffect>();
+    private Map<MobEffect, Boolean> mobEffects = new HashMap<MobEffect, Boolean>();
 
     public Effect(Skill skill, String name) {
         this.name = name;
@@ -54,7 +56,7 @@ public class Effect {
         this.applyTime = System.currentTimeMillis();
         if (!mobEffects.isEmpty()) {
             EntityCreature eCreature = ((CraftCreature) creature).getHandle();
-            for (MobEffect mobEffect : mobEffects) {
+            for (MobEffect mobEffect : mobEffects.keySet()) {
                 eCreature.addEffect(mobEffect);
             }
         }
@@ -64,8 +66,12 @@ public class Effect {
         this.applyTime = System.currentTimeMillis();
         if (!mobEffects.isEmpty()) {
             EntityPlayer ePlayer = ((CraftPlayer) hero.getPlayer()).getHandle();
-            for (MobEffect mobEffect : mobEffects) {
-                ePlayer.addEffect(mobEffect);
+            for (Entry<MobEffect, Boolean> entry : mobEffects.entrySet()) {
+                if (!entry.getValue()) {
+                    ePlayer.addEffect(entry.getKey());
+                } else {
+                    ePlayer.netServerHandler.sendPacket(new Packet41MobEffect(ePlayer.id, entry.getKey()));
+                }
             }
         }
     }
@@ -73,7 +79,7 @@ public class Effect {
     public void remove(Creature creature) {
         if (!mobEffects.isEmpty()) {
             EntityCreature eCreature = ((CraftCreature) creature).getHandle();
-            for (MobEffect mobEffect : mobEffects) {
+            for (MobEffect mobEffect : mobEffects.keySet()) {
                 eCreature.addEffect(new MobEffect(mobEffect.getEffectId(), 0, 0));
             }
         }
@@ -82,9 +88,13 @@ public class Effect {
     public void remove(Hero hero) {
         if (!mobEffects.isEmpty()) {
             EntityPlayer ePlayer = ((CraftPlayer) hero.getPlayer()).getHandle();
-            for (MobEffect mobEffect : mobEffects) {
-                ePlayer.netServerHandler.sendPacket(new Packet42RemoveMobEffect(ePlayer.id, mobEffect));
-                ePlayer.addEffect(new MobEffect(mobEffect.getEffectId(), 0, 0));
+            for (Entry<MobEffect, Boolean> entry : mobEffects.entrySet()) {
+                //Always tell the client to remove the effect
+                ePlayer.netServerHandler.sendPacket(new Packet42RemoveMobEffect(ePlayer.id, entry.getKey()));
+                //If it's not a faked effect lets make sure to remove it
+                if (!entry.getValue()) {
+                    ePlayer.getEffects().remove(entry.getKey());
+                }
             }
         }
     }
@@ -159,15 +169,15 @@ public class Effect {
         this.persistent = persistent;
     }
 
-    public void addMobEffect(int id, int duration, int strength) {
-        mobEffects.add(new MobEffect(id, duration, strength));
+    public void addMobEffect(int id, int duration, int strength, boolean faked) {
+        mobEffects.put(new MobEffect(id, duration, strength), faked);
     }
 
-    public void addMobEffect(MobEffect mobEffect) {
-        mobEffects.add(mobEffect);
+    public void addMobEffect(MobEffect mobEffect, boolean faked) {
+        mobEffects.put(mobEffect, faked);
     }
 
-    public List<MobEffect> getMobEffects() {
-        return Collections.unmodifiableList(mobEffects);
+    public Map<MobEffect, Boolean> getMobEffects() {
+        return Collections.unmodifiableMap(mobEffects);
     }
 }

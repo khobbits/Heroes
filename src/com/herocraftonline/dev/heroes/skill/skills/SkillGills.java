@@ -56,7 +56,7 @@ public class SkillGills extends ActiveSkill {
 
         public GillsEffect(Skill skill, long duration) {
             super(skill, "Gills", duration);
-            addMobEffect(13, (int) (duration / 1000) * 20, 0);
+            addMobEffect(13, (int) (duration / 1000) * 20, 0, false);
             this.types.add(EffectType.DISPELLABLE);
             this.types.add(EffectType.BENEFICIAL);
         }
