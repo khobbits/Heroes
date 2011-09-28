@@ -11,7 +11,6 @@ public class StunEffect extends PeriodicExpirableEffect {
     private static final long period = 100;
     private final String stunApplyText = "$1 is stunned!";
     private final String stunExpireText = "$1 is no longer stunned!";
-
     private Location loc;
 
     public StunEffect(Skill skill, long duration) {
@@ -27,6 +26,7 @@ public class StunEffect extends PeriodicExpirableEffect {
     public void apply(Hero hero) {
         super.apply(hero);
         Player player = hero.getPlayer();
+        loc = hero.getPlayer().getLocation();
         broadcast(player.getLocation(), stunApplyText, player.getDisplayName());
     }
 
@@ -40,8 +40,9 @@ public class StunEffect extends PeriodicExpirableEffect {
     @Override
     public void tick(Hero hero) {
         super.tick(hero);
-
         Location location = hero.getPlayer().getLocation();
+        if (location == null)
+            return;
         if (location.getX() != loc.getX() || location.getY() != loc.getY() || location.getZ() != loc.getZ()) {
             loc.setYaw(location.getYaw());
             loc.setPitch(location.getPitch());
