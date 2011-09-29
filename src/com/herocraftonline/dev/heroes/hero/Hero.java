@@ -610,6 +610,13 @@ public class Hero {
         }
     }
 
+    protected void removeEffectNoCallBack(Effect effect) {
+        if (effect != null) {
+            effects.remove(effect.getName().toLowerCase());
+            effect.remove(this);
+        }
+    }
+
     /**
      * Removes the given permission from the hero
      * 
@@ -808,38 +815,39 @@ public class Hero {
     public void unbind(Material material) {
         binds.remove(material);
     }
-    
+
     public void checkInventory() {
         if (player.getGameMode() == GameMode.CREATIVE || plugin.getConfigManager().getProperties().disabledWorlds.contains(player.getWorld().getName()))
             return;
         int removedCount = checkArmorSlots();
-        
+
         for (int i = 0; i < 9; i++) {
             if (canEquipItem(i))
                 continue;
-            
+
             removedCount++;
         }
-        // If items were removed from the Players inventory then we need to alert them of such event and re-sync their inventory
+        // If items were removed from the Players inventory then we need to alert them of such event and re-sync their
+        // inventory
         if (removedCount > 0) {
             Messaging.send(player, "$1 have been removed from your inventory due to class restrictions.", removedCount + " Items");
             Messaging.send(player, "Please make space in your inventory then type '$1'", "/heroes recoveritems");
             Util.syncInventory(player, plugin);
-        }        
+        }
     }
-    
+
     public int checkArmorSlots() {
         PlayerInventory inv = player.getInventory();
         String item;
         int removedCount = 0;
-        
+
         if (inv.getHelmet() != null && inv.getHelmet().getTypeId() != 0 && !plugin.getConfigManager().getProperties().allowHats) {
             item = inv.getHelmet().getType().toString();
             if (!heroClass.getAllowedArmor().contains(item) && !heroClass.getAllowedArmor().contains("*")) {
                 Util.moveItem(this, -1, inv.getHelmet());
                 inv.setHelmet(null);
                 removedCount++;
-           
+
             }
         }
         if (inv.getChestplate() != null && inv.getChestplate().getTypeId() != 0) {
@@ -850,7 +858,7 @@ public class Hero {
                 removedCount++;
             }
         }
-        
+
         if (inv.getLeggings() != null && inv.getLeggings().getTypeId() != 0) {
             item = inv.getLeggings().getType().toString();
             if (!heroClass.getAllowedArmor().contains(item) && !heroClass.getAllowedArmor().contains("*")) {
@@ -869,11 +877,11 @@ public class Hero {
         }
         return removedCount;
     }
-    
+
     public boolean canEquipItem(int slot) {
         if (plugin.getConfigManager().getProperties().disabledWorlds.contains(player.getWorld().getName()))
             return true;
-        
+
         ItemStack itemStack = player.getInventory().getItem(slot);
         String itemType = itemStack.getType().toString();
         if (!itemType.equalsIgnoreCase("BOW")) {
