@@ -290,7 +290,7 @@ class EffectUpdater implements Runnable {
                         effectIterator.remove();
                         if (mapEntry.getValue().isEmpty())
                             heroMapIterator.remove();
-                        mapEntry.getKey().removeEffectNoCallBack(effect);
+                        mapEntry.getKey().removeEffect(effect);
                     }
                 }
                 if (effect instanceof Periodic) {
@@ -312,7 +312,7 @@ class EffectUpdater implements Runnable {
                         effectIterator.remove();
                         if (mapEntry.getValue().isEmpty())
                             creatureMapIterator.remove();
-                        effect.remove(mapEntry.getKey());
+                        heroManager.removeCreatureEffect(mapEntry.getKey(), effect);
                     }
                 }
                 if (effect instanceof Periodic) {
