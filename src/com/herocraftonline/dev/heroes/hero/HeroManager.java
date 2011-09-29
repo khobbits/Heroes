@@ -304,6 +304,8 @@ class EffectUpdater implements Runnable {
                 if (effect instanceof Expirable) {
                     if (((Expirable) effect).isExpired()) {
                         effectIterator.remove();
+                        if (mapEntry.getValue().isEmpty())
+                            mapIterator.remove();
                         mapEntry.getKey().removeEffect(effect);
                     }
                 }
