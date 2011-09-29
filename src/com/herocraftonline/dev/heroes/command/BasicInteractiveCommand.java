@@ -91,7 +91,7 @@ public abstract class BasicInteractiveCommand extends BasicCommand implements In
     @Override
     public final void setIdentifiers(String... identifiers) {}
 
-    public final void setStates(InteractiveCommandState[] states) {
+    public final void setStates(InteractiveCommandState...states) {
         if (states.length == 0)
             throw new IllegalArgumentException("An interactive command must have at least one state.");
 
