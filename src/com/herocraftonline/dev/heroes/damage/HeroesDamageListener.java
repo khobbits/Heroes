@@ -230,6 +230,12 @@ public class HeroesDamageListener extends EntityListener {
             if (party != null && event.getDamage() > 0 && !party.updateMapDisplay()) {
                 party.setUpdateMapDisplay(true);
             }
+            
+            //Do our Damage-Dependant effect removals last
+            if (hero.hasEffect("Invisible")) {
+                hero.removeEffect(hero.getEffect("Invisible"));
+            }
+            
         } else if (defender instanceof LivingEntity) {
             event.setDamage(damage);
         }

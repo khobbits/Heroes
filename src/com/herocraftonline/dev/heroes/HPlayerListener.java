@@ -88,6 +88,10 @@ public class HPlayerListener extends PlayerListener {
                 plugin.onCommand(player, null, "skill", args);
             }
         }
+        //Remove effects dependant on non-interaction
+        if (hero.hasEffect("Invisible")) {
+            hero.removeEffect(hero.getEffect("Invisible"));
+        }
     }
 
     @Override

@@ -29,6 +29,7 @@ Version dev
 ** FormEffect - only 1 can be active a time. work like 'stances'
 ** ImbueEffect - like FormEffects but are weapon related to prevent classes from stacking multiple weapon buffs at one time
 * SafeFallEffect is now universal - the damagemanager now checks if the hero has the effect before allowing fall damage
+* InvisibleEffect is now universal - it will automatically break on damage & use events
 * getRemaingTime added to expirable effects
 * TargettedSkills now have built-in - PvP/Party/Summon checking.
 * PeriodicEffect is now PeriodicExpirableEffect - there is now a non-expirable PeriodicEffect
@@ -68,6 +69,10 @@ Version dev
 ** default items will be added to all biomes
 * ForcePull
 ** Pulls the target to the ground right in front of the caster, rather than a fixed amount of distance
+* Garrote - (NEW!)
+** May only be used while stealthed or invisible
+** Silences the target and deals damage
+** Requires the skill to be bound to string
 * Gift - (NEW!)
 ** Sends an item you're holding to another player
 * Herbalism - (NEW!)
@@ -96,6 +101,8 @@ Version dev
 * Slow - (NEW!)
 ** Slows down the target's movement speed
 ** Also slows the targets's swing speed
+* Smoke
+** Now uses InvisibleEffect - will be removed if the player takes damage or interacts with the world
 * SoulBond - (NEW!)
 ** Allows the caster to absorb some damage from the target, allowing the target to live longer
 * SoulLeech - (NEW!)
