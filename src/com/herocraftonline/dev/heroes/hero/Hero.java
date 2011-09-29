@@ -12,6 +12,7 @@ import java.util.Set;
 import net.minecraft.server.EntityPlayer;
 
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
@@ -207,6 +208,8 @@ public class Hero {
      * @param boolean - distributeToParty
      */
     public void gainExp(double expChange, ExperienceType source, boolean distributeToParty) {
+        if (player.getGameMode() == GameMode.CREATIVE)
+            return;
         Properties prop = plugin.getConfigManager().getProperties();
 
         if (prop.disabledWorlds.contains(player.getWorld().getName()))
