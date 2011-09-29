@@ -297,7 +297,8 @@ class EffectUpdater implements Runnable {
     public void run() {
         Map<Hero, Set<Effect>> heroEffects = heroManager.getHeroEffects();
         for (Entry<Hero, Set<Effect>> entry : heroEffects.entrySet() ) {
-            for (Effect effect : entry.getValue()) {
+            Set<Effect> hEffects = new HashSet<Effect>(entry.getValue());
+            for (Effect effect : hEffects) {
                 if (effect instanceof Expirable) {
                     if (((Expirable) effect).isExpired())
                         entry.getKey().removeEffect(effect);
