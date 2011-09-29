@@ -208,7 +208,7 @@ public class Hero {
      * @param boolean - distributeToParty
      */
     public void gainExp(double expChange, ExperienceType source, boolean distributeToParty) {
-        if (player.getGameMode() == GameMode.CREATIVE)
+        if (player.getGameMode() == GameMode.CREATIVE || plugin.getConfigManager().getProperties().disabledWorlds.contains(player.getWorld().getName()))
             return;
         Properties prop = plugin.getConfigManager().getProperties();
 
@@ -810,6 +810,8 @@ public class Hero {
     }
     
     public void checkInventory() {
+        if (player.getGameMode() == GameMode.CREATIVE || plugin.getConfigManager().getProperties().disabledWorlds.contains(player.getWorld().getName()))
+            return;
         int removedCount = checkArmorSlots();
         
         for (int i = 0; i < 9; i++) {
