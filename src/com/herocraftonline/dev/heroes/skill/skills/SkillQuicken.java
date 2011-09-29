@@ -33,6 +33,7 @@ public class SkillQuicken extends ActiveSkill {
         ConfigurationNode node = super.getDefaultConfig();
         node.setProperty("speed-multiplier", 2);
         node.setProperty(Setting.DURATION.node(), 300000);
+        node.setProperty(Setting.RADIUS.node(), 15);
         node.setProperty("apply-text", "%hero% gained a burst of speed!");
         node.setProperty("expire-text", "%hero% returned to normal speed!");
         return node;
@@ -48,14 +49,26 @@ public class SkillQuicken extends ActiveSkill {
     @Override
     public boolean use(Hero hero, String[] args) {
         broadcastExecuteText(hero);
-
+        
         int duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 300000);
         int multiplier = getSetting(hero.getHeroClass(), "speed-multiplier", 2);
         if (multiplier > 20) {
             multiplier = 20;
         }
-        hero.addEffect(new QuickenEffect(this, duration, multiplier));
-
+        QuickenEffect qEffect = new QuickenEffect(this, duration, multiplier);
+        if (!hero.hasParty()) {
+            hero.addEffect(qEffect);
+            return true;
+        }
+        Player player = hero.getPlayer();
+        int rSquared = (int) Math.pow(getSetting(hero.getHeroClass(), Setting.RADIUS.node(), 15), 2);
+        //Apply the effect to all party members
+        for (Hero tHero : hero.getParty().getMembers()) {
+            if (player.getLocation().distanceSquared(tHero.getPlayer().getLocation()) > rSquared)
+                continue;
+            
+            tHero.addEffect(qEffect);
+        }
         return true;
     }
 
