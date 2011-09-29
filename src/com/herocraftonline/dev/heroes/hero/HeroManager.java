@@ -296,6 +296,7 @@ class EffectUpdater implements Runnable {
                         if (mapEntry.getValue().isEmpty())
                             heroMapIterator.remove();
                         mapEntry.getKey().removeEffect(effect);
+                        continue;
                     }
                 }
                 if (effect instanceof Periodic) {
