@@ -71,7 +71,7 @@ public class HeroManager {
         plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, partyUpdater, 0, partyUpdateInterval);
     }
 
-    
+
     protected void addManagedHeroEffect(Hero hero, Effect effect) {
         if (!heroEffects.containsKey(hero)) {
             Set<Effect> effects = new HashSet<Effect>();
@@ -81,7 +81,7 @@ public class HeroManager {
             heroEffects.get(hero).add(effect);
         }
     }
-    
+
     protected void removeManagedHeroEffect(Hero hero, Effect effect) {
         if (!heroEffects.containsKey(hero)) {
             return;
@@ -91,7 +91,7 @@ public class HeroManager {
         if (heroEffects.get(hero).isEmpty())
             heroEffects.remove(hero);
     }
-    
+
     /**
      * Adds a new effect to the specific creature
      * 
@@ -170,6 +170,11 @@ public class HeroManager {
         return creatureEffects.get(creature) != null ? new HashSet<Effect>(creatureEffects.get(creature)) : null;
     }
 
+
+    public Set<Creature> getCreaturesWithEffects() {
+        return new HashSet<Creature>(creatureEffects.keySet());
+    }
+
     /**
      * Gets a hero Object from the hero mapping, if the hero does not exist then it loads in the Hero object for the
      * player
@@ -202,7 +207,7 @@ public class HeroManager {
 
     public void performSkillChecks(Hero hero) {
         HeroClass playerClass = hero.getHeroClass();
-        
+
         for (String skillName : playerClass.getSkillNames()) {
             if (skillName.equals("*") || skillName.equals("ALL"))
                 continue;
@@ -266,7 +271,7 @@ public class HeroManager {
     public void stopTimers() {
         plugin.getServer().getScheduler().cancelTasks(plugin);
     }
-    
+
 }
 
 class EffectUpdater implements Runnable {
@@ -300,174 +305,166 @@ class EffectUpdater implements Runnable {
                 }
             }
         }
-        
-        Iterator<Entry<Creature, Set<Effect>>> creatureMapIterator = heroManager.creatureEffects.entrySet().iterator();
-        while (creatureMapIterator.hasNext()) {
-            Entry<Creature, Set<Effect>> mapEntry = creatureMapIterator.next();
-            Iterator<Effect> effectIterator = mapEntry.getValue().iterator();
-            while (effectIterator.hasNext()) {
-                Effect effect = effectIterator.next();
+        for (Creature creature : heroManager.getCreaturesWithEffects()) {
+            for (Effect effect : heroManager.getCreatureEffects(creature)) {
                 if (effect instanceof Expirable) {
                     if (((Expirable) effect).isExpired()) {
-                        effectIterator.remove();
-                        if (mapEntry.getValue().isEmpty())
-                            creatureMapIterator.remove();
-                        heroManager.removeCreatureEffect(mapEntry.getKey(), effect);
+                        heroManager.removeCreatureEffect(creature, effect);
+                        continue;
+                    }
+                    if (effect instanceof Periodic) {
+                        Periodic periodic = (Periodic) effect;
+                        if (periodic.isReady())
+                            periodic.tick(creature);
                     }
                 }
-                if (effect instanceof Periodic) {
-                    Periodic periodic = (Periodic) effect;
-                    if (periodic.isReady())
-                        periodic.tick(mapEntry.getKey());
+            }
+        }
+    }
+
+    class ManaUpdater implements Runnable {
+
+        private final HeroManager manager;
+        private final long updateInterval;
+        private final int manaPercent;
+        private long lastUpdate = 0;
+
+        ManaUpdater(HeroManager manager, long updateInterval, int manaPercent) {
+            this.manager = manager;
+            this.updateInterval = updateInterval;
+            this.manaPercent = manaPercent;
+        }
+
+        @Override
+        public void run() {
+            long time = System.currentTimeMillis();
+            if (time < lastUpdate + updateInterval)
+                return;
+            lastUpdate = time;
+
+            Collection<Hero> heroes = manager.getHeroes();
+            for (Hero hero : heroes) {
+                if (hero == null) {
+                    continue;
+                }
+
+                int mana = hero.getMana();
+                if (mana == 100) {
+                    continue;
+                }
+
+                HeroRegainManaEvent hrmEvent = new HeroRegainManaEvent(hero, manaPercent, null);
+                Bukkit.getServer().getPluginManager().callEvent(hrmEvent);
+                if (hrmEvent.isCancelled()) {
+                    continue;
+                }
+
+                hero.setMana(mana + hrmEvent.getAmount());
+                if (hero.isVerbose()) {
+                    Messaging.send(hero.getPlayer(), ChatColor.BLUE + "MANA " + Messaging.createManaBar(hero.getMana()));
                 }
             }
         }
     }
-}
 
-class ManaUpdater implements Runnable {
+    class PartyUpdater implements Runnable {
 
-    private final HeroManager manager;
-    private final long updateInterval;
-    private final int manaPercent;
-    private long lastUpdate = 0;
+        private final HeroManager manager;
+        private final Heroes plugin;
+        private final PartyManager partyManager;
 
-    ManaUpdater(HeroManager manager, long updateInterval, int manaPercent) {
-        this.manager = manager;
-        this.updateInterval = updateInterval;
-        this.manaPercent = manaPercent;
-    }
-
-    @Override
-    public void run() {
-        long time = System.currentTimeMillis();
-        if (time < lastUpdate + updateInterval)
-            return;
-        lastUpdate = time;
-
-        Collection<Hero> heroes = manager.getHeroes();
-        for (Hero hero : heroes) {
-            if (hero == null) {
-                continue;
-            }
-
-            int mana = hero.getMana();
-            if (mana == 100) {
-                continue;
-            }
-
-            HeroRegainManaEvent hrmEvent = new HeroRegainManaEvent(hero, manaPercent, null);
-            Bukkit.getServer().getPluginManager().callEvent(hrmEvent);
-            if (hrmEvent.isCancelled()) {
-                continue;
-            }
-
-            hero.setMana(mana + hrmEvent.getAmount());
-            if (hero.isVerbose()) {
-                Messaging.send(hero.getPlayer(), ChatColor.BLUE + "MANA " + Messaging.createManaBar(hero.getMana()));
-            }
+        PartyUpdater(HeroManager manager, Heroes plugin, PartyManager partyManager) {
+            this.manager = manager;
+            this.plugin = plugin;
+            this.partyManager = partyManager;
         }
-    }
-}
 
-class PartyUpdater implements Runnable {
+        @Override
+        public void run() {
+            if (!this.plugin.getConfigManager().getProperties().mapUI)
+                return;
 
-    private final HeroManager manager;
-    private final Heroes plugin;
-    private final PartyManager partyManager;
+            if (partyManager.getParties().size() == 0)
+                return;
 
-    PartyUpdater(HeroManager manager, Heroes plugin, PartyManager partyManager) {
-        this.manager = manager;
-        this.plugin = plugin;
-        this.partyManager = partyManager;
-    }
-
-    @Override
-    public void run() {
-        if (!this.plugin.getConfigManager().getProperties().mapUI)
-            return;
-
-        if (partyManager.getParties().size() == 0)
-            return;
-
-        for (HeroParty party : partyManager.getParties()) {
-            if (party.updateMapDisplay()) {
-                party.setUpdateMapDisplay(false);
-                Player[] players = new Player[party.getMembers().size()];
-                int count = 0;
-                for (Hero heroes : party.getMembers()) {
-                    players[count] = heroes.getPlayer();
-                    count++;
+            for (HeroParty party : partyManager.getParties()) {
+                if (party.updateMapDisplay()) {
+                    party.setUpdateMapDisplay(false);
+                    Player[] players = new Player[party.getMembers().size()];
+                    int count = 0;
+                    for (Hero heroes : party.getMembers()) {
+                        players[count] = heroes.getPlayer();
+                        count++;
+                    }
+                    updateMapView(players);
                 }
-                updateMapView(players);
             }
         }
-    }
 
-    private void updateMapView(Player[] players) {
-        MapAPI mapAPI = new MapAPI();
-        short mapId = this.plugin.getConfigManager().getProperties().mapID;
+        private void updateMapView(Player[] players) {
+            MapAPI mapAPI = new MapAPI();
+            short mapId = this.plugin.getConfigManager().getProperties().mapID;
 
-        TextRenderer text = new TextRenderer(this.plugin);
-        CharacterSprite sword = CharacterSprite.make("      XX", "     XXX", "    XXX ", "X  XXX  ", " XXXX   ", "  XX    ", " X X    ", "X   X   ");
-        CharacterSprite crown = CharacterSprite.make("        ", "        ", "XX XX XX", "X XXXX X", "XX XX XX", " XXXXXX ", " XXXXXX ", "        ");
-        CharacterSprite shield = CharacterSprite.make("   XX   ", "X  XX  X", "XXXXXXXX", "XXXXXXXX", "XXXXXXXX", " XXXXXX ", "  XXXX  ", "   XX   ");
-        CharacterSprite heal = CharacterSprite.make("        ", "  XXX   ", "  XXX   ", "XXXXXXX ", "XXXXXXX ", "XXXXXXX ", "  XXX   ", "  XXX   ");
-        CharacterSprite bow = CharacterSprite.make("XXXX   X", "X  XX X ", " X   X  ", "  X X X ", "   X  XX", "  X X  X", "XX   X X", " X    XX");
-        text.setChar('\u0001', crown);
-        text.setChar('\u0002', sword);
-        text.setChar('\u0003', shield);
-        text.setChar('\u0004', heal);
-        text.setChar('\u0005', bow);
+            TextRenderer text = new TextRenderer(this.plugin);
+            CharacterSprite sword = CharacterSprite.make("      XX", "     XXX", "    XXX ", "X  XXX  ", " XXXX   ", "  XX    ", " X X    ", "X   X   ");
+            CharacterSprite crown = CharacterSprite.make("        ", "        ", "XX XX XX", "X XXXX X", "XX XX XX", " XXXXXX ", " XXXXXX ", "        ");
+            CharacterSprite shield = CharacterSprite.make("   XX   ", "X  XX  X", "XXXXXXXX", "XXXXXXXX", "XXXXXXXX", " XXXXXX ", "  XXXX  ", "   XX   ");
+            CharacterSprite heal = CharacterSprite.make("        ", "  XXX   ", "  XXX   ", "XXXXXXX ", "XXXXXXX ", "XXXXXXX ", "  XXX   ", "  XXX   ");
+            CharacterSprite bow = CharacterSprite.make("XXXX   X", "X  XX X ", " X   X  ", "  X X X ", "   X  XX", "  X X  X", "XX   X X", " X    XX");
+            text.setChar('\u0001', crown);
+            text.setChar('\u0002', sword);
+            text.setChar('\u0003', shield);
+            text.setChar('\u0004', heal);
+            text.setChar('\u0005', bow);
 
-        MapInfo info = mapAPI.loadMap(Bukkit.getServer().getWorlds().get(0), mapId);
-        mapAPI.getWorldMap(Bukkit.getServer().getWorlds().get(0), mapId).map = (byte) 9;
+            MapInfo info = mapAPI.loadMap(Bukkit.getServer().getWorlds().get(0), mapId);
+            mapAPI.getWorldMap(Bukkit.getServer().getWorlds().get(0), mapId).map = (byte) 9;
 
-        info.setData(new byte[128 * 128]);
+            info.setData(new byte[128 * 128]);
 
-        String map = "§22;Party Members -\n";
+            String map = "§22;Party Members -\n";
 
-        for (Player player : players) {
-            Hero hero = this.manager.getHero(player);
-            if (hero.getParty().getLeader().equals(hero)) {
-                map += "§42;\u0001";
-            } else {
-                map += "§27;\u0002";
+            for (Player player : players) {
+                Hero hero = this.manager.getHero(player);
+                if (hero.getParty().getLeader().equals(hero)) {
+                    map += "§42;\u0001";
+                } else {
+                    map += "§27;\u0002";
+                }
+                boolean damage = plugin.getConfigManager().getProperties().damageSystem;
+                double currentHP;
+                double maxHP;
+                if (damage) {
+                    currentHP = hero.getHealth();
+                    maxHP = hero.getMaxHealth();
+                } else {
+                    currentHP = hero.getPlayer().getHealth();
+                    maxHP = 20;
+                }
+                map += " §12;" + player.getName() + "\n" + createHealthBar(currentHP, maxHP) + "\n";
             }
-            boolean damage = plugin.getConfigManager().getProperties().damageSystem;
-            double currentHP;
-            double maxHP;
-            if (damage) {
-                currentHP = hero.getHealth();
-                maxHP = hero.getMaxHealth();
-            } else {
-                currentHP = hero.getPlayer().getHealth();
-                maxHP = 20;
+
+            text.fancyRender(info, 10, 3, map);
+
+            for (Player player : players) {
+                mapAPI.sendMap(player, mapId, info.getData(), this.plugin.getConfigManager().getProperties().mapPacketInterval);
             }
-            map += " §12;" + player.getName() + "\n" + createHealthBar(currentHP, maxHP) + "\n";
         }
 
-        text.fancyRender(info, 10, 3, map);
-
-        for (Player player : players) {
-            mapAPI.sendMap(player, mapId, info.getData(), this.plugin.getConfigManager().getProperties().mapPacketInterval);
+        private static String createHealthBar(double health, double maxHealth) {
+            String manaBar = com.herocraftonline.dev.heroes.ui.MapColor.DARK_RED + "[" + com.herocraftonline.dev.heroes.ui.MapColor.DARK_GREEN;
+            int bars = 40;
+            int progress = (int) (health / maxHealth * bars);
+            for (int i = 0; i < progress; i++) {
+                manaBar += "|";
+            }
+            manaBar += com.herocraftonline.dev.heroes.ui.MapColor.DARK_GRAY;
+            for (int i = 0; i < bars - progress; i++) {
+                manaBar += "|";
+            }
+            manaBar += com.herocraftonline.dev.heroes.ui.MapColor.RED + "]";
+            double percent = health / maxHealth * 100;
+            DecimalFormat df = new DecimalFormat("#.##");
+            return manaBar + " - " + com.herocraftonline.dev.heroes.ui.MapColor.GREEN + df.format(percent) + "%";
         }
     }
-
-    private static String createHealthBar(double health, double maxHealth) {
-        String manaBar = com.herocraftonline.dev.heroes.ui.MapColor.DARK_RED + "[" + com.herocraftonline.dev.heroes.ui.MapColor.DARK_GREEN;
-        int bars = 40;
-        int progress = (int) (health / maxHealth * bars);
-        for (int i = 0; i < progress; i++) {
-            manaBar += "|";
-        }
-        manaBar += com.herocraftonline.dev.heroes.ui.MapColor.DARK_GRAY;
-        for (int i = 0; i < bars - progress; i++) {
-            manaBar += "|";
-        }
-        manaBar += com.herocraftonline.dev.heroes.ui.MapColor.RED + "]";
-        double percent = health / maxHealth * 100;
-        DecimalFormat df = new DecimalFormat("#.##");
-        return manaBar + " - " + com.herocraftonline.dev.heroes.ui.MapColor.GREEN + df.format(percent) + "%";
-    }
-}
