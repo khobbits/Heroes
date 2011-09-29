@@ -321,6 +321,7 @@ class EffectUpdater implements Runnable {
             }
         }
     }
+}
 
     class ManaUpdater implements Runnable {
 
