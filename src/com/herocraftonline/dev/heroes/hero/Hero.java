@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -33,6 +32,8 @@ import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
 import com.herocraftonline.dev.heroes.classes.HeroClass.WeaponItems;
 import com.herocraftonline.dev.heroes.effects.Effect;
 import com.herocraftonline.dev.heroes.effects.EffectType;
+import com.herocraftonline.dev.heroes.effects.Periodic;
+import com.herocraftonline.dev.heroes.effects.Expirable;
 import com.herocraftonline.dev.heroes.party.HeroParty;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.spout.SpoutUI;
@@ -79,6 +80,9 @@ public class Hero {
             removeEffect(getEffect(effect.getName()));
         }
         effects.put(effect.getName().toLowerCase(), effect);
+        if (effect instanceof Periodic || effect instanceof Expirable) {
+            plugin.getHeroManager().addManagedHeroEffect(this, effect);
+        }
         effect.apply(this);
     }
 
@@ -130,13 +134,10 @@ public class Hero {
 
     /**
      * Iterates over the effects this Hero has and removes them
-     * 
      */
     public void clearEffects() {
-        Iterator<Effect> iter = effects.values().iterator();
-        while (iter.hasNext()) {
-            iter.next().remove(this);
-            iter.remove();
+        for (Effect effect : this.getEffects()) {
+            this.removeEffect(effect);
         }
     }
 
@@ -599,6 +600,9 @@ public class Hero {
     public void removeEffect(Effect effect) {
         if (effect != null) {
             effects.remove(effect.getName().toLowerCase());
+            if (effect instanceof Periodic || effect instanceof Expirable) {
+                plugin.getHeroManager().removeManagedHeroEffect(this, effect);
+            }
             effect.remove(this);
         }
     }

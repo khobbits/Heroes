@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Level;
 
@@ -44,6 +45,7 @@ public class HeroManager {
     private Heroes plugin;
     private Map<String, Hero> heroes;
     private Map<Creature, Set<Effect>> creatureEffects;
+    private Map<Hero, Set<Effect>> heroEffects;
     private HeroStorage heroStorage;
     private final static int effectInterval = 2;
     private final static int manaInterval = 5;
@@ -53,7 +55,7 @@ public class HeroManager {
         this.plugin = plugin;
         this.heroes = new HashMap<String, Hero>();
         this.creatureEffects = new HashMap<Creature, Set<Effect>>();
-
+        this.heroEffects = new HashMap<Hero, Set<Effect>>();
         // if (plugin.getConfigManager().getProperties().storageType.toLowerCase().equals("yml"))
         heroStorage = new YMLHeroStorage(plugin);
 
@@ -69,6 +71,27 @@ public class HeroManager {
         plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, partyUpdater, 0, partyUpdateInterval);
     }
 
+    
+    protected void addManagedHeroEffect(Hero hero, Effect effect) {
+        if (!heroEffects.containsKey(hero)) {
+            Set<Effect> effects = new HashSet<Effect>();
+            effects.add(effect);
+            heroEffects.put(hero, effects);
+        } else {
+            heroEffects.get(hero).add(effect);
+        }
+    }
+    
+    protected void removeManagedHeroEffect(Hero hero, Effect effect) {
+        if (!heroEffects.containsKey(hero)) {
+            return;
+        } else {
+            heroEffects.get(hero).remove(effect);
+        }
+        if (heroEffects.get(hero).isEmpty())
+            heroEffects.remove(hero);
+    }
+    
     /**
      * Adds a new effect to the specific creature
      * 
@@ -146,6 +169,14 @@ public class HeroManager {
     public Set<Effect> getCreatureEffects(Creature creature) {
         return creatureEffects.get(creature) != null ? new HashSet<Effect>(creatureEffects.get(creature)) : null;
     }
+
+    /**
+     * @return the heroEffects
+     */
+    public Map<Hero, Set<Effect>> getHeroEffects() {
+        return heroEffects;
+    }
+
 
     /**
      * Gets a hero Object from the hero mapping, if the hero does not exist then it loads in the Hero object for the
@@ -264,21 +295,17 @@ class EffectUpdater implements Runnable {
 
     @Override
     public void run() {
-        for (Hero hero : heroManager.getHeroes()) {
-            for (Effect effect : hero.getEffects()) {
+        Map<Hero, Set<Effect>> heroEffects = heroManager.getHeroEffects();
+        for (Entry<Hero, Set<Effect>> entry : heroEffects.entrySet() ) {
+            for (Effect effect : entry.getValue()) {
                 if (effect instanceof Expirable) {
-                    Expirable expirable = (Expirable) effect;
-                    if (expirable.isExpired()) {
-                        hero.removeEffect(effect);
-                        continue;
-                    }
+                    if (((Expirable) effect).isExpired())
+                        entry.getKey().removeEffect(effect);
                 }
-
                 if (effect instanceof Periodic) {
                     Periodic periodic = (Periodic) effect;
-                    if (periodic.isReady()) {
-                        periodic.tick(hero);
-                    }
+                    if (periodic.isReady())
+                        periodic.tick(entry.getKey());
                 }
             }
         }
