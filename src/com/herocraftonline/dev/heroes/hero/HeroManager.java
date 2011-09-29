@@ -44,8 +44,8 @@ public class HeroManager {
 
     private Heroes plugin;
     private Map<String, Hero> heroes;
-    private Map<Creature, Set<Effect>> creatureEffects;
-    private Map<Hero, Set<Effect>> heroEffects;
+    protected Map<Creature, Set<Effect>> creatureEffects;
+    protected Map<Hero, Set<Effect>> heroEffects;
     private HeroStorage heroStorage;
     private final static int effectInterval = 2;
     private final static int manaInterval = 5;
@@ -171,14 +171,6 @@ public class HeroManager {
     }
 
     /**
-     * @return the heroEffects
-     */
-    protected Map<Hero, Set<Effect>> getHeroEffects() {
-        return heroEffects;
-    }
-
-
-    /**
      * Gets a hero Object from the hero mapping, if the hero does not exist then it loads in the Hero object for the
      * player
      * 
@@ -274,14 +266,6 @@ public class HeroManager {
     public void stopTimers() {
         plugin.getServer().getScheduler().cancelTasks(plugin);
     }
-
-    public HashMap<Creature, Set<Effect>> getCreatureEffects() {
-        return new HashMap<Creature, Set<Effect>>(creatureEffects);
-    }
-    
-    public Set<Creature> getCreaturesWithEffect() {
-        return new HashSet<Creature>(creatureEffects.keySet());
-    }
     
 }
 
@@ -295,9 +279,9 @@ class EffectUpdater implements Runnable {
 
     @Override
     public void run() {
-        Iterator<Entry<Hero, Set<Effect>>> mapIterator = heroManager.getHeroEffects().entrySet().iterator();
-        while (mapIterator.hasNext()) {
-            Entry<Hero, Set<Effect>> mapEntry = mapIterator.next();
+        Iterator<Entry<Hero, Set<Effect>>> heroMapIterator = heroManager.heroEffects.entrySet().iterator();
+        while (heroMapIterator.hasNext()) {
+            Entry<Hero, Set<Effect>> mapEntry = heroMapIterator.next();
             Iterator<Effect> effectIterator = mapEntry.getValue().iterator();
             while (effectIterator.hasNext()) {
                 Effect effect = effectIterator.next();
@@ -305,7 +289,7 @@ class EffectUpdater implements Runnable {
                     if (((Expirable) effect).isExpired()) {
                         effectIterator.remove();
                         if (mapEntry.getValue().isEmpty())
-                            mapIterator.remove();
+                            heroMapIterator.remove();
                         mapEntry.getKey().removeEffect(effect);
                     }
                 }
@@ -317,20 +301,24 @@ class EffectUpdater implements Runnable {
             }
         }
         
-        for (Creature creature : heroManager.getCreaturesWithEffect()) {
-            for (Effect effect : heroManager.getCreatureEffects(creature)) {
+        Iterator<Entry<Creature, Set<Effect>>> creatureMapIterator = heroManager.creatureEffects.entrySet().iterator();
+        while (creatureMapIterator.hasNext()) {
+            Entry<Creature, Set<Effect>> mapEntry = creatureMapIterator.next();
+            Iterator<Effect> effectIterator = mapEntry.getValue().iterator();
+            while (effectIterator.hasNext()) {
+                Effect effect = effectIterator.next();
                 if (effect instanceof Expirable) {
-                    Expirable expirable = (Expirable) effect;
-                    if (expirable.isExpired()) {
-                        heroManager.removeCreatureEffect(creature, effect);
-                        continue;
+                    if (((Expirable) effect).isExpired()) {
+                        effectIterator.remove();
+                        if (mapEntry.getValue().isEmpty())
+                            creatureMapIterator.remove();
+                        heroManager.removeCreatureEffect(mapEntry.getKey(), effect);
                     }
                 }
                 if (effect instanceof Periodic) {
                     Periodic periodic = (Periodic) effect;
-                    if (periodic.isReady()) {
-                        periodic.tick(creature);
-                    }
+                    if (periodic.isReady())
+                        periodic.tick(mapEntry.getKey());
                 }
             }
         }
