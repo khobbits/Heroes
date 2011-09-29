@@ -173,8 +173,8 @@ public class HeroManager {
     /**
      * @return the heroEffects
      */
-    public Map<Hero, Set<Effect>> getHeroEffects() {
-        return new HashMap<Hero, Set<Effect>>(heroEffects);
+    protected Map<Hero, Set<Effect>> getHeroEffects() {
+        return heroEffects;
     }
 
 
@@ -295,21 +295,26 @@ class EffectUpdater implements Runnable {
 
     @Override
     public void run() {
-        Map<Hero, Set<Effect>> heroEffects = heroManager.getHeroEffects();
-        for (Entry<Hero, Set<Effect>> entry : heroEffects.entrySet() ) {
-            Set<Effect> hEffects = new HashSet<Effect>(entry.getValue());
-            for (Effect effect : hEffects) {
+        Iterator<Entry<Hero, Set<Effect>>> mapIterator = heroManager.getHeroEffects().entrySet().iterator();
+        while (mapIterator.hasNext()) {
+            Entry<Hero, Set<Effect>> mapEntry = mapIterator.next();
+            Iterator<Effect> effectIterator = mapEntry.getValue().iterator();
+            while (effectIterator.hasNext()) {
+                Effect effect = effectIterator.next();
                 if (effect instanceof Expirable) {
-                    if (((Expirable) effect).isExpired())
-                        entry.getKey().removeEffect(effect);
+                    if (((Expirable) effect).isExpired()) {
+                        effectIterator.remove();
+                        mapEntry.getKey().removeEffect(effect);
+                    }
                 }
                 if (effect instanceof Periodic) {
                     Periodic periodic = (Periodic) effect;
                     if (periodic.isReady())
-                        periodic.tick(entry.getKey());
+                        periodic.tick(mapEntry.getKey());
                 }
             }
         }
+        
         for (Creature creature : heroManager.getCreaturesWithEffect()) {
             for (Effect effect : heroManager.getCreatureEffects(creature)) {
                 if (effect instanceof Expirable) {
