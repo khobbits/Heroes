@@ -75,6 +75,7 @@ Skills:
 		- Launches the target into the air.
 	Jump - (NEW!)
 		- Now requires the player to be on Solid ground when used - this also means they can't be in a vehicle
+		- Has an option to turn air-jumping on/off
 	Mining - (NEW!)
 		- Passive skill that has a chance to give double-drops when mining ores
 		- Gives a very small chance to drop a random ore from just stone.
@@ -96,6 +97,9 @@ Skills:
 		- Slowly drains your enemies health, when the effect expires it heals you for a percentage of the damage done
 	StealEssence - (NEW!) - thanks Multi
 		- Steals random beneficial effects from the target up to the specified number
+	TransmuteOre - (RENAME!)
+		- XMuteOre is now named TransmuteOre - it has been re-written to function better
+		- Now has an option to force the player to be targeting a furnace
 	Wisdom - (NEW!)
 		- Group buff that increases mana regeneration by a set multiplier.
 	Woodcutting - (NEW!)

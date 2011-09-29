@@ -7,6 +7,7 @@ import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
+import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.hero.Hero;
@@ -34,13 +35,20 @@ public class SkillJump extends ActiveSkill {
         setIdentifiers("skill jump");
         setTypes(SkillType.MOVEMENT, SkillType.PHYSICAL);
     }
-
+    
+    @Override
+    public ConfigurationNode getDefaultConfig() {
+        ConfigurationNode node = super.getDefaultConfig();
+        node.setProperty("no-air-jump", true);
+        return node;
+    }
+    
     @Override
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
         Material mat = player.getLocation().getBlock().getRelative(BlockFace.DOWN).getType();
-        if (noJumpMaterials.contains(mat) || player.isInsideVehicle()) {
-            Messaging.send(player, "You can only jump from solid ground!");
+        if ((getSetting(hero.getHeroClass(), "no-air-jump", true) && noJumpMaterials.contains(mat)) || player.isInsideVehicle()) {
+            Messaging.send(player, "You can't jump while mid-air or from inside a vehicle!");
             return false;
         }
         float pitch = player.getEyeLocation().getPitch();
