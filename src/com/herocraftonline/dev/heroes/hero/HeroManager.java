@@ -174,7 +174,7 @@ public class HeroManager {
      * @return the heroEffects
      */
     public Map<Hero, Set<Effect>> getHeroEffects() {
-        return heroEffects;
+        return new HashMap<Hero, Set<Effect>>(heroEffects);
     }
 
 
