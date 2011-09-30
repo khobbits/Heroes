@@ -46,6 +46,9 @@ Version dev
 ** Stun effects now cause the victim's screen to wobble
 ** Poison & Disease effects now turn the victims health-bar yellow
 ** delay - all skills that are used via command/binding can now be given a 'warmup' - the time is in milliseconds
+* Become Death - (NEW!)
+** You become like a zombie, and no longer need to breath air
+** Undead will not target you for the duration of the skill
 * Berserk - (NEW!)
 ** Uses new FormEffect
 ** Causes the hero to deal more physical damage, but take more damage.

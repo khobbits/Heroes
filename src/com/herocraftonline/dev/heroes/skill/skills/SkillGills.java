@@ -45,8 +45,7 @@ public class SkillGills extends ActiveSkill {
     @Override
     public boolean use(Hero hero, String[] args) {
         broadcastExecuteText(hero);
-
-        int duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 5000);
+        int duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 30000);
         hero.addEffect(new GillsEffect(this, duration));
 
         return true;
@@ -74,6 +73,5 @@ public class SkillGills extends ActiveSkill {
             Player player = hero.getPlayer();
             broadcast(player.getLocation(), expireText, player.getDisplayName());
         }
-
     }
 }
