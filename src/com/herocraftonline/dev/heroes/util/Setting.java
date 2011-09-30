@@ -11,6 +11,7 @@ public enum Setting {
     APPLY_TEXT("apply-text"),
     COOLDOWN("cooldown"),
     DAMAGE("damage"),
+    DELAY("delay"),
     DURATION("duration"),
     EXP("exp"),
     EXPIRE_TEXT("expire-text"),

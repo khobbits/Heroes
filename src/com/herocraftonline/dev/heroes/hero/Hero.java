@@ -36,6 +36,7 @@ import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.effects.Periodic;
 import com.herocraftonline.dev.heroes.effects.Expirable;
 import com.herocraftonline.dev.heroes.party.HeroParty;
+import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.spout.SpoutUI;
 import com.herocraftonline.dev.heroes.util.Messaging;
@@ -61,6 +62,7 @@ public class Hero {
     private Set<String> suppressedSkills = new HashSet<String>();
     private Map<String, Map<String, String>> skillSettings = new HashMap<String, Map<String, String>>();
     private Map<String, ConfigurationNode> skills = new HashMap<String, ConfigurationNode>();
+    private int delayedSkillTaskId = -1;
     private double health;
     private final PermissionAttachment transientPerms;
 
@@ -591,6 +593,30 @@ public class Hero {
         return verbose;
     }
 
+    /**
+     * @return the delayedSkillTaskId
+     */
+    public int getDelayedSkillTaskId() {
+        return delayedSkillTaskId;
+    }
+
+    /**
+     * @param delayedSkillTaskId the delayedSkillTaskId to set
+     */
+    public void setDelayedSkillTaskId(int delayedSkillTaskId) {
+        this.delayedSkillTaskId = delayedSkillTaskId;
+    }
+    
+    /**
+     * Cancels the delayed skill task
+     */
+    public void cancelDelayedSkill() {
+        plugin.getServer().getScheduler().cancelTask(delayedSkillTaskId);
+        Skill skill = ActiveSkill.getDelayedSkill(player);
+        skill.broadcast(player.getLocation(), "$1 has stopped using $2", player.getDisplayName(), skill.getName());
+        ActiveSkill.removeDelayedSkill(player);
+    }
+    
     public void removeCooldown(String name) {
         cooldowns.remove(name.toLowerCase());
     }

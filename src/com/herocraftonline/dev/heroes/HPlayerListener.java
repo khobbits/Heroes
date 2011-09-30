@@ -88,8 +88,13 @@ public class HPlayerListener extends PlayerListener {
             if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 String[] args = hero.getBind(material);
                 plugin.onCommand(player, null, "skill", args);
+            } else {
+                hero.cancelDelayedSkill();
             }
+        } else {
+            hero.cancelDelayedSkill();
         }
+        
         //Remove effects dependant on non-interaction
         if (hero.hasEffect("Invisible")) {
             hero.removeEffect(hero.getEffect("Invisible"));
