@@ -611,6 +611,17 @@ public class Hero {
     }
 
     /**
+     * Removes an effect without removing it from the list of managed effects
+     * This is specifically for use during iteration over the managedEffects
+     * @param effect
+     */
+    public void safeRemoveEffect(Effect effect) {
+        if (effect != null) {
+            effects.remove(effect.getName().toLowerCase());
+            effect.remove(this);
+        }
+    }
+    /**
      * Removes the given permission from the hero
      * 
      * @param permission
