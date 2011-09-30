@@ -12,6 +12,7 @@ Version dev
 * Fixed SpoutUI hooking
 * Tamed Pets & Summons will now award Experience for their kills as intended
 * Player inventory now synchs properly when an item is removed from a player's inventory
+* Crafting Xp is now awarded each time an item is crafted regardless of Cursor status
 
 ==== **General:** ====
 

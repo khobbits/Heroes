@@ -92,9 +92,7 @@ public class SkillBecomeDeath extends ActiveSkill {
     
     public class SkillEntityListener extends EntityListener {
 
-        /* (non-Javadoc)
-         * @see org.bukkit.event.entity.EntityListener#onEntityTarget(org.bukkit.event.entity.EntityTargetEvent)
-         */
+
         @Override
         public void onEntityTarget(EntityTargetEvent event) {
             if (event.isCancelled() || !(event.getTarget() instanceof Player))
@@ -113,7 +111,7 @@ public class SkillBecomeDeath extends ActiveSkill {
             if (event.isCancelled() || event.getDamage() == 0)
                 return;
             
-            if (!isUndead(event.getEntity()) || event instanceof EntityDamageByEntityEvent)
+            if (!isUndead(event.getEntity()) || !(event instanceof EntityDamageByEntityEvent))
                 return;
             
             EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;

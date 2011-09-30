@@ -21,11 +21,9 @@ public class SpoutInventoryListener extends InventoryListener {
     public void onInventoryCraft(InventoryCraftEvent event) {
         if (event.getResult() == null)
             return;
-        if (event.getPlayer().getInventory().firstEmpty() == -1)
-            return;
-
+        
         ItemStack result = event.getResult();
-        if (event.getCursor() != null)
+        if (event.getCursor().getType() != result.getType() && event.getCursor() != null)
             return;
         
         if (plugin.getConfigManager().getProperties().craftingExp.containsKey(result.getType())) {
