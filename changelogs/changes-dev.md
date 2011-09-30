@@ -45,6 +45,7 @@ Version dev
 ** Skills that add FireTicks should now award XP from deaths caused by Fire.
 ** Stun effects now cause the victim's screen to wobble
 ** Poison & Disease effects now turn the victims health-bar yellow
+** delay - all skills that are used via command/binding can now be given a 'warmup' - the time is in milliseconds
 * Berserk - (NEW!)
 ** Uses new FormEffect
 ** Causes the hero to deal more physical damage, but take more damage.

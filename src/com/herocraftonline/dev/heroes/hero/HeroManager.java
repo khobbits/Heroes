@@ -170,11 +170,6 @@ public class HeroManager {
         return creatureEffects.get(creature) != null ? new HashSet<Effect>(creatureEffects.get(creature)) : null;
     }
 
-
-    public Set<Creature> getCreaturesWithEffects() {
-        return new HashSet<Creature>(creatureEffects.keySet());
-    }
-
     /**
      * Gets a hero Object from the hero mapping, if the hero does not exist then it loads in the Hero object for the
      * player
@@ -284,10 +279,8 @@ class EffectUpdater implements Runnable {
 
     @Override
     public void run() {
-        Iterator<Entry<Hero, Set<Effect>>> heroEffectsIterator = heroManager.heroEffects.entrySet().iterator();
-        while (heroEffectsIterator.hasNext()) {
-            Entry<Hero, Set<Effect>> heroEntry = heroEffectsIterator.next();
-            //Iterate over all effects this hero has
+        //Do Hero effects
+        for (Entry<Hero, Set<Effect>> heroEntry : new HashMap<Hero, Set<Effect>>(heroManager.heroEffects).entrySet()) {
             Iterator<Effect> effectIterator = heroEntry.getValue().iterator();
             while (effectIterator.hasNext()) {
                 Effect effect = effectIterator.next();
@@ -295,11 +288,12 @@ class EffectUpdater implements Runnable {
                     if (((Expirable) effect).isExpired()) {
                         //Remove the effect from the Effect set
                         effectIterator.remove();
-                        //If the hero has no more Effects remove them from the managed effect Mapping
-                        if (heroEntry.getValue().isEmpty())
-                            heroEffectsIterator.remove();
                         //Remove the Effect from the Hero 
                         heroEntry.getKey().safeRemoveEffect(effect);
+                        //If the Set is now empty, lets remove it
+                        if (heroEntry.getValue().isEmpty()) {
+                            heroManager.heroEffects.remove(heroEntry.getKey());
+                        }
                         continue;
                     }
                 }
@@ -309,10 +303,9 @@ class EffectUpdater implements Runnable {
                         periodic.tick(heroEntry.getKey());
                 }
             }
-        }
-        Iterator<Entry<Creature, Set<Effect>>> creatureEffectIterator = heroManager.creatureEffects.entrySet().iterator();
-        while (creatureEffectIterator.hasNext()) {
-            Entry<Creature, Set<Effect>> creatureEntry = creatureEffectIterator.next();
+        }   
+        //Do our creature Effects
+        for (Entry<Creature, Set<Effect>> creatureEntry : new HashMap<Creature, Set<Effect>>(heroManager.creatureEffects).entrySet()) {
             Iterator<Effect> effectIterator = creatureEntry.getValue().iterator();
             while (effectIterator.hasNext()) {
                 Effect effect = effectIterator.next();
@@ -320,12 +313,12 @@ class EffectUpdater implements Runnable {
                     if (((Expirable) effect).isExpired()) {
                         //Remove the effect from the Effect set
                         effectIterator.remove();
-                        //If the Set is empty, remove the creature entry from the Map
-                        if (creatureEntry.getValue().isEmpty()) {
-                            creatureEffectIterator.remove();
-                        }
                         //Remove the Effect from the creature
                         effect.remove(creatureEntry.getKey());
+                        //Remove the creature from the map if it's empty
+                        if (creatureEntry.getValue().isEmpty()) {
+                            heroManager.creatureEffects.remove(creatureEntry.getKey());
+                        }
                         continue;
                     }
                 }

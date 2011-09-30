@@ -1,6 +1,8 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
 import com.herocraftonline.dev.heroes.skill.SkillType;
+
+import org.bukkit.entity.Creature;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.config.ConfigurationNode;
@@ -88,6 +90,17 @@ public class SkillSlow extends TargettedSkill {
             super.remove(hero);
             Player player = hero.getPlayer();
             broadcast(player.getLocation(), expireText, player.getDisplayName());
+        }
+        
+        @Override
+        public void apply(Creature creature) {
+            super.apply(creature);
+        }
+        
+        @Override
+        public void remove(Creature creature) {
+            super.remove(creature);
+            broadcast(creature.getLocation(), expireText, Messaging.getCreatureName(creature));
         }
     }
 }
