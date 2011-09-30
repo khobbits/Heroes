@@ -11,6 +11,7 @@ Version dev
 * Creature effects should no longer crash the effect manager
 * Fixed SpoutUI hooking
 * Tamed Pets & Summons will now award Experience for their kills as intended
+* Player inventory now synchs properly when an item is removed from a player's inventory
 
 ==== **General:** ====
 

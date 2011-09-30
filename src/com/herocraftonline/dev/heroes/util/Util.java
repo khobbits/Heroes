@@ -153,8 +153,7 @@ public final class Util {
      * @param player
      * @return
      */
-    public static int firstEmpty(Player player) {
-        ItemStack[] inventory = player.getInventory().getContents();
+    public static int firstEmpty(ItemStack[] inventory) {
         for (int i = 9; i < inventory.length; i++) {
             if (inventory[i] == null)
                 return i;
@@ -164,7 +163,7 @@ public final class Util {
 
     /**
      * Move the selected Item to an available slot, if a slot does not exist then we remove it from the inventory.
-     * 
+     * Returns if the item is still in the player's inventory
      * @param player
      * @param slot
      * @param item
@@ -173,20 +172,16 @@ public final class Util {
     public static boolean moveItem(Hero hero, int slot, ItemStack item) {
         Player player = hero.getPlayer();
         PlayerInventory inv = player.getInventory();
-        int empty = firstEmpty(player);
+        int empty = firstEmpty(inv.getContents());
         if (empty == -1) {
             player.getWorld().dropItemNaturally(player.getLocation(), item);
-            if (slot != -1) {
-                inv.setItem(slot, null);
-            }
-            return true;
+            inv.clear(slot);
+            return false;
         } else {
             inv.setItem(empty, item);
-            if (slot != -1) {
-                inv.setItem(slot, null);
-            }
+            inv.clear(slot);
             Messaging.send(player, "You are not trained to use a $1.", MaterialUtil.getFriendlyName(item.getType()));
-            return false;
+            return true;
         }
     }
 

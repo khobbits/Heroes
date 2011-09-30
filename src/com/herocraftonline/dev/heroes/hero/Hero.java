@@ -823,7 +823,6 @@ public class Hero {
         // If items were removed from the Players inventory then we need to alert them of such event and re-sync their inventory
         if (removedCount > 0) {
             Messaging.send(player, "$1 have been removed from your inventory due to class restrictions.", removedCount + " Items");
-            Messaging.send(player, "Please make space in your inventory then type '$1'", "/heroes recoveritems");
             Util.syncInventory(player, plugin);
         }        
     }
