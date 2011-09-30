@@ -611,9 +611,13 @@ public class Hero {
      * Cancels the delayed skill task
      */
     public void cancelDelayedSkill() {
+        if (delayedSkillTaskId == -1)
+            return;
+        
         plugin.getServer().getScheduler().cancelTask(delayedSkillTaskId);
         Skill skill = ActiveSkill.getDelayedSkill(player);
         skill.broadcast(player.getLocation(), "$1 has stopped using $2", player.getDisplayName(), skill.getName());
+        delayedSkillTaskId = -1;
         ActiveSkill.removeDelayedSkill(player);
     }
     

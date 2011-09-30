@@ -18,7 +18,7 @@ import com.herocraftonline.dev.heroes.util.Messaging;
 
 public class SkillRevive extends ActiveSkill {
 
-    public Map<String, Location> deaths = new LinkedHashMap<String, Location>();
+    public Map<String, Location> deaths;
 
     @SuppressWarnings("serial")
     public SkillRevive(Heroes plugin) {
