@@ -120,9 +120,10 @@ public class HEntityListener extends EntityListener {
 
         if (defender instanceof Player) {
             Hero heroDefender = heroManager.getHero((Player) defender);
+            Util.deaths.put(heroDefender.getPlayer().getName(), event.getEntity().getLocation());
             double exp = heroDefender.getExperience();
             int level = prop.getLevel(exp);
-
+            
             // check to see if this death was caused by FireTick
             if (attacker == null && heroDefender.hasEffect("Combust")) {
                 attacker = ((CombustEffect) heroDefender.getEffect("Combust")).getApplier();

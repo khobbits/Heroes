@@ -38,6 +38,7 @@ Version dev
 * setIdentifiers for skills now uses VarArgs, please adjust accordingly (it's unecessary but cleans up the look)
 * Effects can now have mobEffects (potion effects) use addMobEffect(id, ticks, amplitute, faked)
 ** Faked mobEffects are only sent to the player and are not resolved server-side
+* Player - Location death map has been exposed.  It is now in the Util class instead of being only in the Revive skill
 
 ==== **Skills:** ====
 

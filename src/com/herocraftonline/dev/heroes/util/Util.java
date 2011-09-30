@@ -1,8 +1,11 @@
 package com.herocraftonline.dev.heroes.util;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
@@ -18,6 +21,7 @@ import org.bukkit.inventory.PlayerInventory;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.hero.Hero;
 
+@SuppressWarnings("serial")
 public final class Util {
 
     // Default Sword List
@@ -37,7 +41,9 @@ public final class Util {
 
     // Random number generator
     public final static Random rand = new Random();
-
+    
+    public final static HashMap<String, Location> deaths;
+    
     static {
         swords = new ArrayList<String>();
         swords.add("WOOD_SWORD");
@@ -102,6 +108,16 @@ public final class Util {
         transparentIds.add((byte) Material.DETECTOR_RAIL.getId());
         transparentIds.add((byte) Material.DIODE_BLOCK_OFF.getId());
         transparentIds.add((byte) Material.DIODE_BLOCK_ON.getId());
+        
+        deaths = new LinkedHashMap<String, Location>() {
+
+            private static final int MAX_ENTRIES = 50;
+
+            @Override
+            protected boolean removeEldestEntry(Map.Entry<String, Location> eldest) {
+                return size() > MAX_ENTRIES;
+            }
+        };
     }
 
     /**
