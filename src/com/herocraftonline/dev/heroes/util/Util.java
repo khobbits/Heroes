@@ -191,11 +191,13 @@ public final class Util {
         int empty = firstEmpty(inv.getContents());
         if (empty == -1) {
             player.getWorld().dropItemNaturally(player.getLocation(), item);
-            inv.clear(slot);
+            if (slot != -1)
+                inv.clear(slot);
             return false;
         } else {
             inv.setItem(empty, item);
-            inv.clear(slot);
+            if (slot != -1)
+                inv.clear(slot);
             Messaging.send(player, "You are not trained to use a $1.", MaterialUtil.getFriendlyName(item.getType()));
             return true;
         }
