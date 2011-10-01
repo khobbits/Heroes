@@ -1,18 +1,16 @@
 package com.herocraftonline.dev.heroes.api;
 
-import org.bukkit.event.Event;
-
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.party.HeroParty;
 
 @SuppressWarnings("serial")
-public class HeroLeavePartyEvent extends Event {
+public class HeroLeavePartyEvent extends HeroEvent {
 
     private final Hero hero;
     private final HeroParty party;
 
     public HeroLeavePartyEvent(Hero hero, HeroParty heroParty) {
-        super("HeroLeavePartyEvent");
+        super("HeroLeavePartyEvent", HeroEventType.HERO_LEAVE_PARTY);
         this.hero = hero;
         this.party = heroParty;
     }

@@ -1,13 +1,12 @@
 package com.herocraftonline.dev.heroes.api;
 
 import org.bukkit.event.Cancellable;
-import org.bukkit.event.Event;
 
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
 
 @SuppressWarnings("serial")
-public class HeroRegainManaEvent extends Event implements Cancellable {
+public class HeroRegainManaEvent extends HeroEvent implements Cancellable {
 
     private int amount;
     private final Hero hero;
@@ -15,7 +14,7 @@ public class HeroRegainManaEvent extends Event implements Cancellable {
     private boolean cancelled = false;
 
     public HeroRegainManaEvent(Hero hero, int amount, Skill skill) {
-        super("HeroRegainManaEvent");
+        super("HeroRegainManaEvent", HeroEventType.HERO_REGAIN_MANA);
         this.hero = hero;
         this.amount = amount;
         this.skill = skill;

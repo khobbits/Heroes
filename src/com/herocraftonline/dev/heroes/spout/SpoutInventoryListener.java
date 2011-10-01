@@ -22,8 +22,12 @@ public class SpoutInventoryListener extends InventoryListener {
         if (event.getResult() == null)
             return;
         
+        if (!event.isShiftClick() && event.getCursor() != null && event.getCursor().getType().getMaxStackSize() == event.getCursor().getAmount())
+            return;
+        
         ItemStack result = event.getResult();
-        if (event.getCursor().getType() != result.getType() && event.getCursor() != null)
+        
+        if (event.getCursor() != null && event.getCursor().getType() != result.getType())
             return;
         
         if (plugin.getConfigManager().getProperties().craftingExp.containsKey(result.getType())) {

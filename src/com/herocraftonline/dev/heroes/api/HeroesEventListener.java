@@ -16,27 +16,40 @@ public class HeroesEventListener extends CustomEventListener {
 
     @Override
     public void onCustomEvent(Event event) {
-
-        if (event instanceof ClassChangeEvent) {
+        if (!(event instanceof HeroEvent))
+            return;
+        
+        switch (((HeroEvent) event).getHeroEventType()) {
+        case HERO_CLASS_CHANGE :
             onClassChange((ClassChangeEvent) event);
-        } else if (event instanceof ExperienceChangeEvent) {
+            break;
+        case HERO_EXPERIENCE_CHANGE :
             onExperienceChange((ExperienceChangeEvent) event);
-        } else if (event instanceof WeaponDamageEvent) {
+            break;
+        case WEAPON_DAMAGE :
             onWeaponDamage((WeaponDamageEvent) event);
-        } else if (event instanceof HeroChangeLevelEvent) {
+            break;
+        case HERO_LEVEL_CHANGE :
             onHeroChangeLevel((HeroChangeLevelEvent) event);
-        } else if (event instanceof SkillDamageEvent) {
+            break;
+        case SKILL_DAMAGE :
             onSkillDamage((SkillDamageEvent) event);
-        } else if (event instanceof SkillUseEvent) {
+            break;
+        case SKILL_USE :
             onSkillUse((SkillUseEvent) event);
-        } else if (event instanceof HeroJoinPartyEvent) {
+            break;
+        case HERO_JOIN_PARTY :
             onHeroJoinParty((HeroJoinPartyEvent) event);
-        } else if (event instanceof HeroLeavePartyEvent) {
+            break;
+        case HERO_LEAVE_PARTY :
             onHeroLeaveParty((HeroLeavePartyEvent) event);
-        } else if (event instanceof HeroRegainHealthEvent) {
+            break;
+        case HERO_REGAIN_HEALTH :
             onHeroRegainHealth((HeroRegainHealthEvent) event);
-        } else if (event instanceof HeroRegainManaEvent) {
+            break;
+        case HERO_REGAIN_MANA :
             onHeroRegainMana((HeroRegainManaEvent) event);
+            break;
         }
     }
 

@@ -1,13 +1,12 @@
 package com.herocraftonline.dev.heroes.api;
 
 import org.bukkit.event.Cancellable;
-import org.bukkit.event.Event;
 
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.hero.Hero;
 
 @SuppressWarnings("serial")
-public class ClassChangeEvent extends Event implements Cancellable {
+public class ClassChangeEvent extends HeroEvent implements Cancellable {
 
     protected boolean cancelled = false;
     protected final Hero hero;
@@ -15,7 +14,7 @@ public class ClassChangeEvent extends Event implements Cancellable {
     protected HeroClass to;
 
     public ClassChangeEvent(Hero hero, HeroClass from, HeroClass to) {
-        super("ClassChangeEvent");
+        super("ClassChangeEvent", HeroEventType.HERO_CLASS_CHANGE);
         this.hero = hero;
         this.from = from;
         this.to = to;

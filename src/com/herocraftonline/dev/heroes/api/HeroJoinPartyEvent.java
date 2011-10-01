@@ -1,20 +1,19 @@
 package com.herocraftonline.dev.heroes.api;
 
 import org.bukkit.event.Cancellable;
-import org.bukkit.event.Event;
 
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.party.HeroParty;
 
 @SuppressWarnings("serial")
-public class HeroJoinPartyEvent extends Event implements Cancellable {
+public class HeroJoinPartyEvent extends HeroEvent implements Cancellable {
 
     private boolean cancelled = false;
     private final Hero hero;
     private final HeroParty party;
 
     public HeroJoinPartyEvent(Hero hero, HeroParty heroParty) {
-        super("PlayerJoinPartyEvent");
+        super("PlayerJoinPartyEvent", HeroEventType.HERO_JOIN_PARTY);
         this.hero = hero;
         this.party = heroParty;
     }

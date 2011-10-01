@@ -2,14 +2,13 @@ package com.herocraftonline.dev.heroes.api;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
-import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
 
 @SuppressWarnings("serial")
-public class SkillUseEvent extends Event implements Cancellable {
+public class SkillUseEvent extends HeroEvent implements Cancellable {
 
     private final Player player;
     private final Skill skill;
@@ -21,7 +20,7 @@ public class SkillUseEvent extends Event implements Cancellable {
     private boolean cancelled = false;
 
     public SkillUseEvent(Skill skill, Player player, Hero hero, int manaCost, int healthCost, ItemStack reagentCost, String[] args) {
-        super("SkillUseEvent");
+        super("SkillUseEvent", HeroEventType.SKILL_USE);
         this.player = player;
         this.skill = skill;
         this.hero = hero;
