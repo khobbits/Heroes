@@ -102,6 +102,9 @@ public class HeroManager {
             cEffects = new HashSet<Effect>();
             creatureEffects.put(creature, cEffects);
         }
+        if (effect instanceof Periodic || effect instanceof Expirable) {
+            managedEffects.add(new ManagedCreatureEffect(creature, effect));
+        }
         cEffects.add(effect);
         effect.apply(creature);
     }

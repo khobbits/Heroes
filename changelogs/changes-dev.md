@@ -22,6 +22,10 @@ Version dev
 * Classes can now have multiple parents via Strong and Weak parent settings
 * ExperienceOrbs will no longer drop by default - they can be turned back on in the config, but they wont do anything while heroes is active
 * Hero recovery items have been removed - all items are now dropped to the world instead - players will need to recover their items before you update, they will become inaccessible
+* Economy Support has been re-written - now supports iCo4/5/6 + Bose + EssentialsEco
+* Spout is no longer used for inventory restrictions, 
+** players will be able to equip the item, but if they try to use it it will be removed.  
+** Armor will be removed if the player takes damage.
 
 ==== **API:** ====
 
