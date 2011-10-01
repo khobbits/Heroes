@@ -107,6 +107,7 @@ public class HeroParty {
             remainingMember.setParty(null);
             messageParty("Party disbanded.");
             members.remove(remainingMember);
+            leader = null;
             return;
         }
         if (hero.equals(leader) && !members.isEmpty()) {

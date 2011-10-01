@@ -436,6 +436,10 @@ class PartyUpdater implements Runnable {
 
         for (Player player : players) {
             Hero hero = this.manager.getHero(player);
+            if (!hero.hasParty() || hero.getParty().getLeader() == null) {
+                Heroes.log(Level.SEVERE, "Error in party of player: " + player.getDisplayName());
+                continue;
+            }
             if (hero.getParty().getLeader().equals(hero)) {
                 map += "§42;\u0001";
             } else {
