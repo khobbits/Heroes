@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Level;
 
@@ -21,6 +20,9 @@ import com.herocraftonline.dev.heroes.api.HeroRegainManaEvent;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.effects.Effect;
 import com.herocraftonline.dev.heroes.effects.Expirable;
+import com.herocraftonline.dev.heroes.effects.ManagedCreatureEffect;
+import com.herocraftonline.dev.heroes.effects.ManagedEffect;
+import com.herocraftonline.dev.heroes.effects.ManagedHeroEffect;
 import com.herocraftonline.dev.heroes.effects.Periodic;
 import com.herocraftonline.dev.heroes.party.HeroParty;
 import com.herocraftonline.dev.heroes.party.PartyManager;
@@ -45,7 +47,7 @@ public class HeroManager {
     private Heroes plugin;
     private Map<String, Hero> heroes;
     protected Map<Creature, Set<Effect>> creatureEffects;
-    protected Map<Hero, Set<Effect>> heroEffects;
+    protected Set<ManagedEffect> managedEffects;
     private HeroStorage heroStorage;
     private final static int effectInterval = 2;
     private final static int manaInterval = 5;
@@ -55,7 +57,7 @@ public class HeroManager {
         this.plugin = plugin;
         this.heroes = new HashMap<String, Hero>();
         this.creatureEffects = new HashMap<Creature, Set<Effect>>();
-        this.heroEffects = new HashMap<Hero, Set<Effect>>();
+        this.managedEffects = new HashSet<ManagedEffect>();
         // if (plugin.getConfigManager().getProperties().storageType.toLowerCase().equals("yml"))
         heroStorage = new YMLHeroStorage(plugin);
 
@@ -72,24 +74,20 @@ public class HeroManager {
     }
 
 
-    protected void addManagedHeroEffect(Hero hero, Effect effect) {
-        if (!heroEffects.containsKey(hero)) {
-            Set<Effect> effects = new HashSet<Effect>();
-            effects.add(effect);
-            heroEffects.put(hero, effects);
-        } else {
-            heroEffects.get(hero).add(effect);
-        }
+    protected void addManagedEffect(Hero hero, Effect effect) {
+        managedEffects.add(new ManagedHeroEffect(hero, effect));
+    }
+    
+    protected void addManagedEffect(Creature creature, Effect effect) {
+        managedEffects.add(new ManagedCreatureEffect(creature, effect));
     }
 
-    protected void removeManagedHeroEffect(Hero hero, Effect effect) {
-        if (!heroEffects.containsKey(hero)) {
-            return;
-        } else {
-            heroEffects.get(hero).remove(effect);
-        }
-        if (heroEffects.get(hero).isEmpty())
-            heroEffects.remove(hero);
+    protected void removeManagedEffect(Hero hero, Effect effect) {
+        managedEffects.remove(new ManagedHeroEffect(hero, effect));
+    }
+    
+    protected void removeManagedEffect(Creature creature, Effect effect) {
+        managedEffects.remove(new ManagedCreatureEffect(creature, effect));
     }
 
     /**
@@ -219,12 +217,25 @@ public class HeroManager {
     }
 
     /**
-     * Removes an effect from a creature
+     * Removes an effect from a creature 
      * 
      * @param creature
      * @param effect
      */
     public void removeCreatureEffect(Creature creature, Effect effect) {
+        Set<Effect> cEffects = creatureEffects.get(creature);
+        if (cEffects != null) {
+            effect.remove(creature);
+            cEffects.remove(effect);
+            // If the creature has no effects left
+            if (cEffects.isEmpty()) {
+                creatureEffects.remove(creature);
+            }
+            managedEffects.remove(new ManagedCreatureEffect(creature, effect));
+        }
+    }
+    
+    void safeRemoveCreatureEffect(Creature creature, Effect effect) {
         Set<Effect> cEffects = creatureEffects.get(creature);
         if (cEffects != null) {
             effect.remove(creature);
@@ -279,53 +290,29 @@ class EffectUpdater implements Runnable {
 
     @Override
     public void run() {
-        //Do Hero effects
-        for (Entry<Hero, Set<Effect>> heroEntry : new HashMap<Hero, Set<Effect>>(heroManager.heroEffects).entrySet()) {
-            Iterator<Effect> effectIterator = heroEntry.getValue().iterator();
-            while (effectIterator.hasNext()) {
-                Effect effect = effectIterator.next();
-                if (effect instanceof Expirable) {
-                    if (((Expirable) effect).isExpired()) {
-                        //Remove the effect from the Effect set
-                        effectIterator.remove();
-                        //Remove the Effect from the Hero 
-                        heroEntry.getKey().safeRemoveEffect(effect);
-                        //If the Set is now empty, lets remove it
-                        if (heroEntry.getValue().isEmpty()) {
-                            heroManager.heroEffects.remove(heroEntry.getKey());
-                        }
-                        continue;
+        Iterator<ManagedEffect> iter = heroManager.managedEffects.iterator();
+        while (iter.hasNext()) {
+            ManagedEffect mEffect = iter.next();
+            Effect effect = mEffect.getEffect();
+            if (effect instanceof Expirable) {
+                if (((Expirable) effect).isExpired()) {
+                    if (mEffect instanceof ManagedHeroEffect) {
+                        Hero hero = ((ManagedHeroEffect) mEffect).hero;
+                        hero.safeRemoveEffect(effect);
+                        iter.remove();
+                    } else {
+                        heroManager.safeRemoveCreatureEffect(((ManagedCreatureEffect) mEffect).creature, effect);
+                        iter.remove();
                     }
                 }
-                if (effect instanceof Periodic) {
-                    Periodic periodic = (Periodic) effect;
-                    if (periodic.isReady())
-                        periodic.tick(heroEntry.getKey());
-                }
-            }
-        }   
-        //Do our creature Effects
-        for (Entry<Creature, Set<Effect>> creatureEntry : new HashMap<Creature, Set<Effect>>(heroManager.creatureEffects).entrySet()) {
-            Iterator<Effect> effectIterator = creatureEntry.getValue().iterator();
-            while (effectIterator.hasNext()) {
-                Effect effect = effectIterator.next();
-                if (effect instanceof Expirable) {
-                    if (((Expirable) effect).isExpired()) {
-                        //Remove the effect from the Effect set
-                        effectIterator.remove();
-                        //Remove the Effect from the creature
-                        effect.remove(creatureEntry.getKey());
-                        //Remove the creature from the map if it's empty
-                        if (creatureEntry.getValue().isEmpty()) {
-                            heroManager.creatureEffects.remove(creatureEntry.getKey());
-                        }
-                        continue;
+            } else if (effect instanceof Periodic) {
+                Periodic periodic = (Periodic) effect;
+                if (periodic.isReady()) {
+                    if (mEffect instanceof ManagedHeroEffect) {
+                        periodic.tick(((ManagedHeroEffect) mEffect).hero);
+                    } else {
+                        periodic.tick(((ManagedCreatureEffect) mEffect).creature);
                     }
-                }
-                if (effect instanceof Periodic) {
-                    Periodic periodic = (Periodic) effect;
-                    if (periodic.isReady())
-                        periodic.tick(creatureEntry.getKey());
                 }
             }
         }

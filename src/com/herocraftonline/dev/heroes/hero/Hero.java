@@ -84,7 +84,7 @@ public class Hero {
         }
         effects.put(effect.getName().toLowerCase(), effect);
         if (effect instanceof Periodic || effect instanceof Expirable) {
-            plugin.getHeroManager().addManagedHeroEffect(this, effect);
+            plugin.getHeroManager().addManagedEffect(this, effect);
         }
         effect.apply(this);
     }
@@ -634,7 +634,7 @@ public class Hero {
         if (effect != null) {
             effects.remove(effect.getName().toLowerCase());
             if (effect instanceof Periodic || effect instanceof Expirable) {
-                plugin.getHeroManager().removeManagedHeroEffect(this, effect);
+                plugin.getHeroManager().removeManagedEffect(this, effect);
             }
             effect.remove(this);
         }
