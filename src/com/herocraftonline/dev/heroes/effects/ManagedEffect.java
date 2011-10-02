@@ -7,8 +7,4 @@ public class ManagedEffect {
     protected ManagedEffect(Effect effect) {
         this.effect = effect;
     }
-    
-    public Effect getEffect() {
-        return effect;
-    }
 }

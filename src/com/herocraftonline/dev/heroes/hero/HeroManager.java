@@ -295,7 +295,7 @@ class EffectUpdater implements Runnable {
         Iterator<ManagedEffect> iter = heroManager.managedEffects.iterator();
         while (iter.hasNext()) {
             ManagedEffect mEffect = iter.next();
-            Effect effect = mEffect.getEffect();
+            Effect effect = mEffect.effect;
             if (effect instanceof Expirable) {
                 if (((Expirable) effect).isExpired()) {
                     if (mEffect instanceof ManagedHeroEffect) {
