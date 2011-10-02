@@ -74,7 +74,7 @@ public class HeroesDamageListener extends EntityListener {
         HeroDamageCause heroLastDamage = null;
         DamageCause cause = event.getCause();
         int damage = event.getDamage();
-        
+
         if (damageManager.isSpellTarget(defender)) {
             SkillUseInfo skillInfo = damageManager.getSpellTargetInfo(defender);
             damageManager.removeSpellTarget(defender);
@@ -141,7 +141,8 @@ public class HeroesDamageListener extends EntityListener {
                 if (tmpDamage != null) {
                     damage = tmpDamage;
                     if (cause == DamageCause.FALL) {
-                        damage += damage / 3 * (event.getDamage() - 3);
+                        if (event.getDamage() != 0)
+                            damage += damage / 3 * (event.getDamage() - 3);
                     }
                 }
                 heroLastDamage = new HeroDamageCause(damage, cause);
@@ -208,7 +209,6 @@ public class HeroesDamageListener extends EntityListener {
             int fPlayerHP = (int) Math.ceil(fHeroHP / hero.getMaxHealth() * 20);
             plugin.debugLog(Level.INFO, "Damage done to " + player.getName() + " by " + cause + ": " + iHeroHP + " -> " + fHeroHP + "   |   " + player.getHealth() + " -> " + fPlayerHP);
 
-            // TODO: Doing this completely Breaks any form of damage modification from passive/active skills
             hero.setHealth(fHeroHP);
 
             // If final HP is 0, make sure we kill the player
@@ -230,12 +230,12 @@ public class HeroesDamageListener extends EntityListener {
             if (party != null && event.getDamage() > 0 && !party.updateMapDisplay()) {
                 party.setUpdateMapDisplay(true);
             }
-            
+
             //Do our Damage-Dependant effect removals last
             if (hero.hasEffect("Invisible")) {
                 hero.removeEffect(hero.getEffect("Invisible"));
             }
-            
+
         } else if (defender instanceof LivingEntity) {
             event.setDamage(damage);
         }

@@ -260,6 +260,9 @@ public class SkillWolf extends ActiveSkill {
             while (iter.hasNext()) {
                 Creature creature = iter.next();
                 if (creature instanceof Wolf) {
+                    if (!creature.getLocation().getBlock().getChunk().isLoaded()) {
+                        creature.getWorld().loadChunk(creature.getLocation().getBlock().getChunk());
+                    }
                     creature.remove();
                     iter.remove();
                 }

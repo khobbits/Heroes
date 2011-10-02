@@ -44,6 +44,7 @@ Version dev
 * Effects can now have mobEffects (potion effects) use addMobEffect(id, ticks, amplitute, faked)
 ** Faked mobEffects are only sent to the player and are not resolved server-side
 * Player - Location death map has been exposed.  It is now in the Util class instead of being only in the Revive skill
+* Fall damage can now be adjusted before the heroes damage listener is called, not just cancelled
 
 ==== **Skills:** ====
 
@@ -123,6 +124,8 @@ Version dev
 * TransmuteOre - (RENAME!)
 ** XMuteOre is now named TransmuteOre - it has been re-written to function better
 ** Now has an option to force the player to be targeting a furnace
+* Tumble - (NEW!)
+** Passive skill that reduces fall damage
 * Wisdom - (NEW!)
 ** Group buff that increases mana regeneration by a set multiplier.
 * Woodcutting - (NEW!)
