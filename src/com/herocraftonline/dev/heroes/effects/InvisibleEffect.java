@@ -27,7 +27,10 @@ public class InvisibleEffect extends ExpirableEffect {
         Player player = hero.getPlayer();
         // Tell all the logged in Clients to Destroy the Entity - Appears Invisible.
         for (Player onlinePlayer : plugin.getServer().getOnlinePlayers()) {
-            if (player.equals(onlinePlayer) || player.getLocation().distanceSquared(onlinePlayer.getLocation()) > 16000 )
+            if (player.equals(onlinePlayer) || !player.getWorld().equals(onlinePlayer.getWorld()))
+                continue;
+            
+            if (player.getLocation().distanceSquared(onlinePlayer.getLocation()) > 16000 )
                 continue;
             
             ((CraftPlayer) onlinePlayer).getHandle().netServerHandler.sendPacket(new Packet29DestroyEntity(((CraftPlayer) player).getEntityId()));
