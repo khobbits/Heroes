@@ -44,7 +44,9 @@ public class InvisibleEffect extends ExpirableEffect {
         super.remove(hero);
         Player player = hero.getPlayer();
         for (Player onlinePlayer : plugin.getServer().getOnlinePlayers()) {
-            if (onlinePlayer.equals(player) || player.getLocation().distanceSquared(onlinePlayer.getLocation()) > 16000) 
+            if (onlinePlayer.equals(player) || !player.getWorld().equals(onlinePlayer.getWorld())) 
+                continue;
+            if (player.getLocation().distanceSquared(onlinePlayer.getLocation()) > 16000)
                 continue;
             
             ((CraftPlayer) onlinePlayer).getHandle().netServerHandler.sendPacket(new Packet20NamedEntitySpawn(((CraftPlayer) player).getHandle()));

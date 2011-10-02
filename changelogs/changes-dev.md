@@ -128,5 +128,7 @@ Version dev
 ** Passive skill that reduces fall damage
 * Wisdom - (NEW!)
 ** Group buff that increases mana regeneration by a set multiplier.
+* Wolf
+** Fixed Wolves in unloaded chunks not despawning properly when a player exits
 * Woodcutting - (NEW!)
 ** Passive skill that has a chance to give double-drops when chopping logs
