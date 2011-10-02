@@ -215,7 +215,6 @@ public class HeroManager {
 
             if (skill instanceof PassiveSkill)
                 ((PassiveSkill) skill).tryApplying(hero);
-
         }
     }
 
