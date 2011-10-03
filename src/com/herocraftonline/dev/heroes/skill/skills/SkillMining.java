@@ -31,7 +31,7 @@ public class SkillMining extends PassiveSkill {
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty("chance-per-level", .01);
+        node.setProperty("chance-per-level", .001);
         node.setProperty("chance-from-stone", .0005);
         return node;
     }
@@ -77,13 +77,18 @@ public class SkillMining extends PassiveSkill {
             if (!hero.hasEffect("Mining") || dropMaterial == null)
                 return;
 
-            if (Util.rand.nextDouble() >= getSetting(hero.getHeroClass(), "chance-from-stone", .0005) * hero.getLevel())
-                return;
+            double chance = Util.rand.nextDouble();
             
-            if (isStone) {
+            if (isStone && chance <= getSetting(hero.getHeroClass(), "chance-from-stone", .0005) * hero.getLevel()) {
                 block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(getMatFromHeight(block), 1));
                 return;
-            } else if (dropMaterial == Material.INK_SACK) {
+            } else if (isStone)
+                return;
+            
+            if (chance >= getSetting(hero.getHeroClass(), "chance-per-level", .001) * hero.getLevel()) {
+                return;
+            }
+            if (dropMaterial == Material.INK_SACK) {
                 block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(dropMaterial, 1, (short) 0, (byte) 4));
             } else {
                 block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(dropMaterial, 1));

@@ -31,7 +31,7 @@ public class SkillHerbalism extends PassiveSkill {
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty("chance-per-level", .01);
+        node.setProperty("chance-per-level", .001);
         return node;
     }
 
@@ -69,7 +69,7 @@ public class SkillHerbalism extends PassiveSkill {
             }
 
             Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
-            if (!hero.hasEffect("Herbalism") || Util.rand.nextDouble() >= getSetting(hero.getHeroClass(), "chance-per-level", .01) * hero.getLevel())
+            if (!hero.hasEffect("Herbalism") || Util.rand.nextDouble() >= getSetting(hero.getHeroClass(), "chance-per-level", .001) * hero.getLevel())
                 return;
 
             if (extraDrops != 0) {
