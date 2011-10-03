@@ -8,6 +8,9 @@ import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
 
 @SuppressWarnings("serial")
+/**
+ * Called when a hero uses a skill. This event is cancellable.
+ */
 public class SkillUseEvent extends HeroEvent implements Cancellable {
 
     private final Player player;
@@ -110,6 +113,9 @@ public class SkillUseEvent extends HeroEvent implements Cancellable {
         this.manaCost = manaCost;
     }
 
+    /**
+     * @param reagentCost
+     */
     public void setReagentCost(ItemStack reagentCost) {
         this.reagentCost = reagentCost;
     }

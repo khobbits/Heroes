@@ -18,13 +18,17 @@ public class HeroAttackDamageCause extends HeroDamageCause {
         }
     }
 
+    /**
+     * Returns the entity attacker
+     * @return
+     */
     public Entity getAttacker() {
         return attacker;
     }
 
     /**
      * Supports null value if the attacker is not a player
-     * 
+     * Will return an ItemStack of the weapon being used to damage
      * @return
      */
     public ItemStack getWeapon() {

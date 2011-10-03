@@ -6,12 +6,17 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
 @SuppressWarnings("serial")
+/**
+ * This event is called when a DamageCause.ATTACK event is registered in the heroesdamagelistener
+ * Both creatures & Players can cause this event to be fired even if they aren't using a 'weapon' per se.
+ * This event is cancellable.
+ */
 public class WeaponDamageEvent extends HeroEvent implements Cancellable {
 
     private int damage;
-    private Entity damager;
-    private Entity entity;
-    private DamageCause cause;
+    private final Entity damager;
+    private final Entity entity;
+    private final DamageCause cause;
     private boolean cancelled = false;
 
     public WeaponDamageEvent(int damage, EntityDamageByEntityEvent event) {
@@ -21,19 +26,31 @@ public class WeaponDamageEvent extends HeroEvent implements Cancellable {
         this.entity = event.getEntity();
         this.cause = event.getCause();
     }
-
+    
+    /**
+     * @return the DamageCause
+     */
     public DamageCause getCause() {
         return cause;
     }
 
+    /**
+     * @return the damage
+     */
     public int getDamage() {
         return damage;
     }
 
+    /**
+     * @return the entity dealing the damage
+     */
     public Entity getDamager() {
         return damager;
     }
 
+    /**
+     * @return the entity being damaged
+     */
     public Entity getEntity() {
         return entity;
     }
@@ -48,20 +65,10 @@ public class WeaponDamageEvent extends HeroEvent implements Cancellable {
         this.cancelled = val;
     }
 
-    public void setCause(DamageCause cause) {
-        this.cause = cause;
-    }
-
+    /**
+     * @param damage
+     */
     public void setDamage(int damage) {
         this.damage = damage;
     }
-
-    public void setDamager(Entity damager) {
-        this.damager = damager;
-    }
-
-    public void setEntity(Entity entity) {
-        this.entity = entity;
-    }
-
 }

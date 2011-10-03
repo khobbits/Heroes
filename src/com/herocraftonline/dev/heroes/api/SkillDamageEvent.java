@@ -7,6 +7,9 @@ import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
 
 @SuppressWarnings("serial")
+/**
+ * This event is called when a skill would deal damage.  It is cancellable.
+ */
 public class SkillDamageEvent extends HeroEvent implements Cancellable {
 
     private int damage;
@@ -23,18 +26,30 @@ public class SkillDamageEvent extends HeroEvent implements Cancellable {
         this.entity = entity;
     }
 
+    /**
+     * @return the damage the skill will cause
+     */
     public int getDamage() {
         return damage;
     }
 
+    /**
+     * @return the hero that is causing the damage
+     */
     public Hero getDamager() {
         return damager;
     }
 
+    /**
+     * @return the entity that is being dealt the damage
+     */
     public Entity getEntity() {
         return entity;
     }
 
+    /**
+     * @return the skill being used
+     */
     public Skill getSkill() {
         return skill;
     }

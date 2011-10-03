@@ -6,6 +6,9 @@ import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.party.HeroParty;
 
 @SuppressWarnings("serial")
+/**
+ * Called when a Hero is attempting to join a party.  This event is cancellable.
+ */
 public class HeroJoinPartyEvent extends HeroEvent implements Cancellable {
 
     private boolean cancelled = false;

@@ -4,6 +4,9 @@ import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.party.HeroParty;
 
 @SuppressWarnings("serial")
+/**
+ * This event is called when a hero leaves a party.
+ */
 public class HeroLeavePartyEvent extends HeroEvent {
 
     private final Hero hero;

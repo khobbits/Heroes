@@ -6,6 +6,9 @@ import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
 
 @SuppressWarnings("serial")
+/**
+ * Called when a hero regains health, primarily from a skill.  This event is able to be cancelled.
+ */
 public class HeroRegainHealthEvent extends HeroEvent implements Cancellable {
 
     private int amount;
@@ -49,8 +52,7 @@ public class HeroRegainHealthEvent extends HeroEvent implements Cancellable {
     }
 
     /**
-     * @param amount
-     *            the amount to set
+     * @param amount to set
      */
     public void setAmount(int amount) {
         this.amount = amount;

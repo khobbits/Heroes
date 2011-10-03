@@ -6,6 +6,9 @@ import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
 
 @SuppressWarnings("serial")
+/**
+ * This event is called when a hero would regain mana, this event is cancellable
+ */
 public class HeroRegainManaEvent extends HeroEvent implements Cancellable {
 
     private int amount;

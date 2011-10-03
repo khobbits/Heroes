@@ -303,8 +303,8 @@ class EffectUpdater implements Runnable {
                         hero.safeRemoveEffect(effect);
                         iter.remove();
                     } else {
-                        heroManager.safeRemoveCreatureEffect(((ManagedCreatureEffect) mEffect).creature, effect);
                         iter.remove();
+                        heroManager.safeRemoveCreatureEffect(((ManagedCreatureEffect) mEffect).creature, effect);
                     }
                 }
             } else if (effect instanceof Periodic) {
