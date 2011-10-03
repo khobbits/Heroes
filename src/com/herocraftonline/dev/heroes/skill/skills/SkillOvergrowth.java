@@ -4,6 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.TreeType;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.util.Callback;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
@@ -36,8 +37,8 @@ public class SkillOvergrowth extends ActiveSkill {
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
         int range = getSetting(hero.getHeroClass(), Setting.MAX_DISTANCE.node(), 15);
-        if (player.getTargetBlock(null, range).getType() == Material.SAPLING) {
-            Block targetBlock = player.getTargetBlock(null, range);
+        if (player.getTargetBlock((Callback<Boolean, Block>) null, range).getType() == Material.SAPLING) {
+            Block targetBlock = player.getTargetBlock((Callback<Boolean, Block>) null, range);
             TreeType tType = null;
 
             switch (targetBlock.getData()) {

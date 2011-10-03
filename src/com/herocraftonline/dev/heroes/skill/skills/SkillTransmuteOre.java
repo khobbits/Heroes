@@ -5,8 +5,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Callback;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
@@ -49,7 +51,7 @@ public class SkillTransmuteOre extends ActiveSkill {
         Player player = hero.getPlayer();
         ItemStack item = player.getItemInHand();
         
-        if (getSetting(hero.getHeroClass(), "require-furnace", false) && player.getTargetBlock(null, 3).getType() != Material.FURNACE) {
+        if (getSetting(hero.getHeroClass(), "require-furnace", false) && player.getTargetBlock((Callback<Boolean, Block>) null, 3).getType() != Material.FURNACE) {
             Messaging.send(player, "You must have a furnace targetted to transmute ores!");
             return false;
         }

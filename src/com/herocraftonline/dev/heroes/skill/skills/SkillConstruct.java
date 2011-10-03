@@ -7,8 +7,10 @@ import java.util.Map;
 import java.util.Set;
 
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Callback;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
@@ -88,7 +90,7 @@ public class SkillConstruct extends ActiveSkill {
             }
         }
 
-        if (player.getTargetBlock(null, 3).getType() != Material.WORKBENCH && getSetting(hero.getHeroClass(), "require-workbench", true)) {
+        if (player.getTargetBlock((Callback<Boolean, Block>) null, 3).getType() != Material.WORKBENCH && getSetting(hero.getHeroClass(), "require-workbench", true)) {
             Messaging.send(player, "You must have a workbench targetted to construct an item!");
             return false;
         }
