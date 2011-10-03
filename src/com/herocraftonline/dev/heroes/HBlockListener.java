@@ -22,20 +22,21 @@ public class HBlockListener extends BlockListener {
 
     private final Heroes plugin;
     public static Map<Location, Long> placedBlocks;
-
+    int blockTrackingDuration = 0;
     public HBlockListener(Heroes plugin) {
         this.plugin = plugin;
     }
 
     public void init() {
         final int maxTrackedBlocks = plugin.getConfigManager().getProperties().maxTrackedBlocks;
+        blockTrackingDuration = plugin.getConfigManager().getProperties().blockTrackingDuration;
         placedBlocks = new LinkedHashMap<Location, Long>() {
             private static final long serialVersionUID = 2623620773233514414L;
             private final int MAX_ENTRIES = maxTrackedBlocks;
 
             @Override
             protected boolean removeEldestEntry(Map.Entry<Location, Long> eldest) {
-                return size() > MAX_ENTRIES;
+                return size() > MAX_ENTRIES || eldest.getValue() + blockTrackingDuration > System.currentTimeMillis();
             }
         };
     }
@@ -109,7 +110,7 @@ public class HBlockListener extends BlockListener {
 
     private boolean wasBlockPlaced(Block block) {
         Location loc = block.getLocation();
-        int blockTrackingDuration = plugin.getConfigManager().getProperties().blockTrackingDuration;
+        
 
         if (placedBlocks.containsKey(loc)) {
             long timePlaced = placedBlocks.get(loc);
