@@ -1,14 +1,17 @@
-package com.herocraftonline.dev.heroes.effects;
+package com.herocraftonline.dev.heroes.effects.managed;
 
-import com.herocraftonline.dev.heroes.hero.Hero;
+import org.bukkit.entity.Creature;
 
-public class ManagedHeroEffect extends ManagedEffect {
+import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
+
+public class CreatureExpirableEffect extends ManagedExpirableEffect {
     
-    public final Hero hero;
+    public final Creature creature;
+
     
-    public ManagedHeroEffect(Hero hero, Effect effect) {
+    public CreatureExpirableEffect(Creature creature, ExpirableEffect effect) {
         super(effect);
-        this.hero = hero;
+        this.creature = creature;
     }
 
     @Override
@@ -16,7 +19,7 @@ public class ManagedHeroEffect extends ManagedEffect {
         final int prime = 37;
         int result = 7;
         result = prime * result + effect.hashCode();
-        result = prime * result + hero.hashCode();
+        result = prime * result + creature.hashCode();
         return result;
     }
 
@@ -28,10 +31,10 @@ public class ManagedHeroEffect extends ManagedEffect {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        ManagedHeroEffect other = (ManagedHeroEffect) obj;
+        CreatureExpirableEffect other = (CreatureExpirableEffect) obj;
         if (!effect.equals(other.effect))
             return false;
-        else if (!hero.equals(other.hero))
+        else if (!creature.equals(other.creature))
             return false;
         return true;
     }

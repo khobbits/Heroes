@@ -20,10 +20,15 @@ import com.herocraftonline.dev.heroes.api.HeroRegainManaEvent;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.effects.Effect;
 import com.herocraftonline.dev.heroes.effects.Expirable;
-import com.herocraftonline.dev.heroes.effects.ManagedCreatureEffect;
-import com.herocraftonline.dev.heroes.effects.ManagedEffect;
-import com.herocraftonline.dev.heroes.effects.ManagedHeroEffect;
+import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
 import com.herocraftonline.dev.heroes.effects.Periodic;
+import com.herocraftonline.dev.heroes.effects.PeriodicEffect;
+import com.herocraftonline.dev.heroes.effects.managed.CreatureExpirableEffect;
+import com.herocraftonline.dev.heroes.effects.managed.CreaturePeriodicEffect;
+import com.herocraftonline.dev.heroes.effects.managed.HeroExpirableEffect;
+import com.herocraftonline.dev.heroes.effects.managed.HeroPeriodicEffect;
+import com.herocraftonline.dev.heroes.effects.managed.ManagedExpirableEffect;
+import com.herocraftonline.dev.heroes.effects.managed.ManagedPeriodicEffect;
 import com.herocraftonline.dev.heroes.party.HeroParty;
 import com.herocraftonline.dev.heroes.party.PartyManager;
 import com.herocraftonline.dev.heroes.persistence.HeroStorage;
@@ -47,7 +52,8 @@ public class HeroManager {
     private Heroes plugin;
     private Map<String, Hero> heroes;
     protected Map<Creature, Set<Effect>> creatureEffects;
-    protected Set<ManagedEffect> managedEffects;
+    protected Set<ManagedPeriodicEffect> managedPeriodicEffects;
+    protected Set<ManagedExpirableEffect> managedExpirableEffects;
     private HeroStorage heroStorage;
     private final static int effectInterval = 2;
     private final static int manaInterval = 5;
@@ -57,7 +63,8 @@ public class HeroManager {
         this.plugin = plugin;
         this.heroes = new HashMap<String, Hero>();
         this.creatureEffects = new HashMap<Creature, Set<Effect>>();
-        this.managedEffects = new HashSet<ManagedEffect>();
+        this.managedExpirableEffects = new HashSet<ManagedExpirableEffect>();
+        this.managedPeriodicEffects = new HashSet<ManagedPeriodicEffect>();
         // if (plugin.getConfigManager().getProperties().storageType.toLowerCase().equals("yml"))
         heroStorage = new YMLHeroStorage(plugin);
 
@@ -74,20 +81,36 @@ public class HeroManager {
     }
 
 
-    protected void addManagedEffect(Hero hero, Effect effect) {
-        managedEffects.add(new ManagedHeroEffect(hero, effect));
+    protected void addManagedEffect(Hero hero, PeriodicEffect effect) {
+        managedPeriodicEffects.add(new HeroPeriodicEffect(hero, effect));
+    }
+    
+    protected void addManagedEffect(Hero hero, ExpirableEffect effect) {
+        managedExpirableEffects.add(new HeroExpirableEffect(hero, effect));
     }
 
-    protected void addManagedEffect(Creature creature, Effect effect) {
-        managedEffects.add(new ManagedCreatureEffect(creature, effect));
+    protected void addManagedEffect(Creature creature, PeriodicEffect effect) {
+        managedPeriodicEffects.add(new CreaturePeriodicEffect(creature, effect));
     }
 
-    protected void removeManagedEffect(Hero hero, Effect effect) {
-        managedEffects.remove(new ManagedHeroEffect(hero, effect));
+    protected void addManagedEffect(Creature creature, ExpirableEffect effect) {
+        managedExpirableEffects.add(new CreatureExpirableEffect(creature, effect));
     }
-
-    protected void removeManagedEffect(Creature creature, Effect effect) {
-        managedEffects.remove(new ManagedCreatureEffect(creature, effect));
+    
+    protected void removeManagedEffect(Hero hero, PeriodicEffect effect) {
+        managedPeriodicEffects.remove(new HeroPeriodicEffect(hero, effect));
+    }
+    
+    protected void removeManagedEffect(Hero hero, ExpirableEffect effect) {
+        managedExpirableEffects.remove(new HeroExpirableEffect(hero, effect));
+    }
+    
+    protected void removeManagedEffect(Creature creature, PeriodicEffect effect) {
+        managedPeriodicEffects.remove(new CreaturePeriodicEffect(creature, effect));
+    }
+    
+    protected void removeManagedEffect(Creature creature, ExpirableEffect effect) {
+        managedExpirableEffects.remove(new CreatureExpirableEffect(creature, effect));
     }
 
     /**
@@ -102,8 +125,11 @@ public class HeroManager {
             cEffects = new HashSet<Effect>();
             creatureEffects.put(creature, cEffects);
         }
-        if (effect instanceof Periodic || effect instanceof Expirable) {
-            managedEffects.add(new ManagedCreatureEffect(creature, effect));
+        if (effect instanceof Periodic) {
+            managedPeriodicEffects.add(new CreaturePeriodicEffect(creature, (PeriodicEffect) effect));
+        }
+        if (effect instanceof Expirable) {
+            managedExpirableEffects.add(new CreatureExpirableEffect(creature, (ExpirableEffect) effect));
         }
         cEffects.add(effect);
         effect.apply(creature);
@@ -122,7 +148,14 @@ public class HeroManager {
         if (creatureEffects.containsKey(creature)) {
             Iterator<Effect> iter = creatureEffects.get(creature).iterator();
             while (iter.hasNext()) {
-                iter.next().remove(creature);
+                Effect effect = iter.next();
+                effect.remove(creature);
+                if (effect instanceof Periodic) {
+                    managedPeriodicEffects.remove(new CreaturePeriodicEffect(creature, (PeriodicEffect) effect));
+                }
+                if (effect instanceof Expirable) {
+                    managedExpirableEffects.remove(new CreatureExpirableEffect(creature, (ExpirableEffect) effect));
+                }
                 iter.remove();
             }
             creatureEffects.remove(creature);
@@ -233,8 +266,10 @@ public class HeroManager {
             if (cEffects.isEmpty()) {
                 creatureEffects.remove(creature);
             }
-            if (effect instanceof Periodic || effect instanceof Expirable)
-                managedEffects.remove(new ManagedCreatureEffect(creature, effect));
+            if (effect instanceof Periodic)
+                managedPeriodicEffects.remove(new CreaturePeriodicEffect(creature, (PeriodicEffect) effect));
+            if (effect instanceof Expirable)
+                managedExpirableEffects.remove(new CreatureExpirableEffect(creature, (ExpirableEffect) effect));
         }
     }
 
@@ -293,29 +328,28 @@ class EffectUpdater implements Runnable {
 
     @Override
     public void run() {
-        Iterator<ManagedEffect> iter = heroManager.managedEffects.iterator();
+        Iterator<ManagedExpirableEffect> iter = heroManager.managedExpirableEffects.iterator();
         while (iter.hasNext()) {
-            ManagedEffect mEffect = iter.next();
-            Effect effect = mEffect.effect;
-            if (effect instanceof Expirable) {
-                if (((Expirable) effect).isExpired()) {
-                    if (mEffect instanceof ManagedHeroEffect) {
-                        Hero hero = ((ManagedHeroEffect) mEffect).hero;
-                        hero.safeRemoveEffect(effect);
-                        iter.remove();
-                    } else {
-                        iter.remove();
-                        heroManager.safeRemoveCreatureEffect(((ManagedCreatureEffect) mEffect).creature, effect);
-                    }
+            ManagedExpirableEffect mEffect = iter.next();
+            if (mEffect.effect.isExpired()) {
+                if (mEffect instanceof HeroExpirableEffect) {
+                    ((HeroExpirableEffect) mEffect).hero.safeRemoveEffect(mEffect.effect);
+                    iter.remove();
+                } else {
+                    heroManager.safeRemoveCreatureEffect(((CreatureExpirableEffect) mEffect).creature, mEffect.effect);
+                    iter.remove();
                 }
-            } else if (effect instanceof Periodic) {
-                Periodic periodic = (Periodic) effect;
-                if (periodic.isReady()) {
-                    if (mEffect instanceof ManagedHeroEffect) {
-                        periodic.tick(((ManagedHeroEffect) mEffect).hero);
-                    } else {
-                        periodic.tick(((ManagedCreatureEffect) mEffect).creature);
-                    }
+            }
+        }
+
+        Iterator<ManagedPeriodicEffect> pIter = heroManager.managedPeriodicEffects.iterator();
+        while (pIter.hasNext()) {
+            ManagedPeriodicEffect pEffect = pIter.next();
+            if (pEffect.effect.isReady()) {
+                if (pEffect instanceof HeroPeriodicEffect) {
+                    pEffect.effect.tick(((HeroPeriodicEffect) pEffect).hero);
+                } else {
+                    pEffect.effect.tick(((CreaturePeriodicEffect) pEffect).creature);
                 }
             }
         }

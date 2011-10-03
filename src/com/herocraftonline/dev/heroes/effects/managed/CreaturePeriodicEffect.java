@@ -1,13 +1,15 @@
-package com.herocraftonline.dev.heroes.effects;
+package com.herocraftonline.dev.heroes.effects.managed;
 
 import org.bukkit.entity.Creature;
 
-public class ManagedCreatureEffect extends ManagedEffect {
+import com.herocraftonline.dev.heroes.effects.PeriodicEffect;
+
+public class CreaturePeriodicEffect extends ManagedPeriodicEffect {
     
     public final Creature creature;
 
     
-    public ManagedCreatureEffect(Creature creature, Effect effect) {
+    public CreaturePeriodicEffect(Creature creature, PeriodicEffect effect) {
         super(effect);
         this.creature = creature;
     }
@@ -29,7 +31,7 @@ public class ManagedCreatureEffect extends ManagedEffect {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        ManagedCreatureEffect other = (ManagedCreatureEffect) obj;
+        CreaturePeriodicEffect other = (CreaturePeriodicEffect) obj;
         if (!effect.equals(other.effect))
             return false;
         else if (!creature.equals(other.creature))
