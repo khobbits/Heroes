@@ -1,9 +1,9 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
 import java.util.Collection;
+import java.util.HashSet;
 
 import org.bukkit.Location;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.LivingEntity;
@@ -20,7 +20,6 @@ import org.bukkit.event.entity.EntityListener;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.util.Callback;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
@@ -78,7 +77,7 @@ public class SkillSkeleton extends ActiveSkill {
 
         if (hero.getSummons().size() < getSetting(hero.getHeroClass(), "max-summons", 3)) {
             int distance = getSetting(hero.getHeroClass(), Setting.MAX_DISTANCE.node(), 5);
-            Location castLoc = player.getTargetBlock((Callback<Boolean, Block>) null, distance).getLocation();
+            Location castLoc = player.getTargetBlock((HashSet<Byte>) null, distance).getLocation();
             Creature skeleton = (Creature) player.getWorld().spawnCreature(castLoc, CreatureType.SKELETON);
             long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 60000);
             plugin.getHeroManager().addCreatureEffect(skeleton, new SummonEffect(this, duration, hero, expireText));

@@ -1,10 +1,10 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
+import java.util.HashSet;
 import java.util.Iterator;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.CreatureType;
@@ -18,7 +18,6 @@ import org.bukkit.event.entity.EntityTameEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.util.Callback;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
@@ -90,7 +89,7 @@ public class SkillWolf extends ActiveSkill {
             }
 
             int distance = getSetting(hero.getHeroClass(), Setting.MAX_DISTANCE.node(), 5);
-            Location castLoc = player.getTargetBlock((Callback<Boolean, Block>) null, distance).getLocation();
+            Location castLoc = player.getTargetBlock((HashSet<Byte>) null, distance).getLocation();
             if (castLoc.getBlock().getType() != Material.AIR) {
                 castLoc = castLoc.getBlock().getRelative(BlockFace.UP).getLocation();
             }

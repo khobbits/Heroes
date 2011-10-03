@@ -1,5 +1,7 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
+import java.util.HashSet;
+
 import net.minecraft.server.EntityFireball;
 import net.minecraft.server.EntityLiving;
 import net.minecraft.server.MathHelper;
@@ -18,7 +20,6 @@ import org.bukkit.event.Event.Type;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityListener;
-import org.bukkit.util.Callback;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
@@ -78,7 +79,7 @@ public class SkillExplosiveFireball extends ActiveSkill {
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
 
-        Block target = player.getTargetBlock((Callback<Boolean, Block>) null, 100);
+        Block target = player.getTargetBlock((HashSet<Byte>) null, 100);
         Location playerLoc = player.getLocation();
 
         double dx = target.getX() - playerLoc.getX();

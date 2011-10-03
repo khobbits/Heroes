@@ -6,10 +6,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.Callback;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
@@ -109,7 +107,7 @@ public class SkillDeconstruct extends ActiveSkill {
             slot = player.getInventory().getHeldItemSlot();
         }
 
-        if (getSetting(hero.getHeroClass(), "require-workbench", true) && player.getTargetBlock((Callback<Boolean, Block>) null, 3).getType() != Material.WORKBENCH) {
+        if (getSetting(hero.getHeroClass(), "require-workbench", true) && player.getTargetBlock((HashSet<Byte>) null, 3).getType() != Material.WORKBENCH) {
             Messaging.send(player, "You must have a workbench targetted to deconstruct an item!");
             return false;
         }
