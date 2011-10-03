@@ -1,13 +1,13 @@
 package com.herocraftonline.dev.heroes.effects.managed;
 
-import com.herocraftonline.dev.heroes.effects.PeriodicEffect;
+import com.herocraftonline.dev.heroes.effects.Periodic;
 import com.herocraftonline.dev.heroes.hero.Hero;
 
 public class HeroPeriodicEffect extends ManagedPeriodicEffect {
     
     public final Hero hero;
     
-    public HeroPeriodicEffect(Hero hero, PeriodicEffect effect) {
+    public HeroPeriodicEffect(Hero hero, Periodic effect) {
         super(effect);
         this.hero = hero;
     }

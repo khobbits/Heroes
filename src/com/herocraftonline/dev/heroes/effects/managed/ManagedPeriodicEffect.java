@@ -1,12 +1,12 @@
 package com.herocraftonline.dev.heroes.effects.managed;
 
-import com.herocraftonline.dev.heroes.effects.PeriodicEffect;
+import com.herocraftonline.dev.heroes.effects.Periodic;
 
 public class ManagedPeriodicEffect {
     
-    public final PeriodicEffect effect;
+    public final Periodic effect;
     
-    protected ManagedPeriodicEffect(PeriodicEffect effect) {
+    protected ManagedPeriodicEffect(Periodic effect) {
         this.effect = effect;
     }
 }

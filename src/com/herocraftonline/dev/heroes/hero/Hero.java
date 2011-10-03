@@ -33,10 +33,8 @@ import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
 import com.herocraftonline.dev.heroes.classes.HeroClass.WeaponItems;
 import com.herocraftonline.dev.heroes.effects.Effect;
 import com.herocraftonline.dev.heroes.effects.EffectType;
-import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
 import com.herocraftonline.dev.heroes.effects.Periodic;
 import com.herocraftonline.dev.heroes.effects.Expirable;
-import com.herocraftonline.dev.heroes.effects.PeriodicEffect;
 import com.herocraftonline.dev.heroes.party.HeroParty;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
@@ -86,10 +84,10 @@ public class Hero {
         }
         effects.put(effect.getName().toLowerCase(), effect);
         if (effect instanceof Periodic) {
-            plugin.getHeroManager().addManagedEffect(this, (PeriodicEffect) effect);
+            plugin.getHeroManager().addManagedEffect(this, (Periodic) effect);
         }
         if (effect instanceof Expirable) {
-            plugin.getHeroManager().addManagedEffect(this, (ExpirableEffect) effect);
+            plugin.getHeroManager().addManagedEffect(this, (Expirable) effect);
         }
         effect.apply(this);
     }
@@ -639,10 +637,10 @@ public class Hero {
         if (effect != null) {
             effects.remove(effect.getName().toLowerCase());
             if (effect instanceof Periodic) {
-                plugin.getHeroManager().removeManagedEffect(this, (PeriodicEffect) effect);
+                plugin.getHeroManager().removeManagedEffect(this, (Periodic) effect);
             }
             if (effect instanceof Expirable) {
-                plugin.getHeroManager().removeManagedEffect(this, (ExpirableEffect) effect);
+                plugin.getHeroManager().removeManagedEffect(this, (Expirable) effect);
             }
             effect.remove(this);
         }

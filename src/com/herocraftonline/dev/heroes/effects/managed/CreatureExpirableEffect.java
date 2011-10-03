@@ -2,14 +2,14 @@ package com.herocraftonline.dev.heroes.effects.managed;
 
 import org.bukkit.entity.Creature;
 
-import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
+import com.herocraftonline.dev.heroes.effects.Expirable;
 
 public class CreatureExpirableEffect extends ManagedExpirableEffect {
     
     public final Creature creature;
 
     
-    public CreatureExpirableEffect(Creature creature, ExpirableEffect effect) {
+    public CreatureExpirableEffect(Creature creature, Expirable effect) {
         super(effect);
         this.creature = creature;
     }

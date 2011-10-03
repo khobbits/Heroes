@@ -1,13 +1,13 @@
 package com.herocraftonline.dev.heroes.effects.managed;
 
-import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
+import com.herocraftonline.dev.heroes.effects.Expirable;
 import com.herocraftonline.dev.heroes.hero.Hero;
 
 public class HeroExpirableEffect extends ManagedExpirableEffect {
     
     public final Hero hero;
     
-    public HeroExpirableEffect(Hero hero, ExpirableEffect effect) {
+    public HeroExpirableEffect(Hero hero, Expirable effect) {
         super(effect);
         this.hero = hero;
     }
