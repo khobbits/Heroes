@@ -77,7 +77,7 @@ public class HeroManager {
     protected void addManagedEffect(Hero hero, Effect effect) {
         managedEffects.add(new ManagedHeroEffect(hero, effect));
     }
-    
+
     protected void addManagedEffect(Creature creature, Effect effect) {
         managedEffects.add(new ManagedCreatureEffect(creature, effect));
     }
@@ -85,7 +85,7 @@ public class HeroManager {
     protected void removeManagedEffect(Hero hero, Effect effect) {
         managedEffects.remove(new ManagedHeroEffect(hero, effect));
     }
-    
+
     protected void removeManagedEffect(Creature creature, Effect effect) {
         managedEffects.remove(new ManagedCreatureEffect(creature, effect));
     }
@@ -233,10 +233,11 @@ public class HeroManager {
             if (cEffects.isEmpty()) {
                 creatureEffects.remove(creature);
             }
-            managedEffects.remove(new ManagedCreatureEffect(creature, effect));
+            if (effect instanceof Periodic || effect instanceof Expirable)
+                managedEffects.remove(new ManagedCreatureEffect(creature, effect));
         }
     }
-    
+
     void safeRemoveCreatureEffect(Creature creature, Effect effect) {
         Set<Effect> cEffects = creatureEffects.get(creature);
         if (cEffects != null) {
