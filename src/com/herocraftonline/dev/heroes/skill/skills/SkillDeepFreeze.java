@@ -139,6 +139,21 @@ public class SkillDeepFreeze extends TargettedSkill {
         }
 
         @Override
+        public void tick(Creature creature) {
+            super.tick(creature);
+            
+            Location location = creature.getLocation();
+            if (location.getX() != x || location.getY() != y || location.getZ() != z) {
+                location.setX(x);
+                location.setY(y);
+                location.setZ(z);
+                location.setYaw(creature.getLocation().getYaw());
+                location.setPitch(creature.getLocation().getPitch());
+                creature.teleport(location);
+            }
+        }
+        
+        @Override
         public void tick(Hero hero) {
             super.tick(hero);
 

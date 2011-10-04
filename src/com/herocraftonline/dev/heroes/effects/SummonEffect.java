@@ -36,6 +36,9 @@ import com.herocraftonline.dev.heroes.skill.Skill;
             super.remove(creature);
             summoner.getSummons().remove(creature);
             broadcast(creature.getLocation(), expireText);
+            //Load the chunk first
+            if (!creature.getWorld().getChunkAt(creature.getLocation()).isLoaded()) 
+                creature.getWorld().loadChunk(creature.getWorld().getChunkAt(creature.getLocation()));
             creature.remove();
 
             // Check if the summoner has anymore creatures with Summon

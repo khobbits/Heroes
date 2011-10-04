@@ -3,6 +3,7 @@ package com.herocraftonline.dev.heroes.hero;
 import java.text.DecimalFormat;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -347,7 +348,14 @@ class EffectUpdater implements Runnable {
 
             Iterator<ManagedPeriodicEffect> pIter = heroManager.managedPeriodicEffects.iterator();
             while (pIter.hasNext()) {
-                ManagedPeriodicEffect pEffect = pIter.next();
+                ManagedPeriodicEffect pEffect = null;
+                try {
+                    pEffect = pIter.next();
+                } catch (ConcurrentModificationException e) {
+                    Heroes.log(Level.SEVERE, "PeriodicEffectIterator failed on effect: " + ((Effect) pEffect.effect).getName());
+                    e.printStackTrace();
+                    break;
+                }
                 if (pEffect.effect.isReady()) {
                     if (pEffect instanceof HeroPeriodicEffect) {
                         pEffect.effect.tick(((HeroPeriodicEffect) pEffect).hero);
