@@ -32,5 +32,4 @@ public class SafeFallEffect extends ExpirableEffect {
         Player player = hero.getPlayer();
         broadcast(player.getLocation(), expireText, player.getDisplayName());
     }
-
 }
