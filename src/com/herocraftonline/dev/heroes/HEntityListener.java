@@ -17,9 +17,10 @@ import org.bukkit.event.entity.EntityListener;
 
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
-import com.herocraftonline.dev.heroes.effects.CombustEffect;
 import com.herocraftonline.dev.heroes.effects.Effect;
-import com.herocraftonline.dev.heroes.effects.SummonEffect;
+import com.herocraftonline.dev.heroes.effects.EffectManager;
+import com.herocraftonline.dev.heroes.effects.common.CombustEffect;
+import com.herocraftonline.dev.heroes.effects.common.SummonEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.hero.HeroManager;
 import com.herocraftonline.dev.heroes.util.Properties;
@@ -42,8 +43,8 @@ public class HEntityListener extends EntityListener {
                 Projectile projectile = (Projectile) damager;
                 if (projectile.getShooter() instanceof Player) {
                     return (Player) projectile.getShooter();
-                } else if (projectile.getShooter() instanceof Skeleton && plugin.getHeroManager().creatureHasEffect((Creature) projectile.getShooter(), "Summon")) {
-                    SummonEffect sEffect = (SummonEffect) plugin.getHeroManager().getCreatureEffect((Skeleton) projectile.getShooter(), "Summon");
+                } else if (projectile.getShooter() instanceof Skeleton && plugin.getEffectManager().creatureHasEffect((Creature) projectile.getShooter(), "Summon")) {
+                    SummonEffect sEffect = (SummonEffect) plugin.getEffectManager().getCreatureEffect((Skeleton) projectile.getShooter(), "Summon");
                     return sEffect.getSummoner().getPlayer();
                 }
             } else if (damager instanceof Creature) {
@@ -52,8 +53,8 @@ public class HEntityListener extends EntityListener {
                     if (tamed.isTamed() && tamed.getOwner() instanceof Player)
                         return (Player) tamed.getOwner();
                 }
-                if (plugin.getHeroManager().creatureHasEffect((Creature) damager, "Summon")) {
-                    SummonEffect sEffect = (SummonEffect) plugin.getHeroManager().getCreatureEffect((Creature) damager, "Summon");
+                if (plugin.getEffectManager().creatureHasEffect((Creature) damager, "Summon")) {
+                    SummonEffect sEffect = (SummonEffect) plugin.getEffectManager().getCreatureEffect((Creature) damager, "Summon");
                     return sEffect.getSummoner().getPlayer();
                 }
             }
@@ -152,10 +153,11 @@ public class HEntityListener extends EntityListener {
                 }
             }
         } else if (defender instanceof Creature) {
+            EffectManager effectManager = plugin.getEffectManager();
             Creature creatureDefender = (Creature) defender;
-            heroManager.clearCreatureEffects(creatureDefender);
-            if (attacker == null && heroManager.creatureHasEffect(creatureDefender, "Combust")) {
-                attacker = ((CombustEffect) heroManager.getCreatureEffect(creatureDefender, "Combust")).getApplier();
+            effectManager.clearCreatureEffects(creatureDefender);
+            if (attacker == null && effectManager.creatureHasEffect(creatureDefender, "Combust")) {
+                attacker = ((CombustEffect) effectManager.getCreatureEffect(creatureDefender, "Combust")).getApplier();
             }
         }
 

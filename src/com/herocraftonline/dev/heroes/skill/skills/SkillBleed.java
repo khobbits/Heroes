@@ -63,7 +63,7 @@ public class SkillBleed extends TargettedSkill {
         if (target instanceof Player) {
             plugin.getHeroManager().getHero((Player) target).addEffect(bEffect);
         } else if (target instanceof Creature) {
-            plugin.getHeroManager().addCreatureEffect((Creature) target, bEffect);
+            plugin.getEffectManager().addCreatureEffect((Creature) target, bEffect);
         } else {
             Messaging.send(player, "Invalid target!");
             return false;

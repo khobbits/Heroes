@@ -62,7 +62,7 @@ public class SkillPiggify extends TargettedSkill {
         if (target instanceof Player) {
             plugin.getHeroManager().getHero((Player) target).addEffect(pEffect);
         } else if (target instanceof Creature) {
-            plugin.getHeroManager().addCreatureEffect((Creature) target, pEffect);
+            plugin.getEffectManager().addCreatureEffect((Creature) target, pEffect);
         } else {
             Messaging.send(player, "Invalid Target!");
             return false;

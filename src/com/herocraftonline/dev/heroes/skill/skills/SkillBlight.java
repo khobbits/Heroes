@@ -61,7 +61,7 @@ public class SkillBlight extends TargettedSkill {
         if (target instanceof Player) {
             plugin.getHeroManager().getHero((Player) target).addEffect(bEffect);
         } else if (target instanceof Creature) {
-            plugin.getHeroManager().addCreatureEffect((Creature) target, bEffect);
+            plugin.getEffectManager().addCreatureEffect((Creature) target, bEffect);
         } else {
             Messaging.send(player, "Invalid target!");
             return false;
@@ -136,7 +136,7 @@ public class SkillBlight extends TargettedSkill {
                     if (plugin.getHeroManager().getHero((Player) target).hasEffect("Blight")) {
                         continue;
                     }
-                } else if (target instanceof Creature && plugin.getHeroManager().creatureHasEffect((Creature) target, "Blight")) {
+                } else if (target instanceof Creature && plugin.getEffectManager().creatureHasEffect((Creature) target, "Blight")) {
                     continue;
                 } else {
                     // Skip this one if for some reason it's not a creature or player

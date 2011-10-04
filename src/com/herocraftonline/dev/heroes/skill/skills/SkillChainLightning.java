@@ -75,7 +75,7 @@ public class SkillChainLightning extends TargettedSkill {
                             Hero tHero = heroManager.getHero((Player) target);
                             tHero.addEffect(new DelayedBolt(this, (maxBounce - bounces) * 250, hero, damage));
                         } else if (target instanceof Creature) {
-                            heroManager.addCreatureEffect((Creature) target, new DelayedBolt(this, (maxBounce - bounces) * 500, hero, damage));
+                            plugin.getEffectManager().addCreatureEffect((Creature) target, new DelayedBolt(this, (maxBounce - bounces) * 500, hero, damage));
                         } else {
                             continue;
                         }

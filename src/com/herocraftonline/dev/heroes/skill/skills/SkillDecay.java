@@ -61,7 +61,7 @@ public class SkillDecay extends TargettedSkill {
             plugin.getHeroManager().getHero((Player) target).addEffect(decayEffect);
         } else if (target instanceof Creature) {
             Creature creature = (Creature) target;
-            plugin.getHeroManager().addCreatureEffect(creature, decayEffect);
+            plugin.getEffectManager().addCreatureEffect(creature, decayEffect);
         } else {
             Messaging.send(player, "Invalid target!");
             return false;

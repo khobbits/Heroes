@@ -1,4 +1,4 @@
-package com.herocraftonline.dev.heroes.effects;
+package com.herocraftonline.dev.heroes.effects.common;
 
 import net.minecraft.server.Packet20NamedEntitySpawn;
 import net.minecraft.server.Packet29DestroyEntity;
@@ -6,6 +6,8 @@ import net.minecraft.server.Packet29DestroyEntity;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
+import com.herocraftonline.dev.heroes.effects.EffectType;
+import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
 

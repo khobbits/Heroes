@@ -1,20 +1,22 @@
-package com.herocraftonline.dev.heroes.effects;
+package com.herocraftonline.dev.heroes.effects.common;
 
 import org.bukkit.entity.Player;
 
+import com.herocraftonline.dev.heroes.effects.EffectType;
+import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
 
-public class InvulnerabilityEffect extends ExpirableEffect {
-
-    private final String applyText = "$1 has become invulnerable!";
-    private final String expireText = "$1 is once again vulnerable!";
-
-    public InvulnerabilityEffect(Skill skill, long duration) {
-        super(skill, "Invuln", duration);
+public class SafeFallEffect extends ExpirableEffect {
+    
+    private String applyText = "$1 has braced for landing!";
+    private String expireText = "$1 has lost safefall!";
+    
+    public SafeFallEffect(Skill skill, long duration) {
+        super(skill, "Safefall", duration);
         this.types.add(EffectType.DISPELLABLE);
         this.types.add(EffectType.BENEFICIAL);
-        this.types.add(EffectType.INVULNERABILITY);
+        this.types.add(EffectType.SAFEFALL);
     }
 
     @Override
@@ -30,4 +32,5 @@ public class InvulnerabilityEffect extends ExpirableEffect {
         Player player = hero.getPlayer();
         broadcast(player.getLocation(), expireText, player.getDisplayName());
     }
+
 }

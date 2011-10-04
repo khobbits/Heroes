@@ -167,7 +167,7 @@ public class SkillAssassinsBlade extends ActiveSkill {
                 int tickDamage = getSetting(hero.getHeroClass(), "tick-damage", 2);
                 AssassinsPoison apEffect = new AssassinsPoison(skill, period, duration, tickDamage, player);
                 if (event.getEntity() instanceof Creature) {
-                    plugin.getHeroManager().addCreatureEffect((Creature) event.getEntity(), apEffect);
+                    plugin.getEffectManager().addCreatureEffect((Creature) event.getEntity(), apEffect);
                     checkBuff(hero);
                 } else if (event.getEntity() instanceof Player) {
                     Hero target = plugin.getHeroManager().getHero((Player) event.getEntity());

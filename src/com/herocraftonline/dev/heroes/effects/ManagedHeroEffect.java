@@ -1,13 +1,12 @@
-package com.herocraftonline.dev.heroes.effects.managed;
+package com.herocraftonline.dev.heroes.effects;
 
-import com.herocraftonline.dev.heroes.effects.Expirable;
 import com.herocraftonline.dev.heroes.hero.Hero;
 
-public class HeroExpirableEffect extends ManagedExpirableEffect {
+public class ManagedHeroEffect extends ManagedEffect {
     
     public final Hero hero;
     
-    public HeroExpirableEffect(Hero hero, Expirable effect) {
+    public ManagedHeroEffect(Hero hero, Effect effect) {
         super(effect);
         this.hero = hero;
     }
@@ -29,7 +28,7 @@ public class HeroExpirableEffect extends ManagedExpirableEffect {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        HeroExpirableEffect other = (HeroExpirableEffect) obj;
+        ManagedHeroEffect other = (ManagedHeroEffect) obj;
         if (!effect.equals(other.effect))
             return false;
         else if (!hero.equals(other.hero))

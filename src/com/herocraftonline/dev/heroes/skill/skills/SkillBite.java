@@ -66,7 +66,7 @@ public class SkillBite extends TargettedSkill {
         if (target instanceof Player) {
             plugin.getHeroManager().getHero((Player) target).addEffect(bbEffect);
         } else if (target instanceof Creature) {
-            plugin.getHeroManager().addCreatureEffect((Creature) target, bbEffect);
+            plugin.getEffectManager().addCreatureEffect((Creature) target, bbEffect);
         }
 
         broadcastExecuteText(hero, target);

@@ -12,8 +12,8 @@ import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.effects.EffectType;
-import com.herocraftonline.dev.heroes.effects.ImbueEffect;
 import com.herocraftonline.dev.heroes.effects.PeriodicDamageEffect;
+import com.herocraftonline.dev.heroes.effects.common.ImbueEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
@@ -141,7 +141,7 @@ public class SkillPoisonArrow extends ActiveSkill {
                 ArrowPoison apEffect = new ArrowPoison(skill, period, duration, tickDamage, player);
 
                 if (event.getEntity() instanceof Creature) {
-                    plugin.getHeroManager().addCreatureEffect((Creature) event.getEntity(), apEffect);
+                    plugin.getEffectManager().addCreatureEffect((Creature) event.getEntity(), apEffect);
                     checkBuff(hero);
                 } else if (event.getEntity() instanceof Player) {
                     Hero target = plugin.getHeroManager().getHero((Player) event.getEntity());

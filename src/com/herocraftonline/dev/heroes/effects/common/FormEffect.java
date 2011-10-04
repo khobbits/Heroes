@@ -1,5 +1,7 @@
-package com.herocraftonline.dev.heroes.effects;
+package com.herocraftonline.dev.heroes.effects.common;
 
+import com.herocraftonline.dev.heroes.effects.Effect;
+import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
 

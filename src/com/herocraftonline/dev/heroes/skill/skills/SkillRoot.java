@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.effects.RootEffect;
+import com.herocraftonline.dev.heroes.effects.common.RootEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
@@ -41,7 +41,7 @@ public class SkillRoot extends TargettedSkill {
         if (target instanceof Player) {
             plugin.getHeroManager().getHero((Player) target).addEffect(rEffect);
         } else if (target instanceof Creature) {
-            plugin.getHeroManager().addCreatureEffect((Creature) target, rEffect);
+            plugin.getEffectManager().addCreatureEffect((Creature) target, rEffect);
         } else {
             Messaging.send(player, "Invalid target!");
             return false;

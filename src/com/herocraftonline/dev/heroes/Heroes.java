@@ -52,6 +52,7 @@ import com.herocraftonline.dev.heroes.command.commands.ToolsCommand;
 import com.herocraftonline.dev.heroes.command.commands.VerboseCommand;
 import com.herocraftonline.dev.heroes.command.commands.WhoCommand;
 import com.herocraftonline.dev.heroes.damage.DamageManager;
+import com.herocraftonline.dev.heroes.effects.EffectManager;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.hero.HeroManager;
 import com.herocraftonline.dev.heroes.party.PartyManager;
@@ -94,12 +95,12 @@ public class Heroes extends JavaPlugin {
     private final HPartyListener partyListener = new HPartyListener(this);
     private final HEventListener hEventListener = new HEventListener(this);
     private SpoutInventoryListener siListener = null;
-    
+
     // Various data managers
     private ConfigManager configManager;
     private CommandHandler commandHandler = new CommandHandler(this);
     private HeroClassManager heroClassManager;
-
+    private EffectManager effectManager;
     private HeroManager heroManager;
     private PartyManager partyManager;
     private DamageManager damageManager;
@@ -144,13 +145,17 @@ public class Heroes extends JavaPlugin {
     public HeroManager getHeroManager() {
         return heroManager;
     }
-    
+
     public PartyManager getPartyManager() {
         return partyManager;
     }
 
     public SkillManager getSkillManager() {
         return skillManager;
+    }
+
+    public EffectManager getEffectManager() {
+        return effectManager;
     }
 
     /**
@@ -192,6 +197,7 @@ public class Heroes extends JavaPlugin {
             return;
         }
 
+        effectManager = new EffectManager(this);
         partyManager = new PartyManager(this);
         heroManager = new HeroManager(this);
         damageManager = new DamageManager(this);
@@ -322,7 +328,7 @@ public class Heroes extends JavaPlugin {
      */
     public void setupSpout() {
         Heroes.useSpout = this.getServer().getPluginManager().getPlugin("Spout") != null;
-        //If it was found, then lets register our custom event for spout
+        // If it was found, then lets register our custom event for spout
         if (useSpout) {
             siListener = new SpoutInventoryListener(this);
             getServer().getPluginManager().registerEvent(Type.CUSTOM_EVENT, siListener, Priority.Monitor, this);

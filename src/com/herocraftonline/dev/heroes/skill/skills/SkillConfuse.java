@@ -63,7 +63,7 @@ public class SkillConfuse extends TargettedSkill {
         if (target instanceof Player) {
             plugin.getHeroManager().getHero((Player) target).addEffect(new ConfuseEffect(this, duration, period, maxDrift));
         } else if (target instanceof Creature) {
-            plugin.getHeroManager().addCreatureEffect((Creature) target, new ConfuseEffect(this, duration, period, maxDrift));
+            plugin.getEffectManager().addCreatureEffect((Creature) target, new ConfuseEffect(this, duration, period, maxDrift));
         } else
             return false;
 

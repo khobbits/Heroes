@@ -4,29 +4,16 @@ import java.text.DecimalFormat;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Creature;
 import org.bukkit.entity.Player;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.HeroRegainManaEvent;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
-import com.herocraftonline.dev.heroes.effects.Effect;
-import com.herocraftonline.dev.heroes.effects.Expirable;
-import com.herocraftonline.dev.heroes.effects.Periodic;
-import com.herocraftonline.dev.heroes.effects.managed.CreatureExpirableEffect;
-import com.herocraftonline.dev.heroes.effects.managed.CreaturePeriodicEffect;
-import com.herocraftonline.dev.heroes.effects.managed.HeroExpirableEffect;
-import com.herocraftonline.dev.heroes.effects.managed.HeroPeriodicEffect;
-import com.herocraftonline.dev.heroes.effects.managed.ManagedExpirableEffect;
-import com.herocraftonline.dev.heroes.effects.managed.ManagedPeriodicEffect;
 import com.herocraftonline.dev.heroes.party.HeroParty;
 import com.herocraftonline.dev.heroes.party.PartyManager;
 import com.herocraftonline.dev.heroes.persistence.HeroStorage;
@@ -49,25 +36,15 @@ public class HeroManager {
 
     private Heroes plugin;
     private Map<String, Hero> heroes;
-    protected Map<Creature, Set<Effect>> creatureEffects;
-    protected Set<ManagedPeriodicEffect> managedPeriodicEffects;
-    protected Set<ManagedExpirableEffect> managedExpirableEffects;
     private HeroStorage heroStorage;
-    private final static int effectInterval = 2;
     private final static int manaInterval = 5;
     private final static int partyUpdateInterval = 5;
 
     public HeroManager(Heroes plugin) {
         this.plugin = plugin;
         this.heroes = new HashMap<String, Hero>();
-        this.creatureEffects = new HashMap<Creature, Set<Effect>>();
-        this.managedExpirableEffects = new HashSet<ManagedExpirableEffect>();
-        this.managedPeriodicEffects = new HashSet<ManagedPeriodicEffect>();
         // if (plugin.getConfigManager().getProperties().storageType.toLowerCase().equals("yml"))
         heroStorage = new YMLHeroStorage(plugin);
-
-        Runnable effectTimer = new EffectUpdater(this);
-        plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, effectTimer, 0, effectInterval);
 
         int regenAmount = plugin.getConfigManager().getProperties().manaRegenPercent;
         long regenInterval = plugin.getConfigManager().getProperties().manaRegenInterval * 1000L;
@@ -78,128 +55,12 @@ public class HeroManager {
         plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, partyUpdater, 0, partyUpdateInterval);
     }
 
-
-    protected void addManagedEffect(Hero hero, Periodic effect) {
-        managedPeriodicEffects.add(new HeroPeriodicEffect(hero, effect));
-    }
-    
-    protected void addManagedEffect(Hero hero, Expirable effect) {
-        managedExpirableEffects.add(new HeroExpirableEffect(hero, effect));
-    }
-
-    protected void addManagedEffect(Creature creature, Periodic effect) {
-        managedPeriodicEffects.add(new CreaturePeriodicEffect(creature, effect));
-    }
-
-    protected void addManagedEffect(Creature creature, Expirable effect) {
-        managedExpirableEffects.add(new CreatureExpirableEffect(creature, effect));
-    }
-    
-    protected void removeManagedEffect(Hero hero, Periodic effect) {
-        managedPeriodicEffects.remove(new HeroPeriodicEffect(hero, effect));
-    }
-    
-    protected void removeManagedEffect(Hero hero, Expirable effect) {
-        managedExpirableEffects.remove(new HeroExpirableEffect(hero, effect));
-    }
-    
-    protected void removeManagedEffect(Creature creature, Periodic effect) {
-        managedPeriodicEffects.remove(new CreaturePeriodicEffect(creature, effect));
-    }
-    
-    protected void removeManagedEffect(Creature creature, Expirable effect) {
-        managedExpirableEffects.remove(new CreatureExpirableEffect(creature, effect));
-    }
-
-    /**
-     * Adds a new effect to the specific creature
-     * 
-     * @param creature
-     * @param effect
-     */
-    public void addCreatureEffect(Creature creature, Effect effect) {
-        Set<Effect> cEffects = creatureEffects.get(creature);
-        if (cEffects == null) {
-            cEffects = new HashSet<Effect>();
-            creatureEffects.put(creature, cEffects);
-        }
-        if (effect instanceof Periodic) {
-            managedPeriodicEffects.add(new CreaturePeriodicEffect(creature, (Periodic) effect));
-        }
-        if (effect instanceof Expirable) {
-            managedExpirableEffects.add(new CreatureExpirableEffect(creature, (Expirable) effect));
-        }
-        cEffects.add(effect);
-        effect.apply(creature);
-    }
-
     public void addHero(Hero hero) {
         heroes.put(hero.getPlayer().getName().toLowerCase(), hero);
     }
 
-    /**
-     * Clears all effects from the creature
-     * 
-     * @param creature
-     */
-    public void clearCreatureEffects(Creature creature) {
-        if (creatureEffects.containsKey(creature)) {
-            Iterator<Effect> iter = creatureEffects.get(creature).iterator();
-            while (iter.hasNext()) {
-                Effect effect = iter.next();
-                effect.remove(creature);
-                if (effect instanceof Periodic) {
-                    managedPeriodicEffects.remove(new CreaturePeriodicEffect(creature, (Periodic) effect));
-                }
-                if (effect instanceof Expirable) {
-                    managedExpirableEffects.remove(new CreatureExpirableEffect(creature, (Expirable) effect));
-                }
-                iter.remove();
-            }
-            creatureEffects.remove(creature);
-        }
-    }
-
     public boolean containsPlayer(Player player) {
         return getHero(player) != null;
-    }
-
-    /**
-     * Checks if a creature has the effect
-     * 
-     * @param creature
-     * @param effect
-     * @return
-     */
-    public boolean creatureHasEffect(Creature creature, String name) {
-        if (!creatureEffects.containsKey(creature))
-            return false;
-        for (Effect effect : creatureEffects.get(creature)) {
-            if (effect.getName().equalsIgnoreCase(name))
-                return true;
-        }
-        return false;
-    }
-
-    public Effect getCreatureEffect(Creature creature, String name) {
-        if (creatureEffects.get(creature) == null)
-            return null;
-
-        for (Effect effect : creatureEffects.get(creature)) {
-            if (effect.getName().equals(name))
-                return effect;
-        }
-        return null;
-    }
-
-    /**
-     * Gets a set view of all effects currently applied to the specified creature
-     * 
-     * @param creature
-     * @return
-     */
-    public Set<Effect> getCreatureEffects(Creature creature) {
-        return creatureEffects.get(creature) != null ? new HashSet<Effect>(creatureEffects.get(creature)) : null;
     }
 
     /**
@@ -249,40 +110,6 @@ public class HeroManager {
         }
     }
 
-    /**
-     * Removes an effect from a creature 
-     * 
-     * @param creature
-     * @param effect
-     */
-    public void removeCreatureEffect(Creature creature, Effect effect) {
-        Set<Effect> cEffects = creatureEffects.get(creature);
-        if (cEffects != null) {
-            effect.remove(creature);
-            cEffects.remove(effect);
-            // If the creature has no effects left
-            if (cEffects.isEmpty()) {
-                creatureEffects.remove(creature);
-            }
-            if (effect instanceof Periodic)
-                managedPeriodicEffects.remove(new CreaturePeriodicEffect(creature, (Periodic) effect));
-            if (effect instanceof Expirable)
-                managedExpirableEffects.remove(new CreatureExpirableEffect(creature, (Expirable) effect));
-        }
-    }
-
-    void safeRemoveCreatureEffect(Creature creature, Effect effect) {
-        Set<Effect> cEffects = creatureEffects.get(creature);
-        if (cEffects != null) {
-            effect.remove(creature);
-            cEffects.remove(effect);
-            // If the creature has no effects left
-            if (cEffects.isEmpty()) {
-                creatureEffects.remove(creature);
-            }
-        }
-    }
-
     public void removeHero(Hero hero) {
         if (hero != null && hero.hasParty()) {
             HeroParty party = hero.getParty();
@@ -314,44 +141,6 @@ public class HeroManager {
         plugin.getServer().getScheduler().cancelTasks(plugin);
     }
 
-}
-
-class EffectUpdater implements Runnable {
-
-    private final HeroManager heroManager;
-
-    EffectUpdater(HeroManager heroManager) {
-        this.heroManager = heroManager;
-    }
-
-    @Override
-    public void run() {
-        Iterator<ManagedExpirableEffect> iter = heroManager.managedExpirableEffects.iterator();
-        while (iter.hasNext()) {
-            ManagedExpirableEffect mEffect = iter.next();
-            if (mEffect.effect.isExpired()) {
-                if (mEffect instanceof HeroExpirableEffect) {
-                    ((HeroExpirableEffect) mEffect).hero.safeRemoveEffect((Effect) mEffect.effect);
-                    iter.remove();
-                } else {
-                    heroManager.safeRemoveCreatureEffect(((CreatureExpirableEffect) mEffect).creature, (Effect) mEffect.effect);
-                    iter.remove();
-                }
-            }
-        }
-
-        Iterator<ManagedPeriodicEffect> pIter = heroManager.managedPeriodicEffects.iterator();
-        while (pIter.hasNext()) {
-            ManagedPeriodicEffect pEffect = pIter.next();
-            if (pEffect.effect.isReady()) {
-                if (pEffect instanceof HeroPeriodicEffect) {
-                    pEffect.effect.tick(((HeroPeriodicEffect) pEffect).hero);
-                } else {
-                    pEffect.effect.tick(((CreaturePeriodicEffect) pEffect).creature);
-                }
-            }
-        }
-    }
 }
 
 class ManaUpdater implements Runnable {

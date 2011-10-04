@@ -60,7 +60,7 @@ public class SkillSoulLeech extends TargettedSkill {
             plugin.getHeroManager().getHero((Player) target).addEffect(slEffect);
         } else if (target instanceof Creature) {
             Creature creature = (Creature) target;
-            plugin.getHeroManager().addCreatureEffect(creature, slEffect);
+            plugin.getEffectManager().addCreatureEffect(creature, slEffect);
         } else {
             Messaging.send(player, "Invalid target!");
             return false;

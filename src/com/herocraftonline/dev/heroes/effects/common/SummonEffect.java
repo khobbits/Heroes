@@ -1,4 +1,4 @@
-package com.herocraftonline.dev.heroes.effects;
+package com.herocraftonline.dev.heroes.effects.common;
 
 import net.minecraft.server.EntityCreature;
 
@@ -7,6 +7,9 @@ import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.LivingEntity;
 
+import com.herocraftonline.dev.heroes.effects.EffectType;
+import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
+import com.herocraftonline.dev.heroes.effects.PeriodicEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
 
@@ -40,7 +43,7 @@ import com.herocraftonline.dev.heroes.skill.Skill;
 
             // Check if the summoner has anymore creatures with Summon
             for (Creature c : summoner.getSummons()) {
-                if (plugin.getHeroManager().creatureHasEffect(c, name))
+                if (plugin.getEffectManager().creatureHasEffect(c, name))
                     return;
             }
             // If there are no more summoned skeletons lets remove the follow effect
@@ -72,7 +75,7 @@ import com.herocraftonline.dev.heroes.skill.Skill;
             public void tick(Hero hero) {
                 super.tick(hero);
                 for (Creature creature : hero.getSummons()) {
-                    if (plugin.getHeroManager().creatureHasEffect(creature, "Summon")) {
+                    if (plugin.getEffectManager().creatureHasEffect(creature, "Summon")) {
                         if (creature.getTarget() != null && creature.getTarget() instanceof LivingEntity)
                             return;
 

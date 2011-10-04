@@ -24,7 +24,7 @@ import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.effects.Effect;
-import com.herocraftonline.dev.heroes.effects.SummonEffect;
+import com.herocraftonline.dev.heroes.effects.common.SummonEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.SkillType;
@@ -80,7 +80,7 @@ public class SkillSkeleton extends ActiveSkill {
             Location castLoc = player.getTargetBlock((HashSet<Byte>) null, distance).getLocation();
             Creature skeleton = (Creature) player.getWorld().spawnCreature(castLoc, CreatureType.SKELETON);
             long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 60000);
-            plugin.getHeroManager().addCreatureEffect(skeleton, new SummonEffect(this, duration, hero, expireText));
+            plugin.getEffectManager().addCreatureEffect(skeleton, new SummonEffect(this, duration, hero, expireText));
             broadcastExecuteText(hero);
             Messaging.send(player, "You have succesfully summoned a skeleton to fight for you.");
             return true;
@@ -98,7 +98,7 @@ public class SkillSkeleton extends ActiveSkill {
                 return;
             Creature creature = (Creature) event.getEntity();
             // Don't allow summoned creatures to combust
-            if (plugin.getHeroManager().creatureHasEffect(creature, "Summon")) {
+            if (plugin.getEffectManager().creatureHasEffect(creature, "Summon")) {
                 event.setCancelled(true);
             }
         }
@@ -204,9 +204,9 @@ public class SkillSkeleton extends ActiveSkill {
                 return;
             for (Creature summon : hero.getSummons()) {
                 if (summon instanceof Skeleton) {
-                    Effect effect = plugin.getHeroManager().getCreatureEffect(summon, "Summon");
+                    Effect effect = plugin.getEffectManager().getCreatureEffect(summon, "Summon");
                     if (effect != null) {
-                        plugin.getHeroManager().removeCreatureEffect(summon, effect);
+                        plugin.getEffectManager().removeCreatureEffect(summon, effect);
                     } else {
                         summon.remove();
                     }

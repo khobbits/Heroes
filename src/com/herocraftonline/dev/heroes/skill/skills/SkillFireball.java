@@ -14,7 +14,7 @@ import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
-import com.herocraftonline.dev.heroes.effects.CombustEffect;
+import com.herocraftonline.dev.heroes.effects.common.CombustEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
@@ -88,7 +88,7 @@ public class SkillFireball extends ActiveSkill {
                                 if (livingEntity instanceof Player) {
                                     plugin.getHeroManager().getHero((Player) livingEntity).addEffect(new CombustEffect(skill, (Player) dmger));
                                 } else if (livingEntity instanceof Creature) {
-                                    plugin.getHeroManager().addCreatureEffect((Creature) livingEntity, new CombustEffect(skill, (Player) dmger));
+                                    plugin.getEffectManager().addCreatureEffect((Creature) livingEntity, new CombustEffect(skill, (Player) dmger));
                                 }
                                 addSpellTarget(entity, hero);
                                 int damage = getSetting(heroClass, Setting.DAMAGE.node(), 4);

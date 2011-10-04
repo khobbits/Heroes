@@ -68,21 +68,21 @@ public class SkillPurge extends TargettedSkill {
 
     private int purge(Creature creature, int removalsLeft, Hero hero) {
         //Return immediately if this creature has no effects
-        if (plugin.getHeroManager().getCreatureEffects(creature) == null)
+        if (plugin.getEffectManager().getCreatureEffects(creature) == null)
             return removalsLeft;
         
         boolean removeHarmful = false;
         if (hero.getSummons().contains(creature))
             removeHarmful = true;
         
-        for (Effect effect : plugin.getHeroManager().getCreatureEffects(creature)) {
+        for (Effect effect : plugin.getEffectManager().getCreatureEffects(creature)) {
             if (removalsLeft == 0) {
                 break;
             } else if (effect.isType(EffectType.HARMFUL) && effect.isType(EffectType.DISPELLABLE) && removeHarmful) {
-                plugin.getHeroManager().removeCreatureEffect(creature, effect);
+                plugin.getEffectManager().removeCreatureEffect(creature, effect);
                 removalsLeft--;
             } else if (effect.isType(EffectType.BENEFICIAL) && effect.isType(EffectType.DISPELLABLE) && !removeHarmful) {
-                plugin.getHeroManager().removeCreatureEffect(creature, effect);
+                plugin.getEffectManager().removeCreatureEffect(creature, effect);
                 removalsLeft--;
             }
         }

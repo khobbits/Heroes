@@ -1,9 +1,11 @@
-package com.herocraftonline.dev.heroes.effects;
+package com.herocraftonline.dev.heroes.effects.common;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Player;
 
+import com.herocraftonline.dev.heroes.effects.EffectType;
+import com.herocraftonline.dev.heroes.effects.PeriodicExpirableEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.util.Messaging;

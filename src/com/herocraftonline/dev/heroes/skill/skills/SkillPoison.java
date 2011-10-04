@@ -57,7 +57,7 @@ public class SkillPoison extends TargettedSkill {
             plugin.getHeroManager().getHero((Player) target).addEffect(pEffect);
         } else if (target instanceof Creature) {
             Creature creature = (Creature) target;
-            plugin.getHeroManager().addCreatureEffect(creature, pEffect);
+            plugin.getEffectManager().addCreatureEffect(creature, pEffect);
         } else {
             Messaging.send(player, "Invalid target!");
             return false;

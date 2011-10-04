@@ -11,9 +11,9 @@ import org.bukkit.event.entity.EntityListener;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.effects.CombustEffect;
 import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
+import com.herocraftonline.dev.heroes.effects.common.CombustEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
@@ -100,7 +100,7 @@ public class SkillSoulFire extends ActiveSkill {
             if (entity instanceof Player) {
                 plugin.getHeroManager().getHero((Player) entity).addEffect(new CombustEffect(skill, player));
             } else if (entity instanceof Creature) {
-                plugin.getHeroManager().addCreatureEffect((Creature) entity, new CombustEffect(skill, player));
+                plugin.getEffectManager().addCreatureEffect((Creature) entity, new CombustEffect(skill, player));
             }
 
             String name = null;

@@ -62,7 +62,7 @@ public class SkillPlague extends TargettedSkill {
             plugin.getHeroManager().getHero((Player) target).addEffect(bEffect);
         } else if (target instanceof Creature) {
             Creature creature = (Creature) target;
-            plugin.getHeroManager().addCreatureEffect(creature, bEffect);
+            plugin.getEffectManager().addCreatureEffect(creature, bEffect);
         } else {
             Messaging.send(player, "Invalid target!");
             return false;
@@ -153,12 +153,12 @@ public class SkillPlague extends TargettedSkill {
                 } else if (target instanceof Creature) {
                     Creature creature = (Creature) target;
                     // Make sure the creature doesn't already have the effect
-                    if (plugin.getHeroManager().creatureHasEffect(creature, "Plague")) {
+                    if (plugin.getEffectManager().creatureHasEffect(creature, "Plague")) {
                         continue;
                     }
 
                     // Apply the effect to the creature, creating a copy of the effect
-                    plugin.getHeroManager().addCreatureEffect(creature, new PlagueEffect(this));
+                    plugin.getEffectManager().addCreatureEffect(creature, new PlagueEffect(this));
                 }
             }
         }

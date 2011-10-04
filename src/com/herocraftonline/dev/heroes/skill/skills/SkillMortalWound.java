@@ -83,7 +83,7 @@ public class SkillMortalWound extends TargettedSkill {
         if (target instanceof Player) {
             plugin.getHeroManager().getHero((Player) target).addEffect(mEffect);
         } else if (target instanceof Creature) {
-            plugin.getHeroManager().addCreatureEffect((Creature) target, mEffect);
+            plugin.getEffectManager().addCreatureEffect((Creature) target, mEffect);
         }
 
         broadcastExecuteText(hero, target);

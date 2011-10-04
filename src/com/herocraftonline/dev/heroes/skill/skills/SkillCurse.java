@@ -14,7 +14,6 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.HeroesEventListener;
 import com.herocraftonline.dev.heroes.api.WeaponDamageEvent;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
-import com.herocraftonline.dev.heroes.effects.Effect;
 import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;
@@ -74,7 +73,7 @@ public class SkillCurse extends TargettedSkill {
             plugin.getHeroManager().getHero((Player) target).addEffect(cEffect);
             return true;
         } else if (target instanceof Creature) {
-            plugin.getHeroManager().addCreatureEffect((Creature) target, cEffect);
+            plugin.getEffectManager().addCreatureEffect((Creature) target, cEffect);
             return true;
         }
 
@@ -150,7 +149,7 @@ public class SkillCurse extends TargettedSkill {
             }
 
             if (hero != null) {
-                if (hero.getEffect("Curse") != null) {
+                if (hero.hasEffect("Curse")) {
                     CurseEffect cEffect = (CurseEffect) hero.getEffect("Curse");
                     if (rand.nextDouble() < cEffect.missChance) {
                         event.setCancelled(true);
@@ -158,15 +157,11 @@ public class SkillCurse extends TargettedSkill {
                     }
                 }
             } else if (creature != null) {
-                if (plugin.getHeroManager().getCreatureEffects(creature) == null)
-                    return;
-                for (Effect effect : plugin.getHeroManager().getCreatureEffects(creature)) {
-                    if (effect instanceof CurseEffect) {
-                        CurseEffect cEffect = (CurseEffect) effect;
-                        if (rand.nextDouble() < cEffect.missChance) {
-                            event.setCancelled(true);
-                            broadcast(creature.getLocation(), missText, Messaging.getCreatureName(creature).toLowerCase());
-                        }
+                if (plugin.getEffectManager().creatureHasEffect(creature, "Curse")) {
+                    CurseEffect cEffect = (CurseEffect) plugin.getEffectManager().getCreatureEffect(creature, "Curse");
+                    if (rand.nextDouble() < cEffect.missChance) {
+                        event.setCancelled(true);
+                        broadcast(creature.getLocation(), missText, Messaging.getCreatureName(creature).toLowerCase());
                     }
                 }
             }

@@ -114,7 +114,7 @@ public class SkillFlameshield extends ActiveSkill {
                 }
             } else if (event.getEntity() instanceof Creature) {
                 Creature creature = (Creature) event.getEntity();
-                if (plugin.getHeroManager().creatureHasEffect(creature, "Flameshield")) {
+                if (plugin.getEffectManager().creatureHasEffect(creature, "Flameshield")) {
                     String name = event.getDamager().getPlayer().getName();
                     String skillName = event.getSkill().getName().toLowerCase();
                     broadcast(event.getEntity().getLocation(), skillBlockText, Messaging.getCreatureName(creature), name, skillName);

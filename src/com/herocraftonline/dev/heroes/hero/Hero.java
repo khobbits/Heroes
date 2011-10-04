@@ -82,13 +82,12 @@ public class Hero {
         if (hasEffect(effect.getName())) {
             removeEffect(getEffect(effect.getName()));
         }
+
+        if (effect instanceof Periodic || effect instanceof Expirable) {
+            plugin.getEffectManager().manageEffect(this, effect);
+        }
+
         effects.put(effect.getName().toLowerCase(), effect);
-        if (effect instanceof Periodic) {
-            plugin.getHeroManager().addManagedEffect(this, (Periodic) effect);
-        }
-        if (effect instanceof Expirable) {
-            plugin.getHeroManager().addManagedEffect(this, (Expirable) effect);
-        }
         effect.apply(this);
     }
 
@@ -604,26 +603,27 @@ public class Hero {
     }
 
     /**
-     * @param delayedSkillTaskId the delayedSkillTaskId to set
+     * @param delayedSkillTaskId
+     *            the delayedSkillTaskId to set
      */
     public void setDelayedSkillTaskId(int delayedSkillTaskId) {
         this.delayedSkillTaskId = delayedSkillTaskId;
     }
-    
+
     /**
      * Cancels the delayed skill task
      */
     public void cancelDelayedSkill() {
         if (delayedSkillTaskId == -1)
             return;
-        
+
         plugin.getServer().getScheduler().cancelTask(delayedSkillTaskId);
         Skill skill = ActiveSkill.getDelayedSkill(player);
         skill.broadcast(player.getLocation(), "$1 has stopped using $2", player.getDisplayName(), skill.getName());
         delayedSkillTaskId = -1;
         ActiveSkill.removeDelayedSkill(player);
     }
-    
+
     public void removeCooldown(String name) {
         cooldowns.remove(name.toLowerCase());
     }
@@ -635,28 +635,14 @@ public class Hero {
      */
     public void removeEffect(Effect effect) {
         if (effect != null) {
-            effects.remove(effect.getName().toLowerCase());
-            if (effect instanceof Periodic) {
-                plugin.getHeroManager().removeManagedEffect(this, (Periodic) effect);
-            }
-            if (effect instanceof Expirable) {
-                plugin.getHeroManager().removeManagedEffect(this, (Expirable) effect);
+            if (effect instanceof Expirable || effect instanceof Periodic) {
+                plugin.getEffectManager().queueForRemoval(this, effect);
             }
             effect.remove(this);
+            effects.remove(effect.getName().toLowerCase());
         }
     }
 
-    /**
-     * Removes an effect without removing it from the list of managed effects
-     * This is specifically for use during iteration over the managedEffects
-     * @param effect
-     */
-    public void safeRemoveEffect(Effect effect) {
-        if (effect != null) {
-            effects.remove(effect.getName().toLowerCase());
-            effect.remove(this);
-        }
-    }
     /**
      * Removes the given permission from the hero
      * 
@@ -855,37 +841,38 @@ public class Hero {
     public void unbind(Material material) {
         binds.remove(material);
     }
-    
+
     public void checkInventory() {
         if (player.getGameMode() == GameMode.CREATIVE || plugin.getConfigManager().getProperties().disabledWorlds.contains(player.getWorld().getName()))
             return;
         int removedCount = checkArmorSlots();
-        
+
         for (int i = 0; i < 9; i++) {
             if (canEquipItem(i))
                 continue;
-            
+
             removedCount++;
         }
-        // If items were removed from the Players inventory then we need to alert them of such event and re-sync their inventory
+        // If items were removed from the Players inventory then we need to alert them of such event and re-sync their
+        // inventory
         if (removedCount > 0) {
             Messaging.send(player, "$1 have been removed from your inventory due to class restrictions.", removedCount + " Items");
             Util.syncInventory(player, plugin);
-        }        
+        }
     }
-    
+
     public int checkArmorSlots() {
         PlayerInventory inv = player.getInventory();
         String item;
         int removedCount = 0;
-        
+
         if (inv.getHelmet() != null && inv.getHelmet().getTypeId() != 0 && !plugin.getConfigManager().getProperties().allowHats) {
             item = inv.getHelmet().getType().toString();
             if (!heroClass.getAllowedArmor().contains(item) && !heroClass.getAllowedArmor().contains("*")) {
                 Util.moveItem(this, -1, inv.getHelmet());
                 inv.setHelmet(null);
                 removedCount++;
-           
+
             }
         }
         if (inv.getChestplate() != null && inv.getChestplate().getTypeId() != 0) {
@@ -896,7 +883,7 @@ public class Hero {
                 removedCount++;
             }
         }
-        
+
         if (inv.getLeggings() != null && inv.getLeggings().getTypeId() != 0) {
             item = inv.getLeggings().getType().toString();
             if (!heroClass.getAllowedArmor().contains(item) && !heroClass.getAllowedArmor().contains("*")) {
@@ -915,11 +902,11 @@ public class Hero {
         }
         return removedCount;
     }
-    
+
     public boolean canEquipItem(int slot) {
         if (plugin.getConfigManager().getProperties().disabledWorlds.contains(player.getWorld().getName()))
             return true;
-        
+
         ItemStack itemStack = player.getInventory().getItem(slot);
         String itemType = itemStack.getType().toString();
         if (!itemType.equalsIgnoreCase("BOW")) {
