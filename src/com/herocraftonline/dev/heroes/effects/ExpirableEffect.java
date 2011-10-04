@@ -52,6 +52,11 @@ public class ExpirableEffect extends Effect implements Expirable {
             return false;
         return System.currentTimeMillis() >= getExpiry();
     }
+    
+    @Override
+    public void expire() {
+        this.expireTime = System.currentTimeMillis();
+    }
 
     @Override
     public void remove(Creature creature) {

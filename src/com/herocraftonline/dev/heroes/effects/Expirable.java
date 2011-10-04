@@ -9,4 +9,6 @@ public interface Expirable {
     public long getRemainingTime();
 
     public boolean isExpired();
+    
+    public void expire();
 }
