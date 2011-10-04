@@ -333,10 +333,15 @@ class EffectUpdater implements Runnable {
                 if (mEffect instanceof HeroExpirableEffect) {
                     ((HeroExpirableEffect) mEffect).hero.safeRemoveEffect((Effect) mEffect.effect);
                     iter.remove();
+                    if (mEffect.effect instanceof Periodic) {
+                        heroManager.removeManagedEffect(((HeroExpirableEffect) mEffect).hero, (Periodic) mEffect.effect);
+                    }
                 } else {
                     heroManager.safeRemoveCreatureEffect(((CreatureExpirableEffect) mEffect).creature, (Effect) mEffect.effect);
                     iter.remove();
-                }
+                    if (mEffect.effect instanceof Periodic) {
+                        heroManager.removeManagedEffect(((CreatureExpirableEffect) mEffect).creature, (Periodic) mEffect.effect);
+                    }
             }
         }
 
