@@ -16,9 +16,10 @@ public class EffectManager {
 
     private Set<ManagedEffect> managedEffects = new HashSet<ManagedEffect>();
     private Set<ManagedEffect> pendingRemovals = new HashSet<ManagedEffect>();
+    private Set<ManagedEffect> pendingAdditions = new HashSet<ManagedEffect>();
     private Map<Creature, Set<Effect>> creatureEffects = new HashMap<Creature, Set<Effect>>();
     private final static int effectInterval = 2;
-    
+
     public EffectManager(Heroes plugin) {
         Runnable effectTimer = new EffectUpdater();
         plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, effectTimer, 0, effectInterval);
@@ -26,12 +27,12 @@ public class EffectManager {
 
     public void manageEffect(Hero hero, Effect effect) {
         if (effect instanceof Expirable || effect instanceof Periodic)
-            managedEffects.add(new ManagedHeroEffect(hero, effect));
+            pendingAdditions.add(new ManagedHeroEffect(hero, effect));
     }
 
     public void manageEffect(Creature creature, Effect effect) {
         if (effect instanceof Expirable || effect instanceof Periodic)
-            managedEffects.add(new ManagedCreatureEffect(creature, effect));
+            pendingAdditions.add(new ManagedCreatureEffect(creature, effect));
     }
 
     public void queueForRemoval(Hero hero, Effect effect) {
@@ -102,29 +103,29 @@ public class EffectManager {
 
         return false;
     }
-    
+
     public Effect getCreatureEffect(Creature creature, String name) {
         Set<Effect> effects = creatureEffects.get(creature);
         if (effects == null)
             return null;
-        
+
         for (Effect effect : effects) {
             if (effect.getName().equalsIgnoreCase(name))
                 return effect;
         }
-        
+
         return null;
     }
-    
+
     public Set<Effect> getCreatureEffects(Creature creature) {
         if (!creatureEffects.containsKey(creature))
             return new HashSet<Effect>();
-        
+
         return Collections.unmodifiableSet(creatureEffects.get(creature));
     }
 
     class EffectUpdater implements Runnable {
-        
+
         @Override
         public void run() {
             Set<ManagedEffect> removals = new HashSet<ManagedEffect>(pendingRemovals);
@@ -132,7 +133,13 @@ public class EffectManager {
             for (ManagedEffect managed : removals) {
                 managedEffects.remove(managed);
             }
-            
+
+            Set<ManagedEffect> additions = new HashSet<ManagedEffect>(pendingAdditions);
+            pendingAdditions.clear();
+            for (ManagedEffect managed : additions) {
+                managedEffects.add(managed);
+            }
+
             for (ManagedEffect managed : managedEffects) {
                 if (managed.effect instanceof Expirable) {
                     if (((Expirable) managed.effect).isExpired()) {
@@ -143,7 +150,7 @@ public class EffectManager {
                         }
                     }
                 }
-                
+
                 if (managed.effect instanceof Periodic) {
                     if (managed instanceof ManagedHeroEffect) {
                         ((Periodic) managed.effect).tick(((ManagedHeroEffect) managed).hero);
