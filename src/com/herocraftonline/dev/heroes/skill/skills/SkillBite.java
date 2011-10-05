@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.effects.PeriodicDamageEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;
@@ -52,16 +53,17 @@ public class SkillBite extends TargettedSkill {
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
+        HeroClass heroClass = hero.getHeroClass();
 
         // Damage the target
-        int damage = getSetting(hero.getHeroClass(), Setting.DAMAGE.node(), 10);
+        int damage = getSetting(heroClass, Setting.DAMAGE.node(), 10);
         addSpellTarget(target, hero);
         target.damage(damage, player);
 
         // Apply our effect
-        long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 15000);
-        long period = getSetting(hero.getHeroClass(), Setting.PERIOD.node(), 3000);
-        int tickDamage = getSetting(hero.getHeroClass(), "tick-damage", 1);
+        long duration = getSetting(heroClass, Setting.DURATION.node(), 15000);
+        long period = getSetting(heroClass, Setting.PERIOD.node(), 3000);
+        int tickDamage = getSetting(heroClass, "tick-damage", 1);
         BiteBleedEffect bbEffect = new BiteBleedEffect(this, period, duration, tickDamage, player);
         if (target instanceof Player) {
             plugin.getHeroManager().getHero((Player) target).addEffect(bbEffect);

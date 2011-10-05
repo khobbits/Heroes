@@ -9,6 +9,7 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.HeroesEventListener;
 import com.herocraftonline.dev.heroes.api.SkillDamageEvent;
 import com.herocraftonline.dev.heroes.api.WeaponDamageEvent;
+import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.effects.common.FormEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;
@@ -69,7 +70,8 @@ public class SkillBerserk extends ActiveSkill {
         @Override
         public void remove(Hero hero) {
             super.remove(hero);
-            broadcast(hero.getPlayer().getLocation(), expireText, hero.getPlayer().getDisplayName());
+            Player player = hero.getPlayer();
+            broadcast(player.getLocation(), expireText, player.getDisplayName());
         }
     }
 
@@ -90,8 +92,9 @@ public class SkillBerserk extends ActiveSkill {
             if (event.getDamager() instanceof Player && event.getSkill().isType(SkillType.PHYSICAL)) {
                 Hero hero = plugin.getHeroManager().getHero((Player) event.getDamager());
                 if (hero.hasEffect(getName())) {
-                    double levelMult = getSetting(hero.getHeroClass(), "multiplier-per-level", .005) * hero.getLevel();
-                    int newDamage = (int) (event.getDamage() * (getSetting(hero.getHeroClass(), "outgoing-multiplier", 1.1) + levelMult));
+                    HeroClass heroClass = hero.getHeroClass();
+                    double levelMult = getSetting(heroClass, "multiplier-per-level", .005) * hero.getLevel();
+                    int newDamage = (int) (event.getDamage() * (getSetting(heroClass, "outgoing-multiplier", 1.1) + levelMult));
                     event.setDamage(newDamage);
                 }
             }
@@ -112,8 +115,9 @@ public class SkillBerserk extends ActiveSkill {
             if (event.getDamager() instanceof Player) {
                 Hero hero = plugin.getHeroManager().getHero((Player) event.getDamager());
                 if (hero.hasEffect(getName())) {
-                    double levelMult = getSetting(hero.getHeroClass(), "multiplier-per-level", .005) * hero.getLevel();
-                    int newDamage = (int) (event.getDamage() * (getSetting(hero.getHeroClass(), "outgoing-multiplier", 1.1) + levelMult));
+                    HeroClass heroClass = hero.getHeroClass();
+                    double levelMult = getSetting(heroClass, "multiplier-per-level", .005) * hero.getLevel();
+                    int newDamage = (int) (event.getDamage() * (getSetting(heroClass, "outgoing-multiplier", 1.1) + levelMult));
                     event.setDamage(newDamage);
                 }
             }

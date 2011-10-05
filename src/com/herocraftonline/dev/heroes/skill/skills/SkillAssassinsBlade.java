@@ -1,6 +1,7 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
 import org.bukkit.entity.Creature;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
@@ -11,6 +12,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
 import com.herocraftonline.dev.heroes.effects.PeriodicDamageEffect;
@@ -118,7 +120,8 @@ public class SkillAssassinsBlade extends ActiveSkill {
         @Override
         public void apply(Hero hero) {
             super.apply(hero);
-            broadcast(hero.getPlayer().getLocation(), applyText, hero.getPlayer().getDisplayName());
+            Player player = hero.getPlayer();
+            broadcast(player.getLocation(), applyText, player.getDisplayName());
         }
 
         @Override
@@ -130,7 +133,8 @@ public class SkillAssassinsBlade extends ActiveSkill {
         @Override
         public void remove(Hero hero) {
             super.remove(hero);
-            broadcast(hero.getPlayer().getLocation(), expireText, hero.getPlayer().getDisplayName());
+            Player player = hero.getPlayer();
+            broadcast(player.getLocation(), expireText, player.getDisplayName());
         }
     }
 
@@ -158,20 +162,22 @@ public class SkillAssassinsBlade extends ActiveSkill {
             Player player = (Player) subEvent.getDamager();
             ItemStack item = player.getItemInHand();
             Hero hero = plugin.getHeroManager().getHero(player);
-            if (!getSetting(hero.getHeroClass(), "weapons", Util.swords).contains(item.getType().name()))
+            HeroClass heroClass = hero.getHeroClass();
+            if (!getSetting(heroClass, "weapons", Util.swords).contains(item.getType().name()))
                 return;
 
             if (hero.hasEffect("PoisonBlade")) {
-                long duration = getSetting(hero.getHeroClass(), "poison-duration", 10000);
-                long period = getSetting(hero.getHeroClass(), Setting.PERIOD.node(), 2000);
-                int tickDamage = getSetting(hero.getHeroClass(), "tick-damage", 2);
+                long duration = getSetting(heroClass, "poison-duration", 10000);
+                long period = getSetting(heroClass, Setting.PERIOD.node(), 2000);
+                int tickDamage = getSetting(heroClass, "tick-damage", 2);
                 AssassinsPoison apEffect = new AssassinsPoison(skill, period, duration, tickDamage, player);
-                if (event.getEntity() instanceof Creature) {
-                    plugin.getEffectManager().addCreatureEffect((Creature) event.getEntity(), apEffect);
+                Entity target = event.getEntity();
+                if (target instanceof Creature) {
+                    plugin.getEffectManager().addCreatureEffect((Creature) target, apEffect);
                     checkBuff(hero);
                 } else if (event.getEntity() instanceof Player) {
-                    Hero target = plugin.getHeroManager().getHero((Player) event.getEntity());
-                    target.addEffect(apEffect);
+                    Hero targetHero = plugin.getHeroManager().getHero((Player) target);
+                    targetHero.addEffect(apEffect);
                     checkBuff(hero);
                 }
             }

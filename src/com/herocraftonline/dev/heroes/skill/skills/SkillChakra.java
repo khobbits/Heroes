@@ -38,7 +38,8 @@ public class SkillChakra extends ActiveSkill {
         Player player = hero.getPlayer();
         HeroClass heroClass = hero.getHeroClass();
         Location castLoc = player.getLocation();
-        int radiusSquared = (int) Math.pow(getSetting(heroClass, Setting.RADIUS.node(), 7), 2);
+        int radius = getSetting(heroClass, Setting.RADIUS.node(), 7);
+        int radiusSquared = radius * radius;
         int healAmount = getSetting(heroClass, "heal-amount", 10);
         int removals = getSetting(heroClass, "max-removals", -1);
         if (hero.hasParty()) {

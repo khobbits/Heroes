@@ -95,12 +95,13 @@ public class SkillAbsorb extends ActiveSkill {
                 if (hero.hasEffect("Absorb")) {
                     int absorbAmount = getSetting(hero.getHeroClass(), "mana-amount", 20);
                     event.setDamage((int) (event.getDamage() * 0.50));
-                    if (hero.getMana() + absorbAmount > 100) {
+                    int mana = hero.getMana();
+                    if (mana + absorbAmount > 100) {
                         hero.removeEffect(hero.getEffect("Absorb"));
                     } else {
-                        hero.setMana(hero.getMana() + absorbAmount);
+                        hero.setMana(mana + absorbAmount);
                         if (hero.isVerbose()) {
-                            Messaging.send(hero.getPlayer(), ChatColor.BLUE + "MANA " + Messaging.createManaBar(hero.getMana()));
+                            Messaging.send(player, ChatColor.BLUE + "MANA " + Messaging.createManaBar(mana + absorbAmount));
                         }
                     }
                 }

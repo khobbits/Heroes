@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.effects.PeriodicDamageEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;
@@ -52,10 +53,11 @@ public class SkillBlight extends TargettedSkill {
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
+        HeroClass heroClass = hero.getHeroClass();
 
-        long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 21000);
-        long period = getSetting(hero.getHeroClass(), Setting.PERIOD.node(), 3000);
-        int tickDamage = getSetting(hero.getHeroClass(), "tick-damage", 1);
+        long duration = getSetting(heroClass, Setting.DURATION.node(), 21000);
+        long period = getSetting(heroClass, Setting.PERIOD.node(), 3000);
+        int tickDamage = getSetting(heroClass, "tick-damage", 1);
         BlightEffect bEffect = new BlightEffect(this, duration, period, tickDamage, player);
 
         if (target instanceof Player) {
