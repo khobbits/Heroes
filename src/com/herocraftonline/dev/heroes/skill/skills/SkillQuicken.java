@@ -1,6 +1,8 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
 import com.herocraftonline.dev.heroes.skill.SkillType;
+
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityListener;
@@ -61,10 +63,12 @@ public class SkillQuicken extends ActiveSkill {
             return true;
         }
         Player player = hero.getPlayer();
-        int rSquared = (int) Math.pow(getSetting(hero.getHeroClass(), Setting.RADIUS.node(), 15), 2);
+        int radius = getSetting(hero.getHeroClass(), Setting.RADIUS.node(), 15);
+        int rSquared = radius * radius;
+        Location loc = player.getLocation();
         //Apply the effect to all party members
         for (Hero tHero : hero.getParty().getMembers()) {
-            if (player.getLocation().distanceSquared(tHero.getPlayer().getLocation()) > rSquared)
+            if (loc.distanceSquared(tHero.getPlayer().getLocation()) > rSquared)
                 continue;
             
             tHero.addEffect(qEffect);

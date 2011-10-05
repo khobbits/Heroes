@@ -9,6 +9,7 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.PassiveSkill;
@@ -40,9 +41,10 @@ public class SkillTumble extends PassiveSkill {
             if (!(event.getEntity() instanceof Player) || event.getCause() != DamageCause.FALL)
                 return;
             Hero hero = plugin.getHeroManager().getHero((Player) event.getEntity());
+            HeroClass heroClass = hero.getHeroClass();
             if (!hero.hasEffect("Tumble"))
                 return;
-            int distance = (int) (getSetting(hero.getHeroClass(), "base-distance", 3) + (hero.getLevel() * getSetting(hero.getHeroClass(), "distance-per-level", .5)));
+            int distance = (int) (getSetting(heroClass, "base-distance", 3) + (hero.getLevel() * getSetting(heroClass, "distance-per-level", .5)));
             int fallDistance = (event.getDamage() - 3) * 3;
             fallDistance -= distance;
             if (fallDistance <= 0)

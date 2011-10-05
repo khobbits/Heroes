@@ -7,9 +7,11 @@ import java.util.Set;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.SkillType;
@@ -47,14 +49,15 @@ public class SkillTransmuteOre extends ActiveSkill {
     @Override
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
+        HeroClass heroClass = hero.getHeroClass();
         ItemStack item = player.getItemInHand();
         
-        if (getSetting(hero.getHeroClass(), "require-furnace", false) && player.getTargetBlock((HashSet<Byte>) null, 3).getType() != Material.FURNACE) {
+        if (getSetting(heroClass, "require-furnace", false) && player.getTargetBlock((HashSet<Byte>) null, 3).getType() != Material.FURNACE) {
             Messaging.send(player, "You must have a furnace targetted to transmute ores!");
             return false;
         }
         // List all items this hero can transmute
-        Set<String> itemSet = new HashSet<String>(getSettingKeys(hero.getHeroClass()));
+        Set<String> itemSet = new HashSet<String>(getSettingKeys(heroClass));
         itemSet.remove("require-furnace");
         for (Setting set : Setting.values()) {
             itemSet.remove(set.node());
@@ -65,22 +68,23 @@ public class SkillTransmuteOre extends ActiveSkill {
             return false;
         }
         
-        int cost = getSetting(hero.getHeroClass(), itemName + "." + Setting.REAGENT_COST.node(), 1);
+        int cost = getSetting(heroClass, itemName + "." + Setting.REAGENT_COST.node(), 1);
         if (item.getAmount() < cost) {
             Messaging.send(player, "You need to be holding $1 of $2 to transmute.", cost, itemName);
             return false;
         }
         
-        Material finished = Material.matchMaterial(getSetting(hero.getHeroClass(), itemName + ".product", ""));
+        Material finished = Material.matchMaterial(getSetting(heroClass, itemName + ".product", ""));
         if (finished == null) {
             throw new IllegalArgumentException("Invalid product material defined for TransmuteOre node: " + itemName);
         }
         item.setAmount(item.getAmount() - cost);
+        PlayerInventory inventory = player.getInventory();
         if (item.getAmount() == 0) {
-            player.getInventory().clear(player.getInventory().getHeldItemSlot());
+            inventory.clear(inventory.getHeldItemSlot());
         }
         
-        HashMap<Integer, ItemStack> leftOvers = player.getInventory().addItem(new ItemStack(finished, 1));
+        HashMap<Integer, ItemStack> leftOvers = inventory.addItem(new ItemStack(finished, 1));
         
         if (!leftOvers.isEmpty()) {
             for (ItemStack leftOver : leftOvers.values()) {

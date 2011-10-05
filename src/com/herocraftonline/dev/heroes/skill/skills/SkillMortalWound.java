@@ -65,13 +65,13 @@ public class SkillMortalWound extends TargettedSkill {
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
+        HeroClass heroClass = hero.getHeroClass();
 
         Material item = player.getItemInHand().getType();
-        if (!getSetting(hero.getHeroClass(), "weapons", Util.swords).contains(item.name())) {
+        if (!getSetting(heroClass, "weapons", Util.swords).contains(item.name())) {
             Messaging.send(player, "You can't Mortal Strike with that weapon!");
         }
 
-        HeroClass heroClass = hero.getHeroClass();
         int damage = heroClass.getItemDamage(item) == null ? 0 : heroClass.getItemDamage(item);
         target.damage(damage, player);
 

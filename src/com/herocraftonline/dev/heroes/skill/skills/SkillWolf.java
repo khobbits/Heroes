@@ -6,8 +6,10 @@ import java.util.Iterator;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.CreatureType;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
 import org.bukkit.event.Event.Priority;
@@ -23,6 +25,7 @@ import org.bukkit.util.config.ConfigurationNode;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.HeroesEventListener;
 import com.herocraftonline.dev.heroes.api.WeaponDamageEvent;
+import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
@@ -137,8 +140,9 @@ public class SkillWolf extends ActiveSkill {
 
     private void setWolfSettings(Hero hero, Wolf wolf) {
         Player player = hero.getPlayer();
-        int health = getSetting(hero.getHeroClass(), Setting.HEALTH.node(), 30);
-        health = (int) (health + getSetting(hero.getHeroClass(), "health-per-level", .25) * hero.getLevel());
+        HeroClass heroClass = hero.getHeroClass();
+        int health = getSetting(heroClass, Setting.HEALTH.node(), 30);
+        health = (int) (health + getSetting(heroClass, "health-per-level", .25) * hero.getLevel());
         wolf.setOwner(player);
         wolf.setTamed(true);
         wolf.setHealth(health);
@@ -159,10 +163,11 @@ public class SkillWolf extends ActiveSkill {
                 return;
 
             Wolf wolf = (Wolf) event.getEntity();
-            if (!wolf.isTamed() || wolf.getOwner() == null || !(wolf.getOwner() instanceof Player))
+            AnimalTamer owner = wolf.getOwner();
+            if (!wolf.isTamed() || owner == null || !(owner instanceof Player))
                 return;
 
-            Hero hero = plugin.getHeroManager().getHero((Player) wolf.getOwner());
+            Hero hero = plugin.getHeroManager().getHero((Player) owner);
             if (!hero.getSummons().contains(wolf))
                 return;
 
@@ -173,11 +178,13 @@ public class SkillWolf extends ActiveSkill {
 
         @Override
         public void onEntityTame(EntityTameEvent event) {
-            if (event.isCancelled() || !(event.getEntity() instanceof Wolf) || !(event.getOwner() instanceof Player))
+            AnimalTamer owner = event.getOwner();
+            Entity animal = event.getEntity();
+            if (event.isCancelled() || !(animal instanceof Wolf) || !(owner instanceof Player))
                 return;
 
-            Player player = (Player) event.getOwner();
-            Hero hero = plugin.getHeroManager().getHero((Player) event.getOwner());
+            Player player = (Player) owner;
+            Hero hero = plugin.getHeroManager().getHero(player);
             int numWolves = 0;
             for (Creature creature : hero.getSummons()) {
                 if (creature instanceof Wolf) {
@@ -192,7 +199,7 @@ public class SkillWolf extends ActiveSkill {
                     Messaging.send(player, "You can't tame anymore wolves!");
                     return;
                 }
-                skill.setWolfSettings(hero, (Wolf) event.getEntity());
+                skill.setWolfSettings(hero, (Wolf) animal);
                 Messaging.send(player, "You have tamed a wolf!");
             }
         }
@@ -213,10 +220,11 @@ public class SkillWolf extends ActiveSkill {
                 return;
 
             Wolf wolf = (Wolf) event.getDamager();
-            if (!wolf.isTamed() || wolf.getOwner() == null || !(wolf.getOwner() instanceof Player))
+            AnimalTamer owner = wolf.getOwner();
+            if (!wolf.isTamed() || owner == null || !(owner instanceof Player))
                 return;
 
-            Hero hero = plugin.getHeroManager().getHero((Player) wolf.getOwner());
+            Hero hero = plugin.getHeroManager().getHero((Player) owner);
             if (!hero.getSummons().contains(wolf))
                 return;
 

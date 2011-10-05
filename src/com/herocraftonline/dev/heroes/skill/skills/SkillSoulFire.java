@@ -11,6 +11,7 @@ import org.bukkit.event.entity.EntityListener;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
 import com.herocraftonline.dev.heroes.effects.common.CombustEffect;
@@ -86,14 +87,15 @@ public class SkillSoulFire extends ActiveSkill {
 
             Player player = (Player) subEvent.getDamager();
             Hero hero = plugin.getHeroManager().getHero(player);
-            if (!getSetting(hero.getHeroClass(), "weapons", Util.swords).contains(player.getItemInHand().getType().name()) || !hero.hasEffect("SoulFire"))
+            HeroClass heroClass = hero.getHeroClass();
+            if (!getSetting(heroClass, "weapons", Util.swords).contains(player.getItemInHand().getType().name()) || !hero.hasEffect("SoulFire"))
                 return;
 
-            double chance = getSetting(hero.getHeroClass(), "ignite-chance", .2);
+            double chance = getSetting(heroClass, "ignite-chance", .2);
             if (Util.rand.nextDouble() >= chance)
                 return;
 
-            int fireTicks = getSetting(hero.getHeroClass(), "ignite-duration", 5000) / 50;
+            int fireTicks = getSetting(heroClass, "ignite-duration", 5000) / 50;
             Entity entity = event.getEntity();
             entity.setFireTicks(fireTicks);
 

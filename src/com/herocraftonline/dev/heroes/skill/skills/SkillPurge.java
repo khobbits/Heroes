@@ -8,6 +8,7 @@ import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.effects.Effect;
+import com.herocraftonline.dev.heroes.effects.EffectManager;
 import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.SkillType;
@@ -67,22 +68,23 @@ public class SkillPurge extends TargettedSkill {
     }  
 
     private int purge(Creature creature, int removalsLeft, Hero hero) {
+        EffectManager effectManager = plugin.getEffectManager();
         //Return immediately if this creature has no effects
-        if (plugin.getEffectManager().getCreatureEffects(creature) == null)
+        if (effectManager.getCreatureEffects(creature) == null)
             return removalsLeft;
         
         boolean removeHarmful = false;
         if (hero.getSummons().contains(creature))
             removeHarmful = true;
         
-        for (Effect effect : plugin.getEffectManager().getCreatureEffects(creature)) {
+        for (Effect effect : effectManager.getCreatureEffects(creature)) {
             if (removalsLeft == 0) {
                 break;
             } else if (effect.isType(EffectType.HARMFUL) && effect.isType(EffectType.DISPELLABLE) && removeHarmful) {
-                plugin.getEffectManager().removeCreatureEffect(creature, effect);
+                effectManager.removeCreatureEffect(creature, effect);
                 removalsLeft--;
             } else if (effect.isType(EffectType.BENEFICIAL) && effect.isType(EffectType.DISPELLABLE) && !removeHarmful) {
-                plugin.getEffectManager().removeCreatureEffect(creature, effect);
+                effectManager.removeCreatureEffect(creature, effect);
                 removalsLeft--;
             }
         }

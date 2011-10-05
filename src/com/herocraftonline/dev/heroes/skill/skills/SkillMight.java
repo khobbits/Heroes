@@ -1,5 +1,6 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.Event.Priority;
@@ -68,13 +69,15 @@ public class SkillMight extends ActiveSkill {
             }
             hero.addEffect(mEffect);
         } else {
-            int rangeSquared = (int) Math.pow(getSetting(hero.getHeroClass(), Setting.RADIUS.node(), 10), 2);
+            int range = getSetting(hero.getHeroClass(), Setting.RADIUS.node(), 10);
+            int rangeSquared = range * range;
+            Location loc = player.getLocation();
             for (Hero pHero : hero.getParty().getMembers()) {
                 Player pPlayer = pHero.getPlayer();
                 if (!pPlayer.getWorld().equals(player.getWorld())) {
                     continue;
                 }
-                if (pPlayer.getLocation().distanceSquared(player.getLocation()) > rangeSquared) {
+                if (pPlayer.getLocation().distanceSquared(loc) > rangeSquared) {
                     continue;
                 }
                 if (pHero.hasEffect("Might")) {

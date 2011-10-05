@@ -7,6 +7,7 @@ import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.HeroRegainHealthEvent;
+import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.effects.PeriodicDamageEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;
@@ -49,10 +50,11 @@ public class SkillSoulLeech extends TargettedSkill {
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
+        HeroClass heroClass = hero.getHeroClass();
 
-        long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 10000);
-        long period = getSetting(hero.getHeroClass(), Setting.PERIOD.node(), 2000);
-        int tickDamage = getSetting(hero.getHeroClass(), "tick-damage", 1);
+        long duration = getSetting(heroClass, Setting.DURATION.node(), 10000);
+        long period = getSetting(heroClass, Setting.PERIOD.node(), 2000);
+        int tickDamage = getSetting(heroClass, "tick-damage", 1);
 
         SoulLeechEffect slEffect = new SoulLeechEffect(this, period, duration, tickDamage, player);
 
