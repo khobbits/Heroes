@@ -209,6 +209,12 @@ public class HPlayerListener extends PlayerListener {
         }
 
         @Override
+        public void apply(Hero hero) {
+            super.apply(hero);
+            this.lastTickTime = System.currentTimeMillis();
+        }
+
+        @Override
         public void tick(Hero hero) {
             super.tick(hero);
             Player player = hero.getPlayer();

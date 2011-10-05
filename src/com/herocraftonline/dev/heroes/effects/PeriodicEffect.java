@@ -8,7 +8,7 @@ import com.herocraftonline.dev.heroes.skill.Skill;
 public class PeriodicEffect extends Effect implements Periodic {
 
     private final long period;
-    private long lastTickTime = 0;
+    protected long lastTickTime = 0;
 
     public PeriodicEffect(Skill skill, String name, long period) {
         super(skill, name);

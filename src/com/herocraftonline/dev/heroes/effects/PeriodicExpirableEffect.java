@@ -8,7 +8,7 @@ import com.herocraftonline.dev.heroes.skill.Skill;
 public class PeriodicExpirableEffect extends ExpirableEffect implements Periodic {
 
     private final long period;
-    private long lastTickTime = 0;
+    protected long lastTickTime = 0;
 
     public PeriodicExpirableEffect(Skill skill, String name, long period, long duration) {
         super(skill, name, duration);
