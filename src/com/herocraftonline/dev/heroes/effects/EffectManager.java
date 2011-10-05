@@ -152,10 +152,13 @@ public class EffectManager {
                 }
 
                 if (managed.effect instanceof Periodic) {
+                    Periodic periodic = (Periodic) managed.effect;
                     if (managed instanceof ManagedHeroEffect) {
-                        ((Periodic) managed.effect).tick(((ManagedHeroEffect) managed).hero);
+                        if (periodic.isReady())
+                            periodic.tick(((ManagedHeroEffect) managed).hero);
                     } else {
-                        ((Periodic) managed.effect).tick(((ManagedCreatureEffect) managed).creature);
+                        if (periodic.isReady())
+                            periodic.tick(((ManagedCreatureEffect) managed).creature);
                     }
                 }
             }
