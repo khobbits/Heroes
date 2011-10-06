@@ -619,7 +619,7 @@ public class Hero {
 
         plugin.getServer().getScheduler().cancelTask(delayedSkillTaskId);
         Skill skill = ActiveSkill.getDelayedSkill(player);
-        skill.broadcast(player.getLocation(), "$1 has stopped using $2", player.getDisplayName(), skill.getName());
+        skill.broadcast(player.getLocation(), "$1 has stopped using $2!", player.getDisplayName(), skill.getName());
         delayedSkillTaskId = -1;
         ActiveSkill.removeDelayedSkill(player);
     }
