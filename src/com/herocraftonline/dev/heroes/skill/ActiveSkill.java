@@ -147,19 +147,19 @@ public abstract class ActiveSkill extends Skill {
             }
         }
 
-        int delay = getSetting(hero.getHeroClass(), Setting.DELAY.node(), 0);
+        int delay = getSetting(heroClass, Setting.DELAY.node(), 0);
         if (delay > 0 && !delayedSkillUsers.containsKey(sender)) {
-            addDelayedSkill(player, hero, delay, identifier, args);
+            addDelayedSkill(hero, delay, identifier, args);
             return false;
         } else if (delayedSkillUsers.containsKey(sender)) {
             Skill skill = delayedSkillUsers.get(sender);
             int taskId = hero.getDelayedSkillTaskId();
             if (skill != this || (taskId != -1 && plugin.getServer().getScheduler().isQueued(taskId))) {
                 plugin.getServer().getScheduler().cancelTask(taskId);
-                broadcast(player.getLocation(), "$1 has stopped using $2", player.getDisplayName(), skill.getName());
+                broadcast(player.getLocation(), "$1 has stopped using $2!", player.getDisplayName(), skill.getName());
                 //If the new skill is also a delayed skill lets 
                 if (delay > 0) {
-                    addDelayedSkill(player, hero, delay, identifier, args);
+                    addDelayedSkill(hero, delay, identifier, args);
                     return false;
                 }
             }
@@ -218,10 +218,17 @@ public abstract class ActiveSkill extends Skill {
         return node;
     }
 
-    private void addDelayedSkill(Player player, Hero hero, int delay, String identifier, String[] args) {
+    private void addDelayedSkill(Hero hero, int delay, final String identifier, final String[] args) {
+        final Player player = hero.getPlayer();
         delayedSkillUsers.put(player, this);
-        broadcast(player.getLocation(), "$1 begins to use $2", player.getDisplayName(), getName());
-        hero.setDelayedSkillTaskId(plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new DelayedSkillUse(this, player, identifier, args), (delay/1000 ) * 20));
+        broadcast(player.getLocation(), "$1 begins to use $2!", player.getDisplayName(), getName());
+        int taskId = plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+            @Override
+            public void run() {
+                execute(player, identifier, args);
+            }
+        }, delay * 20 / 1000);
+        hero.setDelayedSkillTaskId(taskId);
     }
 
     /**
@@ -309,25 +316,5 @@ public abstract class ActiveSkill extends Skill {
      */
     public static void removeDelayedSkill(Player player) {
         delayedSkillUsers.remove(player);
-    }
-    
-    public class DelayedSkillUse implements Runnable {
-
-        private final Skill skill;
-        private final CommandSender sender;
-        private final String identifier;
-        private final String[] args;
-
-        public DelayedSkillUse(Skill skill, CommandSender sender, String identifer, String[] args) {
-            this.skill = skill;
-            this.sender = sender;
-            this.identifier = identifer;
-            this.args = args;
-        }
-
-        @Override
-        public void run() {
-            skill.execute(sender, identifier, args);
-        }
     }
 }
