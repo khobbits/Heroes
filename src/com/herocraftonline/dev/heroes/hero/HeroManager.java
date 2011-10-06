@@ -13,7 +13,6 @@ import org.bukkit.entity.Player;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.HeroRegainManaEvent;
-import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.party.HeroParty;
 import com.herocraftonline.dev.heroes.party.PartyManager;
 import com.herocraftonline.dev.heroes.persistence.HeroStorage;
@@ -94,13 +93,8 @@ public class HeroManager {
     }
 
     public void performSkillChecks(Hero hero) {
-        HeroClass playerClass = hero.getHeroClass();
-
-        for (String skillName : playerClass.getSkillNames()) {
-            if (skillName.equals("*") || skillName.equals("ALL"))
-                continue;
-            Skill skill = plugin.getSkillManager().getSkill(skillName);
-            if (skill == null)
+        for (Skill skill : plugin.getSkillManager().getSkills()) {
+            if (skill.getName().equals("*") || skill.getName().equals("ALL"))
                 continue;
             if (skill instanceof OutsourcedSkill)
                 ((OutsourcedSkill) skill).tryLearningSkill(hero);
