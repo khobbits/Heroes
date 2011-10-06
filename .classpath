@@ -10,5 +10,6 @@
 	<classpathentry kind="lib" path="libs/Spout.jar"/>
 	<classpathentry kind="lib" path="libs/iCo6.jar"/>
 	<classpathentry kind="lib" path="libs/craftbukkit-0.0.1-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="extra"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

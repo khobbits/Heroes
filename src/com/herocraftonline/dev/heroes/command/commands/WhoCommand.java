@@ -41,7 +41,7 @@ public class WhoCommand extends BasicCommand {
             Collection<Hero> heroes = plugin.getHeroManager().getHeroes();
             sender.sendMessage("§c-----[ " + "§f" + searchedClass.getName() + "§c ]-----");
             for (Hero hero : heroes) {
-                if (hero == null) {
+                if (hero == null || !hero.getPlayer().isOnline()) {
                     continue;
                 }
                 if (hero.getHeroClass().equals(searchedClass)) {
