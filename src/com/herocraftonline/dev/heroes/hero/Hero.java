@@ -64,13 +64,13 @@ public class Hero {
     private Map<String, ConfigurationNode> skills = new HashMap<String, ConfigurationNode>();
     private int delayedSkillTaskId = -1;
     private double health;
-    private final PermissionAttachment transientPerms;
+    private PermissionAttachment transientPerms;
 
     public Hero(Heroes plugin, Player player, HeroClass heroClass) {
         this.plugin = plugin;
         this.player = player;
         this.heroClass = heroClass;
-        transientPerms = new PermissionAttachment(plugin, player);
+        transientPerms = player.addAttachment(plugin);
     }
 
     /**
@@ -160,7 +160,9 @@ public class Hero {
      * Clears all set Permissions on the hero's permission attachment
      */
     public void clearPermissions() {
-        transientPerms.getPermissions().clear();
+        player.removeAttachment(transientPerms);
+        if (plugin.isEnabled())
+            transientPerms = player.addAttachment(plugin);
     }
 
     /**
@@ -650,6 +652,7 @@ public class Hero {
      */
     public void removePermission(String permission) {
         transientPerms.unsetPermission(permission);
+        player.recalculatePermissions();
     }
 
     public void removeSkill(String skill) {

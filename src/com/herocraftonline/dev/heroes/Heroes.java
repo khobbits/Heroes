@@ -175,7 +175,9 @@ public class Heroes extends JavaPlugin {
         final Player[] players = getServer().getOnlinePlayers();
         for (Player player : players) {
             heroManager.saveHero(player);
-            heroManager.getHero(player).clearSummons();
+            Hero hero = heroManager.getHero(player);
+            hero.clearSummons();
+            hero.clearPermissions();
         }
         Heroes.econ = null; // When it Enables again it performs the checks anyways.
         Heroes.Permissions = null; // When it Enables again it performs the checks anyways.
