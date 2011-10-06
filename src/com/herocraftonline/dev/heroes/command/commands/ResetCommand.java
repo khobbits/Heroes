@@ -94,7 +94,8 @@ public class ResetCommand extends BasicInteractiveCommand {
 
             hero.setHeroClass(defaultClass); // Set the hero to the default class
             hero.syncHealth(); // re-sync health just in-case the display isn't 100% accurate
-
+            
+            plugin.getHeroManager().performSkillChecks(hero);
             if (plugin.getConfigManager().getProperties().prefixClassName) {
                 player.setDisplayName("[" + hero.getHeroClass().getName() + "]" + player.getName());
             }
