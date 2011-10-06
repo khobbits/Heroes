@@ -113,7 +113,7 @@ public class HeroManager {
             }
         }
 
-        heroes.remove(hero.getPlayer().getName());
+        heroes.remove(hero.getPlayer().getName().toLowerCase());
     }
 
     /**
