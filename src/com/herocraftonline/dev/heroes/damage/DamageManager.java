@@ -179,11 +179,11 @@ public class DamageManager {
         EGG;
 
         public static ProjectileType matchProjectile(final String name) {
-            if (name.toLowerCase().equals("arrow"))
+            if (name.equalsIgnoreCase("arrow"))
                 return ARROW;
-            else if (name.toLowerCase().equals("snowball"))
+            else if (name.equalsIgnoreCase("snowball"))
                 return SNOWBALL;
-            else if (name.toLowerCase().equals("egg"))
+            else if (name.equalsIgnoreCase("egg"))
                 return EGG;
             else
                 return null;
