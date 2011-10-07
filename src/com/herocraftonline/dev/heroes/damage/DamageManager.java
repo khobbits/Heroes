@@ -12,6 +12,7 @@ import org.bukkit.entity.Egg;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Slime;
 import org.bukkit.entity.Snowball;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
@@ -175,8 +176,8 @@ public class DamageManager {
 
     public enum ProjectileType {
         ARROW,
-        SNOWBALL,
-        EGG;
+        EGG,
+        SNOWBALL;
 
         public static ProjectileType matchProjectile(final String name) {
             if (name.equalsIgnoreCase("arrow"))

@@ -21,7 +21,7 @@ classes:
         expmodifier: 1.0
         item-damage:
             air: 1
-        projectile-damages:
+        projectile-damage:
             Arrow: 3
         expLoss: 0
     Shaman:
