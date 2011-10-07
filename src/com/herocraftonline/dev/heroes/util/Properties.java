@@ -58,6 +58,7 @@ public class Properties {
     public boolean firstSwitchFree;
     public boolean swapMasteryCost;
     public boolean damageSystem;
+    public double foodHealPercent = .05;
 
     // Bed Stuffs
     public boolean bedHeal;

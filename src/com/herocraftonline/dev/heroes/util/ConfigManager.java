@@ -255,6 +255,7 @@ public class ConfigManager {
         properties.firstSwitchFree = config.getBoolean(root + "firstSwitchFree", true);
         properties.debug = config.getBoolean(root + "debug", false);
         properties.damageSystem = config.getBoolean(root + "useDamageSystem", false);
+        properties.foodHealPercent = config.getDouble(root + "foodHealPercent", .05);
     }
 
     private void loadStorageConfig(Configuration config) {

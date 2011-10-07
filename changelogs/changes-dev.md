@@ -13,7 +13,7 @@ Version dev
 * Fixed SpoutUI hooking
 * Tamed Pets & Summons will now award Experience for their kills as intended
 * Player inventory now synchs properly when an item is removed
-* Satiated state will now regenerate 5% of a hero's HP as intended, rather than the default half-heart
+* Satiated state will now regenerate a % of a hero's HP as intended, rather than the default half-heart (configurable)
 * Crafting Xp is now awarded each time an item is crafted regardless of Cursor status
 * Arrow damage is now altered for bow draw - minimum damage is 1/3rd what is set in the configuration
 

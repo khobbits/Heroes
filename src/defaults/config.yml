@@ -20,6 +20,7 @@ properties:
     firstSwitchFree: true #toggles charging for the first class switch
     debug: false #use this at your own risk
     useDamageSystem: true #toggles the damage system
+    foodHealPercent: .05 # .05 = 5% of Total HP regained when a player regains health from being full
 bed:
     bedHeal: true #Do you want players to heal in beds? NOTE - useDamageSystem must be true
     healInterval: 15 #the seconds it takes to heal the healPercent
