@@ -18,6 +18,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityListener;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
+import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
@@ -244,20 +245,24 @@ public class HeroesDamageListener extends EntityListener {
 
     @Override
     public void onEntityRegainHealth(EntityRegainHealthEvent event) {
-        if (event.isCancelled())
+        if (event.isCancelled() || !(event.getEntity() instanceof Player))
             return;
 
-        Entity entity = event.getEntity();
         int amount = event.getAmount();
-
-        if (entity instanceof Player) {
-            Player player = (Player) entity;
-            Hero hero = plugin.getHeroManager().getHero(player);
-            double newHeroHealth = hero.getHealth() + amount;
-            int newPlayerHealth = (int) Math.ceil(newHeroHealth / hero.getMaxHealth() * 20);
-            hero.setHealth(newHeroHealth);
-            event.setAmount(newPlayerHealth - player.getHealth());
+        Player player = (Player) event.getEntity();
+        Hero hero = plugin.getHeroManager().getHero(player);
+        //Satiated players regenerate 5% of total HP rather than 1 HP
+        if (event.getRegainReason() == RegainReason.SATIATED) {
+            amount = (int) Math.ceil(hero.getMaxHealth() * .05D);
         }
+        double newHeroHealth = hero.getHealth() + amount;
+        if (newHeroHealth > hero.getMaxHealth()) {
+            newHeroHealth = hero.getMaxHealth();
+        }
+        int newPlayerHealth = (int) Math.ceil(newHeroHealth / hero.getMaxHealth() * 20);
+        hero.setHealth(newHeroHealth);
+        event.setAmount(newPlayerHealth - player.getHealth());
+
     }
 
     private int calculateArmorReduction(PlayerInventory inventory, int damage) {

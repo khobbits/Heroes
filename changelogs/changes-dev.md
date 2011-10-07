@@ -4,16 +4,18 @@ Version dev
 
 * /bind now properly allows usage of shortened skill name identifiers (ablade, parrow, mshield, etc)
 * Fixed issue with bukkit permissions not being set if Permissions3 wasn't detected
+* SuperPerms is now fully supported - permission skills now work at all times
 * Player's displaynames will be updated properly when they choose a new path or reset.
-* Player HP is now ceiled when synced preventing high HP classes from dying before they actually hit 0 HP. - for real
+* Player HP is now ceiled when synched preventing high HP classes from dying before they actually hit 0 HP. - for real
 * creatures added in 1.8 will no longer crash the effect system
 * Player's no longer get XP for killing themselves
 * Creature effects should no longer crash the effect manager
 * Fixed SpoutUI hooking
 * Tamed Pets & Summons will now award Experience for their kills as intended
-* Player inventory now synchs properly when an item is removed from a player's inventory
+* Player inventory now synchs properly when an item is removed
+* Satiated state will now regenerate 5% of a hero's HP as intended, rather than the default half-heart
 * Crafting Xp is now awarded each time an item is crafted regardless of Cursor status
-* Arrow damage is altered for bow draw
+* Arrow damage is now altered for bow draw - minimum damage is 1/3rd what is set in the configuration
 
 ==== **General:** ====
 
