@@ -83,8 +83,10 @@ public class HeroClassManager {
 
             Double baseMaxHealth = classConfig.getDouble("base-max-health", 20);
             Double maxHealthPerLevel = classConfig.getDouble("max-health-per-level", 0);
+            boolean userClass= classConfig.getBoolean("user-class", true);
             newClass.setBaseMaxHealth(baseMaxHealth);
             newClass.setMaxHealthPerLevel(maxHealthPerLevel);
+            newClass.setUserClass(userClass);
 
             // Get the class expLoss
             newClass.setExpLoss(classConfig.getDouble("expLoss", -1));
@@ -127,7 +129,7 @@ public class HeroClassManager {
         if (defaultClass == null) {
             Heroes.log(Level.SEVERE, "You are missing a default class, this will cause A LOT of issues!");
         }
-        
+
         //Only register the permissions once
         if (plugin.getServer().getPluginManager().getPermission("heroes.classes.*") == null)
             registerClassPermissions();
@@ -136,7 +138,8 @@ public class HeroClassManager {
     private void registerClassPermissions() {
         Map<String, Boolean> classPermissions = new HashMap<String, Boolean>();
         for (HeroClass heroClass : classes) {
-            classPermissions.put("heroes.classes." + heroClass.getName().toLowerCase(), true);
+            if (heroClass.isUserClass())
+                classPermissions.put("heroes.classes." + heroClass.getName().toLowerCase(), true);
         }
         Permission wildcardClassPermission = new Permission("heroes.classes.*", "Grants access to all classes.", classPermissions);
         plugin.getServer().getPluginManager().addPermission(wildcardClassPermission);

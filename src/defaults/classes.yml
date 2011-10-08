@@ -24,6 +24,7 @@ classes:
         projectile-damage:
             Arrow: 3
         expLoss: 0
+        user-class: true
     Shaman:
         default: false
         description: This is a PARENT

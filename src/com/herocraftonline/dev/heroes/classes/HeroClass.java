@@ -37,6 +37,7 @@ public class HeroClass {
     private double expLoss;
     private double baseMaxHealth;
     private double maxHealthPerLevel;
+    private boolean userClass = true;
 
     public HeroClass() {
         name = "";
@@ -251,6 +252,14 @@ public class HeroClass {
     @Override
     public String toString() {
         return name;
+    }
+
+    public boolean isUserClass() {
+        return userClass;
+    }
+
+    public void setUserClass(boolean userClass) {
+        this.userClass = userClass;
     }
 
     public static enum ArmorItems {
