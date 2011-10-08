@@ -1,7 +1,5 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
-import java.util.Random;
-
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.util.config.ConfigurationNode;
@@ -12,10 +10,9 @@ import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Messaging;
+import com.herocraftonline.dev.heroes.util.Util;
 
 public class SkillTrack extends ActiveSkill {
-
-    private static final Random random = new Random();
 
     public SkillTrack(Heroes plugin) {
         super(plugin, "Track");
@@ -47,9 +44,9 @@ public class SkillTrack extends ActiveSkill {
 
         Location location = target.getLocation();
         int randomness = getSetting(heroClass, "randomness", 50);
-        int x = location.getBlockX() + random.nextInt(randomness);
-        int y = location.getBlockY() + random.nextInt(randomness / 10);
-        int z = location.getBlockZ() + random.nextInt(randomness);
+        int x = location.getBlockX() + Util.rand.nextInt(randomness);
+        int y = location.getBlockY() + Util.rand.nextInt(randomness / 10);
+        int z = location.getBlockZ() + Util.rand.nextInt(randomness);
 
         Messaging.send(player, "Tracked $1: $2,$3,$4", target.getName(), x, y, z);
         player.setCompassTarget(location);

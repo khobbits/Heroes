@@ -1,7 +1,5 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
-import java.util.Random;
-
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -22,13 +20,13 @@ import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Setting;
+import com.herocraftonline.dev.heroes.util.Util;
 
 public class SkillCurse extends TargettedSkill {
 
     private String applyText;
     private String expireText;
     private String missText;
-    private Random rand = new Random();
 
     public SkillCurse(Heroes plugin) {
         super(plugin, "Curse");
@@ -151,7 +149,7 @@ public class SkillCurse extends TargettedSkill {
             if (hero != null) {
                 if (hero.hasEffect("Curse")) {
                     CurseEffect cEffect = (CurseEffect) hero.getEffect("Curse");
-                    if (rand.nextDouble() < cEffect.missChance) {
+                    if (Util.rand.nextDouble() < cEffect.missChance) {
                         event.setCancelled(true);
                         broadcast(hero.getPlayer().getLocation(), missText, hero.getPlayer().getDisplayName());
                     }
@@ -159,7 +157,7 @@ public class SkillCurse extends TargettedSkill {
             } else if (creature != null) {
                 if (plugin.getEffectManager().creatureHasEffect(creature, "Curse")) {
                     CurseEffect cEffect = (CurseEffect) plugin.getEffectManager().getCreatureEffect(creature, "Curse");
-                    if (rand.nextDouble() < cEffect.missChance) {
+                    if (Util.rand.nextDouble() < cEffect.missChance) {
                         event.setCancelled(true);
                         broadcast(creature.getLocation(), missText, Messaging.getCreatureName(creature).toLowerCase());
                     }

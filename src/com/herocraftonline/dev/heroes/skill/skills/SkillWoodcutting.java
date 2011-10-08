@@ -1,7 +1,5 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
-import java.util.Random;
-
 import org.bukkit.block.Block;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
@@ -16,10 +14,9 @@ import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.PassiveSkill;
 import com.herocraftonline.dev.heroes.skill.SkillType;
+import com.herocraftonline.dev.heroes.util.Util;
 
 public class SkillWoodcutting extends PassiveSkill {
-
-    private final Random rand = new Random();
 
     public SkillWoodcutting(Heroes plugin) {
         super(plugin, "Woodcutting");
@@ -57,11 +54,11 @@ public class SkillWoodcutting extends PassiveSkill {
             }
 
             Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
-            if (!hero.hasEffect("Woodcutting") || rand.nextDouble() > getSetting(hero.getHeroClass(), "chance-per-level", .001) * hero.getLevel())
+            if (!hero.hasEffect("Woodcutting") || Util.rand.nextDouble() > getSetting(hero.getHeroClass(), "chance-per-level", .001) * hero.getLevel())
                 return;
 
             if (extraDrops != 0) {
-                extraDrops = rand.nextInt(extraDrops) + 1;
+                extraDrops = Util.rand.nextInt(extraDrops) + 1;
             } else {
                 extraDrops = 1;
             }

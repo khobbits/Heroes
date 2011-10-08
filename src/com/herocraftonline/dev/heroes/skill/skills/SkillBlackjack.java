@@ -1,7 +1,5 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
-import java.util.Random;
-
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
@@ -20,13 +18,12 @@ import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Setting;
+import com.herocraftonline.dev.heroes.util.Util;
 
 public class SkillBlackjack extends ActiveSkill {
 
     private String applyText;
     private String expireText;
-
-    private Random random = new Random();
 
     public SkillBlackjack(Heroes plugin) {
         super(plugin, "Blackjack");
@@ -111,7 +108,7 @@ public class SkillBlackjack extends ActiveSkill {
                 Hero defendingHero = plugin.getHeroManager().getHero((Player) event.getEntity());
 
                 double chance = getSetting(attackingHero.getHeroClass(), "stun-chance", 0.20);
-                if (random.nextDouble() < chance) {
+                if (Util.rand.nextDouble() < chance) {
                     int duration = getSetting(attackingHero.getHeroClass(), "stun-duration", 5000);
                     defendingHero.addEffect(new StunEffect(skill, duration));
                 }

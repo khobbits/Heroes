@@ -2,7 +2,6 @@ package com.herocraftonline.dev.heroes.skill.skills;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Creature;
@@ -24,13 +23,13 @@ import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Setting;
+import com.herocraftonline.dev.heroes.util.Util;
 
 public class SkillFireArmor extends ActiveSkill {
 
     private String applyText;
     private String expireText;
     private String igniteText;
-    private Random random = new Random();
     private List<String> defaultArmors = new ArrayList<String>();
 
     public SkillFireArmor(Heroes plugin) {
@@ -118,7 +117,7 @@ public class SkillFireArmor extends ActiveSkill {
 
             // Check our ignite chance
             double chance = getSetting(hero.getHeroClass(), "ignite-chance", .2);
-            if (random.nextDouble() >= chance)
+            if (Util.rand.nextDouble() >= chance)
                 return;
 
             // Set the damager on fire if it was successful

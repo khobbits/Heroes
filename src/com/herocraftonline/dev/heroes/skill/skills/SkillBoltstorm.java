@@ -2,7 +2,6 @@ package com.herocraftonline.dev.heroes.skill.skills;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -18,12 +17,12 @@ import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Setting;
+import com.herocraftonline.dev.heroes.util.Util;
 
 public class SkillBoltstorm extends ActiveSkill {
 
     private String applyText;
     private String expireText;
-    private Random rand;
 
     public SkillBoltstorm(Heroes plugin) {
         super(plugin, "Boltstorm");
@@ -32,8 +31,6 @@ public class SkillBoltstorm extends ActiveSkill {
         setArgumentRange(0, 0);
         setIdentifiers("skill boltstorm");
         setTypes(SkillType.LIGHTNING, SkillType.SILENCABLE, SkillType.DAMAGING);
-
-        rand = new Random();
     }
 
     @Override
@@ -120,7 +117,7 @@ public class SkillBoltstorm extends ActiveSkill {
                 return;
 
             int damage = getSetting(heroClass, Setting.DAMAGE.node(), 4);
-            LivingEntity target = targets.get(rand.nextInt(targets.size()));
+            LivingEntity target = targets.get(Util.rand.nextInt(targets.size()));
             addSpellTarget(target, hero);
 
             target.getWorld().strikeLightningEffect(target.getLocation());
