@@ -21,8 +21,8 @@ Version dev
 
 * Uses ExperienceBar built into MC
 * Added /hero admin level - command to adjust a player's level directly.
-* Skills are now loaded on Demand (only if a class has them)
 * Classes can now have multiple parents via Strong and Weak parent settings
+* Classes must have 'user-class: true' to be added to the permission 'heroes.classes.*' 
 * ExperienceOrbs will no longer drop by default - they can be turned back on in the config, but they wont do anything while heroes is active
 * Hero recovery items have been removed - all items are now dropped to the world instead - players will need to recover their items before you update, they will become inaccessible
 * Economy Support has been re-written - now supports iCo4/5/6 + Bose + EssentialsEco
@@ -34,6 +34,7 @@ Version dev
 
 * New 
 ** SkillManager - skills are now loaded into the SkillManager rather than the CommandHandler
+** Skills are now loaded on Demand (only when a class has them)
 ** CombustEffect - it's used for tracking who last applied FireTicks to a player
 ** FormEffect - only 1 can be active a time. work like 'stances'
 ** ImbueEffect - like FormEffects but are weapon related to prevent classes from stacking multiple weapon buffs at one time
@@ -56,6 +57,7 @@ Version dev
 ** Stun effects now cause the victim's screen to wobble
 ** Poison & Disease effects now turn the victims health-bar yellow
 ** delay - all skills that are used via command/binding can now be given a 'warmup' - the time is in milliseconds
+** Summons now clear properly when changing classes.
 * Become Death - (NEW!)
 ** You become like a zombie, and no longer need to breath air
 ** Undead will not target you for the duration of the skill
@@ -133,5 +135,6 @@ Version dev
 ** Group buff that increases mana regeneration by a set multiplier.
 * Wolf
 ** Fixed Wolves in unloaded chunks not despawning properly when a player exits
+** Now reset properly when a player changes out of a class that has wolves
 * Woodcutting - (NEW!)
 ** Passive skill that has a chance to give double-drops when chopping logs
