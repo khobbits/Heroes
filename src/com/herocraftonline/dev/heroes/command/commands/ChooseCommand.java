@@ -169,10 +169,7 @@ public class ChooseCommand extends BasicInteractiveCommand {
                 }
             }
 
-            // Cleanup stuff
-            hero.clearEffects();
-            hero.clearBinds();
-            hero.setHeroClass(newClass);
+            hero.changeHeroClass(newClass);
 
             plugin.getHeroManager().performSkillChecks(hero);
             if (plugin.getConfigManager().getProperties().prefixClassName) {

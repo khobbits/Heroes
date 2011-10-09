@@ -119,14 +119,15 @@ public class Hero {
     }
 
     /**
-     * Changes the hero's current class to the given class then clears all binds
+     * Changes the hero's current class to the given class then clears all binds, effects and summons.
      * 
      * @param heroClass
      */
     public void changeHeroClass(HeroClass heroClass) {
         clearEffects();
+        clearSummons();
+        clearBinds();
         setHeroClass(heroClass);
-        binds.clear();
     }
 
     public void clearBinds() {
