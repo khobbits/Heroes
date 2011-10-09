@@ -4,6 +4,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.api.ClassChangeEvent;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.command.BasicCommand;
 import com.herocraftonline.dev.heroes.hero.Hero;
@@ -43,6 +44,12 @@ public class AdminClassCommand extends BasicCommand {
             Messaging.send(sender, "$1 is already a $2.", player.getName(), heroClass.getName());
             return false;
         }
+        
+        ClassChangeEvent event = new ClassChangeEvent(hero, hero.getHeroClass(), heroClass);
+        plugin.getServer().getPluginManager().callEvent(event);
+        if (event.isCancelled())
+            return false;
+        
         // Change the Players HeroClass and reset their Bindings.
         hero.changeHeroClass(heroClass);
         // Recheck hero skills

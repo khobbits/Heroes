@@ -2,6 +2,7 @@ package com.herocraftonline.dev.heroes.skill.skills;
 
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -23,6 +24,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.api.ClassChangeEvent;
 import com.herocraftonline.dev.heroes.api.HeroesEventListener;
 import com.herocraftonline.dev.heroes.api.WeaponDamageEvent;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
@@ -212,6 +214,18 @@ public class SkillWolf extends ActiveSkill {
 
         public SkillHeroListener(Skill skill) {
             this.skill = skill;
+        }
+        
+        @Override
+        public void onClassChange(ClassChangeEvent event) {
+            if (event.isCancelled())
+                return;
+            
+            Hero hero = event.getHero();
+            Map<String, String> skillSettings = hero.getSkillSettings(skill);
+            if (skillSettings != null) {
+                hero.setSkillSetting(skill, "wolves", 0);
+            }
         }
 
         @Override
