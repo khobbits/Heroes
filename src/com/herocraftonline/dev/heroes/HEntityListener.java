@@ -116,12 +116,16 @@ public class HEntityListener extends EntityListener {
         Player attacker = getAttacker(defender.getLastDamageCause());
         HeroManager heroManager = plugin.getHeroManager();
 
-        if (!prop.orbExp)
+        if (!prop.orbExp) 
             event.setDroppedExp(0);
-
+        
         if (defender instanceof Player) {
-            Hero heroDefender = heroManager.getHero((Player) defender);
-            Util.deaths.put(heroDefender.getPlayer().getName(), event.getEntity().getLocation());
+            Player player = (Player) defender;
+            player.setExperience(0);
+            player.setTotalExperience(0);
+            player.setLevel(0);
+            Hero heroDefender = heroManager.getHero(player);
+            Util.deaths.put(player.getName(), event.getEntity().getLocation());
             double exp = heroDefender.getExperience();
             int level = prop.getLevel(exp);
             
