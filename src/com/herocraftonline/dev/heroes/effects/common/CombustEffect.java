@@ -11,6 +11,7 @@ import com.herocraftonline.dev.heroes.skill.Skill;
 public class CombustEffect extends PeriodicExpirableEffect {
 
     private final Player applier;
+    private boolean expired = false;
     
     public CombustEffect(Skill skill, Player applier) {
         super(skill, "Combust", 50, 0);
@@ -23,7 +24,7 @@ public class CombustEffect extends PeriodicExpirableEffect {
     public void apply(Creature creature) {
         super.apply(creature);
     }
-
+    
     @Override
     public void apply(Hero hero) {
         super.apply(hero);
@@ -31,6 +32,11 @@ public class CombustEffect extends PeriodicExpirableEffect {
 
     public Player getApplier() {
         return applier;
+    }
+    
+    @Override
+    public boolean isExpired() {
+        return expired;
     }
 
     @Override
@@ -47,7 +53,7 @@ public class CombustEffect extends PeriodicExpirableEffect {
     public void tick(Creature creature) {
         super.tick(creature);
         if (creature.getFireTicks() == 0) {
-            this.expire();
+            this.expired = true;
         }
     }
 
@@ -55,7 +61,7 @@ public class CombustEffect extends PeriodicExpirableEffect {
     public void tick(Hero hero) {
         super.tick(hero);
         if (hero.getPlayer().getFireTicks() == 0) {
-            this.expire();
+            this.expired = true;
         }
     }
 }
