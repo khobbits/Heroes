@@ -1,5 +1,6 @@
 package com.herocraftonline.dev.heroes.util;
 
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -35,10 +36,10 @@ public class Properties {
     public boolean noSpawnCamp = false;
     public int spawnCampRadius;
     public double spawnCampExpMult;
-    public Map<CreatureType, Double> creatureKillingExp = new HashMap<CreatureType, Double>();
-    public Map<Material, Double> miningExp = new HashMap<Material, Double>();
-    public Map<Material, Double> loggingExp = new HashMap<Material, Double>();
-    public Map<Material, Double> craftingExp = new HashMap<Material, Double>();
+    public Map<CreatureType, Double> creatureKillingExp = new EnumMap<CreatureType, Double>(CreatureType.class);
+    public Map<Material, Double> miningExp = new EnumMap<Material, Double>(Material.class);
+    public Map<Material, Double> loggingExp = new EnumMap<Material, Double>(Material.class);
+    public Map<Material, Double> craftingExp = new EnumMap<Material, Double>(Material.class);
     public Map<String, String> skillInfo = new HashMap<String, String>();
     public Map<Player, Location> playerDeaths = new HashMap<Player, Location>();
 
