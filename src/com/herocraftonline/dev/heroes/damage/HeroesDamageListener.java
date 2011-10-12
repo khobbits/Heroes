@@ -59,7 +59,7 @@ public class HeroesDamageListener extends EntityListener {
 
     @Override
     public void onEntityDamage(EntityDamageEvent event) {
-        if (event.isCancelled())
+        if (event.isCancelled() || plugin.getConfigManager().getProperties().disabledWorlds.contains(event.getEntity().getWorld().getName()))
             return;
 
         if (event.getCause() == DamageCause.SUICIDE) {
@@ -160,7 +160,6 @@ public class HeroesDamageListener extends EntityListener {
                 return;
             }
             final Hero hero = plugin.getHeroManager().getHero(player);
-            hero.checkArmorSlots();
             // If the defender is a player
             if (hero.hasEffectType(EffectType.INVULNERABILITY)) {
                 event.setCancelled(true);
