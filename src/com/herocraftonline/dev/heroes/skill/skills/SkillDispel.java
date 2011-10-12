@@ -45,7 +45,7 @@ public class SkillDispel extends TargettedSkill {
             // if player is targetting itself
             if (targetPlayer.equals(player)) {
                 for (Effect effect : hero.getEffects()) {
-                    if (effect.isType(EffectType.DISPELLABLE) && !effect.isType(EffectType.HARMFUL)) {
+                    if (effect.isType(EffectType.DISPELLABLE) && effect.isType(EffectType.HARMFUL)) {
                         hero.removeEffect(effect);
                         removed = true;
                         maxRemovals--;
