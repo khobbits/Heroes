@@ -159,10 +159,10 @@ public class HEntityListener extends EntityListener {
         } else if (defender instanceof Creature) {
             EffectManager effectManager = plugin.getEffectManager();
             Creature creatureDefender = (Creature) defender;
-            effectManager.clearCreatureEffects(creatureDefender);
             if (attacker == null && effectManager.creatureHasEffect(creatureDefender, "Combust")) {
                 attacker = ((CombustEffect) effectManager.getCreatureEffect(creatureDefender, "Combust")).getApplier();
             }
+            effectManager.clearCreatureEffects(creatureDefender);
         }
 
         if (attacker != null && !attacker.equals(defender)) {
