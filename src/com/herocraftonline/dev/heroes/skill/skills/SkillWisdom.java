@@ -58,7 +58,7 @@ public class SkillWisdom extends ActiveSkill {
         WisdomEffect mEffect = new WisdomEffect(this, duration, manaMultiplier);
         if (!hero.hasParty()) {
             if (hero.hasEffect("Wisdom")) {
-                if (((WisdomEffect) hero.getEffect("Might")).getManaMultiplier() > mEffect.getManaMultiplier()) {
+                if (((WisdomEffect) hero.getEffect("Wisdom")).getManaMultiplier() > mEffect.getManaMultiplier()) {
                     Messaging.send(player, "You have a more powerful effect already!");
                 }
             }
