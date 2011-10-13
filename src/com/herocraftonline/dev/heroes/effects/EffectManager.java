@@ -128,6 +128,7 @@ public class EffectManager {
 
         @Override
         public void run() {
+            Heroes.debug.startTask("EffectUpdater.run");
             Set<ManagedEffect> removals = new HashSet<ManagedEffect>(pendingRemovals);
             pendingRemovals.clear();
             for (ManagedEffect managed : removals) {
@@ -162,6 +163,7 @@ public class EffectManager {
                     }
                 }
             }
+            Heroes.debug.stopTask("EffectUpdater.run");
         }
 
     }

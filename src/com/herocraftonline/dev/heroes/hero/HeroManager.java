@@ -70,12 +70,14 @@ public class HeroManager {
      * @return
      */
     public Hero getHero(Player player) {
+        Heroes.debug.startTask("HeroManager.getHero");
         String key = player.getName().toLowerCase();
         Hero hero = heroes.get(key);
         if (hero != null) {
             if (hero.getPlayer().getEntityId() != player.getEntityId()) {
                 heroes.remove(key);
             } else {
+                Heroes.debug.stopTask("HeroManager.getHero");
                 return hero;
             }
         }
@@ -85,6 +87,7 @@ public class HeroManager {
         addHero(hero);
         performSkillChecks(hero);
 
+        Heroes.debug.stopTask("HeroManager.getHero");
         return hero;
     }
 

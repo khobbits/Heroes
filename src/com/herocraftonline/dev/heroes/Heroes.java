@@ -30,6 +30,7 @@ import com.herocraftonline.dev.heroes.command.commands.BindSkillCommand;
 import com.herocraftonline.dev.heroes.command.commands.ChooseCommand;
 import com.herocraftonline.dev.heroes.command.commands.ConfigReloadCommand;
 import com.herocraftonline.dev.heroes.command.commands.CooldownCommand;
+import com.herocraftonline.dev.heroes.command.commands.DebugDumpCommand;
 import com.herocraftonline.dev.heroes.command.commands.HealthCommand;
 import com.herocraftonline.dev.heroes.command.commands.HelpCommand;
 import com.herocraftonline.dev.heroes.command.commands.HeroSaveCommand;
@@ -82,7 +83,8 @@ public class Heroes extends JavaPlugin {
     // Using this instead of getDataFolder(), getDataFolder() uses the File
     // Name. We wan't a constant folder name.
     public static final File dataFolder = new File("plugins" + File.separator + "Heroes");
-
+    public static final DebugTimer debug = new DebugTimer();
+    
     // Simple hook to Minecraft's logger so we can output to the console.
     private static final Logger log = Logger.getLogger("Minecraft");
     private static DebugLog debugLog;
@@ -187,6 +189,7 @@ public class Heroes extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        debug.reset();
         configManager = new ConfigManager(this);
 
         // Attempt to load the Configuration file.
@@ -378,6 +381,7 @@ public class Heroes extends JavaPlugin {
         commandHandler.addCommand(new LeaderboardCommand(this));
         commandHandler.addCommand(new HeroSaveCommand(this));
         commandHandler.addCommand(new ResetCommand(this));
+        commandHandler.addCommand(new DebugDumpCommand());
     }
 
     /**
