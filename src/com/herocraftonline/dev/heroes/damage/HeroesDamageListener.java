@@ -56,9 +56,8 @@ public class HeroesDamageListener extends EntityListener {
             entity.setHealth(maxHealth);
         }
     }
-
-    @Override
-    public void onEntityDamage(EntityDamageEvent event) {
+    
+    private void onEntityDamageCore(EntityDamageEvent event) {
         if (event.isCancelled() || plugin.getConfigManager().getProperties().disabledWorlds.contains(event.getEntity().getWorld().getName()))
             return;
 
@@ -243,9 +242,19 @@ public class HeroesDamageListener extends EntityListener {
     }
 
     @Override
+    public void onEntityDamage(EntityDamageEvent event) {
+        Heroes.debug.startTask("HeroesDamageListener.onEntityDamage");
+        onEntityDamageCore(event);
+        Heroes.debug.stopTask("HeroesDamageListener.onEntityDamage");
+    }
+
+    @Override
     public void onEntityRegainHealth(EntityRegainHealthEvent event) {
-        if (event.isCancelled() || !(event.getEntity() instanceof Player))
+        Heroes.debug.startTask("HeroesDamageListener.onEntityRegainHealth");
+        if (event.isCancelled() || !(event.getEntity() instanceof Player)) {
+            Heroes.debug.stopTask("HeroesDamageListener.onEntityRegainHealth");
             return;
+        }
 
         int amount = event.getAmount();
         Player player = (Player) event.getEntity();
@@ -263,6 +272,7 @@ public class HeroesDamageListener extends EntityListener {
         int newPlayerHealth = (int) Math.ceil(newHeroHealth / maxHealth * 20);
         hero.setHealth(newHeroHealth);
         event.setAmount(newPlayerHealth - player.getHealth());
+        Heroes.debug.stopTask("HeroesDamageListener.onEntityRegainHealth");
 
     }
 

@@ -107,11 +107,14 @@ public class HEntityListener extends EntityListener {
 
     @Override
     public void onEntityDeath(EntityDeathEvent event) {
+        Heroes.debug.startTask("HEntityListener.onEntityDeath");
         Entity defender = event.getEntity();
         Properties prop = plugin.getConfigManager().getProperties();
         //If this is a disabled world ignore it
-        if (prop.disabledWorlds.contains(defender.getWorld().getName()))
+        if (prop.disabledWorlds.contains(defender.getWorld().getName())) {
+            Heroes.debug.stopTask("HEntityListener.onEntityDeath");
             return;
+        }
 
         Player attacker = getAttacker(defender.getLastDamageCause());
         HeroManager heroManager = plugin.getHeroManager();
@@ -169,5 +172,7 @@ public class HEntityListener extends EntityListener {
             Hero hero = heroManager.getHero(attacker);
             awardKillExp(hero, defender);
         }
+        
+        Heroes.debug.stopTask("HEntityListener.onEntityDeath");
     }
 }
