@@ -100,11 +100,13 @@ public class SkillDisarm extends TargettedSkill {
         public void apply(Hero hero) {
             Player player = hero.getPlayer();
             ItemStack is = player.getItemInHand();
-            if (!ismap.containsKey(hero)) {
-                ismap.put(hero, is);
-                player.setItemInHand(null);
-                super.apply(hero);
-                broadcast(player.getLocation(), applyText, player.getDisplayName());
+            if (is != null && Util.isWeapon(is.getType())) {                
+                if (!ismap.containsKey(hero)) {
+                    ismap.put(hero, is);
+                    player.setItemInHand(null);
+                    super.apply(hero);
+                    broadcast(player.getLocation(), applyText, player.getDisplayName());
+                }
             }
         }
 
