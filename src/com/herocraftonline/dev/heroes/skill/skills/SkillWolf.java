@@ -54,6 +54,7 @@ public class SkillWolf extends ActiveSkill {
         SkillEntityListener seListener = new SkillEntityListener(this);
         SkillPlayerListener spListener = new SkillPlayerListener(this);
 
+        registerEvent(Type.CHUNK_UNLOAD, new SkillChunkListener(), Priority.Highest);
         registerEvent(Type.ENTITY_TAME, seListener, Priority.Highest);
         registerEvent(Type.ENTITY_DEATH, seListener, Priority.Monitor);
         registerEvent(Type.PLAYER_JOIN, spListener, Priority.High);
@@ -80,7 +81,7 @@ public class SkillWolf extends ActiveSkill {
         skillTaming = getSetting(null, "tame-requires-skill", true);
     }
 
-    @Override   
+    @Override
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
 
@@ -153,6 +154,7 @@ public class SkillWolf extends ActiveSkill {
         wolf.setTamed(true);
         wolf.setHealth(health);
         hero.getSummons().add(wolf);
+        wolves.add(wolf);
     }
 
     public class SkillEntityListener extends EntityListener {
@@ -207,7 +209,6 @@ public class SkillWolf extends ActiveSkill {
                     return;
                 }
                 skill.setWolfSettings(hero, (Wolf) animal);
-                wolves.add((Wolf) animal);
                 Messaging.send(player, "You have tamed a wolf!");
             }
         }
@@ -220,14 +221,14 @@ public class SkillWolf extends ActiveSkill {
         public SkillHeroListener(Skill skill) {
             this.skill = skill;
         }
-        
+
         @Override
         public void onClassChange(ClassChangeEvent event) {
             if (event.isCancelled())
                 return;
-            
+
             Hero hero = event.getHero();
-            
+
             Iterator<Creature> iter = hero.getSummons().iterator();
             while (iter.hasNext()) {
                 Creature creature = iter.next();
@@ -262,18 +263,26 @@ public class SkillWolf extends ActiveSkill {
             event.setDamage(damage);
         }
     }
-    
+
     public class SkillChunkListener extends WorldListener {
 
         @Override
         public void onChunkUnload(ChunkUnloadEvent event) {
             if (event.isCancelled())
                 return;
-            
-            for (Wolf wolf : wolves) {
+
+            Set<Wolf> wolvesClone = new HashSet<Wolf>(wolves);
+            for (Wolf wolf : wolvesClone) {
                 Location loc = wolf.getLocation();
-                if (event.getChunk().getX() == loc.getBlockX() >> 4 && event.getChunk().getZ() == loc.getBlockZ() >> 4) {
-                    event.setCancelled(true);
+                if (event.getChunk().getX() == (loc.getBlockX() >> 4) && (event.getChunk().getZ() == loc.getBlockZ() >> 4)) {
+                    Player owner = (Player) wolf.getOwner();
+                    if (owner.isOnline()) {
+                        Wolf newWolf = (Wolf) owner.getWorld().spawnCreature(owner.getLocation(), CreatureType.WOLF);
+                        setWolfSettings(plugin.getHeroManager().getHero(owner), newWolf);
+                        wolves.add(newWolf);
+                    }
+                    wolves.remove(wolf);
+                    wolf.remove();
                 }
             }
         }
@@ -314,6 +323,7 @@ public class SkillWolf extends ActiveSkill {
             while (iter.hasNext()) {
                 Creature creature = iter.next();
                 if (creature instanceof Wolf) {
+                    System.out.println("removing wolf");
                     creature.remove();
                     wolves.remove(creature);
                     iter.remove();
