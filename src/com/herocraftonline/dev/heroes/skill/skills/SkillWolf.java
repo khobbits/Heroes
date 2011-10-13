@@ -3,6 +3,7 @@ package com.herocraftonline.dev.heroes.skill.skills;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -21,6 +22,8 @@ import org.bukkit.event.entity.EntityTameEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
+import org.bukkit.event.world.WorldListener;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
@@ -38,6 +41,7 @@ import com.herocraftonline.dev.heroes.util.Setting;
 public class SkillWolf extends ActiveSkill {
 
     public boolean skillTaming = true;
+    public Set<Wolf> wolves = new HashSet<Wolf>();
 
     public SkillWolf(Heroes plugin) {
         super(plugin, "Wolf");
@@ -76,7 +80,7 @@ public class SkillWolf extends ActiveSkill {
         skillTaming = getSetting(null, "tame-requires-skill", true);
     }
 
-    @Override
+    @Override   
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
 
@@ -89,7 +93,7 @@ public class SkillWolf extends ActiveSkill {
 
             int maxWolves = getSetting(hero.getHeroClass(), "max-wolves", 3);
             if (wolves >= maxWolves) {
-                Messaging.send(player, "You already have the maximum number of wolves");
+                Messaging.send(player, "You already have the maximum number of summons.");
                 return false;
             }
 
@@ -174,6 +178,7 @@ public class SkillWolf extends ActiveSkill {
                 return;
 
             hero.getSummons().remove(wolf);
+            wolves.remove(wolf);
             int wolves = Integer.parseInt(hero.getSkillSettings(skill).get("wolves"));
             hero.setSkillSetting(skill, "wolves", wolves - 1);
         }
@@ -202,10 +207,10 @@ public class SkillWolf extends ActiveSkill {
                     return;
                 }
                 skill.setWolfSettings(hero, (Wolf) animal);
+                wolves.add((Wolf) animal);
                 Messaging.send(player, "You have tamed a wolf!");
             }
         }
-
     }
 
     public class SkillHeroListener extends HeroesEventListener {
@@ -222,6 +227,16 @@ public class SkillWolf extends ActiveSkill {
                 return;
             
             Hero hero = event.getHero();
+            
+            Iterator<Creature> iter = hero.getSummons().iterator();
+            while (iter.hasNext()) {
+                Creature creature = iter.next();
+                if (creature instanceof Wolf) {
+                    creature.remove();
+                    wolves.remove(creature);
+                    iter.remove();
+                }
+            }
             Map<String, String> skillSettings = hero.getSkillSettings(skill);
             if (skillSettings != null) {
                 hero.setSkillSetting(skill, "wolves", 0);
@@ -245,6 +260,22 @@ public class SkillWolf extends ActiveSkill {
             double damagePerLevel = skill.getSetting(hero.getHeroClass(), "damage-per-level", .1);
             int damage = skill.getSetting(hero.getHeroClass(), Setting.DAMAGE.node(), 3) + (int) (hero.getLevel() * damagePerLevel);
             event.setDamage(damage);
+        }
+    }
+    
+    public class SkillChunkListener extends WorldListener {
+
+        @Override
+        public void onChunkUnload(ChunkUnloadEvent event) {
+            if (event.isCancelled())
+                return;
+            
+            for (Wolf wolf : wolves) {
+                Location loc = wolf.getLocation();
+                if (event.getChunk().getX() == loc.getBlockX() >> 4 && event.getChunk().getZ() == loc.getBlockZ() >> 4) {
+                    event.setCancelled(true);
+                }
+            }
         }
     }
 
@@ -283,10 +314,8 @@ public class SkillWolf extends ActiveSkill {
             while (iter.hasNext()) {
                 Creature creature = iter.next();
                 if (creature instanceof Wolf) {
-                    if (!creature.getLocation().getBlock().getChunk().isLoaded()) {
-                        creature.getWorld().loadChunk(creature.getLocation().getBlock().getChunk());
-                    }
                     creature.remove();
+                    wolves.remove(creature);
                     iter.remove();
                 }
             }
