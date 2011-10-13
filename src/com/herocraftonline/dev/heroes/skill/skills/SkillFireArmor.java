@@ -16,30 +16,22 @@ import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.effects.EffectType;
-import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;
-import com.herocraftonline.dev.heroes.skill.ActiveSkill;
-import com.herocraftonline.dev.heroes.skill.Skill;
+import com.herocraftonline.dev.heroes.skill.PassiveSkill;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Messaging;
-import com.herocraftonline.dev.heroes.util.Setting;
 import com.herocraftonline.dev.heroes.util.Util;
 
-public class SkillFireArmor extends ActiveSkill {
+public class SkillFireArmor extends PassiveSkill {
 
-    private String applyText;
-    private String expireText;
     private String igniteText;
     private List<String> defaultArmors = new ArrayList<String>();
 
     public SkillFireArmor(Heroes plugin) {
         super(plugin, "FireArmor");
         setDescription("Gives your armor a chance to ignite your attackers!");
-        setUsage("/skill firearmor");
-        setArgumentRange(0, 0);
-        setIdentifiers("skill firearmor", "skill farmor");
         setTypes(SkillType.FIRE, SkillType.SILENCABLE, SkillType.BUFF);
-
+        setEffectTypes(EffectType.FIRE);
         defaultArmors.add(Material.GOLD_CHESTPLATE.name());
 
         registerEvent(Type.ENTITY_DAMAGE, new SkillDamageListener(), Priority.Monitor);
@@ -49,9 +41,6 @@ public class SkillFireArmor extends ActiveSkill {
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
         node.setProperty("armors", defaultArmors);
-        node.setProperty(Setting.APPLY_TEXT.node(), "%hero%'s armor is enveloped in flame!");
-        node.setProperty(Setting.EXPIRE_TEXT.node(), "%hero%'s armor is no longer aflame!");
-        node.setProperty(Setting.DURATION.node(), 20000);
         node.setProperty("ignite-chance", 0.20);
         node.setProperty("ignite-duration", 5000);
         node.setProperty("ignite-text", "%hero% ignited %target% with firearmor!");
@@ -61,40 +50,7 @@ public class SkillFireArmor extends ActiveSkill {
     @Override
     public void init() {
         super.init();
-        applyText = getSetting(null, Setting.APPLY_TEXT.node(), "%hero%'s armor is enveloped in flame!").replace("%hero%", "$1");
-        expireText = getSetting(null, Setting.EXPIRE_TEXT.node(), "%hero%'s armor is no longer aflame!").replace("%hero%", "$1");
         igniteText = getSetting(null, "ignite-text", "%hero% ignited %target% with firearmor!").replace("%hero%", "$1").replace("%target%", "$2");
-    }
-
-    @Override
-    public boolean use(Hero hero, String[] args) {
-        int duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 20000);
-        hero.addEffect(new FireArmorEffect(this, duration));
-        return true;
-    }
-
-    public class FireArmorEffect extends ExpirableEffect {
-
-        public FireArmorEffect(Skill skill, long duration) {
-            super(skill, "FireArmor", duration);
-            this.types.add(EffectType.BENEFICIAL);
-            this.types.add(EffectType.DISPELLABLE);
-            this.types.add(EffectType.FIRE);
-        }
-
-        @Override
-        public void apply(Hero hero) {
-            super.apply(hero);
-            Player player = hero.getPlayer();
-            broadcast(player.getLocation(), applyText, player.getDisplayName());
-        }
-
-        @Override
-        public void remove(Hero hero) {
-            super.remove(hero);
-            Player player = hero.getPlayer();
-            broadcast(player.getLocation(), expireText, player.getDisplayName());
-        }
     }
 
     public class SkillDamageListener extends EntityListener {
@@ -121,7 +77,7 @@ public class SkillFireArmor extends ActiveSkill {
                 return;
 
             // Set the damager on fire if it was successful
-            int fireTicks = getSetting(hero.getHeroClass(), "ignite-duration", 5000) / 200;
+            int fireTicks = getSetting(hero.getHeroClass(), "ignite-duration", 5000) / 50;
             subEvent.getDamager().setFireTicks(fireTicks);
 
             String name = null;
