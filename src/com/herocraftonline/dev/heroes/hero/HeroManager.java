@@ -155,9 +155,12 @@ class ManaUpdater implements Runnable {
 
     @Override
     public void run() {
+        Heroes.debug.startTask("ManaUpdater.run");
         long time = System.currentTimeMillis();
-        if (time < lastUpdate + updateInterval)
+        if (time < lastUpdate + updateInterval) {
+            Heroes.debug.stopTask("ManaUpdater.run");
             return;
+        }
         lastUpdate = time;
 
         Collection<Hero> heroes = manager.getHeroes();
@@ -182,6 +185,8 @@ class ManaUpdater implements Runnable {
                 Messaging.send(hero.getPlayer(), ChatColor.BLUE + "MANA " + Messaging.createManaBar(hero.getMana()));
             }
         }
+        
+        Heroes.debug.stopTask("ManaUpdater.run");
     }
 }
 
