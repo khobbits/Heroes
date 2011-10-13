@@ -199,11 +199,16 @@ class PartyUpdater implements Runnable {
 
     @Override
     public void run() {
-        if (!this.plugin.getConfigManager().getProperties().mapUI)
+        Heroes.debug.startTask("PartyUpdater.run");
+        if (!this.plugin.getConfigManager().getProperties().mapUI) {
+            Heroes.debug.stopTask("PartyUpdater.run");
             return;
+        }
 
-        if (partyManager.getParties().size() == 0)
+        if (partyManager.getParties().size() == 0) {
+            Heroes.debug.stopTask("PartyUpdater.run");
             return;
+        }
 
         for (HeroParty party : partyManager.getParties()) {
             if (party.updateMapDisplay()) {
@@ -217,6 +222,8 @@ class PartyUpdater implements Runnable {
                 updateMapView(players);
             }
         }
+        
+        Heroes.debug.stopTask("PartyUpdater.run");
     }
 
     private void updateMapView(Player[] players) {
