@@ -56,7 +56,7 @@ public class HeroesDamageListener extends EntityListener {
             entity.setHealth(maxHealth);
         }
     }
-    
+
     private void onEntityDamageCore(EntityDamageEvent event) {
         if (event.isCancelled() || plugin.getConfigManager().getProperties().disabledWorlds.contains(event.getEntity().getWorld().getName()))
             return;
@@ -231,7 +231,7 @@ public class HeroesDamageListener extends EntityListener {
                 party.setUpdateMapDisplay(true);
             }
 
-            //Do our Damage-Dependant effect removals last
+            // Do our Damage-Dependant effect removals last
             if (hero.hasEffect("Invisible")) {
                 hero.removeEffect(hero.getEffect("Invisible"));
             }
@@ -261,7 +261,7 @@ public class HeroesDamageListener extends EntityListener {
         Hero hero = plugin.getHeroManager().getHero(player);
         double maxHealth = hero.getMaxHealth();
         double healPercent = plugin.getConfigManager().getProperties().foodHealPercent;
-        //Satiated players regenerate % of total HP rather than 1 HP
+        // Satiated players regenerate % of total HP rather than 1 HP
         if (event.getRegainReason() == RegainReason.SATIATED) {
             amount = (int) Math.ceil(maxHealth * healPercent);
         }
@@ -286,7 +286,7 @@ public class HeroesDamageListener extends EntityListener {
 
         for (ItemStack armor : armorContents) {
             Material armorType = armor.getType();
-            if (armorType != Material.AIR) {
+            if (armorPoints.containsKey(armorType)) {
                 short armorDurability = armor.getDurability();
                 // Ignore non-durable items
                 if (armorDurability == -1) {
