@@ -302,7 +302,7 @@ public class Heroes extends JavaPlugin {
         if (Heroes.Permissions == null) {
             if (test != null) {
                 // Ignore fake permissions or Bukkit Permissions
-                if (test.getDescription().getVersion().startsWith("2") || this.getServer().getPluginManager().getPlugin("GroupManager") != null || this.getServer().getPluginManager().getPlugin("PermissionsBukkit") != null || this.getServer().getPluginManager().getPlugin("bPermissions") != null)
+                if (test.getDescription().getVersion().startsWith("2") || this.getServer().getPluginManager().getPlugin("GroupManager") != null || this.getServer().getPluginManager().getPlugin("PermissionsBukkit") != null || this.getServer().getPluginManager().getPlugin("bPermissions") != null || this.getServer().getPluginManager().getPlugin("PermissionsEx") != null)
                     return;
 
                 Heroes.Permissions = ((Permissions) test).getHandler();
