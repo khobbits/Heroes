@@ -417,7 +417,7 @@ public class HeroClassManager {
                 for (Skill skill : plugin.getSkillManager().getSkills()) {
                     // Ignore this skill if it was already loaded onto the class (we don't want to overwrite defined
                     // skills as they have settings)
-                    if (newClass.hasSkill(skill.getName())) {
+                    if (newClass.hasSkill(skill.getName()) || skill instanceof OutsourcedSkill) {
                         continue;
                     }
 

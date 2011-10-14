@@ -2,8 +2,6 @@ package com.herocraftonline.dev.heroes.skill;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.CustomEventListener;
-import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
 import org.bukkit.util.config.ConfigurationNode;
@@ -11,6 +9,7 @@ import org.bukkit.util.config.ConfigurationNode;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.ClassChangeEvent;
 import com.herocraftonline.dev.heroes.api.HeroChangeLevelEvent;
+import com.herocraftonline.dev.heroes.api.HeroesEventListener;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.util.Setting;
@@ -56,7 +55,7 @@ public class OutsourcedSkill extends Skill {
         setArgumentRange(0, 0);
         setDescription(usage);
         this.permissions = permissions;
-        registerEvent(Type.CUSTOM_EVENT, new SkillCustomListener(), Priority.Normal);
+        registerEvent(Type.CUSTOM_EVENT, new SkillHeroListener(), Priority.Monitor);
     }
 
     /**
@@ -153,18 +152,19 @@ public class OutsourcedSkill extends Skill {
     /**
      * Monitors level and class change events and tries to give or remove the skill's permissions when appropriate.
      */
-    public class SkillCustomListener extends CustomEventListener {
+    public class SkillHeroListener extends HeroesEventListener {
 
         @Override
-        public void onCustomEvent(Event event) {
-            if (event instanceof ClassChangeEvent) {
-                ClassChangeEvent subEvent = (ClassChangeEvent) event;
-                tryLearningSkill(subEvent.getHero(), subEvent.getTo());
-            } else if (event instanceof HeroChangeLevelEvent) {
-                HeroChangeLevelEvent subEvent = (HeroChangeLevelEvent) event;
-                tryLearningSkill(subEvent.getHero());
-            }
+        public void onClassChange(ClassChangeEvent event) {
+            if (event.isCancelled())
+                return;
+            
+            tryLearningSkill(event.getHero(), event.getTo());
+        }
+
+        @Override
+        public void onHeroChangeLevel(HeroChangeLevelEvent event) {
+            tryLearningSkill(event.getHero());
         }
     }
-
 }
