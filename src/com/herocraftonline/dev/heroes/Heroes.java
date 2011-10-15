@@ -3,6 +3,8 @@ package com.herocraftonline.dev.heroes;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -13,6 +15,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
+import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -307,24 +310,35 @@ public class Heroes extends JavaPlugin {
 
                 Heroes.Permissions = ((Permissions) test).getHandler();
                 log(Level.INFO, "Permissions found.");
-                final Player[] players = getServer().getOnlinePlayers();
-                for (Player player : players) {
-                    Hero hero = heroManager.getHero(player);
-                    HeroClass heroClass = hero.getHeroClass();
+            }
+        }
+        final Player[] players = getServer().getOnlinePlayers();
+        for (Player player : players) {
+            Hero hero = heroManager.getHero(player);
+            HeroClass heroClass = hero.getHeroClass();
 
-                    for (Command cmd : commandHandler.getCommands()) {
-                        if (cmd instanceof OutsourcedSkill) {
-                            ((OutsourcedSkill) cmd).tryLearningSkill(hero);
-                        }
-                    }
-
-                    if (Heroes.Permissions != null && heroClass != heroClassManager.getDefaultClass()) {
-                        if (!Heroes.Permissions.has(player, "heroes.classes." + heroClass.getName().toLowerCase())) {
-                            hero.setHeroClass(heroClassManager.getDefaultClass());
-                        }
-                    }
+            for (Command cmd : commandHandler.getCommands()) {
+                if (cmd instanceof OutsourcedSkill) {
+                    ((OutsourcedSkill) cmd).tryLearningSkill(hero);
                 }
             }
+
+            if (Heroes.Permissions != null && heroClass != heroClassManager.getDefaultClass()) {
+                if (!Heroes.Permissions.has(player, "heroes.classes." + heroClass.getName().toLowerCase())) {
+                    hero.setHeroClass(heroClassManager.getDefaultClass());
+                }
+            }
+        }
+        if (this.getServer().getPluginManager().getPermission("heroes.admin.*") == null) {
+            Map<String, Boolean> adminPermissions = new HashMap<String, Boolean>();
+            adminPermissions.put("heroes.admin.class", true);
+            adminPermissions.put("heroes.admin.level", true);
+            adminPermissions.put("heroes.admin.health", true);
+            adminPermissions.put("heroes.admin.exp", true);
+            adminPermissions.put("heroes.admin.reload", true);
+            adminPermissions.put("heroes.admin.saveall", true);
+            Permission wildcardAdminPermission = new Permission("heroes.admin.*", "Grants access to all admin commands.", adminPermissions);
+            this.getServer().getPluginManager().addPermission(wildcardAdminPermission);
         }
     }
 
