@@ -83,7 +83,12 @@ public class HPlayerListener extends PlayerListener {
             Util.syncInventory(player, plugin);
             return;
         }
-
+        
+        //Remove effects dependant on non-interaction
+        if (hero.hasEffect("Invisible")) {
+            hero.removeEffect(hero.getEffect("Invisible"));
+        }
+        
         if (hero.hasBind(material)) {
             if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 String[] args = hero.getBind(material);
@@ -93,11 +98,6 @@ public class HPlayerListener extends PlayerListener {
             }
         } else {
             hero.cancelDelayedSkill();
-        }
-        
-        //Remove effects dependant on non-interaction
-        if (hero.hasEffect("Invisible")) {
-            hero.removeEffect(hero.getEffect("Invisible"));
         }
     }
 
