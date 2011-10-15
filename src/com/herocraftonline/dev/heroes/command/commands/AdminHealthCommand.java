@@ -19,7 +19,7 @@ public class AdminHealthCommand extends BasicCommand {
         setUsage("/hero admin hp §9<player> <health>");
         setArgumentRange(2, 2);
         setIdentifiers("hero admin hp");
-        setPermission("heroes.admin.healthchange");
+        setPermission("heroes.admin.health");
     }
 
     @Override

@@ -21,7 +21,7 @@ public class AdminClassCommand extends BasicCommand {
         setUsage("/hero admin class §9<player> <class>");
         setArgumentRange(2, 2);
         setIdentifiers("hero admin class");
-        setPermission("heroes.admin.classchange");
+        setPermission("heroes.admin.class");
     }
 
     @Override
