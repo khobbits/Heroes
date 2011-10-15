@@ -61,6 +61,7 @@ import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.hero.HeroManager;
 import com.herocraftonline.dev.heroes.party.PartyManager;
 import com.herocraftonline.dev.heroes.skill.OutsourcedSkill;
+import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.SkillManager;
 import com.herocraftonline.dev.heroes.spout.SpoutInventoryListener;
 import com.herocraftonline.dev.heroes.ui.ColorMap;
@@ -317,9 +318,9 @@ public class Heroes extends JavaPlugin {
             Hero hero = heroManager.getHero(player);
             HeroClass heroClass = hero.getHeroClass();
 
-            for (Command cmd : commandHandler.getCommands()) {
-                if (cmd instanceof OutsourcedSkill) {
-                    ((OutsourcedSkill) cmd).tryLearningSkill(hero);
+            for (Skill skill : skillManager.getSkills()) {
+                if (skill instanceof OutsourcedSkill) {
+                    ((OutsourcedSkill) skill).tryLearningSkill(hero);
                 }
             }
 
