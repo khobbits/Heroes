@@ -254,6 +254,7 @@ public final class Util {
         case DIAMOND_PICKAXE:
         case DIAMOND_SPADE:
         case DIAMOND_SWORD:
+        case BOW:
             return true;
         default:
             return false;
