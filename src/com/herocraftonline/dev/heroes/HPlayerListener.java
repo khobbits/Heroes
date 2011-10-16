@@ -23,6 +23,7 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.command.Command;
+import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.effects.PeriodicEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.hero.HeroManager;
@@ -42,7 +43,12 @@ public class HPlayerListener extends PlayerListener {
 
     @Override
     public void onItemHeldChange(PlayerItemHeldEvent event) {
-        plugin.getHeroManager().getHero(event.getPlayer()).checkInventory();
+        Player player = event.getPlayer();
+        Hero hero = plugin.getHeroManager().getHero(player);
+        if (hero.hasEffectType(EffectType.DISARM)) {
+            Util.disarmCheck(hero, plugin);
+        }
+        hero.checkInventory();
     }
 
     @Override
@@ -76,19 +82,23 @@ public class HPlayerListener extends PlayerListener {
         if (event.useItemInHand() == Result.DENY)
             return;
 
-        Material material = player.getItemInHand().getType();
+
         Hero hero = plugin.getHeroManager().getHero(player);
+        if (hero.hasEffectType(EffectType.DISARM))
+            Util.disarmCheck(hero, plugin);
+        
+        Material material = player.getItemInHand().getType();
         if (!hero.canEquipItem(player.getInventory().getHeldItemSlot())) {
             event.setCancelled(true);
             Util.syncInventory(player, plugin);
             return;
         }
-        
+
         //Remove effects dependant on non-interaction
         if (hero.hasEffect("Invisible")) {
             hero.removeEffect(hero.getEffect("Invisible"));
         }
-        
+
         if (hero.hasBind(material)) {
             if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 String[] args = hero.getBind(material);
@@ -117,9 +127,13 @@ public class HPlayerListener extends PlayerListener {
     public void onPlayerPickupItem(PlayerPickupItemEvent event) {
         if (event.isCancelled() || plugin.getConfigManager().getProperties().disabledWorlds.contains(event.getPlayer().getWorld().getName()))
             return;
-
+        
         final Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
-
+        if (hero.hasEffectType(EffectType.DISARM) && Util.isWeapon(event.getItem().getItemStack().getType())) {
+            event.setCancelled(true);
+            return;
+        }
+        
         plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
             @Override
             public void run() {
