@@ -63,6 +63,7 @@ public class SkillHerbalism extends PassiveSkill {
                     mat = Material.SUGAR_CANE;
                     extraDrops = 2;
                     break;
+                case MELON_BLOCK:
                 case SAPLING:
                 case LEAVES:
                 case YELLOW_FLOWER:
@@ -71,6 +72,7 @@ public class SkillHerbalism extends PassiveSkill {
                 case RED_MUSHROOM:
                 case CACTUS:
                 case LONG_GRASS:
+                case PUMPKIN:
                 case DEAD_BUSH:
                     break;
                 default:
