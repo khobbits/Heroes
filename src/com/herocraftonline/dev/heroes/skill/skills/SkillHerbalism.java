@@ -64,6 +64,9 @@ public class SkillHerbalism extends PassiveSkill {
                     extraDrops = 2;
                     break;
                 case MELON_BLOCK:
+                    mat = Material.MELON;
+                    extraDrops = 7;
+                    break;
                 case SAPLING:
                 case LEAVES:
                 case YELLOW_FLOWER:
