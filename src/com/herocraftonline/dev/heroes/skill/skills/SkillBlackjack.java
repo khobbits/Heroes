@@ -95,8 +95,11 @@ public class SkillBlackjack extends ActiveSkill {
 
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
-            if (event.isCancelled() || !(event.getEntity() instanceof Player))
+            Heroes.debug.startTask("HeroesSkillListener");
+            if (event.isCancelled() || !(event.getEntity() instanceof Player)) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
+            }
             if (event instanceof EntityDamageByEntityEvent) {
                 EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
                 if (subEvent.getCause() != DamageCause.ENTITY_ATTACK || !(subEvent.getDamager() instanceof Player))
@@ -113,7 +116,7 @@ public class SkillBlackjack extends ActiveSkill {
                     defendingHero.addEffect(new StunEffect(skill, duration));
                 }
             }
+            Heroes.debug.stopTask("HeroesSkillListener");
         }
-
     }
 }

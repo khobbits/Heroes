@@ -79,9 +79,12 @@ public class SkillBerserk extends ActiveSkill {
 
         @Override
         public void onSkillDamage(SkillDamageEvent event) {
-            if (event.isCancelled())
+            Heroes.debug.startTask("HeroesSkillListener");
+            if (event.isCancelled()) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
-
+            }
+            
             if (event.getEntity() instanceof Player) {
                 Hero hero = plugin.getHeroManager().getHero((Player) event.getEntity());
                 if (hero.hasEffect(getName())) {
@@ -98,12 +101,16 @@ public class SkillBerserk extends ActiveSkill {
                     event.setDamage(newDamage);
                 }
             }
+            Heroes.debug.stopTask("HeroesSkillListener");
         }
 
         @Override
         public void onWeaponDamage(WeaponDamageEvent event) {
-            if (event.isCancelled())
+            Heroes.debug.startTask("HeroesSkillListener");
+            if (event.isCancelled()) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
+            }
 
             if (event.getEntity() instanceof Player) {
                 Hero hero = plugin.getHeroManager().getHero((Player) event.getEntity());
@@ -121,6 +128,7 @@ public class SkillBerserk extends ActiveSkill {
                     event.setDamage(newDamage);
                 }
             }
+            Heroes.debug.stopTask("HeroesSkillListener");
         }
     }
 }

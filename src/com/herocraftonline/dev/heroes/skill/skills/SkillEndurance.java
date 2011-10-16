@@ -78,8 +78,11 @@ public class SkillEndurance extends ActiveSkill {
 
         @Override
         public void onSkillDamage(SkillDamageEvent event) {
-            if (event.isCancelled())
+            Heroes.debug.startTask("HeroesSkillListener");
+            if (event.isCancelled()) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
+            }
 
             if (event.getEntity() instanceof Player) {
                 Hero hero = plugin.getHeroManager().getHero((Player) event.getEntity());
@@ -97,12 +100,16 @@ public class SkillEndurance extends ActiveSkill {
                     event.setDamage((int) (event.getDamage() * getSetting(hero.getHeroClass(), "outgoing-multiplier", .9)));
                 }
             }
+            Heroes.debug.stopTask("HeroesSkillListener");
         }
 
         @Override
         public void onWeaponDamage(WeaponDamageEvent event) {
-            if (event.isCancelled())
+            Heroes.debug.startTask("HeroesSkillListener");
+            if (event.isCancelled()) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
+            }
 
             if (event.getEntity() instanceof Player) {
                 Hero hero = plugin.getHeroManager().getHero((Player) event.getEntity());
@@ -121,6 +128,7 @@ public class SkillEndurance extends ActiveSkill {
                     event.setDamage((int) (event.getDamage() * getSetting(hero.getHeroClass(), "outgoing-multiplier", .9)));
                 }
             }
+            Heroes.debug.stopTask("HeroesSkillListener");
         }
     }
 }

@@ -41,12 +41,17 @@ public class SkillMining extends PassiveSkill {
 
         @Override
         public void onBlockBreak(BlockBreakEvent event) {
-            if (event.isCancelled())
+            Heroes.debug.startTask("HeroesSkillListener");
+            if (event.isCancelled()) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
+            }
 
             Block block = event.getBlock();
-            if (HBlockListener.placedBlocks.containsKey(block.getLocation()))
+            if (HBlockListener.placedBlocks.containsKey(block.getLocation())) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
+            }
 
             Material dropMaterial = null;
             boolean isStone = false;
@@ -71,22 +76,29 @@ public class SkillMining extends PassiveSkill {
                     isStone = true;
                     break;
                 default:
+                    Heroes.debug.stopTask("HeroesSkillListener");
                     return;
             }
 
             Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
-            if (!hero.hasEffect("Mining") || dropMaterial == null)
+            if (!hero.hasEffect("Mining") || dropMaterial == null) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
+            }
 
             double chance = Util.rand.nextDouble();
             
             if (isStone && chance <= getSetting(hero.getHeroClass(), "chance-from-stone", .0005) * hero.getLevel()) {
                 block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(getMatFromHeight(block), 1));
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
-            } else if (isStone)
+            } else if (isStone) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
+            }
             
             if (chance >= getSetting(hero.getHeroClass(), "chance-per-level", .001) * hero.getLevel()) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
             }
             if (dropMaterial == Material.INK_SACK) {
@@ -94,6 +106,7 @@ public class SkillMining extends PassiveSkill {
             } else {
                 block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(dropMaterial, 1));
             }
+            Heroes.debug.stopTask("HeroesSkillListener");
         }
 
         private Material getMatFromHeight(Block block) {

@@ -125,8 +125,11 @@ public class SkillCurse extends TargettedSkill {
 
         @Override
         public void onWeaponDamage(WeaponDamageEvent event) {
-            if (event.isCancelled() || event.getDamage() == 0)
+            Heroes.debug.startTask("HeroesSkillListener");
+            if (event.isCancelled() || event.getDamage() == 0) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
+            }
 
             Hero hero = null;
             Creature creature = null;
@@ -137,8 +140,10 @@ public class SkillCurse extends TargettedSkill {
                 creature = (Creature) event.getDamager();
             } else if (event.getDamager() instanceof Projectile) {
                 LivingEntity shooter = ((Projectile) event.getDamager()).getShooter();
-                if (shooter == null)
+                if (shooter == null) {
+                    Heroes.debug.stopTask("HeroesSkillListener");
                     return;
+                }
                 if (shooter instanceof Player) {
                     hero = plugin.getHeroManager().getHero((Player) shooter);
                 } else if (shooter instanceof Creature) {
@@ -163,6 +168,7 @@ public class SkillCurse extends TargettedSkill {
                     }
                 }
             }
+            Heroes.debug.stopTask("HeroesSkillListener");
         }
     }
 }

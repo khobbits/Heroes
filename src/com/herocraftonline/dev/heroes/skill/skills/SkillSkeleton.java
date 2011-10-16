@@ -94,24 +94,33 @@ public class SkillSkeleton extends ActiveSkill {
 
         @Override
         public void onEntityCombust(EntityCombustEvent event) {
-            if (!(event.getEntity() instanceof Skeleton) || event.isCancelled())
+            Heroes.debug.startTask("HeroesSkillListener.Skeleton");
+            if (!(event.getEntity() instanceof Skeleton) || event.isCancelled()) {
+                Heroes.debug.stopTask("HeroesSkillListener.Skeleton");
                 return;
+            }
             Creature creature = (Creature) event.getEntity();
             // Don't allow summoned creatures to combust
             if (plugin.getEffectManager().creatureHasEffect(creature, "Summon")) {
                 event.setCancelled(true);
             }
+            Heroes.debug.stopTask("HeroesSkillListener.Skeleton");
         }
 
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
-            if (event.isCancelled() || !(event instanceof EntityDamageByEntityEvent))
+            Heroes.debug.startTask("HeroesSkillListener.Skeleton");
+            if (event.isCancelled() || !(event instanceof EntityDamageByEntityEvent)) {
+                Heroes.debug.stopTask("HeroesSkillListener.Skeleton");
                 return;
+            }
             if (event.getEntity() instanceof Player) {
                 Hero hero = plugin.getHeroManager().getHero((Player) event.getEntity());
                 // If this hero has no summons then ignore the event
-                if (hero.getSummons().isEmpty())
+                if (hero.getSummons().isEmpty()) {
+                    Heroes.debug.stopTask("HeroesSkillListener.Skeleton");
                     return;
+                }
 
                 EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
                 LivingEntity damager = null;
@@ -121,8 +130,10 @@ public class SkillSkeleton extends ActiveSkill {
                 } else if (subEvent.getEntity() instanceof LivingEntity) {
                     damager = (LivingEntity) subEvent.getDamager();
                 }
-                if (damager == null)
+                if (damager == null) {
+                    Heroes.debug.stopTask("HeroesSkillListener.Skeleton");
                     return;
+                }
 
                 // Loop through the hero's summons and set the target
                 for (Creature creature : hero.getSummons()) {
@@ -144,24 +155,32 @@ public class SkillSkeleton extends ActiveSkill {
                     }
                 }
 
-                if (player == null)
+                if (player == null) {
+                    Heroes.debug.stopTask("HeroesSkillListener.Skeleton");
                     return;
+                }
                 Hero hero = plugin.getHeroManager().getHero(player);
-                if (hero.getSummons().isEmpty())
+                if (hero.getSummons().isEmpty()) {
+                    Heroes.debug.stopTask("HeroesSkillListener.Skeleton");
                     return;
+                }
                 for (Creature creature : hero.getSummons()) {
                     if (!(creature instanceof Skeleton)) {
                         continue;
                     }
                     creature.setTarget((LivingEntity) event.getEntity());
                 }
+                Heroes.debug.stopTask("HeroesSkillListener.Skeleton");
             }
         }
 
         @Override
         public void onEntityDeath(EntityDeathEvent event) {
-            if (!(event.getEntity() instanceof Creature))
+            Heroes.debug.startTask("HeroesSkillListener.Skeleton");
+            if (!(event.getEntity() instanceof Creature)) {
+                Heroes.debug.stopTask("HeroesSkillListener.Skeleton");
                 return;
+            }
             Creature defender = (Creature) event.getEntity();
             Collection<Hero> heroes = plugin.getHeroManager().getHeroes();
             for (Hero hero : heroes) {
@@ -169,12 +188,16 @@ public class SkillSkeleton extends ActiveSkill {
                     hero.getSummons().remove(defender);
                 }
             }
+            Heroes.debug.stopTask("HeroesSkillListener.Skeleton");
         }
 
         @Override
         public void onEntityTarget(EntityTargetEvent event) {
-            if (event.isCancelled() || !(event.getEntity() instanceof Creature))
+            Heroes.debug.startTask("HeroesSkillListener.Skeleton");
+            if (event.isCancelled() || !(event.getEntity() instanceof Creature)) {
+                Heroes.debug.stopTask("HeroesSkillListener.Skeleton");
                 return;
+            }
             if (event.getTarget() instanceof Player) {
                 for (Hero hero : plugin.getHeroManager().getHeroes()) {
                     if (hero.getSummons().contains(event.getEntity())) {
@@ -191,6 +214,7 @@ public class SkillSkeleton extends ActiveSkill {
                     }
                 }
             }
+            Heroes.debug.stopTask("HeroesSkillListener.Skeleton");
         }
     }
 
@@ -198,10 +222,13 @@ public class SkillSkeleton extends ActiveSkill {
 
         @Override
         public void onPlayerQuit(PlayerQuitEvent event) {
+            Heroes.debug.startTask("HeroesSkillListener.Skeleton");
             // Destroy any summoned creatures when the player exits
             Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
-            if (hero.getSummons().isEmpty())
+            if (hero.getSummons().isEmpty()) {
+                Heroes.debug.stopTask("HeroesSkillListener.Skeleton");
                 return;
+            }
             for (Creature summon : hero.getSummons()) {
                 if (summon instanceof Skeleton) {
                     Effect effect = plugin.getEffectManager().getCreatureEffect(summon, "Summon");
@@ -212,6 +239,7 @@ public class SkillSkeleton extends ActiveSkill {
                     }
                 }
             }
+            Heroes.debug.stopTask("HeroesSkillListener.Skeleton");
         }
     }
 }

@@ -167,30 +167,41 @@ public class SkillWolf extends ActiveSkill {
 
         @Override
         public void onEntityDeath(EntityDeathEvent event) {
-            if (!(event.getEntity() instanceof Wolf))
+            Heroes.debug.startTask("HeroesSkillListener.Wolf");
+            if (!(event.getEntity() instanceof Wolf)) {
+                Heroes.debug.stopTask("HeroesSkillListener.Wolf");
                 return;
+            }
 
             Wolf wolf = (Wolf) event.getEntity();
             AnimalTamer owner = wolf.getOwner();
-            if (!wolf.isTamed() || owner == null || !(owner instanceof Player))
+            if (!wolf.isTamed() || owner == null || !(owner instanceof Player)) {
+                Heroes.debug.stopTask("HeroesSkillListener.Wolf");
                 return;
+            }
 
             Hero hero = plugin.getHeroManager().getHero((Player) owner);
-            if (!hero.getSummons().contains(wolf))
+            if (!hero.getSummons().contains(wolf)) {
+                Heroes.debug.stopTask("HeroesSkillListener.Wolf");
                 return;
+            }
 
             hero.getSummons().remove(wolf);
             wolves.remove(wolf);
             int wolves = Integer.parseInt(hero.getSkillSettings(skill).get("wolves"));
             hero.setSkillSetting(skill, "wolves", wolves - 1);
+            Heroes.debug.stopTask("HeroesSkillListener.Wolf");
         }
 
         @Override
         public void onEntityTame(EntityTameEvent event) {
+            Heroes.debug.startTask("HeroesSkillListener.Wolf");
             AnimalTamer owner = event.getOwner();
             Entity animal = event.getEntity();
-            if (event.isCancelled() || !(animal instanceof Wolf) || !(owner instanceof Player))
+            if (event.isCancelled() || !(animal instanceof Wolf) || !(owner instanceof Player)) {
+                Heroes.debug.stopTask("HeroesSkillListener.Wolf");
                 return;
+            }
 
             Player player = (Player) owner;
             Hero hero = plugin.getHeroManager().getHero(player);
@@ -211,6 +222,7 @@ public class SkillWolf extends ActiveSkill {
                 skill.setWolfSettings(hero, (Wolf) animal);
                 Messaging.send(player, "You have tamed a wolf!");
             }
+            Heroes.debug.stopTask("HeroesSkillListener.Wolf");
         }
     }
 
@@ -224,8 +236,11 @@ public class SkillWolf extends ActiveSkill {
 
         @Override
         public void onClassChange(ClassChangeEvent event) {
-            if (event.isCancelled())
+            Heroes.debug.startTask("HeroesSkillListener.Wolf");
+            if (event.isCancelled()) {
+                Heroes.debug.stopTask("HeroesSkillListener.Wolf");
                 return;
+            }
 
             Hero hero = event.getHero();
 
@@ -242,25 +257,34 @@ public class SkillWolf extends ActiveSkill {
             if (skillSettings != null) {
                 hero.setSkillSetting(skill, "wolves", 0);
             }
+            Heroes.debug.stopTask("HeroesSkillListener.Wolf");
         }
 
         @Override
         public void onWeaponDamage(WeaponDamageEvent event) {
-            if (!(event.getDamager() instanceof Wolf) || event.isCancelled())
+            Heroes.debug.startTask("HeroesSkillListener.Wolf");
+            if (!(event.getDamager() instanceof Wolf) || event.isCancelled()) {
+                Heroes.debug.stopTask("HeroesSkillListener.Wolf");
                 return;
+            }
 
             Wolf wolf = (Wolf) event.getDamager();
             AnimalTamer owner = wolf.getOwner();
-            if (!wolf.isTamed() || owner == null || !(owner instanceof Player))
+            if (!wolf.isTamed() || owner == null || !(owner instanceof Player)) {
+                Heroes.debug.stopTask("HeroesSkillListener.Wolf");
                 return;
+            }
 
             Hero hero = plugin.getHeroManager().getHero((Player) owner);
-            if (!hero.getSummons().contains(wolf))
+            if (!hero.getSummons().contains(wolf)) {
+                Heroes.debug.stopTask("HeroesSkillListener.Wolf");
                 return;
+            }
 
             double damagePerLevel = skill.getSetting(hero.getHeroClass(), "damage-per-level", .1);
             int damage = skill.getSetting(hero.getHeroClass(), Setting.DAMAGE.node(), 3) + (int) (hero.getLevel() * damagePerLevel);
             event.setDamage(damage);
+            Heroes.debug.stopTask("HeroesSkillListener.Wolf");
         }
     }
 
@@ -268,8 +292,11 @@ public class SkillWolf extends ActiveSkill {
 
         @Override
         public void onChunkUnload(ChunkUnloadEvent event) {
-            if (event.isCancelled())
+            Heroes.debug.startTask("HeroesSkillListener.Wolf");
+            if (event.isCancelled()) {
+                Heroes.debug.stopTask("HeroesSkillListener.Wolf");
                 return;
+            }
 
             Set<Wolf> wolvesClone = new HashSet<Wolf>(wolves);
             for (Wolf wolf : wolvesClone) {
@@ -285,6 +312,7 @@ public class SkillWolf extends ActiveSkill {
                     wolf.remove();
                 }
             }
+            Heroes.debug.stopTask("HeroesSkillListener.Wolf");
         }
     }
 
@@ -298,11 +326,14 @@ public class SkillWolf extends ActiveSkill {
 
         @Override
         public void onPlayerJoin(PlayerJoinEvent event) {
+            Heroes.debug.startTask("HeroesSkillListener.Wolf");
             Player player = event.getPlayer();
             Hero hero = plugin.getHeroManager().getHero(player);
 
-            if (!hero.hasSkill(skill) || hero.getSkillSettings(skill) == null)
+            if (!hero.hasSkill(skill) || hero.getSkillSettings(skill) == null) {
+                Heroes.debug.stopTask("HeroesSkillListener.Wolf");
                 return;
+            }
 
             if (hero.getSkillSettings(skill).containsKey("wolves")) {
                 int wolves = Integer.parseInt(hero.getSkillSettings(skill).get("wolves"));
@@ -311,13 +342,17 @@ public class SkillWolf extends ActiveSkill {
                     setWolfSettings(hero, wolf);
                 }
             }
+            Heroes.debug.stopTask("HeroesSkillListener.Wolf");
         }
 
         @Override
         public void onPlayerQuit(PlayerQuitEvent event) {
+            Heroes.debug.startTask("HeroesSkillListener.Wolf");
             Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
-            if (!hero.hasSkill("Wolf"))
+            if (!hero.hasSkill("Wolf")) {
+                Heroes.debug.stopTask("HeroesSkillListener.Wolf");
                 return;
+            }
 
             Iterator<Creature> iter = hero.getSummons().iterator();
             while (iter.hasNext()) {
@@ -329,6 +364,7 @@ public class SkillWolf extends ActiveSkill {
                     iter.remove();
                 }
             }
+            Heroes.debug.stopTask("HeroesSkillListener.Wolf");
         }
     }
 }

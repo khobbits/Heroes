@@ -23,7 +23,6 @@ public class SkillDispel extends TargettedSkill {
         setUsage("/skill dispel");
         setArgumentRange(0, 1);
         setIdentifiers("skill dispel");
-
         setTypes(SkillType.SILENCABLE);
     }
 

@@ -66,6 +66,7 @@ public class SkillSuperheat extends ActiveSkill {
 
         @Override
         public void onBlockBreak(BlockBreakEvent event) {
+            Heroes.debug.startTask("HeroesSkillListener");
             Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
             if (hero.hasEffect("Superheat")) {
                 Block block = event.getBlock();
@@ -92,6 +93,7 @@ public class SkillSuperheat extends ActiveSkill {
                         break;
                 }
             }
+            Heroes.debug.stopTask("HeroesSkillListener");
         }
     }
 

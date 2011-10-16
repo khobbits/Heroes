@@ -113,8 +113,11 @@ public class SkillExplosiveFireball extends ActiveSkill {
 
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
-            if (event.isCancelled())
+            Heroes.debug.startTask("HeroesSkillListener");
+            if (event.isCancelled()) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
+            }
 
             if (event instanceof EntityDamageByEntityEvent) {
                 EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
@@ -138,8 +141,7 @@ public class SkillExplosiveFireball extends ActiveSkill {
                     }
                 }
             }
+            Heroes.debug.stopTask("HeroesSkillListener");
         }
-
     }
-
 }

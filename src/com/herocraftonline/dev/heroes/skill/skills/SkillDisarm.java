@@ -127,9 +127,12 @@ public class SkillDisarm extends TargettedSkill {
 
         @Override
         public void onItemHeldChange(PlayerItemHeldEvent event) {
+            Heroes.debug.startTask("HeroesSkillListener");
             Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
-            if (!hero.hasEffectType(EffectType.DISARM))
+            if (!hero.hasEffectType(EffectType.DISARM)) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
+            }
 
             Inventory inv = event.getPlayer().getInventory();
             Material mat = inv.getItem(event.getNewSlot()).getType();
@@ -139,17 +142,22 @@ public class SkillDisarm extends TargettedSkill {
                 inv.setItem(event.getNewSlot(), inv.getItem(event.getPreviousSlot()));
                 inv.setItem(event.getPreviousSlot(), carry);
             }
+            Heroes.debug.stopTask("HeroesSkillListener");
         }
 
         @Override
         public void onPlayerPickupItem(PlayerPickupItemEvent event) {
-            if (event.isCancelled())
+            Heroes.debug.startTask("HeroesSkillListener");
+            if (event.isCancelled()) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
+            }
 
             Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
             if (hero.hasEffectType(EffectType.DISARM) && Util.isWeapon(event.getItem().getItemStack().getType())) {
                 event.setCancelled(true);
             }
+            Heroes.debug.stopTask("HeroesSkillListener");
         }
     }
 }

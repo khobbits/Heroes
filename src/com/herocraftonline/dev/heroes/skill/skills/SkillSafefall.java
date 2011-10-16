@@ -11,8 +11,6 @@ import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillSafefall extends ActiveSkill {
 
-
-
     public SkillSafefall(Heroes plugin) {
         super(plugin, "Safefall");
         setDescription("Stops you from taking fall damage for a short amount of time");

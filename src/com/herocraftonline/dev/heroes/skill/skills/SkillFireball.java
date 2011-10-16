@@ -65,39 +65,43 @@ public class SkillFireball extends ActiveSkill {
 
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
-            if (event.isCancelled())
+            Heroes.debug.startTask("HeroesSkillListener");
+            if (event.isCancelled() || !(event instanceof EntityDamageByEntityEvent)) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
-            if (event instanceof EntityDamageByEntityEvent) {
-                EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
-                Entity projectile = subEvent.getDamager();
-                if (projectile instanceof Snowball) {
-                    if (projectile.getFireTicks() > 0) {
-                        Entity entity = subEvent.getEntity();
-                        if (entity instanceof LivingEntity) {
-                            Entity dmger = ((Snowball) subEvent.getDamager()).getShooter();
-                            if (dmger instanceof Player) {
-                                Hero hero = plugin.getHeroManager().getHero((Player) dmger);
-                                HeroClass heroClass = hero.getHeroClass();
-                                LivingEntity livingEntity = (LivingEntity) entity;
+            }
+            EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
+            Entity projectile = subEvent.getDamager();
+            if (projectile instanceof Snowball) {
+                if (projectile.getFireTicks() > 0) {
+                    Entity entity = subEvent.getEntity();
+                    if (entity instanceof LivingEntity) {
+                        Entity dmger = ((Snowball) subEvent.getDamager()).getShooter();
+                        if (dmger instanceof Player) {
+                            Hero hero = plugin.getHeroManager().getHero((Player) dmger);
+                            HeroClass heroClass = hero.getHeroClass();
+                            LivingEntity livingEntity = (LivingEntity) entity;
 
-                                if (!damageCheck((Player) dmger, livingEntity))
-                                    return;
-
-                                // Damage the player and ignite them.
-                                livingEntity.setFireTicks(getSetting(heroClass, "fire-ticks", 100));
-                                if (livingEntity instanceof Player) {
-                                    plugin.getHeroManager().getHero((Player) livingEntity).addEffect(new CombustEffect(skill, (Player) dmger));
-                                } else if (livingEntity instanceof Creature) {
-                                    plugin.getEffectManager().addCreatureEffect((Creature) livingEntity, new CombustEffect(skill, (Player) dmger));
-                                }
-                                addSpellTarget(entity, hero);
-                                int damage = getSetting(heroClass, Setting.DAMAGE.node(), 4);
-                                event.setDamage(damage);
+                            if (!damageCheck((Player) dmger, livingEntity)) {
+                                Heroes.debug.stopTask("HeroesSkillListener");
+                                return;
                             }
+
+                            // Damage the player and ignite them.
+                            livingEntity.setFireTicks(getSetting(heroClass, "fire-ticks", 100));
+                            if (livingEntity instanceof Player) {
+                                plugin.getHeroManager().getHero((Player) livingEntity).addEffect(new CombustEffect(skill, (Player) dmger));
+                            } else if (livingEntity instanceof Creature) {
+                                plugin.getEffectManager().addCreatureEffect((Creature) livingEntity, new CombustEffect(skill, (Player) dmger));
+                            }
+                            addSpellTarget(entity, hero);
+                            int damage = getSetting(heroClass, Setting.DAMAGE.node(), 4);
+                            event.setDamage(damage);
                         }
                     }
                 }
             }
+            Heroes.debug.stopTask("HeroesSkillListener");
         }
     }
 }

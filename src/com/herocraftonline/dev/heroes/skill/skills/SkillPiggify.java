@@ -37,7 +37,7 @@ public class SkillPiggify extends TargettedSkill {
         setIdentifiers("skill piggify");
         setTypes(SkillType.DEBUFF, SkillType.SILENCABLE, SkillType.HARMFUL);
 
-        registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
+        registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Low);
     }
 
     @Override
@@ -114,10 +114,14 @@ public class SkillPiggify extends TargettedSkill {
     }
 
     public class SkillEntityListener extends EntityListener {
+        
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
-            if (event.isCancelled() || !creatures.contains(event.getEntity()))
+            Heroes.debug.startTask("HeroesSkillListener");
+            if (event.isCancelled() || !creatures.contains(event.getEntity())) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
+            }
 
             event.setCancelled(true);
         }

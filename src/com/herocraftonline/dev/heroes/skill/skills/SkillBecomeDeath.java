@@ -95,24 +95,35 @@ public class SkillBecomeDeath extends ActiveSkill {
 
         @Override
         public void onEntityTarget(EntityTargetEvent event) {
-            if (event.isCancelled() || !(event.getTarget() instanceof Player))
+            Heroes.debug.startTask("HeroesSkillListener");
+            if (event.isCancelled() || !(event.getTarget() instanceof Player)) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
+            }
             
-            if (!isUndead(event.getEntity()))
+            if (!isUndead(event.getEntity())) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
+            }
             
             Hero hero = plugin.getHeroManager().getHero((Player) event.getTarget());
             if (hero.hasEffect("Undead")) {
                 event.setCancelled(true);
             }
+            Heroes.debug.stopTask("HeroesSkillListener");
         }
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
-            if (event.isCancelled() || event.getDamage() == 0)
+            Heroes.debug.startTask("HeroesSkillListener");
+            if (event.isCancelled() || event.getDamage() == 0) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
+            }
             
-            if (!isUndead(event.getEntity()) || !(event instanceof EntityDamageByEntityEvent))
+            if (!isUndead(event.getEntity()) || !(event instanceof EntityDamageByEntityEvent)) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
+            }
             
             EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
             if (subEvent.getDamager() instanceof Player) {
@@ -126,6 +137,7 @@ public class SkillBecomeDeath extends ActiveSkill {
                         hero.removeEffect(hero.getEffect("Undead"));
                 }
             }
+            Heroes.debug.stopTask("HeroesSkillListener");
         }
         
         private boolean isUndead(Entity entity) {

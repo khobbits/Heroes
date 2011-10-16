@@ -38,12 +38,17 @@ public class SkillTumble extends PassiveSkill {
 
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
-            if (!(event.getEntity() instanceof Player) || event.getCause() != DamageCause.FALL)
+            Heroes.debug.startTask("HeroesSkillListener");
+            if (!(event.getEntity() instanceof Player) || event.getCause() != DamageCause.FALL) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
+            }
             Hero hero = plugin.getHeroManager().getHero((Player) event.getEntity());
             HeroClass heroClass = hero.getHeroClass();
-            if (!hero.hasEffect("Tumble"))
+            if (!hero.hasEffect("Tumble")) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
+            }
             int distance = (int) (getSetting(heroClass, "base-distance", 3) + (hero.getLevel() * getSetting(heroClass, "distance-per-level", .5)));
             int fallDistance = (event.getDamage() - 3) * 3;
             fallDistance -= distance;
@@ -51,6 +56,8 @@ public class SkillTumble extends PassiveSkill {
                 event.setCancelled(true);
             else 
                 event.setDamage(3 + (fallDistance / 3));
+            
+            Heroes.debug.stopTask("HeroesSkillListener");
         }
     }
 }

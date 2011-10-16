@@ -90,28 +90,29 @@ public class SkillManaShield extends ActiveSkill {
 
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
-            if (event.isCancelled())
+            Heroes.debug.startTask("HeroesSkillListener");
+            if (event.isCancelled() || !(event.getEntity() instanceof Player)) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
+            }
 
-            Entity defender = event.getEntity();
-            if (defender instanceof Player) {
-                Player player = (Player) defender;
-                Hero hero = plugin.getHeroManager().getHero(player);
-                if (hero.hasEffect(getName())) {
-                    int absorbamount = getSetting(hero.getHeroClass(), "mana-amount", 20);
-                    event.setDamage(event.getDamage() / 2);
-                    int mana = hero.getMana();
-                    if (mana < absorbamount) {
-                        hero.removeEffect(hero.getEffect("ManaShield"));
-                    } else {
-                        mana -= absorbamount;
-                        hero.setMana(mana);
-                        if (mana != 100 && hero.isVerbose()) {
-                            Messaging.send(hero.getPlayer(), ChatColor.BLUE + "MANA " + Messaging.createManaBar(hero.getMana()));
-                        }
+            Player player = (Player) event.getEntity();
+            Hero hero = plugin.getHeroManager().getHero(player);
+            if (hero.hasEffect(getName())) {
+                int absorbamount = getSetting(hero.getHeroClass(), "mana-amount", 20);
+                event.setDamage(event.getDamage() / 2);
+                int mana = hero.getMana();
+                if (mana < absorbamount) {
+                    hero.removeEffect(hero.getEffect("ManaShield"));
+                } else {
+                    mana -= absorbamount;
+                    hero.setMana(mana);
+                    if (mana != 100 && hero.isVerbose()) {
+                        Messaging.send(player, ChatColor.BLUE + "MANA " + Messaging.createManaBar(hero.getMana()));
                     }
                 }
             }
+            Heroes.debug.stopTask("HeroesSkillListener");
         }
     }
 }

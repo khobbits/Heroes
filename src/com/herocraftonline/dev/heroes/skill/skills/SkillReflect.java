@@ -96,8 +96,11 @@ public class SkillReflect extends ActiveSkill {
 
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
-            if (event.isCancelled() || !(event instanceof EntityDamageByEntityEvent))
+            Heroes.debug.startTask("HeroesSkillListener");
+            if (event.isCancelled() || !(event instanceof EntityDamageByEntityEvent)) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
+            }
 
             EntityDamageByEntityEvent edbe = (EntityDamageByEntityEvent) event;
             Entity defender = edbe.getEntity();
@@ -110,6 +113,7 @@ public class SkillReflect extends ActiveSkill {
                         Player attPlayer = (Player) attacker;
                         if (plugin.getHeroManager().getHero(attPlayer).hasEffect(getName())) {
                             event.setCancelled(true);
+                            Heroes.debug.stopTask("HeroesSkillListener");
                             return;
                         }
                     }
@@ -119,6 +123,7 @@ public class SkillReflect extends ActiveSkill {
                     attEntity.damage(damage, defender);
                 }
             }
+            Heroes.debug.stopTask("HeroesSkillListener");
         }
     }
 }

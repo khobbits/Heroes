@@ -41,8 +41,11 @@ public class SkillShield extends PassiveSkill {
 
         @Override
         public void onWeaponDamage(WeaponDamageEvent event) {
-            if (event.getCause() != DamageCause.ENTITY_ATTACK || event.getDamage() == 0 || !(event.getEntity() instanceof Player))
+            Heroes.debug.startTask("HeroesSkillListener");
+            if (event.getCause() != DamageCause.ENTITY_ATTACK || event.getDamage() == 0 || !(event.getEntity() instanceof Player)) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
+            }
 
             Player player = (Player) event.getEntity();
             Hero hero = plugin.getHeroManager().getHero(player);
@@ -57,6 +60,7 @@ public class SkillShield extends PassiveSkill {
                 }
                 event.setDamage((int) (event.getDamage() * multiplier));
             }
+            Heroes.debug.stopTask("HeroesSkillListener");
         }
     }
 }

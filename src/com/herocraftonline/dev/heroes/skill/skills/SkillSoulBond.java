@@ -89,8 +89,11 @@ public class SkillSoulBond extends TargettedSkill {
 
         @Override
         public void onSkillDamage(SkillDamageEvent event) {
-            if (event.isCancelled())
+            Heroes.debug.startTask("HeroesSkillListener");
+            if (event.isCancelled()) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
+            }
 
             if (event.getEntity() instanceof Player) {
                 Hero tHero = plugin.getHeroManager().getHero((Player) event.getEntity());
@@ -104,8 +107,10 @@ public class SkillSoulBond extends TargettedSkill {
                     // Distance check
                     int radius = getSetting(heroClass, Setting.RADIUS.node(), 25);
                     int radiusSquared = radius * radius;
-                    if (applier.getLocation().distanceSquared(event.getEntity().getLocation()) > radiusSquared)
+                    if (applier.getLocation().distanceSquared(event.getEntity().getLocation()) > radiusSquared) {
+                        Heroes.debug.stopTask("HeroesSkillListener");
                         return;
+                    }
 
                     // Split the damage
                     int splitDamage = (int) (event.getDamage() * getSetting(heroClass, "damage-multiplier", .5));
@@ -113,8 +118,10 @@ public class SkillSoulBond extends TargettedSkill {
                     event.setDamage(event.getDamage() - splitDamage);
                 }
             } else if (event.getEntity() instanceof Creature) {
-                if (!plugin.getEffectManager().creatureHasEffect((Creature) event.getEntity(), "SoulBonded"))
+                if (!plugin.getEffectManager().creatureHasEffect((Creature) event.getEntity(), "SoulBonded")) {
+                    Heroes.debug.stopTask("HeroesSkillListener");
                     return;
+                }
 
                 Player applier = ((SoulBondedEffect) plugin.getEffectManager().getCreatureEffect((Creature) event.getEntity(), "SoulBonded")).getApplier();
                 Hero hero = plugin.getHeroManager().getHero(applier);
@@ -123,20 +130,26 @@ public class SkillSoulBond extends TargettedSkill {
                 // Distance check
                 int radius = getSetting(heroClass, Setting.RADIUS.node(), 25);
                 int radiusSquared = radius * radius;
-                if (applier.getLocation().distanceSquared(event.getEntity().getLocation()) > radiusSquared)
+                if (applier.getLocation().distanceSquared(event.getEntity().getLocation()) > radiusSquared) {
+                    Heroes.debug.stopTask("HeroesSkillListener");
                     return;
+                }
 
                 // Split the damage
                 int splitDamage = (int) (event.getDamage() * getSetting(heroClass, "damage-multiplier", .5));
                 applier.damage(splitDamage, event.getDamager().getPlayer());
                 event.setDamage(event.getDamage() - splitDamage);
             }
+            Heroes.debug.stopTask("HeroesSkillListener");
         }
 
         @Override
         public void onWeaponDamage(WeaponDamageEvent event) {
-            if (event.isCancelled())
+            Heroes.debug.startTask("HeroesSkillListener");
+            if (event.isCancelled()) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
+            }
 
             if (event.getEntity() instanceof Player) {
                 Hero tHero = plugin.getHeroManager().getHero((Player) event.getEntity());
@@ -150,8 +163,10 @@ public class SkillSoulBond extends TargettedSkill {
                     // Distance check
                     int radius = getSetting(heroClass, Setting.RADIUS.node(), 25);
                     int radiusSquared = radius * radius;
-                    if (applier.getLocation().distanceSquared(event.getEntity().getLocation()) > radiusSquared)
+                    if (applier.getLocation().distanceSquared(event.getEntity().getLocation()) > radiusSquared) {
+                        Heroes.debug.stopTask("HeroesSkillListener");
                         return;
+                    }
 
                     // Split the damage
                     int splitDamage = (int) (event.getDamage() * getSetting(heroClass, "damage-multiplier", .5));
@@ -159,8 +174,10 @@ public class SkillSoulBond extends TargettedSkill {
                     event.setDamage(event.getDamage() - splitDamage);
                 }
             } else if (event.getEntity() instanceof Creature) {
-                if (!plugin.getEffectManager().creatureHasEffect((Creature) event.getEntity(), "SoulBonded"))
+                if (!plugin.getEffectManager().creatureHasEffect((Creature) event.getEntity(), "SoulBonded")) {
+                    Heroes.debug.stopTask("HeroesSkillListener");
                     return;
+                }
 
                 Player applier = ((SoulBondedEffect) plugin.getEffectManager().getCreatureEffect((Creature) event.getEntity(), "SoulBonded")).getApplier();
                 Hero hero = plugin.getHeroManager().getHero(applier);
@@ -169,16 +186,18 @@ public class SkillSoulBond extends TargettedSkill {
                 // Distance check
                 int radius = getSetting(heroClass, Setting.RADIUS.node(), 25);
                 int radiusSquared = radius * radius;
-                if (applier.getLocation().distanceSquared(event.getEntity().getLocation()) > radiusSquared)
+                if (applier.getLocation().distanceSquared(event.getEntity().getLocation()) > radiusSquared) {
+                    Heroes.debug.stopTask("HeroesSkillListener");
                     return;
+                }
 
                 // Split the damage
                 int splitDamage = (int) (event.getDamage() * getSetting(heroClass, "damage-multiplier", .5));
                 applier.damage(splitDamage, event.getDamager());
                 event.setDamage(event.getDamage() - splitDamage);
             }
+            Heroes.debug.stopTask("HeroesSkillListener");
         }
-
     }
 
     public class SoulBondedEffect extends Effect {

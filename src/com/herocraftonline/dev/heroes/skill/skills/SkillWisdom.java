@@ -90,12 +90,16 @@ public class SkillWisdom extends ActiveSkill {
 
         @Override
         public void onHeroRegainMana(HeroRegainManaEvent event) {
-            if (event.isCancelled())
+            Heroes.debug.startTask("HeroesSkillListener");
+            if (event.isCancelled()) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
+            }
 
             if (event.getHero().hasEffect("Wisdom")) {
                 event.setAmount((int) (event.getAmount() * getSetting(event.getHero().getHeroClass(), "regen-multiplier", 1.2)));
             }
+            Heroes.debug.stopTask("HeroesSkillListener");
         }
     }
 

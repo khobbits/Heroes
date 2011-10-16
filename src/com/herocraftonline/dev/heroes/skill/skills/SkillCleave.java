@@ -23,7 +23,6 @@ public class SkillCleave extends TargettedSkill {
         setUsage("/skill cleave <target>");
         setArgumentRange(0, 1);
         setIdentifiers("skill cleave");
-
         setTypes(SkillType.PHYSICAL, SkillType.DAMAGING, SkillType.HARMFUL);
     }
 

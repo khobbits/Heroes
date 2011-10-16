@@ -34,7 +34,6 @@ public class SkillFlameshield extends ActiveSkill {
         setUsage("/skill flameshield");
         setArgumentRange(0, 0);
         setIdentifiers("skill flameshield", "skill fshield");
-
         setTypes(SkillType.FIRE, SkillType.SILENCABLE, SkillType.BUFF);
 
         registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
@@ -98,10 +97,11 @@ public class SkillFlameshield extends ActiveSkill {
 
         @Override
         public void onSkillDamage(SkillDamageEvent event) {
-            if (event.isCancelled())
+            Heroes.debug.startTask("HeroesSkillListener");
+            if (event.isCancelled() || !event.getSkill().isType(SkillType.FIRE)) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
-            if (!event.getSkill().isType(SkillType.FIRE))
-                return;
+            }
 
             if (event.getEntity() instanceof Player) {
                 Player player = (Player) event.getEntity();
@@ -121,6 +121,7 @@ public class SkillFlameshield extends ActiveSkill {
                     event.setCancelled(true);
                 }
             }
+            Heroes.debug.stopTask("HeroesSkillListener");
         }
     }
 
@@ -128,11 +129,16 @@ public class SkillFlameshield extends ActiveSkill {
 
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
-            if (event.isCancelled())
+            Heroes.debug.startTask("HeroesSkillListener");
+            if (event.isCancelled()) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
+            }
 
-            if (event.getCause() != DamageCause.FIRE && event.getCause() != DamageCause.FIRE_TICK && event.getCause() != DamageCause.LAVA)
+            if (event.getCause() != DamageCause.FIRE && event.getCause() != DamageCause.FIRE_TICK && event.getCause() != DamageCause.LAVA) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
+            }
 
             Entity defender = event.getEntity();
             if (defender instanceof Player) {
@@ -142,6 +148,7 @@ public class SkillFlameshield extends ActiveSkill {
                     event.setCancelled(true);
                 }
             }
+            Heroes.debug.stopTask("HeroesSkillListener");
         }
     }
 }

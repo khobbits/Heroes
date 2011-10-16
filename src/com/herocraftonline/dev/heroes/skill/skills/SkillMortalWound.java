@@ -131,29 +131,36 @@ public class SkillMortalWound extends TargettedSkill {
 
         @Override
         public void onEntityRegainHealth(EntityRegainHealthEvent event) {
-            if (event.isCancelled() || !(event.getEntity() instanceof Player))
+            Heroes.debug.startTask("HeroesSkillListener");
+            if (event.isCancelled() || !(event.getEntity() instanceof Player)) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
+            }
 
             Hero hero = plugin.getHeroManager().getHero((Player) event.getEntity());
             if (hero.hasEffect("MortalWound")) {
                 MortalWound mEffect = (MortalWound) hero.getEffect("MortalWound");
                 event.setAmount((int) (event.getAmount() * mEffect.healMultiplier));
             }
+            Heroes.debug.stopTask("HeroesSkillListener");
         }
-
     }
 
     public class SkillHeroListener extends HeroesEventListener {
 
         @Override
         public void onHeroRegainHealth(HeroRegainHealthEvent event) {
-            if (event.isCancelled())
+            Heroes.debug.startTask("HeroesSkillListener");
+            if (event.isCancelled()) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
+            }
 
             if (event.getHero().hasEffect("MortalWound")) {
                 MortalWound mEffect = (MortalWound) event.getHero().getEffect("MortalWound");
                 event.setAmount((int) (event.getAmount() * mEffect.healMultiplier));
             }
+            Heroes.debug.stopTask("HeroesSkillListener");
         }
     }
 }

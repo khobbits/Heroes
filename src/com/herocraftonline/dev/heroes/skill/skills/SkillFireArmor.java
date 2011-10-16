@@ -57,24 +57,33 @@ public class SkillFireArmor extends PassiveSkill {
 
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
-            if (event.isCancelled() || !(event.getEntity() instanceof Player) || !(event instanceof EntityDamageByEntityEvent))
+            Heroes.debug.startTask("HeroesSkillListener");
+            if (event.isCancelled() || !(event.getEntity() instanceof Player) || !(event instanceof EntityDamageByEntityEvent)) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
+            }
 
             Player player = (Player) event.getEntity();
             Hero hero = plugin.getHeroManager().getHero(player);
 
-            if (!hero.hasEffect("FireArmor") || !getSetting(hero.getHeroClass(), "armors", defaultArmors).contains(player.getInventory().getChestplate().getType().name()))
+            if (!hero.hasEffect("FireArmor") || !getSetting(hero.getHeroClass(), "armors", defaultArmors).contains(player.getInventory().getChestplate().getType().name())) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
+            }
 
             EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
             // Dont set Projectiles on fire
-            if (!(subEvent.getDamager() instanceof LivingEntity))
+            if (!(subEvent.getDamager() instanceof LivingEntity)) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
+            }
 
             // Check our ignite chance
             double chance = getSetting(hero.getHeroClass(), "ignite-chance", .2);
-            if (Util.rand.nextDouble() >= chance)
+            if (Util.rand.nextDouble() >= chance) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
+            }
 
             // Set the damager on fire if it was successful
             int fireTicks = getSetting(hero.getHeroClass(), "ignite-duration", 5000) / 50;
@@ -88,6 +97,7 @@ public class SkillFireArmor extends PassiveSkill {
             }
 
             broadcast(player.getLocation(), igniteText, player.getDisplayName(), name);
+            Heroes.debug.stopTask("HeroesSkillListener");
         }
     }
 }

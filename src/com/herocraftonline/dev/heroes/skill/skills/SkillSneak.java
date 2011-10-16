@@ -76,8 +76,11 @@ public class SkillSneak extends ActiveSkill {
 
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
-            if (event.isCancelled() || !damageCancels)
+            Heroes.debug.startTask("HeroesSkillListener");
+            if (event.isCancelled() || !damageCancels) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
+            }
             Player player = null;
             if (event.getEntity() instanceof Player) {
                 player = (Player) event.getEntity();
@@ -91,14 +94,17 @@ public class SkillSneak extends ActiveSkill {
                     }
                 }
             }
-            if (player == null)
+            if (player == null) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
+            }
 
             Hero hero = plugin.getHeroManager().getHero(player);
             if (hero.hasEffect("Sneak")) {
                 player.setSneaking(false);
                 hero.removeEffect(hero.getEffect("Sneak"));
             }
+            Heroes.debug.stopTask("HeroesSkillListener");
         }
     }
 

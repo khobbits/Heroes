@@ -46,8 +46,12 @@ public class SkillBackstab extends PassiveSkill {
 
         @Override
         public void onWeaponDamage(WeaponDamageEvent event) {
-            if (!(event.getDamager() instanceof Player))
+            Heroes.debug.startTask("HeroesSkillListener");
+            if (!(event.getDamager() instanceof Player)) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
+            }
+            
             Player player = (Player) event.getDamager();
             Hero hero = plugin.getHeroManager().getHero(player);
             
@@ -55,11 +59,15 @@ public class SkillBackstab extends PassiveSkill {
                 HeroClass heroClass = hero.getHeroClass();
                 ItemStack item = player.getItemInHand();
                 
-                if (!getSetting(heroClass, "weapons", Util.swords).contains(item.getType().name()))
+                if (!getSetting(heroClass, "weapons", Util.swords).contains(item.getType().name())) {
+                    Heroes.debug.stopTask("HeroesSkillListener");
                     return;
+                }
                 
-                if (event.getEntity().getLocation().getDirection().dot(player.getLocation().getDirection()) <= 0)
+                if (event.getEntity().getLocation().getDirection().dot(player.getLocation().getDirection()) <= 0) {
+                    Heroes.debug.stopTask("HeroesSkillListener");
                     return;
+                }
 
                 if (hero.hasEffect("Sneak") && Util.rand.nextDouble() < getSetting(heroClass, "sneak-chance", 1.0)) {
                     event.setDamage((int) (event.getDamage() * getSetting(heroClass, "sneak-bonus", 2.0)));
@@ -79,6 +87,7 @@ public class SkillBackstab extends PassiveSkill {
 
                 Messaging.send(player, "You have backstabbed " + name + "!");
             }
+            Heroes.debug.stopTask("HeroesSkillListener");
         }
     }
 }

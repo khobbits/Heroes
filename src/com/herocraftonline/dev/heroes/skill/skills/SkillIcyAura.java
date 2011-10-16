@@ -92,8 +92,11 @@ public class SkillIcyAura extends ActiveSkill {
 
         @Override
         public void onBlockBreak(BlockBreakEvent event) {
-            if (event.isCancelled())
+            Heroes.debug.startTask("HeroesSkillListener");
+            if (event.isCancelled()) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
+            }
 
             // Check out mappings to see if this block was a changed block, if so lets deny breaking it.
             for (Map<Location, Material> blockMap : changedBlocks.values()) {
@@ -102,6 +105,7 @@ public class SkillIcyAura extends ActiveSkill {
                         event.setCancelled(true);
                     }
             }
+            Heroes.debug.stopTask("HeroesSkillListener");
         }
     }
 

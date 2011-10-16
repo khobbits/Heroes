@@ -24,5 +24,4 @@ public class SkillCharge extends TargettedSkill {
         broadcastExecuteText(hero, target);
         return true;
     }
-
 }

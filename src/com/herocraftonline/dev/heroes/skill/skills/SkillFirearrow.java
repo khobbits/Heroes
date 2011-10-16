@@ -74,17 +74,24 @@ public class SkillFirearrow extends ActiveSkill {
 
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
-            if (event.isCancelled() || !(event instanceof EntityDamageByEntityEvent))
+            Heroes.debug.startTask("HeroesSkillListener");
+            if (event.isCancelled() || !(event instanceof EntityDamageByEntityEvent)) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
+            }
 
             Entity projectile = ((EntityDamageByEntityEvent) event).getDamager();
-            if (!(projectile instanceof Arrow) || !(((Projectile) projectile).getShooter() instanceof Player))
+            if (!(projectile instanceof Arrow) || !(((Projectile) projectile).getShooter() instanceof Player)) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
+            }
             
             Player player = (Player) ((Projectile) projectile).getShooter();
             Hero hero = plugin.getHeroManager().getHero(player);
-            if (!hero.hasEffect("FireArrowBuff"))
+            if (!hero.hasEffect("FireArrowBuff")) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
+            }
             //Get the duration of the fire damage
             int fireTicks = getSetting(hero.getHeroClass(), "fire-ticks", 100);
             if (event.getEntity() instanceof LivingEntity) {
@@ -99,6 +106,7 @@ public class SkillFirearrow extends ActiveSkill {
                     plugin.getEffectManager().addCreatureEffect((Creature) event.getEntity(), new CombustEffect(skill, player));
                 }
             }
+            Heroes.debug.stopTask("HeroesSkillListener");
         }
         
         private void checkBuff(Hero hero) {

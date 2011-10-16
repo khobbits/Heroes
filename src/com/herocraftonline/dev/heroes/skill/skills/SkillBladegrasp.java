@@ -93,9 +93,12 @@ public class SkillBladegrasp extends ActiveSkill {
 
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
+            Heroes.debug.startTask("HeroesSkillListener");
             // Ignore cancelled damage events & 0 damage events for Spam Control
-            if (event.getDamage() == 0 || event.isCancelled() || !(event instanceof EntityDamageByEntityEvent))
+            if (event.getDamage() == 0 || event.isCancelled() || !(event instanceof EntityDamageByEntityEvent)) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
+            }
 
             Entity defender = event.getEntity();
             if (defender instanceof Player) {
@@ -114,6 +117,7 @@ public class SkillBladegrasp extends ActiveSkill {
                     }
                 }
             }
+            Heroes.debug.stopTask("HeroesSkillListener");
         }
     }
 }

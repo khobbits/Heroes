@@ -86,9 +86,12 @@ public class SkillAbsorb extends ActiveSkill {
 
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
-            if (event.isCancelled())
+            Heroes.debug.startTask("HeroesSkillListener");
+            if (event.isCancelled()) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
-
+            }
+            
             Entity defender = event.getEntity();
             if (defender instanceof Player) {
                 Player player = (Player) defender;
@@ -107,6 +110,7 @@ public class SkillAbsorb extends ActiveSkill {
                     }
                 }
             }
+            Heroes.debug.stopTask("HeroesSkillListener");
         }
     }
 }

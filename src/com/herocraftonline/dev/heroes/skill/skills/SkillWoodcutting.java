@@ -39,24 +39,32 @@ public class SkillWoodcutting extends PassiveSkill {
 
         @Override
         public void onBlockBreak(BlockBreakEvent event) {
-            if (event.isCancelled())
+            Heroes.debug.startTask("HeroesSkillListener");
+            if (event.isCancelled()) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
+            }
 
             Block block = event.getBlock();
-            if (HBlockListener.placedBlocks.containsKey(block.getLocation()))
+            if (HBlockListener.placedBlocks.containsKey(block.getLocation())) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
+            }
 
             int extraDrops = 0;
             switch (block.getType()) {
                 case LOG:
                     break;
                 default:
+                    Heroes.debug.stopTask("HeroesSkillListener");
                     return;
             }
 
             Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
-            if (!hero.hasEffect("Woodcutting") || Util.rand.nextDouble() > getSetting(hero.getHeroClass(), "chance-per-level", .001) * hero.getLevel())
+            if (!hero.hasEffect("Woodcutting") || Util.rand.nextDouble() > getSetting(hero.getHeroClass(), "chance-per-level", .001) * hero.getLevel()) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
+            }
 
             if (extraDrops != 0) {
                 extraDrops = Util.rand.nextInt(extraDrops) + 1;
@@ -65,6 +73,7 @@ public class SkillWoodcutting extends PassiveSkill {
             }
 
             block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(block.getType(), extraDrops, (short) 0, block.getData()));
+            Heroes.debug.stopTask("HeroesSkillListener");
         }
     }
 }

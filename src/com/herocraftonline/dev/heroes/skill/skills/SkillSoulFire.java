@@ -78,22 +78,31 @@ public class SkillSoulFire extends ActiveSkill {
 
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
-            if (event.isCancelled() || !(event instanceof EntityDamageByEntityEvent))
+            Heroes.debug.startTask("HeroesSkillListener");
+            if (event.isCancelled() || !(event instanceof EntityDamageByEntityEvent)) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
+            }
 
             EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
-            if (!(subEvent.getDamager() instanceof Player))
+            if (!(subEvent.getDamager() instanceof Player)) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
+            }
 
             Player player = (Player) subEvent.getDamager();
             Hero hero = plugin.getHeroManager().getHero(player);
             HeroClass heroClass = hero.getHeroClass();
-            if (!getSetting(heroClass, "weapons", Util.swords).contains(player.getItemInHand().getType().name()) || !hero.hasEffect("SoulFire"))
+            if (!getSetting(heroClass, "weapons", Util.swords).contains(player.getItemInHand().getType().name()) || !hero.hasEffect("SoulFire")) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
+            }
 
             double chance = getSetting(heroClass, "ignite-chance", .2);
-            if (Util.rand.nextDouble() >= chance)
+            if (Util.rand.nextDouble() >= chance) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
+            }
 
             int fireTicks = getSetting(heroClass, "ignite-duration", 5000) / 50;
             Entity entity = event.getEntity();
@@ -113,6 +122,7 @@ public class SkillSoulFire extends ActiveSkill {
             }
 
             broadcast(player.getLocation(), igniteText, player.getDisplayName(), name);
+            Heroes.debug.stopTask("HeroesSkillListener");
         }
     }
 

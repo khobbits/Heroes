@@ -26,7 +26,6 @@ public class SkillDecay extends TargettedSkill {
         setUsage("/skill decay <target>");
         setArgumentRange(0, 1);
         setIdentifiers("skill decay");
-
         setTypes(SkillType.DARK, SkillType.SILENCABLE, SkillType.DAMAGING, SkillType.HARMFUL);
     }
 

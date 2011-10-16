@@ -79,13 +79,17 @@ public class SkillWeb extends TargettedSkill {
 
         @Override
         public void onBlockBreak(BlockBreakEvent event) {
-            if (event.isCancelled())
+            Heroes.debug.startTask("HeroesSkillListener");
+            if (event.isCancelled()) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
+            }
 
             // Check out mappings to see if this block was a changed block, if so lets deny breaking it.
             if (changedBlocks.contains(event.getBlock().getLocation())) {
                 event.setCancelled(true);
             }
+            Heroes.debug.stopTask("HeroesSkillListener");
         }
     }
 

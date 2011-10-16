@@ -127,8 +127,11 @@ public class SkillMight extends ActiveSkill {
 
         @Override
         public void onWeaponDamage(WeaponDamageEvent event) {
-            if (event.getCause() != DamageCause.ENTITY_ATTACK)
+            Heroes.debug.startTask("HeroesSkillListener");
+            if (event.getCause() != DamageCause.ENTITY_ATTACK) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
+            }
 
             if (event.getDamager() instanceof Player) {
                 Player player = (Player) event.getDamager();
@@ -149,6 +152,7 @@ public class SkillMight extends ActiveSkill {
                     }
                 }
             }
+            Heroes.debug.stopTask("HeroesSkillListener");
         }
     }
 }

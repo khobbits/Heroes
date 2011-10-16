@@ -71,12 +71,16 @@ public class SkillManaFreeze extends TargettedSkill {
 
         @Override
         public void onHeroRegainMana(HeroRegainManaEvent event) {
-            if (event.isCancelled())
+            Heroes.debug.startTask("HeroesSkillListener");
+            if (event.isCancelled()) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
+            }
 
             if (event.getHero().hasEffect("ManaFreeze")) {
                 event.setCancelled(true);
             }
+            Heroes.debug.stopTask("HeroesSkillListener");
         }
     }
 

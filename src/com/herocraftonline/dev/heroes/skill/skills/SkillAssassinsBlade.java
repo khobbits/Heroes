@@ -35,7 +35,6 @@ public class SkillAssassinsBlade extends ActiveSkill {
         setUsage("/skill ablade");
         setArgumentRange(0, 0);
         setIdentifiers("skill ablade", "skill assassinsblade");
-
         setTypes(SkillType.BUFF);
 
         registerEvent(Type.ENTITY_DAMAGE, new SkillDamageListener(this), Priority.Monitor);
@@ -148,23 +147,32 @@ public class SkillAssassinsBlade extends ActiveSkill {
 
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
-            if (event.isCancelled() || !(event instanceof EntityDamageByEntityEvent))
+            Heroes.debug.startTask("HeroesSkillListener");
+            if (event.isCancelled() || !(event instanceof EntityDamageByEntityEvent)) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
-
+            }
+            
             // If our target isn't a creature or player lets exit
-            if (!(event.getEntity() instanceof Creature) && !(event.getEntity() instanceof Player))
+            if (!(event.getEntity() instanceof Creature) && !(event.getEntity() instanceof Player)) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
+            }
 
             EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
-            if (!(subEvent.getDamager() instanceof Player))
+            if (!(subEvent.getDamager() instanceof Player)) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
+            }
 
             Player player = (Player) subEvent.getDamager();
             ItemStack item = player.getItemInHand();
             Hero hero = plugin.getHeroManager().getHero(player);
             HeroClass heroClass = hero.getHeroClass();
-            if (!getSetting(heroClass, "weapons", Util.swords).contains(item.getType().name()))
+            if (!getSetting(heroClass, "weapons", Util.swords).contains(item.getType().name())) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
+            }
 
             if (hero.hasEffect("PoisonBlade")) {
                 long duration = getSetting(heroClass, "poison-duration", 10000);
@@ -181,6 +189,7 @@ public class SkillAssassinsBlade extends ActiveSkill {
                     checkBuff(hero);
                 }
             }
+            Heroes.debug.stopTask("HeroesSkillListener");
         }
 
         private void checkBuff(Hero hero) {

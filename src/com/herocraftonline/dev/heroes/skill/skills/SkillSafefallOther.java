@@ -14,7 +14,6 @@ import com.iCo6.util.Messaging;
 
 public class SkillSafefallOther extends TargettedSkill {
 
-
     public SkillSafefallOther(Heroes plugin) {
         super(plugin, "SafefallOther");
         setDescription("Stops your target from taking fall damage for a short amount of time");

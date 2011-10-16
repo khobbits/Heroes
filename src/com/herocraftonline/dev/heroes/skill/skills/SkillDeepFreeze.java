@@ -174,8 +174,11 @@ public class SkillDeepFreeze extends TargettedSkill {
 
         @Override
         public void onEntityCombust(EntityCombustEvent event) {
-            if (event.isCancelled() || !(event.getEntity() instanceof LivingEntity))
+            Heroes.debug.startTask("HeroesSkillListener");
+            if (event.isCancelled() || !(event.getEntity() instanceof LivingEntity)) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
+            }
 
             if (event.getEntity() instanceof Player) {
                 Player player = (Player) event.getEntity();
@@ -201,6 +204,7 @@ public class SkillDeepFreeze extends TargettedSkill {
                     plugin.getEffectManager().removeCreatureEffect(creature, fEffect);
                 }
             }
+            Heroes.debug.stopTask("HeroesSkillListener");
         }
     }
 
@@ -208,11 +212,11 @@ public class SkillDeepFreeze extends TargettedSkill {
 
         @Override
         public void onSkillDamage(SkillDamageEvent event) {
-            if (event.isCancelled() || event.getDamage() == 0)
+            Heroes.debug.startTask("HeroesSkillListener");
+            if (event.isCancelled() || event.getDamage() == 0 || !event.getSkill().isType(SkillType.FIRE)) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
-
-            if (!event.getSkill().isType(SkillType.FIRE))
-                return;
+            }
 
             HeroClass heroClass = event.getDamager().getHeroClass();
             int damage = getSetting(heroClass, "shatter-damage", 7);
@@ -234,6 +238,7 @@ public class SkillDeepFreeze extends TargettedSkill {
                     plugin.getEffectManager().removeCreatureEffect(creature, plugin.getEffectManager().getCreatureEffect(creature, "Freeze"));
                 }
             }
+            Heroes.debug.stopTask("HeroesSkillListener");
         }
     }
 }

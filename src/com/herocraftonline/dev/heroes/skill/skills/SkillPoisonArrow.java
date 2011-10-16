@@ -121,16 +121,23 @@ public class SkillPoisonArrow extends ActiveSkill {
 
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
-            if (event.isCancelled() || !(event instanceof EntityDamageByEntityEvent))
+            Heroes.debug.startTask("HeroesSkillListener");
+            if (event.isCancelled() || !(event instanceof EntityDamageByEntityEvent)) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
+            }
 
             EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
-            if (!(subEvent.getDamager() instanceof Arrow))
+            if (!(subEvent.getDamager() instanceof Arrow)) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
+            }
 
             Arrow arrow = (Arrow) subEvent.getDamager();
-            if (!(arrow.getShooter() instanceof Player))
+            if (!(arrow.getShooter() instanceof Player)) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
+            }
 
             Player player = (Player) arrow.getShooter();
             Hero hero = plugin.getHeroManager().getHero(player);
@@ -151,6 +158,7 @@ public class SkillPoisonArrow extends ActiveSkill {
                     checkBuff(hero);
                 }
             }
+            Heroes.debug.stopTask("HeroesSkillListener");
         }
 
         private void checkBuff(Hero hero) {
