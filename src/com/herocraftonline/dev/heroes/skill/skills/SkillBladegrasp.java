@@ -102,7 +102,7 @@ public class SkillBladegrasp extends ActiveSkill {
                 Player player = (Player) defender;
                 Hero hero = plugin.getHeroManager().getHero(player);
                 if (hero.hasEffect(getName())) {
-                    double parryChance = getSetting(hero.getHeroClass(), "chance-per-level", .02);
+                    double parryChance = getSetting(hero.getHeroClass(), "chance-per-level", .02) * hero.getLevel();
                     if (Util.rand.nextDouble() > parryChance)
                         return;
 
