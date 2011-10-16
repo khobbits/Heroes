@@ -22,6 +22,7 @@ public class SkillBlaze extends ActiveSkill {
         setUsage("/skill blaze");
         setArgumentRange(0, 0);
         setIdentifiers("skill blaze");
+        setTypes(SkillType.FIRE, SkillType.DAMAGING, SkillType.HARMFUL);
     }
 
     @Override
@@ -29,9 +30,6 @@ public class SkillBlaze extends ActiveSkill {
         ConfigurationNode node = super.getDefaultConfig();
         node.setProperty("fire-length", 3000);
         node.setProperty(Setting.RADIUS.node(), 5);
-
-        setTypes(SkillType.FIRE, SkillType.DAMAGING, SkillType.HARMFUL);
-
         return node;
     }
 

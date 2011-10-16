@@ -9,6 +9,7 @@ public enum Setting {
 
     AMOUNT("amount"),
     APPLY_TEXT("apply-text"),
+    CHANCE_LEVEL("chance-per-level"),
     COOLDOWN("cooldown"),
     DAMAGE("damage"),
     DELAY("delay"),

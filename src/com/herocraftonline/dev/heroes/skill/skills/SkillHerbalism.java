@@ -15,6 +15,7 @@ import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.PassiveSkill;
 import com.herocraftonline.dev.heroes.skill.SkillType;
+import com.herocraftonline.dev.heroes.util.Setting;
 import com.herocraftonline.dev.heroes.util.Util;
 
 public class SkillHerbalism extends PassiveSkill {
@@ -31,7 +32,7 @@ public class SkillHerbalism extends PassiveSkill {
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty("chance-per-level", .001);
+        node.setProperty(Setting.CHANCE_LEVEL.node(), .001);
         return node;
     }
 

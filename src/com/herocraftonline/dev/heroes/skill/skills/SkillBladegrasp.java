@@ -4,8 +4,8 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityListener;
 import org.bukkit.util.config.ConfigurationNode;
 
@@ -17,6 +17,8 @@ import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Setting;
+import com.herocraftonline.dev.heroes.util.Util;
+import com.iCo6.util.Messaging;
 
 public class SkillBladegrasp extends ActiveSkill {
 
@@ -42,6 +44,7 @@ public class SkillBladegrasp extends ActiveSkill {
         node.setProperty(Setting.APPLY_TEXT.node(), "%hero% tightened his grip!");
         node.setProperty(Setting.EXPIRE_TEXT.node(), "%hero% loosened his grip!");
         node.setProperty("parry-text", "%hero% parried an attack!");
+        node.setProperty(Setting.CHANCE_LEVEL.node(), .02);
         return node;
     }
 
@@ -91,7 +94,7 @@ public class SkillBladegrasp extends ActiveSkill {
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
             // Ignore cancelled damage events & 0 damage events for Spam Control
-            if (event.getDamage() == 0 || event.isCancelled())
+            if (event.getDamage() == 0 || event.isCancelled() || !(event instanceof EntityDamageByEntityEvent))
                 return;
 
             Entity defender = event.getEntity();
@@ -99,9 +102,15 @@ public class SkillBladegrasp extends ActiveSkill {
                 Player player = (Player) defender;
                 Hero hero = plugin.getHeroManager().getHero(player);
                 if (hero.hasEffect(getName())) {
-                    if (event.getCause() == DamageCause.ENTITY_ATTACK || event.getCause() == DamageCause.ENTITY_EXPLOSION) {
-                        event.setCancelled(true);
-                        broadcast(player.getLocation(), parryText, player.getDisplayName());
+                    double parryChance = getSetting(hero.getHeroClass(), "chance-per-level", .02);
+                    if (Util.rand.nextDouble() > parryChance)
+                        return;
+
+                    event.setCancelled(true);
+                    Messaging.send(player, parryText.replace("$1", player.getDisplayName()));
+                    EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
+                    if (subEvent.getDamager() instanceof Player) {
+                        Messaging.send((Player) subEvent.getDamager(), parryText.replace("$1", player.getDisplayName()));
                     }
                 }
             }
