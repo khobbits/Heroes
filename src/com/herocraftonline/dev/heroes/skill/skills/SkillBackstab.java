@@ -3,14 +3,13 @@ package com.herocraftonline.dev.heroes.skill.skills;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.CustomEventListener;
-import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.api.HeroesEventListener;
 import com.herocraftonline.dev.heroes.api.WeaponDamageEvent;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.effects.EffectType;
@@ -29,7 +28,7 @@ public class SkillBackstab extends PassiveSkill {
         setTypes(SkillType.PHYSICAL, SkillType.BUFF);
         setEffectTypes(EffectType.BENEFICIAL, EffectType.PHYSICAL);
         
-        registerEvent(Type.CUSTOM_EVENT, new CustomListener(), Priority.Normal);
+        registerEvent(Type.CUSTOM_EVENT, new SkillHeroesListener(), Priority.Normal);
     }
 
     @Override
@@ -43,46 +42,42 @@ public class SkillBackstab extends PassiveSkill {
         return node;
     }
 
-    public class CustomListener extends CustomEventListener {
+    public class SkillHeroesListener extends HeroesEventListener {
 
         @Override
-        public void onCustomEvent(Event event) {
-            if (!(event instanceof WeaponDamageEvent))
+        public void onWeaponDamage(WeaponDamageEvent event) {
+            if (!(event.getDamager() instanceof Player))
                 return;
-
-            WeaponDamageEvent subEvent = (WeaponDamageEvent) event;
-            if (subEvent.getDamager() instanceof Player) {
-                Player player = (Player) subEvent.getDamager();
-                Hero hero = plugin.getHeroManager().getHero(player);
+            Player player = (Player) event.getDamager();
+            Hero hero = plugin.getHeroManager().getHero(player);
+            
+            if (hero.hasEffect(getName())) {
+                HeroClass heroClass = hero.getHeroClass();
+                ItemStack item = player.getItemInHand();
                 
-                if (hero.hasEffect(getName())) {
-                    HeroClass heroClass = hero.getHeroClass();
-                    ItemStack item = player.getItemInHand();
-                    
-                    if (!getSetting(heroClass, "weapons", Util.swords).contains(item.getType().name()))
-                        return;
-                    
-                    if (subEvent.getEntity().getLocation().getDirection().dot(player.getLocation().getDirection()) <= 0)
-                        return;
+                if (!getSetting(heroClass, "weapons", Util.swords).contains(item.getType().name()))
+                    return;
+                
+                if (event.getEntity().getLocation().getDirection().dot(player.getLocation().getDirection()) <= 0)
+                    return;
 
-                    if (hero.hasEffect("Sneak") && Util.rand.nextDouble() < getSetting(heroClass, "sneak-chance", 1.0)) {
-                        subEvent.setDamage((int) (subEvent.getDamage() * getSetting(heroClass, "sneak-bonus", 2.0)));
-                    } else if (Util.rand.nextDouble() < getSetting(heroClass, "attack-chance", .5)) {
-                        subEvent.setDamage((int) (subEvent.getDamage() * getSetting(heroClass, "attack-bonus", 1.5)));
-                    }
-
-                    String name = "";
-                    Entity target = subEvent.getEntity();
-
-                    if (target instanceof Player) {
-                        name = ((Player) target).getName();
-                        Messaging.send((Player) target, player.getName() + " has backstabbed you!");
-                    } else if (target instanceof Creature) {
-                        name = "a " + Messaging.getCreatureName((Creature) target).toLowerCase();
-                    }
-
-                    Messaging.send(player, "You have backstabbed " + name + "!");
+                if (hero.hasEffect("Sneak") && Util.rand.nextDouble() < getSetting(heroClass, "sneak-chance", 1.0)) {
+                    event.setDamage((int) (event.getDamage() * getSetting(heroClass, "sneak-bonus", 2.0)));
+                } else if (Util.rand.nextDouble() < getSetting(heroClass, "attack-chance", .5)) {
+                    event.setDamage((int) (event.getDamage() * getSetting(heroClass, "attack-bonus", 1.5)));
                 }
+
+                String name = "";
+                Entity target = event.getEntity();
+
+                if (target instanceof Player) {
+                    name = ((Player) target).getName();
+                    Messaging.send((Player) target, player.getName() + " has backstabbed you!");
+                } else if (target instanceof Creature) {
+                    name = "a " + Messaging.getCreatureName((Creature) target).toLowerCase();
+                }
+
+                Messaging.send(player, "You have backstabbed " + name + "!");
             }
         }
     }
