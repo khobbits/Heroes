@@ -153,6 +153,7 @@ public class SkillForage extends ActiveSkill{
                 Messaging.send(player, "Items have been dropped at your feet!");
             }
         }
+        Util.syncInventory(player, plugin);
         broadcastExecuteText(hero);
         return true; 
         
