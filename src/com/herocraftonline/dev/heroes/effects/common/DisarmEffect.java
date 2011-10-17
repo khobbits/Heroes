@@ -35,8 +35,9 @@ public class DisarmEffect extends ExpirableEffect {
             ItemStack is = inv[i];
             if (is != null && Util.isWeapon(is.getType())) {
                 if (!disarms.containsKey(hero)) {
-                    ItemStack[] items = disarms.put(hero, new ItemStack[9]);
-                    items[i] = is;
+                    ItemStack[] disarmedItems = new ItemStack[9];
+                    disarmedItems[i] = is.clone();
+                    disarms.put(hero, disarmedItems);
                     player.getInventory().clear(i);
                 } else {
                     ItemStack[] items = disarms.get(hero);
