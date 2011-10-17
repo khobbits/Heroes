@@ -21,8 +21,9 @@ import com.herocraftonline.dev.heroes.util.Properties;
 public class HBlockListener extends BlockListener {
 
     private final Heroes plugin;
+    private int blockTrackingDuration = 0;
     public static Map<Location, Long> placedBlocks;
-    int blockTrackingDuration = 0;
+
     public HBlockListener(Heroes plugin) {
         this.plugin = plugin;
     }
@@ -36,7 +37,7 @@ public class HBlockListener extends BlockListener {
 
             @Override
             protected boolean removeEldestEntry(Map.Entry<Location, Long> eldest) {
-                return size() > MAX_ENTRIES || eldest.getValue() + blockTrackingDuration > System.currentTimeMillis();
+                return size() > MAX_ENTRIES || eldest.getValue() + blockTrackingDuration <= System.currentTimeMillis();
             }
         };
     }
@@ -50,7 +51,7 @@ public class HBlockListener extends BlockListener {
 
         if (prop.disabledWorlds.contains(player.getWorld().getName()))
             return;
-        
+
         Block block = event.getBlock();
 
         // Get the Hero representing the player
@@ -59,7 +60,6 @@ public class HBlockListener extends BlockListener {
         HeroClass playerClass = hero.getHeroClass();
         // Get the sources of experience for the player's class
         Set<ExperienceType> expSources = playerClass.getExperienceSources();
-
 
         double addedExp = 0;
 
@@ -110,14 +110,13 @@ public class HBlockListener extends BlockListener {
 
     private boolean wasBlockPlaced(Block block) {
         Location loc = block.getLocation();
-        
 
         if (placedBlocks.containsKey(loc)) {
             long timePlaced = placedBlocks.get(loc);
-            if (timePlaced + blockTrackingDuration > System.currentTimeMillis())
+            if (timePlaced + blockTrackingDuration > System.currentTimeMillis()) {
                 return true;
-            else {
-                placedBlocks.remove(block.getLocation());
+            } else {
+                placedBlocks.remove(loc);
                 return false;
             }
         }
