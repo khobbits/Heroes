@@ -10,9 +10,6 @@ commands:
     aliases: ['hero']
     description: Heroes commands
     usage: /<command>
-  hrecover:
-    description: Heroes Recover Items command
-    usage: /<command>
   party:
     aliases: ['p']
     description: Heroes command
