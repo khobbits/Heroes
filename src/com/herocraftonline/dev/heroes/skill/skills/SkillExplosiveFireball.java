@@ -41,7 +41,7 @@ public class SkillExplosiveFireball extends ActiveSkill {
         setIdentifiers("skill explosivefireball");
         setTypes(SkillType.FIRE, SkillType.SILENCABLE, SkillType.DAMAGING, SkillType.HARMFUL);
 
-        registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(this), Priority.Normal);
+        registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(this), Priority.Low);
     }
 
     @Override
