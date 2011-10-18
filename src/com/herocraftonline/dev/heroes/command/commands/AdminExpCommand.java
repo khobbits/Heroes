@@ -34,7 +34,7 @@ public class AdminExpCommand extends BasicCommand {
         Hero hero = plugin.getHeroManager().getHero(player);
 
         try {
-            double expChange = Integer.parseInt(args[1]) - hero.getExperience();
+            double expChange = Integer.parseInt(args[1]);
             hero.gainExp(expChange, ExperienceType.ADMIN, false);
             Messaging.send(sender, "Experience changed.");
             return true;

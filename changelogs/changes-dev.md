@@ -21,6 +21,7 @@ Version dev
 
 * Uses ExperienceBar built into MC
 * Added /hero admin level - command to adjust a player's level directly.
+* /hero admin exp - is now additive and supports negative values. (it no longer sets the players xp to the value)
 * Classes can now have multiple parents via Strong and Weak parent settings
 * Classes must have 'user-class: true' to be added to the permission 'heroes.classes.*' 
 * ExperienceOrbs will no longer drop by default - they can be turned back on in the config, but they wont do anything while heroes is active
