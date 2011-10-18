@@ -206,7 +206,9 @@ public class HeroesDamageListener extends EntityListener {
             }
 
             // Round up to get the number of remaining Hearts
-            int fPlayerHP = (int) Math.ceil(fHeroHP / hero.getMaxHealth() * 20);
+            int fPlayerHP = (int)(fHeroHP / hero.getMaxHealth() * 20);
+            if (fPlayerHP == 0 && fHeroHP > 0)
+                fPlayerHP = 1;
             plugin.debugLog(Level.INFO, "Damage done to " + player.getName() + " by " + cause + ": " + iHeroHP + " -> " + fHeroHP + "   |   " + player.getHealth() + " -> " + fPlayerHP);
 
             hero.setHealth(fHeroHP);
@@ -266,7 +268,9 @@ public class HeroesDamageListener extends EntityListener {
             amount = maxHealth * healPercent;
         }
         double newHeroHealth = hero.getHealth() + amount;
-        int newPlayerHealth = (int) Math.ceil(newHeroHealth / maxHealth * 20);
+        int newPlayerHealth = (int) (newHeroHealth / maxHealth * 20);
+        if (newPlayerHealth == 0 && newHeroHealth > 0)
+            newPlayerHealth = 1;
         hero.setHealth(newHeroHealth);
         event.setAmount(newPlayerHealth - player.getHealth());
         Heroes.debug.stopTask("HeroesDamageListener.onEntityRegainHealth");
