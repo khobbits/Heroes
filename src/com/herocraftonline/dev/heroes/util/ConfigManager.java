@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.logging.Level;
 
 import org.bukkit.ChatColor;
@@ -19,7 +18,6 @@ import org.bukkit.util.config.Configuration;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.classes.HeroClassManager;
 import com.herocraftonline.dev.heroes.skill.Skill;
 
@@ -33,7 +31,7 @@ public class ConfigManager {
     protected final File skillConfigFile;
     protected final File damageConfigFile;
     protected final Properties properties = new Properties();
-    
+
     public ConfigManager(Heroes plugin) {
         this.plugin = plugin;
         this.primaryConfigFile = new File(plugin.getDataFolder(), "config.yml");
@@ -89,15 +87,9 @@ public class ConfigManager {
         Configuration config = new Configuration(skillConfigFile);
         config.load();
 
-        ConfigurationNode node = config.getNode(skill.getName());
         ConfigurationNode defaultNode = skill.getDefaultConfig();
-        if (node == null) {
-            config.setProperty(skill.getName(), defaultNode.getAll());
-            skill.setConfig(defaultNode);
-        } else {
-            mergeNodeToConfig(config, defaultNode, skill.getName());
-            skill.setConfig(config.getNode(skill.getName()));
-        }
+        mergeNodeToConfig(config, defaultNode, skill.getName());
+        skill.setConfig(config.getNode(skill.getName()));
         config.save();
         skill.init();
     }

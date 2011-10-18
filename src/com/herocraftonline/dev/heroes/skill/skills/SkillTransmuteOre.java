@@ -40,7 +40,7 @@ public class SkillTransmuteOre extends ActiveSkill {
         node.setProperty("IRON_ORE." + Setting.REAGENT_COST.node(), 3);
         node.setProperty("IRON_ORE." + Setting.LEVEL.node(), 1);
         node.setProperty("LAPIS_BLOCK.product", "DIAMOND");
-        node.setProperty("LAPIS_BLOCK." + Setting.REAGENT_COST, 1);
+        node.setProperty("LAPIS_BLOCK." + Setting.REAGENT_COST.node(), 1);
         node.setProperty("LAPIS_BLOCK." + Setting.LEVEL.node(), 1);
         node.setProperty("require-furnace", false);
         return node;
