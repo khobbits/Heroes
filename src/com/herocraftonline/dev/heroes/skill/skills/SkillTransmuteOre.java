@@ -62,9 +62,16 @@ public class SkillTransmuteOre extends ActiveSkill {
         for (Setting set : Setting.values()) {
             itemSet.remove(set.node());
         }
+        
         String itemName = item.getType().name();
         if (item == null || !itemSet.contains(itemName)) {
             Messaging.send(player, "You can't transmute that item!");
+            return false;
+        }
+        
+        int level = getSetting(heroClass, itemName + "." + Setting.LEVEL.node(), 1);
+        if (hero.getLevel() < level) {
+            Messaging.send(player, "You must be level $1 to transmute that.", level);
             return false;
         }
         
