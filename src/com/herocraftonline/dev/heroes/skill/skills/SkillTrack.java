@@ -2,7 +2,7 @@ package com.herocraftonline.dev.heroes.skill.skills;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.util.config.ConfigurationNode;
+import com.herocraftonline.util.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClass;

@@ -18,14 +18,14 @@ import org.bukkit.event.Event.Type;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.util.config.Configuration;
-import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.command.BasicCommand;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.util.Messaging;
+import com.herocraftonline.util.Configuration;
+import com.herocraftonline.util.ConfigurationNode;
 
 /**
  * The root class of the skill heirarchy. This class implements the basic functionality of every Heroes skill including
