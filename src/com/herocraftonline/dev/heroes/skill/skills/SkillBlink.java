@@ -37,7 +37,7 @@ public class SkillBlink extends ActiveSkill {
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
         Location loc = player.getLocation();
-        if (loc.getBlockY() > 128 || loc.getBlockY() < 1) {
+        if (loc.getBlockY() > loc.getWorld().getMaxHeight() || loc.getBlockY() < 1) {
             Messaging.send(player, "The void prevents you from blinking!");
             return false;
         }
