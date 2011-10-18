@@ -55,13 +55,13 @@ public class SkillDisarm extends TargettedSkill {
 
         Hero tHero = plugin.getHeroManager().getHero((Player) target);
 
-        if (!Util.isWeapon(player.getItemInHand().getType())) {
-            Messaging.send(hero.getPlayer(), "You cannot disarm bare hands!");
+        if (!Util.isWeapon(tHero.getPlayer().getItemInHand().getType())) {
+            Messaging.send(player, "You cannot disarm bare hands!");
             return false;
         }
 
         if (tHero.hasEffectType(EffectType.DISARM)) {
-            Messaging.send(hero.getPlayer(), "%target% is already disarmed.");
+            Messaging.send(player, "%target% is already disarmed.");
             return false;
         }
 
