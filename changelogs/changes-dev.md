@@ -131,6 +131,8 @@ Version dev
 ** Now has an option to force the player to be targeting a furnace
 * Tumble - (NEW!)
 ** Passive skill that reduces fall damage
+* Web
+** Now makes a diamond shape rather than a +. Will extend 2 blocks each direction, it now also extends down 1 block in case the target square was in the air.
 * Wisdom - (NEW!)
 ** Group buff that increases mana regeneration by a set multiplier.
 * Wolf

@@ -39,7 +39,7 @@ public class SkillWeb extends TargettedSkill {
         setArgumentRange(0, 1);
         setIdentifiers("skill web");
         setTypes(SkillType.EARTH, SkillType.SILENCABLE, SkillType.HARMFUL);
-        
+
         registerEvent(Type.BLOCK_BREAK, new WebBlockListener(), Priority.Highest);
     }
 
@@ -60,7 +60,7 @@ public class SkillWeb extends TargettedSkill {
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
-        
+
         String name = "";
         if (target instanceof Player) {
             name = ((Player) target).getDisplayName();
@@ -107,11 +107,17 @@ public class SkillWeb extends TargettedSkill {
         public void apply(Hero hero) {
             super.apply(hero);
             changeBlock(loc, hero);
+            Block block = loc.getBlock();
+            changeBlock(block.getRelative(BlockFace.DOWN).getLocation(), hero);
             for (BlockFace face : BlockFace.values()) {
                 if (face.toString().contains("_") || face == BlockFace.UP || face == BlockFace.DOWN) {
                     continue;
                 }
-                Location blockLoc = loc.getBlock().getRelative(face).getLocation();
+                Location blockLoc = block.getRelative(face).getLocation();
+                changeBlock(blockLoc, hero);
+                blockLoc = block.getRelative(getClockwise(face)).getLocation();
+                changeBlock(blockLoc, hero);
+                blockLoc = block.getRelative(face, 2).getLocation();
                 changeBlock(blockLoc, hero);
             }
         }
@@ -137,6 +143,20 @@ public class SkillWeb extends TargettedSkill {
                 changedBlocks.add(location);
                 locations.add(location);
                 location.getBlock().setType(Material.WEB);
+            }
+        }
+
+        private BlockFace getClockwise(BlockFace face) {
+            switch (face) {
+            case NORTH:
+                return BlockFace.EAST;
+            case EAST:
+                return BlockFace.SOUTH;
+            case SOUTH:
+                return BlockFace.WEST;
+            case WEST:
+            default:
+                return BlockFace.SELF;
             }
         }
     }
