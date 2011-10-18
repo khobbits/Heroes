@@ -10,12 +10,12 @@ import java.util.logging.Level;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.util.config.Configuration;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.command.CommandHandler;
 import com.herocraftonline.dev.heroes.hero.Hero;
-import com.herocraftonline.util.Configuration;
 
 public class YMLHeroStorage extends HeroStorage {
 

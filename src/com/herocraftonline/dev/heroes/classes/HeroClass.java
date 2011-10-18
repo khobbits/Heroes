@@ -12,9 +12,9 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.bukkit.Material;
+import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.damage.DamageManager.ProjectileType;
-import com.herocraftonline.util.ConfigurationNode;
 
 public class HeroClass {
 

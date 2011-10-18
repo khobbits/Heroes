@@ -12,6 +12,8 @@ import java.util.logging.Level;
 
 import org.bukkit.Material;
 import org.bukkit.permissions.Permission;
+import org.bukkit.util.config.Configuration;
+import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClass.ArmorItems;
@@ -22,9 +24,8 @@ import com.herocraftonline.dev.heroes.classes.HeroClass.WeaponType;
 import com.herocraftonline.dev.heroes.damage.DamageManager.ProjectileType;
 import com.herocraftonline.dev.heroes.skill.OutsourcedSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
-import com.herocraftonline.util.Configuration;
-import com.herocraftonline.util.ConfigurationNode;
 
+@SuppressWarnings("deprecation")
 public class HeroClassManager {
 
     private final Heroes plugin;
