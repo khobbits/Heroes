@@ -152,7 +152,7 @@ public class HeroClassManager {
             strongParents.add(oldStyleParentName);
             this.strongParents.put(newClass, strongParents);
         } else {
-            strongParents = new HashSet<String>(config.getStringList("parents.strong", new ArrayList<String>()));
+            strongParents.addAll(config.getStringList("parents.strong", new ArrayList<String>()));
             Set<String> weakParents = new HashSet<String>(config.getStringList("parents.weak", new ArrayList<String>()));
             this.weakParents.put(newClass, weakParents);
             this.strongParents.put(newClass, strongParents);
