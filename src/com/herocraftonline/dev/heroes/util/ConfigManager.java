@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 
 import org.bukkit.ChatColor;
@@ -18,23 +19,25 @@ import org.bukkit.util.config.Configuration;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.classes.HeroClassManager;
 import com.herocraftonline.dev.heroes.skill.Skill;
 
+@SuppressWarnings("deprecation")
 public class ConfigManager {
 
     protected final Heroes plugin;
     protected final File primaryConfigFile;
-    protected final File classConfigFile;
+    protected final File classConfigFolder;
     protected final File expConfigFile;
     protected final File skillConfigFile;
     protected final File damageConfigFile;
     protected final Properties properties = new Properties();
-
+    
     public ConfigManager(Heroes plugin) {
         this.plugin = plugin;
         this.primaryConfigFile = new File(plugin.getDataFolder(), "config.yml");
-        this.classConfigFile = new File(plugin.getDataFolder(), "classes.yml");
+        this.classConfigFolder = new File(plugin.getDataFolder() + File.separator + "classes");
         this.expConfigFile = new File(plugin.getDataFolder(), "experience.yml");
         this.skillConfigFile = new File(plugin.getDataFolder(), "skills.yml");
         this.damageConfigFile = new File(plugin.getDataFolder(), "damages.yml");
@@ -46,11 +49,14 @@ public class ConfigManager {
 
     public void load() throws Exception {
         checkForConfig(primaryConfigFile);
-        checkForConfig(classConfigFile);
         checkForConfig(expConfigFile);
         checkForConfig(damageConfigFile);
         checkForConfig(new File(plugin.getDataFolder(), "font.png"));
         checkForConfig(new File(plugin.getDataFolder(), "heroes.png"));
+        if (!classConfigFolder.exists()) {
+            classConfigFolder.mkdirs();
+            checkForConfig(new File(classConfigFolder, "vagrant.yml"));
+        }
 
         Configuration primaryConfig = new Configuration(primaryConfigFile);
         primaryConfig.load();
@@ -75,7 +81,7 @@ public class ConfigManager {
         loadExperience(expConfig);
 
         HeroClassManager heroClassManager = new HeroClassManager(plugin);
-        heroClassManager.loadClasses(classConfigFile);
+        heroClassManager.loadClasses(classConfigFolder);
         plugin.setClassManager(heroClassManager);
     }
 

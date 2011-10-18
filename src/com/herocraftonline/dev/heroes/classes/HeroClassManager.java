@@ -25,11 +25,15 @@ import com.herocraftonline.dev.heroes.damage.DamageManager.ProjectileType;
 import com.herocraftonline.dev.heroes.skill.OutsourcedSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
 
+@SuppressWarnings("deprecation")
 public class HeroClassManager {
 
     private final Heroes plugin;
     private Set<HeroClass> classes;
     private HeroClass defaultClass;
+    //Temp data store for loading class heirarchies
+    private HashMap<HeroClass, Set<String>> weakParents = new HashMap<HeroClass, Set<String>>();
+    private HashMap<HeroClass, Set<String>> strongParents = new HashMap<HeroClass, Set<String>>();
 
     public HeroClassManager(Heroes plugin) {
         this.plugin = plugin;
@@ -57,74 +61,24 @@ public class HeroClassManager {
     }
 
     public void loadClasses(File file) {
-        Configuration config = new Configuration(file);
-        config.load();
-        List<String> classNames = config.getKeys("classes");
-        // Warn console if there are No class definitions
-        if (classNames == null) {
+        if (file.listFiles().length == 0) {
             Heroes.log(Level.WARNING, "You have no classes defined in your setup!");
             return;
         }
-        for (String className : classNames) {
-            HeroClass newClass = new HeroClass(className);
-            ConfigurationNode classConfig = config.getNode("classes." + className);
-
-            newClass.setDescription(classConfig.getString("description", ""));
-            newClass.setExpModifier(classConfig.getDouble("expmodifier", 1.0D));
-
-            // Load class allowed Armor + Weapons
-
-            loadArmor(newClass, classConfig);
-            loadWeapons(newClass, classConfig);
-            loadDamages(newClass, classConfig);
-            loadPermittedSkills(newClass, classConfig);
-            loadPermissionSkills(newClass, classConfig);
-            loadExperienceTypes(newClass, classConfig);
-
-            Double baseMaxHealth = classConfig.getDouble("base-max-health", 20);
-            Double maxHealthPerLevel = classConfig.getDouble("max-health-per-level", 0);
-            boolean userClass= classConfig.getBoolean("user-class", true);
-            newClass.setBaseMaxHealth(baseMaxHealth);
-            newClass.setMaxHealthPerLevel(maxHealthPerLevel);
-            newClass.setUserClass(userClass);
-
-            // Get the class expLoss
-            newClass.setExpLoss(classConfig.getDouble("expLoss", -1));
-
-            // Get the maximum level or use the default if it's not specified
-            int defaultMaxLevel = plugin.getConfigManager().getProperties().maxLevel;
-            int maxLevel = classConfig.getInt("max-level", defaultMaxLevel);
-            if (maxLevel < 1) {
-                Heroes.log(Level.WARNING, "Class (" + className + ") max level is too low. Setting max level to 1.");
-                maxLevel = 1;
-            } else if (maxLevel > defaultMaxLevel) {
-                Heroes.log(Level.WARNING, "Class (" + className + ") max level is too high. Setting max level to " + defaultMaxLevel + ".");
-                maxLevel = defaultMaxLevel;
-            }
-            newClass.setMaxLevel(maxLevel);
-
-            int defaultCost = plugin.getConfigManager().getProperties().swapCost;
-            int cost = classConfig.getInt("cost", defaultCost);
-            if (cost < 0) {
-                Heroes.log(Level.WARNING, "Class (" + className + ") cost is too low. Setting cost to 0.");
-                cost = 0;
-            }
-            newClass.setCost(cost);
-
-            // Attempt to add the class
-            if (!addClass(newClass)) {
-                Heroes.log(Level.WARNING, "Duplicate class (" + className + ") found. Skipping this class.");
-            } else {
-                Heroes.log(Level.INFO, "Loaded class: " + className);
-                if (config.getBoolean("classes." + className + ".default", false)) {
-                    Heroes.log(Level.INFO, "Default class found: " + className);
-                    defaultClass = newClass;
+        for (File f : file.listFiles()) {
+            if (f.isFile() && f.getName().contains(".yml")) {
+                HeroClass newClass = loadClass(f);
+                // Attempt to add the class
+                if (!addClass(newClass)) {
+                    Heroes.log(Level.WARNING, "Duplicate class (" + newClass.getName() + ") found. Skipping this class.");
+                } else {
+                    Heroes.log(Level.INFO, "Loaded class: " + newClass.getName());
                 }
             }
         }
 
         // After all classes are loaded we need to link them all together
-        checkClassHeirarchy(config);
+        checkClassHeirarchy();
 
         if (defaultClass == null) {
             Heroes.log(Level.SEVERE, "You are missing a default class, this will cause A LOT of issues!");
@@ -135,6 +89,79 @@ public class HeroClassManager {
             registerClassPermissions();
     }
 
+    private HeroClass loadClass(File file) {
+        Configuration config = new Configuration(file);
+        config.load();
+        String className = config.getString("name");
+        if (className == null) {
+            return null;
+        }
+        HeroClass newClass = new HeroClass(className);
+
+        newClass.setDescription(config.getString("description", ""));
+        newClass.setExpModifier(config.getDouble("expmodifier", 1.0D));
+
+        // Load class allowed Armor + Weapons
+
+        loadArmor(newClass, config);
+        loadWeapons(newClass, config);
+        loadDamages(newClass, config);
+        loadPermittedSkills(newClass, config);
+        loadPermissionSkills(newClass, config);
+        loadExperienceTypes(newClass, config);
+
+        Double baseMaxHealth = config.getDouble("base-max-health", 20);
+        Double maxHealthPerLevel = config.getDouble("max-health-per-level", 0);
+        boolean userClass= config.getBoolean("user-class", true);
+        newClass.setBaseMaxHealth(baseMaxHealth);
+        newClass.setMaxHealthPerLevel(maxHealthPerLevel);
+        newClass.setUserClass(userClass);
+
+        // Get the class expLoss
+        newClass.setExpLoss(config.getDouble("expLoss", -1));
+
+        // Get the maximum level or use the default if it's not specified
+        int defaultMaxLevel = plugin.getConfigManager().getProperties().maxLevel;
+        int maxLevel = config.getInt("max-level", defaultMaxLevel);
+        if (maxLevel < 1) {
+            Heroes.log(Level.WARNING, "Class (" + className + ") max level is too low. Setting max level to 1.");
+            maxLevel = 1;
+        } else if (maxLevel > defaultMaxLevel) {
+            Heroes.log(Level.WARNING, "Class (" + className + ") max level is too high. Setting max level to " + defaultMaxLevel + ".");
+            maxLevel = defaultMaxLevel;
+        }
+        newClass.setMaxLevel(maxLevel);
+
+        int defaultCost = plugin.getConfigManager().getProperties().swapCost;
+        int cost = config.getInt("cost", defaultCost);
+        if (cost < 0) {
+            Heroes.log(Level.WARNING, "Class (" + className + ") cost is too low. Setting cost to 0.");
+            cost = 0;
+        }
+        newClass.setCost(cost);
+
+        //Setup temporary class name storage for heirarchies
+
+        String oldStyleParentName = config.getString("parent");
+        Set<String> strongParents = new HashSet<String>();
+        if (oldStyleParentName != null) {
+            strongParents.add(oldStyleParentName);
+            this.strongParents.put(newClass, strongParents);
+        } else {
+            strongParents = new HashSet<String>(config.getStringList("parents.strong", new ArrayList<String>()));
+            Set<String> weakParents = new HashSet<String>(config.getStringList("parents.weak", new ArrayList<String>()));
+            this.weakParents.put(newClass, weakParents);
+            this.strongParents.put(newClass, strongParents);
+        }
+
+        //Set the default
+        if (config.getBoolean("default", false)) {
+            Heroes.log(Level.INFO, "Default class found: " + className);
+            defaultClass = newClass;
+        }
+
+        return newClass;
+    }
     private void registerClassPermissions() {
         Map<String, Boolean> classPermissions = new HashMap<String, Boolean>();
         for (HeroClass heroClass : classes) {
@@ -248,41 +275,38 @@ public class HeroClassManager {
      * 
      * @param config
      */
-    private void checkClassHeirarchy(Configuration config) {
+    private void checkClassHeirarchy() {
         for (HeroClass unlinkedClass : classes) {
-            String className = unlinkedClass.getName();
-
-            String oldStyleParentName = config.getString("classes." + className + ".parent");
-            if (oldStyleParentName != null) {
-                HeroClass parent = getClass(oldStyleParentName);
-                if (parent != null) {
-                    parent.addSpecialization(unlinkedClass);
-                    unlinkedClass.addStrongParent(parent);
-                } else {
-                    Heroes.log(Level.WARNING, "Cannot assign " + className + " a parent class as " + oldStyleParentName + " does not exist.");
-                }
-            } else {
-                Set<String> strongParents = new HashSet<String>(config.getStringList("classes." + className + ".parents.strong", new ArrayList<String>()));
-                for (String cName : strongParents) {
-                    HeroClass parent = getClass(cName);
+            Set<String> strong = strongParents.get(unlinkedClass);
+            if (strong != null && !strong.isEmpty()) {
+                for (String sp : strong) {
+                    HeroClass parent = getClass(sp);
                     if (parent != null) {
                         parent.addSpecialization(unlinkedClass);
                         unlinkedClass.addStrongParent(parent);
                     } else {
-                        Heroes.log(Level.WARNING, "Cannot assign " + className + " a parent class as " + cName + " does not exist.");
+                        Heroes.log(Level.WARNING, "Cannot assign " + unlinkedClass.getName() + " a parent class as " + sp + " does not exist.");
                     }
                 }
-
-                Set<String> weakParents = new HashSet<String>(config.getStringList("classes." + className + ".parents.weak", new ArrayList<String>()));
-                for (String cName : weakParents) {
-                    HeroClass parent = getClass(cName);
+            }
+            Set<String> weak = weakParents.get(unlinkedClass);
+            if (weak != null && !weak.isEmpty()) {
+                for (String wp : weak) {
+                    HeroClass parent = getClass(wp);
                     if (parent != null) {
                         parent.addSpecialization(unlinkedClass);
                         unlinkedClass.addWeakParent(parent);
+                    } else {
+                        Heroes.log(Level.WARNING, "Cannot assign " + unlinkedClass.getName() + " a parent class as " + wp + " does not exist.");
                     }
                 }
             }
         }
+        //Clean out the variables just in case
+        this.strongParents.clear();
+        this.strongParents = null;
+        this.weakParents.clear();
+        this.weakParents = null;
     }
 
     private void loadArmor(HeroClass newClass, ConfigurationNode config) {

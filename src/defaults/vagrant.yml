@@ -1,0 +1,26 @@
+name: Vagrant
+default: true
+description: The vagrant, starter PATH
+permitted-armor:
+- '*'
+permitted-weapon:
+- '*'
+permitted-skills:
+  ALL:
+experience-sources:
+- KILLING
+permission-skills:
+  Example:
+  level: 1
+  usage: This is an EXAMPLE!
+  permissions:
+  - plugin.example.node.here
+base-max-health: 20
+max-health-per-level: 0.1
+expmodifier: 1.0
+item-damage:
+  air: 1
+projectile-damage:
+  Arrow: 3
+expLoss: 0
+user-class: true
