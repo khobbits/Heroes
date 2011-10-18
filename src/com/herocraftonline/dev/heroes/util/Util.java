@@ -48,18 +48,21 @@ public final class Util {
         swords = new ArrayList<String>();
         swords.add("WOOD_SWORD");
         swords.add("STONE_SWORD");
+        swords.add("IRON_SWORD");
         swords.add("GOLD_SWORD");
         swords.add("DIAMOND_SWORD");
 
         axes = new ArrayList<String>();
         axes.add("WOOD_AXE");
         axes.add("STONE_AXE");
+        axes.add("IRON_AXE");
         axes.add("GOLD_AXE");
         axes.add("DIAMOND_AXE");
 
         shovels = new ArrayList<String>();
         shovels.add("WOODEN_SPADE");
         shovels.add("STONE_SPADE");
+        shovels.add("IRON_SPADE");
         shovels.add("GOLD_SPADE");
         shovels.add("DIAMOND_SPADE");
 
