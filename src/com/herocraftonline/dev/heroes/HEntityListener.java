@@ -72,16 +72,14 @@ public class HEntityListener extends EntityListener {
         ExperienceType experienceType = null;
 
         // If this entity is on the summon map, don't award XP!
-        if (attacker.getSummons().contains(defender))
+        if (attacker.getSummons().contains(defender) || attacker.getPlayer().equals(defender))
             return;
 
         if (defender instanceof Player && expSources.contains(ExperienceType.PVP)) {
             // Don't award XP for Players killing themselves
-            if (!defender.equals(attacker)) {
-                prop.playerDeaths.put((Player) defender, defender.getLocation());
-                addedExp = prop.playerKillingExp;
-                experienceType = ExperienceType.PVP;
-            }
+            prop.playerDeaths.put((Player) defender, defender.getLocation());
+            addedExp = prop.playerKillingExp;
+            experienceType = ExperienceType.PVP;
         } else if (defender instanceof LivingEntity && !(defender instanceof Player) && expSources.contains(ExperienceType.KILLING)) {
 
             // Get the dying entity's CreatureType

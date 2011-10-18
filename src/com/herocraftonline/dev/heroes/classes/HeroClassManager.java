@@ -68,6 +68,10 @@ public class HeroClassManager {
         for (File f : file.listFiles()) {
             if (f.isFile() && f.getName().contains(".yml")) {
                 HeroClass newClass = loadClass(f);
+                if (newClass == null) {
+                    Heroes.log(Level.WARNING, "Attempted to load " + f.getName() + " but failed. Skipping.");
+                    continue;
+                }
                 // Attempt to add the class
                 if (!addClass(newClass)) {
                     Heroes.log(Level.WARNING, "Duplicate class (" + newClass.getName() + ") found. Skipping this class.");
