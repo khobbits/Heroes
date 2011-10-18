@@ -68,6 +68,10 @@ public class HeroClassManager {
         for (File f : file.listFiles()) {
             if (f.isFile() && f.getName().contains(".yml")) {
                 HeroClass newClass = loadClass(f);
+                if (newClass == null) {
+                    Heroes.log(Level.WARNING, "Attempted to load " + f.getName() + " but failed. Skipping.");
+                    continue;
+                }
                 // Attempt to add the class
                 if (!addClass(newClass)) {
                     Heroes.log(Level.WARNING, "Duplicate class (" + newClass.getName() + ") found. Skipping this class.");
@@ -148,7 +152,7 @@ public class HeroClassManager {
             strongParents.add(oldStyleParentName);
             this.strongParents.put(newClass, strongParents);
         } else {
-            strongParents = new HashSet<String>(config.getStringList("parents.strong", new ArrayList<String>()));
+            strongParents.addAll(config.getStringList("parents.strong", new ArrayList<String>()));
             Set<String> weakParents = new HashSet<String>(config.getStringList("parents.weak", new ArrayList<String>()));
             this.weakParents.put(newClass, weakParents);
             this.strongParents.put(newClass, strongParents);
