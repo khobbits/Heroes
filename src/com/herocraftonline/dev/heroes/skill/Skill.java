@@ -117,6 +117,9 @@ public abstract class Skill extends BasicCommand {
      * @return
      */
     public boolean damageCheck(Player player, LivingEntity target) {
+        if (player.equals(target))
+            return false;
+        
         EntityDamageByEntityEvent damageEntityEvent = new EntityDamageByEntityEvent(player, target, DamageCause.CUSTOM, 0);
         plugin.getServer().getPluginManager().callEvent(damageEntityEvent);
         if (damageEntityEvent.isCancelled())
