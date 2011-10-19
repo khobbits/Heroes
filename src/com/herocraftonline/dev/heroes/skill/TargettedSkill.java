@@ -171,6 +171,8 @@ public abstract class TargettedSkill extends ActiveSkill {
      * @return the player's target or null if no target is found
      */
     public static LivingEntity getPlayerTarget(Player player, int maxDistance) {
+        if (player.getLocation().getBlockY() > player.getLocation().getWorld().getMaxHeight() )
+            return null;
         List<Block> lineOfSight = player.getLineOfSight(Util.transparentIds, maxDistance);
         List<Entity> nearbyEntities = player.getNearbyEntities(maxDistance, maxDistance, maxDistance);
         for (Entity entity : nearbyEntities) {
