@@ -10,7 +10,7 @@ import com.herocraftonline.dev.heroes.util.Messaging;
 public class ImbueEffect extends ExpirableEffect {
 
     private int applicationsLeft;
-    String description;
+    private String description;
     
     public ImbueEffect(Skill skill, String name, long duration, int numAttacks) {
         super(skill, name, duration);
