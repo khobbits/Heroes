@@ -181,7 +181,6 @@ public class HeroesDamageListener extends EntityListener {
 
         if (defender instanceof Player) {
             Player player = (Player) defender;
-            System.out.println(player.getNoDamageTicks() + "\t" + player.getMaximumNoDamageTicks());
             if (player.getNoDamageTicks() > 10 || player.isDead() || player.getHealth() <= 0) {
                 event.setCancelled(true);
                 return;
