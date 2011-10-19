@@ -99,6 +99,11 @@ public class HPlayerListener extends PlayerListener {
             hero.removeEffect(hero.getEffect("Invisible"));
         }
 
+        if (event.useInteractedBlock() == Result.ALLOW) {
+            hero.cancelDelayedSkill();
+            return;
+        }
+        
         if (hero.hasBind(material)) {
             if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 String[] args = hero.getBind(material);
