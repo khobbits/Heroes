@@ -105,8 +105,14 @@ public class HeroesDamageListener extends EntityListener {
             if (event instanceof EntityDamageByEntityEvent) {
                 attacker = ((EntityDamageByEntityEvent) event).getDamager();
                 if (attacker instanceof Player) {
+                    Player attackingPlayer = (Player) attacker;
+                    Hero hero = plugin.getHeroManager().getHero(attackingPlayer);
+                    if (!hero.canEquipItem(attackingPlayer.getInventory().getHeldItemSlot())) {
+                        event.setCancelled(true);
+                        return;
+                    }
                     // Get the damage this player should deal for the weapon they are using
-                    damage = getPlayerDamage((Player) attacker, damage);
+                    damage = getPlayerDamage(attackingPlayer, damage);
                 } else if (attacker instanceof LivingEntity) {
                     CreatureType type = Util.getCreatureFromEntity(attacker);
                     if (type != null) {
