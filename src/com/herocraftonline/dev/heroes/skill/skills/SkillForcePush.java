@@ -47,13 +47,14 @@ public class SkillForcePush extends TargettedSkill {
         Location playerLoc = player.getLocation();
         Location targetLoc = target.getLocation();
         
-        double distance = player.getLocation().distanceSquared(target.getLocation());
-        double distAdjustment = 1.0 - distance / getSetting(heroClass, Setting.MAX_DISTANCE.node(), 15);
-        double xDir = targetLoc.getX() - playerLoc.getX();
+        double distanceSquared = player.getLocation().distanceSquared(target.getLocation());
+        double maxDistance = getSetting(heroClass, Setting.MAX_DISTANCE.node(), 15);
+        double distAdjustment = 1.0 - distanceSquared / (maxDistance * maxDistance);
+        double xDir = targetLoc.getX() - targetLoc.getX();
         double zDir = targetLoc.getZ() - playerLoc.getZ();
         double magnitude = Math.sqrt(xDir * xDir + zDir * zDir);
         double hPower = getSetting(heroClass, "horizontal-power", 1d) * distAdjustment;
-        double vPower = getSetting(heroClass, "vertical-power", 1d);
+        double vPower = getSetting(heroClass, "vertical-power", 1d) * distAdjustment;
         
         Vector v = new Vector(xDir / magnitude * hPower, vPower, zDir / magnitude * hPower);
         target.setVelocity(v);
