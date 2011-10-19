@@ -41,6 +41,8 @@ public class HeroesDamageListener extends EntityListener {
     private DamageManager damageManager;
 
     private static final Map<Material, Integer> armorPoints;
+    
+    private boolean ignoreNextDamageEventBecauseBukkitCallsTwoEventsGRRR = false;
 
     public HeroesDamageListener(Heroes plugin, DamageManager damageManager) {
         this.plugin = plugin;
@@ -60,6 +62,12 @@ public class HeroesDamageListener extends EntityListener {
     private void onEntityDamageCore(EntityDamageEvent event) {
         if (event.isCancelled() || plugin.getConfigManager().getProperties().disabledWorlds.contains(event.getEntity().getWorld().getName()))
             return;
+        
+        if (ignoreNextDamageEventBecauseBukkitCallsTwoEventsGRRR) {
+            ignoreNextDamageEventBecauseBukkitCallsTwoEventsGRRR = false;
+            event.setDamage(0);
+            return;
+        }
 
         if (event.getCause() == DamageCause.SUICIDE) {
             if (event.getEntity() instanceof Player) {
@@ -74,6 +82,9 @@ public class HeroesDamageListener extends EntityListener {
         HeroDamageCause heroLastDamage = null;
         DamageCause cause = event.getCause();
         int damage = event.getDamage();
+        
+        if (cause == DamageCause.PROJECTILE)
+            ignoreNextDamageEventBecauseBukkitCallsTwoEventsGRRR = true;
 
         if (damageManager.isSpellTarget(defender)) {
             SkillUseInfo skillInfo = damageManager.getSpellTargetInfo(defender);
@@ -90,7 +101,7 @@ public class HeroesDamageListener extends EntityListener {
                     heroLastDamage = new HeroSkillDamageCause(damage, cause, skillInfo.getHero().getPlayer(), skillInfo.getSkill());
                 }
             }
-        } else if (damage != 0) {
+        } else if (cause == DamageCause.ENTITY_ATTACK || cause == DamageCause.ENTITY_EXPLOSION || cause == DamageCause.PROJECTILE) {
             if (event instanceof EntityDamageByEntityEvent) {
                 attacker = ((EntityDamageByEntityEvent) event).getDamager();
                 if (attacker instanceof Player) {
@@ -195,31 +206,31 @@ public class HeroesDamageListener extends EntityListener {
             if (damage < 0) {
                 damage = 0;
             }
-
+            
             hero.setLastDamageCause(heroLastDamage);
-
+            
             double iHeroHP = hero.getHealth();
             double fHeroHP = iHeroHP - damage;
             // Never set HP less than 0
             if (fHeroHP < 0) {
                 fHeroHP = 0;
             }
-
+            
             // Round up to get the number of remaining Hearts
             int fPlayerHP = (int)(fHeroHP / hero.getMaxHealth() * 20);
             if (fPlayerHP == 0 && fHeroHP > 0)
                 fPlayerHP = 1;
             plugin.debugLog(Level.INFO, "Damage done to " + player.getName() + " by " + cause + ": " + iHeroHP + " -> " + fHeroHP + "   |   " + player.getHealth() + " -> " + fPlayerHP);
-
+            
             hero.setHealth(fHeroHP);
-
+            
             // If final HP is 0, make sure we kill the player
             if (fHeroHP == 0) {
                 event.setDamage(200);
             } else {
                 player.setHealth(fPlayerHP + damage);
                 event.setDamage(damage + damageReduction);
-
+            
                 // Make sure health syncs on the next tick
                 Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
                     @Override
@@ -232,7 +243,7 @@ public class HeroesDamageListener extends EntityListener {
             if (party != null && event.getDamage() > 0 && !party.updateMapDisplay()) {
                 party.setUpdateMapDisplay(true);
             }
-
+            
             // Do our Damage-Dependant effect removals last
             if (hero.hasEffect("Invisible")) {
                 hero.removeEffect(hero.getEffect("Invisible"));
