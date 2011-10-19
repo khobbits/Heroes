@@ -51,7 +51,7 @@ public class YMLHeroStorage extends HeroStorage {
             playerHero.setVerbose(playerConfig.getBoolean("verbose", true));
             playerHero.setSuppressedSkills(new HashSet<String>(playerConfig.getStringList("suppressed", null)));
 
-            Heroes.log(Level.INFO, "Loaded hero: " + player.getName());
+            Heroes.log(Level.INFO, "Loaded hero: " + player.getName() + " with EID: " + player.getEntityId());
             return playerHero;
         } else {
             // Create a New Hero with the Default Setup.
