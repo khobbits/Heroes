@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -28,6 +30,7 @@ public class SkillManager {
     private Map<String, File> skillFiles;
     private final Heroes plugin;
     private final File dir;
+    private final ClassLoader classLoader;
 
     public SkillManager(Heroes plugin) {
         skills = new LinkedHashMap<String, Skill>();
@@ -36,11 +39,23 @@ public class SkillManager {
         this.plugin = plugin;
         dir = new File(plugin.getDataFolder(), "skills");
         dir.mkdir();
+        
+        List<URL> urls = new ArrayList<URL>();
         for (String skillFile : dir.list()) {
             if (skillFile.contains(".jar")) {
-                skillFiles.put(skillFile.toLowerCase().replace(".jar", "").replace("skill", ""), new File(dir, skillFile));
+                File file = new File(dir, skillFile);
+                skillFiles.put(skillFile.toLowerCase().replace(".jar", "").replace("skill", ""), file);
+                try {
+                    urls.add(file.toURI().toURL());
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
             }
         }
+        
+        ClassLoader tmp = null;
+        tmp = URLClassLoader.newInstance(urls.toArray(new URL[0]), plugin.getClass().getClassLoader());
+        classLoader = tmp;
     }
 
     /**
@@ -131,10 +146,9 @@ public class SkillManager {
             }
 
             if (mainClass != null) {
-                ClassLoader loader = URLClassLoader.newInstance(new URL[] { file.toURI().toURL() }, plugin.getClass().getClassLoader());
-                Class<?> clazz = Class.forName(mainClass, true, loader);
+                Class<?> clazz = Class.forName(mainClass, true, classLoader);
                 for (Class<?> subclazz : clazz.getClasses()) {
-                    Class.forName(subclazz.getName(), true, loader);
+                    Class.forName(subclazz.getName(), true, classLoader);
                 }
                 Class<? extends Skill> skillClass = clazz.asSubclass(Skill.class);
                 Constructor<? extends Skill> ctor = skillClass.getConstructor(plugin.getClass());
