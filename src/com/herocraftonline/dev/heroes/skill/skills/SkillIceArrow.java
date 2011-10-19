@@ -59,7 +59,6 @@ public class SkillIceArrow extends ActiveSkill {
         long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 60000);
         int numAttacks = getSetting(hero.getHeroClass(), "attacks", 1);
         hero.addEffect(new IceArrowBuff(this, duration, numAttacks));
-        broadcastExecuteText(hero);
         return true;
     }
 
