@@ -53,9 +53,7 @@ public class SkillManager {
             }
         }
         
-        ClassLoader tmp = null;
-        tmp = URLClassLoader.newInstance(urls.toArray(new URL[0]), plugin.getClass().getClassLoader());
-        classLoader = tmp;
+        classLoader = URLClassLoader.newInstance(urls.toArray(new URL[0]), plugin.getClass().getClassLoader());
     }
 
     /**
