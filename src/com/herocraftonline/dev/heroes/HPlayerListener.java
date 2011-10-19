@@ -6,6 +6,7 @@ import net.minecraft.server.EntityPlayer;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Result;
@@ -82,11 +83,10 @@ public class HPlayerListener extends PlayerListener {
         if (event.useItemInHand() == Result.DENY)
             return;
 
-
         Hero hero = plugin.getHeroManager().getHero(player);
         if (hero.hasEffectType(EffectType.DISARM))
             Util.disarmCheck(hero, plugin);
-        
+
         Material material = player.getItemInHand().getType();
         if (!hero.canEquipItem(player.getInventory().getHeldItemSlot())) {
             event.setCancelled(true);
@@ -94,16 +94,32 @@ public class HPlayerListener extends PlayerListener {
             return;
         }
 
-        //Remove effects dependant on non-interaction
+        // Remove effects dependant on non-interaction
         if (hero.hasEffect("Invisible")) {
             hero.removeEffect(hero.getEffect("Invisible"));
         }
 
-        if (event.useInteractedBlock() == Result.ALLOW) {
-            hero.cancelDelayedSkill();
-            return;
+        Block clickedBlock = event.getClickedBlock();
+        if (clickedBlock != null) {
+            switch (clickedBlock.getType()) {
+                case DISPENSER:
+                case BED:
+                case FURNACE:
+                case BURNING_FURNACE:
+                case WOOD_DOOR:
+                case LEVER:
+                case IRON_DOOR:
+                case JUKEBOX:
+                case DIODE_BLOCK_OFF:
+                case DIODE_BLOCK_ON:
+                case CHEST:
+                case LOCKED_CHEST:
+                case TRAP_DOOR:
+                    hero.cancelDelayedSkill();
+                    return;
+            }
         }
-        
+
         if (hero.hasBind(material)) {
             if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 String[] args = hero.getBind(material);
@@ -132,13 +148,13 @@ public class HPlayerListener extends PlayerListener {
     public void onPlayerPickupItem(PlayerPickupItemEvent event) {
         if (event.isCancelled() || plugin.getConfigManager().getProperties().disabledWorlds.contains(event.getPlayer().getWorld().getName()))
             return;
-        
+
         final Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
         if (hero.hasEffectType(EffectType.DISARM) && Util.isWeapon(event.getItem().getItemStack().getType())) {
             event.setCancelled(true);
             return;
         }
-        
+
         plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
             @Override
             public void run() {
