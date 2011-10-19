@@ -9,6 +9,7 @@ Version dev
 * Player HP is now ceiled when synched preventing high HP classes from dying before they actually hit 0 HP. - for real
 * creatures added in 1.8 will no longer crash the effect system
 * Player's no longer get XP for killing themselves
+* XP is only granted for Survival game-mode (creative mode will not award XP)
 * Creature effects should no longer crash the effect manager
 * Fixed SpoutUI hooking
 * Tamed Pets & Summons will now award Experience for their kills as intended

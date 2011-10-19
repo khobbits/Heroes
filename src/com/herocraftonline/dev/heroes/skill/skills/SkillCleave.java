@@ -43,6 +43,7 @@ public class SkillCleave extends TargettedSkill {
         Material item = player.getItemInHand().getType();
         if (!getSetting(hero.getHeroClass(), "weapons", Util.axes).contains(item.name())) {
             Messaging.send(player, "You can't cleave with that weapon!");
+            return false;
         }
 
         HeroClass heroClass = hero.getHeroClass();
