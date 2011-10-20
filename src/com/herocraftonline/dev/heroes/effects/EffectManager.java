@@ -92,6 +92,18 @@ public class EffectManager {
         }
     }
 
+    public boolean creatureHasEffectType(Creature creature, EffectType type) {
+        if (!creatureEffects.containsKey(creature))
+            return false;
+        
+        for (Effect effect : creatureEffects.get(creature)) {
+            if (effect.isType(type))
+                return true;
+        }
+        
+        return false;
+    }
+    
     public boolean creatureHasEffect(Creature creature, String name) {
         if (!creatureEffects.containsKey(creature))
             return false;

@@ -35,6 +35,7 @@ Version dev
 * Added option to prevent max tiered players from switching classes.
 * Food & Saturation levels will now be set to max (20) when a hero levels up.
 * Fall damage is now a percent, use FALL: .05 for 5% health per 1 meter dropped, etc.
+* Resistances are now checked internally in the HeroDamageListener
 
 ==== **API:** ====
 
@@ -55,6 +56,7 @@ Version dev
 ** Faked mobEffects are only sent to the player and are not resolved server-side
 * Player - Location death map has been exposed.  It is now in the Util class instead of being only in the Revive skill
 * Fall damage can now be adjusted before the heroes damage listener is called, not just cancelled
+* New EffectTypes for tagging effects as Resist_TYPE - they will block any harmful skill of the type.
 
 ==== **Skills:** ====
 

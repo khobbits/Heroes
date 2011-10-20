@@ -31,9 +31,13 @@ import com.herocraftonline.dev.heroes.api.SkillDamageEvent;
 import com.herocraftonline.dev.heroes.api.SkillUseInfo;
 import com.herocraftonline.dev.heroes.api.WeaponDamageEvent;
 import com.herocraftonline.dev.heroes.damage.DamageManager.ProjectileType;
+import com.herocraftonline.dev.heroes.effects.EffectManager;
 import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.party.HeroParty;
+import com.herocraftonline.dev.heroes.skill.Skill;
+import com.herocraftonline.dev.heroes.skill.SkillType;
+import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Util;
 
 public class HeroesDamageListener extends EntityListener {
@@ -89,6 +93,14 @@ public class HeroesDamageListener extends EntityListener {
             SkillUseInfo skillInfo = damageManager.getSpellTargetInfo(defender);
             damageManager.removeSpellTarget(defender);
             if (event instanceof EntityDamageByEntityEvent) {
+                if (resistanceCheck(defender, skillInfo.getSkill())) {
+                    if (defender instanceof Player)
+                        skillInfo.getSkill().broadcast(defender.getLocation(), "$1 has resisted $2", ((Player) defender).getDisplayName(),  skillInfo.getSkill().getName());
+                    if (defender instanceof Creature)
+                        skillInfo.getSkill().broadcast(defender.getLocation(), "$1 has resisted $2", Messaging.getCreatureName((Creature) defender), skillInfo.getSkill().getName());
+                    event.setCancelled(true);
+                    return;
+                }
                 SkillDamageEvent spellDamageEvent = new SkillDamageEvent(damage, defender, skillInfo);
                 plugin.getServer().getPluginManager().callEvent(spellDamageEvent);
                 if (spellDamageEvent.isCancelled()) {
@@ -167,14 +179,19 @@ public class HeroesDamageListener extends EntityListener {
                     switch (cause) {
                     case FALL:
                         damage = onEntityFall(event.getDamage(), tmpDamage, defender);
-                        if (damage == 0) {
-                            event.setCancelled(true);
-                            return;
-                        }
+                        break;
+                    case FIRE:
+                    case LAVA:
+                    case FIRE_TICK:
+                        damage = onEntityFlame(tmpDamage, cause, defender);
                         break;
                     default:
                         damage = (int) (double) tmpDamage;
                         break;
+                    }
+                    if (damage == 0) {
+                        event.setCancelled(true);
+                        return;
                     }
                 }
                 heroLastDamage = new HeroDamageCause(damage, cause);
@@ -306,6 +323,25 @@ public class HeroesDamageListener extends EntityListener {
     }
 
     /**
+     * Adjusts damage for Fire damage events.
+     * @param damage
+     * @param cause
+     * @param entity
+     * @return
+     */
+    private int onEntityFlame(double damage, DamageCause cause, Entity entity) {
+        if (entity instanceof Player) {
+            Hero hero = plugin.getHeroManager().getHero((Player) entity);
+            if (hero.hasEffectType(EffectType.RESIST_FIRE)) {
+                damage = 0;
+            }
+        } else if (entity instanceof Creature) {
+            if (plugin.getEffectManager().creatureHasEffectType((Creature) entity, EffectType.RESIST_FIRE))
+                damage = 0;
+        }
+        return (int) damage;
+    }
+    /**
      * Adjusts the damage being dealt during a fall
      * @param damage
      * @param entity
@@ -320,7 +356,10 @@ public class HeroesDamageListener extends EntityListener {
                 else
                     damage = (int) (damage * damagePercent * dHero.getMaxHealth());
             } else if (entity instanceof Creature) {
-                damage = (int) (damage * damagePercent * plugin.getDamageManager().getCreatureHealth(Util.getCreatureFromEntity(entity)));
+                if (plugin.getEffectManager().creatureHasEffectType((Creature) entity, EffectType.SAFEFALL))
+                    damage = 0;
+                else
+                    damage = (int) (damage * damagePercent * plugin.getDamageManager().getCreatureHealth(Util.getCreatureFromEntity(entity)));
             }
         }
         return damage;
@@ -370,6 +409,35 @@ public class HeroesDamageListener extends EntityListener {
         return tmpDamage == null ? damage : tmpDamage;
     }
 
+    private boolean resistanceCheck(Entity defender, Skill skill) {
+        if (defender instanceof Player) {
+            Hero hero = plugin.getHeroManager().getHero((Player) defender);
+            if (hero.hasEffectType(EffectType.RESIST_FIRE) && skill.isType(SkillType.FIRE))
+                return true;
+            else if (hero.hasEffectType(EffectType.RESIST_DARK) && skill.isType(SkillType.DARK))
+                return true;
+            else if (hero.hasEffectType(EffectType.LIGHT) && skill.isType(SkillType.LIGHT))
+                return true;
+            else if (hero.hasEffectType(EffectType.RESIST_LIGHTNING) && skill.isType(SkillType.LIGHTNING))
+                return true;
+            else if (hero.hasEffectType(EffectType.RESIST_ICE) && skill.isType(SkillType.ICE))
+                return true;
+        } else if (defender instanceof Creature) {
+            EffectManager em = plugin.getEffectManager();
+            Creature c = (Creature) defender;
+            if (em.creatureHasEffectType(c, EffectType.RESIST_FIRE) && skill.isType(SkillType.FIRE))
+                return true;
+            else if (em.creatureHasEffectType(c, EffectType.RESIST_DARK) && skill.isType(SkillType.DARK))
+                return true;
+            else if (em.creatureHasEffectType(c, EffectType.LIGHT) && skill.isType(SkillType.LIGHT))
+                return true;
+            else if (em.creatureHasEffectType(c, EffectType.RESIST_LIGHTNING) && skill.isType(SkillType.LIGHTNING))
+                return true;
+            else if (em.creatureHasEffectType(c, EffectType.RESIST_ICE) && skill.isType(SkillType.ICE))
+                return true;
+        }
+        return false;
+    }
     static {
         Map<Material, Integer> aMap = new HashMap<Material, Integer>();
         aMap.put(Material.LEATHER_HELMET, 3);
