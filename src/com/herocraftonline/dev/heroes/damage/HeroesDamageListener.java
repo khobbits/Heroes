@@ -197,7 +197,7 @@ public class HeroesDamageListener extends EntityListener {
         }
         
         if (damage == 0) {
-            if (cause == DamageCause.CUSTOM)
+            if (cause != DamageCause.CUSTOM)
                 event.setCancelled(true);
             return;
         }
