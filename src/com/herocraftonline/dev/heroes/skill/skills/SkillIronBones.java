@@ -10,6 +10,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityListener;
 import org.bukkit.util.config.ConfigurationNode;
 
@@ -19,10 +20,10 @@ public class SkillIronBones extends PassiveSkill {
         super(plugin, "IronBones");
         setDescription("You hit the ground with a thunderous roar!");
         setArgumentRange(0, 0);
-        setEffectTypes( EffectType.PHYSICAL);
+        setEffectTypes(EffectType.PHYSICAL, EffectType.BENEFICIAL);
         setTypes(SkillType.PHYSICAL);
 
-        registerEvent(Event.Type.ENTITY_DAMAGE, new DamageListener(), Event.Priority.Highest);
+        registerEvent(Event.Type.ENTITY_DAMAGE, new SkillDamageListener(), Event.Priority.Highest);
     }
 
     @Override
@@ -33,37 +34,36 @@ public class SkillIronBones extends PassiveSkill {
         return node;
     }
 
-    public class DamageListener extends EntityListener {
+    public class SkillDamageListener extends EntityListener {
 
-        public void onEntityDamage(EntityDamageEvent e) {
-            if (e.getCause() != EntityDamageEvent.DamageCause.FALL) {
+        public void onEntityDamage(EntityDamageEvent event) {
+            Heroes.debug.startTask("HeroesSkillListener");
+            if (event.getCause() != DamageCause.FALL || !(event.getEntity() instanceof Player)) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
             }
 
-            if (!(e.getEntity() instanceof Player)) {
-                return;
-            }
-            Player player = (Player) e.getEntity();
+            Player player = (Player) event.getEntity();
             Hero hero = plugin.getHeroManager().getHero(player);
 
             if (!hero.hasEffect(getName())) {
+                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
             }
 
-            double damage = e.getDamage() * getSetting(hero.getHeroClass(), "damage", 0.10);
+            double damage = event.getDamage() * getSetting(hero.getHeroClass(), "damage", 0.10);
             int radius = getSetting(hero.getHeroClass(), "radius", 10);
 
-            for (Entity n : player.getNearbyEntities(radius, radius, radius)) {
-                if (n instanceof LivingEntity) {
-                    ((LivingEntity) n).damage((int) damage);
+            for (Entity entity : player.getNearbyEntities(radius, radius, radius)) {
+                if (entity instanceof LivingEntity) {
+                    LivingEntity target = (LivingEntity) entity;
+                    if (!damageCheck(player, target)) {
+                        continue;
+                    }
+                    target.damage((int) damage, player);
                 }
             }
-
-
+            Heroes.debug.stopTask("HeroesSkillListener");
         }
-
-
     }
-
-
 }

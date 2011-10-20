@@ -39,7 +39,7 @@ public class SkillCleave extends TargettedSkill {
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
-
+        
         Material item = player.getItemInHand().getType();
         if (!getSetting(hero.getHeroClass(), "weapons", Util.axes).contains(item.name())) {
             Messaging.send(player, "You can't cleave with that weapon!");
