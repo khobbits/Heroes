@@ -67,20 +67,22 @@ public class SkillChainLightning extends TargettedSkill {
                 keepBouncing = false;
                 if (entity instanceof LivingEntity) {
                     // never bounce back to the player
-                    if (entity.equals(player)) {
+                    if (!damageCheck(player, target))
                         continue;
-                    }
+                    
                     if (!previousTargets.contains(entity) && checkTarget(target, entity)) {
                         if (target instanceof Player) {
                             Hero tHero = heroManager.getHero((Player) target);
-                            tHero.addEffect(new DelayedBolt(this, (maxBounce - bounces) * 250, hero, damage));
+                            tHero.addEffect(new DelayedBolt(this, (maxBounce - bounces) * 200, hero, damage));
+                            keepBouncing = true;
+                            break;
                         } else if (target instanceof Creature) {
-                            plugin.getEffectManager().addCreatureEffect((Creature) target, new DelayedBolt(this, (maxBounce - bounces) * 500, hero, damage));
+                            plugin.getEffectManager().addCreatureEffect((Creature) target, new DelayedBolt(this, (maxBounce - bounces) * 200, hero, damage));
+                            keepBouncing = true;
+                            break;
                         } else {
                             continue;
                         }
-                        keepBouncing = true;
-                        break;
                     }
                 }
             }
