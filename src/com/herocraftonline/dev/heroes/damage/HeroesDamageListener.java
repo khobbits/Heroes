@@ -135,15 +135,9 @@ public class HeroesDamageListener extends EntityListener {
                                 ignoreNextDamageEventBecauseWolvesAreOnCrack = true;
                             }
                         }
-                        if (type == CreatureType.CREEPER && cause == DamageCause.ENTITY_ATTACK) {
-                            // Ghetto fix for creepers throwing two damage events
-                            damage = 0;
-                            return;
-                        } else {
-                            Integer tmpDamage = damageManager.getCreatureDamage(type);
-                            if (tmpDamage != null) {
-                                damage = tmpDamage;
-                            }
+                        Integer tmpDamage = damageManager.getCreatureDamage(type);
+                        if (tmpDamage != null) {
+                            damage = tmpDamage;
                         }
                     }
                 } else if (attacker instanceof Projectile) {
@@ -195,7 +189,7 @@ public class HeroesDamageListener extends EntityListener {
         } else {
             heroLastDamage = new HeroDamageCause(damage, cause);
         }
-        
+
         if (damage == 0) {
             if (cause != DamageCause.CUSTOM)
                 event.setCancelled(true);
