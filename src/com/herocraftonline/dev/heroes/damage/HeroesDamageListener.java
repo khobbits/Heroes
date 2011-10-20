@@ -66,7 +66,6 @@ public class HeroesDamageListener extends EntityListener {
 
         if (ignoreNextDamageEventBecauseBukkitCallsTwoEventsGRRR) {
             ignoreNextDamageEventBecauseBukkitCallsTwoEventsGRRR = false;
-            event.setDamage(0);
             return;
         }
 
@@ -120,7 +119,6 @@ public class HeroesDamageListener extends EntityListener {
                         if (type == CreatureType.WOLF) {
                             if (ignoreNextDamageEventBecauseWolvesAreOnCrack) {
                                 ignoreNextDamageEventBecauseWolvesAreOnCrack = false;
-                                event.setDamage(0);
                                 return;
                             } else {
                                 ignoreNextDamageEventBecauseWolvesAreOnCrack = true;
