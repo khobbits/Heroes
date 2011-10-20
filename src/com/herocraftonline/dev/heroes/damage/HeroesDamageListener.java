@@ -190,10 +190,6 @@ public class HeroesDamageListener extends EntityListener {
                         damage = (int) (double) tmpDamage;
                         break;
                 }
-                if (damage == 0) {
-                    event.setCancelled(true);
-                    return;
-                }
             }
             heroLastDamage = new HeroDamageCause(damage, cause);
         } else {
@@ -354,15 +350,19 @@ public class HeroesDamageListener extends EntityListener {
         if (damage != 0) {
             if (entity instanceof Player) {
                 Hero dHero = plugin.getHeroManager().getHero((Player) entity);
+                System.out.println(damage);
                 if (dHero.hasEffectType(EffectType.SAFEFALL))
                     damage = 0;
                 else
                     damage = (int) (damage * damagePercent * dHero.getMaxHealth());
+                System.out.println(damage);
             } else if (entity instanceof Creature) {
-                if (plugin.getEffectManager().creatureHasEffectType((Creature) entity, EffectType.SAFEFALL))
+                if (plugin.getEffectManager().creatureHasEffectType((Creature) entity, EffectType.SAFEFALL)) {
                     damage = 0;
-                else
-                    damage = (int) (damage * damagePercent * plugin.getDamageManager().getCreatureHealth(Util.getCreatureFromEntity(entity)));
+                } else {
+                    Integer creatureHealth = damageManager.getCreatureHealth(Util.getCreatureFromEntity(entity));
+                    damage = (int) (damage * damagePercent * ((creatureHealth == null) ? 10 : creatureHealth));
+                }
             }
         }
         return damage;
