@@ -55,14 +55,17 @@ public class SkillIronBones extends PassiveSkill {
             int radius = getSetting(hero.getHeroClass(), "radius", 10);
 
             for (Entity entity : player.getNearbyEntities(radius, radius, radius)) {
-                if (entity instanceof LivingEntity) {
-                    LivingEntity target = (LivingEntity) entity;
-                    if (!damageCheck(player, target)) {
-                        continue;
-                    }
-                    target.damage((int) damage, player);
+                if (!(entity instanceof LivingEntity))
+                    continue;
+
+                LivingEntity target = (LivingEntity) entity;
+                if (!damageCheck(player, target)) {
+                    continue;
                 }
+                addSpellTarget(target, hero);
+                target.damage((int) damage, player);
             }
+
             Heroes.debug.stopTask("HeroesSkillListener");
         }
     }

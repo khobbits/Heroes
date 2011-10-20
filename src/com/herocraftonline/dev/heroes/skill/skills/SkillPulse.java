@@ -45,17 +45,9 @@ public class SkillPulse extends ActiveSkill {
                 continue;
             }
             LivingEntity target = (LivingEntity) entity;
-            if (target.equals(player)) {
-                continue;
-            }
 
-            if (target instanceof Player) {
-                EntityDamageEvent damageEvent = new EntityDamageEvent(player, DamageCause.CUSTOM, 0);
-                Bukkit.getServer().getPluginManager().callEvent(damageEvent);
-                if (damageEvent.isCancelled()) {
-                    continue;
-                }
-            }
+            if (!damageCheck(player, target))
+                continue;
 
             int damage = getSetting(hero.getHeroClass(), "damage", 1);
             addSpellTarget(target, hero);
