@@ -65,27 +65,30 @@ public class SkillChainLightning extends TargettedSkill {
         while (bounces > 0 && keepBouncing) {
             for (Entity entity : target.getNearbyEntities(range, range, range)) {
                 keepBouncing = false;
-                if (entity instanceof LivingEntity) {
-                    // never bounce back to the player
-                    if (!damageCheck(player, target))
+                if (!(entity instanceof LivingEntity))
+                    continue;
+
+                //PvP/Summon check the target
+                if (!damageCheck(player, (LivingEntity) entity))
+                    continue;
+                
+                // never bounce back to the player - and make sure the target has LoS
+                if (!previousTargets.contains(entity) && checkTarget(target, entity)) {
+                    if (target instanceof Player) {
+                        Hero tHero = heroManager.getHero((Player) target);
+                        tHero.addEffect(new DelayedBolt(this, (maxBounce - bounces) * 200, hero, damage));
+                        keepBouncing = true;
+                        break;
+                    } else if (target instanceof Creature) {
+                        plugin.getEffectManager().addCreatureEffect((Creature) target, new DelayedBolt(this, (maxBounce - bounces) * 200, hero, damage));
+                        keepBouncing = true;
+                        break;
+                    } else {
                         continue;
-                    
-                    if (!previousTargets.contains(entity) && checkTarget(target, entity)) {
-                        if (target instanceof Player) {
-                            Hero tHero = heroManager.getHero((Player) target);
-                            tHero.addEffect(new DelayedBolt(this, (maxBounce - bounces) * 200, hero, damage));
-                            keepBouncing = true;
-                            break;
-                        } else if (target instanceof Creature) {
-                            plugin.getEffectManager().addCreatureEffect((Creature) target, new DelayedBolt(this, (maxBounce - bounces) * 200, hero, damage));
-                            keepBouncing = true;
-                            break;
-                        } else {
-                            continue;
-                        }
                     }
                 }
             }
+
             bounces -= 1;
         }
         broadcastExecuteText(hero, target);
