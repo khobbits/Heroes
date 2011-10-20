@@ -1,0 +1,16 @@
+<component name="libraryTable">
+  <library name="libs">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/libs/Permissions.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/Spout.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/iCo6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/iCo4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/craftbukkit-0.0.1-SNAPSHOT.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/BOSEconomy.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/Essentials.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/iCo5.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
