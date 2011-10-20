@@ -141,7 +141,7 @@ public class HeroesDamageListener extends EntityListener {
                         attacker = projectile.getShooter();
                         // Allow alteration of player damage
                         damage = getPlayerProjectileDamage((Player) projectile.getShooter(), projectile, damage);
-                        damage = (int) ((damage / 3D) * Math.ceil(projectile.getVelocity().length()));
+                        damage = (int) Math.ceil(damage / 3.0 * projectile.getVelocity().length());
                     } else {
                         attacker = projectile.getShooter();
                         CreatureType type = Util.getCreatureFromEntity(projectile.getShooter());
