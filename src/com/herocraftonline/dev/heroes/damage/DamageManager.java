@@ -24,7 +24,6 @@ import com.herocraftonline.dev.heroes.api.SkillUseInfo;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
-import com.herocraftonline.dev.heroes.util.Properties;
 
 public class DamageManager {
 
@@ -35,7 +34,7 @@ public class DamageManager {
     private Map<ProjectileType, Integer> projectileDamage;
     private Map<CreatureType, Integer> creatureHealth;
     private Map<CreatureType, Integer> creatureDamage;
-    private Map<DamageCause, Integer> environmentalDamage;
+    private Map<DamageCause, Double> environmentalDamage;
     private Map<Entity, SkillUseInfo> spellTargs = new HashMap<Entity, SkillUseInfo>();
 
     public DamageManager(Heroes plugin) {
@@ -47,11 +46,11 @@ public class DamageManager {
         SkillUseInfo skillInfo = new SkillUseInfo(hero, skill);
         spellTargs.put(o, skillInfo);
     }
-    
+
     public boolean isSpellTarget(Entity o) {
         return spellTargs.containsKey(o);
     }
-    
+
     public SkillUseInfo getSpellTargetInfo(Entity o) {
         return spellTargs.get(o);
     }
@@ -68,7 +67,7 @@ public class DamageManager {
             return null;
     }
 
-    public Integer getEnvironmentalDamage(DamageCause cause) {
+    public Double getEnvironmentalDamage(DamageCause cause) {
         return environmentalDamage.get(cause);
     }
 
@@ -102,7 +101,7 @@ public class DamageManager {
                 CreatureType type = CreatureType.fromName(key);
                 if (type == null)
                     continue;
-                
+
                 creatureHealth.put(type, config.getInt("creature-health." + key, 10));
             }
         }
@@ -114,7 +113,7 @@ public class DamageManager {
                 CreatureType type = CreatureType.fromName(key);
                 if (type == null)
                     continue;
-                
+
                 creatureDamage.put(type, config.getInt("creature-damage." + key, 10));
             }
         }
@@ -131,13 +130,13 @@ public class DamageManager {
             }
         }
 
-        environmentalDamage = new EnumMap<DamageCause, Integer>(DamageCause.class);
+        environmentalDamage = new EnumMap<DamageCause, Double>(DamageCause.class);
         keys = config.getKeys("environmental-damage");
         if (keys != null) {
             for (String key : keys) {
                 try {
                     DamageCause cause = DamageCause.valueOf(key.toUpperCase());
-                    int damage = config.getInt("environmental-damage." + key, 0);
+                    double damage = config.getDouble("environmental-damage." + key, 0.0);
                     environmentalDamage.put(cause, damage);
                 } catch (IllegalArgumentException e) {}
             }
@@ -150,7 +149,7 @@ public class DamageManager {
                 ProjectileType type = ProjectileType.valueOf(key.toUpperCase());
                 if (type == null)
                     continue;
-                
+
                 projectileDamage.put(type, config.getInt("projectile-damage." + key, 0));
             }
         }
@@ -160,13 +159,10 @@ public class DamageManager {
      * Register the events for the damage system
      */
     public void registerEvents() {
-        Properties prop = plugin.getConfigManager().getProperties();
-        if (prop.damageSystem) {
-            PluginManager pluginManager = plugin.getServer().getPluginManager();
-            pluginManager.registerEvent(Type.ENTITY_DAMAGE, listener, Priority.High, plugin);
-            pluginManager.registerEvent(Type.ENTITY_REGAIN_HEALTH, listener, Priority.Highest, plugin);
-            pluginManager.registerEvent(Type.CREATURE_SPAWN, listener, Priority.Highest, plugin);
-        }
+        PluginManager pluginManager = plugin.getServer().getPluginManager();
+        pluginManager.registerEvent(Type.ENTITY_DAMAGE, listener, Priority.High, plugin);
+        pluginManager.registerEvent(Type.ENTITY_REGAIN_HEALTH, listener, Priority.Highest, plugin);
+        pluginManager.registerEvent(Type.CREATURE_SPAWN, listener, Priority.Highest, plugin);
     }
 
     public void removeSpellTarget(Entity o) {

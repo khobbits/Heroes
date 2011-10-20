@@ -60,7 +60,6 @@ public class Properties {
     public int swapCost;
     public boolean firstSwitchFree;
     public boolean swapMasteryCost;
-    public boolean damageSystem;
     public double foodHealPercent = .05;
 
     // Bed Stuffs
