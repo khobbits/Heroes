@@ -95,7 +95,7 @@ public class HeroesDamageListener extends EntityListener {
             if (event instanceof EntityDamageByEntityEvent) {
                 if (resistanceCheck(defender, skillInfo.getSkill())) {
                     if (defender instanceof Player)
-                        skillInfo.getSkill().broadcast(defender.getLocation(), "$1 has resisted $2", ((Player) defender).getDisplayName(),  skillInfo.getSkill().getName());
+                        skillInfo.getSkill().broadcast(defender.getLocation(), "$1 has resisted $2", ((Player) defender).getDisplayName(), skillInfo.getSkill().getName());
                     if (defender instanceof Creature)
                         skillInfo.getSkill().broadcast(defender.getLocation(), "$1 has resisted $2", Messaging.getCreatureName((Creature) defender), skillInfo.getSkill().getName());
                     event.setCancelled(true);
@@ -173,10 +173,11 @@ public class HeroesDamageListener extends EntityListener {
                 }
                 damage = weaponDamageEvent.getDamage();
                 heroLastDamage = new HeroAttackDamageCause(damage, cause, attacker);
-            } else if (cause != DamageCause.CUSTOM) {
-                Double tmpDamage = damageManager.getEnvironmentalDamage(cause);
-                if (tmpDamage != null) {
-                    switch (cause) {
+            }
+        } else if (cause != DamageCause.CUSTOM) {
+            Double tmpDamage = damageManager.getEnvironmentalDamage(cause);
+            if (tmpDamage != null) {
+                switch (cause) {
                     case FALL:
                         damage = onEntityFall(event.getDamage(), tmpDamage, defender);
                         break;
@@ -188,16 +189,15 @@ public class HeroesDamageListener extends EntityListener {
                     default:
                         damage = (int) (double) tmpDamage;
                         break;
-                    }
-                    if (damage == 0) {
-                        event.setCancelled(true);
-                        return;
-                    }
                 }
-                heroLastDamage = new HeroDamageCause(damage, cause);
-            } else {
-                heroLastDamage = new HeroDamageCause(damage, cause);
+                if (damage == 0) {
+                    event.setCancelled(true);
+                    return;
+                }
             }
+            heroLastDamage = new HeroDamageCause(damage, cause);
+        } else {
+            heroLastDamage = new HeroDamageCause(damage, cause);
         }
 
         if (defender instanceof Player) {
@@ -324,6 +324,7 @@ public class HeroesDamageListener extends EntityListener {
 
     /**
      * Adjusts damage for Fire damage events.
+     * 
      * @param damage
      * @param cause
      * @param entity
@@ -341,8 +342,10 @@ public class HeroesDamageListener extends EntityListener {
         }
         return (int) damage;
     }
+
     /**
      * Adjusts the damage being dealt during a fall
+     * 
      * @param damage
      * @param entity
      * @return
@@ -438,6 +441,7 @@ public class HeroesDamageListener extends EntityListener {
         }
         return false;
     }
+
     static {
         Map<Material, Integer> aMap = new HashMap<Material, Integer>();
         aMap.put(Material.LEATHER_HELMET, 3);
