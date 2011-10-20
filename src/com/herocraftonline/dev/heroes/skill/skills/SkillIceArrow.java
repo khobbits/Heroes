@@ -1,6 +1,8 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
 import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Creature;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
@@ -11,8 +13,8 @@ import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.effects.EffectType;
-import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
 import com.herocraftonline.dev.heroes.effects.common.ImbueEffect;
+import com.herocraftonline.dev.heroes.effects.common.SlowEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
@@ -39,8 +41,8 @@ public class SkillIceArrow extends ActiveSkill {
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
         node.setProperty("slow-duration", 5000); // 5 seconds
+        node.setProperty("speed-multiplier", 2);
         node.setProperty(Setting.DURATION.node(), 60000); // milliseconds
-        node.setProperty("speed-multiplier", 2); // 2 seconds in milliseconds
         node.setProperty("attacks", 1); // How many attacks the buff lasts for.
         node.setProperty(Setting.APPLY_TEXT.node(), "%target% imbue's their arrows with ice!");
         node.setProperty(Setting.EXPIRE_TEXT.node(), "%target%'s arrows are no longer imbued with ice!");
@@ -62,13 +64,12 @@ public class SkillIceArrow extends ActiveSkill {
         return true;
     }
 
-    public class ArrowSlow extends ExpirableEffect {
+    public class IceArrowBuff extends ImbueEffect {
 
-        public ArrowSlow(Skill skill, long duration, int amplifier) {
-            super(skill, "ArrowSlow", duration);
-            this.types.add(EffectType.DISPELLABLE);
-            this.types.add(EffectType.HARMFUL);
-            addMobEffect(2, (int) (duration / 1000) * 20, amplifier, false);
+        public IceArrowBuff(Skill skill, long duration, int numAttacks) {
+            super(skill, "SlowArrowBuff", duration, numAttacks);
+            this.types.add(EffectType.ICE);
+            setDescription("ice");
         }
 
         @Override
@@ -86,15 +87,6 @@ public class SkillIceArrow extends ActiveSkill {
         }
     }
 
-    public class IceArrowBuff extends ImbueEffect {
-
-        public IceArrowBuff(Skill skill, long duration, int numAttacks) {
-            super(skill, "SlowArrowBuff", duration, numAttacks);
-            this.types.add(EffectType.ICE);
-            setDescription("ice");
-        }
-    }
-
     public class SkillDamageListener extends EntityListener {
 
         private final Skill skill;
@@ -106,7 +98,7 @@ public class SkillIceArrow extends ActiveSkill {
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
             Heroes.debug.startTask("HeroesSkillListener");
-            if (event.isCancelled() || !(event instanceof EntityDamageByEntityEvent) || !(event.getEntity() instanceof Player)) {
+            if (event.isCancelled() || !(event instanceof EntityDamageByEntityEvent) || !(event.getEntity() instanceof LivingEntity)) {
                 Heroes.debug.stopTask("HeroesSkillListener");
                 return;
             }
@@ -128,11 +120,15 @@ public class SkillIceArrow extends ActiveSkill {
 
             if (hero.hasEffect("SlowArrowBuff")) {
                 long duration = getSetting(hero.getHeroClass(), "slow-duration", 10000);
-                int period = getSetting(hero.getHeroClass(), "speed-multiplier", 2);
-                ArrowSlow apEffect = new ArrowSlow(skill, duration, period);
-
-                Hero target = plugin.getHeroManager().getHero((Player) event.getEntity());
-                target.addEffect(apEffect);
+                int amplifier = getSetting(hero.getHeroClass(), "speed-multiplier", 2);
+                SlowEffect iceSlowEffect = new SlowEffect(skill, duration, amplifier, false);
+                LivingEntity target = (LivingEntity) event.getEntity();
+                if (target instanceof Player) {
+                    Hero tHero = plugin.getHeroManager().getHero((Player) target);
+                    tHero.addEffect(iceSlowEffect);
+                } else if (target instanceof Creature) {
+                    plugin.getEffectManager().addCreatureEffect((Creature) target, iceSlowEffect);
+                }
                 checkBuff(hero);
             }
             Heroes.debug.stopTask("HeroesSkillListener");

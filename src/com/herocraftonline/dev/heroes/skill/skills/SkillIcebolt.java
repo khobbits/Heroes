@@ -5,6 +5,7 @@ import java.util.HashSet;
 import net.minecraft.server.MathHelper;
 
 import org.bukkit.Location;
+import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -19,8 +20,10 @@ import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
+import com.herocraftonline.dev.heroes.effects.common.SlowEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
+import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Setting;
 
@@ -36,13 +39,15 @@ public class SkillIcebolt extends ActiveSkill {
         setIdentifiers("skill icebolt");
         setTypes(SkillType.ICE, SkillType.SILENCABLE, SkillType.DAMAGING, SkillType.HARMFUL);
 
-        registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Normal);
+        registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(this), Priority.Normal);
     }
 
     @Override
     public ConfigurationNode getDefaultConfig() {
         ConfigurationNode node = super.getDefaultConfig();
         node.setProperty(Setting.DAMAGE.node(), 3);
+        node.setProperty("slow-duration", 5000); // 5 seconds
+        node.setProperty("speed-multiplier", 2);
         return node;
     }
 
@@ -68,40 +73,60 @@ public class SkillIcebolt extends ActiveSkill {
     }
 
     public class SkillEntityListener extends EntityListener {
-
+        
+        private final Skill skill;
+        
+        public SkillEntityListener(Skill skill) {
+            this.skill = skill;
+        }
+        
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
             Heroes.debug.startTask("HeroesSkillListener");
-            if (event.isCancelled() || !(event instanceof EntityDamageByEntityEvent)) {
+            if (event.isCancelled() || !(event instanceof EntityDamageByEntityEvent) || !(event.getEntity() instanceof LivingEntity)) {
                 Heroes.debug.stopTask("HeroesSkillListener");
                 return;
             }
             EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
             Entity projectile = subEvent.getDamager();
-            if (projectile instanceof Snowball) {
-                if (snowballs.contains(projectile)) {
-                    snowballs.remove(projectile);
-
-                    Entity entity = subEvent.getEntity();
-                    if (entity instanceof LivingEntity) {
-                        Entity dmger = ((Snowball) subEvent.getDamager()).getShooter();
-                        if (dmger instanceof Player) {
-                            Hero hero = plugin.getHeroManager().getHero((Player) dmger);
-                            HeroClass heroClass = hero.getHeroClass();
-                            LivingEntity livingEntity = (LivingEntity) entity;
-
-                            if (!damageCheck((Player) dmger, livingEntity)) {
-                                Heroes.debug.stopTask("HeroesSkillListener");
-                                return;
-                            }
-
-                            event.getEntity().setFireTicks(0);
-                            int damage = getSetting(heroClass, Setting.DAMAGE.node(), 3);
-                            event.setDamage(damage);
-                        }
-                    }
-                }
+            if (!(projectile instanceof Snowball) || !snowballs.contains(projectile)) {
+                Heroes.debug.stopTask("HeroesSkillListener");
+                return;
             }
+
+            snowballs.remove(projectile);
+
+            LivingEntity entity = (LivingEntity) subEvent.getEntity();
+            Entity dmger = ((Snowball) subEvent.getDamager()).getShooter();
+            if (dmger instanceof Player) {
+                Hero hero = plugin.getHeroManager().getHero((Player) dmger);
+                HeroClass heroClass = hero.getHeroClass();
+                LivingEntity livingEntity = (LivingEntity) entity;
+
+                if (!damageCheck((Player) dmger, livingEntity)) {
+                    Heroes.debug.stopTask("HeroesSkillListener");
+                    return;
+                }
+
+                event.getEntity().setFireTicks(0);
+                int damage = getSetting(heroClass, Setting.DAMAGE.node(), 3);
+                
+                long duration = getSetting(hero.getHeroClass(), "slow-duration", 10000);
+                int amplifier = getSetting(hero.getHeroClass(), "speed-multiplier", 2);
+                
+                SlowEffect iceSlowEffect = new SlowEffect(skill, duration, amplifier, false);
+                LivingEntity target = (LivingEntity) event.getEntity();
+                if (target instanceof Player) {
+                    Hero tHero = plugin.getHeroManager().getHero((Player) target);
+                    tHero.addEffect(iceSlowEffect);
+                } else if (target instanceof Creature) {
+                    plugin.getEffectManager().addCreatureEffect((Creature) target, iceSlowEffect);
+                }
+                
+                event.setDamage(damage);
+            }
+
+
             Heroes.debug.stopTask("HeroesSkillListener");
         }
     }
