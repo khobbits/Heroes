@@ -70,12 +70,10 @@ public class HeroesDamageListener extends EntityListener {
             return;
         }
 
-        if (event.getCause() == DamageCause.SUICIDE) {
-            if (event.getEntity() instanceof Player) {
-                Player player = (Player) event.getEntity();
-                plugin.getHeroManager().getHero(player).setHealth(0D);
-                return;
-            }
+        if (event.getCause() == DamageCause.SUICIDE && event.getEntity() instanceof Player) {
+            Player player = (Player) event.getEntity();
+            plugin.getHeroManager().getHero(player).setHealth(0D);
+            return;
         }
 
         Entity defender = event.getEntity();
@@ -166,17 +164,17 @@ public class HeroesDamageListener extends EntityListener {
             } else if (cause != DamageCause.CUSTOM) {
                 Double tmpDamage = damageManager.getEnvironmentalDamage(cause);
                 if (tmpDamage != null) {
-                    if (cause == DamageCause.FALL) {
-                        if (event.getDamage() != 0) {
-                            if (defender instanceof Player) {
-                                Hero dHero = plugin.getHeroManager().getHero((Player) defender);
-                                damage = (int) (event.getDamage() * tmpDamage * dHero.getMaxHealth());
-                            } else if (defender instanceof Creature) {
-                                damage = (int) (event.getDamage() * tmpDamage * plugin.getDamageManager().getCreatureHealth(Util.getCreatureFromEntity(defender)));
-                            }
+                    switch (cause) {
+                    case FALL:
+                        damage = onEntityFall(event.getDamage(), tmpDamage, defender);
+                        if (damage == 0) {
+                            event.setCancelled(true);
+                            return;
                         }
-                    } else {
+                        break;
+                    default:
                         damage = (int) (double) tmpDamage;
+                        break;
                     }
                 }
                 heroLastDamage = new HeroDamageCause(damage, cause);
@@ -194,9 +192,6 @@ public class HeroesDamageListener extends EntityListener {
             final Hero hero = plugin.getHeroManager().getHero(player);
             // If the defender is a player
             if (hero.hasEffectType(EffectType.INVULNERABILITY)) {
-                event.setCancelled(true);
-                return;
-            } else if (cause == DamageCause.FALL && hero.hasEffectType(EffectType.SAFEFALL)) {
                 event.setCancelled(true);
                 return;
             }
@@ -308,6 +303,27 @@ public class HeroesDamageListener extends EntityListener {
         hero.setHealth(newHeroHealth);
         event.setAmount(newPlayerHealth - player.getHealth());
         Heroes.debug.stopTask("HeroesDamageListener.onEntityRegainHealth");
+    }
+
+    /**
+     * Adjusts the damage being dealt during a fall
+     * @param damage
+     * @param entity
+     * @return
+     */
+    private int onEntityFall(int damage, double damagePercent, Entity entity) {
+        if (damage != 0) {
+            if (entity instanceof Player) {
+                Hero dHero = plugin.getHeroManager().getHero((Player) entity);
+                if (dHero.hasEffectType(EffectType.SAFEFALL))
+                    damage = 0;
+                else
+                    damage = (int) (damage * damagePercent * dHero.getMaxHealth());
+            } else if (entity instanceof Creature) {
+                damage = (int) (damage * damagePercent * plugin.getDamageManager().getCreatureHealth(Util.getCreatureFromEntity(entity)));
+            }
+        }
+        return damage;
     }
 
     private int calculateArmorReduction(PlayerInventory inventory, int damage) {
