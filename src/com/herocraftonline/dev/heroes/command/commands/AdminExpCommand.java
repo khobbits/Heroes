@@ -37,6 +37,7 @@ public class AdminExpCommand extends BasicCommand {
             double expChange = Integer.parseInt(args[1]);
             hero.gainExp(expChange, ExperienceType.ADMIN, false);
             Messaging.send(sender, "Experience changed.");
+            Messaging.send(hero.getPlayer(), "You have been awarded $1 exp", expChange);
             return true;
         } catch (NumberFormatException e) {
             Messaging.send(sender, "Invalid experience value.");
