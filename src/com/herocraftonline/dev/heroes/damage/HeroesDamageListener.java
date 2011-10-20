@@ -7,6 +7,7 @@ import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.Creature;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -166,8 +167,14 @@ public class HeroesDamageListener extends EntityListener {
                 Double tmpDamage = damageManager.getEnvironmentalDamage(cause);
                 if (tmpDamage != null) {
                     if (cause == DamageCause.FALL) {
-                        if (event.getDamage() != 0)
-                            damage = (int) ((tmpDamage / 3) * (event.getDamage() - 3) + tmpDamage);
+                        if (event.getDamage() != 0) {
+                            if (defender instanceof Player) {
+                                Hero dHero = plugin.getHeroManager().getHero((Player) defender);
+                                damage = (int) (event.getDamage() * tmpDamage * dHero.getMaxHealth());
+                            } else if (defender instanceof Creature) {
+                                damage = (int) (event.getDamage() * tmpDamage * plugin.getDamageManager().getCreatureHealth(Util.getCreatureFromEntity(defender)));
+                            }
+                        }
                     } else {
                         damage = (int) (double) tmpDamage;
                     }

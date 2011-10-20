@@ -34,6 +34,7 @@ Version dev
 * Added option to prevent players from switching classes till they have mastered their current one.
 * Added option to prevent max tiered players from switching classes.
 * Food & Saturation levels will now be set to max (20) when a hero levels up.
+* Fall damage is now a percent, use FALL: .05 for 5% health per 1 meter dropped, etc.
 
 ==== **API:** ====
 

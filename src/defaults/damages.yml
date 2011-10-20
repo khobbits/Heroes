@@ -7,5 +7,5 @@ creature-damage:
 item-damage:
     Air: 2
 environmental-damage:
-    Fall: 3
+    Fall: .02
     Fire: 4
