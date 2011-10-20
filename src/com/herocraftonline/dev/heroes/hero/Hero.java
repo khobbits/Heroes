@@ -128,6 +128,10 @@ public class Hero {
         clearSummons();
         clearBinds();
         setHeroClass(heroClass);
+        if (plugin.getConfigManager().getProperties().prefixClassName) {
+            player.setDisplayName("[" + getHeroClass().getName() + "]" + player.getName());
+        }
+        plugin.getHeroManager().performSkillChecks(this);
     }
 
     public void clearBinds() {
