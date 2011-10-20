@@ -33,6 +33,7 @@ Version dev
 ** Armor will be removed if the player takes damage.
 * Added option to prevent players from switching classes till they have mastered their current one.
 * Added option to prevent max tiered players from switching classes.
+* Food & Saturation levels will now be set to max (20) when a hero levels up.
 
 ==== **API:** ====
 
