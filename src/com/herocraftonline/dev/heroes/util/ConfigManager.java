@@ -254,7 +254,6 @@ public class ConfigManager {
         properties.swapCost = config.getInt(root + "swapcost", 0);
         properties.firstSwitchFree = config.getBoolean(root + "firstSwitchFree", true);
         properties.debug = config.getBoolean(root + "debug", false);
-        properties.damageSystem = config.getBoolean(root + "useDamageSystem", false);
         properties.foodHealPercent = config.getDouble(root + "foodHealPercent", .05);
     }
 
