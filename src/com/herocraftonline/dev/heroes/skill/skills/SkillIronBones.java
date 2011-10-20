@@ -44,7 +44,7 @@ public class SkillIronBones extends PassiveSkill {
                 return;
             }
             Player player = (Player) e.getEntity();
-            Hero hero = plugin.getHeroManager().getHero();
+            Hero hero = plugin.getHeroManager().getHero(player);
 
             if (!hero.hasEffect(getName())) {
                 return;
