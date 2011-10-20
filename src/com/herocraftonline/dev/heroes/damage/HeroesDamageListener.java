@@ -163,12 +163,13 @@ public class HeroesDamageListener extends EntityListener {
                 damage = weaponDamageEvent.getDamage();
                 heroLastDamage = new HeroAttackDamageCause(damage, cause, attacker);
             } else if (cause != DamageCause.CUSTOM) {
-                Integer tmpDamage = damageManager.getEnvironmentalDamage(cause);
+                Double tmpDamage = damageManager.getEnvironmentalDamage(cause);
                 if (tmpDamage != null) {
-                    damage = tmpDamage;
                     if (cause == DamageCause.FALL) {
                         if (event.getDamage() != 0)
-                            damage += damage / 3 * (event.getDamage() - 3);
+                            damage = (int) ((tmpDamage / 3) * (event.getDamage() - 3) + tmpDamage);
+                    } else {
+                        damage = (int) (double) tmpDamage;
                     }
                 }
                 heroLastDamage = new HeroDamageCause(damage, cause);

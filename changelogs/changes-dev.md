@@ -116,6 +116,9 @@ Version dev
 * Purge - (NEW!)
 ** Acts as an Area of effect targeted purge.
 ** Still requires a target like dispel, or will target self if cast with no target
+* Quake - (NEW!)
+** Deals damage in a radius from where the hero lands from a fall.
+** damage is a % of the damage taken by the hero
 * Quicken - (NEW!)
 ** Long duration movement speed increase
 ** Removes/Cancels when the player takes damage

@@ -35,7 +35,7 @@ public class DamageManager {
     private Map<ProjectileType, Integer> projectileDamage;
     private Map<CreatureType, Integer> creatureHealth;
     private Map<CreatureType, Integer> creatureDamage;
-    private Map<DamageCause, Integer> environmentalDamage;
+    private Map<DamageCause, Double> environmentalDamage;
     private Map<Entity, SkillUseInfo> spellTargs = new HashMap<Entity, SkillUseInfo>();
 
     public DamageManager(Heroes plugin) {
@@ -68,7 +68,7 @@ public class DamageManager {
             return null;
     }
 
-    public Integer getEnvironmentalDamage(DamageCause cause) {
+    public Double getEnvironmentalDamage(DamageCause cause) {
         return environmentalDamage.get(cause);
     }
 
@@ -131,13 +131,13 @@ public class DamageManager {
             }
         }
 
-        environmentalDamage = new EnumMap<DamageCause, Integer>(DamageCause.class);
+        environmentalDamage = new EnumMap<DamageCause, Double>(DamageCause.class);
         keys = config.getKeys("environmental-damage");
         if (keys != null) {
             for (String key : keys) {
                 try {
                     DamageCause cause = DamageCause.valueOf(key.toUpperCase());
-                    int damage = config.getInt("environmental-damage." + key, 0);
+                    double damage = config.getDouble("environmental-damage." + key, 0.0);
                     environmentalDamage.put(cause, damage);
                 } catch (IllegalArgumentException e) {}
             }
