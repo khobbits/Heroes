@@ -25,6 +25,8 @@ public class Properties {
     public double expLoss;
     public boolean levelsViaExpLoss = false;
     public boolean masteryLoss = false;
+    public boolean lockPathTillMaster = false;
+    public boolean lockAtHighestTier = false;
 
     // Experience//
     public double partyBonus = 0;

@@ -31,6 +31,8 @@ Version dev
 * Spout is no longer used for inventory restrictions, 
 ** players will be able to equip the item, but if they try to use it it will be removed.  
 ** Armor will be removed if the player takes damage.
+* Added option to prevent players from switching classes till they have mastered their current one.
+* Added option to prevent max tiered players from switching classes.
 
 ==== **API:** ====
 

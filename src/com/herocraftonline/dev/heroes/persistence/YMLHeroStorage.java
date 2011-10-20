@@ -41,7 +41,7 @@ public class YMLHeroStorage extends HeroStorage {
                 return createNewHero(player);
             }
             Hero playerHero = new Hero(plugin, player, playerClass);
-
+            
             loadCooldowns(playerHero, playerConfig);
             loadExperience(playerHero, playerConfig);
             loadBinds(playerHero, playerConfig);
@@ -50,7 +50,7 @@ public class YMLHeroStorage extends HeroStorage {
             playerHero.setHealth(playerConfig.getDouble("health", playerClass.getBaseMaxHealth()));
             playerHero.setVerbose(playerConfig.getBoolean("verbose", true));
             playerHero.setSuppressedSkills(new HashSet<String>(playerConfig.getStringList("suppressed", null)));
-
+            
             Heroes.log(Level.INFO, "Loaded hero: " + player.getName() + " with EID: " + player.getEntityId());
             return playerHero;
         } else {
