@@ -255,6 +255,8 @@ class PartyUpdater implements Runnable {
         String map = "§22;Party Members -\n";
 
         for (Player player : players) {
+            if (!player.isOnline())
+                continue;
             Hero hero = this.manager.getHero(player);
             if (!hero.hasParty() || hero.getParty().getLeader() == null) {
                 Heroes.log(Level.SEVERE, "Error in party of player: " + player.getDisplayName());
