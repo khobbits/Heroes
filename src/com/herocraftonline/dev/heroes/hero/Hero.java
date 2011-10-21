@@ -641,6 +641,15 @@ public class Hero {
         cooldowns.remove(name.toLowerCase());
     }
 
+    public void manualRemoveEffect(Effect effect) {
+        if (effect != null) {
+            if (effect instanceof Expirable || effect instanceof Periodic) {
+                plugin.getEffectManager().queueForRemoval(this, effect);
+            }
+            effects.remove(effect.getName().toLowerCase());
+        }
+    }
+    
     /**
      * This method can NOT be called from an iteration over the effect set
      * 

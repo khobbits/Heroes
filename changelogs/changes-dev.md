@@ -88,6 +88,8 @@ Version dev
 ** Screen now wobbles when under this skill's effect
 * Deconstruct
 ** Fixed exploit that allowed a player to deconstruct items over the damage threshold
+* Deep Freeze
+** No longer double-messages when the effect shatters.
 * Disarm - (NEW!) - thanks Kostronor!
 ** Disarms your opponent for the duration and prevents them from re-equipping weapons.
 * Endurance - (NEW!)

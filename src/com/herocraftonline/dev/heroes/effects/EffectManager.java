@@ -62,7 +62,24 @@ public class EffectManager {
         effect.apply(creature);
     }
 
+    public void manualRemoveCreatureEffect(Creature creature, Effect effect) {
+        if (effect == null)
+            return;
+        Set<Effect> effects = creatureEffects.get(creature);
+        if (effects != null) {
+            if (effect instanceof Expirable || effect instanceof Periodic) {
+                queueForRemoval(creature, effect);
+            }
+            effects.remove(effect);
+            if (effects.isEmpty()) {
+                creatureEffects.remove(creature);
+            }
+        }
+    }
+    
     public void removeCreatureEffect(Creature creature, Effect effect) {
+        if (effect == null)
+            return;
         Set<Effect> effects = creatureEffects.get(creature);
         if (effects != null) {
             if (effect instanceof Expirable || effect instanceof Periodic) {

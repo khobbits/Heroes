@@ -124,7 +124,24 @@ public class SkillDeepFreeze extends TargettedSkill {
         public Hero getApplier() {
             return applier;
         }
-
+        
+        public void shatter(Creature creature) {
+            super.remove(creature);
+            int damage = getSetting(applier.getHeroClass(), "shatter-damage", 7);
+            addSpellTarget(creature, applier);
+            creature.damage(damage, applier.getPlayer());
+            broadcast(creature.getLocation(), shatterText, Messaging.getCreatureName(creature));
+        }
+        
+        public void shatter(Hero hero) {
+            super.remove(hero);
+            Player player = hero.getPlayer();
+            int damage = getSetting(applier.getHeroClass(), "shatter-damage", 7);
+            addSpellTarget(player, applier);
+            player.damage(damage, applier.getPlayer());
+            broadcast(player.getLocation(), shatterText, player.getDisplayName());
+        }
+        
         @Override
         public void remove(Creature creature) {
             super.remove(creature);
@@ -185,23 +202,15 @@ public class SkillDeepFreeze extends TargettedSkill {
                 Hero tHero = plugin.getHeroManager().getHero(player);
                 if (tHero.hasEffect("Freeze")) {
                     FreezeEffect fEffect = (FreezeEffect) tHero.getEffect("Freeze");
-                    Hero hero = fEffect.getApplier();
-                    int damage = getSetting(hero.getHeroClass(), "shatter-damage", 7);
-                    addSpellTarget(player, hero);
-                    player.damage(damage, hero.getPlayer());
-                    broadcast(player.getLocation(), shatterText, player.getDisplayName());
-                    tHero.removeEffect(fEffect);
+                    fEffect.shatter(tHero);
+                    tHero.manualRemoveEffect(fEffect);
                 }
             } else if (event.getEntity() instanceof Creature) {
                 Creature creature = (Creature) event.getEntity();
                 if (plugin.getEffectManager().creatureHasEffect(creature, "Freeze")) {
                     FreezeEffect fEffect = (FreezeEffect) plugin.getEffectManager().getCreatureEffect(creature, "Freeze");
-                    Hero hero = fEffect.getApplier();
-                    int damage = getSetting(hero.getHeroClass(), "shatter-damage", 7);
-                    addSpellTarget(creature, hero);
-                    creature.damage(damage, hero.getPlayer());
-                    broadcast(creature.getLocation(), shatterText, Messaging.getCreatureName(creature));
-                    plugin.getEffectManager().removeCreatureEffect(creature, fEffect);
+                    fEffect.shatter(creature);
+                    plugin.getEffectManager().manualRemoveCreatureEffect(creature, fEffect);
                 }
             }
             Heroes.debug.stopTask("HeroesSkillListener");
