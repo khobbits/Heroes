@@ -170,21 +170,23 @@ public class HeroesDamageListener extends EntityListener {
             }
         } else if (cause != DamageCause.CUSTOM) {
             Double tmpDamage = damageManager.getEnvironmentalDamage(cause);
-            if (tmpDamage != null) {
-                switch (cause) {
-                    case FALL:
-                        damage = onEntityFall(event.getDamage(), tmpDamage, defender);
-                        break;
-                    case FIRE:
-                    case LAVA:
-                    case FIRE_TICK:
-                        damage = onEntityFlame(tmpDamage, cause, defender);
-                        break;
-                    default:
-                        damage = (int) (double) tmpDamage;
-                        break;
-                }
+            if (tmpDamage == null)
+                tmpDamage = (double) event.getDamage();
+
+            switch (cause) {
+            case FALL:
+                damage = onEntityFall(event.getDamage(), tmpDamage, defender);
+                break;
+            case FIRE:
+            case LAVA:
+            case FIRE_TICK:
+                damage = onEntityFlame(tmpDamage, cause, defender);
+                break;
+            default:
+                damage = (int) (double) tmpDamage;
+                break;
             }
+
             heroLastDamage = new HeroDamageCause(damage, cause);
         } else {
             heroLastDamage = new HeroDamageCause(damage, cause);
