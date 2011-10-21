@@ -187,6 +187,9 @@ public class HeroesDamageListener extends EntityListener {
                 case DROWNING:
                     damage = onEntityDrown(tmpDamage, defender);
                     break;
+                case STARVATION:
+                    damage = onEntityStarve(tmpDamage, defender);
+                    break;
                 case FIRE:
                 case LAVA:
                 case FIRE_TICK:
@@ -323,6 +326,25 @@ public class HeroesDamageListener extends EntityListener {
         hero.setHealth(newHeroHealth);
         event.setAmount(newPlayerHealth - player.getHealth());
         Heroes.debug.stopTask("HeroesDamageListener.onEntityRegainHealth");
+    }
+    
+    /**
+     * Returns a percentage adjusted damage value for starvation
+     * 
+     * @param percent
+     * @param entity
+     * @return
+     */
+    private int onEntityStarve(double percent, Entity entity) {
+        if (entity instanceof Creature) {
+            Integer creatureHealth = damageManager.getCreatureHealth(Util.getCreatureFromEntity(entity));
+            if (creatureHealth != null)
+                percent *= creatureHealth;
+        } else if (entity instanceof Player) {
+            Hero hero = plugin.getHeroManager().getHero((Player) entity);
+            percent *= hero.getMaxHealth();
+        }
+        return (int) percent;
     }
     
     /**

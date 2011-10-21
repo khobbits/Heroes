@@ -36,8 +36,9 @@ Version dev
 * Food & Saturation levels will now be set to max (20) when a hero levels up.
 * Some Damages are now percentage based:
 ** FALL damage: .05 for 5% health per 1 meter dropped, etc.
-** SUFFOCATION damage: .05 is vanilla setting
-** DROWNING damage: .1 is what vanilla is set to. 
+** SUFFOCATION damage: .05 is vanilla 
+** DROWNING damage: .1 is vanilla
+** STARVATION damage: .05 is vanilla
 * Resistances are now checked internally in the HeroDamageListener
 
 ==== **API:** ====

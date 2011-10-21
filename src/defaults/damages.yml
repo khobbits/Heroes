@@ -11,3 +11,4 @@ environmental-damage:
     FIRE: 4
     SUFFOCATION: .05
     DROWNING: .1
+    STARVATION: .05
