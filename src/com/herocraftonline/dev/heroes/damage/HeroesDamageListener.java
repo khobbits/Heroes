@@ -405,9 +405,16 @@ public class HeroesDamageListener extends EntityListener {
             if (hero.hasEffectType(EffectType.RESIST_FIRE)) {
                 return 0;
             }
+            if (cause == DamageCause.LAVA)
+                damage *= hero.getMaxHealth();
         } else if (entity instanceof Creature) {
             if (plugin.getEffectManager().creatureHasEffectType((Creature) entity, EffectType.RESIST_FIRE))
                 return 0;
+            if (cause == DamageCause.LAVA) {
+                Integer creatureHealth = damageManager.getCreatureHealth(Util.getCreatureFromEntity(entity));
+                if (creatureHealth != null)
+                    damage *= creatureHealth;
+            }
         }
         return damage < 1 ? 1 : (int) damage;
     }

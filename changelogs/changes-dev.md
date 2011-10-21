@@ -39,6 +39,7 @@ Version dev
 ** SUFFOCATION damage: .05 is vanilla 
 ** DROWNING damage: .1 is vanilla
 ** STARVATION damage: .05 is vanilla
+** LAVA damage: .2 by default (20%)
 * Resistances are now checked internally in the HeroDamageListener
 
 ==== **API:** ====

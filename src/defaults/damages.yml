@@ -8,6 +8,7 @@ item-damage:
     Air: 2
 environmental-damage:
     FALL: .02
+    LAVA: .2
     FIRE: 4
     SUFFOCATION: .05
     DROWNING: .1
