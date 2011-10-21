@@ -36,7 +36,7 @@ public class SkillGift extends ActiveSkill{
     @Override
     public void init() {
         super.init();
-        sendText = getSetting(null, "send-text", "%hero% has sent you %amount% %item%").replace("%hero", "$1").replace("%amount%", "$2").replace("%item%", "$3");
+        sendText = getSetting(null, "send-text", "%hero% has sent you %amount% %item%").replace("%hero%", "$1").replace("%amount%", "$2").replace("%item%", "$3");
     }
 
     @Override
