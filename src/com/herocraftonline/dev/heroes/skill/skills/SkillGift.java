@@ -55,7 +55,7 @@ public class SkillGift extends ActiveSkill{
                 amount = maxAmount;
             }
             
-            if(args.length >= 2) {
+            if(args.length > 2) {
                 try {
                     amount = Integer.parseInt(args[2]);
                 } catch (NumberFormatException e) {
