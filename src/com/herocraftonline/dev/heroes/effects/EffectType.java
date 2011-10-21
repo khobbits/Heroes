@@ -30,7 +30,8 @@ public enum EffectType {
     SAFEFALL,
     SILENCE,
     SLOW,
-    STUN,
+    STUN, 
     WATER,
+    WATER_BREATHING,
     WOUNDING; // Prevents/Limits Healing
 }

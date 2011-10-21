@@ -170,23 +170,33 @@ public class HeroesDamageListener extends EntityListener {
             }
         } else if (cause != DamageCause.CUSTOM) {
             Double tmpDamage = damageManager.getEnvironmentalDamage(cause);
-            if (tmpDamage == null)
+            boolean skipAdjustment = false;
+            if (tmpDamage == null) {
                 tmpDamage = (double) event.getDamage();
-
-            switch (cause) {
-            case FALL:
-                damage = onEntityFall(event.getDamage(), tmpDamage, defender);
-                break;
-            case FIRE:
-            case LAVA:
-            case FIRE_TICK:
-                damage = onEntityFlame(tmpDamage, cause, defender);
-                break;
-            default:
-                damage = (int) (double) tmpDamage;
-                break;
+                skipAdjustment = true;
             }
 
+            if (!skipAdjustment) {
+                switch (cause) {
+                case FALL:
+                    damage = onEntityFall(event.getDamage(), tmpDamage, defender);
+                    break;
+                case SUFFOCATION:
+                    damage = onEntitySuffocate(tmpDamage, defender);
+                    break;
+                case DROWNING:
+                    damage = onEntityDrown(tmpDamage, defender);
+                    break;
+                case FIRE:
+                case LAVA:
+                case FIRE_TICK:
+                    damage = onEntityFlame(tmpDamage, cause, defender);
+                    break;
+                default:
+                    damage = (int) (double) tmpDamage;
+                    break;
+                }
+            }
             heroLastDamage = new HeroDamageCause(damage, cause);
         } else {
             heroLastDamage = new HeroDamageCause(damage, cause);
@@ -314,7 +324,49 @@ public class HeroesDamageListener extends EntityListener {
         event.setAmount(newPlayerHealth - player.getHealth());
         Heroes.debug.stopTask("HeroesDamageListener.onEntityRegainHealth");
     }
-
+    
+    /**
+     * Returns a percentage adjusted damage value for suffocation
+     * 
+     * @param percent
+     * @param entity
+     * @return
+     */
+    private int onEntitySuffocate(double percent, Entity entity) {
+        if (entity instanceof Creature) {
+            Integer creatureHealth = damageManager.getCreatureHealth(Util.getCreatureFromEntity(entity));
+            if (creatureHealth != null)
+                percent *= creatureHealth;
+        } else if (entity instanceof Player) {
+            Hero hero = plugin.getHeroManager().getHero((Player) entity);
+            percent *= hero.getMaxHealth();
+        }
+        return (int) percent;
+    }
+    
+    /**
+     * Returns a percentage adjusted damage value for drowning
+     * 
+     * @param percent
+     * @param entity
+     * @return
+     */
+    private int onEntityDrown(double percent, Entity entity) {
+        if (entity instanceof Creature) {
+            if (plugin.getEffectManager().creatureHasEffectType((Creature) entity, EffectType.WATER_BREATHING))
+                return 0;
+            Integer creatureHealth = damageManager.getCreatureHealth(Util.getCreatureFromEntity(entity));
+            if (creatureHealth != null)
+                percent *= creatureHealth;
+        } else if (entity instanceof Player) {
+            Hero hero = plugin.getHeroManager().getHero((Player) entity);
+            if (hero.hasEffectType(EffectType.WATER_BREATHING))
+                return 0;
+            percent *= hero.getMaxHealth();
+        }
+        return (int) percent;
+    }
+    
     /**
      * Adjusts damage for Fire damage events.
      * 
@@ -356,7 +408,8 @@ public class HeroesDamageListener extends EntityListener {
                     damage = 0;
                 } else {
                     Integer creatureHealth = damageManager.getCreatureHealth(Util.getCreatureFromEntity(entity));
-                    damage = (int) (damage * damagePercent * ((creatureHealth == null) ? 10 : creatureHealth));
+                    if (creatureHealth != null)
+                        damage = (int) (damage * damagePercent * creatureHealth);
                 }
             }
         }

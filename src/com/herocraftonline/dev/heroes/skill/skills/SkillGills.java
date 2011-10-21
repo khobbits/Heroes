@@ -1,14 +1,11 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
-import org.bukkit.entity.Player;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.effects.EffectType;
-import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
+import com.herocraftonline.dev.heroes.effects.common.WaterBreatheEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
-import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Setting;
 
@@ -44,34 +41,8 @@ public class SkillGills extends ActiveSkill {
 
     @Override
     public boolean use(Hero hero, String[] args) {
-        broadcastExecuteText(hero);
         int duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 30000);
-        hero.addEffect(new GillsEffect(this, duration));
-
+        hero.addEffect(new WaterBreatheEffect(this, duration, applyText, expireText));
         return true;
-    }
-
-    public class GillsEffect extends ExpirableEffect {
-
-        public GillsEffect(Skill skill, long duration) {
-            super(skill, "Gills", duration);
-            addMobEffect(13, (int) (duration / 1000) * 20, 0, false);
-            this.types.add(EffectType.DISPELLABLE);
-            this.types.add(EffectType.BENEFICIAL);
-        }
-
-        @Override
-        public void apply(Hero hero) {
-            super.apply(hero);
-            Player player = hero.getPlayer();
-            broadcast(player.getLocation(), applyText, player.getDisplayName());
-        }
-
-        @Override
-        public void remove(Hero hero) {
-            super.remove(hero);
-            Player player = hero.getPlayer();
-            broadcast(player.getLocation(), expireText, player.getDisplayName());
-        }
     }
 }
