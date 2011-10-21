@@ -298,6 +298,8 @@ public final class Util {
         ItemStack[] contents = hero.getPlayer().getInventory().getContents();
         boolean changed = false;
         for (int i = 0; i < 9; i++) {
+            if (contents[i] == null)
+                continue;
             if (Util.isWeapon(contents[i].getType())) {
                 Util.moveItem(hero, i, contents[i]);
                 changed = true;
