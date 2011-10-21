@@ -41,7 +41,6 @@ public class SkillBackstab extends PassiveSkill {
         node.setProperty("sneak-bonus", 2.0); // Alternative bonus if player is sneaking when doing the backstab
         node.setProperty("sneak-chance", 1.0);
         node.setProperty(Setting.USE_TEXT.node(), "%hero% backstabbed %target%!");
-        node.setProperty("victim-text", "%hero% has backstabbed you!");
         return node;
     }
     
