@@ -53,8 +53,8 @@ public class SkillBecomeDeath extends ActiveSkill {
     @Override
     public void init() {
         super.init();
-        applyText = getSetting(null, Setting.APPLY_TEXT.node(), "%hero% has grown a set of gills!").replace("%hero%", "$1");
-        expireText = getSetting(null, Setting.EXPIRE_TEXT.node(), "%hero% lost his gills!").replace("%hero%", "$1");
+        applyText = getSetting(null, Setting.APPLY_TEXT.node(), "%hero% gains the features of a zombie!").replace("%hero%", "$1");
+        expireText = getSetting(null, Setting.EXPIRE_TEXT.node(), "%hero% no longer appears as an undead!").replace("%hero%", "$1");
     }
     
     @Override
@@ -73,6 +73,7 @@ public class SkillBecomeDeath extends ActiveSkill {
             this.types.add(EffectType.DISPELLABLE);
             this.types.add(EffectType.BENEFICIAL);
             this.types.add(EffectType.DARK);
+            this.types.add(EffectType.WATER_BREATHING);
         }
 
         @Override

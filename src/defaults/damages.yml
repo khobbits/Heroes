@@ -7,5 +7,8 @@ creature-damage:
 item-damage:
     Air: 2
 environmental-damage:
-    Fall: .02
-    Fire: 4
+    FALL: .02
+    FIRE: 4
+    SUFFOCATION: .05
+    DROWNING: .1
+    STARVATION: .05

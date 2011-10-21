@@ -34,7 +34,11 @@ Version dev
 * Added option to prevent players from switching classes till they have mastered their current one.
 * Added option to prevent max tiered players from switching classes.
 * Food & Saturation levels will now be set to max (20) when a hero levels up.
-* Fall damage is now a percent, use FALL: .05 for 5% health per 1 meter dropped, etc.
+* Some Damages are now percentage based:
+** FALL damage: .05 for 5% health per 1 meter dropped, etc.
+** SUFFOCATION damage: .05 is vanilla 
+** DROWNING damage: .1 is vanilla
+** STARVATION damage: .05 is vanilla
 * Resistances are now checked internally in the HeroDamageListener
 
 ==== **API:** ====
@@ -57,6 +61,7 @@ Version dev
 * Player - Location death map has been exposed.  It is now in the Util class instead of being only in the Revive skill
 * Fall damage can now be adjusted before the heroes damage listener is called, not just cancelled
 * New EffectTypes for tagging effects as Resist_TYPE - they will block any harmful skill of the type.
+* WATER_BREATHING effecttype for tagging an effect as providing water breathing
 
 ==== **Skills:** ====
 
@@ -116,6 +121,8 @@ Version dev
 ** Gives a very small chance to drop a random ore from just stone.
 * One - (READDED!)
 ** Provides a speed boost to the caster
+* Plague
+** Fixed bug that caused plague to use the original duration rather than the remaining spell time when spreading to nearby enemies
 * Purge - (NEW!)
 ** Acts as an Area of effect targeted purge.
 ** Still requires a target like dispel, or will target self if cast with no target

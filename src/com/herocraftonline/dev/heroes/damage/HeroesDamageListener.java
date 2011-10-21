@@ -170,19 +170,34 @@ public class HeroesDamageListener extends EntityListener {
             }
         } else if (cause != DamageCause.CUSTOM) {
             Double tmpDamage = damageManager.getEnvironmentalDamage(cause);
-            if (tmpDamage != null) {
+            boolean skipAdjustment = false;
+            if (tmpDamage == null) {
+                tmpDamage = (double) event.getDamage();
+                skipAdjustment = true;
+            }
+
+            if (!skipAdjustment) {
                 switch (cause) {
-                    case FALL:
-                        damage = onEntityFall(event.getDamage(), tmpDamage, defender);
-                        break;
-                    case FIRE:
-                    case LAVA:
-                    case FIRE_TICK:
-                        damage = onEntityFlame(tmpDamage, cause, defender);
-                        break;
-                    default:
-                        damage = (int) (double) tmpDamage;
-                        break;
+                case FALL:
+                    damage = onEntityFall(event.getDamage(), tmpDamage, defender);
+                    break;
+                case SUFFOCATION:
+                    damage = onEntitySuffocate(tmpDamage, defender);
+                    break;
+                case DROWNING:
+                    damage = onEntityDrown(tmpDamage, defender);
+                    break;
+                case STARVATION:
+                    damage = onEntityStarve(tmpDamage, defender);
+                    break;
+                case FIRE:
+                case LAVA:
+                case FIRE_TICK:
+                    damage = onEntityFlame(tmpDamage, cause, defender);
+                    break;
+                default:
+                    damage = (int) (double) tmpDamage;
+                    break;
                 }
             }
             heroLastDamage = new HeroDamageCause(damage, cause);
@@ -314,6 +329,67 @@ public class HeroesDamageListener extends EntityListener {
     }
 
     /**
+     * Returns a percentage adjusted damage value for starvation
+     * 
+     * @param percent
+     * @param entity
+     * @return
+     */
+    private int onEntityStarve(double percent, Entity entity) {
+        if (entity instanceof Creature) {
+            Integer creatureHealth = damageManager.getCreatureHealth(Util.getCreatureFromEntity(entity));
+            if (creatureHealth != null)
+                percent *= creatureHealth;
+        } else if (entity instanceof Player) {
+            Hero hero = plugin.getHeroManager().getHero((Player) entity);
+            percent *= hero.getMaxHealth();
+        }
+        return percent < 1 ? 1 : (int) percent;
+    }
+
+    /**
+     * Returns a percentage adjusted damage value for suffocation
+     * 
+     * @param percent
+     * @param entity
+     * @return
+     */
+    private int onEntitySuffocate(double percent, Entity entity) {
+        if (entity instanceof Creature) {
+            Integer creatureHealth = damageManager.getCreatureHealth(Util.getCreatureFromEntity(entity));
+            if (creatureHealth != null)
+                percent *= creatureHealth;
+        } else if (entity instanceof Player) {
+            Hero hero = plugin.getHeroManager().getHero((Player) entity);
+            percent *= hero.getMaxHealth();
+        }
+        return percent < 1 ? 1 : (int) percent;
+    }
+
+    /**
+     * Returns a percentage adjusted damage value for drowning
+     * 
+     * @param percent
+     * @param entity
+     * @return
+     */
+    private int onEntityDrown(double percent, Entity entity) {
+        if (entity instanceof Creature) {
+            if (plugin.getEffectManager().creatureHasEffectType((Creature) entity, EffectType.WATER_BREATHING))
+                return 0;
+            Integer creatureHealth = damageManager.getCreatureHealth(Util.getCreatureFromEntity(entity));
+            if (creatureHealth != null)
+                percent *= creatureHealth;
+        } else if (entity instanceof Player) {
+            Hero hero = plugin.getHeroManager().getHero((Player) entity);
+            if (hero.hasEffectType(EffectType.WATER_BREATHING))
+                return 0;
+            percent *= hero.getMaxHealth();
+        }
+        return percent < 1 ? 1 : (int) percent;
+    }
+
+    /**
      * Adjusts damage for Fire damage events.
      * 
      * @param damage
@@ -322,16 +398,18 @@ public class HeroesDamageListener extends EntityListener {
      * @return
      */
     private int onEntityFlame(double damage, DamageCause cause, Entity entity) {
+        if (damage == 0)
+            return 0;
         if (entity instanceof Player) {
             Hero hero = plugin.getHeroManager().getHero((Player) entity);
             if (hero.hasEffectType(EffectType.RESIST_FIRE)) {
-                damage = 0;
+                return 0;
             }
         } else if (entity instanceof Creature) {
             if (plugin.getEffectManager().creatureHasEffectType((Creature) entity, EffectType.RESIST_FIRE))
-                damage = 0;
+                return 0;
         }
-        return (int) damage;
+        return damage < 1 ? 1 : (int) damage;
     }
 
     /**
@@ -342,23 +420,23 @@ public class HeroesDamageListener extends EntityListener {
      * @return
      */
     private int onEntityFall(int damage, double damagePercent, Entity entity) {
-        if (damage != 0) {
-            if (entity instanceof Player) {
-                Hero dHero = plugin.getHeroManager().getHero((Player) entity);
-                if (dHero.hasEffectType(EffectType.SAFEFALL))
-                    damage = 0;
-                else
-                    damage = (int) (damage * damagePercent * dHero.getMaxHealth());
-            } else if (entity instanceof Creature) {
-                if (plugin.getEffectManager().creatureHasEffectType((Creature) entity, EffectType.SAFEFALL)) {
-                    damage = 0;
-                } else {
-                    Integer creatureHealth = damageManager.getCreatureHealth(Util.getCreatureFromEntity(entity));
-                    damage = (int) (damage * damagePercent * ((creatureHealth == null) ? 10 : creatureHealth));
-                }
-            }
+        if (damage == 0)
+            return 0;
+        if (entity instanceof Player) {
+            Hero dHero = plugin.getHeroManager().getHero((Player) entity);
+            if (dHero.hasEffectType(EffectType.SAFEFALL))
+                return 0;
+
+            damage = (int) (damage * damagePercent * dHero.getMaxHealth());
+        } else if (entity instanceof Creature) {
+            if (plugin.getEffectManager().creatureHasEffectType((Creature) entity, EffectType.SAFEFALL)) 
+                return 0;
+
+            Integer creatureHealth = damageManager.getCreatureHealth(Util.getCreatureFromEntity(entity));
+            if (creatureHealth != null)
+                damage = (int) (damage * damagePercent * creatureHealth);
         }
-        return damage;
+        return damage < 1 ? 1 : damage;
     }
 
     private int calculateArmorReduction(PlayerInventory inventory, int damage) {

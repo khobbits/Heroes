@@ -65,25 +65,30 @@ public class SkillChainLightning extends TargettedSkill {
         while (bounces > 0 && keepBouncing) {
             for (Entity entity : target.getNearbyEntities(range, range, range)) {
                 keepBouncing = false;
-                if (entity instanceof LivingEntity) {
-                    // never bounce back to the player
-                    if (entity.equals(player)) {
-                        continue;
-                    }
-                    if (!previousTargets.contains(entity) && checkTarget(target, entity)) {
-                        if (target instanceof Player) {
-                            Hero tHero = heroManager.getHero((Player) target);
-                            tHero.addEffect(new DelayedBolt(this, (maxBounce - bounces) * 250, hero, damage));
-                        } else if (target instanceof Creature) {
-                            plugin.getEffectManager().addCreatureEffect((Creature) target, new DelayedBolt(this, (maxBounce - bounces) * 500, hero, damage));
-                        } else {
-                            continue;
-                        }
+                if (!(entity instanceof LivingEntity))
+                    continue;
+
+                //PvP/Summon check the target
+                if (!damageCheck(player, (LivingEntity) entity))
+                    continue;
+                
+                // never bounce back to the player - and make sure the target has LoS
+                if (!previousTargets.contains(entity) && checkTarget(target, entity)) {
+                    if (target instanceof Player) {
+                        Hero tHero = heroManager.getHero((Player) target);
+                        tHero.addEffect(new DelayedBolt(this, (maxBounce - bounces) * 200, hero, damage));
                         keepBouncing = true;
                         break;
+                    } else if (target instanceof Creature) {
+                        plugin.getEffectManager().addCreatureEffect((Creature) target, new DelayedBolt(this, (maxBounce - bounces) * 200, hero, damage));
+                        keepBouncing = true;
+                        break;
+                    } else {
+                        continue;
                     }
                 }
             }
+
             bounces -= 1;
         }
         broadcastExecuteText(hero, target);
@@ -91,11 +96,9 @@ public class SkillChainLightning extends TargettedSkill {
     }
 
     private boolean checkTarget(Entity previousTarget, Entity potentialTarget) {
-        Vector v1 = previousTarget.getLocation().toVector();
-        Vector v2 = potentialTarget.getLocation().toVector();
-        Vector directional = v2.clone().subtract(v1);
+        Vector directional = potentialTarget.getLocation().clone().subtract(previousTarget.getLocation()).toVector();
         try {
-            BlockIterator iter = new BlockIterator(previousTarget.getWorld(), v1, directional, 0, (int) v1.distance(v2));
+            BlockIterator iter = new BlockIterator(previousTarget.getWorld(), previousTarget.getLocation().toVector(), directional, 0, (int) directional.length());
             while (iter.hasNext()) {
                 if (!Util.transparentBlocks.contains(iter.next().getType()))
                     return false;
