@@ -96,11 +96,9 @@ public class SkillChainLightning extends TargettedSkill {
     }
 
     private boolean checkTarget(Entity previousTarget, Entity potentialTarget) {
-        Vector v1 = previousTarget.getLocation().toVector();
-        Vector v2 = potentialTarget.getLocation().toVector();
-        Vector directional = v2.clone().subtract(v1);
+        Vector directional = potentialTarget.getLocation().clone().subtract(previousTarget.getLocation()).toVector();
         try {
-            BlockIterator iter = new BlockIterator(previousTarget.getWorld(), v1, directional, 0, (int) v1.distance(v2));
+            BlockIterator iter = new BlockIterator(previousTarget.getWorld(), previousTarget.getLocation().toVector(), directional, 0, (int) directional.length());
             while (iter.hasNext()) {
                 if (!Util.transparentBlocks.contains(iter.next().getType()))
                     return false;

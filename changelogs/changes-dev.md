@@ -116,6 +116,8 @@ Version dev
 ** Gives a very small chance to drop a random ore from just stone.
 * One - (READDED!)
 ** Provides a speed boost to the caster
+* Plague
+** Fixed bug that caused plague to use the original duration rather than the remaining spell time when spreading to nearby enemies
 * Purge - (NEW!)
 ** Acts as an Area of effect targeted purge.
 ** Still requires a target like dispel, or will target self if cast with no target
