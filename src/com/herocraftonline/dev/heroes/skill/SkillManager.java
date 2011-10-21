@@ -19,6 +19,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
 import com.herocraftonline.dev.heroes.Heroes;
@@ -53,7 +54,11 @@ public class SkillManager {
             }
         }
         
-        classLoader = URLClassLoader.newInstance(urls.toArray(new URL[0]), plugin.getClass().getClassLoader());
+        ClassLoader cl = plugin.getClass().getClassLoader();
+        if (cl == null) {
+            Heroes.log(Level.SEVERE, "Null Class Loader! - May cause issues with skills.");
+        }
+        classLoader = URLClassLoader.newInstance(urls.toArray(new URL[0]), cl);
     }
 
     /**
