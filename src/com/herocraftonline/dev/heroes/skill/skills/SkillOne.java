@@ -63,7 +63,7 @@ public class SkillOne extends ActiveSkill {
             super(skill, "One", duration);
             this.types.add(EffectType.DISPELLABLE);
             this.types.add(EffectType.BENEFICIAL);
-            addMobEffect(1, (int) (duration / 1000) * 20, amplifier, true);
+            addMobEffect(1, (int) (duration / 1000) * 20, amplifier, false);
         }
 
         @Override
