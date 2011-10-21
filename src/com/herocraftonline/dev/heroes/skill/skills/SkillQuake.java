@@ -14,10 +14,10 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityListener;
 import org.bukkit.util.config.ConfigurationNode;
 
-public class SkillIronBones extends PassiveSkill {
+public class SkillQuake extends PassiveSkill {
 
-    public SkillIronBones(Heroes plugin) {
-        super(plugin, "IronBones");
+    public SkillQuake(Heroes plugin) {
+        super(plugin, "Quake");
         setDescription("You hit the ground with a thunderous roar!");
         setArgumentRange(0, 0);
         setEffectTypes(EffectType.PHYSICAL, EffectType.BENEFICIAL);

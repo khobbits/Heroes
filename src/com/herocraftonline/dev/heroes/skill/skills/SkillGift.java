@@ -79,7 +79,7 @@ public class SkillGift extends ActiveSkill{
             return false;
         }
 
-        player.getInventory().remove(item);
+        player.getInventory().removeItem(item);
         Map<Integer, ItemStack> leftOvers = reciever.getInventory().addItem(item);
         Messaging.send(reciever, sendText, player.getName(), amount, item.getType().name().toLowerCase().replace("_", " "));
         if (!leftOvers.isEmpty()) {
