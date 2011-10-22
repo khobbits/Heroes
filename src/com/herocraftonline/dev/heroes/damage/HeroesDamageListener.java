@@ -314,17 +314,22 @@ public class HeroesDamageListener extends EntityListener {
         Player player = (Player) event.getEntity();
         Hero hero = plugin.getHeroManager().getHero(player);
         double maxHealth = hero.getMaxHealth();
-        double healPercent = plugin.getConfigManager().getProperties().foodHealPercent;
+        
         // Satiated players regenerate % of total HP rather than 1 HP
         if (event.getRegainReason() == RegainReason.SATIATED) {
+            double healPercent = plugin.getConfigManager().getProperties().foodHealPercent;
             amount = maxHealth * healPercent;
         }
+        
         double newHeroHealth = hero.getHealth() + amount;
-        int newPlayerHealth = (int) (newHeroHealth / maxHealth * 20);
-        if (newPlayerHealth == 0 && newHeroHealth > 0)
-            newPlayerHealth = 1;
+        int newPlayerHealth = (int) Math.ceil((newHeroHealth / maxHealth) * 20);
         hero.setHealth(newHeroHealth);
-        event.setAmount(newPlayerHealth - player.getHealth());
+        
+        //Sanity test
+        int newAmount = newPlayerHealth - player.getHealth();
+        if (newAmount < 0)
+            newAmount = 0;
+        event.setAmount(0);
         Heroes.debug.stopTask("HeroesDamageListener.onEntityRegainHealth");
     }
 
