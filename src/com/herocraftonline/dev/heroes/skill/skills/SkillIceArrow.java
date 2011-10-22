@@ -19,6 +19,7 @@ import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.SkillType;
+import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillIceArrow extends ActiveSkill {
@@ -44,7 +45,8 @@ public class SkillIceArrow extends ActiveSkill {
         node.setProperty("speed-multiplier", 2);
         node.setProperty(Setting.DURATION.node(), 60000); // milliseconds
         node.setProperty("attacks", 1); // How many attacks the buff lasts for.
-        node.setProperty(Setting.APPLY_TEXT.node(), "%hero% imbues their arrows with ice!");
+        node.setProperty(Setting.USE_TEXT.node(), "%hero% imbues their arrows with ice!");
+        node.setProperty(Setting.APPLY_TEXT.node(), "%target% is slowed by ice!");
         node.setProperty(Setting.EXPIRE_TEXT.node(), "%hero%'s arrows are no longer imbued with ice!");
         return node;
     }
@@ -52,7 +54,8 @@ public class SkillIceArrow extends ActiveSkill {
     @Override
     public void init() {
         super.init();
-        applyText = getSetting(null, Setting.APPLY_TEXT.node(), "%hero% imbue's their arrows with ice!").replace("%hero%", "$1");
+        setUseText("%hero% imbues their arrows with ice!".replace("%hero%", "$1"));
+        applyText = getSetting(null, Setting.APPLY_TEXT.node(), "%target% is slowed by %hero%s !").replace("%target%", "$1").replace("%hero%", "$2");
         expireText = getSetting(null, Setting.EXPIRE_TEXT.node(), "%hero%'s arrows are no longer imbued with ice!").replace("%hero%", "$1");
     }
 
@@ -61,6 +64,7 @@ public class SkillIceArrow extends ActiveSkill {
         long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 60000);
         int numAttacks = getSetting(hero.getHeroClass(), "attacks", 1);
         hero.addEffect(new IceArrowBuff(this, duration, numAttacks));
+        broadcastExecuteText(hero);
         return true;
     }
 
@@ -70,13 +74,6 @@ public class SkillIceArrow extends ActiveSkill {
             super(skill, "SlowArrowBuff", duration, numAttacks);
             this.types.add(EffectType.ICE);
             setDescription("ice");
-        }
-
-        @Override
-        public void apply(Hero hero) {
-            super.apply(hero);
-            Player player = hero.getPlayer();
-            broadcast(player.getLocation(), applyText, player.getDisplayName());
         }
 
         @Override
@@ -126,8 +123,10 @@ public class SkillIceArrow extends ActiveSkill {
                 if (target instanceof Player) {
                     Hero tHero = plugin.getHeroManager().getHero((Player) target);
                     tHero.addEffect(iceSlowEffect);
+                    broadcast(target.getLocation(), applyText, tHero.getPlayer().getDisplayName(), player.getDisplayName());
                 } else if (target instanceof Creature) {
                     plugin.getEffectManager().addCreatureEffect((Creature) target, iceSlowEffect);
+                    broadcast(target.getLocation(), applyText, Messaging.getCreatureName((Creature) target), player.getDisplayName());
                 }
                 checkBuff(hero);
             }
