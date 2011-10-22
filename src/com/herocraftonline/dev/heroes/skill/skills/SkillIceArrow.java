@@ -44,16 +44,16 @@ public class SkillIceArrow extends ActiveSkill {
         node.setProperty("speed-multiplier", 2);
         node.setProperty(Setting.DURATION.node(), 60000); // milliseconds
         node.setProperty("attacks", 1); // How many attacks the buff lasts for.
-        node.setProperty(Setting.APPLY_TEXT.node(), "%target% imbues their arrows with ice!");
-        node.setProperty(Setting.EXPIRE_TEXT.node(), "%target%'s arrows are no longer imbued with ice!");
+        node.setProperty(Setting.APPLY_TEXT.node(), "%hero% imbues their arrows with ice!");
+        node.setProperty(Setting.EXPIRE_TEXT.node(), "%hero%'s arrows are no longer imbued with ice!");
         return node;
     }
 
     @Override
     public void init() {
         super.init();
-        applyText = getSetting(null, Setting.APPLY_TEXT.node(), "%target% imbue's their arrows with ice!").replace("%target%", "$1");
-        expireText = getSetting(null, Setting.EXPIRE_TEXT.node(), "%target%'s arrows are no longer imbued with ice!").replace("%target%", "$1");
+        applyText = getSetting(null, Setting.APPLY_TEXT.node(), "%hero% imbue's their arrows with ice!").replace("%hero%", "$1");
+        expireText = getSetting(null, Setting.EXPIRE_TEXT.node(), "%hero%'s arrows are no longer imbued with ice!").replace("%hero%", "$1");
     }
 
     @Override
