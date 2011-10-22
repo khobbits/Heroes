@@ -16,6 +16,7 @@ Version dev
 * Player inventory now synchs properly when an item is removed
 * Satiated state will now regenerate a % of a hero's HP as intended, rather than the default half-heart (configurable)
 * Crafting Xp is now awarded each time an item is crafted regardless of Cursor status
+* Crafting XP is no longer awarded with a full inventory when shift-clicking to craft
 * Arrow damage is now altered for bow draw - minimum damage is 1/3rd what is set in the configuration
 
 ==== **General:** ====

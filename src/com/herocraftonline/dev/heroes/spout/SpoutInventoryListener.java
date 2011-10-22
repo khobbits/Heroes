@@ -22,6 +22,9 @@ public class SpoutInventoryListener extends InventoryListener {
         if (event.getResult() == null)
             return;
         
+        if (event.isShiftClick() && event.getInventory().firstEmpty() == -1)
+            return;
+        
         if (!event.isShiftClick() && event.getCursor() != null && event.getCursor().getType().getMaxStackSize() == event.getCursor().getAmount())
             return;
         
