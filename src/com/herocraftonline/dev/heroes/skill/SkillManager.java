@@ -55,9 +55,6 @@ public class SkillManager {
         }
         
         ClassLoader cl = plugin.getClass().getClassLoader();
-        if (cl == null) {
-            Heroes.log(Level.SEVERE, "Null Class Loader! - May cause issues with skills.");
-        }
         classLoader = URLClassLoader.newInstance(urls.toArray(new URL[0]), cl);
     }
 
