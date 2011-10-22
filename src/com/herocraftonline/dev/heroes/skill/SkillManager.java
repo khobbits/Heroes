@@ -19,7 +19,6 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
 import com.herocraftonline.dev.heroes.Heroes;
@@ -45,7 +44,12 @@ public class SkillManager {
         for (String skillFile : dir.list()) {
             if (skillFile.contains(".jar")) {
                 File file = new File(dir, skillFile);
-                skillFiles.put(skillFile.toLowerCase().replace(".jar", "").replace("skill", ""), file);
+                String name = skillFile.toLowerCase().replace(".jar", "").replace("skill", "");
+                if (skillFiles.containsKey(name)) {
+                    Heroes.log(Level.SEVERE, "Duplicate skill jar found! Please remove " + skillFile + " or " + skillFiles.get(name).getName());
+                    continue;
+                }
+                skillFiles.put(name, file);
                 try {
                     urls.add(file.toURI().toURL());
                 } catch (MalformedURLException e) {
