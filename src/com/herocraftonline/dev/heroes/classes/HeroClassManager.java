@@ -327,6 +327,10 @@ public class HeroClassManager {
                 newClass.addAllowedArmor("*");
                 continue;
             }
+            if (a.equalsIgnoreCase("pumpkin")) {
+                newClass.addAllowedArmor("PUMPKIN");
+                aLimits.append(" PUMPKIN");
+            }
             // If it's a generic type like 'DIAMOND' or 'LEATHER' we add all the possible entries.
             if (!a.contains("_")) {
                 try {

@@ -18,6 +18,7 @@ Version dev
 * Crafting Xp is now awarded each time an item is crafted regardless of Cursor status
 * Crafting XP is no longer awarded with a full inventory when shift-clicking to craft
 * Arrow damage is now altered for bow draw - minimum damage is 1/3rd what is set in the configuration
+* PUMPKIN is now an allowed armor type as intended
 
 ==== **General:** ====
 

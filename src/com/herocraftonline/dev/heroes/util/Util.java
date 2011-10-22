@@ -288,6 +288,7 @@ public final class Util {
         case GOLD_LEGGINGS:
         case GOLD_CHESTPLATE:
         case GOLD_BOOTS:
+        case PUMPKIN:
             return true;
         default:
             return false;
