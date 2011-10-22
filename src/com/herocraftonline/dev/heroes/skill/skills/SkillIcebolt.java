@@ -31,6 +31,9 @@ public class SkillIcebolt extends ActiveSkill {
 
     private HashSet<Snowball> snowballs = new HashSet<Snowball>();
 
+    private String applyText;
+    private String expireText;
+    
     public SkillIcebolt(Heroes plugin) {
         super(plugin, "Icebolt");
         setDescription("Fires a snowball that hurts the player and if they're on fire, puts them out");
@@ -48,9 +51,17 @@ public class SkillIcebolt extends ActiveSkill {
         node.setProperty(Setting.DAMAGE.node(), 3);
         node.setProperty("slow-duration", 5000); // 5 seconds
         node.setProperty("speed-multiplier", 2);
+        node.setProperty(Setting.APPLY_TEXT.node(), "%target% has been slowed by %hero%!");
+        node.setProperty(Setting.EXPIRE_TEXT.node(), "%target% is no longer slowed!");
         return node;
+        
     }
-
+    @Override
+    public void init() {
+        applyText = getSetting(null, Setting.APPLY_TEXT.node(), "%target% has been slowed by %hero%!").replace("%target%", "$1").replace("%hero%", "$2");
+        expireText = getSetting(null, Setting.EXPIRE_TEXT.node(), "%target% is no longer slowed!").replace("%target%", "$1");
+    }
+    
     @Override
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
@@ -114,7 +125,7 @@ public class SkillIcebolt extends ActiveSkill {
                 long duration = getSetting(hero.getHeroClass(), "slow-duration", 10000);
                 int amplifier = getSetting(hero.getHeroClass(), "speed-multiplier", 2);
                 
-                SlowEffect iceSlowEffect = new SlowEffect(skill, duration, amplifier, false);
+                SlowEffect iceSlowEffect = new SlowEffect(skill, duration, amplifier, false, applyText, expireText, hero);
                 LivingEntity target = (LivingEntity) event.getEntity();
                 if (target instanceof Player) {
                     Hero tHero = plugin.getHeroManager().getHero((Player) target);

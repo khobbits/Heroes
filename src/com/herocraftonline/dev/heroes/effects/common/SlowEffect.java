@@ -11,14 +11,18 @@ import com.herocraftonline.dev.heroes.util.Messaging;
 
 public class SlowEffect extends ExpirableEffect {
 
-    private final String applyText = "$1 has been slowed!";
-    private final String expireText = "$1 returned to normal speed!";
+    private final String applyText;
+    private final String expireText;
+    private final Hero applier;
     
-    public SlowEffect(Skill skill, long duration, int amplifier, boolean swing) {
+    public SlowEffect(Skill skill, long duration, int amplifier, boolean swing, String applyText, String expireText, Hero applier) {
         super(skill, "Slow", duration);
         this.types.add(EffectType.DISPELLABLE);
         this.types.add(EffectType.HARMFUL);
         this.types.add(EffectType.SLOW);
+        this.applyText = applyText;
+        this.expireText = expireText;
+        this.applier = applier;
         addMobEffect(2, (int) (duration / 1000) * 20, amplifier, false);
         if (swing) {
             addMobEffect(4, (int) (duration / 1000) * 20, amplifier, false);
@@ -29,7 +33,7 @@ public class SlowEffect extends ExpirableEffect {
     public void apply(Hero hero) {
         super.apply(hero);
         Player player = hero.getPlayer();
-        broadcast(player.getLocation(), applyText, player.getDisplayName());
+        broadcast(player.getLocation(), applyText, player.getDisplayName(), applier.getPlayer().getDisplayName());
     }
 
     @Override
@@ -42,7 +46,7 @@ public class SlowEffect extends ExpirableEffect {
     @Override
     public void apply(Creature creature) {
         super.apply(creature);
-        broadcast(creature.getLocation(), applyText, Messaging.getCreatureName(creature));
+        broadcast(creature.getLocation(), applyText, Messaging.getCreatureName(creature), applier.getPlayer().getDisplayName());
     }
     
     @Override

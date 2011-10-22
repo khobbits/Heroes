@@ -118,7 +118,7 @@ public class SkillIceArrow extends ActiveSkill {
             if (hero.hasEffect("SlowArrowBuff")) {
                 long duration = getSetting(hero.getHeroClass(), "slow-duration", 10000);
                 int amplifier = getSetting(hero.getHeroClass(), "speed-multiplier", 2);
-                SlowEffect iceSlowEffect = new SlowEffect(skill, duration, amplifier, false);
+                SlowEffect iceSlowEffect = new SlowEffect(skill, duration, amplifier, false, applyText, "$1 is no longer slowed.", hero);
                 LivingEntity target = (LivingEntity) event.getEntity();
                 if (target instanceof Player) {
                     Hero tHero = plugin.getHeroManager().getHero((Player) target);
