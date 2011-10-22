@@ -50,7 +50,7 @@ public class SkillMortalWound extends TargettedSkill {
         node.setProperty("heal-multiplier", .5);
         node.setProperty("tick-damage", 1);
         node.setProperty(Setting.MAX_DISTANCE.node(), 2);
-        node.setProperty(Setting.APPLY_TEXT.node(), "%target% has a mortal wound!");
+        node.setProperty(Setting.APPLY_TEXT.node(), "%target% has been mortally wounded by %hero%!");
         node.setProperty(Setting.EXPIRE_TEXT.node(), "%target% has recovered from their mortal wound!");
         return node;
     }
@@ -58,8 +58,8 @@ public class SkillMortalWound extends TargettedSkill {
     @Override
     public void init() {
         super.init();
-        applyText = getSetting(null, Setting.APPLY_TEXT.node(), "%target% is bleeding!").replace("%target%", "$1");
-        expireText = getSetting(null, Setting.EXPIRE_TEXT.node(), "%target% has stopped bleeding!").replace("%target%", "$1");
+        applyText = getSetting(null, Setting.APPLY_TEXT.node(), "%target% has been mortally wounded by %hero%!").replace("%target%", "$1").replace("$2", "%hero%");
+        expireText = getSetting(null, Setting.EXPIRE_TEXT.node(), "%target% has recovered from their mortal wound!").replace("%target%", "$1");
     }
 
     @Override
@@ -86,7 +86,6 @@ public class SkillMortalWound extends TargettedSkill {
             plugin.getEffectManager().addCreatureEffect((Creature) target, mEffect);
         }
 
-        broadcastExecuteText(hero, target);
         return true;
     }
 
@@ -109,13 +108,13 @@ public class SkillMortalWound extends TargettedSkill {
         public void apply(Hero hero) {
             super.apply(hero);
             Player player = hero.getPlayer();
-            broadcast(player.getLocation(), applyText, player.getDisplayName());
+            broadcast(player.getLocation(), applyText, player.getDisplayName(), applier.getDisplayName());
         }
 
         @Override
         public void remove(Creature creature) {
             super.remove(creature);
-            broadcast(creature.getLocation(), expireText, Messaging.getCreatureName(creature).toLowerCase());
+            broadcast(creature.getLocation(), expireText, Messaging.getCreatureName(creature).toLowerCase(), applier.getDisplayName());
         }
 
         @Override
