@@ -81,6 +81,7 @@ public class SkillDecay extends TargettedSkill {
         @Override
         public void apply(Creature creature) {
             super.apply(creature);
+            broadcast(creature.getLocation(), applyText, Messaging.getCreatureName(creature));
         }
 
         @Override
