@@ -853,7 +853,11 @@ public class Hero {
         if ((player.isDead() || player.getHealth() == 0) && health <= 0)
             return;
 
-        player.setHealth((int) Math.ceil((health / getMaxHealth() * 20)));
+        int playerHealth = (int) (health / getMaxHealth() * 20);
+        if (playerHealth == 0 && health > 0) {
+            playerHealth = 1;
+        }
+        player.setHealth(playerHealth);
     }
 
     /**
