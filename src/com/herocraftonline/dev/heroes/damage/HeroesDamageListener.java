@@ -324,14 +324,14 @@ public class HeroesDamageListener extends EntityListener {
         double newHeroHealth = hero.getHealth() + amount;
         if (newHeroHealth > maxHealth)
             newHeroHealth = maxHealth;
-        int newPlayerHealth = (int) Math.ceil((newHeroHealth / maxHealth) * 20);
+        int newPlayerHealth = (int) (newHeroHealth / maxHealth * 20);
         hero.setHealth(newHeroHealth);
         
         //Sanity test
         int newAmount = newPlayerHealth - player.getHealth();
         if (newAmount < 0)
             newAmount = 0;
-        event.setAmount(0);
+        event.setAmount(newAmount);
         Heroes.debug.stopTask("HeroesDamageListener.onEntityRegainHealth");
     }
 
