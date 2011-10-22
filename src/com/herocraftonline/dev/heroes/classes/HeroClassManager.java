@@ -100,7 +100,7 @@ public class HeroClassManager {
         if (className == null) {
             return null;
         }
-        HeroClass newClass = new HeroClass(className);
+        HeroClass newClass = new HeroClass(className, plugin);
 
         newClass.setDescription(config.getString("description", ""));
         newClass.setExpModifier(config.getDouble("expmodifier", 1.0D));

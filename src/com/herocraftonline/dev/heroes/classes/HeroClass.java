@@ -14,6 +14,7 @@ import java.util.TreeSet;
 import org.bukkit.Material;
 import org.bukkit.util.config.ConfigurationNode;
 
+import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.damage.DamageManager.ProjectileType;
 
 public class HeroClass {
@@ -38,8 +39,10 @@ public class HeroClass {
     private double baseMaxHealth;
     private double maxHealthPerLevel;
     private boolean userClass = true;
+    private final Heroes plugin;
 
-    public HeroClass() {
+    public HeroClass(Heroes plugin) {
+        this.plugin = plugin;
         name = "";
         description = "";
         expModifier = 1.0D;
@@ -49,8 +52,8 @@ public class HeroClass {
         cost = 0;
     }
 
-    public HeroClass(String name) {
-        this();
+    public HeroClass(String name, Heroes plugin) {
+        this(plugin);
         this.name = name;
     }
 
@@ -77,7 +80,14 @@ public class HeroClass {
     public void addWeakParent(HeroClass parent) {
         weakParents.add(parent);
     }
-
+    
+    /**
+     * @return if this class is the default class
+     */
+    public boolean isDefault() {
+        return plugin.getClassManager().getDefaultClass().equals(this);
+    }
+    
     @Override
     public boolean equals(Object obj) {
         if (this == obj)

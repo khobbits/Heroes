@@ -825,7 +825,7 @@ public class Hero {
     public void setVerbose(boolean verbose) {
         this.verbose = verbose;
     }
-
+    
     /**
      * Syncs the Hero's current Experience with the minecraft experience
      */

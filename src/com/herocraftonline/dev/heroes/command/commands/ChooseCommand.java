@@ -73,7 +73,7 @@ public class ChooseCommand extends BasicInteractiveCommand {
                 return false;
             }
             
-            if (hero.isMaster() && hero.getHeroClass().getParents().isEmpty() && props.lockAtHighestTier) {
+            if (!hero.getHeroClass().isDefault() && hero.isMaster() && hero.getHeroClass().getParents().isEmpty() && props.lockAtHighestTier) {
                 Messaging.send(player, "You have mastered your class and can not choose a new one!");
                 return false;
             }
@@ -104,16 +104,14 @@ public class ChooseCommand extends BasicInteractiveCommand {
                 }
             }
 
-            HeroClass defaultClass = plugin.getClassManager().getDefaultClass();
-
-            if (newClass != defaultClass && !CommandHandler.hasPermission(player, "heroes.classes." + newClass.getName().toLowerCase())) {
+            if (newClass.isDefault() && !CommandHandler.hasPermission(player, "heroes.classes." + newClass.getName().toLowerCase())) {
                 Messaging.send(player, "You don't have permission for $1.", newClass.getName());
                 return false;
             }
 
             int cost = newClass.getCost();
             boolean costApplied = true;
-            if (prop.firstSwitchFree && currentClass == plugin.getClassManager().getDefaultClass()) {
+            if (prop.firstSwitchFree && currentClass.isDefault()) {
                 costApplied = false;
             } else if (hero.isMaster(newClass) && !prop.swapMasteryCost) {
                 costApplied = false;
