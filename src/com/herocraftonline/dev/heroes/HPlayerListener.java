@@ -87,7 +87,7 @@ public class HPlayerListener extends PlayerListener {
         if (hero.hasEffectType(EffectType.DISARM))
             Util.disarmCheck(hero, plugin);
 
-        Material material = player.getItemInHand().getType();
+
         if (!hero.canEquipItem(player.getInventory().getHeldItemSlot())) {
             event.setCancelled(true);
             Util.syncInventory(player, plugin);
@@ -102,33 +102,36 @@ public class HPlayerListener extends PlayerListener {
         Block clickedBlock = event.getClickedBlock();
         if (clickedBlock != null) {
             switch (clickedBlock.getType()) {
-                case DISPENSER:
-                case BED:
-                case FURNACE:
-                case BURNING_FURNACE:
-                case WOOD_DOOR:
-                case LEVER:
-                case IRON_DOOR:
-                case JUKEBOX:
-                case DIODE_BLOCK_OFF:
-                case DIODE_BLOCK_ON:
-                case CHEST:
-                case LOCKED_CHEST:
-                case TRAP_DOOR:
-                    hero.cancelDelayedSkill();
-                    return;
+            case DISPENSER:
+            case BED:
+            case FURNACE:
+            case BURNING_FURNACE:
+            case WOOD_DOOR:
+            case LEVER:
+            case IRON_DOOR:
+            case JUKEBOX:
+            case DIODE_BLOCK_OFF:
+            case DIODE_BLOCK_ON:
+            case CHEST:
+            case LOCKED_CHEST:
+            case TRAP_DOOR:
+                hero.cancelDelayedSkill();
+                return;
             }
         }
-
-        if (hero.hasBind(material)) {
-            if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-                String[] args = hero.getBind(material);
-                plugin.onCommand(player, null, "skill", args);
+        
+        if (player.getItemInHand() != null) {
+            Material material = player.getItemInHand().getType();
+            if (hero.hasBind(material)) {
+                if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                    String[] args = hero.getBind(material);
+                    plugin.onCommand(player, null, "skill", args);
+                } else {
+                    hero.cancelDelayedSkill();
+                }
             } else {
                 hero.cancelDelayedSkill();
             }
-        } else {
-            hero.cancelDelayedSkill();
         }
     }
 
