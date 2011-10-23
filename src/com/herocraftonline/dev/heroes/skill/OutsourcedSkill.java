@@ -95,6 +95,8 @@ public class OutsourcedSkill extends Skill {
         Player player = hero.getPlayer();
         String world = player.getWorld().getName();
         String playerName = player.getName();
+        if (!heroClass.hasSkill(getName()))
+            return;
         ConfigurationNode settings = heroClass.getSkillSettings(getName());
         if (settings != null) {
             if (hero.getLevel() >= getSetting(heroClass, Setting.LEVEL.node(), 1)) {

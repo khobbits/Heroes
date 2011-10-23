@@ -439,7 +439,6 @@ public class HeroClassManager {
                     }
                 }
                 newClass.addSkill(skillName, skillSettings);
-
             }
 
             // Load all skills onto the Class if we found ALL
@@ -465,5 +464,4 @@ public class HeroClassManager {
             }
         }
     }
-
 }
