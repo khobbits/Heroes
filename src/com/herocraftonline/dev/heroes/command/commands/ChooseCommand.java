@@ -104,7 +104,7 @@ public class ChooseCommand extends BasicInteractiveCommand {
                 }
             }
 
-            if (newClass.isDefault() && !CommandHandler.hasPermission(player, "heroes.classes." + newClass.getName().toLowerCase())) {
+            if (!newClass.isDefault() && !CommandHandler.hasPermission(player, "heroes.classes." + newClass.getName().toLowerCase())) {
                 Messaging.send(player, "You don't have permission for $1.", newClass.getName());
                 return false;
             }
