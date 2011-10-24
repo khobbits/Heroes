@@ -29,6 +29,7 @@ public class HeroClass {
     private Set<ExperienceType> experienceSources = null;
     private boolean primary = true;
     private boolean secondary = true;
+    private int tier = 0;
     private Map<Material, Integer> itemDamage = new EnumMap<Material, Integer>(Material.class);
     private Map<ProjectileType, Integer> projectileDamage = new EnumMap<ProjectileType, Integer>(ProjectileType.class);
     private Map<String, ConfigurationNode> skills = new LinkedHashMap<String, ConfigurationNode>();
@@ -118,6 +119,21 @@ public class HeroClass {
      */
     public void setSecondary(boolean secondary) {
         this.secondary = secondary;
+    }
+
+    /**
+     * Gets what tier this class is
+     * @return the tier
+     */
+    public int getTier() {
+        return tier;
+    }
+
+    /**
+     * @param tier the tier to set
+     */
+    public void setTier(int tier) {
+        this.tier = tier;
     }
 
     @Override
