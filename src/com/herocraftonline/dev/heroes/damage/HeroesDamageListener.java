@@ -31,6 +31,7 @@ import com.herocraftonline.dev.heroes.api.SkillDamageEvent;
 import com.herocraftonline.dev.heroes.api.SkillUseInfo;
 import com.herocraftonline.dev.heroes.api.WeaponDamageEvent;
 import com.herocraftonline.dev.heroes.damage.DamageManager.ProjectileType;
+import com.herocraftonline.dev.heroes.effects.Effect;
 import com.herocraftonline.dev.heroes.effects.EffectManager;
 import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.hero.Hero;
@@ -218,12 +219,21 @@ public class HeroesDamageListener extends EntityListener {
                 return;
             }
             final Hero hero = plugin.getHeroManager().getHero(player);
-            // If the defender is a player
-            if (hero.hasEffectType(EffectType.INVULNERABILITY)) {
-                event.setCancelled(true);
-                return;
+            
+            //Loop through the player's effects and check to see if we need to remove them
+            boolean exit = false;
+            for (Effect effect : hero.getEffects()) {
+                if (effect.isType(EffectType.INVULNERABILITY)) {
+                    event.setCancelled(true);
+                    exit = true;
+                }
+                if (effect.isType(EffectType.ROOT) || effect.isType(EffectType.SNEAK)) {
+                    effect.remove(hero);
+                }
             }
-
+            if (exit)
+                return;
+            
             // Party damage & PvPable test
             if (attacker instanceof Player) {
                 // If the players aren't within the level range then deny the PvP

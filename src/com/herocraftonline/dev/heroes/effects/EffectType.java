@@ -16,6 +16,7 @@ public enum EffectType {
     HARMFUL,
     HEAL,
     IMBUE, // Players can only have 1 imbue - they are skills that trigger from weapons
+    INVIS,
     INVULNERABILITY,
     LIGHT,
     LIGHTNING,
@@ -30,6 +31,7 @@ public enum EffectType {
     SAFEFALL,
     SILENCE,
     SLOW,
+    SNEAK,
     STUN, 
     WATER,
     WATER_BREATHING,

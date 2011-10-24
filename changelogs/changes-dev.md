@@ -52,8 +52,9 @@ Version dev
 ** CombustEffect - it's used for tracking who last applied FireTicks to a player
 ** FormEffect - only 1 can be active a time. work like 'stances'
 ** ImbueEffect - like FormEffects but are weapon related to prevent classes from stacking multiple weapon buffs at one time
-* SafeFallEffect is now universal - the damagemanager now checks if the hero has the effect before allowing fall damage
-* InvisibleEffect is now universal - it will automatically break on damage & use events
+** SafeFallEffect is now universal - the damagemanager now checks if the hero has the effect before allowing fall damage
+** InvisibleEffect is now universal - it will automatically break on damage & use events
+** SneakEffect is now universal
 * getRemaingTime added to expirable effects
 * TargettedSkills now have built-in - PvP/Party/Summon checking.
 * PeriodicEffect is now PeriodicExpirableEffect - there is now a non-expirable PeriodicEffect
@@ -65,6 +66,7 @@ Version dev
 * Fall damage can now be adjusted before the heroes damage listener is called, not just cancelled
 * New EffectTypes for tagging effects as Resist_TYPE - they will block any harmful skill of the type.
 * WATER_BREATHING effecttype for tagging an effect as providing water breathing
+* INVIS & SNEAK effecttypes 
 
 ==== **Skills:** ====
 

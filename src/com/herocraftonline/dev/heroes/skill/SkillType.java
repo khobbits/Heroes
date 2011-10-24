@@ -22,6 +22,7 @@ public enum SkillType {
     MOVEMENT,
     PHYSICAL,
     SILENCABLE,
+    STEALTHY,
     SUMMON,
     TELEPORT;
 }

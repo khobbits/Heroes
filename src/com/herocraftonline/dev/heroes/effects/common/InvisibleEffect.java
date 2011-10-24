@@ -19,6 +19,7 @@ public class InvisibleEffect extends ExpirableEffect {
     public InvisibleEffect(Skill skill, long duration, String applyText, String expireText) {
         super(skill, "Invisible", duration);
         this.types.add(EffectType.BENEFICIAL);
+        this.types.add(EffectType.INVIS);
         this.applyText = applyText;
         this.expireText = expireText;
     }
