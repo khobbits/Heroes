@@ -72,6 +72,7 @@ public class HeroesDamageListener extends EntityListener {
 
         if (ignoreNextDamageEventBecauseBukkitCallsTwoEventsGRRR) {
             ignoreNextDamageEventBecauseBukkitCallsTwoEventsGRRR = false;
+            plugin.debugLog(Level.SEVERE, "Detected second projectile damage attack on: " + event.getEntity().toString() + " with event type: " + event.getType().toString());
             return;
         }
 
