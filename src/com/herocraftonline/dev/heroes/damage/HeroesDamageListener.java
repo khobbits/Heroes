@@ -202,15 +202,13 @@ public class HeroesDamageListener extends EntityListener {
                     break;
                 }
             }
+            if (damage == 0) {
+                event.setCancelled(true);
+                return;
+            }
             heroLastDamage = new HeroDamageCause(damage, cause);
         } else {
             heroLastDamage = new HeroDamageCause(damage, cause);
-        }
-
-        if (damage == 0) {
-            if (cause != DamageCause.CUSTOM)
-                event.setCancelled(true);
-            return;
         }
 
         if (defender instanceof Player) {
@@ -250,6 +248,10 @@ public class HeroesDamageListener extends EntityListener {
                 }
             }
 
+            if (damage == 0) {
+                event.setDamage(0);
+                return;
+            }
             int damageReduction = calculateArmorReduction(player.getInventory(), damage);
             damage -= damageReduction;
             if (damage < 0) {
