@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -20,6 +21,7 @@ import org.bukkit.util.config.ConfigurationNode;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.effects.PeriodicExpirableEffect;
+import com.herocraftonline.dev.heroes.effects.common.SlowEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.SkillType;
@@ -50,6 +52,7 @@ public class SkillIcyAura extends ActiveSkill {
         node.setProperty(Setting.PERIOD.node(), 2000);
         node.setProperty("tick-damage", 1);
         node.setProperty(Setting.RADIUS.node(), 10);
+        node.setProperty("amplitude", 2);
         node.setProperty(Setting.APPLY_TEXT.node(), "%hero% is emitting ice!");
         node.setProperty(Setting.EXPIRE_TEXT.node(), "%hero% has stopped emitting ice!");
         return node;
@@ -151,7 +154,9 @@ public class SkillIcyAura extends ActiveSkill {
             Location loc = player.getLocation().clone();
             loc.setY(loc.getY() - 1);
             changeBlock(loc, hero);
-
+            
+            int amplitude = skill.getSetting(hero.getHeroClass(), "amplitude", 2);
+            SlowEffect sEffect = new SlowEffect(skill, this.getPeriod(), amplitude, true, null, null, hero);
             for (Entity entity : player.getNearbyEntities(range, range, range)) {
                 if (entity instanceof LivingEntity) {
                     LivingEntity lEntity = (LivingEntity) entity;
@@ -166,6 +171,11 @@ public class SkillIcyAura extends ActiveSkill {
                     loc = lEntity.getLocation().clone();
                     loc.setY(loc.getY() - 1);
                     changeBlock(loc, hero);
+                    if (lEntity instanceof Player) {
+                        plugin.getHeroManager().getHero((Player) lEntity).addEffect(sEffect);
+                    } else if (lEntity instanceof Creature) {
+                        plugin.getEffectManager().addCreatureEffect((Creature) lEntity, sEffect);
+                    }
                 }
             }
 
