@@ -227,7 +227,7 @@ public class HeroesDamageListener extends EntityListener {
             }
             for (Effect effect : hero.getEffects()) {
                 if (effect.isType(EffectType.ROOT) || effect.isType(EffectType.INVIS)) {
-                    effect.remove(hero);
+                    hero.removeEffect(effect);
                 }
             }
 
