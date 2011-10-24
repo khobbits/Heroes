@@ -33,7 +33,7 @@ public class SkillScan extends TargettedSkill {
             Messaging.send(player, "$1 is a level $2 $3 and has $4 / $5 HP", tHero.getPlayer().getDisplayName(), tHero.getLevel(), tHero.getHeroClass().getName(), (int) tHero.getHealth(), (int) tHero.getMaxHealth());
             return true;
         } else if (target instanceof Creature){
-            Messaging.send(player, "$1 is has $4 / $5 HP", Messaging.getCreatureName((Creature) target), target.getHealth(), plugin.getDamageManager().getCreatureHealth(Util.getCreatureFromEntity(target)));
+            Messaging.send(player, "$1 has $2 / $3 HP", Messaging.getCreatureName((Creature) target), target.getHealth(), plugin.getDamageManager().getCreatureHealth(Util.getCreatureFromEntity(target)));
         } else {
             Messaging.send(player, "Invalid Target!");
             return false;
