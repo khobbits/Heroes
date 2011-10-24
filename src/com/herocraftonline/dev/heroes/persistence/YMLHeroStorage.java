@@ -40,8 +40,9 @@ public class YMLHeroStorage extends HeroStorage {
                 Heroes.log(Level.INFO, "Invalid class found for " + player.getName() + ". Resetting player.");
                 return createNewHero(player);
             }
+
             Hero playerHero = new Hero(plugin, player, playerClass);
-            
+            playerHero.setSecondClass(loadSecondaryClass(player, playerConfig));
             loadCooldowns(playerHero, playerConfig);
             loadExperience(playerHero, playerConfig);
             loadBinds(playerHero, playerConfig);
@@ -50,7 +51,7 @@ public class YMLHeroStorage extends HeroStorage {
             playerHero.setHealth(playerConfig.getDouble("health", playerClass.getBaseMaxHealth()));
             playerHero.setVerbose(playerConfig.getBoolean("verbose", true));
             playerHero.setSuppressedSkills(new HashSet<String>(playerConfig.getStringList("suppressed", null)));
-            
+
             Heroes.log(Level.INFO, "Loaded hero: " + player.getName() + " with EID: " + player.getEntityId());
             return playerHero;
         } else {
@@ -67,6 +68,9 @@ public class YMLHeroStorage extends HeroStorage {
         Configuration playerConfig = new Configuration(playerFile);
 
         playerConfig.setProperty("class", hero.getHeroClass().toString());
+        if (hero.getSecondClass() != null) {
+            playerConfig.setProperty("secondary-class", hero.getSecondClass().toString());
+        }
         playerConfig.setProperty("verbose", hero.isVerbose());
         playerConfig.setProperty("suppressed", new ArrayList<String>(hero.getSuppressedSkills()));
         playerConfig.setProperty("mana", hero.getMana());
@@ -120,6 +124,32 @@ public class YMLHeroStorage extends HeroStorage {
 
         if (config.getString("class") != null) {
             playerClass = plugin.getClassManager().getClass(config.getString("class"));
+
+            if (playerClass == null) {
+                playerClass = defaultClass;
+            } else if (!CommandHandler.hasPermission(player, "heroes.classes." + playerClass.getName().toLowerCase())) {
+                playerClass = defaultClass;
+            }
+        } else {
+            playerClass = defaultClass;
+        }
+        return playerClass;
+    }
+
+    /**
+     * Loads a players class, checks to make sure the class still exists and the player still has permission for the
+     * class
+     * 
+     * @param player
+     * @param config
+     * @return
+     */
+    private HeroClass loadSecondaryClass(Player player, Configuration config) {
+        HeroClass playerClass = null;
+        HeroClass defaultClass = plugin.getClassManager().getDefaultClass();
+
+        if (config.getString("secondary-class") != null) {
+            playerClass = plugin.getClassManager().getClass(config.getString("secondary-class"));
 
             if (playerClass == null) {
                 playerClass = defaultClass;

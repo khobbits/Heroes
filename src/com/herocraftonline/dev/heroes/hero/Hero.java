@@ -50,6 +50,7 @@ public class Hero {
     private final Heroes plugin;
     private Player player;
     private HeroClass heroClass;
+    private HeroClass secondClass;
     private int mana = 0;
     private HeroParty party = null;
     private boolean verbose = true;
@@ -466,6 +467,20 @@ public class Hero {
             }
         }
         return classes;
+    }
+
+    /**
+     * @return the secondClass
+     */
+    public HeroClass getSecondClass() {
+        return secondClass;
+    }
+
+    /**
+     * @param secondClass the secondClass to set
+     */
+    public void setSecondClass(HeroClass secondClass) {
+        this.secondClass = secondClass;
     }
 
     /**
