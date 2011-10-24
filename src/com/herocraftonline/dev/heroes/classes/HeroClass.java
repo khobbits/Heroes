@@ -76,12 +76,33 @@ public class HeroClass {
         specializations.add(heroClass);
     }
 
-    public void addStrongParent(HeroClass parent) {
+    public void addStrongParent(HeroClass parent) throws CircularParentException {
+       if (parent.getAllParents().contains(this))
+           throw new CircularParentException();
+       
         strongParents.add(parent);
     }
 
-    public void addWeakParent(HeroClass parent) {
+    public void addWeakParent(HeroClass parent) throws CircularParentException {
+        if (parent.getAllParents().contains(this))
+            throw new CircularParentException();
+        
         weakParents.add(parent);
+    }
+    
+    public Set<HeroClass> getAllParents() {
+        Set<HeroClass> classes = new HashSet<HeroClass>();
+        for (HeroClass hClass : this.getParents()) {
+            classes.addAll(hClass.getAllParents(new HashSet<HeroClass>(classes)));
+        }
+        return classes;
+    }
+    
+    public Set<HeroClass> getAllParents(Set<HeroClass> parents) {
+        for (HeroClass hClass : this.getParents()) {
+            parents.addAll(hClass.getAllParents(new HashSet<HeroClass>(parents)));
+        }
+        return parents;
     }
     
     /**
@@ -363,4 +384,7 @@ public class HeroClass {
         DIAMOND
     }
 
+    @SuppressWarnings("serial")
+    public class CircularParentException extends Exception {
+    }
 }

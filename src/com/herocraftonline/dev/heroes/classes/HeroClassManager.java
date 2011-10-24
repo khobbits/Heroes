@@ -18,6 +18,7 @@ import org.bukkit.util.config.ConfigurationNode;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClass.ArmorItems;
 import com.herocraftonline.dev.heroes.classes.HeroClass.ArmorType;
+import com.herocraftonline.dev.heroes.classes.HeroClass.CircularParentException;
 import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
 import com.herocraftonline.dev.heroes.classes.HeroClass.WeaponItems;
 import com.herocraftonline.dev.heroes.classes.HeroClass.WeaponType;
@@ -290,8 +291,12 @@ public class HeroClassManager {
                 for (String sp : strong) {
                     HeroClass parent = getClass(sp);
                     if (parent != null) {
-                        parent.addSpecialization(unlinkedClass);
-                        unlinkedClass.addStrongParent(parent);
+                        try {
+                            unlinkedClass.addStrongParent(parent);
+                            parent.addSpecialization(unlinkedClass);
+                        } catch (CircularParentException e) {
+                            Heroes.log(Level.SEVERE, "Cannot assign " + unlinkedClass.getName() + " as a parent class as " + sp + " is already a parent of that class.");
+                        }
                     } else {
                         Heroes.log(Level.WARNING, "Cannot assign " + unlinkedClass.getName() + " a parent class as " + sp + " does not exist.");
                     }
@@ -302,8 +307,12 @@ public class HeroClassManager {
                 for (String wp : weak) {
                     HeroClass parent = getClass(wp);
                     if (parent != null) {
-                        parent.addSpecialization(unlinkedClass);
-                        unlinkedClass.addWeakParent(parent);
+                        try {
+                            unlinkedClass.addWeakParent(parent);
+                            parent.addSpecialization(unlinkedClass);
+                        } catch (CircularParentException e) {
+                            Heroes.log(Level.SEVERE, "Cannot assign " + unlinkedClass.getName() + " as a parent class as " + wp + " is already a parent of that class.");
+                        }
                     } else {
                         Heroes.log(Level.WARNING, "Cannot assign " + unlinkedClass.getName() + " a parent class as " + wp + " does not exist.");
                     }
