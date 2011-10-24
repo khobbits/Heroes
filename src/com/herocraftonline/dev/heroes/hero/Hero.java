@@ -312,7 +312,7 @@ public class Hero {
                     //Reset food stuff on level up
                     if (player.getFoodLevel() < 20)
                         player.setFoodLevel(20);
-                    
+
                     player.setSaturation(20);
                     player.setExhaustion(0);
                     syncHealth();
@@ -429,6 +429,42 @@ public class Hero {
 
     public int getLevel(HeroClass heroClass) {
         return plugin.getConfigManager().getProperties().getLevel(getExperience(heroClass));
+    }
+
+    /**
+     * Gets the tier adjusted level for this character - takes into account already gained levels on parent classes
+     * @return
+     */
+    public int getTieredLevel() {
+        if (heroClass.hasNoParents())
+            return getLevel();
+        
+        Set<HeroClass> classes = new HashSet<HeroClass>();
+        for (HeroClass hClass : heroClass.getParents()) {
+            if (this.isMaster(hClass)) {
+                getTieredLevel(hClass, classes);
+                classes.add(hClass);
+            }
+        }
+        int level = getLevel();
+        for (HeroClass hClass : classes) {
+            level += getLevel(hClass);
+        }
+        return level;
+    }
+
+    /**
+     * recursive method to lookup all classes that are upstream of the parent class and mastered
+     * @param heroClass
+     * @param classes
+     */
+    private void getTieredLevel(HeroClass heroClass, Set<HeroClass> classes) {
+        for (HeroClass hClass : heroClass.getParents()) {
+            if (this.isMaster(hClass)) {
+                getTieredLevel(hClass, classes);
+                classes.add(hClass);
+            }
+        }
     }
 
     /**
@@ -649,7 +685,7 @@ public class Hero {
             effects.remove(effect.getName().toLowerCase());
         }
     }
-    
+
     /**
      * This method can NOT be called from an iteration over the effect set
      * 
@@ -825,7 +861,7 @@ public class Hero {
     public void setVerbose(boolean verbose) {
         this.verbose = verbose;
     }
-    
+
     /**
      * Syncs the Hero's current Experience with the minecraft experience
      */
