@@ -442,7 +442,7 @@ public class Hero {
         Set<HeroClass> classes = new HashSet<HeroClass>();
         for (HeroClass hClass : heroClass.getParents()) {
             if (this.isMaster(hClass)) {
-                getTieredLevel(hClass, classes);
+                classes.addAll(getTieredLevel(hClass, new HashSet<HeroClass>(classes)));
                 classes.add(hClass);
             }
         }
@@ -458,13 +458,14 @@ public class Hero {
      * @param heroClass
      * @param classes
      */
-    private void getTieredLevel(HeroClass heroClass, Set<HeroClass> classes) {
+    private Set<HeroClass> getTieredLevel(HeroClass heroClass, Set<HeroClass> classes) {
         for (HeroClass hClass : heroClass.getParents()) {
             if (this.isMaster(hClass)) {
-                getTieredLevel(hClass, classes);
+                classes.addAll(getTieredLevel(hClass, new HashSet<HeroClass>(classes)));
                 classes.add(hClass);
             }
         }
+        return classes;
     }
 
     /**
