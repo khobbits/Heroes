@@ -17,18 +17,18 @@ import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Properties;
 
-public class ChooseCommand extends BasicInteractiveCommand {
+public class ChooseSecondCommand extends BasicInteractiveCommand {
 
     private final Heroes plugin;
     private Map<Player, HeroClass> pendingClassSelections = new HashMap<Player, HeroClass>();
     private Map<Player, Boolean> pendingClassCostStatus = new HashMap<Player, Boolean>();
 
-    public ChooseCommand(Heroes plugin) {
+    public ChooseSecondCommand(Heroes plugin) {
         super("Choose Class");
         this.plugin = plugin;
         this.setStates(new InteractiveCommandState[] { new StateA(), new StateB() });
-        setDescription("Selects a secondary path or specialization");
-        setUsage("/hero choose second §9<type>");
+        setDescription("Selects a new path or specialization");
+        setUsage("/hero choose §9<type>");
     }
 
     @Override
@@ -47,7 +47,7 @@ public class ChooseCommand extends BasicInteractiveCommand {
     class StateA extends BasicInteractiveCommandState {
 
         public StateA() {
-            super("hero choose second");
+            super("hero choose");
             this.setArgumentRange(1, 1);
         }
 
@@ -59,7 +59,7 @@ public class ChooseCommand extends BasicInteractiveCommand {
             Properties props = plugin.getConfigManager().getProperties();
             Player player = (Player) executor;
             Hero hero = plugin.getHeroManager().getHero(player);
-            HeroClass currentClass = hero.getSecondClass();
+            HeroClass currentClass = hero.getHeroClass();
             HeroClass newClass = plugin.getClassManager().getClass(args[0]);
             Properties prop = plugin.getConfigManager().getProperties();
 
@@ -70,11 +70,6 @@ public class ChooseCommand extends BasicInteractiveCommand {
 
             if (newClass == currentClass) {
                 Messaging.send(player, "You are already set as this Class.");
-                return false;
-            }
-            
-            if (!newClass.isSecondary()) {
-                Messaging.send(player, "That is not a secondary Class!");
                 return false;
             }
             
@@ -156,7 +151,7 @@ public class ChooseCommand extends BasicInteractiveCommand {
 
             Player player = (Player) executor;
             Hero hero = plugin.getHeroManager().getHero(player);
-            HeroClass currentClass = hero.getSecondClass();
+            HeroClass currentClass = hero.getHeroClass();
             HeroClass newClass = pendingClassSelections.get(player);
             Properties prop = plugin.getConfigManager().getProperties();
 
@@ -183,7 +178,7 @@ public class ChooseCommand extends BasicInteractiveCommand {
                 }
             }
 
-            hero.changeHeroClass(newClass, true);
+            hero.changeHeroClass(newClass);
             Messaging.send(player, "Welcome to the path of the $1!", newClass.getName());
 
             plugin.getHeroManager().saveHero(hero);

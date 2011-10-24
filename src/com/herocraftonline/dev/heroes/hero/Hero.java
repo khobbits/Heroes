@@ -124,11 +124,16 @@ public class Hero {
      * 
      * @param heroClass
      */
-    public void changeHeroClass(HeroClass heroClass) {
+    public void changeHeroClass(HeroClass heroClass, boolean secondary) {
         clearEffects();
         clearSummons();
         clearBinds();
-        setHeroClass(heroClass);
+        
+        if (!secondary) 
+            setHeroClass(heroClass);
+        else
+            setSecondClass(heroClass);
+        
         if (plugin.getConfigManager().getProperties().prefixClassName) {
             player.setDisplayName("[" + getHeroClass().getName() + "]" + player.getName());
         }
@@ -439,7 +444,7 @@ public class Hero {
     public int getTieredLevel() {
         if (heroClass.hasNoParents())
             return getLevel();
-        
+
         Set<HeroClass> classes = new HashSet<HeroClass>();
         for (HeroClass hClass : heroClass.getParents()) {
             if (this.isMaster(hClass)) {
@@ -480,6 +485,7 @@ public class Hero {
      * @param secondClass the secondClass to set
      */
     public void setSecondClass(HeroClass secondClass) {
+        //TODO: need to adjust class change methods to resolve proper abilities/HP after setting a new class
         this.secondClass = secondClass;
     }
 
@@ -620,7 +626,7 @@ public class Hero {
      * @return
      */
     public boolean hasSkill(String name) {
-        return this.heroClass.hasSkill(name) || skills.containsKey(name);
+        return this.heroClass.hasSkill(name) || this.secondClass != null ? this.secondClass.hasSkill(name) : false || skills.containsKey(name);
     }
 
     /**
