@@ -221,18 +221,16 @@ public class HeroesDamageListener extends EntityListener {
             final Hero hero = plugin.getHeroManager().getHero(player);
             
             //Loop through the player's effects and check to see if we need to remove them
-            boolean exit = false;
+            if (hero.hasEffectType(EffectType.INVULNERABILITY)) {
+                event.setCancelled(true);
+                return;
+            }
             for (Effect effect : hero.getEffects()) {
-                if (effect.isType(EffectType.INVULNERABILITY)) {
-                    event.setCancelled(true);
-                    exit = true;
-                }
-                if (effect.isType(EffectType.ROOT) || effect.isType(EffectType.SNEAK)) {
+                if (effect.isType(EffectType.ROOT) || effect.isType(EffectType.SNEAK) || effect.isType(EffectType.INVIS)) {
                     effect.remove(hero);
                 }
             }
-            if (exit)
-                return;
+
             
             // Party damage & PvPable test
             if (attacker instanceof Player) {
@@ -293,11 +291,6 @@ public class HeroesDamageListener extends EntityListener {
             HeroParty party = hero.getParty();
             if (party != null && event.getDamage() > 0 && !party.updateMapDisplay()) {
                 party.setUpdateMapDisplay(true);
-            }
-
-            // Do our Damage-Dependant effect removals last
-            if (hero.hasEffect("Invisible")) {
-                hero.removeEffect(hero.getEffect("Invisible"));
             }
 
         } else if (defender instanceof LivingEntity) {
