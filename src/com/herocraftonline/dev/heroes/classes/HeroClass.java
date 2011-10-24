@@ -27,6 +27,8 @@ public class HeroClass {
     private Set<String> allowedArmor = new LinkedHashSet<String>();
     private Set<String> allowedWeapons = new LinkedHashSet<String>();
     private Set<ExperienceType> experienceSources = null;
+    private boolean primary = true;
+    private boolean secondary = true;
     private Map<Material, Integer> itemDamage = new EnumMap<Material, Integer>(Material.class);
     private Map<ProjectileType, Integer> projectileDamage = new EnumMap<ProjectileType, Integer>(ProjectileType.class);
     private Map<String, ConfigurationNode> skills = new LinkedHashMap<String, ConfigurationNode>();
@@ -88,6 +90,36 @@ public class HeroClass {
         return plugin.getClassManager().getDefaultClass().equals(this);
     }
     
+    /**
+     * @return the primary
+     */
+    public boolean isPrimary() {
+        return primary;
+    }
+
+    /**
+     * Allows this class to be selected as a primary class
+     * @param primary the primary to set
+     */
+    public void setPrimary(boolean primary) {
+        this.primary = primary;
+    }
+
+    /**
+     * Allows this class to be selected as a secondary class
+     * @return the secondary
+     */
+    public boolean isSecondary() {
+        return secondary;
+    }
+
+    /**
+     * @param secondary the secondary to set
+     */
+    public void setSecondary(boolean secondary) {
+        this.secondary = secondary;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -195,7 +227,7 @@ public class HeroClass {
         return skills.containsKey(name.toLowerCase());
     }
 
-    public boolean isPrimary() {
+    public boolean hasNoParents() {
         return strongParents.isEmpty() && weakParents.isEmpty();
     }
 

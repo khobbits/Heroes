@@ -36,7 +36,7 @@ public class PathsCommand extends BasicCommand {
         Set<HeroClass> classes = plugin.getClassManager().getClasses();
         Set<HeroClass> primaryClasses = new HashSet<HeroClass>();
         for (HeroClass heroClass : classes) {
-            if (heroClass.isPrimary()) {
+            if (heroClass.hasNoParents()) {
                 primaryClasses.add(heroClass);
             }
         }

@@ -83,7 +83,7 @@ public class ChooseCommand extends BasicInteractiveCommand {
                 return false;
             }
             
-            if (!newClass.isPrimary()) {
+            if (!newClass.hasNoParents()) {
                 for (HeroClass parentClass : newClass.getStrongParents()) {
                     if (!hero.isMaster(parentClass)) {
                         Messaging.send(player, "$1 requires you to master: $2", newClass.getName(), newClass.getStrongParents().toString().replace("[", "").replace("]", ""));

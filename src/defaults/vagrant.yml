@@ -24,3 +24,5 @@ projectile-damage:
   Arrow: 3
 expLoss: 0
 user-class: true
+primary: true
+secondary: false
