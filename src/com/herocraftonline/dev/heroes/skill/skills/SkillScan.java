@@ -28,23 +28,17 @@ public class SkillScan extends TargettedSkill {
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
-        String name = "";
-        int hp = 0;
-        int maxHp = 0;
         if (target instanceof Player) {
             Hero tHero = plugin.getHeroManager().getHero((Player) target);
-            hp = (int) tHero.getHealth();
-            maxHp = (int) tHero.getMaxHealth();
-            name = tHero.getPlayer().getDisplayName();
+            Messaging.send(player, "$1 is a level $2 $3 and has $4 / $5 HP", tHero.getPlayer().getDisplayName(), tHero.getLevel(), tHero.getClass().getName(), (int) tHero.getHealth(), (int) tHero.getMaxHealth());
+            return true;
         } else if (target instanceof Creature){
-            name = Messaging.getCreatureName((Creature) target);
-            hp = target.getHealth();
-            maxHp = plugin.getDamageManager().getCreatureHealth(Util.getCreatureFromEntity(target));
+            Messaging.send(player, "$1 is has $4 / $5 HP", Messaging.getCreatureName((Creature) target), target.getHealth(), plugin.getDamageManager().getCreatureHealth(Util.getCreatureFromEntity(target)));
         } else {
             Messaging.send(player, "Invalid Target!");
             return false;
         }
-        Messaging.send(player, "$1 has $2 / $3 HP", name, hp, maxHp);
+        
         return true;
     }
 
