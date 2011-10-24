@@ -178,7 +178,7 @@ public class ChooseSecondCommand extends BasicInteractiveCommand {
                 }
             }
 
-            hero.changeHeroClass(newClass);
+            hero.changeHeroClass(newClass, true);
             Messaging.send(player, "Welcome to the path of the $1!", newClass.getName());
 
             plugin.getHeroManager().saveHero(hero);

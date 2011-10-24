@@ -138,7 +138,7 @@ public class HEntityListener extends EntityListener {
             if (prop.resetOnDeath) {
                 // Wipe xp if we are in hardcore mode
                 heroDefender.gainExp(-heroDefender.getExperience(), ExperienceType.DEATH, false);
-                heroDefender.changeHeroClass(plugin.getClassManager().getDefaultClass());
+                heroDefender.changeHeroClass(plugin.getClassManager().getDefaultClass(), false);
             } else {
                 // otherwise just do standard loss
                 int currentLevelExp = prop.getExperience(level);
