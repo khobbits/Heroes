@@ -24,12 +24,14 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.command.Command;
+import com.herocraftonline.dev.heroes.effects.Effect;
 import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.effects.PeriodicEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.hero.HeroManager;
 import com.herocraftonline.dev.heroes.party.HeroParty;
 import com.herocraftonline.dev.heroes.skill.OutsourcedSkill;
+import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Properties;
 import com.herocraftonline.dev.heroes.util.Util;
@@ -94,11 +96,6 @@ public class HPlayerListener extends PlayerListener {
             return;
         }
 
-        // Remove effects dependant on non-interaction
-        if (hero.hasEffect("Invisible")) {
-            hero.removeEffect(hero.getEffect("Invisible"));
-        }
-
         Block clickedBlock = event.getClickedBlock();
         if (clickedBlock != null) {
             switch (clickedBlock.getType()) {
@@ -119,18 +116,27 @@ public class HPlayerListener extends PlayerListener {
                 return;
             }
         }
-        
+
+        boolean isStealthy = false;
         if (player.getItemInHand() != null) {
             Material material = player.getItemInHand().getType();
             if (hero.hasBind(material)) {
                 if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                     String[] args = hero.getBind(material);
                     plugin.onCommand(player, null, "skill", args);
+                    isStealthy = plugin.getSkillManager().getSkill(args[0]).isType(SkillType.STEALTHY);
                 } else {
                     hero.cancelDelayedSkill();
                 }
             } else {
                 hero.cancelDelayedSkill();
+            }
+        }
+        // Remove effects dependant on non-interaction
+        if (!isStealthy) {
+            for (Effect effect : hero.getEffects()) {
+                if (effect.isType(EffectType.INVIS))
+                    effect.remove(hero);
             }
         }
     }

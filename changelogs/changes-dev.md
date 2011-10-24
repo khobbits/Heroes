@@ -49,6 +49,7 @@ Version dev
 * New 
 ** SkillManager - skills are now loaded into the SkillManager rather than the CommandHandler
 ** Skills are now loaded on Demand (only when a class has them)
+** New SkillType - STEALTHY - can be used without breaking Invisibility - though the skills sideeffects may break it (like damage)
 ** CombustEffect - it's used for tracking who last applied FireTicks to a player
 ** FormEffect - only 1 can be active a time. work like 'stances'
 ** ImbueEffect - like FormEffects but are weapon related to prevent classes from stacking multiple weapon buffs at one time

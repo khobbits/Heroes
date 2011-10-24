@@ -21,7 +21,7 @@ public class SkillGarrote extends TargettedSkill {
         setUsage("/skill garrote <target>");
         setArgumentRange(0, 1);
         setIdentifiers("skill garrote");
-        setTypes(SkillType.PHYSICAL, SkillType.DEBUFF, SkillType.DAMAGING, SkillType.HARMFUL);
+        setTypes(SkillType.PHYSICAL, SkillType.DEBUFF, SkillType.DAMAGING, SkillType.HARMFUL, SkillType.STEALTHY);
     }
     
     @Override
