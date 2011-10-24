@@ -20,7 +20,7 @@ public class SkillScan extends TargettedSkill {
         this.plugin = plugin;
         setDescription("Reports the target's health");
         setUsage("/skill scan <target>");
-        setArgumentRange(1, 1);
+        setArgumentRange(0, 1);
         setIdentifiers("skill scan");
         setTypes(SkillType.KNOWLEDGE, SkillType.STEALTHY);
     }
