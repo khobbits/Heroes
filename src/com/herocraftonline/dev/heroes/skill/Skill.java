@@ -172,6 +172,8 @@ public abstract class Skill extends BasicCommand {
      * @return the stored setting
      */
     public boolean getSetting(Hero hero, String setting, boolean def) {
+        if (hero == null)
+            return config.getBoolean(setting, def);
         if (hasSetting(hero.getHeroClass(), setting))
             return hero.getHeroClass().getSkillSettings(getName()).getBoolean(setting, def);
         else if (hero.getSecondClass() != null && hasSetting(hero.getSecondClass(), setting))
@@ -194,6 +196,9 @@ public abstract class Skill extends BasicCommand {
      * @return the stored setting
      */
     public double getSetting(Hero hero, String setting, double def, boolean lower) {
+        if (hero == null)
+            return config.getDouble(setting, def);
+        
         double val1 = -1;
         double val2 = -1;
         if (hasSetting(hero.getHeroClass(), setting))
@@ -229,6 +234,9 @@ public abstract class Skill extends BasicCommand {
      * @return the stored setting
      */
     public int getSetting(Hero hero, String setting, int def, boolean lower) {
+        if (hero == null)
+            return getConfig().getInt(setting, def);
+        
         int val1 = -1;
         int val2 = -1;
         if (hasSetting(hero.getHeroClass(), setting))
@@ -264,6 +272,9 @@ public abstract class Skill extends BasicCommand {
      * @return the stored setting
      */
     public List<String> getSetting(Hero hero, String setting, List<String> def) {
+        if (hero == null)
+            return config.getStringList(setting, def);
+        
         List<String> vals = new ArrayList<String>();
         if (hasSetting(hero.getHeroClass(), setting))
             vals.addAll(hero.getHeroClass().getSkillSettings(getName()).getStringList(setting, def));
