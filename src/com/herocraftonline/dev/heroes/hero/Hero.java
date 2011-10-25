@@ -262,11 +262,11 @@ public class Hero {
         }
 
         HeroClass[] classes = new HeroClass[] {heroClass, secondClass};
-        
+
         for (HeroClass hc : classes) {
             if (hc == null)
                 continue;
-            
+
             double exp = getExperience(hc);
 
             // adjust exp using the class modifier if it's positive
@@ -274,7 +274,7 @@ public class Hero {
                 expChange *= hc.getExpModifier();
             } else if (source != ExperienceType.ADMIN && isMaster() && (!prop.masteryLoss || !prop.levelsViaExpLoss))
                 return;
-            
+
             //This is called once for each class
             ExperienceChangeEvent expEvent = new ExperienceChangeEvent(this, hc, expChange, source);
             plugin.getServer().getPluginManager().callEvent(expEvent);
@@ -515,8 +515,14 @@ public class Hero {
      * @return the hero's maximum health
      */
     public double getMaxHealth() {
-        int level = plugin.getConfigManager().getProperties().getLevel(getExperience());
-        return heroClass.getBaseMaxHealth() + (level - 1) * heroClass.getMaxHealthPerLevel();
+        int level = plugin.getConfigManager().getProperties().getLevel(getExperience(heroClass));
+        double primaryHp = heroClass.getBaseMaxHealth() + (level - 1) * heroClass.getMaxHealthPerLevel();
+        double secondHp = 0;
+        if (secondClass != null) {
+            level = plugin.getConfigManager().getProperties().getLevel(getExperience(secondClass));
+            secondHp = secondClass.getBaseMaxHealth() + (level - 1) * secondClass.getMaxHealthPerLevel();
+        }
+        return primaryHp > secondHp ? primaryHp : secondHp;
     }
 
     /**
