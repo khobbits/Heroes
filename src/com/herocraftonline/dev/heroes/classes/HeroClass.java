@@ -195,9 +195,12 @@ public class HeroClass {
     }
 
     public Set<ExperienceType> getExperienceSources() {
-        return experienceSources;
+        return Collections.unmodifiableSet(experienceSources);
     }
 
+    public boolean hasExperiencetype(ExperienceType type) {
+        return experienceSources.contains(type);
+    }
     /**
      * @return the expLoss
      */

@@ -275,9 +275,8 @@ public abstract class ActiveSkill extends Skill {
     public abstract boolean use(Hero hero, String[] args);
 
     private void awardExp(Hero hero) {
-        HeroClass heroClass = hero.getHeroClass();
-        if (heroClass.getExperienceSources().contains(ExperienceType.SKILL)) {
-            hero.gainExp(this.getSetting(heroClass, Setting.EXP.node(), 0), ExperienceType.SKILL);
+        if (hero.hasExperienceType(ExperienceType.SKILL)) {
+            hero.gainExp(this.getSetting(hero.getHeroClass(), Setting.EXP.node(), 0), ExperienceType.SKILL);
         }
     }
 

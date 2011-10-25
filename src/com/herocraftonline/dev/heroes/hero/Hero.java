@@ -105,6 +105,10 @@ public class Hero {
         skills.put(skill, Configuration.getEmptyNode());
     }
 
+    public boolean hasExperienceType(ExperienceType type) {
+        return heroClass.hasExperiencetype(type) || secondClass.hasExperiencetype(type);
+    }
+
     /**
      * Adds a skill binding to the given Material.
      * Ignores Air/Null values
@@ -128,12 +132,12 @@ public class Hero {
         clearEffects();
         clearSummons();
         clearBinds();
-        
+
         if (!secondary) 
             setHeroClass(heroClass);
         else
             setSecondClass(heroClass);
-        
+
         if (plugin.getConfigManager().getProperties().prefixClassName) {
             player.setDisplayName("[" + getHeroClass().getName() + "]" + player.getName());
         }
@@ -257,82 +261,89 @@ public class Hero {
             return;
         }
 
-        double exp = getExperience();
-
-        // adjust exp using the class modifier if it's positive
-        if (expChange > 0 && source != ExperienceType.ADMIN) {
-            expChange *= heroClass.getExpModifier();
-        } else if (source != ExperienceType.ADMIN && isMaster() && (!prop.masteryLoss || !prop.levelsViaExpLoss))
-            return;
-
+        HeroClass[] classes = new HeroClass[] {heroClass, secondClass};
         // call event
         ExperienceChangeEvent expEvent = new ExperienceChangeEvent(this, expChange, source);
         plugin.getServer().getPluginManager().callEvent(expEvent);
         if (expEvent.isCancelled())
             return;
+        
+        for (HeroClass hc : classes) {
+            if (hc == null)
+                continue;
+            
+            double exp = getExperience(hc);
 
-        // Lets get our modified xp change value
-        expChange = expEvent.getExpChange();
+            // adjust exp using the class modifier if it's positive
+            if (expChange > 0 && source != ExperienceType.ADMIN) {
+                expChange *= hc.getExpModifier();
+            } else if (source != ExperienceType.ADMIN && isMaster() && (!prop.masteryLoss || !prop.levelsViaExpLoss))
+                return;
 
-        int currentLevel = prop.getLevel(exp);
-        int newLevel = prop.getLevel(exp + expChange);
 
-        if (isMaster() && source != ExperienceType.ADMIN) {
-            expChange = 0;
-        } else if (currentLevel > newLevel && !prop.levelsViaExpLoss && source != ExperienceType.ADMIN) {
-            expChange = prop.getExperience(currentLevel) - (exp - 1);
-        }
+            // Lets get our modified xp change value
+            expChange = expEvent.getExpChange();
 
-        // add the experience
-        exp += expChange;
+            int currentLevel = prop.getLevel(exp);
+            int newLevel = prop.getLevel(exp + expChange);
 
-        // If we went negative lets reset our values so that we would hit 0
-        if (exp < 0) {
-            expChange = -(expChange + exp);
-            exp = 0;
-        }
-
-        // Reset our new level - in case xp adjustement settings actually don't cause us to change
-        newLevel = prop.getLevel(exp);
-        setExperience(exp);
-
-        // notify the user
-        if (expChange != 0) {
-            syncExperience();
-            if (verbose && expChange > 0) {
-                Messaging.send(player, "$1: Gained $2 Exp", heroClass.getName(), decFormat.format(expChange));
-            } else if (verbose && expChange < 0) {
-                Messaging.send(player, "$1: Lost $2 Exp", heroClass.getName(), decFormat.format(-expChange));
+            if (isMaster(hc) && source != ExperienceType.ADMIN) {
+                expChange = 0;
+            } else if (currentLevel > newLevel && !prop.levelsViaExpLoss && source != ExperienceType.ADMIN) {
+                expChange = prop.getExperience(currentLevel) - (exp - 1);
             }
+
+            // add the experience
+            exp += expChange;
+
+            // If we went negative lets reset our values so that we would hit 0
+            if (exp < 0) {
+                expChange = -(expChange + exp);
+                exp = 0;
+            }
+
+            // Reset our new level - in case xp adjustement settings actually don't cause us to change
+            newLevel = prop.getLevel(exp);
+            setExperience(hc, exp);
+
+            // notify the user
+            if (expChange != 0) {
+                if (verbose && expChange > 0) {
+                    Messaging.send(player, "$1: Gained $2 Exp", heroClass.getName(), decFormat.format(expChange));
+                } else if (verbose && expChange < 0) {
+                    Messaging.send(player, "$1: Lost $2 Exp", heroClass.getName(), decFormat.format(-expChange));
+                }
+                if (newLevel != currentLevel) {
+                    HeroChangeLevelEvent hLEvent = new HeroChangeLevelEvent(this, currentLevel, newLevel);
+                    plugin.getServer().getPluginManager().callEvent(hLEvent);
+                    if (newLevel >= hc.getMaxLevel()) {
+                        setExperience(prop.getExperience(hc.getMaxLevel()));
+                        Messaging.broadcast(plugin, "$1 has become a master $2!", player.getName(), hc.getName());
+                    }
+                    if (newLevel > currentLevel) {
+                        SpoutUI.sendPlayerNotification(player, ChatColor.GOLD + "Level Up!", ChatColor.DARK_RED + "Level - " + String.valueOf(newLevel), Material.DIAMOND_HELMET);
+                        Messaging.send(player, "You gained a level! (Lvl $1 $2)", String.valueOf(newLevel), hc.getName());
+                        setHealth(getMaxHealth());
+                        //Reset food stuff on level up
+                        if (player.getFoodLevel() < 20)
+                            player.setFoodLevel(20);
+
+                        player.setSaturation(20);
+                        player.setExhaustion(0);
+                        syncHealth();
+                    } else {
+                        SpoutUI.sendPlayerNotification(player, ChatColor.GOLD + "Level Lost!", ChatColor.DARK_RED + "Level - " + String.valueOf(newLevel), Material.DIAMOND_HELMET);
+                        Messaging.send(player, "You lost a level! (Lvl $1 $2)", String.valueOf(newLevel), hc.getName());
+                    }
+                }
+            }
+
+            // Save the hero file when the Hero changes levels to prevent rollback issues
             if (newLevel != currentLevel) {
-                HeroChangeLevelEvent hLEvent = new HeroChangeLevelEvent(this, currentLevel, newLevel);
-                plugin.getServer().getPluginManager().callEvent(hLEvent);
-                if (newLevel >= heroClass.getMaxLevel()) {
-                    setExperience(prop.getExperience(heroClass.getMaxLevel()));
-                    Messaging.broadcast(plugin, "$1 has become a master $2!", player.getName(), heroClass.getName());
-                }
-                if (newLevel > currentLevel) {
-                    SpoutUI.sendPlayerNotification(player, ChatColor.GOLD + "Level Up!", ChatColor.DARK_RED + "Level - " + String.valueOf(newLevel), Material.DIAMOND_HELMET);
-                    Messaging.send(player, "You gained a level! (Lvl $1 $2)", String.valueOf(newLevel), heroClass.getName());
-                    setHealth(getMaxHealth());
-                    //Reset food stuff on level up
-                    if (player.getFoodLevel() < 20)
-                        player.setFoodLevel(20);
-
-                    player.setSaturation(20);
-                    player.setExhaustion(0);
-                    syncHealth();
-                } else {
-                    SpoutUI.sendPlayerNotification(player, ChatColor.GOLD + "Level Lost!", ChatColor.DARK_RED + "Level - " + String.valueOf(newLevel), Material.DIAMOND_HELMET);
-                    Messaging.send(player, "You lost a level! (Lvl $1 $2)", String.valueOf(newLevel), heroClass.getName());
-                }
+                plugin.getHeroManager().saveHero(this);
             }
         }
-
-        // Save the hero file when the Hero changes levels to prevent rollback issues
-        if (newLevel != currentLevel) {
-            plugin.getHeroManager().saveHero(this);
-        }
+        syncExperience();
     }
 
     public String[] getBind(Material mat) {

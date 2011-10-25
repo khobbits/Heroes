@@ -1,7 +1,5 @@
 package com.herocraftonline.dev.heroes;
 
-import java.util.Set;
-
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Entity;
@@ -15,7 +13,6 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityListener;
 
-import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
 import com.herocraftonline.dev.heroes.effects.Effect;
 import com.herocraftonline.dev.heroes.effects.EffectManager;
@@ -65,9 +62,6 @@ public class HEntityListener extends EntityListener {
     private void awardKillExp(Hero attacker, Entity defender) {
         Properties prop = plugin.getConfigManager().getProperties();
 
-        HeroClass playerClass = attacker.getHeroClass();
-        Set<ExperienceType> expSources = playerClass.getExperienceSources();
-
         double addedExp = 0;
         ExperienceType experienceType = null;
 
@@ -75,12 +69,12 @@ public class HEntityListener extends EntityListener {
         if (attacker.getSummons().contains(defender) || attacker.getPlayer().equals(defender))
             return;
 
-        if (defender instanceof Player && expSources.contains(ExperienceType.PVP)) {
+        if (defender instanceof Player && attacker.hasExperienceType(ExperienceType.PVP)) {
             // Don't award XP for Players killing themselves
             prop.playerDeaths.put((Player) defender, defender.getLocation());
             addedExp = prop.playerKillingExp;
             experienceType = ExperienceType.PVP;
-        } else if (defender instanceof LivingEntity && !(defender instanceof Player) && expSources.contains(ExperienceType.KILLING)) {
+        } else if (defender instanceof LivingEntity && !(defender instanceof Player) && attacker.hasExperienceType(ExperienceType.KILLING)) {
 
             // Get the dying entity's CreatureType
             CreatureType type = Util.getCreatureFromEntity(defender);

@@ -2,7 +2,6 @@ package com.herocraftonline.dev.heroes;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Set;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -12,7 +11,6 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.BlockPlaceEvent;
 
-import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.util.Messaging;
@@ -56,20 +54,16 @@ public class HBlockListener extends BlockListener {
 
         // Get the Hero representing the player
         Hero hero = plugin.getHeroManager().getHero(player);
-        // Get the player's class definition
-        HeroClass playerClass = hero.getHeroClass();
-        // Get the sources of experience for the player's class
-        Set<ExperienceType> expSources = playerClass.getExperienceSources();
 
         double addedExp = 0;
 
-        if (expSources.contains(ExperienceType.MINING)) {
+        if (hero.hasExperienceType(ExperienceType.MINING)) {
             if (prop.miningExp.containsKey(block.getType())) {
                 addedExp = prop.miningExp.get(block.getType());
             }
         }
 
-        if (expSources.contains(ExperienceType.LOGGING)) {
+        if (hero.hasExperienceType(ExperienceType.LOGGING)) {
             if (prop.loggingExp.containsKey(block.getType())) {
                 addedExp = prop.loggingExp.get(block.getType());
             }
