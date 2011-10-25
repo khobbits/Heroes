@@ -262,11 +262,6 @@ public class Hero {
         }
 
         HeroClass[] classes = new HeroClass[] {heroClass, secondClass};
-        // call event
-        ExperienceChangeEvent expEvent = new ExperienceChangeEvent(this, expChange, source);
-        plugin.getServer().getPluginManager().callEvent(expEvent);
-        if (expEvent.isCancelled())
-            return;
         
         for (HeroClass hc : classes) {
             if (hc == null)
@@ -279,7 +274,12 @@ public class Hero {
                 expChange *= hc.getExpModifier();
             } else if (source != ExperienceType.ADMIN && isMaster() && (!prop.masteryLoss || !prop.levelsViaExpLoss))
                 return;
-
+            
+            //This is called once for each class
+            ExperienceChangeEvent expEvent = new ExperienceChangeEvent(this, hc, expChange, source);
+            plugin.getServer().getPluginManager().callEvent(expEvent);
+            if (expEvent.isCancelled())
+                return;
 
             // Lets get our modified xp change value
             expChange = expEvent.getExpChange();

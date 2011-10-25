@@ -2,6 +2,7 @@ package com.herocraftonline.dev.heroes.api;
 
 import org.bukkit.event.Cancellable;
 
+import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
 import com.herocraftonline.dev.heroes.hero.Hero;
 
@@ -14,14 +15,16 @@ public class ExperienceChangeEvent extends HeroEvent implements Cancellable {
 
     protected boolean cancelled = false;
     protected final Hero hero;
+    protected final HeroClass heroClass;
     protected double expChange;
     protected final ExperienceType source;
 
-    public ExperienceChangeEvent(Hero hero, double expChange, ExperienceType source) {
+    public ExperienceChangeEvent(Hero hero, HeroClass heroClass, double expChange, ExperienceType source) {
         super("ExperienceGainEvent", HeroEventType.HERO_EXPERIENCE_CHANGE);
         this.hero = hero;
         this.expChange = expChange;
         this.source = source;
+        this.heroClass = heroClass;
     }
 
     /**
@@ -66,6 +69,14 @@ public class ExperienceChangeEvent extends HeroEvent implements Cancellable {
      */
     public void setExpGain(double exp) {
         this.expChange = exp;
+    }
+    
+    /**
+     * The class gaining the xp
+     * @return
+     */
+    public HeroClass getHeroClass() {
+        return heroClass;
     }
 
 }
