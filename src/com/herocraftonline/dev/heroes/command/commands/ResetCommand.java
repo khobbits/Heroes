@@ -55,7 +55,7 @@ public class ResetCommand extends BasicInteractiveCommand {
             Player player = (Player) executor;
             HeroClass defaultClass = plugin.getClassManager().getDefaultClass();
 
-            Messaging.send(executor, "This will reset all earned XP and reset your class to: " + defaultClass.getName());
+            Messaging.send(executor, "This will reset all earned XP, both classes and reset your class to: " + defaultClass.getName());
             Messaging.send(executor, "Please §8/hero confirm §7 or §8/hero cancel §7this selection.");
 
             pendingResets.add(player);
@@ -93,6 +93,7 @@ public class ResetCommand extends BasicInteractiveCommand {
             hero.clearBinds();
 
             hero.setHeroClass(defaultClass); // Set the hero to the default class
+            hero.setSecondClass(null); // Null the second class
             hero.syncHealth(); // re-sync health just in-case the display isn't 100% accurate
             
             plugin.getHeroManager().performSkillChecks(hero);

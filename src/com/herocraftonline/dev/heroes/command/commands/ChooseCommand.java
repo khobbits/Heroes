@@ -27,7 +27,7 @@ public class ChooseCommand extends BasicInteractiveCommand {
         super("Choose Class");
         this.plugin = plugin;
         this.setStates(new InteractiveCommandState[] { new StateA(), new StateB() });
-        setDescription("Selects a secondary path or specialization");
+        setDescription("Selects a path or specialization");
         setUsage("/hero choose §9<type>");
     }
 
