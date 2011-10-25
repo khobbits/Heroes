@@ -51,9 +51,9 @@ public class SkillDecay extends TargettedSkill {
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
 
-        long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 21000);
-        long period = getSetting(hero.getHeroClass(), Setting.PERIOD.node(), 3000);
-        int tickDamage = getSetting(hero.getHeroClass(), "tick-damage", 1);
+        long duration = getSetting(hero, Setting.DURATION.node(), 21000, false);
+        long period = getSetting(hero, Setting.PERIOD.node(), 3000, true);
+        int tickDamage = getSetting(hero, "tick-damage", 1, false);
         DecayEffect decayEffect = new DecayEffect(this, duration, period, tickDamage, player);
 
         if (target instanceof Player) {

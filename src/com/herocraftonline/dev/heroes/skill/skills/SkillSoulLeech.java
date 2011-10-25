@@ -50,11 +50,10 @@ public class SkillSoulLeech extends TargettedSkill {
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
-        HeroClass heroClass = hero.getHeroClass();
 
-        long duration = getSetting(heroClass, Setting.DURATION.node(), 10000);
-        long period = getSetting(heroClass, Setting.PERIOD.node(), 2000);
-        int tickDamage = getSetting(heroClass, "tick-damage", 1);
+        long duration = getSetting(hero, Setting.DURATION.node(), 10000, false);
+        long period = getSetting(hero, Setting.PERIOD.node(), 2000, true);
+        int tickDamage = getSetting(hero, "tick-damage", 1, false);
 
         SoulLeechEffect slEffect = new SoulLeechEffect(this, period, duration, tickDamage, player);
 
@@ -122,7 +121,7 @@ public class SkillSoulLeech extends TargettedSkill {
 
         private void healApplier() {
             Hero hero = plugin.getHeroManager().getHero(applier);
-            int healAmount = totalDamage * getSetting(hero.getHeroClass(), "heal-multiplier", 1);
+            int healAmount = totalDamage * getSetting(hero, "heal-multiplier", 1, false);
 
             // Fire our heal event
             HeroRegainHealthEvent hrhEvent = new HeroRegainHealthEvent(hero, healAmount, skill);

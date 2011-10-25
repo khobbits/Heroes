@@ -52,11 +52,11 @@ public class SkillShield extends PassiveSkill {
             if (hero.hasEffect(getName())) {
                 double multiplier = 1;
                 if (player.getItemInHand().getType() == Material.IRON_DOOR) {
-                    multiplier = getSetting(hero.getHeroClass(), "iron-door", 0.75);
+                    multiplier = getSetting(hero, "iron-door", 0.75, true);
                 } else if (player.getItemInHand().getType() == Material.WOOD_DOOR) {
-                    multiplier = getSetting(hero.getHeroClass(), "wooden-door", 0.85);
+                    multiplier = getSetting(hero, "wooden-door", 0.85, true);
                 } else if (player.getItemInHand().getType() == Material.TRAP_DOOR) {
-                    multiplier = getSetting(hero.getHeroClass(), "trapdoor", 0.60);
+                    multiplier = getSetting(hero, "trapdoor", 0.60, true);
                 }
                 event.setDamage((int) (event.getDamage() * multiplier));
             }

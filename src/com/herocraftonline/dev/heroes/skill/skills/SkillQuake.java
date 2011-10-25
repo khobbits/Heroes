@@ -51,8 +51,8 @@ public class SkillQuake extends PassiveSkill {
                 return;
             }
 
-            double damage = event.getDamage() * getSetting(hero.getHeroClass(), "damage", 0.10);
-            int radius = getSetting(hero.getHeroClass(), "radius", 10);
+            double damage = event.getDamage() * getSetting(hero, "damage", 0.10, false);
+            int radius = getSetting(hero, "radius", 10, false);
 
             for (Entity entity : player.getNearbyEntities(radius, radius, radius)) {
                 if (!(entity instanceof LivingEntity))

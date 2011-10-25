@@ -63,8 +63,8 @@ public class SkillAssassinsBlade extends ActiveSkill {
 
     @Override
     public boolean use(Hero hero, String[] args) {
-        long duration = getSetting(hero.getHeroClass(), "buff-duration", 600000);
-        int numAttacks = getSetting(hero.getHeroClass(), "attacks", 1);
+        long duration = getSetting(hero, "buff-duration", 600000, false);
+        int numAttacks = getSetting(hero, "attacks", 1, false);
         hero.addEffect(new AssassinBladeBuff(this, duration, numAttacks));
         broadcastExecuteText(hero);
         return true;
@@ -168,16 +168,15 @@ public class SkillAssassinsBlade extends ActiveSkill {
             Player player = (Player) subEvent.getDamager();
             ItemStack item = player.getItemInHand();
             Hero hero = plugin.getHeroManager().getHero(player);
-            HeroClass heroClass = hero.getHeroClass();
-            if (!getSetting(heroClass, "weapons", Util.swords).contains(item.getType().name())) {
+            if (!getSetting(hero, "weapons", Util.swords).contains(item.getType().name())) {
                 Heroes.debug.stopTask("HeroesSkillListener");
                 return;
             }
 
             if (hero.hasEffect("PoisonBlade")) {
-                long duration = getSetting(heroClass, "poison-duration", 10000);
-                long period = getSetting(heroClass, Setting.PERIOD.node(), 2000);
-                int tickDamage = getSetting(heroClass, "tick-damage", 2);
+                long duration = getSetting(hero, "poison-duration", 10000, false);
+                long period = getSetting(hero, Setting.PERIOD.node(), 2000, false);
+                int tickDamage = getSetting(hero, "tick-damage", 2, false);
                 AssassinsPoison apEffect = new AssassinsPoison(skill, period, duration, tickDamage, player);
                 Entity target = event.getEntity();
                 if (target instanceof Creature) {

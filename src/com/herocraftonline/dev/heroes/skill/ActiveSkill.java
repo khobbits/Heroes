@@ -86,7 +86,7 @@ public abstract class ActiveSkill extends Skill {
             Messaging.send(player, "$1s cannot use $2.", heroClass.getName(), name);
             return false;
         }
-        int level = getSetting(heroClass, Setting.LEVEL.node(), 1);
+        int level = getSetting(hero, Setting.LEVEL.node(), 1, true);
         if (hero.getLevel() < level) {
             Messaging.send(player, "You must be level $1 to use $2.", String.valueOf(level), name);
             return false;
@@ -98,7 +98,7 @@ public abstract class ActiveSkill extends Skill {
             Messaging.send(hero.getPlayer(), "Sorry, you must wait $1 seconds longer before using another skill.", (global - time) / 1000);
             return false;
         }
-        int cooldown = getSetting(heroClass, Setting.COOLDOWN.node(), 0);
+        int cooldown = getSetting(hero, Setting.COOLDOWN.node(), 0, true);
         if (cooldown > 0) {
             Long expiry = hero.getCooldown(name);
             if (expiry != null && time < expiry) {
@@ -107,17 +107,17 @@ public abstract class ActiveSkill extends Skill {
                 return false;
             }
         }
-        int manaCost = getSetting(heroClass, Setting.MANA.node(), 0);
-        String reagentName = getSetting(heroClass, Setting.REAGENT.node(), (String) null);
+        int manaCost = getSetting(hero, Setting.MANA.node(), 0, true);
+        String reagentName = getSetting(hero, Setting.REAGENT.node(), (String) null);
         ItemStack itemStack = null;
         if (reagentName != null) {
             if (Material.matchMaterial(reagentName) != null) {
-                int reagentCost = getSetting(hero.getHeroClass(), Setting.REAGENT_COST.node(), 0);
+                int reagentCost = getSetting(hero, Setting.REAGENT_COST.node(), 0, true);
                 itemStack = new ItemStack(Material.matchMaterial(reagentName), reagentCost);
             }
         }
 
-        int healthCost = getSetting(heroClass, Setting.HEALTH_COST.node(), 0);
+        int healthCost = getSetting(hero, Setting.HEALTH_COST.node(), 0, true);
 
         SkillUseEvent skillEvent = new SkillUseEvent(this, player, hero, manaCost, healthCost, itemStack, args);
         plugin.getServer().getPluginManager().callEvent(skillEvent);
@@ -147,7 +147,7 @@ public abstract class ActiveSkill extends Skill {
             }
         }
 
-        int delay = getSetting(heroClass, Setting.DELAY.node(), 0);
+        int delay = getSetting(hero, Setting.DELAY.node(), 0, true);
         if (delay > 0 && !delayedSkillUsers.containsKey(sender)) {
             addDelayedSkill(hero, delay, identifier, args);
             return false;
@@ -276,7 +276,7 @@ public abstract class ActiveSkill extends Skill {
 
     private void awardExp(Hero hero) {
         if (hero.hasExperienceType(ExperienceType.SKILL)) {
-            hero.gainExp(this.getSetting(hero.getHeroClass(), Setting.EXP.node(), 0), ExperienceType.SKILL);
+            hero.gainExp(this.getSetting(hero, Setting.EXP.node(), 0, false), ExperienceType.SKILL);
         }
     }
 

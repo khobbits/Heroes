@@ -40,7 +40,7 @@ public class SkillInvuln extends ActiveSkill {
     @Override
     public boolean use(Hero hero, String[] args) {
         broadcastExecuteText(hero);
-        int duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 10000);
+        int duration = getSetting(hero, Setting.DURATION.node(), 10000, false);
         // Remove any harmful effects on the caster
         for (Effect effect : hero.getEffects()) {
             if (effect.isType(EffectType.HARMFUL)) {

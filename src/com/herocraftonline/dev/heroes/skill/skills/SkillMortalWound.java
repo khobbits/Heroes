@@ -68,17 +68,17 @@ public class SkillMortalWound extends TargettedSkill {
         HeroClass heroClass = hero.getHeroClass();
 
         Material item = player.getItemInHand().getType();
-        if (!getSetting(heroClass, "weapons", Util.swords).contains(item.name())) {
+        if (!getSetting(hero, "weapons", Util.swords).contains(item.name())) {
             Messaging.send(player, "You can't Mortal Strike with that weapon!");
         }
 
         int damage = heroClass.getItemDamage(item) == null ? 0 : heroClass.getItemDamage(item);
         target.damage(damage, player);
 
-        long duration = getSetting(heroClass, Setting.DURATION.node(), 12000);
-        long period = getSetting(heroClass, Setting.PERIOD.node(), 3000);
-        int tickDamage = getSetting(heroClass, "tick-damage", 1);
-        double healMultiplier = getSetting(heroClass, "heal-multiplier", 0.5);
+        long duration = getSetting(hero, Setting.DURATION.node(), 12000, false);
+        long period = getSetting(hero, Setting.PERIOD.node(), 3000, true);
+        int tickDamage = getSetting(hero, "tick-damage", 1, false);
+        double healMultiplier = getSetting(hero, "heal-multiplier", 0.5, true);
         MortalWound mEffect = new MortalWound(this, period, duration, tickDamage, player, healMultiplier);
         if (target instanceof Player) {
             plugin.getHeroManager().getHero((Player) target).addEffect(mEffect);

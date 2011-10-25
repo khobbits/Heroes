@@ -48,7 +48,7 @@ public class SkillFlameshield extends ActiveSkill {
     public boolean use(Hero hero, String[] args) {
         broadcastExecuteText(hero);
 
-        int duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 5000);
+        int duration = getSetting(hero, Setting.DURATION.node(), 5000, false);
         hero.addEffect(new FlameshieldEffect(this, duration));
 
         return true;

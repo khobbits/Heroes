@@ -107,7 +107,7 @@ public abstract class PassiveSkill extends Skill {
             return;
         ConfigurationNode settings = heroClass.getSkillSettings(getName());
         if (settings != null) {
-            if (hero.getLevel() >= getSetting(heroClass, Setting.LEVEL.node(), 1)) {
+            if (hero.getLevel() >= getSetting(hero, Setting.LEVEL.node(), 1, true)) {
                 apply(hero);
             } else {
                 unapply(hero);

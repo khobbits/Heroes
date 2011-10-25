@@ -41,16 +41,16 @@ public class SkillCleave extends TargettedSkill {
         Player player = hero.getPlayer();
         
         Material item = player.getItemInHand().getType();
-        if (!getSetting(hero.getHeroClass(), "weapons", Util.axes).contains(item.name())) {
+        if (!getSetting(hero, "weapons", Util.axes).contains(item.name())) {
             Messaging.send(player, "You can't cleave with that weapon!");
             return false;
         }
 
         HeroClass heroClass = hero.getHeroClass();
         int damage = heroClass.getItemDamage(item) == null ? 0 : heroClass.getItemDamage(item);
-        damage *= getSetting(heroClass, "damage-multiplier", 1);
+        damage *= getSetting(hero, "damage-multiplier", 1, false);
         target.damage(damage, player);
-        int radius = getSetting(heroClass, Setting.RADIUS.node(), 3);
+        int radius = getSetting(hero, Setting.RADIUS.node(), 3, false);
         for (Entity entity : target.getNearbyEntities(radius, radius, radius)) {
             if (!(entity instanceof LivingEntity) || !damageCheck(player, (LivingEntity) entity)) {
                 continue;

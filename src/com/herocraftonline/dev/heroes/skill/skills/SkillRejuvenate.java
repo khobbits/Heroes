@@ -57,9 +57,9 @@ public class SkillRejuvenate extends TargettedSkill {
                 return false;
             }
 
-            long period = getSetting(hero.getHeroClass(), Setting.PERIOD.node(), 3000);
-            long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 21000);
-            int tickHealth = getSetting(hero.getHeroClass(), "tick-heal", 1);
+            long period = getSetting(hero, Setting.PERIOD.node(), 3000, true);
+            long duration = getSetting(hero, Setting.DURATION.node(), 21000, false);
+            int tickHealth = getSetting(hero, "tick-heal", 1, false);
             RejuvenateEffect rEffect = new RejuvenateEffect(this, period, duration, tickHealth, player);
             targetHero.addEffect(rEffect);
             return true;

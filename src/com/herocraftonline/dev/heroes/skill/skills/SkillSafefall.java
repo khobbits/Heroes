@@ -31,7 +31,7 @@ public class SkillSafefall extends ActiveSkill {
     public boolean use(Hero hero, String[] args) {
         broadcastExecuteText(hero);
 
-        int duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 20000);
+        int duration = getSetting(hero, Setting.DURATION.node(), 20000, false);
         hero.addEffect(new SafeFallEffect(this, duration));
 
         return true;

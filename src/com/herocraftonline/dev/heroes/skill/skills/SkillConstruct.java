@@ -56,7 +56,7 @@ public class SkillConstruct extends ActiveSkill {
         Player player = hero.getPlayer();
 
         // List all items this hero can make with construct
-        Set<String> itemSet = new HashSet<String>(getSettingKeys(hero.getHeroClass()));
+        Set<String> itemSet = new HashSet<String>(getSettingKeys(hero));
         itemSet.remove("require-workbench");
         for (Setting set : Setting.values()) {
             itemSet.remove(set.node());
@@ -76,19 +76,19 @@ public class SkillConstruct extends ActiveSkill {
             } else {
                 // Iterate over the construct recipe and get all the items/amounts it turns into
                 Messaging.send(player, args[1] + " requires the following items to craft: ");
-                for (String s : getSettingKeys(hero.getHeroClass(), args[1])) {
+                for (String s : getSettingKeys(hero, args[1])) {
                     if (s.equals(Setting.LEVEL.node()) || s.equals(Setting.EXP.node()) || s.equals(Setting.AMOUNT.node())) {
                         continue;
                     }
 
-                    int amount = getSetting(hero.getHeroClass(), args[1] + "." + s, 1);
+                    int amount = getSetting(hero, args[1] + "." + s, 1, false);
                     Messaging.send(player, s.toLowerCase().replace("_", " ") + ": " + amount);
                 }
                 return false;
             }
         }
 
-        if (player.getTargetBlock((HashSet<Byte>) null, 3).getType() != Material.WORKBENCH && getSetting(hero.getHeroClass(), "require-workbench", true)) {
+        if (player.getTargetBlock((HashSet<Byte>) null, 3).getType() != Material.WORKBENCH && getSetting(hero, "require-workbench", true)) {
             Messaging.send(player, "You must have a workbench targetted to construct an item!");
             return false;
         }
@@ -99,13 +99,13 @@ public class SkillConstruct extends ActiveSkill {
         }
 
         String matName = args[0];
-        if (!getSettingKeys(hero.getHeroClass()).contains(matName)) {
-            Messaging.send(player, "Found Keys: " + getSettingKeys(hero.getHeroClass()).toString());
+        if (!getSettingKeys(hero).contains(matName)) {
+            Messaging.send(player, "Found Keys: " + getSettingKeys(hero).toString());
             Messaging.send(player, "You can't construct that item!");
             return false;
         }
 
-        int level = getSetting(hero.getHeroClass(), matName + "." + Setting.LEVEL.node(), 1);
+        int level = getSetting(hero, matName + "." + Setting.LEVEL.node(), 1, true);
         if (level > hero.getLevel()) {
             Messaging.send(player, "You must be level " + level + " to construct that item!");
             return false;
@@ -115,7 +115,7 @@ public class SkillConstruct extends ActiveSkill {
         if (mat == null)
             throw new IllegalArgumentException("Invalid Material definition for skill construct: " + matName);
 
-        List<String> returned = getSettingKeys(hero.getHeroClass(), matName);
+        List<String> returned = getSettingKeys(hero, matName);
         if (returned == null) {
             Messaging.send(player, "Unable to construct that item!");
             return false;
@@ -130,7 +130,7 @@ public class SkillConstruct extends ActiveSkill {
             Material m = Material.matchMaterial(s);
             if (m == null)
                 throw new IllegalArgumentException("Error with skill " + getName() + ": bad item definition " + s);
-            int amount = getSetting(hero.getHeroClass(), matName + "." + s, 1);
+            int amount = getSetting(hero, matName + "." + s, 1, true);
             if (amount < 1)
                 throw new IllegalArgumentException("Error with skill " + getName() + ": bad amount definition for " + s + ": " + amount);
 
@@ -143,7 +143,7 @@ public class SkillConstruct extends ActiveSkill {
         }
         // Remove the item costs from the player
         player.getInventory().removeItem(items.toArray(new ItemStack[0]));
-        int amount = getSetting(hero.getHeroClass(), matName + "." + Setting.AMOUNT.node(), 1);
+        int amount = getSetting(hero, matName + "." + Setting.AMOUNT.node(), 1, false);
         Map<Integer, ItemStack> leftOvers = player.getInventory().addItem(normalizeItemStack(mat, amount));
 
         // Drop any leftovers we couldn't add to the players inventory
@@ -156,7 +156,7 @@ public class SkillConstruct extends ActiveSkill {
         Util.syncInventory(player, plugin);
 
         // Give/Take experience from the hero
-        int xp = getSetting(hero.getHeroClass(), matName + "." + Setting.EXP.node(), 0);
+        int xp = getSetting(hero, matName + "." + Setting.EXP.node(), 0, false);
         hero.gainExp(xp, ExperienceType.CRAFTING);
 
         broadcast(player.getLocation(), getUseText(), player.getDisplayName(), matName.toLowerCase().replace("_", " "));

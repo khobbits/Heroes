@@ -13,7 +13,6 @@ import org.bukkit.util.config.ConfigurationNode;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.HeroesEventListener;
 import com.herocraftonline.dev.heroes.api.SkillDamageEvent;
-import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.effects.PeriodicExpirableEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;
@@ -65,7 +64,7 @@ public class SkillDeepFreeze extends TargettedSkill {
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
 
-        long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 5000);
+        long duration = getSetting(hero, Setting.DURATION.node(), 5000, false);
         FreezeEffect fEffect = new FreezeEffect(this, duration, hero);
 
         if (target instanceof Player) {
@@ -127,7 +126,7 @@ public class SkillDeepFreeze extends TargettedSkill {
         
         public void shatter(Creature creature) {
             super.remove(creature);
-            int damage = getSetting(applier.getHeroClass(), "shatter-damage", 7);
+            int damage = getSetting(applier, "shatter-damage", 7, false);
             addSpellTarget(creature, applier);
             creature.damage(damage, applier.getPlayer());
             broadcast(creature.getLocation(), shatterText, Messaging.getCreatureName(creature));
@@ -136,7 +135,7 @@ public class SkillDeepFreeze extends TargettedSkill {
         public void shatter(Hero hero) {
             super.remove(hero);
             Player player = hero.getPlayer();
-            int damage = getSetting(applier.getHeroClass(), "shatter-damage", 7);
+            int damage = getSetting(applier, "shatter-damage", 7, false);
             addSpellTarget(player, applier);
             player.damage(damage, applier.getPlayer());
             broadcast(player.getLocation(), shatterText, player.getDisplayName());
@@ -227,8 +226,7 @@ public class SkillDeepFreeze extends TargettedSkill {
                 return;
             }
 
-            HeroClass heroClass = event.getDamager().getHeroClass();
-            int damage = getSetting(heroClass, "shatter-damage", 7);
+            int damage = getSetting(event.getDamager(), "shatter-damage", 7, false);
             if (event.getEntity() instanceof Player) {
                 Player player = (Player) event.getEntity();
                 Hero tHero = plugin.getHeroManager().getHero(player);

@@ -34,7 +34,7 @@ public class SkillForcePull extends TargettedSkill {
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
 
-        int damage = getSetting(hero.getHeroClass(), Setting.DAMAGE.node(), 0);
+        int damage = getSetting(hero, Setting.DAMAGE.node(), 0, false);
         if (damage > 0) {
             addSpellTarget(target, hero);
             target.damage(damage, player);

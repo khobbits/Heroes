@@ -65,7 +65,7 @@ public class SkillDisarm extends TargettedSkill {
             return false;
         }
 
-        int duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 500);
+        int duration = getSetting(hero, Setting.DURATION.node(), 500, false);
         tHero.addEffect(new DisarmEffect(this, duration, applyText, expireText));
         broadcastExecuteText(hero, target);
         return true;

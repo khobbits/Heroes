@@ -47,7 +47,7 @@ public class SkillChainLightning extends TargettedSkill {
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
 
-        int damage = getSetting(hero.getHeroClass(), Setting.DAMAGE.node(), 6);
+        int damage = getSetting(hero, Setting.DAMAGE.node(), 6, false);
 
         // Damage the first target
         addSpellTarget(target, hero);
@@ -57,8 +57,8 @@ public class SkillChainLightning extends TargettedSkill {
         // Try to bounce
         Set<Entity> previousTargets = new HashSet<Entity>();
         previousTargets.add(target);
-        int range = getSetting(hero.getHeroClass(), Setting.RADIUS.node(), 7);
-        int bounces = getSetting(hero.getHeroClass(), "max-bounces", 3);
+        int range = getSetting(hero, Setting.RADIUS.node(), 7, false);
+        int bounces = getSetting(hero, "max-bounces", 3, false);
         int maxBounce = bounces + 1;
         boolean keepBouncing = true;
         HeroManager heroManager = plugin.getHeroManager();

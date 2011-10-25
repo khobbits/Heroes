@@ -5,7 +5,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.SkillType;
@@ -40,10 +39,8 @@ public class SkillTrack extends ActiveSkill {
             return false;
         }
 
-        HeroClass heroClass = plugin.getHeroManager().getHero(player).getHeroClass();
-
         Location location = target.getLocation();
-        int randomness = getSetting(heroClass, "randomness", 50);
+        int randomness = getSetting(hero, "randomness", 50, true);
         int x = location.getBlockX() + Util.rand.nextInt(randomness);
         int y = location.getBlockY() + Util.rand.nextInt(randomness / 10);
         int z = location.getBlockZ() + Util.rand.nextInt(randomness);

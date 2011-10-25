@@ -64,7 +64,7 @@ public class SkillStealEssence extends TargettedSkill {
         }
 
         String stolenNames = "";
-        int numEffects = getSetting(hero.getHeroClass(), Setting.AMOUNT.node(), 3);
+        int numEffects = getSetting(hero, Setting.AMOUNT.node(), 3, false);
         for (int i = 0; i < numEffects && possibleEffects.size() > 0; i++) {
             Effect stolenEffect = possibleEffects.get(Util.rand.nextInt(possibleEffects.size()));
             tHero.removeEffect(stolenEffect);

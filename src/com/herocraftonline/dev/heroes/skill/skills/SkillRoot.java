@@ -35,7 +35,7 @@ public class SkillRoot extends TargettedSkill {
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
 
-        long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 5000);
+        long duration = getSetting(hero, Setting.DURATION.node(), 5000, false);
         RootEffect rEffect = new RootEffect(this, duration);
 
         if (target instanceof Player) {

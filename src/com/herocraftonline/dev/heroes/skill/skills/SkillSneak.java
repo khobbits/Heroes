@@ -62,8 +62,8 @@ public class SkillSneak extends ActiveSkill {
         } else {
             Messaging.send(hero.getPlayer(), "You are now sneaking");
 
-            int duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 600000);
-            int period = getSetting(hero.getHeroClass(), "refresh-interval", 5000);
+            int duration = getSetting(hero, Setting.DURATION.node(), 600000, false);
+            int period = getSetting(hero, "refresh-interval", 5000, true);
             hero.addEffect(new SneakEffect(this, period, duration));
         }
         return true;

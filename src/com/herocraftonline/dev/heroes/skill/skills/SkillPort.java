@@ -36,7 +36,7 @@ public class SkillPort extends ActiveSkill {
 
         if (args[0].equalsIgnoreCase("list")) {
             for (String n : getConfig().getKeys()) {
-                String retrievedNode = getSetting(hero.getHeroClass(), n, (String) null);
+                String retrievedNode = getSetting(hero, n, (String) null);
                 if (retrievedNode != null && retrievedNode.split(":").length == 5) {
                     Messaging.send(player, "$1 - $2", n, retrievedNode);
                 }
@@ -44,8 +44,8 @@ public class SkillPort extends ActiveSkill {
             return false;
         }
 
-        if (getSetting(hero.getHeroClass(), args[0].toLowerCase(), (String) null) != null) {
-            String[] splitArg = getSetting(hero.getHeroClass(), args[0].toLowerCase(), (String) null).split(":");
+        if (getSetting(hero, args[0].toLowerCase(), (String) null) != null) {
+            String[] splitArg = getSetting(hero, args[0].toLowerCase(), (String) null).split(":");
             int levelRequirement = Integer.parseInt(splitArg[4]);
             World world = plugin.getServer().getWorld(splitArg[0]);
             if (world == null) {
@@ -57,7 +57,7 @@ public class SkillPort extends ActiveSkill {
                 return false;
             }
 
-            int range = (int) Math.pow(getSetting(hero.getHeroClass(), Setting.RADIUS.node(), 10), 2);
+            int range = (int) Math.pow(getSetting(hero, Setting.RADIUS.node(), 10, false), 2);
             Location loc = new Location(world, Double.parseDouble(splitArg[1]), Double.parseDouble(splitArg[2]), Double.parseDouble(splitArg[3]));
             broadcastExecuteText(hero);
             if (!hero.hasParty()) {

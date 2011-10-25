@@ -38,7 +38,7 @@ public class SkillForcePush extends TargettedSkill {
         Player player = hero.getPlayer();
         HeroClass heroClass = hero.getHeroClass();
 
-        int damage = getSetting(heroClass, Setting.DAMAGE.node(), 0);
+        int damage = getSetting(hero, Setting.DAMAGE.node(), 0, false);
         if (damage > 0) {
             addSpellTarget(target, hero);
             target.damage(damage, player);
@@ -48,13 +48,13 @@ public class SkillForcePush extends TargettedSkill {
         Location targetLoc = target.getLocation();
         
         double distanceSquared = player.getLocation().distanceSquared(target.getLocation());
-        double maxDistance = getSetting(heroClass, Setting.MAX_DISTANCE.node(), 15);
+        double maxDistance = getSetting(hero, Setting.MAX_DISTANCE.node(), 15, false);
         double distAdjustment = 1.0 - distanceSquared / (maxDistance * maxDistance);
         double xDir = targetLoc.getX() - targetLoc.getX();
         double zDir = targetLoc.getZ() - playerLoc.getZ();
         double magnitude = Math.sqrt(xDir * xDir + zDir * zDir);
-        double hPower = getSetting(heroClass, "horizontal-power", 1d) * distAdjustment;
-        double vPower = getSetting(heroClass, "vertical-power", 1d) * distAdjustment;
+        double hPower = getSetting(hero, "horizontal-power", 1.0, false) * distAdjustment;
+        double vPower = getSetting(hero, "vertical-power", 1.0, false) * distAdjustment;
         
         Vector v = new Vector(xDir / magnitude * hPower, vPower, zDir / magnitude * hPower);
         target.setVelocity(v);

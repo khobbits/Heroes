@@ -66,7 +66,7 @@ public class SkillFireArmor extends PassiveSkill {
             Player player = (Player) event.getEntity();
             Hero hero = plugin.getHeroManager().getHero(player);
 
-            if (!hero.hasEffect("FireArmor") || !getSetting(hero.getHeroClass(), "armors", defaultArmors).contains(player.getInventory().getChestplate().getType().name())) {
+            if (!hero.hasEffect("FireArmor") || !getSetting(hero, "armors", defaultArmors).contains(player.getInventory().getChestplate().getType().name())) {
                 Heroes.debug.stopTask("HeroesSkillListener");
                 return;
             }
@@ -79,14 +79,14 @@ public class SkillFireArmor extends PassiveSkill {
             }
 
             // Check our ignite chance
-            double chance = getSetting(hero.getHeroClass(), "ignite-chance", .2);
+            double chance = getSetting(hero, "ignite-chance", .2, false);
             if (Util.rand.nextDouble() >= chance) {
                 Heroes.debug.stopTask("HeroesSkillListener");
                 return;
             }
 
             // Set the damager on fire if it was successful
-            int fireTicks = getSetting(hero.getHeroClass(), "ignite-duration", 5000) / 50;
+            int fireTicks = getSetting(hero, "ignite-duration", 5000, false) / 50;
             subEvent.getDamager().setFireTicks(fireTicks);
 
             String name = null;

@@ -9,7 +9,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.effects.PeriodicExpirableEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;
@@ -54,9 +53,8 @@ public class SkillBoltstorm extends ActiveSkill {
 
     @Override
     public boolean use(Hero hero, String[] args) {
-        HeroClass heroClass = hero.getHeroClass();
-        int period = getSetting(heroClass, Setting.PERIOD.node(), 1000);
-        int duration = getSetting(heroClass, Setting.DURATION.node(), 10000);
+        int period = getSetting(hero, Setting.PERIOD.node(), 1000, true);
+        int duration = getSetting(hero, Setting.DURATION.node(), 10000, false);
         hero.addEffect(new BoltStormEffect(this, period, duration));
         return true;
     }
@@ -89,8 +87,7 @@ public class SkillBoltstorm extends ActiveSkill {
             super.tick(hero);
 
             Player player = hero.getPlayer();
-            HeroClass heroClass = hero.getHeroClass();
-            int range = getSetting(heroClass, Setting.RADIUS.node(), 7);
+            int range = getSetting(hero, Setting.RADIUS.node(), 7, false);
 
             List<LivingEntity> targets = new ArrayList<LivingEntity>();
             for (Entity entity : player.getNearbyEntities(range, range, range)) {
@@ -116,7 +113,7 @@ public class SkillBoltstorm extends ActiveSkill {
             if (targets.isEmpty())
                 return;
 
-            int damage = getSetting(heroClass, Setting.DAMAGE.node(), 4);
+            int damage = getSetting(hero, Setting.DAMAGE.node(), 4, false);
             LivingEntity target = targets.get(Util.rand.nextInt(targets.size()));
             addSpellTarget(target, hero);
 

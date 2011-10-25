@@ -61,7 +61,7 @@ public class SkillWoodcutting extends PassiveSkill {
             }
 
             Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
-            if (!hero.hasEffect("Woodcutting") || Util.rand.nextDouble() > getSetting(hero.getHeroClass(), "chance-per-level", .001) * hero.getLevel()) {
+            if (!hero.hasEffect("Woodcutting") || Util.rand.nextDouble() > getSetting(hero, "chance-per-level", .001, false) * hero.getLevel()) {
                 Heroes.debug.stopTask("HeroesSkillListener");
                 return;
             }

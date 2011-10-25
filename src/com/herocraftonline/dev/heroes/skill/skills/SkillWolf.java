@@ -30,7 +30,6 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.ClassChangeEvent;
 import com.herocraftonline.dev.heroes.api.HeroesEventListener;
 import com.herocraftonline.dev.heroes.api.WeaponDamageEvent;
-import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
@@ -92,13 +91,13 @@ public class SkillWolf extends ActiveSkill {
                 wolves = Integer.parseInt(hero.getSkillSettings(this).get("wolves"));
             }
 
-            int maxWolves = getSetting(hero.getHeroClass(), "max-wolves", 3);
+            int maxWolves = getSetting(hero, "max-wolves", 3, false);
             if (wolves >= maxWolves) {
                 Messaging.send(player, "You already have the maximum number of summons.");
                 return false;
             }
 
-            int distance = getSetting(hero.getHeroClass(), Setting.MAX_DISTANCE.node(), 5);
+            int distance = getSetting(hero, Setting.MAX_DISTANCE.node(), 5, false);
             Location castLoc = player.getTargetBlock((HashSet<Byte>) null, distance).getLocation();
             if (castLoc.getBlock().getType() != Material.AIR) {
                 castLoc = castLoc.getBlock().getRelative(BlockFace.UP).getLocation();
@@ -147,9 +146,8 @@ public class SkillWolf extends ActiveSkill {
 
     private void setWolfSettings(Hero hero, Wolf wolf) {
         Player player = hero.getPlayer();
-        HeroClass heroClass = hero.getHeroClass();
-        int health = getSetting(heroClass, Setting.HEALTH.node(), 30);
-        health = (int) (health + getSetting(heroClass, "health-per-level", .25) * hero.getLevel());
+        int health = getSetting(hero, Setting.HEALTH.node(), 30, false);
+        health = (int) (health + getSetting(hero, "health-per-level", .25, false) * hero.getLevel());
         wolf.setOwner(player);
         wolf.setTamed(true);
         wolf.setHealth(health);
@@ -214,7 +212,7 @@ public class SkillWolf extends ActiveSkill {
             if (skill.skillTaming && !hero.hasSkill(skill.getName())) {
                 event.setCancelled(true);
             } else {
-                if (numWolves >= getSetting(hero.getHeroClass(), "max-wolves", 3)) {
+                if (numWolves >= getSetting(hero, "max-wolves", 3, false)) {
                     event.setCancelled(true);
                     Messaging.send(player, "You can't tame anymore wolves!");
                     return;
@@ -281,8 +279,8 @@ public class SkillWolf extends ActiveSkill {
                 return;
             }
 
-            double damagePerLevel = skill.getSetting(hero.getHeroClass(), "damage-per-level", .1);
-            int damage = skill.getSetting(hero.getHeroClass(), Setting.DAMAGE.node(), 3) + (int) (hero.getLevel() * damagePerLevel);
+            double damagePerLevel = skill.getSetting(hero, "damage-per-level", .1, false);
+            int damage = skill.getSetting(hero, Setting.DAMAGE.node(), 3, false) + (int) (hero.getLevel() * damagePerLevel);
             event.setDamage(damage);
             Heroes.debug.stopTask("HeroesSkillListener.Wolf");
         }

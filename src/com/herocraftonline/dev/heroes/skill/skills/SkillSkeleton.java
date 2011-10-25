@@ -75,11 +75,11 @@ public class SkillSkeleton extends ActiveSkill {
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
 
-        if (hero.getSummons().size() < getSetting(hero.getHeroClass(), "max-summons", 3)) {
-            int distance = getSetting(hero.getHeroClass(), Setting.MAX_DISTANCE.node(), 5);
+        if (hero.getSummons().size() < getSetting(hero, "max-summons", 3, false)) {
+            int distance = getSetting(hero, Setting.MAX_DISTANCE.node(), 5, false);
             Location castLoc = player.getTargetBlock((HashSet<Byte>) null, distance).getLocation();
             Creature skeleton = (Creature) player.getWorld().spawnCreature(castLoc, CreatureType.SKELETON);
-            long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 60000);
+            long duration = getSetting(hero, Setting.DURATION.node(), 60000, false);
             plugin.getEffectManager().addCreatureEffect(skeleton, new SummonEffect(this, duration, hero, expireText));
             broadcastExecuteText(hero);
             Messaging.send(player, "You have succesfully summoned a skeleton to fight for you.");

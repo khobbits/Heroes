@@ -35,18 +35,18 @@ public class SkillLickWounds extends ActiveSkill {
     @Override
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
-        int rangeSquared = (int) Math.pow(getSetting(hero.getHeroClass(), Setting.RADIUS.node(), 10), 2);
+        int rangeSquared = (int) Math.pow(getSetting(hero, Setting.RADIUS.node(), 10, false), 2);
         Skill skill = plugin.getSkillManager().getSkill("Wolf");
         if (skill == null)
             return false;
 
-        if (!hero.hasSkill(skill) || skill.getSetting(hero.getHeroClass(), Setting.LEVEL.node(), 1) > hero.getLevel()) {
+        if (!hero.hasSkill(skill) || skill.getSetting(hero, Setting.LEVEL.node(), 1, true) > hero.getLevel()) {
             Messaging.send(player, "You don't have the proper skills to do that!");
             return false;
         }
-        double healthPerLevel = skill.getSetting(hero.getHeroClass(), "health-per-level", .25);
-        int healthMax = skill.getSetting(hero.getHeroClass(), Setting.HEALTH.node(), 30) + (int) (healthPerLevel * hero.getLevel());
-        double healed = healthMax * getSetting(hero.getHeroClass(), "heal-amount", .25);
+        double healthPerLevel = skill.getSetting(hero, "health-per-level", .25, false);
+        int healthMax = skill.getSetting(hero, Setting.HEALTH.node(), 30, false) + (int) (healthPerLevel * hero.getLevel());
+        double healed = healthMax * getSetting(hero, "heal-amount", .25, false);
         boolean used = false;
         for (Creature creature : hero.getSummons()) {
             if (!(creature instanceof Wolf) || creature.getLocation().distanceSquared(player.getLocation()) > rangeSquared) {

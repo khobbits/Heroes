@@ -69,7 +69,7 @@ public class SkillWeb extends TargettedSkill {
         }
 
         broadcast(player.getLocation(), applyText, player.getDisplayName(), name);
-        int duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 5000);
+        int duration = getSetting(hero, Setting.DURATION.node(), 5000, false);
         WebEffect wEffect = new WebEffect(this, duration, target.getLocation().getBlock().getLocation());
         hero.addEffect(wEffect);
         return true;

@@ -5,7 +5,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.effects.Effect;
 import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.hero.Hero;
@@ -36,12 +35,11 @@ public class SkillChakra extends ActiveSkill {
     @Override
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
-        HeroClass heroClass = hero.getHeroClass();
         Location castLoc = player.getLocation();
-        int radius = getSetting(heroClass, Setting.RADIUS.node(), 7);
+        int radius = getSetting(hero, Setting.RADIUS.node(), 7, false);
         int radiusSquared = radius * radius;
-        int healAmount = getSetting(heroClass, "heal-amount", 10);
-        int removals = getSetting(heroClass, "max-removals", -1);
+        int healAmount = getSetting(hero, "heal-amount", 10, false);
+        int removals = getSetting(hero, "max-removals", -1, true);
         if (hero.hasParty()) {
             for (Hero p : hero.getParty().getMembers()) {
                 if (castLoc.distanceSquared(p.getPlayer().getLocation()) <= radiusSquared) {

@@ -44,7 +44,7 @@ public class SkillBandage extends TargettedSkill {
         }
 
         Hero targetHero = plugin.getHeroManager().getHero((Player) target);
-        int hpPlus = getSetting(hero.getHeroClass(), "health", 5);
+        int hpPlus = getSetting(hero, "health", 5, false);
         double targetHealth = targetHero.getHealth();
 
         if (targetHealth >= targetHero.getMaxHealth()) {

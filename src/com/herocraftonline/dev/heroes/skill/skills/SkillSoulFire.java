@@ -11,7 +11,6 @@ import org.bukkit.event.entity.EntityListener;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
 import com.herocraftonline.dev.heroes.effects.common.CombustEffect;
@@ -63,7 +62,7 @@ public class SkillSoulFire extends ActiveSkill {
 
     @Override
     public boolean use(Hero hero, String[] args) {
-        int duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 600000);
+        int duration = getSetting(hero, Setting.DURATION.node(), 600000, false);
         hero.addEffect(new SoulFireEffect(this, duration));
         return true;
     }
@@ -92,19 +91,18 @@ public class SkillSoulFire extends ActiveSkill {
 
             Player player = (Player) subEvent.getDamager();
             Hero hero = plugin.getHeroManager().getHero(player);
-            HeroClass heroClass = hero.getHeroClass();
-            if (!getSetting(heroClass, "weapons", Util.swords).contains(player.getItemInHand().getType().name()) || !hero.hasEffect("SoulFire")) {
+            if (!getSetting(hero, "weapons", Util.swords).contains(player.getItemInHand().getType().name()) || !hero.hasEffect("SoulFire")) {
                 Heroes.debug.stopTask("HeroesSkillListener");
                 return;
             }
 
-            double chance = getSetting(heroClass, "ignite-chance", .2);
+            double chance = getSetting(hero, "ignite-chance", .2, false);
             if (Util.rand.nextDouble() >= chance) {
                 Heroes.debug.stopTask("HeroesSkillListener");
                 return;
             }
 
-            int fireTicks = getSetting(heroClass, "ignite-duration", 5000) / 50;
+            int fireTicks = getSetting(hero, "ignite-duration", 5000, false) / 50;
             Entity entity = event.getEntity();
             entity.setFireTicks(fireTicks);
 

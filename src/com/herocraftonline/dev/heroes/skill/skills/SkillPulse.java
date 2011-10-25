@@ -35,7 +35,7 @@ public class SkillPulse extends ActiveSkill {
     @Override
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
-        int radius = getSetting(hero.getHeroClass(), Setting.RADIUS.node(), 5);
+        int radius = getSetting(hero, Setting.RADIUS.node(), 5, false);
         List<Entity> entities = hero.getPlayer().getNearbyEntities(radius, radius, radius);
         for (Entity entity : entities) {
             if (!(entity instanceof LivingEntity)) {
@@ -46,7 +46,7 @@ public class SkillPulse extends ActiveSkill {
             if (!damageCheck(player, target))
                 continue;
 
-            int damage = getSetting(hero.getHeroClass(), "damage", 1);
+            int damage = getSetting(hero, "damage", 1, false);
             addSpellTarget(target, hero);
             target.damage(damage, player);
         }

@@ -7,7 +7,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.effects.common.SlowEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
@@ -52,9 +51,8 @@ public class SkillSlow extends TargettedSkill {
             return false;
         }
         
-        HeroClass heroClass = hero.getHeroClass();
-        int duration = getSetting(heroClass, Setting.DURATION.node(), 15000);
-        int multiplier = getSetting(heroClass, "speed-multiplier", 2);
+        int duration = getSetting(hero, Setting.DURATION.node(), 15000, false);
+        int multiplier = getSetting(hero, "speed-multiplier", 2, false);
         if (multiplier > 20) {
             multiplier = 20;
         }

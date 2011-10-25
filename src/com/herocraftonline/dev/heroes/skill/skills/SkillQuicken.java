@@ -52,8 +52,8 @@ public class SkillQuicken extends ActiveSkill {
     public boolean use(Hero hero, String[] args) {
         broadcastExecuteText(hero);
         
-        int duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 300000);
-        int multiplier = getSetting(hero.getHeroClass(), "speed-multiplier", 2);
+        int duration = getSetting(hero, Setting.DURATION.node(), 300000, false);
+        int multiplier = getSetting(hero, "speed-multiplier", 2, false);
         if (multiplier > 20) {
             multiplier = 20;
         }
@@ -63,7 +63,7 @@ public class SkillQuicken extends ActiveSkill {
             return true;
         }
         Player player = hero.getPlayer();
-        int radius = getSetting(hero.getHeroClass(), Setting.RADIUS.node(), 15);
+        int radius = getSetting(hero, Setting.RADIUS.node(), 15, false);
         int rSquared = radius * radius;
         Location loc = player.getLocation();
         //Apply the effect to all party members

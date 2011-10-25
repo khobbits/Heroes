@@ -56,19 +56,19 @@ public class SkillImpale extends TargettedSkill {
         Player player = hero.getPlayer();
 
         Material item = player.getItemInHand().getType();
-        if (!getSetting(hero.getHeroClass(), "weapons", Util.swords).contains(item.name())) {
+        if (!getSetting(hero, "weapons", Util.swords).contains(item.name())) {
             Messaging.send(player, "You can't use impale with that weapon!");
         }
 
         HeroClass heroClass = hero.getHeroClass();
-        int force = getSetting(heroClass, "force", 3);
+        int force = getSetting(hero, "force", 3, false);
         int damage = heroClass.getItemDamage(item) == null ? 0 : heroClass.getItemDamage(item);
         target.damage(damage, player);
         //Do a little knockup
         target.setVelocity(target.getVelocity().add(new Vector(0, force, 0)));
         //Add the slow effect
-        long duration = getSetting(heroClass, Setting.DURATION.node(), 5000);
-        int amplitude = getSetting(heroClass, "amplitude", 4);
+        long duration = getSetting(hero, Setting.DURATION.node(), 5000, false);
+        int amplitude = getSetting(hero, "amplitude", 4, false);
         SlowEffect sEffect = new SlowEffect(this, duration, amplitude, false, applyText, applyText, hero);
         if (target instanceof Player) {
             plugin.getHeroManager().getHero((Player) target).addEffect(sEffect);

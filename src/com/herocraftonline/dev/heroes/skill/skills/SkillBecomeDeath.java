@@ -60,7 +60,7 @@ public class SkillBecomeDeath extends ActiveSkill {
     @Override
     public boolean use(Hero hero, String[] args) {
         broadcastExecuteText(hero);
-        int duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 30000);
+        int duration = getSetting(hero, Setting.DURATION.node(), 30000, false);
         hero.addEffect(new UndeadEffect(this, duration));
         return true;
     }

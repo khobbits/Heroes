@@ -44,7 +44,7 @@ public class SkillGift extends ActiveSkill{
         Player player = hero.getPlayer();
         Player reciever = null;
         ItemStack item = null;
-        int maxAmount = getSetting(hero.getHeroClass(), "max-amount", 64);
+        int maxAmount = getSetting(hero, "max-amount", 64, false);
         int amount = 0;
         if(args.length >= 1 && plugin.getServer().getPlayer(args[0]) != null) {
             reciever = plugin.getServer().getPlayer(args[0]);

@@ -88,14 +88,14 @@ public class SkillFireball extends ActiveSkill {
                             }
 
                             // Damage the player and ignite them.
-                            livingEntity.setFireTicks(getSetting(heroClass, "fire-ticks", 100));
+                            livingEntity.setFireTicks(getSetting(hero, "fire-ticks", 100, false));
                             if (livingEntity instanceof Player) {
                                 plugin.getHeroManager().getHero((Player) livingEntity).addEffect(new CombustEffect(skill, (Player) dmger));
                             } else if (livingEntity instanceof Creature) {
                                 plugin.getEffectManager().addCreatureEffect((Creature) livingEntity, new CombustEffect(skill, (Player) dmger));
                             }
                             addSpellTarget(entity, hero);
-                            int damage = getSetting(heroClass, Setting.DAMAGE.node(), 4);
+                            int damage = getSetting(hero, Setting.DAMAGE.node(), 4, false);
                             event.setDamage(damage);
                         }
                     }

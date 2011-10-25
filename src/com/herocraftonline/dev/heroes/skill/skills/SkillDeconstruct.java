@@ -54,7 +54,7 @@ public class SkillDeconstruct extends ActiveSkill {
     @Override
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
-        Set<String> items = new HashSet<String>(getSettingKeys(hero.getHeroClass()));
+        Set<String> items = new HashSet<String>(getSettingKeys(hero));
         items.remove("require-workbench");
         for (Setting set : Setting.values()) {
             items.remove(set.node());
@@ -77,12 +77,12 @@ public class SkillDeconstruct extends ActiveSkill {
                 } else {
                     // Iterate over the deconstruct recipe and get all the items/amounts it turns into
                     Messaging.send(player, args[1] + " deconstructs into the following items: ");
-                    for (String s : getSettingKeys(hero.getHeroClass(), args[1])) {
+                    for (String s : getSettingKeys(hero, args[1])) {
                         if (s.equals("min-durability") || s.equals(Setting.LEVEL.node()) || s.equals(Setting.EXP.node())) {
                             continue;
                         }
 
-                        int amount = getSetting(hero.getHeroClass(), args[1] + "." + s, 1);
+                        int amount = getSetting(hero, args[1] + "." + s, 1, false);
                         Messaging.send(player, s.toLowerCase().replace("_", " ") + ": " + amount);
                     }
 
@@ -106,7 +106,7 @@ public class SkillDeconstruct extends ActiveSkill {
             slot = player.getInventory().getHeldItemSlot();
         }
 
-        if (getSetting(hero.getHeroClass(), "require-workbench", true) && player.getTargetBlock((HashSet<Byte>) null, 3).getType() != Material.WORKBENCH) {
+        if (getSetting(hero, "require-workbench", true) && player.getTargetBlock((HashSet<Byte>) null, 3).getType() != Material.WORKBENCH) {
             Messaging.send(player, "You must have a workbench targetted to deconstruct an item!");
             return false;
         }
@@ -122,14 +122,14 @@ public class SkillDeconstruct extends ActiveSkill {
             return false;
         }
 
-        int level = getSetting(hero.getHeroClass(), matName + "." + Setting.LEVEL.node(), 1);
+        int level = getSetting(hero, matName + "." + Setting.LEVEL.node(), 1, true);
         if (level > hero.getLevel()) {
             Messaging.send(player, "You must be level " + level + " to deconstruct that item!");
             return false;
         }
         double minDurability = 0;
         if (item.getType().getMaxDurability() > 16) {
-            minDurability = item.getType().getMaxDurability() * (1D - getSetting(hero.getHeroClass(), matName + ".min-durability", .5));
+            minDurability = item.getType().getMaxDurability() * (1D - getSetting(hero, matName + ".min-durability", .5, true));
         }
 
         if (slot == -1) {
@@ -150,7 +150,7 @@ public class SkillDeconstruct extends ActiveSkill {
             return false;
         }
 
-        List<String> returned = getSettingKeys(hero.getHeroClass(), matName);
+        List<String> returned = getSettingKeys(hero, matName);
         if (returned == null) {
             Messaging.send(player, "Unable to deconstruct that item!");
             return false;
@@ -164,7 +164,7 @@ public class SkillDeconstruct extends ActiveSkill {
             Material m = Material.matchMaterial(s);
             if (m == null)
                 throw new IllegalArgumentException("Error with skill " + getName() + ": bad item definition " + s);
-            int amount = getSetting(hero.getHeroClass(), matName + "." + s, 1);
+            int amount = getSetting(hero, matName + "." + s, 1, false);
             if (amount < 1)
                 throw new IllegalArgumentException("Error with skill " + getName() + ": bad amount definition for " + s + ": " + amount);
 
@@ -187,7 +187,7 @@ public class SkillDeconstruct extends ActiveSkill {
         Util.syncInventory(player, plugin);
 
         // Grant the hero experience
-        int xp = getSetting(hero.getHeroClass(), matName + "." + Setting.EXP.node(), 0);
+        int xp = getSetting(hero, matName + "." + Setting.EXP.node(), 0, false);
         hero.gainExp(xp, ExperienceType.CRAFTING);
 
         broadcast(player.getLocation(), getUseText(), player.getDisplayName(), matName.toLowerCase().replace("_", " "));

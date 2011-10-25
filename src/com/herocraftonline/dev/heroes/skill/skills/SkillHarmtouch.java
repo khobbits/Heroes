@@ -32,7 +32,7 @@ public class SkillHarmtouch extends TargettedSkill {
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
 
-        int damage = getSetting(hero.getHeroClass(), Setting.DAMAGE.node(), 10);
+        int damage = getSetting(hero, Setting.DAMAGE.node(), 10, false);
         addSpellTarget(target, hero);
         target.damage(damage, player);
         broadcastExecuteText(hero, target);

@@ -36,9 +36,9 @@ public class SkillBlaze extends ActiveSkill {
     @Override
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
-        int range = getSetting(hero.getHeroClass(), Setting.RADIUS.node(), 5);
+        int range = getSetting(hero, Setting.RADIUS.node(), 5, false);
         List<Entity> entities = hero.getPlayer().getNearbyEntities(range, range, range);
-        int fireTicks = getSetting(hero.getHeroClass(), "fire-length", 3000);
+        int fireTicks = getSetting(hero, "fire-length", 3000, false);
         boolean damaged = false;
         for (Entity entity : entities) {
             if (!(entity instanceof LivingEntity)) {

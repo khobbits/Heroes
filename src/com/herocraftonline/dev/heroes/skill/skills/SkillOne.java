@@ -47,8 +47,8 @@ public class SkillOne extends ActiveSkill {
     public boolean use(Hero hero, String[] args) {
         broadcastExecuteText(hero);
 
-        int duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 15000);
-        int multiplier = getSetting(hero.getHeroClass(), "speed-multiplier", 2);
+        int duration = getSetting(hero, Setting.DURATION.node(), 15000, false);
+        int multiplier = getSetting(hero, "speed-multiplier", 2, false);
         if (multiplier > 20) {
             multiplier = 20;
         }

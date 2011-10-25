@@ -34,8 +34,8 @@ public class SkillMegabolt extends TargettedSkill {
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
 
-        int range = getSetting(hero.getHeroClass(), Setting.RADIUS.node(), 5);
-        int damage = getSetting(hero.getHeroClass(), Setting.DAMAGE.node(), 4);
+        int range = getSetting(hero, Setting.RADIUS.node(), 5, false);
+        int damage = getSetting(hero, Setting.DAMAGE.node(), 4, false);
 
         // Damage the first target
         addSpellTarget(target, hero);

@@ -7,7 +7,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.SkillType;
@@ -35,8 +34,7 @@ public class SkillSummonArrow extends ActiveSkill {
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
         World world = player.getWorld();
-        HeroClass heroClass = hero.getHeroClass();
-        ItemStack dropItem = new ItemStack(Material.ARROW, getSetting(heroClass, "amount", 1));
+        ItemStack dropItem = new ItemStack(Material.ARROW, getSetting(hero, "amount", 1, false));
         world.dropItem(player.getLocation(), dropItem);
         broadcastExecuteText(hero);
         return true;

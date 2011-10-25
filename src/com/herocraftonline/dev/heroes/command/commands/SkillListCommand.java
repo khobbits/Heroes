@@ -52,7 +52,7 @@ public class SkillListCommand extends BasicCommand {
         // Filter out Skills from the command list.
         for (Skill skill : plugin.getSkillManager().getSkills()) {
             if (heroClass.hasSkill(skill.getName()) && !skills.containsKey(skill)) {
-                skills.put(skill, skill.getSetting(heroClass, Setting.LEVEL.node(), 1));
+                skills.put(skill, skill.getSetting(hero, Setting.LEVEL.node(), 1, true));
             }
         }
 

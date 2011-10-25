@@ -52,8 +52,8 @@ public class SkillWisdom extends ActiveSkill {
     @Override
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
-        int duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 600000);
-        double manaMultiplier = getSetting(hero.getHeroClass(), "regen-multiplier", 1.2);
+        int duration = getSetting(hero, Setting.DURATION.node(), 600000, false);
+        double manaMultiplier = getSetting(hero, "regen-multiplier", 1.2, false);
 
         WisdomEffect mEffect = new WisdomEffect(this, duration, manaMultiplier);
         if (!hero.hasParty()) {
@@ -64,7 +64,7 @@ public class SkillWisdom extends ActiveSkill {
             }
             hero.addEffect(mEffect);
         } else {
-            int rangeSquared = (int) Math.pow(getSetting(hero.getHeroClass(), Setting.RADIUS.node(), 10), 2);
+            int rangeSquared = (int) Math.pow(getSetting(hero, Setting.RADIUS.node(), 10, false), 2);
             for (Hero pHero : hero.getParty().getMembers()) {
                 Player pPlayer = pHero.getPlayer();
                 if (!pPlayer.getWorld().equals(player.getWorld())) {
@@ -97,7 +97,7 @@ public class SkillWisdom extends ActiveSkill {
             }
 
             if (event.getHero().hasEffect("Wisdom")) {
-                event.setAmount((int) (event.getAmount() * getSetting(event.getHero().getHeroClass(), "regen-multiplier", 1.2)));
+                event.setAmount((int) (event.getAmount() * getSetting(event.getHero(), "regen-multiplier", 1.2, false)));
             }
             Heroes.debug.stopTask("HeroesSkillListener");
         }

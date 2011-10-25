@@ -27,7 +27,7 @@ public class HEventListener extends HeroesEventListener {
         if (level > event.getFrom()) {
             for (Skill skill : plugin.getSkillManager().getSkills()) {
                 if (heroClass.hasSkill(skill.getName())) {
-                    int levelRequired = skill.getSetting(heroClass, Setting.LEVEL.node(), 1);
+                    int levelRequired = skill.getSetting(hero, Setting.LEVEL.node(), 1, true);
                     if (levelRequired == level) {
                         Messaging.send(event.getHero().getPlayer(), "You have learned $1.", skill.getName());
                     }
@@ -36,7 +36,7 @@ public class HEventListener extends HeroesEventListener {
         } else {
             for (Skill skill : plugin.getSkillManager().getSkills()) {
                 if (heroClass.hasSkill(skill.getName())) {
-                    if (skill.getSetting(heroClass, Setting.LEVEL.node(), 1) > level) {
+                    if (skill.getSetting(hero, Setting.LEVEL.node(), 1, true) > level) {
                         Messaging.send(event.getHero().getPlayer(), "You have forgotton how to use $1", skill.getName());
                     }
                 }

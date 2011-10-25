@@ -57,7 +57,7 @@ public class SkillPiggify extends TargettedSkill {
         }
 
         Entity creature = target.getWorld().spawnCreature(target.getLocation(), type);
-        long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 10000);
+        long duration = getSetting(hero, Setting.DURATION.node(), 10000, false);
         PigEffect pEffect = new PigEffect(this, duration, (Creature) creature);
         if (target instanceof Player) {
             plugin.getHeroManager().getHero((Player) target).addEffect(pEffect);

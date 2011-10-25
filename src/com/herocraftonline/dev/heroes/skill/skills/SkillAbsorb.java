@@ -97,7 +97,7 @@ public class SkillAbsorb extends ActiveSkill {
                 Player player = (Player) defender;
                 Hero hero = plugin.getHeroManager().getHero(player);
                 if (hero.hasEffect("Absorb")) {
-                    int absorbAmount = getSetting(hero.getHeroClass(), "mana-amount", 20);
+                    int absorbAmount = getSetting(hero, "mana-amount", 20, false);
                     event.setDamage((int) (event.getDamage() * 0.50));
                     int mana = hero.getMana();
                     if (mana + absorbAmount > 100) {

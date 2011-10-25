@@ -45,8 +45,8 @@ public class SkillPurge extends TargettedSkill {
             }
         }
 
-        int radius = getSetting(hero.getHeroClass(), Setting.RADIUS.node(), 10);
-        int removalsLeft = getSetting(hero.getHeroClass(), "max-removals", -1);
+        int radius = getSetting(hero, Setting.RADIUS.node(), 10, false);
+        int removalsLeft = getSetting(hero, "max-removals", -1, true);
         int maxRemovals = removalsLeft;
         for (Entity e : target.getNearbyEntities(radius, radius, radius)) {
             if (removalsLeft == 0)

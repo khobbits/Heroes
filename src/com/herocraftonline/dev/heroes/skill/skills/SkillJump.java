@@ -47,7 +47,7 @@ public class SkillJump extends ActiveSkill {
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
         Material mat = player.getLocation().getBlock().getRelative(BlockFace.DOWN).getType();
-        if ((getSetting(hero.getHeroClass(), "no-air-jump", true) && noJumpMaterials.contains(mat)) || player.isInsideVehicle()) {
+        if ((getSetting(hero, "no-air-jump", true) && noJumpMaterials.contains(mat)) || player.isInsideVehicle()) {
             Messaging.send(player, "You can't jump while mid-air or from inside a vehicle!");
             return false;
         }

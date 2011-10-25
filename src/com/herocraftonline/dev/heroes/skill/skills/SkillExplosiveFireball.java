@@ -23,7 +23,6 @@ import org.bukkit.event.entity.EntityListener;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.effects.common.CombustEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
@@ -128,10 +127,9 @@ public class SkillExplosiveFireball extends ActiveSkill {
                         Entity entity = event.getEntity();
                         Player shooter = (Player) fireball.getShooter();
                         Hero hero = plugin.getHeroManager().getHero(shooter);
-                        HeroClass heroClass = hero.getHeroClass();
-                        int damage = getSetting(heroClass, Setting.DAMAGE.node(), 4);
+                        int damage = getSetting(hero, Setting.DAMAGE.node(), 4, false);
                         addSpellTarget(entity, hero);
-                        entity.setFireTicks(getSetting(heroClass, "fire-ticks", 100));
+                        entity.setFireTicks(getSetting(hero, "fire-ticks", 100, false));
                         if (entity instanceof Player) {
                             plugin.getHeroManager().getHero((Player) entity).addEffect(new CombustEffect(skill, shooter));
                         } else if (entity instanceof Creature) {

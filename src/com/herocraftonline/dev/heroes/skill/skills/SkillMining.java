@@ -88,7 +88,7 @@ public class SkillMining extends PassiveSkill {
 
             double chance = Util.rand.nextDouble();
             
-            if (isStone && chance <= getSetting(hero.getHeroClass(), "chance-from-stone", .0005) * hero.getLevel()) {
+            if (isStone && chance <= getSetting(hero, "chance-from-stone", .0005, false) * hero.getLevel()) {
                 block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(getMatFromHeight(block), 1));
                 Heroes.debug.stopTask("HeroesSkillListener");
                 return;
@@ -97,7 +97,7 @@ public class SkillMining extends PassiveSkill {
                 return;
             }
             
-            if (chance >= getSetting(hero.getHeroClass(), "chance-per-level", .001) * hero.getLevel()) {
+            if (chance >= getSetting(hero, "chance-per-level", .001, false) * hero.getLevel()) {
                 Heroes.debug.stopTask("HeroesSkillListener");
                 return;
             }

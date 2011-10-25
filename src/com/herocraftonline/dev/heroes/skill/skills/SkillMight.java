@@ -57,8 +57,8 @@ public class SkillMight extends ActiveSkill {
     @Override
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
-        int duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 600000);
-        double damageBonus = getSetting(hero.getHeroClass(), "damage-bonus", 1.25);
+        int duration = getSetting(hero, Setting.DURATION.node(), 600000, false);
+        double damageBonus = getSetting(hero, "damage-bonus", 1.25, false);
 
         MightEffect mEffect = new MightEffect(this, duration, damageBonus);
         if (!hero.hasParty()) {
@@ -69,7 +69,7 @@ public class SkillMight extends ActiveSkill {
             }
             hero.addEffect(mEffect);
         } else {
-            int range = getSetting(hero.getHeroClass(), Setting.RADIUS.node(), 10);
+            int range = getSetting(hero, Setting.RADIUS.node(), 10, false);
             int rangeSquared = range * range;
             Location loc = player.getLocation();
             for (Hero pHero : hero.getParty().getMembers()) {

@@ -61,8 +61,8 @@ public class SkillIceArrow extends ActiveSkill {
 
     @Override
     public boolean use(Hero hero, String[] args) {
-        long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 60000);
-        int numAttacks = getSetting(hero.getHeroClass(), "attacks", 1);
+        long duration = getSetting(hero, Setting.DURATION.node(), 60000, false);
+        int numAttacks = getSetting(hero, "attacks", 1, false);
         hero.addEffect(new IceArrowBuff(this, duration, numAttacks));
         broadcastExecuteText(hero);
         return true;
@@ -116,8 +116,8 @@ public class SkillIceArrow extends ActiveSkill {
             Hero hero = plugin.getHeroManager().getHero(player);
 
             if (hero.hasEffect("SlowArrowBuff")) {
-                long duration = getSetting(hero.getHeroClass(), "slow-duration", 10000);
-                int amplifier = getSetting(hero.getHeroClass(), "speed-multiplier", 2);
+                long duration = getSetting(hero, "slow-duration", 10000, false);
+                int amplifier = getSetting(hero, "speed-multiplier", 2, false);
                 SlowEffect iceSlowEffect = new SlowEffect(skill, duration, amplifier, false, applyText, "$1 is no longer slowed.", hero);
                 LivingEntity target = (LivingEntity) event.getEntity();
                 if (target instanceof Player) {

@@ -40,7 +40,7 @@ public class SkillPray extends TargettedSkill {
         }
 
         Hero targetHero = plugin.getHeroManager().getHero((Player) target);
-        int hpPlus = getSetting(hero.getHeroClass(), "health", 10);
+        int hpPlus = getSetting(hero, "health", 10, false);
         double targetHealth = targetHero.getHealth();
 
         if (targetHealth >= targetHero.getMaxHealth()) {

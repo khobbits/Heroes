@@ -34,7 +34,7 @@ public class SkillGroupHeal extends ActiveSkill {
     @Override
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
-        int healAmount = getSetting(hero.getHeroClass(), "heal-amount", 2);
+        int healAmount = getSetting(hero, "heal-amount", 2, false);
         if (hero.getParty() == null) {
             // Heal just the caster if he's not in a party
             HeroRegainHealthEvent hrhEvent = new HeroRegainHealthEvent(hero, healAmount, this);
@@ -46,7 +46,7 @@ public class SkillGroupHeal extends ActiveSkill {
             hero.setHealth(hero.getHealth() + hrhEvent.getAmount());
             hero.syncHealth();
         } else {
-            int radiusSquared = (int) Math.pow(getSetting(hero.getHeroClass(), Setting.RADIUS.node(), 5), 2);
+            int radiusSquared = (int) Math.pow(getSetting(hero, Setting.RADIUS.node(), 5, false), 2);
             Location heroLoc = player.getLocation();
             // Heal party members near the caster
             for (Hero partyHero : hero.getParty().getMembers()) {

@@ -44,7 +44,7 @@ public class SkillConsume extends ActiveSkill {
             return false;
         }
 
-        List<String> keys = getSettingKeys(hero.getHeroClass());
+        List<String> keys = getSettingKeys(hero);
         if (keys == null || keys.isEmpty())
             return false;
 
@@ -54,11 +54,11 @@ public class SkillConsume extends ActiveSkill {
                 if (mat == null)
                     throw new IllegalArgumentException("Invalid Configuration for Skill Consume: " + key + " is not a valid Material");
 
-                int amount = getSetting(hero.getHeroClass(), key + "." + Setting.AMOUNT.node(), 1);
+                int amount = getSetting(hero, key + "." + Setting.AMOUNT.node(), 1, true);
                 if (amount < 1)
                     throw new IllegalArgumentException("Invalid Configuration for Skill Consume: " + key + " has invalid amount defined");
 
-                int level = getSetting(hero.getHeroClass(), key + "." + Setting.LEVEL.node(), 1);
+                int level = getSetting(hero, key + "." + Setting.LEVEL.node(), 1, true);
                 if (hero.getLevel() < level) {
                     Messaging.send(player, "You must be level $1 before you can consume that item", level);
                     return false;
@@ -72,7 +72,7 @@ public class SkillConsume extends ActiveSkill {
                 }
 
                 player.getInventory().removeItem(reagent);
-                int mana = getSetting(hero.getHeroClass(), key + "." + Setting.MANA.node(), 20);
+                int mana = getSetting(hero, key + "." + Setting.MANA.node(), 20, false);
                 HeroRegainManaEvent hrmEvent = new HeroRegainManaEvent(hero, mana, this);
                 plugin.getServer().getPluginManager().callEvent(hrmEvent);
                 if (hrmEvent.isCancelled())

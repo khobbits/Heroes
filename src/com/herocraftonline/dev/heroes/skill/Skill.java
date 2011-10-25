@@ -157,6 +157,7 @@ public abstract class Skill extends BasicCommand {
         return plugin;
     }
 
+    
     /**
      * Retrieves a <code>Boolean</code> value from the skill's configuration. Data from the provided
      * <code>HeroClass</code> will be preferred over the skill's own data, if found. If the setting is found in neither
@@ -170,9 +171,11 @@ public abstract class Skill extends BasicCommand {
      *            the default value to be used if no entry is found
      * @return the stored setting
      */
-    public boolean getSetting(HeroClass heroClass, String setting, boolean def) {
-        if (hasSetting(heroClass, setting))
-            return heroClass.getSkillSettings(getName()).getBoolean(setting, def);
+    public boolean getSetting(Hero hero, String setting, boolean def) {
+        if (hasSetting(hero.getHeroClass(), setting))
+            return hero.getHeroClass().getSkillSettings(getName()).getBoolean(setting, def);
+        else if (hero.getSecondClass() != null && hasSetting(hero.getSecondClass(), setting))
+            return hero.getSecondClass().getSkillSettings(getName()).getBoolean(setting, def);
         else
             return config.getBoolean(setting, def);
     }
@@ -182,7 +185,7 @@ public abstract class Skill extends BasicCommand {
      * <code>HeroClass</code> will be preferred over the skill's own data, if found. If the setting is found in neither
      * of these sources, the default value is returned.
      * 
-     * @param heroClass
+     * @param hero
      *            the class to search for skill data
      * @param setting
      *            the name of the data entry to retrieve
@@ -190,9 +193,24 @@ public abstract class Skill extends BasicCommand {
      *            the default value to be used if no entry is found
      * @return the stored setting
      */
-    public double getSetting(HeroClass heroClass, String setting, double def) {
-        if (hasSetting(heroClass, setting))
-            return heroClass.getSkillSettings(getName()).getDouble(setting, def);
+    public double getSetting(Hero hero, String setting, double def, boolean lower) {
+        double val1 = -1;
+        double val2 = -1;
+        if (hasSetting(hero.getHeroClass(), setting))
+            val1 = hero.getHeroClass().getSkillSettings(getName()).getDouble(setting, def);
+        if (hero.getSecondClass() != null && hasSetting(hero.getSecondClass(), setting)) {
+            val2 = hero.getHeroClass().getSkillSettings(getName()).getDouble(setting, def);
+        }
+        
+        if (val1 != -1 && val2 != -1) {
+            if (lower)
+                return val1 < val2 ? val1 : val2;
+            else
+                return val1 > val2 ? val1 : val2;
+        } else if (val1 != -1)
+            return val1;
+        else if (val2 != -1)
+            return val2;
         else
             return config.getDouble(setting, def);
     }
@@ -210,9 +228,24 @@ public abstract class Skill extends BasicCommand {
      *            the default value to be used if no entry is found
      * @return the stored setting
      */
-    public int getSetting(HeroClass heroClass, String setting, int def) {
-        if (hasSetting(heroClass, setting))
-            return heroClass.getSkillSettings(getName()).getInt(setting, def);
+    public int getSetting(Hero hero, String setting, int def, boolean lower) {
+        int val1 = -1;
+        int val2 = -1;
+        if (hasSetting(hero.getHeroClass(), setting))
+            val1 = hero.getHeroClass().getSkillSettings(getName()).getInt(setting, def);
+        if (hero.getSecondClass() != null && hasSetting(hero.getSecondClass(), setting)) {
+            val2 = hero.getHeroClass().getSkillSettings(getName()).getInt(setting, def);
+        }
+        
+        if (val1 != -1 && val2 != -1) {
+            if (lower)
+                return val1 < val2 ? val1 : val2;
+            else
+                return val1 > val2 ? val1 : val2;
+        } else if (val1 != -1)
+            return val1;
+        else if (val2 != -1)
+            return val2;
         else
             return config.getInt(setting, def);
     }
@@ -230,9 +263,15 @@ public abstract class Skill extends BasicCommand {
      *            the default value to be used if no entry is found
      * @return the stored setting
      */
-    public List<String> getSetting(HeroClass heroClass, String setting, List<String> def) {
-        if (hasSetting(heroClass, setting))
-            return heroClass.getSkillSettings(getName()).getStringList(setting, def);
+    public List<String> getSetting(Hero hero, String setting, List<String> def) {
+        List<String> vals = new ArrayList<String>();
+        if (hasSetting(hero.getHeroClass(), setting))
+            vals.addAll(hero.getHeroClass().getSkillSettings(getName()).getStringList(setting, def));
+        if (hero.getSecondClass() != null && hasSetting(hero.getSecondClass(), setting))
+            vals.addAll(hero.getSecondClass().getSkillSettings(getName()).getStringList(setting, def));
+        
+        if (!vals.isEmpty())
+            return vals;
         else
             return config.getStringList(setting, def);
     }
@@ -250,9 +289,13 @@ public abstract class Skill extends BasicCommand {
      *            the default value to be used if no entry is found
      * @return the stored setting
      */
-    public String getSetting(HeroClass heroClass, String setting, String def) {
-        if (hasSetting(heroClass, setting))
-            return heroClass.getSkillSettings(getName()).getString(setting, def);
+    public String getSetting(Hero hero, String setting, String def) {
+        if (hero == null)
+            return config.getString(setting, def);
+        else if (hasSetting(hero.getHeroClass(), setting))
+            return hero.getHeroClass().getSkillSettings(getName()).getString(setting, def);
+        else if (hero.getSecondClass() != null && hasSetting(hero.getSecondClass(), setting))
+            return hero.getSecondClass().getSkillSettings(getName()).getString(setting, def);
         else
             return config.getString(setting, def);
     }
@@ -266,12 +309,15 @@ public abstract class Skill extends BasicCommand {
      *            the class to search for skill data
      * @return the stored setting
      */
-    public List<String> getSettingKeys(HeroClass heroClass) {
+    public List<String> getSettingKeys(Hero hero) {
         Set<String> keys = new HashSet<String>();
         keys.addAll(config.getKeys());
 
-        if (hasNode(heroClass, null)) {
-            keys.addAll(heroClass.getSkillSettings(getName()).getKeys());
+        if (hasNode(hero.getHeroClass(), null)) {
+            keys.addAll(hero.getHeroClass().getSkillSettings(getName()).getKeys());
+        }
+        if (hero.getSecondClass() != null && hasNode(hero.getSecondClass(), null)) {
+            keys.addAll(hero.getSecondClass().getSkillSettings(getName()).getKeys());
         }
         return new ArrayList<String>(keys);
     }
@@ -285,11 +331,14 @@ public abstract class Skill extends BasicCommand {
      *            the class to search for skill data
      * @return the stored setting
      */
-    public List<String> getSettingKeys(HeroClass heroClass, String setting) {
+    public List<String> getSettingKeys(Hero hero, String setting) {
         Set<String> keys = new HashSet<String>();
         keys.addAll(config.getKeys(setting));
-        if (hasNode(heroClass, setting)) {
-            keys.addAll(heroClass.getSkillSettings(getName()).getKeys(setting));
+        if (hasNode(hero.getHeroClass(), setting)) {
+            keys.addAll(hero.getHeroClass().getSkillSettings(getName()).getKeys(setting));
+        }
+        if (hero.getSecondClass() != null && hasNode(hero.getSecondClass(), setting)) {
+            keys.addAll(hero.getSecondClass().getSkillSettings(getName()).getKeys(setting));
         }
         return new ArrayList<String>(keys);
     }

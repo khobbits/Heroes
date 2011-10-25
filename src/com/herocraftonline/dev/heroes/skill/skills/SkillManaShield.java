@@ -55,7 +55,7 @@ public class SkillManaShield extends ActiveSkill {
     public boolean use(Hero hero, String[] args) {
         broadcastExecuteText(hero);
 
-        int duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 5000);
+        int duration = getSetting(hero, Setting.DURATION.node(), 5000, false);
         hero.addEffect(new ManaShieldEffect(this, duration));
 
         return true;
@@ -98,7 +98,7 @@ public class SkillManaShield extends ActiveSkill {
             Player player = (Player) event.getEntity();
             Hero hero = plugin.getHeroManager().getHero(player);
             if (hero.hasEffect(getName())) {
-                int absorbamount = getSetting(hero.getHeroClass(), "mana-amount", 20);
+                int absorbamount = getSetting(hero, "mana-amount", 20, false);
                 event.setDamage(event.getDamage() / 2);
                 int mana = hero.getMana();
                 if (mana < absorbamount) {

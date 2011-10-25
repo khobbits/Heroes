@@ -40,7 +40,7 @@ public class SkillBattery extends TargettedSkill {
         if (tHero.equals(hero))
             return false;
 
-        int transferAmount = getSetting(hero.getHeroClass(), "transfer-amount", 20);
+        int transferAmount = getSetting(hero, "transfer-amount", 20, false);
         if (hero.getMana() > transferAmount) {
             if (tHero.getMana() + transferAmount > 100) {
                 transferAmount = 100 - tHero.getMana();

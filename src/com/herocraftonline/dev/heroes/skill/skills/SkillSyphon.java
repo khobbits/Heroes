@@ -39,7 +39,7 @@ public class SkillSyphon extends TargettedSkill {
 
         Hero targetHero = plugin.getHeroManager().getHero((Player) target);
 
-        double transferredHealth = getSetting(hero.getHeroClass(), "default-health", 4);
+        double transferredHealth = getSetting(hero, "default-health", 4, false);
         if (args.length == 2) {
             try {
                 transferredHealth = Integer.parseInt(args[1]);
@@ -53,7 +53,7 @@ public class SkillSyphon extends TargettedSkill {
         hero.setHealth(playerHealth - transferredHealth);
         hero.syncHealth();
 
-        transferredHealth *= getSetting(hero.getHeroClass(), "multiplier", 1d);
+        transferredHealth *= getSetting(hero, "multiplier", 1.0, false);
         targetHero.setHealth(targetHealth + transferredHealth);
         targetHero.syncHealth();
 

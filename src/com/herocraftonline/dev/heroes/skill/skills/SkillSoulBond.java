@@ -11,7 +11,6 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.HeroesEventListener;
 import com.herocraftonline.dev.heroes.api.SkillDamageEvent;
 import com.herocraftonline.dev.heroes.api.WeaponDamageEvent;
-import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.effects.Effect;
 import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
@@ -71,7 +70,7 @@ public class SkillSoulBond extends TargettedSkill {
             hero.removeEffect(hero.getEffect("SoulBond"));
         }
 
-        long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 300000);
+        long duration = getSetting(hero, Setting.DURATION.node(), 300000, false);
         SoulBondedEffect sbEffect = new SoulBondedEffect(this, player);
         hero.addEffect(new SoulBondEffect(this, duration, target, sbEffect));
 
@@ -102,10 +101,9 @@ public class SkillSoulBond extends TargettedSkill {
                 if (tHero.hasEffect("SoulBonded") && !tHero.hasEffect("SoulBond")) {
                     Player applier = ((SoulBondedEffect) tHero.getEffect("SoulBonded")).getApplier();
                     Hero hero = plugin.getHeroManager().getHero(applier);
-                    HeroClass heroClass = hero.getHeroClass();
 
                     // Distance check
-                    int radius = getSetting(heroClass, Setting.RADIUS.node(), 25);
+                    int radius = getSetting(hero, Setting.RADIUS.node(), 25, false);
                     int radiusSquared = radius * radius;
                     if (applier.getLocation().distanceSquared(event.getEntity().getLocation()) > radiusSquared) {
                         Heroes.debug.stopTask("HeroesSkillListener");
@@ -113,7 +111,7 @@ public class SkillSoulBond extends TargettedSkill {
                     }
 
                     // Split the damage
-                    int splitDamage = (int) (event.getDamage() * getSetting(heroClass, "damage-multiplier", .5));
+                    int splitDamage = (int) (event.getDamage() * getSetting(hero, "damage-multiplier", .5, false));
                     applier.damage(splitDamage, event.getDamager().getPlayer());
                     event.setDamage(event.getDamage() - splitDamage);
                 }
@@ -125,10 +123,9 @@ public class SkillSoulBond extends TargettedSkill {
 
                 Player applier = ((SoulBondedEffect) plugin.getEffectManager().getCreatureEffect((Creature) event.getEntity(), "SoulBonded")).getApplier();
                 Hero hero = plugin.getHeroManager().getHero(applier);
-                HeroClass heroClass = hero.getHeroClass();
 
                 // Distance check
-                int radius = getSetting(heroClass, Setting.RADIUS.node(), 25);
+                int radius = getSetting(hero, Setting.RADIUS.node(), 25, false);
                 int radiusSquared = radius * radius;
                 if (applier.getLocation().distanceSquared(event.getEntity().getLocation()) > radiusSquared) {
                     Heroes.debug.stopTask("HeroesSkillListener");
@@ -136,7 +133,7 @@ public class SkillSoulBond extends TargettedSkill {
                 }
 
                 // Split the damage
-                int splitDamage = (int) (event.getDamage() * getSetting(heroClass, "damage-multiplier", .5));
+                int splitDamage = (int) (event.getDamage() * getSetting(hero, "damage-multiplier", .5, false));
                 applier.damage(splitDamage, event.getDamager().getPlayer());
                 event.setDamage(event.getDamage() - splitDamage);
             }
@@ -158,10 +155,9 @@ public class SkillSoulBond extends TargettedSkill {
                 if (tHero.hasEffect("SoulBonded") && !tHero.hasEffect("SoulBond")) {
                     Player applier = ((SoulBondedEffect) tHero.getEffect("SoulBonded")).getApplier();
                     Hero hero = plugin.getHeroManager().getHero(applier);
-                    HeroClass heroClass = hero.getHeroClass();
 
                     // Distance check
-                    int radius = getSetting(heroClass, Setting.RADIUS.node(), 25);
+                    int radius = getSetting(hero, Setting.RADIUS.node(), 25, false);
                     int radiusSquared = radius * radius;
                     if (applier.getLocation().distanceSquared(event.getEntity().getLocation()) > radiusSquared) {
                         Heroes.debug.stopTask("HeroesSkillListener");
@@ -169,7 +165,7 @@ public class SkillSoulBond extends TargettedSkill {
                     }
 
                     // Split the damage
-                    int splitDamage = (int) (event.getDamage() * getSetting(heroClass, "damage-multiplier", .5));
+                    int splitDamage = (int) (event.getDamage() * getSetting(hero, "damage-multiplier", .5, false));
                     applier.damage(splitDamage, event.getDamager());
                     event.setDamage(event.getDamage() - splitDamage);
                 }
@@ -181,10 +177,9 @@ public class SkillSoulBond extends TargettedSkill {
 
                 Player applier = ((SoulBondedEffect) plugin.getEffectManager().getCreatureEffect((Creature) event.getEntity(), "SoulBonded")).getApplier();
                 Hero hero = plugin.getHeroManager().getHero(applier);
-                HeroClass heroClass = hero.getHeroClass();
 
                 // Distance check
-                int radius = getSetting(heroClass, Setting.RADIUS.node(), 25);
+                int radius = getSetting(hero, Setting.RADIUS.node(), 25, false);
                 int radiusSquared = radius * radius;
                 if (applier.getLocation().distanceSquared(event.getEntity().getLocation()) > radiusSquared) {
                     Heroes.debug.stopTask("HeroesSkillListener");
@@ -192,7 +187,7 @@ public class SkillSoulBond extends TargettedSkill {
                 }
 
                 // Split the damage
-                int splitDamage = (int) (event.getDamage() * getSetting(heroClass, "damage-multiplier", .5));
+                int splitDamage = (int) (event.getDamage() * getSetting(hero, "damage-multiplier", .5, false));
                 applier.damage(splitDamage, event.getDamager());
                 event.setDamage(event.getDamage() - splitDamage);
             }

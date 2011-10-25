@@ -57,7 +57,7 @@ public class SkillBlackjack extends ActiveSkill {
     @Override
     public boolean use(Hero hero, String[] args) {
         broadcastExecuteText(hero);
-        int duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 20000);
+        int duration = getSetting(hero, Setting.DURATION.node(), 20000, false);
         hero.addEffect(new BlackjackEffect(this, duration));
         return true;
     }
@@ -114,9 +114,9 @@ public class SkillBlackjack extends ActiveSkill {
                 }
                 Hero defendingHero = plugin.getHeroManager().getHero((Player) event.getEntity());
 
-                double chance = getSetting(attackingHero.getHeroClass(), "stun-chance", 0.20);
+                double chance = getSetting(attackingHero, "stun-chance", 0.20, false);
                 if (Util.rand.nextDouble() < chance) {
-                    int duration = getSetting(attackingHero.getHeroClass(), "stun-duration", 5000);
+                    int duration = getSetting(attackingHero, "stun-duration", 5000, false);
                     defendingHero.addEffect(new StunEffect(skill, duration));
                 }
             }

@@ -29,7 +29,7 @@ public class SkillReplenish extends ActiveSkill {
 
     @Override
     public boolean use(Hero hero, String[] args) {
-        int manaBonus = getSetting(hero.getHeroClass(), "mana-bonus", 100);
+        int manaBonus = getSetting(hero, "mana-bonus", 100, false);
         HeroRegainManaEvent hrmEvent = new HeroRegainManaEvent(hero, manaBonus, this);
         plugin.getServer().getPluginManager().callEvent(hrmEvent);
         if (hrmEvent.isCancelled())

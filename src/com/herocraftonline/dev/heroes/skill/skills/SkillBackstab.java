@@ -10,7 +10,6 @@ import org.bukkit.util.config.ConfigurationNode;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.HeroesEventListener;
 import com.herocraftonline.dev.heroes.api.WeaponDamageEvent;
-import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.PassiveSkill;
@@ -64,10 +63,9 @@ public class SkillBackstab extends PassiveSkill {
             Hero hero = plugin.getHeroManager().getHero(player);
             
             if (hero.hasEffect(getName())) {
-                HeroClass heroClass = hero.getHeroClass();
                 ItemStack item = player.getItemInHand();
                 
-                if (!getSetting(heroClass, "weapons", Util.swords).contains(item.getType().name())) {
+                if (!getSetting(hero, "weapons", Util.swords).contains(item.getType().name())) {
                     Heroes.debug.stopTask("HeroesSkillListener");
                     return;
                 }
@@ -77,10 +75,10 @@ public class SkillBackstab extends PassiveSkill {
                     return;
                 }
 
-                if (hero.hasEffect("Sneak") && Util.rand.nextDouble() < getSetting(heroClass, "sneak-chance", 1.0)) {
-                    event.setDamage((int) (event.getDamage() * getSetting(heroClass, "sneak-bonus", 2.0)));
-                } else if (Util.rand.nextDouble() < getSetting(heroClass, "attack-chance", .5)) {
-                    event.setDamage((int) (event.getDamage() * getSetting(heroClass, "attack-bonus", 1.5)));
+                if (hero.hasEffect("Sneak") && Util.rand.nextDouble() < getSetting(hero, "sneak-chance", 1.0, false)) {
+                    event.setDamage((int) (event.getDamage() * getSetting(hero, "sneak-bonus", 2.0, false)));
+                } else if (Util.rand.nextDouble() < getSetting(hero, "attack-chance", .5, false)) {
+                    event.setDamage((int) (event.getDamage() * getSetting(hero, "attack-bonus", 1.5, false)));
                 }
 
                 Entity target = event.getEntity();

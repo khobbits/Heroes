@@ -9,7 +9,6 @@ import org.bukkit.util.Vector;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.effects.PeriodicExpirableEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;
@@ -55,11 +54,9 @@ public class SkillConfuse extends TargettedSkill {
 
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
-
-        HeroClass heroClass = hero.getHeroClass();
-        long duration = getSetting(heroClass, Setting.DURATION.node(), 10000);
-        long period = getSetting(heroClass, Setting.PERIOD.node(), 2000);
-        float maxDrift = (float) getSetting(heroClass, "max-drift", 0.35);
+        long duration = getSetting(hero, Setting.DURATION.node(), 10000, false);
+        long period = getSetting(hero, Setting.PERIOD.node(), 2000, true);
+        float maxDrift = (float) getSetting(hero, "max-drift", 0.35, false);
         if (target instanceof Player) {
             plugin.getHeroManager().getHero((Player) target).addEffect(new ConfuseEffect(this, duration, period, maxDrift));
         } else if (target instanceof Creature) {

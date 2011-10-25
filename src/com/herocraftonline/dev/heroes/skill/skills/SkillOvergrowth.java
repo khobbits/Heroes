@@ -37,7 +37,7 @@ public class SkillOvergrowth extends ActiveSkill {
     @Override
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
-        int range = getSetting(hero.getHeroClass(), Setting.MAX_DISTANCE.node(), 15);
+        int range = getSetting(hero, Setting.MAX_DISTANCE.node(), 15, false);
         if (player.getTargetBlock((HashSet<Byte>) null, range).getType() == Material.SAPLING) {
             Block targetBlock = player.getTargetBlock((HashSet<Byte>) null, range);
             TreeType tType = null;

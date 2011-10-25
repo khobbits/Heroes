@@ -41,7 +41,7 @@ public class SkillBlink extends ActiveSkill {
             Messaging.send(player, "The void prevents you from blinking!");
             return false;
         }
-        int distance = getSetting(hero.getHeroClass(), Setting.MAX_DISTANCE.node(), 6);
+        int distance = getSetting(hero, Setting.MAX_DISTANCE.node(), 6, false);
         Block prev = null;
         Block b;
         BlockIterator iter = null;

@@ -69,10 +69,10 @@ public class SkillIcyAura extends ActiveSkill {
     public boolean use(Hero hero, String[] args) {
         broadcastExecuteText(hero);
 
-        long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 10000);
-        long period = getSetting(hero.getHeroClass(), Setting.PERIOD.node(), 500);
-        int tickDamage = getSetting(hero.getHeroClass(), "tick-damage", 1);
-        int range = getSetting(hero.getHeroClass(), Setting.RADIUS.node(), 10);
+        long duration = getSetting(hero, Setting.DURATION.node(), 10000, false);
+        long period = getSetting(hero, Setting.PERIOD.node(), 500, true);
+        int tickDamage = getSetting(hero, "tick-damage", 1, false);
+        int range = getSetting(hero, Setting.RADIUS.node(), 10, false);
         hero.addEffect(new IcyAuraEffect(this, duration, period, tickDamage, range));
         return true;
     }
@@ -155,7 +155,7 @@ public class SkillIcyAura extends ActiveSkill {
             loc.setY(loc.getY() - 1);
             changeBlock(loc, hero);
             
-            int amplitude = skill.getSetting(hero.getHeroClass(), "amplitude", 2);
+            int amplitude = skill.getSetting(hero, "amplitude", 2, false);
             SlowEffect sEffect = new SlowEffect(skill, this.getPeriod(), amplitude, true, null, null, hero);
             for (Entity entity : player.getNearbyEntities(range, range, range)) {
                 if (entity instanceof LivingEntity) {

@@ -9,7 +9,6 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.HeroesEventListener;
 import com.herocraftonline.dev.heroes.api.SkillDamageEvent;
 import com.herocraftonline.dev.heroes.api.WeaponDamageEvent;
-import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.effects.common.FormEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;
@@ -86,10 +85,9 @@ public class SkillEndurance extends ActiveSkill {
 
             if (event.getEntity() instanceof Player) {
                 Hero hero = plugin.getHeroManager().getHero((Player) event.getEntity());
-                HeroClass heroClass = hero.getHeroClass();
                 if (hero.hasEffect(getName())) {
-                    double levelMult = getSetting(heroClass, "multiplier-per-level", .005) * hero.getLevel();
-                    int newDamage = (int) (event.getDamage() * (getSetting(heroClass, "incoming-multiplier", .9) - levelMult));
+                    double levelMult = getSetting(hero, "multiplier-per-level", .005, false) * hero.getLevel();
+                    int newDamage = (int) (event.getDamage() * (getSetting(hero, "incoming-multiplier", .9, true) - levelMult));
                     event.setDamage(newDamage);
                 }
             }
@@ -97,7 +95,7 @@ public class SkillEndurance extends ActiveSkill {
             if (event.getDamager() instanceof Player && event.getSkill().isType(SkillType.PHYSICAL)) {
                 Hero hero = plugin.getHeroManager().getHero((Player) event.getDamager());
                 if (hero.hasEffect(getName())) {
-                    event.setDamage((int) (event.getDamage() * getSetting(hero.getHeroClass(), "outgoing-multiplier", .9)));
+                    event.setDamage((int) (event.getDamage() * getSetting(hero, "outgoing-multiplier", .9, false)));
                 }
             }
             Heroes.debug.stopTask("HeroesSkillListener");
@@ -113,10 +111,9 @@ public class SkillEndurance extends ActiveSkill {
 
             if (event.getEntity() instanceof Player) {
                 Hero hero = plugin.getHeroManager().getHero((Player) event.getEntity());
-                HeroClass heroClass = hero.getHeroClass();
                 if (hero.hasEffect(getName())) {
-                    double levelMult = getSetting(heroClass, "multiplier-per-level", .005) * hero.getLevel();
-                    int newDamage = (int) (event.getDamage() * (getSetting(heroClass, "incoming-multiplier", .9) - levelMult));
+                    double levelMult = getSetting(hero, "multiplier-per-level", .005, false) * hero.getLevel();
+                    int newDamage = (int) (event.getDamage() * (getSetting(hero, "incoming-multiplier", .9, true) - levelMult));
                     event.setDamage(newDamage);
 
                 }
@@ -125,7 +122,7 @@ public class SkillEndurance extends ActiveSkill {
             if (event.getDamager() instanceof Player) {
                 Hero hero = plugin.getHeroManager().getHero((Player) event.getDamager());
                 if (hero.hasEffect(getName())) {
-                    event.setDamage((int) (event.getDamage() * getSetting(hero.getHeroClass(), "outgoing-multiplier", .9)));
+                    event.setDamage((int) (event.getDamage() * getSetting(hero, "outgoing-multiplier", .9, false)));
                 }
             }
             Heroes.debug.stopTask("HeroesSkillListener");

@@ -42,7 +42,7 @@ public class SkillSafefallOther extends TargettedSkill {
 
         Hero targetHero = plugin.getHeroManager().getHero((Player) target);
         broadcastExecuteText(hero, target);
-        int duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 10000);
+        int duration = getSetting(hero, Setting.DURATION.node(), 10000, false);
         targetHero.addEffect(new SafeFallEffect(this, duration));
 
         return true;

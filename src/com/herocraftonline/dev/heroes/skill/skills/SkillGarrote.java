@@ -47,10 +47,10 @@ public class SkillGarrote extends TargettedSkill {
             return false;
         }
         
-        int damage = getSetting(hero.getHeroClass(), Setting.DAMAGE.node(), 4);
+        int damage = getSetting(hero, Setting.DAMAGE.node(), 4, false);
         target.damage(damage, player);
         if (target instanceof Player) {
-            long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 4000);
+            long duration = getSetting(hero, Setting.DURATION.node(), 4000, false);
             plugin.getHeroManager().getHero((Player) target).addEffect(new SilenceEffect(this, duration));
         }
         broadcastExecuteText(hero, target);

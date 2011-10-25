@@ -48,8 +48,8 @@ public class SkillFireArrow extends ActiveSkill {
 
     @Override
     public boolean use(Hero hero, String[] args) {
-        long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 600000);
-        int numAttacks = getSetting(hero.getHeroClass(), "attacks", 1);
+        long duration = getSetting(hero, Setting.DURATION.node(), 600000, false);
+        int numAttacks = getSetting(hero, "attacks", 1, false);
         hero.addEffect(new FireArrowBuff(this, duration, numAttacks));
         broadcastExecuteText(hero);
         return true;
@@ -93,7 +93,7 @@ public class SkillFireArrow extends ActiveSkill {
                 return;
             }
             //Get the duration of the fire damage
-            int fireTicks = getSetting(hero.getHeroClass(), "fire-ticks", 100);
+            int fireTicks = getSetting(hero, "fire-ticks", 100, false);
             if (event.getEntity() instanceof LivingEntity) {
                 //Light the target on fire
                 event.getEntity().setFireTicks(fireTicks);

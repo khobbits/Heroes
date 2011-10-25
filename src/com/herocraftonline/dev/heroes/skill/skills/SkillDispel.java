@@ -38,7 +38,7 @@ public class SkillDispel extends TargettedSkill {
         Player player = hero.getPlayer();
 
         boolean removed = false;
-        int maxRemovals = getSetting(hero.getHeroClass(), "max-removals", 3);
+        int maxRemovals = getSetting(hero, "max-removals", 3, false);
         if (target instanceof Player) {
             Player targetPlayer = (Player) target;
             // if player is targetting itself

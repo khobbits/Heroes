@@ -19,7 +19,6 @@ import org.bukkit.util.Vector;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.effects.common.SlowEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
@@ -111,7 +110,6 @@ public class SkillIcebolt extends ActiveSkill {
             Entity dmger = ((Snowball) subEvent.getDamager()).getShooter();
             if (dmger instanceof Player) {
                 Hero hero = plugin.getHeroManager().getHero((Player) dmger);
-                HeroClass heroClass = hero.getHeroClass();
                 LivingEntity livingEntity = (LivingEntity) entity;
 
                 if (!damageCheck((Player) dmger, livingEntity)) {
@@ -120,10 +118,10 @@ public class SkillIcebolt extends ActiveSkill {
                 }
 
                 event.getEntity().setFireTicks(0);
-                int damage = getSetting(heroClass, Setting.DAMAGE.node(), 3);
+                int damage = getSetting(hero, Setting.DAMAGE.node(), 3, false);
                 
-                long duration = getSetting(hero.getHeroClass(), "slow-duration", 10000);
-                int amplifier = getSetting(hero.getHeroClass(), "speed-multiplier", 2);
+                long duration = getSetting(hero, "slow-duration", 10000, false);
+                int amplifier = getSetting(hero, "speed-multiplier", 2, false);
                 
                 SlowEffect iceSlowEffect = new SlowEffect(skill, duration, amplifier, false, applyText, expireText, hero);
                 LivingEntity target = (LivingEntity) event.getEntity();

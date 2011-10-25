@@ -40,7 +40,7 @@ public class SkillIronFist extends ActiveSkill {
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
 
-        int radius = getSetting(hero.getHeroClass(), Setting.RADIUS.node(), 5);
+        int radius = getSetting(hero, Setting.RADIUS.node(), 5, false);
         List<Entity> entities = hero.getPlayer().getNearbyEntities(radius, radius, radius);
         for (Entity entity : entities) {
             if (!(entity instanceof LivingEntity)) {
@@ -57,7 +57,7 @@ public class SkillIronFist extends ActiveSkill {
             }
 
             // Damage the target
-            int damage = getSetting(hero.getHeroClass(), "damage", 1);
+            int damage = getSetting(hero, "damage", 1, false);
             addSpellTarget(target, hero);
             target.damage(damage, player);
 
@@ -68,11 +68,11 @@ public class SkillIronFist extends ActiveSkill {
             double xDir =  targetLoc.getX() - playerLoc.getX();
             double zDir =  targetLoc.getZ() - playerLoc.getZ();
             double magnitude = Math.sqrt(xDir * xDir + zDir * zDir);
-            double multiplier = this.getSetting(hero.getHeroClass(), "horizontal-power", .5);
+            double multiplier = this.getSetting(hero, "horizontal-power", .5, false);
             xDir = xDir / magnitude * multiplier;
             zDir = zDir / magnitude * multiplier;
             
-            target.setVelocity(new Vector(xDir, getSetting(hero.getHeroClass(), "vertical-power", .25), zDir));
+            target.setVelocity(new Vector(xDir, getSetting(hero, "vertical-power", .25, false), zDir));
         }
 
         broadcastExecuteText(hero);

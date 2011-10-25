@@ -45,7 +45,7 @@ public class SkillSmoke extends ActiveSkill {
     public boolean use(Hero hero, String[] args) {
         broadcastExecuteText(hero);
 
-        long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 20000);
+        long duration = getSetting(hero, Setting.DURATION.node(), 20000, false);
         Player player = hero.getPlayer();
         player.getWorld().playEffect(player.getLocation(), org.bukkit.Effect.SMOKE, 4);
         hero.addEffect(new InvisibleEffect(this, duration, applyText, expireText));

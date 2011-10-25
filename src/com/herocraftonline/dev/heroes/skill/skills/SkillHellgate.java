@@ -40,8 +40,8 @@ public class SkillHellgate extends ActiveSkill {
     public boolean use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
 
-        String defaultWorld = getSetting(hero.getHeroClass(), "default-return", "world");
-        String hellWorld = getSetting(hero.getHeroClass(), "hell-world", "world_nether");
+        String defaultWorld = getSetting(hero, "default-return", "world");
+        String hellWorld = getSetting(hero, "hell-world", "world_nether");
         World world = null;
         Location teleportLocation = null;
         Location castLocation = player.getLocation();
@@ -79,7 +79,7 @@ public class SkillHellgate extends ActiveSkill {
         }
 
         if (hero.hasParty()) {
-            int rangeSquared = (int) Math.pow(getSetting(hero.getHeroClass(), Setting.RADIUS.node(), 10), 2);
+            int rangeSquared = (int) Math.pow(getSetting(hero, Setting.RADIUS.node(), 10, false), 2);
             for (Hero targetHero : hero.getParty().getMembers()) {
                 Player target = targetHero.getPlayer();
                 if (target.equals(player)) {

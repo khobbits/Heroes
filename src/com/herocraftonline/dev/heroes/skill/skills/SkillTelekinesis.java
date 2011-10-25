@@ -47,7 +47,7 @@ public class SkillTelekinesis extends ActiveSkill {
         transparent.add((byte) Material.REDSTONE_WIRE.getId());
         transparent.add((byte) Material.TORCH.getId());
         transparent.add((byte) Material.SNOW.getId());
-        Block block = player.getTargetBlock(transparent, getSetting(hero.getHeroClass(), Setting.MAX_DISTANCE.node(), 15));
+        Block block = player.getTargetBlock(transparent, getSetting(hero, Setting.MAX_DISTANCE.node(), 15, false));
         if (block.getType() == Material.LEVER || block.getType() == Material.STONE_BUTTON) {
             EntityHuman eH = ((CraftPlayer) player).getHandle();
             // Can't adjust levers/Buttons through CB

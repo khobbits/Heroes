@@ -59,7 +59,7 @@ public class SkillBladegrasp extends ActiveSkill {
     @Override
     public boolean use(Hero hero, String[] args) {
         broadcastExecuteText(hero);
-        int duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 5000);
+        int duration = getSetting(hero, Setting.DURATION.node(), 5000, false);
         hero.addEffect(new BladegraspEffect(this, duration));
 
         return true;
@@ -105,7 +105,7 @@ public class SkillBladegrasp extends ActiveSkill {
                 Player player = (Player) defender;
                 Hero hero = plugin.getHeroManager().getHero(player);
                 if (hero.hasEffect(getName())) {
-                    double parryChance = getSetting(hero.getHeroClass(), "chance-per-level", .02) * hero.getLevel();
+                    double parryChance = getSetting(hero, "chance-per-level", .02, false) * hero.getLevel();
                     if (Util.rand.nextDouble() > parryChance)
                         return;
 

@@ -11,7 +11,6 @@ import org.bukkit.event.entity.EntityListener;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.effects.PeriodicDamageEffect;
 import com.herocraftonline.dev.heroes.effects.common.ImbueEffect;
@@ -60,8 +59,8 @@ public class SkillPoisonArrow extends ActiveSkill {
 
     @Override
     public boolean use(Hero hero, String[] args) {
-        long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 600000);
-        int numAttacks = getSetting(hero.getHeroClass(), "attacks", 1);
+        long duration = getSetting(hero, Setting.DURATION.node(), 600000, false);
+        int numAttacks = getSetting(hero, "attacks", 1, false);
         hero.addEffect(new PoisonArrowBuff(this, duration, numAttacks));
         broadcastExecuteText(hero);
         return true;
@@ -141,12 +140,11 @@ public class SkillPoisonArrow extends ActiveSkill {
 
             Player player = (Player) arrow.getShooter();
             Hero hero = plugin.getHeroManager().getHero(player);
-            HeroClass heroClass = hero.getHeroClass();
 
             if (hero.hasEffect("PoisonArrowBuff")) {
-                long duration = getSetting(heroClass, "poison-duration", 10000);
-                long period = getSetting(heroClass, Setting.PERIOD.node(), 2000);
-                int tickDamage = getSetting(heroClass, "tick-damage", 2);
+                long duration = getSetting(hero, "poison-duration", 10000, false);
+                long period = getSetting(hero, Setting.PERIOD.node(), 2000, true);
+                int tickDamage = getSetting(hero, "tick-damage", 2, false);
                 ArrowPoison apEffect = new ArrowPoison(skill, period, duration, tickDamage, player);
 
                 if (event.getEntity() instanceof Creature) {

@@ -7,7 +7,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.effects.PeriodicDamageEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;
@@ -53,11 +52,10 @@ public class SkillPlague extends TargettedSkill {
     @Override
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
-        HeroClass heroClass = hero.getHeroClass();
 
-        long duration = getSetting(heroClass, Setting.DURATION.node(), 21000);
-        long period = getSetting(heroClass, Setting.PERIOD.node(), 3000);
-        int tickDamage = getSetting(heroClass, "tick-damage", 1);
+        long duration = getSetting(hero, Setting.DURATION.node(), 21000, false);
+        long period = getSetting(hero, Setting.PERIOD.node(), 3000, true);
+        int tickDamage = getSetting(hero, "tick-damage", 1, false);
         PlagueEffect bEffect = new PlagueEffect(this, duration, period, tickDamage, player);
 
         if (target instanceof Player) {
@@ -133,7 +131,7 @@ public class SkillPlague extends TargettedSkill {
          * @param lEntity
          */
         private void spreadToNearbyEntities(LivingEntity lEntity) {
-            int radius = getSetting(applyHero.getHeroClass(), Setting.RADIUS.node(), 4);
+            int radius = getSetting(applyHero, Setting.RADIUS.node(), 4, false);
             for (Entity target : lEntity.getNearbyEntities(radius, radius, radius)) {
                 if (!(target instanceof LivingEntity) || target.equals(applier) || applyHero.getSummons().contains(target)) {
                     continue;

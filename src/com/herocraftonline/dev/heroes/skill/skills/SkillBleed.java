@@ -55,9 +55,9 @@ public class SkillBleed extends TargettedSkill {
             return false;
         }
 
-        long duration = getSetting(hero.getHeroClass(), Setting.DURATION.node(), 10000);
-        long period = getSetting(hero.getHeroClass(), Setting.PERIOD.node(), 2000);
-        int tickDamage = getSetting(hero.getHeroClass(), "tick-damage", 1);
+        long duration = getSetting(hero, Setting.DURATION.node(), 10000, false);
+        long period = getSetting(hero, Setting.PERIOD.node(), 2000, true);
+        int tickDamage = getSetting(hero, "tick-damage", 1, false);
         BleedSkillEffect bEffect = new BleedSkillEffect(this, duration, period, tickDamage, player);
 
         if (target instanceof Player) {
