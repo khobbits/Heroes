@@ -162,7 +162,7 @@ public class ProfessionCommand extends BasicInteractiveCommand {
 
             Player player = (Player) executor;
             Hero hero = plugin.getHeroManager().getHero(player);
-            HeroClass currentClass = hero.getHeroClass();
+            HeroClass currentClass = hero.getSecondClass();
             HeroClass newClass = pendingClassSelections.get(player);
             Properties prop = plugin.getConfigManager().getProperties();
 

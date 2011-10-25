@@ -156,7 +156,7 @@ public class ChooseCommand extends BasicInteractiveCommand {
 
             Player player = (Player) executor;
             Hero hero = plugin.getHeroManager().getHero(player);
-            HeroClass currentClass = hero.getSecondClass();
+            HeroClass currentClass = hero.getHeroClass();
             HeroClass newClass = pendingClassSelections.get(player);
             Properties prop = plugin.getConfigManager().getProperties();
 
@@ -183,7 +183,7 @@ public class ChooseCommand extends BasicInteractiveCommand {
                 }
             }
 
-            hero.changeHeroClass(newClass, true);
+            hero.changeHeroClass(newClass, false);
             Messaging.send(player, "Welcome to the path of the $1!", newClass.getName());
 
             plugin.getHeroManager().saveHero(hero);
