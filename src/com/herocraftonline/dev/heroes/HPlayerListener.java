@@ -136,7 +136,7 @@ public class HPlayerListener extends PlayerListener {
         if (!isStealthy) {
             for (Effect effect : hero.getEffects()) {
                 if (effect.isType(EffectType.INVIS))
-                    effect.remove(hero);
+                    hero.removeEffect(effect);
             }
         }
     }

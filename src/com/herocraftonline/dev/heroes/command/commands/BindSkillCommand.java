@@ -44,7 +44,7 @@ public class BindSkillCommand extends BasicCommand {
                 skill = plugin.getSkillManager().getSkillFromIdent("skill " + args[0], sender);
             }
 
-            if (skill != null && (heroClass.hasSkill(skill.getName()) || hero.hasSkill(skill.getName()))) {
+            if (skill != null && hero.hasSkill(skill.getName())) {
                 if (material == Material.AIR) {
                     Messaging.send(sender, "You must be holding an item to bind a skill!");
                     return false;
