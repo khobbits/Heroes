@@ -55,11 +55,11 @@ public class ChooseSecondCommand extends BasicInteractiveCommand {
         public boolean execute(CommandSender executor, String identifier, String[] args) {
             if (!(executor instanceof Player))
                 return false;
-            
+
             Properties props = plugin.getConfigManager().getProperties();
             Player player = (Player) executor;
             Hero hero = plugin.getHeroManager().getHero(player);
-            HeroClass currentClass = hero.getHeroClass();
+            HeroClass currentClass = hero.getSecondClass();
             HeroClass newClass = plugin.getClassManager().getClass(args[0]);
             Properties prop = plugin.getConfigManager().getProperties();
 
@@ -72,17 +72,28 @@ public class ChooseSecondCommand extends BasicInteractiveCommand {
                 Messaging.send(player, "You are already set as this Class.");
                 return false;
             }
-            
-            if (!hero.getHeroClass().isDefault() && hero.isMaster() && hero.getHeroClass().getParents().isEmpty() && props.lockAtHighestTier) {
-                Messaging.send(player, "You have mastered your class and can not choose a new one!");
+
+            if (!newClass.isSecondary()) {
+                Messaging.send(player, "That is not a secondary Class!");
                 return false;
             }
-            
+
+            if (newClass.equals(hero.getHeroClass())) {
+                Messaging.send(player, "That is already set as your primary class!");
+                return false;
+            }
+
+            if (currentClass != null)
+                if (!hero.getHeroClass().isDefault() && hero.isMaster() && currentClass.getParents().isEmpty() && props.lockAtHighestTier) {
+                    Messaging.send(player, "You have mastered your class and can not choose a new one!");
+                    return false;
+                }
+
             if (!hero.isMaster() && props.lockPathTillMaster) {
                 Messaging.send(player, "You must master this class before swapping to another.");
                 return false;
             }
-            
+
             if (!newClass.hasNoParents()) {
                 for (HeroClass parentClass : newClass.getStrongParents()) {
                     if (!hero.isMaster(parentClass)) {

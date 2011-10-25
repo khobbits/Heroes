@@ -59,7 +59,7 @@ public class ChooseCommand extends BasicInteractiveCommand {
             Properties props = plugin.getConfigManager().getProperties();
             Player player = (Player) executor;
             Hero hero = plugin.getHeroManager().getHero(player);
-            HeroClass currentClass = hero.getSecondClass();
+            HeroClass currentClass = hero.getHeroClass();
             HeroClass newClass = plugin.getClassManager().getClass(args[0]);
             Properties prop = plugin.getConfigManager().getProperties();
 
@@ -73,13 +73,13 @@ public class ChooseCommand extends BasicInteractiveCommand {
                 return false;
             }
             
-            if (!newClass.isSecondary()) {
-                Messaging.send(player, "That is not a secondary Class!");
+            if (!hero.getHeroClass().isDefault() && hero.isMaster() && currentClass.getParents().isEmpty() && props.lockAtHighestTier) {
+                Messaging.send(player, "You have mastered your class and can not choose a new one!");
                 return false;
             }
             
-            if (!hero.getHeroClass().isDefault() && hero.isMaster() && hero.getHeroClass().getParents().isEmpty() && props.lockAtHighestTier) {
-                Messaging.send(player, "You have mastered your class and can not choose a new one!");
+            if (newClass.equals(hero.getSecondClass())) {
+                Messaging.send(player, "That is already set as your secondary class!");
                 return false;
             }
             
