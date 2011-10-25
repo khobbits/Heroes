@@ -17,18 +17,18 @@ import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Properties;
 
-public class ChooseSecondCommand extends BasicInteractiveCommand {
+public class ProfessionCommand extends BasicInteractiveCommand {
 
     private final Heroes plugin;
     private Map<Player, HeroClass> pendingClassSelections = new HashMap<Player, HeroClass>();
     private Map<Player, Boolean> pendingClassCostStatus = new HashMap<Player, Boolean>();
 
-    public ChooseSecondCommand(Heroes plugin) {
+    public ProfessionCommand(Heroes plugin) {
         super("Choose Class");
         this.plugin = plugin;
         this.setStates(new InteractiveCommandState[] { new StateA(), new StateB() });
-        setDescription("Selects a new path or specialization");
-        setUsage("/hero choose §9<type>");
+        setDescription("Selects a new path or specialization as your profession");
+        setUsage("/hero profession §9<type>");
     }
 
     @Override
@@ -47,7 +47,7 @@ public class ChooseSecondCommand extends BasicInteractiveCommand {
     class StateA extends BasicInteractiveCommandState {
 
         public StateA() {
-            super("hero choose");
+            super("hero prof", "hero profession");
             this.setArgumentRange(1, 1);
         }
 

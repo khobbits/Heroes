@@ -28,7 +28,7 @@ public class ChooseCommand extends BasicInteractiveCommand {
         this.plugin = plugin;
         this.setStates(new InteractiveCommandState[] { new StateA(), new StateB() });
         setDescription("Selects a secondary path or specialization");
-        setUsage("/hero choose second §9<type>");
+        setUsage("/hero choose §9<type>");
     }
 
     @Override
@@ -47,7 +47,7 @@ public class ChooseCommand extends BasicInteractiveCommand {
     class StateA extends BasicInteractiveCommandState {
 
         public StateA() {
-            super("hero choose second");
+            super("hero choose");
             this.setArgumentRange(1, 1);
         }
 
