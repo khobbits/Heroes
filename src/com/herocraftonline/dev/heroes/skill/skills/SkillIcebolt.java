@@ -106,16 +106,9 @@ public class SkillIcebolt extends ActiveSkill {
 
             snowballs.remove(projectile);
 
-            LivingEntity entity = (LivingEntity) subEvent.getEntity();
             Entity dmger = ((Snowball) subEvent.getDamager()).getShooter();
             if (dmger instanceof Player) {
                 Hero hero = plugin.getHeroManager().getHero((Player) dmger);
-                LivingEntity livingEntity = (LivingEntity) entity;
-
-                if (!damageCheck((Player) dmger, livingEntity)) {
-                    Heroes.debug.stopTask("HeroesSkillListener");
-                    return;
-                }
 
                 event.getEntity().setFireTicks(0);
                 int damage = getSetting(hero, Setting.DAMAGE.node(), 3, false);
@@ -132,6 +125,7 @@ public class SkillIcebolt extends ActiveSkill {
                     plugin.getEffectManager().addCreatureEffect((Creature) target, iceSlowEffect);
                 }
                 
+                addSpellTarget(event.getEntity(), hero);
                 event.setDamage(damage);
             }
 
