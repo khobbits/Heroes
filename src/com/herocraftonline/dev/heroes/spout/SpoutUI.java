@@ -6,6 +6,7 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.gui.GenericTextField;
+import org.getspout.spoutapi.gui.Color;
 
 import java.awt.*;
 
@@ -63,7 +64,7 @@ public class SpoutUI {
         }
     }
 
-    public static void screenText(Player player, String text, int color, Point point){
+    public static void screenText(Player player, String text, Color color, Point point, Heroes plugin) {
         if(!Heroes.useSpout)
             return;
         if(SpoutManager.getPlayer(player).isSpoutCraftEnabled()){
@@ -72,7 +73,7 @@ public class SpoutUI {
             textField.setColor(color);
             textField.setY(point.y);
             textField.setX(point.x);
-            SpoutManager.getPlayer(player).getMainScreen().attachWidget(textField);
+            SpoutManager.getPlayer(player).getMainScreen().attachWidget(plugin, textField);
         }
     }
 
@@ -83,5 +84,4 @@ public class SpoutUI {
             SpoutManager.getAppearanceManager().setGlobalCloak((HumanEntity) player, Cloaks.valueOf(cloakName).toString());
         }
     }
-
 }
