@@ -2,6 +2,7 @@ package com.herocraftonline.dev.heroes.command.commands;
 
 import java.util.Set;
 
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -33,7 +34,7 @@ public class ArmorCommand extends BasicCommand {
         Hero hero = plugin.getHeroManager().getHero(player);
         HeroClass heroClass = hero.getHeroClass();
 
-        Set<String> allArmors = heroClass.getAllowedArmor();
+        Set<Material> allArmors = heroClass.getAllowedArmor();
         String[] categories = { "Helmet", "Chestplate", "Leggings", "Boots" };
         String[] categorizedArmors = new String[categories.length];
 
@@ -41,7 +42,8 @@ public class ArmorCommand extends BasicCommand {
             categorizedArmors[i] = "";
         }
 
-        for (String armor : allArmors) {
+        for (Material mat : allArmors) {
+            String armor = mat.name();
             for (int i = 0; i < categories.length; i++) {
                 if (armor.endsWith(categories[i].toUpperCase())) {
                     categorizedArmors[i] += MaterialUtil.getFriendlyName(armor).split(" ")[0] + ", ";

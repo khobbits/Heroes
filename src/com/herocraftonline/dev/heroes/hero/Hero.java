@@ -30,7 +30,6 @@ import com.herocraftonline.dev.heroes.api.HeroChangeLevelEvent;
 import com.herocraftonline.dev.heroes.api.HeroDamageCause;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
-import com.herocraftonline.dev.heroes.classes.HeroClass.WeaponItems;
 import com.herocraftonline.dev.heroes.effects.Effect;
 import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.effects.Periodic;
@@ -321,7 +320,7 @@ public class Hero {
                         Messaging.broadcast(plugin, "$1 has become a master $2!", player.getName(), hc.getName());
                     }
                     if (newLevel > currentLevel) {
-                        SpoutUI.sendPlayerNotification(player, ChatColor.GOLD + "Level Up!", ChatColor.DARK_RED + "Level - " + String.valueOf(newLevel), Material.DIAMOND_HELMET);
+                        //SpoutUI.sendPlayerNotification(player, ChatColor.GOLD + "Level Up!", ChatColor.DARK_RED + "Level - " + String.valueOf(newLevel), Material.DIAMOND_HELMET);
                         Messaging.send(player, "You gained a level! (Lvl $1 $2)", String.valueOf(newLevel), hc.getName());
                         setHealth(getMaxHealth());
                         //Reset food stuff on level up
@@ -332,7 +331,7 @@ public class Hero {
                         player.setExhaustion(0);
                         syncHealth();
                     } else {
-                        SpoutUI.sendPlayerNotification(player, ChatColor.GOLD + "Level Lost!", ChatColor.DARK_RED + "Level - " + String.valueOf(newLevel), Material.DIAMOND_HELMET);
+                        //SpoutUI.sendPlayerNotification(player, ChatColor.GOLD + "Level Lost!", ChatColor.DARK_RED + "Level - " + String.valueOf(newLevel), Material.DIAMOND_HELMET);
                         Messaging.send(player, "You lost a level! (Lvl $1 $2)", String.valueOf(newLevel), hc.getName());
                     }
                 }
@@ -965,12 +964,12 @@ public class Hero {
 
     public int checkArmorSlots() {
         PlayerInventory inv = player.getInventory();
-        String item;
+        Material item;
         int removedCount = 0;
 
         if (inv.getHelmet() != null && inv.getHelmet().getTypeId() != 0 && !plugin.getConfigManager().getProperties().allowHats) {
-            item = inv.getHelmet().getType().toString();
-            if (!heroClass.getAllowedArmor().contains(item) && !heroClass.getAllowedArmor().contains("*")) {
+            item = inv.getHelmet().getType();
+            if (!heroClass.isAllowedArmor(item) && !secondClass.isAllowedArmor(item) ) {
                 Util.moveItem(this, -1, inv.getHelmet());
                 inv.setHelmet(null);
                 removedCount++;
@@ -978,8 +977,8 @@ public class Hero {
             }
         }
         if (inv.getChestplate() != null && inv.getChestplate().getTypeId() != 0) {
-            item = inv.getChestplate().getType().toString();
-            if (!heroClass.getAllowedArmor().contains(item) && !heroClass.getAllowedArmor().contains("*")) {
+            item = inv.getChestplate().getType();
+            if (!heroClass.isAllowedArmor(item) && !secondClass.isAllowedArmor(item)) {
                 Util.moveItem(this, -1, inv.getChestplate());
                 inv.setChestplate(null);
                 removedCount++;
@@ -987,16 +986,16 @@ public class Hero {
         }
 
         if (inv.getLeggings() != null && inv.getLeggings().getTypeId() != 0) {
-            item = inv.getLeggings().getType().toString();
-            if (!heroClass.getAllowedArmor().contains(item) && !heroClass.getAllowedArmor().contains("*")) {
+            item = inv.getLeggings().getType();
+            if (!heroClass.isAllowedArmor(item) && !secondClass.isAllowedArmor(item)) {
                 Util.moveItem(this, -1, inv.getLeggings());
                 inv.setLeggings(null);
                 removedCount++;
             }
         }
         if (inv.getBoots() != null && inv.getBoots().getTypeId() != 0) {
-            item = inv.getBoots().getType().toString();
-            if (!heroClass.getAllowedArmor().contains(item) && !heroClass.getAllowedArmor().contains("*")) {
+            item = inv.getBoots().getType();
+            if (!heroClass.isAllowedArmor(item) && !secondClass.isAllowedArmor(item)) {
                 Util.moveItem(this, -1, inv.getBoots());
                 inv.setBoots(null);
                 removedCount++;
@@ -1010,18 +1009,14 @@ public class Hero {
             return true;
 
         ItemStack itemStack = player.getInventory().getItem(slot);
-        String itemType = itemStack.getType().toString();
-        if (!itemType.equalsIgnoreCase("BOW")) {
-            try {
-                WeaponItems.valueOf(itemType.substring(itemType.indexOf("_") + 1, itemType.length()));
-            } catch (IllegalArgumentException e1) {
-                return true;
-            }
-        }
-        if (!heroClass.getAllowedWeapons().contains(itemType) && !heroClass.getAllowedWeapons().contains("*")) {
+        Material itemType = itemStack.getType();
+        if (!Util.isWeapon(itemType))
+            return true;
+        else if (heroClass.isAllowedWeapon(itemType) || secondClass.isAllowedWeapon(itemType))
+            return true;
+        else {
             Util.moveItem(this, slot, itemStack);
             return false;
         }
-        return true;
     }
 }

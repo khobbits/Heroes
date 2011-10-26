@@ -16,15 +16,12 @@ import org.bukkit.util.config.Configuration;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.classes.HeroClass.ArmorItems;
-import com.herocraftonline.dev.heroes.classes.HeroClass.ArmorType;
 import com.herocraftonline.dev.heroes.classes.HeroClass.CircularParentException;
 import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
-import com.herocraftonline.dev.heroes.classes.HeroClass.WeaponItems;
-import com.herocraftonline.dev.heroes.classes.HeroClass.WeaponType;
 import com.herocraftonline.dev.heroes.damage.DamageManager.ProjectileType;
 import com.herocraftonline.dev.heroes.skill.OutsourcedSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
+import com.herocraftonline.dev.heroes.util.Util;
 
 @SuppressWarnings("deprecation")
 public class HeroClassManager {
@@ -228,45 +225,19 @@ public class HeroClassManager {
             return;
         }
         for (String w : weapon) {
-            if (w.equals("*") || w.equals("ALL")) {
-                newClass.addAllowedWeapon("*");
-                continue;
-            }
-            // A BOW has no ItemType so we just add it straight away.
-            if (w.equalsIgnoreCase("BOW")) {
-                newClass.addAllowedWeapon("BOW");
-                wLimits.append(" BOW");
-                continue;
-            }
-            // If it's a generic type like 'DIAMOND' or 'LEATHER' we add all the possible entries.
-            if (!w.contains("_")) {
-                try {
-                    WeaponType wType = WeaponType.valueOf(w);
-                    newClass.addAllowedWeapon(wType + "_PICKAXE");
-                    wLimits.append(" ").append(wType).append("_PICKAXE");
-                    newClass.addAllowedWeapon(wType + "_AXE");
-                    wLimits.append(" ").append(wType).append("_AXE");
-                    newClass.addAllowedWeapon(wType + "_HOE");
-                    wLimits.append(" ").append(wType).append("_HOE");
-                    newClass.addAllowedWeapon(wType + "_SPADE");
-                    wLimits.append(" ").append(wType).append("_SPADE");
-                    newClass.addAllowedWeapon(wType + "_SWORD");
-                    wLimits.append(" ").append(wType).append("_SWORD");
-                } catch (IllegalArgumentException e) {
-                    Heroes.log(Level.WARNING, "Invalid weapon type (" + w + ") defined for " + className);
-                }
-            } else {
-                String type = w.substring(0, w.indexOf("_"));
-                String item = w.substring(w.indexOf("_") + 1, w.length());
-                try {
-                    WeaponType wType = WeaponType.valueOf(type);
-                    WeaponItems wItem = WeaponItems.valueOf(item);
-                    newClass.addAllowedWeapon(wType + "_" + wItem);
-                    wLimits.append(" - ").append(wType).append("_").append(wItem);
-                } catch (IllegalArgumentException e) {
-                    Heroes.log(Level.WARNING, "Invalid weapon type (" + type + "_" + item + ") defined for " + className);
+            boolean matched = false;
+            for (String s : Util.weapons) {
+                if (s.contains(w.toUpperCase()) || w.equals("*") || w.equalsIgnoreCase("ALL")) {
+                    newClass.addAllowedWeapon(Material.matchMaterial(s));
+                    wLimits.append(" ").append(s);
+                    matched = true;
                 }
             }
+
+            if (w.equals("*") || w.equals("ALL")) 
+                break;
+            if (!matched)
+                Heroes.log(Level.WARNING, "Invalid weapon type (" + w + ") defined for " + className);
         }
         plugin.debugLog(Level.INFO, "Allowed Weapons - " + wLimits.toString());
     }
@@ -330,47 +301,26 @@ public class HeroClassManager {
         StringBuilder aLimits = new StringBuilder();
         String className = newClass.getName();
         // Get the list of Allowed armors for this class
-        List<String> armor = config.getStringList("permitted-armor", new ArrayList<String>());
-        if (armor.isEmpty()) {
+        List<String> armors = config.getStringList("permitted-armor", new ArrayList<String>());
+        if (armors.isEmpty()) {
             plugin.debugLog(Level.WARNING, className + " has no permitted-armor section");
             return;
         }
-        for (String a : armor) {
+        for (String a : armors) {
+            boolean matched = false;
+            for (String s : Util.armors) {
+                if (s.contains(a.toUpperCase()) || a.equals("*") || a.equalsIgnoreCase("ALL")) {
+                    newClass.addAllowedArmor(Material.matchMaterial(s));
+                    aLimits.append(" ").append(s);
+                    matched = true;
+                }
+            }
+            //If we had an All node we don't need to continue looping through the allowed armors we can already wear them all
             if (a.equals("*") || a.equals("ALL")) {
-                newClass.addAllowedArmor("*");
-                continue;
+                break;
             }
-            if (a.equalsIgnoreCase("pumpkin")) {
-                newClass.addAllowedArmor("PUMPKIN");
-                aLimits.append(" PUMPKIN");
-            }
-            // If it's a generic type like 'DIAMOND' or 'LEATHER' we add all the possible entries.
-            if (!a.contains("_")) {
-                try {
-                    ArmorType aType = ArmorType.valueOf(a);
-                    newClass.addAllowedArmor(aType + "_HELMET");
-                    aLimits.append(" ").append(aType).append("_HELMET");
-                    newClass.addAllowedArmor(aType + "_CHESTPLATE");
-                    aLimits.append(" ").append(aType).append("_CHESTPLATE");
-                    newClass.addAllowedArmor(aType + "_LEGGINGS");
-                    aLimits.append(" ").append(aType).append("_LEGGINGS");
-                    newClass.addAllowedArmor(aType + "_BOOTS");
-                    aLimits.append(" ").append(aType).append("_BOOTS");
-                } catch (IllegalArgumentException e) {
-                    Heroes.log(Level.WARNING, "Invalid armor type (" + a + ") defined for " + className);
-                }
-            } else {
-                String type = a.substring(0, a.indexOf("_"));
-                String item = a.substring(a.indexOf("_") + 1, a.length());
-                try {
-                    ArmorType aType = ArmorType.valueOf(type);
-                    ArmorItems aItem = ArmorItems.valueOf(item);
-                    newClass.addAllowedArmor(aType + "_" + aItem);
-                    aLimits.append(" ").append(aType).append("_").append(aItem);
-                } catch (IllegalArgumentException e) {
-                    Heroes.log(Level.WARNING, "Invalid armor type (" + type + "_" + item + ") defined for " + className);
-                }
-            }
+            if (!matched)
+                Heroes.log(Level.WARNING, "Invalid armor type (" + a + ") defined for " + className);
         }
         plugin.debugLog(Level.INFO, "Allowed Armor - " + aLimits.toString());
     }

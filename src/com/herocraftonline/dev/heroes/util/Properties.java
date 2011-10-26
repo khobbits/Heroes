@@ -40,6 +40,7 @@ public class Properties {
     public double spawnCampExpMult;
     public Map<CreatureType, Double> creatureKillingExp = new EnumMap<CreatureType, Double>(CreatureType.class);
     public Map<Material, Double> miningExp = new EnumMap<Material, Double>(Material.class);
+    public Map<Material, Double> farmingExp = new EnumMap<Material, Double>(Material.class);
     public Map<Material, Double> loggingExp = new EnumMap<Material, Double>(Material.class);
     public Map<Material, Double> craftingExp = new EnumMap<Material, Double>(Material.class);
     public Map<String, String> skillInfo = new HashMap<String, String>();

@@ -3,6 +3,7 @@ package com.herocraftonline.dev.heroes.classes;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -24,8 +25,8 @@ public class HeroClass {
     private Set<HeroClass> strongParents = new HashSet<HeroClass>();
     private Set<HeroClass> weakParents = new HashSet<HeroClass>();
     private Set<HeroClass> specializations = new LinkedHashSet<HeroClass>();
-    private Set<String> allowedArmor = new LinkedHashSet<String>();
-    private Set<String> allowedWeapons = new LinkedHashSet<String>();
+    private Set<Material> allowedArmor = EnumSet.noneOf(Material.class);
+    private Set<Material> allowedWeapons = EnumSet.noneOf(Material.class);
     private Set<ExperienceType> experienceSources = null;
     private boolean primary = true;
     private boolean secondary = true;
@@ -60,11 +61,11 @@ public class HeroClass {
         this.name = name;
     }
 
-    public void addAllowedArmor(String armor) {
+    public void addAllowedArmor(Material armor) {
         this.allowedArmor.add(armor);
     }
 
-    public void addAllowedWeapon(String weapon) {
+    public void addAllowedWeapon(Material weapon) {
         this.allowedWeapons.add(weapon);
     }
 
@@ -174,26 +175,62 @@ public class HeroClass {
         return true;
     }
 
-    public Set<String> getAllowedArmor() {
-        return this.allowedArmor;
+    /**
+     * Returns true if this class is allowed to wear the specified armor
+     * @param mat
+     * @return
+     */
+    public boolean isAllowedArmor(Material mat) {
+        return this.allowedArmor.contains(mat);
+    }
+    
+    /**
+     * @return the Set of Allowed Armor materials
+     */
+    public Set<Material> getAllowedArmor() {
+        return Collections.unmodifiableSet(allowedArmor);
+    }
+    
+    /**
+     * Returns true if this class is allowed to wear the specified weapon
+     * @param mat
+     * @return
+     */
+    public boolean isAllowedWeapon(Material mat) {
+        return this.allowedWeapons.contains(mat);
+    }
+    
+    /**
+     * @return the set of Allowed Weapon materials
+     */
+    public Set<Material> getAllowedWeapons() {
+        return Collections.unmodifiableSet(allowedWeapons);
     }
 
-    public Set<String> getAllowedWeapons() {
-        return this.allowedWeapons;
-    }
-
+    /**
+     * @return the base maximum health for the class.
+     */
     public double getBaseMaxHealth() {
         return baseMaxHealth;
     }
 
+    /**
+     * @return the cost to enter switch into this class
+     */
     public int getCost() {
         return cost;
     }
 
+    /**
+     * @return the class description
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * @return the set of Experience sources allowed for this class
+     */
     public Set<ExperienceType> getExperienceSources() {
         return Collections.unmodifiableSet(experienceSources);
     }
@@ -344,26 +381,12 @@ public class HeroClass {
         this.userClass = userClass;
     }
 
-    public static enum ArmorItems {
-        HELMET,
-        CHESTPLATE,
-        LEGGINGS,
-        BOOTS
-    }
-
-    public static enum ArmorType {
-        LEATHER,
-        IRON,
-        GOLD,
-        DIAMOND,
-        CHAINMAIL
-    }
-
     public static enum ExperienceType {
         SKILL,
         KILLING,
         PVP,
         MINING,
+        FARMING,
         CRAFTING,
         LOGGING,
         DEATH,
@@ -371,21 +394,6 @@ public class HeroClass {
         EXTERNAL
     }
 
-    public static enum WeaponItems {
-        PICKAXE,
-        AXE,
-        HOE,
-        SPADE,
-        SWORD
-    }
-
-    public static enum WeaponType {
-        WOOD,
-        STONE,
-        IRON,
-        GOLD,
-        DIAMOND
-    }
 
     @SuppressWarnings("serial")
     public class CircularParentException extends Exception {

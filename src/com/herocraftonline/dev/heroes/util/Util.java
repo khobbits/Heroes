@@ -24,14 +24,13 @@ import com.herocraftonline.dev.heroes.hero.Hero;
 @SuppressWarnings("serial")
 public final class Util {
 
-    // Default Sword List
+    // Default Item Maps
     public final static List<String> swords;
-
-    // Default Axe List
     public final static List<String> axes;
-
-    // Default Shovel List
     public final static List<String> shovels;
+    public final static List<String> picks;
+    public final static List<String> weapons;
+    public final static List<String> armors;
 
     // Blocks that we consider transparent for skills
     public final static Set<Material> transparentBlocks;
@@ -65,7 +64,43 @@ public final class Util {
         shovels.add("IRON_SPADE");
         shovels.add("GOLD_SPADE");
         shovels.add("DIAMOND_SPADE");
-
+        
+        picks = new ArrayList<String>();
+        picks.add("WOOD_PICKAXE");
+        picks.add("STONE_PACKAXE");
+        picks.add("IRON_PACKAXE");
+        picks.add("GOLD_PACKAXE");
+        picks.add("DIAMOND_PACKAXE");
+        
+        weapons = new ArrayList<String>();
+        weapons.addAll(picks);
+        weapons.addAll(shovels);
+        weapons.addAll(axes);
+        weapons.addAll(swords);
+        weapons.add("BOW");
+        
+        armors = new ArrayList<String>();
+        armors.add("LEATHER_HELMET");
+        armors.add("LEATHER_LEGGINGS");
+        armors.add("LEATHER_BOOTS");
+        armors.add("LEATHER_CHESTPLATE");
+        armors.add("IRON_HELMET");
+        armors.add("IRON_LEGGINGS");
+        armors.add("IRON_CHESTPLA");
+        armors.add("CHAINMAIL_HELMET");
+        armors.add("CHAINMAIL_LEGGINGS");
+        armors.add("CHAINMAIL_BOOTS");
+        armors.add("CHAINMAIL_CHESTPLATE");
+        armors.add("GOLD_HELMET");
+        armors.add("GOLD_LEGGINGS");
+        armors.add("GOLD_CHESTPLATE");
+        armors.add("GOLD_BOOTS");
+        armors.add("DIAMOND_HELMET");
+        armors.add("DIAMOND_LEGGINGS");
+        armors.add("DIAMOND_CHESTPLATE");
+        armors.add("DIAMOND_BOOTS");
+        armors.add("PUMPKIN");
+        
         transparentBlocks = new HashSet<Material>();
         transparentBlocks.add(Material.AIR);
         transparentBlocks.add(Material.SNOW);
@@ -288,6 +323,10 @@ public final class Util {
         case GOLD_LEGGINGS:
         case GOLD_CHESTPLATE:
         case GOLD_BOOTS:
+        case DIAMOND_HELMET: 
+        case DIAMOND_LEGGINGS:
+        case DIAMOND_CHESTPLATE:
+        case DIAMOND_BOOTS:
         case PUMPKIN:
             return true;
         default:

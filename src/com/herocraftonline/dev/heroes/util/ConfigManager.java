@@ -186,6 +186,7 @@ public class ConfigManager {
         }
 
         properties.miningExp = loadMaterialExperience(config, "mining");
+        properties.farmingExp = loadMaterialExperience(config, "farming");
         properties.loggingExp = loadMaterialExperience(config, "logging");
         properties.craftingExp = loadMaterialExperience(config, "crafting");
     }

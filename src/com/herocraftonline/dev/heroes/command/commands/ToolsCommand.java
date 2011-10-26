@@ -2,6 +2,7 @@ package com.herocraftonline.dev.heroes.command.commands;
 
 import java.util.Set;
 
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -32,7 +33,7 @@ public class ToolsCommand extends BasicCommand {
         Hero hero = plugin.getHeroManager().getHero(player);
         HeroClass heroClass = hero.getHeroClass();
 
-        Set<String> allTools = heroClass.getAllowedWeapons();
+        Set<Material> allTools = heroClass.getAllowedWeapons();
         String[] categories = { "Sword", "Spade", "Pickaxe", "Axe", "Hoe" };
         String[] categorizedTools = new String[categories.length];
 
@@ -40,7 +41,8 @@ public class ToolsCommand extends BasicCommand {
             categorizedTools[i] = "";
         }
 
-        for (String tool : allTools) {
+        for (Material mat : allTools) {
+            String tool = mat.name(); 
             for (int i = 0; i < categories.length; i++) {
                 if (tool.endsWith(categories[i].toUpperCase())) {
                     if (categorizedTools[i] == null) {
