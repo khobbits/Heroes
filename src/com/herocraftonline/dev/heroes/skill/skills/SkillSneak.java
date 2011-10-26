@@ -30,9 +30,10 @@ public class SkillSneak extends ActiveSkill {
         setUsage("/skill stealth");
         setArgumentRange(0, 0);
         setIdentifiers("skill sneak");
-        setTypes(SkillType.BUFF, SkillType.PHYSICAL);
+        setTypes(SkillType.BUFF, SkillType.PHYSICAL, SkillType.STEALTHY);
 
         registerEvent(Type.PLAYER_TOGGLE_SNEAK, new SneakListener(), Priority.Highest);
+        registerEvent(Type.ENTITY_DAMAGE, new SneakDamageListener(), Priority.Monitor);
     }
 
     @Override
@@ -74,7 +75,7 @@ public class SkillSneak extends ActiveSkill {
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
             Heroes.debug.startTask("HeroesSkillListener");
-            if (event.isCancelled() || !damageCancels) {
+            if (event.isCancelled() || !damageCancels || event.getDamage() == 0) {
                 Heroes.debug.stopTask("HeroesSkillListener");
                 return;
             }
