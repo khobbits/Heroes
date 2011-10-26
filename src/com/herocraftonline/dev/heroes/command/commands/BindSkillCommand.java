@@ -5,7 +5,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.command.BasicCommand;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
@@ -32,7 +31,6 @@ public class BindSkillCommand extends BasicCommand {
 
         Player player = (Player) sender;
         Hero hero = plugin.getHeroManager().getHero(player);
-        HeroClass heroClass = hero.getHeroClass();
         Material material = player.getItemInHand().getType();
         if (!hero.canEquipItem(player.getInventory().getHeldItemSlot())) {
             return false;

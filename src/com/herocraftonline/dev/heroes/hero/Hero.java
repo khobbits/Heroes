@@ -643,7 +643,7 @@ public class Hero {
      * @return
      */
     public boolean hasSkill(String name) {
-        return this.heroClass.hasSkill(name) || this.secondClass != null ? this.secondClass.hasSkill(name) : false || skills.containsKey(name);
+        return this.heroClass.hasSkill(name) || skills.containsKey(name);
     }
 
     /**
