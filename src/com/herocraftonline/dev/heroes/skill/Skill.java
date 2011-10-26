@@ -124,6 +124,12 @@ public abstract class Skill extends BasicCommand {
         plugin.getServer().getPluginManager().callEvent(damageEntityEvent);
         if (damageEntityEvent.isCancelled())
             return false;
+        
+        //Reverse damage check to make sure the target can damage the player - this prevents the player from attacking the target while invulnerable
+        damageEntityEvent = new EntityDamageByEntityEvent(target, player, DamageCause.CUSTOM, 0);
+        plugin.getServer().getPluginManager().callEvent(damageEntityEvent);
+        if (damageEntityEvent.isCancelled())
+            return false;
         return true;
     }
 
