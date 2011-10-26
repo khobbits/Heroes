@@ -47,6 +47,7 @@ import com.herocraftonline.dev.heroes.command.commands.PartyModeCommand;
 import com.herocraftonline.dev.heroes.command.commands.PartyUICommand;
 import com.herocraftonline.dev.heroes.command.commands.PartyWhoCommand;
 import com.herocraftonline.dev.heroes.command.commands.PathsCommand;
+import com.herocraftonline.dev.heroes.command.commands.ProfessionCommand;
 import com.herocraftonline.dev.heroes.command.commands.ResetCommand;
 import com.herocraftonline.dev.heroes.command.commands.SkillListCommand;
 import com.herocraftonline.dev.heroes.command.commands.SpecsCommand;
@@ -362,13 +363,15 @@ public class Heroes extends JavaPlugin {
         commandHandler.addCommand(new PathsCommand(this));
         commandHandler.addCommand(new SpecsCommand(this));
         commandHandler.addCommand(new ChooseCommand(this));
+        commandHandler.addCommand(new ProfessionCommand(this));
         commandHandler.addCommand(new LevelInformationCommand(this));
         commandHandler.addCommand(new SkillListCommand(this));
         commandHandler.addCommand(new BindSkillCommand(this));
         commandHandler.addCommand(new ArmorCommand(this));
-        commandHandler.addCommand(new ToolsCommand(this));
+        
 
         // Page 2
+        commandHandler.addCommand(new ToolsCommand(this));
         commandHandler.addCommand(new ManaCommand(this));
         commandHandler.addCommand(new CooldownCommand(this));
         commandHandler.addCommand(new VerboseCommand(this));
@@ -376,9 +379,10 @@ public class Heroes extends JavaPlugin {
         commandHandler.addCommand(new WhoCommand(this));
         commandHandler.addCommand(new PartyAcceptCommand(this));
         commandHandler.addCommand(new PartyInviteCommand(this));
-        commandHandler.addCommand(new PartyWhoCommand(this));
+        
 
         // Page 3
+        commandHandler.addCommand(new PartyWhoCommand(this));
         commandHandler.addCommand(new PartyLeaveCommand(this));
         commandHandler.addCommand(new PartyModeCommand(this));
         commandHandler.addCommand(new PartyUICommand(this));
@@ -386,9 +390,10 @@ public class Heroes extends JavaPlugin {
         commandHandler.addCommand(new ConfigReloadCommand(this));
         commandHandler.addCommand(new HelpCommand(this));
         commandHandler.addCommand(new AdminExpCommand(this));
-        commandHandler.addCommand(new AdminLevelCommand(this));
+        
 
         // Page 4
+        commandHandler.addCommand(new AdminLevelCommand(this));
         commandHandler.addCommand(new AdminClassCommand(this));
         commandHandler.addCommand(new AdminHealthCommand(this));
         commandHandler.addCommand(new HealthCommand(this));
