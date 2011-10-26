@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
@@ -39,7 +40,7 @@ public class SkillManager {
         this.plugin = plugin;
         dir = new File(plugin.getDataFolder(), "skills");
         dir.mkdir();
-        
+
         List<URL> urls = new ArrayList<URL>();
         for (String skillFile : dir.list()) {
             if (skillFile.contains(".jar")) {
@@ -57,7 +58,7 @@ public class SkillManager {
                 }
             }
         }
-        
+
         ClassLoader cl = plugin.getClass().getClassLoader();
         classLoader = URLClassLoader.newInstance(urls.toArray(new URL[0]), cl);
     }
@@ -68,7 +69,7 @@ public class SkillManager {
      * @param skill
      */
     public void addSkill(Skill skill) {
-        skills.put(skill.getName().toLowerCase(), skill);
+        skills.put(skill.getName().toLowerCase().replace("skill", ""), skill);
         for (String ident : skill.getIdentifiers()) {
             identifiers.put(ident.toLowerCase(), skill);
         }
@@ -172,25 +173,18 @@ public class SkillManager {
      * Load all the skills.
      */
     public void loadSkills() {
-        ArrayList<String> loadedSkills = new ArrayList<String>();
-        for (String f : dir.list()) {
-            if (f.contains(".jar")) {
-                // if the Skill is already loaded, skip it
-                if (isLoaded(f.replace(".jar", ""))) {
-                    continue;
-                }
+        for (Entry<String, File> entry : skillFiles.entrySet()) {
+            // if the Skill is already loaded, skip it
+            if (isLoaded(entry.getKey())) 
+                continue;
 
-                Skill skill = loadSkill(new File(dir, f));
-                if (skill != null) {
-                    addSkill(skill);
-                    if (loadedSkills.isEmpty()) {
-                        Heroes.log(Level.INFO, "Collecting and loading skills");
-                    }
-                    loadedSkills.add(skill.getName());
-                    plugin.debugLog(Level.INFO, "Skill " + skill.getName() + " Loaded");
-                }
+            Skill skill = loadSkill(entry.getValue());
+            if (skill != null) {
+                addSkill(skill);
+                plugin.debugLog(Level.INFO, "Skill " + skill.getName() + " Loaded");
             }
         }
+
     }
 
     /**
