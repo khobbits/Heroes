@@ -124,10 +124,12 @@ public class YMLHeroStorage extends HeroStorage {
 
         if (config.getString("class") != null) {
             playerClass = plugin.getClassManager().getClass(config.getString("class"));
-
+            
             if (playerClass == null) {
                 playerClass = defaultClass;
             } else if (!CommandHandler.hasPermission(player, "heroes.classes." + playerClass.getName().toLowerCase())) {
+                playerClass = defaultClass;
+            } else if (!playerClass.isPrimary()) {
                 playerClass = defaultClass;
             }
         } else {
@@ -149,10 +151,11 @@ public class YMLHeroStorage extends HeroStorage {
 
         if (config.getString("secondary-class") != null) {
             playerClass = plugin.getClassManager().getClass(config.getString("secondary-class"));
-
-            if (!CommandHandler.hasPermission(player, "heroes.classes." + playerClass.getName().toLowerCase())) 
-                playerClass = null;
             
+            if (playerClass != null) {
+                if (playerClass.isSecondary() || !CommandHandler.hasPermission(player, "heroes.classes." + playerClass.getName().toLowerCase()))
+                playerClass = null;
+            }
         }
         return playerClass;
     }
