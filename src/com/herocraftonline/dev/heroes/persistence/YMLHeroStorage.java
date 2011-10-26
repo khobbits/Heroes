@@ -146,18 +146,13 @@ public class YMLHeroStorage extends HeroStorage {
      */
     private HeroClass loadSecondaryClass(Player player, Configuration config) {
         HeroClass playerClass = null;
-        HeroClass defaultClass = plugin.getClassManager().getDefaultClass();
 
         if (config.getString("secondary-class") != null) {
             playerClass = plugin.getClassManager().getClass(config.getString("secondary-class"));
 
-            if (playerClass == null) {
-                playerClass = defaultClass;
-            } else if (!CommandHandler.hasPermission(player, "heroes.classes." + playerClass.getName().toLowerCase())) {
-                playerClass = defaultClass;
-            }
-        } else {
-            playerClass = defaultClass;
+            if (!CommandHandler.hasPermission(player, "heroes.classes." + playerClass.getName().toLowerCase())) 
+                playerClass = null;
+            
         }
         return playerClass;
     }
