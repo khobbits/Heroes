@@ -1,6 +1,7 @@
 package com.herocraftonline.dev.heroes.persistence;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -12,6 +13,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.util.config.Configuration;
 
+import com.google.common.io.Files;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.command.CommandHandler;
@@ -30,6 +32,19 @@ public class YMLHeroStorage extends HeroStorage {
     @Override
     public Hero loadHero(Player player) {
         File playerFile = new File(playerFolder, player.getName() + ".yml"); // Setup our Players Data File.
+        File newPlayerFile = new File(playerFolder + File.separator + player.getName().substring(0, 0).toLowerCase(), player.getName() + ".yml");
+        if (newPlayerFile.exists())
+            playerFile = newPlayerFile;
+        else if (playerFile.exists()) {
+            newPlayerFile.mkdirs();
+            try {
+                Files.copy(playerFile, newPlayerFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            playerFile = newPlayerFile;
+        }
         // Check if it already exists, if so we load the data.
         if (playerFile.exists()) {
             Configuration playerConfig = new Configuration(playerFile); // Setup the Configuration
@@ -64,7 +79,7 @@ public class YMLHeroStorage extends HeroStorage {
     @Override
     public boolean saveHero(Hero hero) {
         String name = hero.getPlayer().getName();
-        File playerFile = new File(playerFolder, name + ".yml");
+        File playerFile = new File(playerFolder + File.separator + name.substring(0, 0).toLowerCase(), name + ".yml");
         Configuration playerConfig = new Configuration(playerFile);
 
         playerConfig.setProperty("class", hero.getHeroClass().toString());
