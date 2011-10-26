@@ -144,7 +144,8 @@ public class HPlayerListener extends PlayerListener {
     @Override
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        Hero hero = plugin.getHeroManager().getHero(player);
+        HeroManager hm = plugin.getHeroManager();
+        Hero hero = hm.getHero(player);
         hero.syncExperience();
         hero.syncHealth();
         hero.checkInventory();

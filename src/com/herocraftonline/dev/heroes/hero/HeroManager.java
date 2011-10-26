@@ -76,6 +76,8 @@ public class HeroManager {
         if (hero != null) {
             if (hero.getPlayer().getEntityId() != player.getEntityId()) {
                 heroes.remove(key);
+                hero.clearEffects();
+                saveHero(hero);
             } else {
                 Heroes.debug.stopTask("HeroManager.getHero");
                 return hero;
@@ -118,7 +120,7 @@ public class HeroManager {
 
         heroes.remove(hero.getPlayer().getName().toLowerCase());
     }
-
+    
     /**
      * Save the given Players Data to a file.
      * 
