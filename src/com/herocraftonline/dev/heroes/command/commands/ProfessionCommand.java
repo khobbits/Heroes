@@ -170,9 +170,10 @@ public class ProfessionCommand extends BasicInteractiveCommand {
                 return false;
 
             if (prop.resetExpOnClassChange || prop.resetMasteryOnClassChange) {
-                if (!hero.isMaster(currentClass) || (prop.resetMasteryOnClassChange)) {
-                    hero.setExperience(currentClass, 0);
-                }
+                if (currentClass != null)
+                    if (!hero.isMaster(currentClass) || (prop.resetMasteryOnClassChange)) {
+                        hero.setExperience(currentClass, 0);
+                    }
             }
 
             int cost = newClass.getCost();

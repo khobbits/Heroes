@@ -155,16 +155,30 @@ public class OutsourcedSkill extends Skill {
     public class SkillHeroListener extends HeroesEventListener {
 
         @Override
-        public void onClassChange(ClassChangeEvent event) {
+        public void onClassChange(final ClassChangeEvent event) {
             if (event.isCancelled())
                 return;
             
-            tryLearningSkill(event.getHero(), event.getTo());
+            plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+
+                @Override
+                public void run() {
+                    tryLearningSkill(event.getHero(), event.getTo());
+                }
+                
+            }, 1);
         }
 
         @Override
-        public void onHeroChangeLevel(HeroChangeLevelEvent event) {
-            tryLearningSkill(event.getHero());
+        public void onHeroChangeLevel(final HeroChangeLevelEvent event) {
+            plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+
+                @Override
+                public void run() {
+                    tryLearningSkill(event.getHero(), event.getHeroClass());
+                }
+                
+            }, 1);
         }
     }
 }
