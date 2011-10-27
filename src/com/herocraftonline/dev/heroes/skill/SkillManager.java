@@ -101,8 +101,10 @@ public class SkillManager {
         plugin.getConfigManager().loadSkillConfig(oSkill);
         ConfigurationNode config = oSkill.getConfig();
         List<String> perms = config.getStringList("permissions", new ArrayList<String>());
-        if (perms.isEmpty())
+        if (perms.isEmpty()) {
+            Heroes.log(Level.SEVERE, "There are no permissions defined for " + oSkill.getName());
             return false;
+        }
         oSkill.setPermissions(perms.toArray(new String[0]));
         oSkill.setUsage(config.getString("usage"));
         skills.put(name.toLowerCase(), oSkill);

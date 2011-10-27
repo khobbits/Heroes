@@ -14,10 +14,7 @@ experience-sources:
 - KILLING
 permission-skills:
   Example:
-  level: 1
-  usage: This is an EXAMPLE!
-  permissions:
-  - plugin.example.node.here
+    level: 1
 base-max-health: 20
 max-health-per-level: 0.1
 expmodifier: 1.0

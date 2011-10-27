@@ -2,6 +2,7 @@ package com.herocraftonline.dev.heroes.util;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -54,6 +55,7 @@ public class ConfigManager {
         checkForConfig(damageConfigFile);
         checkForConfig(new File(plugin.getDataFolder(), "font.png"));
         checkForConfig(new File(plugin.getDataFolder(), "heroes.png"));
+        checkForConfig(outsourcedSkillConfigFile);
         if (!classConfigFolder.exists()) {
             classConfigFolder.mkdirs();
             checkForConfig(new File(classConfigFolder, "vagrant.yml"));
@@ -90,14 +92,18 @@ public class ConfigManager {
         Configuration config = null;
         if (!(skill instanceof OutsourcedSkill)) 
             config = new Configuration(skillConfigFile);
-        else
+        else {
             config = new Configuration(outsourcedSkillConfigFile);
+        }
 
         config.load();
-
         ConfigurationNode defaultNode = skill.getDefaultConfig();
         mergeNodeToConfig(config, defaultNode, skill.getName());
-        skill.setConfig(config.getNode(skill.getName()));
+        ConfigurationNode loadedNode = config.getNode(skill.getName());
+        if (loadedNode == null)
+            skill.setConfig(defaultNode);
+        else
+            skill.setConfig(config.getNode(skill.getName()));
         config.save();
         skill.init();
     }
@@ -286,6 +292,7 @@ public class ConfigManager {
                     config.setProperty(path + "." + key, node.getProperty(key));
                 }
             }
-        }
+        } else
+            config.setProperty(path + ".foo", "foo");
     }
 }
