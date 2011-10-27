@@ -360,7 +360,8 @@ public class HeroClassManager {
                 }
                 try {
                     if (!plugin.getSkillManager().isLoaded(skill)) {
-                        plugin.getSkillManager().loadOutsourcedSkill(skill);
+                        if (!plugin.getSkillManager().loadOutsourcedSkill(skill))
+                            continue;
                     }
                     ConfigurationNode skillSettings = Configuration.getEmptyNode();
                     List<String> settings = config.getKeys("permission-skills." + skill);

@@ -93,16 +93,20 @@ public class SkillManager {
         return skills.get(name.toLowerCase());
     }
     
-    public void loadOutsourcedSkill(String name) {
+    public boolean loadOutsourcedSkill(String name) {
         if (name == null || skills.get(name.toLowerCase()) != null)
-            return;
+            return true;
         
         OutsourcedSkill oSkill = new OutsourcedSkill(plugin, name);
         plugin.getConfigManager().loadSkillConfig(oSkill);
         ConfigurationNode config = oSkill.getConfig();
-        oSkill.setPermissions(config.getStringList("permissions", new ArrayList<String>()).toArray(new String[0]));
+        List<String> perms = config.getStringList("permissions", new ArrayList<String>());
+        if (perms.isEmpty())
+            return false;
+        oSkill.setPermissions(perms.toArray(new String[0]));
         oSkill.setUsage(config.getString("usage"));
         skills.put(name.toLowerCase(), oSkill);
+        return true;
     }
 
     /**
