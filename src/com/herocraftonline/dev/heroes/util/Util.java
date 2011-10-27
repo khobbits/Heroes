@@ -29,6 +29,7 @@ public final class Util {
     public final static List<String> axes;
     public final static List<String> shovels;
     public final static List<String> picks;
+    public final static List<String> hoes;
     public final static List<String> weapons;
     public final static List<String> armors;
 
@@ -44,49 +45,58 @@ public final class Util {
     public final static HashMap<String, Location> deaths;
     
     static {
-        swords = new ArrayList<String>();
+        swords = new ArrayList<String>(5);
         swords.add("WOOD_SWORD");
         swords.add("STONE_SWORD");
         swords.add("IRON_SWORD");
         swords.add("GOLD_SWORD");
         swords.add("DIAMOND_SWORD");
 
-        axes = new ArrayList<String>();
+        axes = new ArrayList<String>(5);
         axes.add("WOOD_AXE");
         axes.add("STONE_AXE");
         axes.add("IRON_AXE");
         axes.add("GOLD_AXE");
         axes.add("DIAMOND_AXE");
 
-        shovels = new ArrayList<String>();
-        shovels.add("WOODEN_SPADE");
+        shovels = new ArrayList<String>(5);
+        shovels.add("WOOD_SPADE");
         shovels.add("STONE_SPADE");
         shovels.add("IRON_SPADE");
         shovels.add("GOLD_SPADE");
         shovels.add("DIAMOND_SPADE");
         
-        picks = new ArrayList<String>();
+        picks = new ArrayList<String>(5);
         picks.add("WOOD_PICKAXE");
-        picks.add("STONE_PACKAXE");
-        picks.add("IRON_PACKAXE");
-        picks.add("GOLD_PACKAXE");
-        picks.add("DIAMOND_PACKAXE");
+        picks.add("STONE_PICKAXE");
+        picks.add("IRON_PICKAXE");
+        picks.add("GOLD_PICKAXE");
+        picks.add("DIAMOND_PICKAXE");
         
-        weapons = new ArrayList<String>();
+        hoes = new ArrayList<String>(5);
+        hoes.add("WOOD_HOE");
+        hoes.add("STONE_HOE");
+        hoes.add("IRON_HOE");
+        hoes.add("GOLD_HOE");
+        hoes.add("DIAMOND_HOE");
+        
+        weapons = new ArrayList<String>(26);
         weapons.addAll(picks);
         weapons.addAll(shovels);
         weapons.addAll(axes);
         weapons.addAll(swords);
+        weapons.addAll(hoes);
         weapons.add("BOW");
         
-        armors = new ArrayList<String>();
+        armors = new ArrayList<String>(21);
         armors.add("LEATHER_HELMET");
         armors.add("LEATHER_LEGGINGS");
         armors.add("LEATHER_BOOTS");
         armors.add("LEATHER_CHESTPLATE");
         armors.add("IRON_HELMET");
         armors.add("IRON_LEGGINGS");
-        armors.add("IRON_CHESTPLA");
+        armors.add("IRON_CHESTPLATE");
+        armors.add("IRON_BOOTS");
         armors.add("CHAINMAIL_HELMET");
         armors.add("CHAINMAIL_LEGGINGS");
         armors.add("CHAINMAIL_BOOTS");
@@ -101,7 +111,7 @@ public final class Util {
         armors.add("DIAMOND_BOOTS");
         armors.add("PUMPKIN");
         
-        transparentBlocks = new HashSet<Material>();
+        transparentBlocks = new HashSet<Material>(22);
         transparentBlocks.add(Material.AIR);
         transparentBlocks.add(Material.SNOW);
         transparentBlocks.add(Material.REDSTONE_WIRE);
@@ -124,7 +134,7 @@ public final class Util {
         transparentBlocks.add(Material.DIODE_BLOCK_OFF);
         transparentBlocks.add(Material.DIODE_BLOCK_ON);
 
-        transparentIds = new HashSet<Byte>();
+        transparentIds = new HashSet<Byte>(22);
         transparentIds.add((byte) Material.AIR.getId());
         transparentIds.add((byte) Material.SNOW.getId());
         transparentIds.add((byte) Material.REDSTONE_WIRE.getId());
