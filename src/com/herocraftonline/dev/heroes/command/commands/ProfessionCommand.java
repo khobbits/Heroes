@@ -121,23 +121,21 @@ public class ProfessionCommand extends BasicInteractiveCommand {
             }
 
             int cost = newClass.getCost();
-            boolean costApplied = true;
-            if (prop.firstSwitchFree && currentClass.isDefault()) {
-                costApplied = false;
-            } else if (hero.isMaster(newClass) && !prop.swapMasteryCost) {
-                costApplied = false;
+            boolean chargePlayer = true;
+            if (hero.isMaster(newClass) && !prop.swapMasteryCost) {
+                chargePlayer = false;
             } else if (!prop.iConomy || Heroes.econ == null || cost <= 0) {
-                costApplied = false;
+                chargePlayer = false;
             }
 
-            pendingClassCostStatus.put(player, costApplied);
+            pendingClassCostStatus.put(player, chargePlayer);
 
             Messaging.send(executor, "You have chosen...");
             Messaging.send(executor, "$1: $2", newClass.getName(), newClass.getDescription().toLowerCase());
             String skills = newClass.getSkillNames().toString();
             skills = skills.substring(1, skills.length() - 1);
             Messaging.send(executor, "$1: $2", "Skills", skills);
-            if (costApplied) {
+            if (chargePlayer) {
                 Messaging.send(executor, "$1: $2", "Fee", Heroes.econ.format(cost));
             }
             Messaging.send(executor, "Please §8/hero confirm §7 or §8/hero cancel §7this selection.");
