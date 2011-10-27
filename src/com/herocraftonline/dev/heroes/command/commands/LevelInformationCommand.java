@@ -5,6 +5,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.command.BasicCommand;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.util.Messaging;
@@ -33,19 +34,19 @@ public class LevelInformationCommand extends BasicCommand {
         int exp = (int) hero.getExperience();
         int level = prop.getLevel(exp);
         int current = prop.getExperience(level);
-
+        HeroClass sClass = hero.getSecondClass();
+        
         sender.sendMessage(ChatColor.RED + "-----[ " + ChatColor.WHITE + "Your Level Information" + ChatColor.RED + " ]-----");
-        sender.sendMessage(ChatColor.GREEN + "  Class: " + ChatColor.WHITE + hero.getHeroClass().getName());
-        sender.sendMessage(ChatColor.GREEN + "  Level: " + ChatColor.WHITE + level + ChatColor.GREEN + "/" + ChatColor.WHITE + hero.getHeroClass().getMaxLevel());
-        sender.sendMessage(ChatColor.GREEN + "  Total Exp: " + ChatColor.WHITE + exp);
+        sender.sendMessage(ChatColor.GREEN + "  Class: " + ChatColor.WHITE + hero.getHeroClass().getName()) + " | " + sClass != null ? sClass.getName() : "");
+        sender.sendMessage(ChatColor.GREEN + "  Level: " + ChatColor.WHITE + level + ChatColor.GREEN + "/" + ChatColor.WHITE + hero.getHeroClass().getMaxLevel()
+                + " | " + sClass != null ? hero.getLevel(sClass) + "" + ChatColor.GREEN + "/" + ChatColor.WHITE + sClass.getMaxLevel() : "");
+        sender.sendMessage(ChatColor.GREEN + "  Total Exp: " + ChatColor.WHITE + exp + " | " + sClass != null ? "" + hero.getExperience(sClass) : "");
         if (!hero.isMaster()) {
             int next = prop.getExperience(level + 1);
             sender.sendMessage(ChatColor.DARK_GREEN + "  EXP.  " + createExperienceBar(exp, current, next));
         } else {
             sender.sendMessage(ChatColor.YELLOW + "  MASTERED!");
         }
-        sender.sendMessage(ChatColor.BLUE + "  MANA " + Messaging.createManaBar(hero.getMana()));
-
         return true;
     }
 

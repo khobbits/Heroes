@@ -68,7 +68,7 @@ public class ChooseCommand extends BasicInteractiveCommand {
                 return false;
             }
 
-            if (newClass == currentClass) {
+            if (newClass.equals(currentClass) || newClass.equals(hero.getSecondClass())) {
                 Messaging.send(player, "You are already set as this Class.");
                 return false;
             }
@@ -80,11 +80,6 @@ public class ChooseCommand extends BasicInteractiveCommand {
             
             if (!newClass.isPrimary()) {
                 Messaging.send(player, "That is not a primary Class!");
-                return false;
-            }
-            
-            if (newClass.equals(hero.getSecondClass())) {
-                Messaging.send(player, "That is already set as your secondary class!");
                 return false;
             }
             

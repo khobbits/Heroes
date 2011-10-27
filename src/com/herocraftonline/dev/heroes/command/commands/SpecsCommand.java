@@ -1,5 +1,6 @@
 package com.herocraftonline.dev.heroes.command.commands;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import org.bukkit.command.CommandSender;
@@ -8,6 +9,7 @@ import org.bukkit.entity.Player;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.command.BasicCommand;
+import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.util.Messaging;
 
 public class SpecsCommand extends BasicCommand {
@@ -19,8 +21,8 @@ public class SpecsCommand extends BasicCommand {
         super("Specializations");
         this.plugin = plugin;
         setDescription("Lists all specializations available to your path");
-        setUsage("/hero specs §8[page#]");
-        setArgumentRange(0, 1);
+        setUsage("/hero specs [primary|profession] §8[page#]");
+        setArgumentRange(0, 2);
         setIdentifiers("hero specs");
     }
 
@@ -29,20 +31,58 @@ public class SpecsCommand extends BasicCommand {
         if (!(sender instanceof Player))
             return false;
 
-        HeroClass playerClass = plugin.getHeroManager().getHero((Player) sender).getHeroClass();
+        Hero hero = plugin.getHeroManager().getHero((Player) sender);
+        Set<HeroClass> childClasses = new HashSet<HeroClass>();
 
         int page = 0;
-        if (args.length != 0) {
+        String classNames = "";
+        if (args.length == 0) {
+            childClasses.addAll(hero.getHeroClass().getSpecializations());
+            if (hero.getSecondClass() != null)
+                childClasses.addAll(hero.getSecondClass().getSpecializations());
+            classNames = hero.getHeroClass().getName() + " and " + hero.getSecondClass().getName();
+        } else if (args.length == 1) {
             try {
                 page = Integer.parseInt(args[0]) - 1;
-            } catch (NumberFormatException ignored) {}
+            } catch (NumberFormatException ignored) {
+                if (args[0].toLowerCase().contains("pri")) {
+                    childClasses.addAll(hero.getHeroClass().getSpecializations());
+                    classNames = hero.getHeroClass().getName();
+                } else if (args[0].toLowerCase().contains("prof")) {
+                    if (hero.getSecondClass() != null) {
+                        childClasses.addAll(hero.getSecondClass().getSpecializations());
+                        classNames = hero.getSecondClass().getName();
+                    } else {
+                        Messaging.send(sender, "You don't have a profession!");
+                        return false;
+                    }
+                } else {
+                    Messaging.send(sender, getUsage());
+                    return false;
+                }
+            }
+        } else if (args.length == 2) {
+            try {
+                page = Integer.parseInt(args[1]) - 1;
+            } catch (NumberFormatException ignored) {
+
+            }
+            if (args[0].toLowerCase().contains("pri")) {
+                childClasses.addAll(hero.getHeroClass().getSpecializations());
+                classNames = hero.getHeroClass().getName();
+            } else if (args[0].toLowerCase().contains("prof")) {
+                childClasses.addAll(hero.getSecondClass().getSpecializations());
+                classNames = hero.getSecondClass().getName();
+            } else {
+                Messaging.send(sender, getUsage());
+                return false;
+            }
         }
 
-        Set<HeroClass> childClasses = playerClass.getSpecializations();
-        HeroClass[] specs = childClasses.toArray(new HeroClass[childClasses.size()]);
 
+        HeroClass[] specs = childClasses.toArray(new HeroClass[childClasses.size()]);
         if (specs.length == 0) {
-            Messaging.send(sender, "$1 has no specializations.", playerClass.getName());
+            Messaging.send(sender, "Your classes have no specializations.");
             return false;
         }
 
@@ -54,7 +94,7 @@ public class SpecsCommand extends BasicCommand {
         if (page >= numPages || page < 0) {
             page = 0;
         }
-        sender.sendMessage("§c-----[ " + "§f" + playerClass.getName() + " Specializations <" + (page + 1) + "/" + numPages + ">§c ]-----");
+        sender.sendMessage("§c-----[ " + "§f" + classNames + " Specializations <" + (page + 1) + "/" + numPages + ">§c ]-----");
         int start = page * SPECS_PER_PAGE;
         int end = start + SPECS_PER_PAGE;
         if (end > specs.length) {
@@ -70,7 +110,7 @@ public class SpecsCommand extends BasicCommand {
             }
         }
 
-        sender.sendMessage("§cTo choose a specialization, type §f/hero choose <spec>");
+        sender.sendMessage("§cTo choose a specialization, type §f/hero choose <spec> or /hero prof <spec>");
         return true;
     }
 

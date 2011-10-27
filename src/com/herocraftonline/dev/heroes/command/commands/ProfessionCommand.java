@@ -68,18 +68,13 @@ public class ProfessionCommand extends BasicInteractiveCommand {
                 return false;
             }
 
-            if (newClass == currentClass) {
+            if (newClass.equals(currentClass) || newClass.equals(hero.getHeroClass())) {
                 Messaging.send(player, "You are already set as this Class.");
                 return false;
             }
 
             if (!newClass.isSecondary()) {
                 Messaging.send(player, "That is not a secondary Class!");
-                return false;
-            }
-
-            if (newClass.equals(hero.getHeroClass())) {
-                Messaging.send(player, "That is already set as your primary class!");
                 return false;
             }
 
