@@ -404,6 +404,8 @@ public class Hero {
      * @return double experience
      */
     public double getExperience(HeroClass heroClass) {
+        if (heroClass == null)
+            return 0;
         Double exp = experience.get(heroClass.getName());
         return exp == null ? 0 : exp;
     }
