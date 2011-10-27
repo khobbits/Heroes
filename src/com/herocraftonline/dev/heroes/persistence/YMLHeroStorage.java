@@ -18,6 +18,7 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.command.CommandHandler;
 import com.herocraftonline.dev.heroes.hero.Hero;
+import com.herocraftonline.dev.heroes.util.Util;
 
 public class YMLHeroStorage extends HeroStorage {
 
@@ -32,16 +33,15 @@ public class YMLHeroStorage extends HeroStorage {
     @Override
     public Hero loadHero(Player player) {
         File playerFile = new File(playerFolder, player.getName() + ".yml"); // Setup our Players Data File.
-        File newPlayerFile = new File(playerFolder + File.separator + player.getName().substring(0, 0).toLowerCase(), player.getName() + ".yml");
+        File pFolder = new File(playerFolder + File.separator + player.getName().toLowerCase().substring(0, 1));
+        pFolder.mkdirs();
+        File newPlayerFile = new File(pFolder, player.getName() + ".yml");
+        
         if (newPlayerFile.exists())
             playerFile = newPlayerFile;
         else if (playerFile.exists()) {
-            newPlayerFile.mkdirs();
-            try {
-                Files.copy(playerFile, newPlayerFile);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            Util.moveFile(playerFile, newPlayerFile);
+            playerFile = newPlayerFile;
         } else {
             playerFile = newPlayerFile;
         }
@@ -79,7 +79,7 @@ public class YMLHeroStorage extends HeroStorage {
     @Override
     public boolean saveHero(Hero hero) {
         String name = hero.getPlayer().getName();
-        File playerFile = new File(playerFolder + File.separator + name.substring(0, 0).toLowerCase(), name + ".yml");
+        File playerFile = new File(playerFolder + File.separator + name.substring(0, 1).toLowerCase(), name + ".yml");
         Configuration playerConfig = new Configuration(playerFile);
 
         playerConfig.setProperty("class", hero.getHeroClass().toString());

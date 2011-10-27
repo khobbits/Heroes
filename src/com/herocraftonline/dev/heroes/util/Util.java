@@ -1,5 +1,11 @@
 package com.herocraftonline.dev.heroes.util;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -41,9 +47,9 @@ public final class Util {
 
     // Random number generator
     public final static Random rand = new Random();
-    
+
     public final static HashMap<String, Location> deaths;
-    
+
     static {
         swords = new ArrayList<String>(5);
         swords.add("WOOD_SWORD");
@@ -65,21 +71,21 @@ public final class Util {
         shovels.add("IRON_SPADE");
         shovels.add("GOLD_SPADE");
         shovels.add("DIAMOND_SPADE");
-        
+
         picks = new ArrayList<String>(5);
         picks.add("WOOD_PICKAXE");
         picks.add("STONE_PICKAXE");
         picks.add("IRON_PICKAXE");
         picks.add("GOLD_PICKAXE");
         picks.add("DIAMOND_PICKAXE");
-        
+
         hoes = new ArrayList<String>(5);
         hoes.add("WOOD_HOE");
         hoes.add("STONE_HOE");
         hoes.add("IRON_HOE");
         hoes.add("GOLD_HOE");
         hoes.add("DIAMOND_HOE");
-        
+
         weapons = new ArrayList<String>(26);
         weapons.addAll(picks);
         weapons.addAll(shovels);
@@ -87,7 +93,7 @@ public final class Util {
         weapons.addAll(swords);
         weapons.addAll(hoes);
         weapons.add("BOW");
-        
+
         armors = new ArrayList<String>(21);
         armors.add("LEATHER_HELMET");
         armors.add("LEATHER_LEGGINGS");
@@ -110,7 +116,7 @@ public final class Util {
         armors.add("DIAMOND_CHESTPLATE");
         armors.add("DIAMOND_BOOTS");
         armors.add("PUMPKIN");
-        
+
         transparentBlocks = new HashSet<Material>(22);
         transparentBlocks.add(Material.AIR);
         transparentBlocks.add(Material.SNOW);
@@ -156,7 +162,7 @@ public final class Util {
         transparentIds.add((byte) Material.DETECTOR_RAIL.getId());
         transparentIds.add((byte) Material.DIODE_BLOCK_OFF.getId());
         transparentIds.add((byte) Material.DIODE_BLOCK_ON.getId());
-        
+
         deaths = new LinkedHashMap<String, Location>() {
 
             private static final int MAX_ENTRIES = 50;
@@ -268,7 +274,7 @@ public final class Util {
             }
         });
     }
-    
+
     /**
      * Checks if the material is a Weapon/Tool
      * 
@@ -343,7 +349,7 @@ public final class Util {
             return false;
         }
     }
-    
+
     public static void disarmCheck(Hero hero, Heroes plugin) {
         ItemStack[] contents = hero.getPlayer().getInventory().getContents();
         boolean changed = false;
@@ -357,5 +363,33 @@ public final class Util {
         }
         if (changed)
             syncInventory(hero.getPlayer(), plugin);
+    }
+
+    public static void moveFile(File from, File to) {
+        if (!from.exists())
+            return;
+        OutputStream output = null;
+        InputStream input = null;
+        try {
+            to.getParentFile().mkdirs();
+            to.createNewFile();
+            output = new FileOutputStream(to, false);
+            input = new FileInputStream(from);
+            int out;
+            while ((out = input.read()) != -1) {
+                output.write(out);
+            }
+            input.close();
+            output.close();
+            from.delete();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                input.close();
+                output.close();
+            } catch (IOException e) {
+            }
+        }
     }
 }
