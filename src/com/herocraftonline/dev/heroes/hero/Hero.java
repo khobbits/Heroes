@@ -308,9 +308,9 @@ public class Hero {
             // notify the user
             if (expChange != 0) {
                 if (verbose && expChange > 0) {
-                    Messaging.send(player, "$1: Gained $2 Exp", heroClass.getName(), decFormat.format(expChange));
+                    Messaging.send(player, "$1: Gained $2 Exp", hc.getName(), decFormat.format(expChange));
                 } else if (verbose && expChange < 0) {
-                    Messaging.send(player, "$1: Lost $2 Exp", heroClass.getName(), decFormat.format(-expChange));
+                    Messaging.send(player, "$1: Lost $2 Exp", hc.getName(), decFormat.format(-expChange));
                 }
                 if (newLevel != currentLevel) {
                     HeroChangeLevelEvent hLEvent = new HeroChangeLevelEvent(this, hc, currentLevel, newLevel);
