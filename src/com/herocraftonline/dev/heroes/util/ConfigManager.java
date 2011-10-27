@@ -40,7 +40,7 @@ public class ConfigManager {
         this.classConfigFolder = new File(plugin.getDataFolder() + File.separator + "classes");
         this.expConfigFile = new File(plugin.getDataFolder(), "experience.yml");
         this.skillConfigFile = new File(plugin.getDataFolder(), "skills.yml");
-        this.outsourcedSkillConfigFile = new File(plugin.getDataFolder(), "outsourced-skills.yml");
+        this.outsourcedSkillConfigFile = new File(plugin.getDataFolder(), "permission-skills.yml");
         this.damageConfigFile = new File(plugin.getDataFolder(), "damages.yml");
     }
 
