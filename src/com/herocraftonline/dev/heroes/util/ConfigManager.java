@@ -292,7 +292,6 @@ public class ConfigManager {
                     config.setProperty(path + "." + key, node.getProperty(key));
                 }
             }
-        } else
-            config.setProperty(path + ".foo", "foo");
+        }
     }
 }
