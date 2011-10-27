@@ -24,7 +24,7 @@ public class ProfessionCommand extends BasicInteractiveCommand {
     private Map<Player, Boolean> pendingClassCostStatus = new HashMap<Player, Boolean>();
 
     public ProfessionCommand(Heroes plugin) {
-        super("Choose Class");
+        super("Choose Profession Class");
         this.plugin = plugin;
         this.setStates(new InteractiveCommandState[] { new StateA(), new StateB() });
         setDescription("Selects a new path or specialization as your profession");
