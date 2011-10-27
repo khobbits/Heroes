@@ -359,14 +359,18 @@ public class HeroClassManager {
                     continue;
                 }
                 try {
+                    if (!plugin.getSkillManager().isLoaded(skill)) {
+                        plugin.getSkillManager().loadOutsourcedSkill(skill);
+                    }
                     ConfigurationNode skillSettings = Configuration.getEmptyNode();
-                    skillSettings.setProperty("level", config.getInt("permission-skills." + skill + ".level", 1));
+                    List<String> settings = config.getKeys("permission-skills." + skill);
+                    if (settings != null) {
+                        for (String key : settings) {
+                            skillSettings.setProperty(key, config.getProperty("permission-skills." + skill + "." + key));
+                        }
+                    }
                     newClass.addSkill(skill, skillSettings);
 
-                    String usage = config.getString("permission-skills." + skill + ".usage", "");
-                    String[] permissions = config.getStringList("permission-skills." + skill + ".permissions", null).toArray(new String[0]);
-                    OutsourcedSkill oSkill = new OutsourcedSkill(plugin, skill, permissions, usage);
-                    plugin.getSkillManager().addSkill(oSkill);
                 } catch (IllegalArgumentException e) {
                     Heroes.log(Level.WARNING, "Invalid permission skill (" + skill + ") defined for " + className + ". Skipping this skill.");
                 }

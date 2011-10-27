@@ -55,9 +55,8 @@ public class YMLHeroStorage extends HeroStorage {
                 Heroes.log(Level.INFO, "Invalid class found for " + player.getName() + ". Resetting player.");
                 return createNewHero(player);
             }
-
-            Hero playerHero = new Hero(plugin, player, playerClass);
-            playerHero.setSecondClass(loadSecondaryClass(player, playerConfig));
+            HeroClass secondClass = loadSecondaryClass(player, playerConfig);
+            Hero playerHero = new Hero(plugin, player, playerClass, secondClass);
             loadCooldowns(playerHero, playerConfig);
             loadExperience(playerHero, playerConfig);
             loadBinds(playerHero, playerConfig);

@@ -66,10 +66,11 @@ public class Hero {
     private double health;
     private PermissionAttachment transientPerms;
 
-    public Hero(Heroes plugin, Player player, HeroClass heroClass) {
+    public Hero(Heroes plugin, Player player, HeroClass heroClass, HeroClass secondClass) {
         this.plugin = plugin;
         this.player = player;
         this.heroClass = heroClass;
+        this.secondClass = secondClass;
         transientPerms = player.addAttachment(plugin);
     }
 
@@ -132,10 +133,7 @@ public class Hero {
         clearSummons();
         clearBinds();
 
-        if (!secondary) 
-            setHeroClass(heroClass);
-        else
-            setSecondClass(heroClass);
+        setHeroClass(heroClass, secondary);
 
         if (plugin.getConfigManager().getProperties().prefixClassName) {
             player.setDisplayName("[" + getHeroClass().getName() + "]" + player.getName());
@@ -492,14 +490,6 @@ public class Hero {
     }
 
     /**
-     * @param secondClass the secondClass to set
-     */
-    public void setSecondClass(HeroClass secondClass) {
-        //TODO: need to adjust class change methods to resolve proper abilities/HP after setting a new class
-        this.secondClass = secondClass;
-    }
-
-    /**
      * All mana is in percentages.
      * 
      * @return Hero's current amount of mana
@@ -799,9 +789,13 @@ public class Hero {
      * 
      * @param heroClass
      */
-    public void setHeroClass(HeroClass heroClass) {
+    public void setHeroClass(HeroClass heroClass, boolean secondary) {
         double currentMaxHP = getMaxHealth();
-        this.heroClass = heroClass;
+        if (secondary) 
+            this.secondClass = heroClass;
+        else
+            this.heroClass = heroClass;
+        
         double newMaxHP = getMaxHealth();
         health *= newMaxHP / currentMaxHP;
         if (health > newMaxHP) {

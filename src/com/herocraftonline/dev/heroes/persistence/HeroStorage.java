@@ -14,7 +14,7 @@ public abstract class HeroStorage {
     }
 
     public Hero createNewHero(Player player) {
-        Hero hero = new Hero(plugin, player, plugin.getClassManager().getDefaultClass());
+        Hero hero = new Hero(plugin, player, plugin.getClassManager().getDefaultClass(), null);
         hero.setMana(100);
         hero.setHealth(hero.getMaxHealth());
         hero.syncHealth();

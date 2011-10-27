@@ -92,8 +92,8 @@ public class ResetCommand extends BasicInteractiveCommand {
             hero.clearSummons();
             hero.clearBinds();
 
-            hero.setHeroClass(defaultClass); // Set the hero to the default class
-            hero.setSecondClass(null); // Null the second class
+            hero.setHeroClass(defaultClass, false); // Set the hero to the default class
+            hero.setHeroClass(null, true); // Null the second class
             hero.syncHealth(); // re-sync health just in-case the display isn't 100% accurate
             
             plugin.getHeroManager().performSkillChecks(hero);
@@ -105,6 +105,5 @@ public class ResetCommand extends BasicInteractiveCommand {
             plugin.getHeroManager().saveHero(hero);
             return true;
         }
-
     }
 }

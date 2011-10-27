@@ -20,6 +20,7 @@ import org.bukkit.util.config.ConfigurationNode;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClassManager;
 import com.herocraftonline.dev.heroes.skill.Skill;
+import com.herocraftonline.dev.heroes.skill.OutsourcedSkill;
 
 @SuppressWarnings("deprecation")
 public class ConfigManager {
@@ -29,6 +30,7 @@ public class ConfigManager {
     protected final File classConfigFolder;
     protected final File expConfigFile;
     protected final File skillConfigFile;
+    protected final File outsourcedSkillConfigFile;
     protected final File damageConfigFile;
     protected final Properties properties = new Properties();
 
@@ -38,6 +40,7 @@ public class ConfigManager {
         this.classConfigFolder = new File(plugin.getDataFolder() + File.separator + "classes");
         this.expConfigFile = new File(plugin.getDataFolder(), "experience.yml");
         this.skillConfigFile = new File(plugin.getDataFolder(), "skills.yml");
+        this.outsourcedSkillConfigFile = new File(plugin.getDataFolder(), "outsourced-skills.yml");
         this.damageConfigFile = new File(plugin.getDataFolder(), "damages.yml");
     }
 
@@ -84,7 +87,12 @@ public class ConfigManager {
     }
 
     public void loadSkillConfig(Skill skill) {
-        Configuration config = new Configuration(skillConfigFile);
+        Configuration config = null;
+        if (!(skill instanceof OutsourcedSkill)) 
+            config = new Configuration(skillConfigFile);
+        else
+            config = new Configuration(outsourcedSkillConfigFile);
+
         config.load();
 
         ConfigurationNode defaultNode = skill.getDefaultConfig();

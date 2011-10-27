@@ -21,6 +21,7 @@ import java.util.jar.JarFile;
 import java.util.logging.Level;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
 
@@ -90,6 +91,18 @@ public class SkillManager {
             loadSkill(name);
         }
         return skills.get(name.toLowerCase());
+    }
+    
+    public void loadOutsourcedSkill(String name) {
+        if (name == null || skills.get(name.toLowerCase()) != null)
+            return;
+        
+        OutsourcedSkill oSkill = new OutsourcedSkill(plugin, name);
+        plugin.getConfigManager().loadSkillConfig(oSkill);
+        ConfigurationNode config = oSkill.getConfig();
+        oSkill.setPermissions(config.getStringList("permissions", new ArrayList<String>()).toArray(new String[0]));
+        oSkill.setUsage(config.getString("usage"));
+        skills.put(name.toLowerCase(), oSkill);
     }
 
     /**

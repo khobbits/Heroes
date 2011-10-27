@@ -326,7 +326,7 @@ public class Heroes extends JavaPlugin {
 
             if (Heroes.Permissions != null && heroClass != heroClassManager.getDefaultClass()) {
                 if (!Heroes.Permissions.has(player, "heroes.classes." + heroClass.getName().toLowerCase())) {
-                    hero.setHeroClass(heroClassManager.getDefaultClass());
+                    hero.setHeroClass(heroClassManager.getDefaultClass(), false);
                 }
             }
         }
