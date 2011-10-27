@@ -78,6 +78,11 @@ public class ChooseCommand extends BasicInteractiveCommand {
                 return false;
             }
             
+            if (!newClass.isPrimary()) {
+                Messaging.send(player, "That is not a primary Class!");
+                return false;
+            }
+            
             if (newClass.equals(hero.getSecondClass())) {
                 Messaging.send(player, "That is already set as your secondary class!");
                 return false;
