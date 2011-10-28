@@ -263,7 +263,10 @@ public class Hero {
         for (HeroClass hc : classes) {
             if (hc == null)
                 continue;
-
+            
+            if (source != ExperienceType.ADMIN && !hc.hasExperiencetype(source))
+                continue;
+            
             double exp = getExperience(hc);
 
             // adjust exp using the class modifier if it's positive
