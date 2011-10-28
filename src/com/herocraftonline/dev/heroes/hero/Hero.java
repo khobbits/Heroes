@@ -62,6 +62,7 @@ public class Hero {
     private Set<String> suppressedSkills = new HashSet<String>();
     private Map<String, Map<String, String>> skillSettings = new HashMap<String, Map<String, String>>();
     private Map<String, ConfigurationNode> skills = new HashMap<String, ConfigurationNode>();
+    private Integer tieredLevel;
     private int delayedSkillTaskId = -1;
     private double health;
     private PermissionAttachment transientPerms;
@@ -139,6 +140,7 @@ public class Hero {
             player.setDisplayName("[" + getHeroClass().getName() + "]" + player.getName());
         }
         plugin.getHeroManager().performSkillChecks(this);
+        getTieredLevel(true);
     }
 
     public void clearBinds() {
@@ -332,6 +334,7 @@ public class Hero {
                         player.setSaturation(20);
                         player.setExhaustion(0);
                         syncHealth();
+                        getTieredLevel(true);
                     } else {
                         //SpoutUI.sendPlayerNotification(player, ChatColor.GOLD + "Level Lost!", ChatColor.DARK_RED + "Level - " + String.valueOf(newLevel), Material.DIAMOND_HELMET);
                         Messaging.send(player, "You lost a level! (Lvl $1 $2)", String.valueOf(newLevel), hc.getName());
@@ -451,11 +454,24 @@ public class Hero {
         return plugin.getConfigManager().getProperties().getLevel(getExperience(heroClass));
     }
 
+    public int getTieredLevel(boolean recache) {
+        if (tieredLevel != null && !recache)
+            return tieredLevel;
+        
+        if (secondClass == null) {
+            tieredLevel = getTieredLevel(heroClass);
+        } else {
+            int hc = getTieredLevel(heroClass);
+            int sc = getTieredLevel(secondClass);
+            tieredLevel = hc > sc ? hc : sc;
+        }
+        return tieredLevel;
+    }
     /**
      * Gets the tier adjusted level for this character - takes into account already gained levels on parent classes
      * @return
      */
-    public int getTieredLevel() {
+    public int getTieredLevel(HeroClass heroclass) {
         if (heroClass.hasNoParents())
             return getLevel();
 
@@ -808,6 +824,7 @@ public class Hero {
             health = newMaxHP;
         }
 
+        getTieredLevel(true);
         // Check the Players inventory now that they have changed class.
         this.checkInventory();
     }

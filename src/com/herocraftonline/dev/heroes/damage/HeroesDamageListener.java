@@ -234,8 +234,8 @@ public class HeroesDamageListener extends EntityListener {
             // Party damage & PvPable test
             if (attacker instanceof Player) {
                 // If the players aren't within the level range then deny the PvP
-                int aLevel = plugin.getHeroManager().getHero((Player) attacker).getLevel();
-                if (Math.abs(aLevel - hero.getLevel()) > plugin.getConfigManager().getProperties().pvpLevelRange) {
+                int aLevel = plugin.getHeroManager().getHero((Player) attacker).getTieredLevel();
+                if (Math.abs(aLevel - hero.getTieredLevel()) > plugin.getConfigManager().getProperties().pvpLevelRange) {
                     event.setCancelled(true);
                     return;
                 }
