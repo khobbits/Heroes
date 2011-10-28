@@ -38,9 +38,11 @@ public class SpecsCommand extends BasicCommand {
         String classNames = "";
         if (args.length == 0) {
             childClasses.addAll(hero.getHeroClass().getSpecializations());
-            if (hero.getSecondClass() != null)
+            if (hero.getSecondClass() != null) {
                 childClasses.addAll(hero.getSecondClass().getSpecializations());
-            classNames = hero.getHeroClass().getName() + " and " + hero.getSecondClass().getName();
+                classNames = hero.getHeroClass().getName() + " and " + hero.getSecondClass().getName();
+            } else
+                classNames = hero.getHeroClass().getName();
         } else if (args.length == 1) {
             try {
                 page = Integer.parseInt(args[0]) - 1;

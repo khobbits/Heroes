@@ -1,5 +1,7 @@
 package com.herocraftonline.dev.heroes.skill;
 
+import java.util.logging.Level;
+
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Priority;
@@ -88,6 +90,10 @@ public class OutsourcedSkill extends Skill {
                 }
             }
         } else {
+            if (permissions == null) {
+                Heroes.log(Level.SEVERE, "No permissions detected for skill: " + this.getName() + " fix your config!");
+                return;
+            }
             for (String permission : permissions) {
                 if (Heroes.Permissions != null && hasPermission(world, playerName, permission)) {
                     removePermission(world, playerName, permission);

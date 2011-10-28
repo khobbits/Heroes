@@ -1008,7 +1008,7 @@ public class Hero {
         Material itemType = itemStack.getType();
         if (!Util.isWeapon(itemType))
             return true;
-        else if (heroClass.isAllowedWeapon(itemType) || secondClass.isAllowedWeapon(itemType))
+        else if (heroClass.isAllowedWeapon(itemType) || (secondClass != null && secondClass.isAllowedWeapon(itemType)))
             return true;
         else {
             Util.moveItem(this, slot, itemStack);
