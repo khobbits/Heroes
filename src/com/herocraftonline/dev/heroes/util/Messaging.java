@@ -104,7 +104,7 @@ public final class Messaging {
         player.sendMessage(parameterizeMessage(msg, params));
     }
 
-    private static String parameterizeMessage(String msg, Object... params) {
+    public static String parameterizeMessage(String msg, Object... params) {
         msg = ChatColor.RED + "Heroes: " + ChatColor.GRAY + msg;
         if (params != null) {
             for (int i = 0; i < params.length; i++) {

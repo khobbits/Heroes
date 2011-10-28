@@ -267,38 +267,39 @@ public class Hero {
             if (source != ExperienceType.ADMIN && !hc.hasExperiencetype(source))
                 continue;
             
+            double gainedExp = expChange;
             double exp = getExperience(hc);
 
             // adjust exp using the class modifier if it's positive
-            if (expChange > 0 && source != ExperienceType.ADMIN) {
-                expChange *= hc.getExpModifier();
+            if (gainedExp > 0 && source != ExperienceType.ADMIN) {
+                gainedExp *= hc.getExpModifier();
             } else if (source != ExperienceType.ADMIN && isMaster() && (!prop.masteryLoss || !prop.levelsViaExpLoss))
                 return;
 
             //This is called once for each class
-            ExperienceChangeEvent expEvent = new ExperienceChangeEvent(this, hc, expChange, source);
+            ExperienceChangeEvent expEvent = new ExperienceChangeEvent(this, hc, gainedExp, source);
             plugin.getServer().getPluginManager().callEvent(expEvent);
             if (expEvent.isCancelled())
                 return;
 
             // Lets get our modified xp change value
-            expChange = expEvent.getExpChange();
+            gainedExp = expEvent.getExpChange();
 
             int currentLevel = prop.getLevel(exp);
-            int newLevel = prop.getLevel(exp + expChange);
+            int newLevel = prop.getLevel(exp + gainedExp);
 
             if (isMaster(hc) && source != ExperienceType.ADMIN) {
-                expChange = 0;
+                gainedExp = 0;
             } else if (currentLevel > newLevel && !prop.levelsViaExpLoss && source != ExperienceType.ADMIN) {
-                expChange = prop.getExperience(currentLevel) - (exp - 1);
+                gainedExp = prop.getExperience(currentLevel) - (exp - 1);
             }
 
             // add the experience
-            exp += expChange;
+            exp += gainedExp;
 
             // If we went negative lets reset our values so that we would hit 0
             if (exp < 0) {
-                expChange = -(expChange + exp);
+                gainedExp = -(gainedExp + exp);
                 exp = 0;
             }
 
