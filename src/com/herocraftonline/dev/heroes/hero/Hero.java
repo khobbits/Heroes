@@ -965,7 +965,7 @@ public class Hero {
 
         if (inv.getHelmet() != null && inv.getHelmet().getTypeId() != 0 && !plugin.getConfigManager().getProperties().allowHats) {
             item = inv.getHelmet().getType();
-            if (!heroClass.isAllowedArmor(item) && !secondClass.isAllowedArmor(item) ) {
+            if (!heroClass.isAllowedArmor(item) && (secondClass == null || !secondClass.isAllowedArmor(item))) {
                 Util.moveItem(this, -1, inv.getHelmet());
                 inv.setHelmet(null);
                 removedCount++;
@@ -974,7 +974,7 @@ public class Hero {
         }
         if (inv.getChestplate() != null && inv.getChestplate().getTypeId() != 0) {
             item = inv.getChestplate().getType();
-            if (!heroClass.isAllowedArmor(item) && !secondClass.isAllowedArmor(item)) {
+            if (!heroClass.isAllowedArmor(item) && (secondClass == null || !secondClass.isAllowedArmor(item))) {
                 Util.moveItem(this, -1, inv.getChestplate());
                 inv.setChestplate(null);
                 removedCount++;
@@ -983,7 +983,7 @@ public class Hero {
 
         if (inv.getLeggings() != null && inv.getLeggings().getTypeId() != 0) {
             item = inv.getLeggings().getType();
-            if (!heroClass.isAllowedArmor(item) && !secondClass.isAllowedArmor(item)) {
+            if (!heroClass.isAllowedArmor(item) && (secondClass == null || !secondClass.isAllowedArmor(item))) {
                 Util.moveItem(this, -1, inv.getLeggings());
                 inv.setLeggings(null);
                 removedCount++;
@@ -991,7 +991,7 @@ public class Hero {
         }
         if (inv.getBoots() != null && inv.getBoots().getTypeId() != 0) {
             item = inv.getBoots().getType();
-            if (!heroClass.isAllowedArmor(item) && !secondClass.isAllowedArmor(item)) {
+            if (!heroClass.isAllowedArmor(item) && (secondClass == null || !secondClass.isAllowedArmor(item))) {
                 Util.moveItem(this, -1, inv.getBoots());
                 inv.setBoots(null);
                 removedCount++;
