@@ -82,7 +82,8 @@ public abstract class ActiveSkill extends Skill {
             return false;
         }
         HeroClass heroClass = hero.getHeroClass();
-        if (!heroClass.hasSkill(name)) {
+        HeroClass secondClass = hero.getSecondClass();
+        if (!heroClass.hasSkill(name) && (secondClass == null || !heroClass.hasSkill(name))) {
             Messaging.send(player, "$1s cannot use $2.", heroClass.getName(), name);
             return false;
         }
