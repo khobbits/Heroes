@@ -40,7 +40,8 @@ public class SkillListCommand extends BasicCommand {
         Player player = (Player) sender;
         Hero hero = plugin.getHeroManager().getHero(player);
         HeroClass heroClass = hero.getHeroClass();
-
+        HeroClass secondClass = hero.getSecondClass();
+        
         int page = 0;
         if (args.length != 0) {
             try {
@@ -51,7 +52,10 @@ public class SkillListCommand extends BasicCommand {
         Map<Skill, Integer> skills = new HashMap<Skill, Integer>();
         // Filter out Skills from the command list.
         for (Skill skill : plugin.getSkillManager().getSkills()) {
-            if (heroClass.hasSkill(skill.getName()) && !skills.containsKey(skill)) {
+            String skillName = skill.getName();
+            if (heroClass.hasSkill(skillName)  && !skills.containsKey(skill)) {
+                skills.put(skill, skill.getSetting(hero, Setting.LEVEL.node(), 1, true));
+            } else if (secondClass != null && secondClass.hasSkill(skillName) && !skills.containsKey(skill)) {
                 skills.put(skill, skill.getSetting(hero, Setting.LEVEL.node(), 1, true));
             }
         }

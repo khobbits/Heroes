@@ -292,6 +292,7 @@ public class Hero {
 
             if (isMaster(hc) && source != ExperienceType.ADMIN) {
                 gainedExp = 0;
+                continue;
             } else if (currentLevel > newLevel && !prop.levelsViaExpLoss && source != ExperienceType.ADMIN) {
                 gainedExp = prop.getExperience(currentLevel) - (exp - 1);
             }
