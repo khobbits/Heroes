@@ -11,7 +11,6 @@ Version dev
 * Player's no longer get XP for killing themselves
 * XP is only granted for Survival game-mode (creative mode will not award XP)
 * Creature effects should no longer crash the effect manager
-* Fixed SpoutUI hooking
 * Tamed Pets & Summons will now award Experience for their kills as intended
 * Player inventory now synchs properly when an item is removed
 * Satiated state will now regenerate a % of a hero's HP as intended, rather than the default half-heart (configurable)
@@ -19,6 +18,7 @@ Version dev
 * Crafting XP is no longer awarded with a full inventory when shift-clicking to craft
 * Arrow damage is now altered for bow draw - minimum damage is 1/3rd what is set in the configuration
 * PUMPKIN is now an allowed armor type as intended
+* SpoutUI displays have been disabled as the SpoutAPI is still changing (with plans to re-add them)
 
 ==== **General:** ====
 
