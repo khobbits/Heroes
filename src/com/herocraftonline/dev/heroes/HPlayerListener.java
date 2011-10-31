@@ -185,6 +185,7 @@ public class HPlayerListener extends PlayerListener {
         Player player = event.getPlayer();
         HeroManager heroManager = plugin.getHeroManager();
         Hero hero = heroManager.getHero(player);
+        hero.cancelDelayedSkill();
         hero.clearEffects();
         heroManager.saveHero(hero);
         heroManager.removeHero(hero);
