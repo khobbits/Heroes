@@ -224,19 +224,18 @@ public class HPlayerListener extends PlayerListener {
         if (event.getFrom().getWorld() != event.getTo().getWorld()) {
             final Hero hero = plugin.getHeroManager().getHero(player);
 
-            Collection<Skill> skills = plugin.getSkillManager().getSkills();
-            for (Skill skill : skills) {
-                if (skill instanceof OutsourcedSkill) 
-                       ((OutsourcedSkill) skill).tryLearningSkill(hero);
-            }
-            if (plugin.getConfigManager().getProperties().disabledWorlds.contains(event.getTo().getWorld().getName())) {
-                plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-                    @Override
-                    public void run() {
-                        hero.checkInventory();
+            plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+                @Override
+                public void run() {
+                    Collection<Skill> skills = plugin.getSkillManager().getSkills();
+                    for (Skill skill : skills) {
+                        if (skill instanceof OutsourcedSkill) 
+                            ((OutsourcedSkill) skill).tryLearningSkill(hero);
                     }
-                });
-            }
+                    hero.checkInventory();
+                }
+            });
+
         }
     }
 
