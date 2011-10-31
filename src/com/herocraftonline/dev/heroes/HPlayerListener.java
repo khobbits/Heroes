@@ -1,5 +1,6 @@
 package com.herocraftonline.dev.heroes;
 
+import java.util.Collection;
 import java.util.List;
 
 import net.minecraft.server.EntityPlayer;
@@ -31,6 +32,7 @@ import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.hero.HeroManager;
 import com.herocraftonline.dev.heroes.party.HeroParty;
 import com.herocraftonline.dev.heroes.skill.OutsourcedSkill;
+import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Properties;
@@ -225,14 +227,10 @@ public class HPlayerListener extends PlayerListener {
             final Hero hero = plugin.getHeroManager().getHero(player);
             HeroClass heroClass = hero.getHeroClass();
 
-            List<Command> commands = plugin.getCommandHandler().getCommands();
-            for (Command cmd : commands) {
-                if (cmd instanceof OutsourcedSkill) {
-                    OutsourcedSkill skill = (OutsourcedSkill) cmd;
-                    if (heroClass.hasSkill(skill.getName())) {
-                        skill.tryLearningSkill(hero);
-                    }
-                }
+            Collection<Skill> skills = plugin.getSkillManager().getSkills();
+            for (Skill skill : skills) {
+                if (skill instanceof OutsourcedSkill) 
+                       ((OutsourcedSkill) skill).tryLearningSkill(hero);
             }
             if (plugin.getConfigManager().getProperties().disabledWorlds.contains(event.getTo().getWorld().getName())) {
                 plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
