@@ -11,7 +11,6 @@ import java.util.Set;
 
 import net.minecraft.server.EntityPlayer;
 
-import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -37,6 +36,7 @@ import com.herocraftonline.dev.heroes.effects.Expirable;
 import com.herocraftonline.dev.heroes.party.HeroParty;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
+import com.herocraftonline.dev.heroes.skill.DelayedSkill;
 import com.herocraftonline.dev.heroes.spout.SpoutUI;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Properties;
@@ -63,9 +63,9 @@ public class Hero {
     private Map<String, Map<String, String>> skillSettings = new HashMap<String, Map<String, String>>();
     private Map<String, ConfigurationNode> skills = new HashMap<String, ConfigurationNode>();
     private Integer tieredLevel;
-    private int delayedSkillTaskId = -1;
     private double health;
     private PermissionAttachment transientPerms;
+    private DelayedSkill delayedSkill = null;
 
     public Hero(Heroes plugin, Player player, HeroClass heroClass, HeroClass secondClass) {
         this.plugin = plugin;
@@ -698,30 +698,27 @@ public class Hero {
     /**
      * @return the delayedSkillTaskId
      */
-    public int getDelayedSkillTaskId() {
-        return delayedSkillTaskId;
+    public DelayedSkill getDelayedSkill() {
+        return delayedSkill;
     }
 
     /**
      * @param delayedSkillTaskId
      *            the delayedSkillTaskId to set
      */
-    public void setDelayedSkillTaskId(int delayedSkillTaskId) {
-        this.delayedSkillTaskId = delayedSkillTaskId;
+    public void setDelayedSkill(DelayedSkill wSkill) {
+        this.delayedSkill = wSkill;
     }
 
     /**
      * Cancels the delayed skill task
      */
     public void cancelDelayedSkill() {
-        if (delayedSkillTaskId == -1)
+        if (delayedSkill == null)
             return;
-
-        plugin.getServer().getScheduler().cancelTask(delayedSkillTaskId);
-        Skill skill = ActiveSkill.getDelayedSkill(player);
+        Skill skill = delayedSkill.getSkill();
+        delayedSkill = null;
         skill.broadcast(player.getLocation(), "$1 has stopped using $2!", player.getDisplayName(), skill.getName());
-        delayedSkillTaskId = -1;
-        ActiveSkill.removeDelayedSkill(player);
     }
 
     public void removeCooldown(String name) {

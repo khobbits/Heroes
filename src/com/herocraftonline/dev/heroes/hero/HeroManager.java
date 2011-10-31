@@ -1,10 +1,14 @@
 package com.herocraftonline.dev.heroes.hero;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
@@ -20,6 +24,7 @@ import com.herocraftonline.dev.heroes.persistence.YMLHeroStorage;
 import com.herocraftonline.dev.heroes.skill.OutsourcedSkill;
 import com.herocraftonline.dev.heroes.skill.PassiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
+import com.herocraftonline.dev.heroes.skill.DelayedSkill;
 import com.herocraftonline.dev.heroes.ui.MapAPI;
 import com.herocraftonline.dev.heroes.ui.MapInfo;
 import com.herocraftonline.dev.heroes.ui.TextRenderer;
@@ -38,6 +43,9 @@ public class HeroManager {
     private HeroStorage heroStorage;
     private final static int manaInterval = 5;
     private final static int partyUpdateInterval = 5;
+    private final static int warmupInterval = 5;
+    private Map<Hero, DelayedSkill> delayedSkills;
+    private List<Hero> completedSkills;
 
     public HeroManager(Heroes plugin) {
         this.plugin = plugin;
@@ -52,6 +60,12 @@ public class HeroManager {
 
         Runnable partyUpdater = new PartyUpdater(this, plugin, plugin.getPartyManager());
         plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, partyUpdater, 0, partyUpdateInterval);
+        
+        delayedSkills = new HashMap<Hero, DelayedSkill>();
+        completedSkills = new ArrayList<Hero>();
+        Runnable delayedExecuter = new DelayedSkillExecuter(this, plugin);
+        plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, delayedExecuter, 0, warmupInterval);
+        
     }
 
     public void addHero(Hero hero) {
@@ -120,7 +134,7 @@ public class HeroManager {
 
         heroes.remove(hero.getPlayer().getName().toLowerCase());
     }
-    
+
     /**
      * Save the given Players Data to a file.
      * 
@@ -140,6 +154,17 @@ public class HeroManager {
         plugin.getServer().getScheduler().cancelTasks(plugin);
     }
 
+    public Map<Hero, DelayedSkill> getDelayedSkills() {
+        return delayedSkills;
+    }
+    
+    public List<Hero> getCompletedSkills() {
+        return completedSkills;
+    }
+    
+    public void addCompletedSkill(Hero hero) {
+        completedSkills.add(hero);
+    }
 }
 
 class ManaUpdater implements Runnable {
@@ -187,8 +212,41 @@ class ManaUpdater implements Runnable {
                 Messaging.send(hero.getPlayer(), ChatColor.BLUE + "MANA " + Messaging.createManaBar(hero.getMana()));
             }
         }
-        
+
         Heroes.debug.stopTask("ManaUpdater.run");
+    }
+}
+
+class DelayedSkillExecuter implements Runnable {
+    private final HeroManager manager;
+    private final Heroes plugin;
+
+    DelayedSkillExecuter(HeroManager manager, Heroes plugin) {
+        this.manager = manager;
+        this.plugin = plugin;
+    }
+
+    @Override
+    public void run() {
+        Heroes.debug.startTask("WarmupExecuter.run");
+        //Cleanup already finished skills
+        for (Hero hero : manager.getCompletedSkills()) {
+            manager.getDelayedSkills().remove(hero);
+            hero.setDelayedSkill(null);
+        }
+        manager.getCompletedSkills().clear();
+        
+        Iterator<Entry<Hero, DelayedSkill>> iter = manager.getDelayedSkills().entrySet().iterator();
+        while(iter.hasNext()) {
+            Entry<Hero, DelayedSkill> entry = iter.next();
+            if (entry.getKey().getDelayedSkill() == null)
+                iter.remove();
+            else if (entry.getValue().isReady()) {
+                DelayedSkill dSkill = entry.getValue();
+                dSkill.getSkill().execute(dSkill.getPlayer(), dSkill.getIdentifier(), dSkill.getArgs());
+            }
+        }
+        Heroes.debug.stopTask("WarmupExecuter.run");
     }
 }
 
@@ -229,7 +287,7 @@ class PartyUpdater implements Runnable {
                 updateMapView(players);
             }
         }
-        
+
         Heroes.debug.stopTask("PartyUpdater.run");
     }
 
@@ -271,7 +329,7 @@ class PartyUpdater implements Runnable {
             }
             double currentHP;
             double maxHP;
-            
+
             currentHP = hero.getHealth();
             maxHP = hero.getMaxHealth();
 

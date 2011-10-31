@@ -1,7 +1,6 @@
 package com.herocraftonline.dev.heroes;
 
 import java.util.Collection;
-import java.util.List;
 
 import net.minecraft.server.EntityPlayer;
 
@@ -23,7 +22,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
-import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.command.Command;
 import com.herocraftonline.dev.heroes.effects.Effect;
 import com.herocraftonline.dev.heroes.effects.EffectType;
@@ -225,7 +223,6 @@ public class HPlayerListener extends PlayerListener {
         Player player = event.getPlayer();
         if (event.getFrom().getWorld() != event.getTo().getWorld()) {
             final Hero hero = plugin.getHeroManager().getHero(player);
-            HeroClass heroClass = hero.getHeroClass();
 
             Collection<Skill> skills = plugin.getSkillManager().getSkills();
             for (Skill skill : skills) {

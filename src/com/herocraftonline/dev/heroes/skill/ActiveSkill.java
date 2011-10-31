@@ -16,6 +16,7 @@ import com.herocraftonline.dev.heroes.api.SkillUseEvent;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
 import com.herocraftonline.dev.heroes.hero.Hero;
+import com.herocraftonline.dev.heroes.hero.HeroManager;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Setting;
 
@@ -42,7 +43,6 @@ public abstract class ActiveSkill extends Skill {
 
     private String useText;
     private boolean awardExpOnCast = true;
-    private static Map<Player, Skill> delayedSkillUsers = new HashMap<Player, Skill>();
 
     /**
      * When defining your own constructor, be sure to assign the name, description, usage, argument bounds and
@@ -76,7 +76,8 @@ public abstract class ActiveSkill extends Skill {
 
         String name = this.getName();
         Player player = (Player) sender;
-        Hero hero = plugin.getHeroManager().getHero(player);
+        HeroManager hm = plugin.getHeroManager();
+        Hero hero = hm.getHero(player);
         if (hero == null) {
             Messaging.send(player, "You are not a hero.");
             return false;
@@ -149,23 +150,22 @@ public abstract class ActiveSkill extends Skill {
         }
 
         int delay = getSetting(hero, Setting.DELAY.node(), 0, true);
-        if (delay > 0 && !delayedSkillUsers.containsKey(sender)) {
+        if (delay > 0 && !hm.getDelayedSkills().containsKey(hero)) {
             addDelayedSkill(hero, delay, identifier, args);
             return false;
-        } else if (delayedSkillUsers.containsKey(sender)) {
-            Skill skill = delayedSkillUsers.get(sender);
-            int taskId = hero.getDelayedSkillTaskId();
-            if (skill != this || (taskId != -1 && plugin.getServer().getScheduler().isQueued(taskId))) {
-                plugin.getServer().getScheduler().cancelTask(taskId);
-                broadcast(player.getLocation(), "$1 has stopped using $2!", player.getDisplayName(), skill.getName());
-                //If the new skill is also a delayed skill lets 
+        } else if (hm.getDelayedSkills().containsKey(hero)) {
+            DelayedSkill dSkill = hm.getDelayedSkills().get(hero);
+            if (dSkill.getSkill() != this) {
+                hm.getDelayedSkills().remove(hero);
+                hero.setDelayedSkill(null);
+                broadcast(player.getLocation(), "$1 has stopped using $2!", player.getDisplayName(), dSkill.getSkill().getName());
+                //If the new skill is also a delayed skill lets add it to the warmups and proceed
                 if (delay > 0) {
                     addDelayedSkill(hero, delay, identifier, args);
                     return false;
                 }
             }
-            delayedSkillUsers.remove(sender);
-            hero.setDelayedSkillTaskId(-1);
+            hm.addCompletedSkill(hero);
         }
 
         if (use(hero, args)) {
@@ -221,15 +221,10 @@ public abstract class ActiveSkill extends Skill {
 
     private void addDelayedSkill(Hero hero, int delay, final String identifier, final String[] args) {
         final Player player = hero.getPlayer();
-        delayedSkillUsers.put(player, this);
+        DelayedSkill dSkill = new DelayedSkill(identifier, player, delay, this, args);
         broadcast(player.getLocation(), "$1 begins to use $2!", player.getDisplayName(), getName());
-        int taskId = plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-            @Override
-            public void run() {
-                execute(player, identifier, args);
-            }
-        }, delay * 20 / 1000);
-        hero.setDelayedSkillTaskId(taskId);
+        plugin.getHeroManager().getDelayedSkills().put(hero, dSkill);
+        hero.setDelayedSkill(dSkill);
     }
 
     /**
@@ -299,22 +294,5 @@ public abstract class ActiveSkill extends Skill {
             amount += stack.getAmount();
         }
         return amount >= itemStack.getAmount();
-    }
-    
-    /**
-     * Gets the currently delayed skill associated with a player
-     * @param player
-     * @return
-     */
-    public static Skill getDelayedSkill(Player player) {
-        return delayedSkillUsers.get(player);
-    }
-    
-    /**
-     * Removes a player from the delayed skill use map
-     * @param player
-     */
-    public static void removeDelayedSkill(Player player) {
-        delayedSkillUsers.remove(player);
     }
 }
