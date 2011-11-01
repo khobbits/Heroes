@@ -234,7 +234,7 @@ public class HPlayerListener extends PlayerListener {
                     }
                     hero.checkInventory();
                 }
-            });
+            }, 5);
 
         }
     }
