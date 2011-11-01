@@ -659,7 +659,7 @@ public class Hero {
      * @return
      */
     public boolean hasSkill(String name) {
-        return this.heroClass.hasSkill(name) || skills.containsKey(name);
+        return heroClass.hasSkill(name) || (secondClass != null && secondClass.hasSkill(name)) || skills.containsKey(name);
     }
 
     /**
