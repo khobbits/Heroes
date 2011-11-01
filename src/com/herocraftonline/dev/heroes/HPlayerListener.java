@@ -217,26 +217,21 @@ public class HPlayerListener extends PlayerListener {
 
     @Override
     public void onPlayerTeleport(PlayerTeleportEvent event) {
-        if (event.isCancelled())
+        if (event.isCancelled() || event.getFrom().getWorld() == event.getTo().getWorld())
             return;
 
-        Player player = event.getPlayer();
-        if (event.getFrom().getWorld() != event.getTo().getWorld()) {
-            final Hero hero = plugin.getHeroManager().getHero(player);
-
-            plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-                @Override
-                public void run() {
-                    Collection<Skill> skills = plugin.getSkillManager().getSkills();
-                    for (Skill skill : skills) {
-                        if (skill instanceof OutsourcedSkill) 
-                            ((OutsourcedSkill) skill).tryLearningSkill(hero);
-                    }
-                    hero.checkInventory();
+        final Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
+        plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+            @Override
+            public void run() {
+                Collection<Skill> skills = plugin.getSkillManager().getSkills();
+                for (Skill skill : skills) {
+                    if (skill instanceof OutsourcedSkill) 
+                        ((OutsourcedSkill) skill).tryLearningSkill(hero);
                 }
-            }, 5);
-
-        }
+                hero.checkInventory();
+            }
+        }, 5);
     }
 
     public class BedHealEffect extends PeriodicEffect {

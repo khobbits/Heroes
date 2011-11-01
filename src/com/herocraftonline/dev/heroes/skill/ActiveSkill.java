@@ -1,8 +1,5 @@
 package com.herocraftonline.dev.heroes.skill;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -84,8 +81,8 @@ public abstract class ActiveSkill extends Skill {
         }
         HeroClass heroClass = hero.getHeroClass();
         HeroClass secondClass = hero.getSecondClass();
-        if (!heroClass.hasSkill(name) && (secondClass == null || !heroClass.hasSkill(name))) {
-            Messaging.send(player, "$1s cannot use $2.", heroClass.getName(), name);
+        if (!heroClass.hasSkill(name) && (secondClass == null || !secondClass.hasSkill(name))) {
+            Messaging.send(player, "Your classes don't have the skill: $1.", name);
             return false;
         }
         int level = getSetting(hero, Setting.LEVEL.node(), 1, true);
