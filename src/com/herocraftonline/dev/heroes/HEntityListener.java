@@ -122,7 +122,7 @@ public class HEntityListener extends EntityListener {
             Hero heroDefender = heroManager.getHero(player);
             Util.deaths.put(player.getName(), event.getEntity().getLocation());
             double exp = heroDefender.getExperience();
-            int level = prop.getLevel(exp);
+            int level = Properties.getLevel(exp);
             
             // check to see if this death was caused by FireTick
             if (attacker == null && heroDefender.hasEffect("Combust")) {
@@ -135,8 +135,8 @@ public class HEntityListener extends EntityListener {
                 heroDefender.changeHeroClass(plugin.getClassManager().getDefaultClass(), false);
             } else {
                 // otherwise just do standard loss
-                int currentLevelExp = prop.getExperience(level);
-                int nextLevelExp = prop.getExperience(level + 1);
+                int currentLevelExp = Properties.getExperience(level);
+                int nextLevelExp = Properties.getExperience(level + 1);
                 double expLossPercent = prop.expLoss;
                 if (heroDefender.getHeroClass().getExpLoss() != -1) {
                     expLossPercent = heroDefender.getHeroClass().getExpLoss();

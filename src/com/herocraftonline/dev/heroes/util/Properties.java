@@ -19,9 +19,9 @@ public class Properties {
 
     // Leveling//
     public double power;
-    public int maxExp;
-    public int maxLevel;
-    public int[] levels;
+    public static int maxExp;
+    public static int maxLevel;
+    public static int[] levels;
     public double expLoss;
     public boolean levelsViaExpLoss = false;
     public boolean masteryLoss = false;
@@ -92,7 +92,7 @@ public class Properties {
     /**
      * Generate experience for the level ArrayList<Integer>
      */
-    public void calcExp() {
+    protected void calcExp() {
         levels = new int[maxLevel + 1];
 
         double A = maxExp * Math.pow(maxLevel - 1, -(power + 1));
@@ -103,7 +103,7 @@ public class Properties {
         levels[maxLevel] = (int) (A * Math.pow(maxLevel, power + 1));
     }
 
-    public int getExperience(int level) {
+    public static int getExperience(int level) {
         if (level >= levels.length)
             return levels[levels.length - 1];
         else if (level < 1)
@@ -118,7 +118,7 @@ public class Properties {
      * @param exp
      * @return
      */
-    public int getLevel(double exp) {
+    public static int getLevel(double exp) {
         for (int i = maxLevel - 1; i >= 0; i--) {
             if (exp >= levels[i])
                 return i + 1;

@@ -22,6 +22,8 @@ import org.bukkit.entity.Wolf;
 import org.bukkit.entity.Zombie;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.classes.HeroClass;
+import com.herocraftonline.dev.heroes.hero.Hero;
 
 public final class Messaging {
 
@@ -59,6 +61,27 @@ public final class Messaging {
         }
         manaBar += ChatColor.RED + "]";
         return manaBar + " - " + ChatColor.BLUE + mana + "%";
+    }
+    
+    public static String createExperienceBar(int exp, int currentLevelExp, int nextLevelExp) {
+        String expBar = ChatColor.RED + "[" + ChatColor.DARK_GREEN;
+        int progress = (int) ((double) (exp - currentLevelExp) / (nextLevelExp - currentLevelExp) * 50);
+        for (int i = 0; i < progress; i++) {
+            expBar += "|";
+        }
+        expBar += ChatColor.DARK_RED;
+        for (int i = 0; i < 50 - progress; i++) {
+            expBar += "|";
+        }
+        expBar += ChatColor.RED + "]";
+        expBar += " - " + ChatColor.DARK_GREEN + progress * 2 + "%  ";
+        expBar += "" + ChatColor.DARK_GREEN + (exp - currentLevelExp) + ChatColor.RED + "/" + ChatColor.DARK_GREEN + (nextLevelExp - currentLevelExp);
+        return expBar;
+    }
+    
+    public static String createExperienceBar(Hero hero, HeroClass heroClass) {
+        int level = hero.getLevel(heroClass);
+        return createExperienceBar((int) hero.getExperience(heroClass), Properties.getExperience(level), Properties.getExperience(level + 1));
     }
 
     public static String getCreatureName(Creature creature) {

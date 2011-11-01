@@ -8,6 +8,7 @@ import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
 import com.herocraftonline.dev.heroes.command.BasicCommand;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.util.Messaging;
+import com.herocraftonline.dev.heroes.util.Properties;
 
 public class AdminLevelCommand extends BasicCommand {
 
@@ -37,7 +38,8 @@ public class AdminLevelCommand extends BasicCommand {
             int levelChange = Integer.parseInt(args[1]);
             if (levelChange < 1)
                 throw new NumberFormatException();
-            int experience = plugin.getConfigManager().getProperties().levels[levelChange - 1];
+
+            int experience = Properties.levels[levelChange - 1];
             hero.gainExp(experience - hero.getExperience(), ExperienceType.ADMIN, false);
             Messaging.send(sender, "Level changed.");
             return true;

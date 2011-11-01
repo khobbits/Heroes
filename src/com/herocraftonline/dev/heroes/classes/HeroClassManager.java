@@ -21,6 +21,7 @@ import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
 import com.herocraftonline.dev.heroes.damage.DamageManager.ProjectileType;
 import com.herocraftonline.dev.heroes.skill.OutsourcedSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
+import com.herocraftonline.dev.heroes.util.Properties;
 import com.herocraftonline.dev.heroes.util.Util;
 
 @SuppressWarnings("deprecation")
@@ -126,8 +127,9 @@ public class HeroClassManager {
         // Get the class expLoss
         newClass.setExpLoss(config.getDouble("expLoss", -1));
 
+        plugin.getConfigManager().getProperties();
         // Get the maximum level or use the default if it's not specified
-        int defaultMaxLevel = plugin.getConfigManager().getProperties().maxLevel;
+        int defaultMaxLevel = Properties.maxLevel;
         int maxLevel = config.getInt("max-level", defaultMaxLevel);
         if (maxLevel < 1) {
             Heroes.log(Level.WARNING, "Class (" + className + ") max level is too low. Setting max level to 1.");

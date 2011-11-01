@@ -208,8 +208,8 @@ public class ConfigManager {
     private void loadLevelConfig(Configuration config) {
         String root = "leveling.";
         properties.power = config.getDouble(root + "power", 1.03);
-        properties.maxExp = config.getInt(root + "maxExperience", 90000);
-        properties.maxLevel = config.getInt(root + "maxLevel", 20);
+        Properties.maxExp = config.getInt(root + "maxExperience", 90000);
+        Properties.maxLevel = config.getInt(root + "maxLevel", 20);
         properties.partyBonus = config.getDouble(root + "partyBonus", 0.20);
         properties.expLoss = config.getDouble(root + "expLoss", 0.05);
         properties.blockTrackingDuration = config.getInt(root + "block-tracking-duration", 10 * 60 * 1000);
