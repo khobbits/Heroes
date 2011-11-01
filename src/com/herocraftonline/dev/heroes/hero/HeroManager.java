@@ -63,7 +63,7 @@ public class HeroManager {
         
         delayedSkills = new HashMap<Hero, DelayedSkill>();
         completedSkills = new ArrayList<Hero>();
-        Runnable delayedExecuter = new DelayedSkillExecuter(this, plugin);
+        Runnable delayedExecuter = new DelayedSkillExecuter(this);
         plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, delayedExecuter, 0, warmupInterval);
         
     }
@@ -113,8 +113,6 @@ public class HeroManager {
 
     public void performSkillChecks(Hero hero) {
         for (Skill skill : plugin.getSkillManager().getSkills()) {
-            if (skill.getName().equals("*") || skill.getName().equals("ALL"))
-                continue;
             if (skill instanceof OutsourcedSkill)
                 ((OutsourcedSkill) skill).tryLearningSkill(hero);
 
@@ -219,11 +217,9 @@ class ManaUpdater implements Runnable {
 
 class DelayedSkillExecuter implements Runnable {
     private final HeroManager manager;
-    private final Heroes plugin;
 
-    DelayedSkillExecuter(HeroManager manager, Heroes plugin) {
+    DelayedSkillExecuter(HeroManager manager) {
         this.manager = manager;
-        this.plugin = plugin;
     }
 
     @Override

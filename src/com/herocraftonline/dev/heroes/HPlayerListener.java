@@ -1,7 +1,5 @@
 package com.herocraftonline.dev.heroes;
 
-import java.util.Collection;
-
 import net.minecraft.server.EntityPlayer;
 
 import org.bukkit.Bukkit;
@@ -29,8 +27,6 @@ import com.herocraftonline.dev.heroes.effects.PeriodicEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.hero.HeroManager;
 import com.herocraftonline.dev.heroes.party.HeroParty;
-import com.herocraftonline.dev.heroes.skill.OutsourcedSkill;
-import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Properties;
@@ -145,13 +141,20 @@ public class HPlayerListener extends PlayerListener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         HeroManager hm = plugin.getHeroManager();
-        Hero hero = hm.getHero(player);
+        final Hero hero = hm.getHero(player);
         hero.syncExperience();
         hero.syncHealth();
         hero.checkInventory();
         if (plugin.getConfigManager().getProperties().prefixClassName) {
             player.setDisplayName("[" + hero.getHeroClass().getName() + "]" + player.getName());
         }
+        plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+            @Override
+            public void run() {
+                plugin.getHeroManager().performSkillChecks(hero);
+                hero.checkInventory();
+            }
+        }, 5);
     }
 
     @Override
@@ -210,6 +213,8 @@ public class HPlayerListener extends PlayerListener {
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
             @Override
             public void run() {
+                plugin.getHeroManager().performSkillChecks(hero);
+                hero.checkInventory();
                 hero.syncExperience();
             }
         }, 20L);
@@ -224,11 +229,7 @@ public class HPlayerListener extends PlayerListener {
         plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
             @Override
             public void run() {
-                Collection<Skill> skills = plugin.getSkillManager().getSkills();
-                for (Skill skill : skills) {
-                    if (skill instanceof OutsourcedSkill) 
-                        ((OutsourcedSkill) skill).tryLearningSkill(hero);
-                }
+                plugin.getHeroManager().performSkillChecks(hero);
                 hero.checkInventory();
             }
         }, 5);
