@@ -45,10 +45,8 @@ public class WhoCommand extends BasicCommand {
                 if (hero == null || !hero.getPlayer().isOnline()) {
                     continue;
                 }
-                if (searchedClass.equals(hero.getHeroClass()) || searchedClass.equals(hero.getSecondClass())) {
-                    int level = Properties.getLevel(hero.getLevel(searchedClass));
-                    sender.sendMessage("  §aName : " + hero.getPlayer().getName() + "  §aLevel : " + level);
-                }
+                if (searchedClass.equals(hero.getHeroClass()) || searchedClass.equals(hero.getSecondClass()))
+                    sender.sendMessage("  §aName : " + hero.getPlayer().getName() + "  §aLevel : " + hero.getLevel(searchedClass));
             }
         } else {
             Messaging.send(sender, "Player not online!");
