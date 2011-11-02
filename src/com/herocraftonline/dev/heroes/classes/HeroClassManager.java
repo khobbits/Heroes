@@ -229,10 +229,18 @@ public class HeroClassManager {
         for (String w : weapon) {
             boolean matched = false;
             for (String s : Util.weapons) {
-                if (s.contains(w.toUpperCase()) || w.equals("*") || w.equalsIgnoreCase("ALL")) {
+                if (w.equals("*") || w.equalsIgnoreCase("ALL")) {
                     newClass.addAllowedWeapon(Material.matchMaterial(s));
                     wLimits.append(" ").append(s);
                     matched = true;
+                } else if (s.contains(w.toUpperCase())) {
+                    if (s.contains("PICK") && !w.contains("PICK"))
+                        continue;
+                    else {
+                        newClass.addAllowedWeapon(Material.matchMaterial(s));
+                        wLimits.append(" ").append(s);
+                        matched = true;
+                    }
                 }
             }
 
