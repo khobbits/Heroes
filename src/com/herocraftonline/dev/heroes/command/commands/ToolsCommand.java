@@ -1,5 +1,6 @@
 package com.herocraftonline.dev.heroes.command.commands;
 
+import java.util.EnumSet;
 import java.util.Set;
 
 import org.bukkit.Material;
@@ -33,7 +34,9 @@ public class ToolsCommand extends BasicCommand {
         Hero hero = plugin.getHeroManager().getHero(player);
         HeroClass heroClass = hero.getHeroClass();
 
-        Set<Material> allTools = heroClass.getAllowedWeapons();
+        Set<Material> allTools = EnumSet.copyOf(heroClass.getAllowedWeapons());
+        if (hero.getSecondClass() != null)
+            allTools.addAll(hero.getSecondClass().getAllowedWeapons());
         String[] categories = { "Sword", "Spade", "Pickaxe", "Axe", "Hoe" };
         String[] categorizedTools = new String[categories.length];
 
