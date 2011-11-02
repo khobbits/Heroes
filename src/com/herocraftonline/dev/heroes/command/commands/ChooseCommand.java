@@ -134,6 +134,9 @@ public class ChooseCommand extends BasicInteractiveCommand {
             if (chargePlayer) {
                 Messaging.send(executor, "$1: $2", "Fee", Heroes.econ.format(cost));
             }
+            if (props.resetProfOnPrimaryChange) {
+                Messaging.send(executor, "Switching your primary class will also reset all experience toward your profession!");
+            }
             Messaging.send(executor, "Please §8/hero confirm §7 or §8/hero cancel §7this selection.");
 
             pendingClassSelections.put(player, newClass);
@@ -185,7 +188,9 @@ public class ChooseCommand extends BasicInteractiveCommand {
 
             hero.changeHeroClass(newClass, false);
             Messaging.send(player, "Welcome to the path of the $1!", newClass.getName());
-
+            if (plugin.getConfigManager().getProperties().resetProfOnPrimaryChange && hero.getSecondClass() != null) {
+                hero.setExperience(hero.getSecondClass(), 0);
+            }
             plugin.getHeroManager().saveHero(hero);
             return true;
         }

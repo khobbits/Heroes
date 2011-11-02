@@ -2,7 +2,6 @@ package com.herocraftonline.dev.heroes.util;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -216,6 +215,7 @@ public class ConfigManager {
         properties.maxTrackedBlocks = config.getInt(root + "max-tracked-blocks", 1000);
         properties.resetExpOnClassChange = config.getBoolean(root + "resetExpOnClassChange", true);
         properties.resetMasteryOnClassChange = config.getBoolean(root + "resetMasteryOnClassChange", false);
+        properties.resetProfOnPrimaryChange = config.getBoolean(root + "resetProfOnPrimaryChange", false);
         properties.swapMasteryCost = config.getBoolean(root + "swapMasteryCost", false);
         properties.levelsViaExpLoss = config.getBoolean(root + "levelsViaExpLoss", false);
         properties.masteryLoss = config.getBoolean(root + "mastery-loss", false);

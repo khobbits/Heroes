@@ -7,6 +7,7 @@ leveling:
     block-tracking-duration: 900000 #duration to track for no-exp
     resetExpOnClassChange: true #will reset the exp if the player switches without mastering
     resetMasteryOnClassChange: false #will reset all xp including masteries if the player switches classes
+    resetProfOnPrimaryChange: false #will reset the players profession whenever they change primary classes
     swapMasteryCost: false #will allow for users to change back to their mastered class freely
     partyBonus: 0.20 #cumulative bonus for each player after the first in a party
     levelsViaExpLoss: false #allow level loss when players lose xp
