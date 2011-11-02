@@ -85,7 +85,6 @@ public class HPlayerListener extends PlayerListener {
         if (hero.hasEffectType(EffectType.DISARM))
             Util.disarmCheck(hero, plugin);
 
-
         if (!hero.canEquipItem(player.getInventory().getHeldItemSlot())) {
             event.setCancelled(true);
             Util.syncInventory(player, plugin);
@@ -134,6 +133,11 @@ public class HPlayerListener extends PlayerListener {
                 if (effect.isType(EffectType.INVIS))
                     hero.removeEffect(effect);
             }
+        }
+        
+        if (hero.hasEffectType(EffectType.STUN)) {
+            event.setCancelled(true);
+            return;
         }
     }
 

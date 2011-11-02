@@ -120,7 +120,7 @@ public class HeroesDamageListener extends EntityListener {
                 if (attacker instanceof Player) {
                     Player attackingPlayer = (Player) attacker;
                     Hero hero = plugin.getHeroManager().getHero(attackingPlayer);
-                    if (!hero.canEquipItem(attackingPlayer.getInventory().getHeldItemSlot())) {
+                    if (!hero.canEquipItem(attackingPlayer.getInventory().getHeldItemSlot()) || hero.hasEffectType(EffectType.STUN)) {
                         event.setCancelled(true);
                         return;
                     }
