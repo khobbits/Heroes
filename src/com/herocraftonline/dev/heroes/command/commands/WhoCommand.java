@@ -31,10 +31,13 @@ public class WhoCommand extends BasicCommand {
         if (searchedPlayer != null) {
             Hero hero = plugin.getHeroManager().getHero(searchedPlayer);
             int level = Properties.getLevel(hero.getExperience());
-
+            HeroClass sClass = hero.getSecondClass();
+            String secondClassName = sClass != null ? " | " + sClass.getName() : "";
+            String secondLevelInfo = sClass != null ? (" | " + hero.getLevel(sClass)) : "";
+            
             sender.sendMessage("§c-----[ " + "§f" + searchedPlayer.getName() + "§c ]-----");
-            sender.sendMessage("  §aClass : " + hero.getHeroClass().getName());
-            sender.sendMessage("  §aLevel : " + level);
+            sender.sendMessage("  §aClass : " + hero.getHeroClass().getName() + secondClassName);
+            sender.sendMessage("  §aLevel : " + level + secondLevelInfo);
         } else if (searchedClass != null) {
             Collection<Hero> heroes = plugin.getHeroManager().getHeroes();
             sender.sendMessage("§c-----[ " + "§f" + searchedClass.getName() + "§c ]-----");
@@ -42,8 +45,8 @@ public class WhoCommand extends BasicCommand {
                 if (hero == null || !hero.getPlayer().isOnline()) {
                     continue;
                 }
-                if (hero.getHeroClass().equals(searchedClass)) {
-                    int level = Properties.getLevel(hero.getExperience());
+                if (searchedClass.equals(hero.getHeroClass()) || searchedClass.equals(hero.getSecondClass())) {
+                    int level = Properties.getLevel(hero.getLevel(searchedClass));
                     sender.sendMessage("  §aName : " + hero.getPlayer().getName() + "  §aLevel : " + level);
                 }
             }

@@ -38,7 +38,6 @@ public class LevelInformationCommand extends BasicCommand {
         HeroClass sClass = hero.getSecondClass();
         String secondClassName = sClass != null ? " | " + sClass.getName() : "";
         String secondLevelInfo = sClass != null ? (" | " + hero.getLevel(sClass) + ChatColor.GREEN + "/" + ChatColor.WHITE + sClass.getMaxLevel()) : "";
-        Heroes.log(Level.INFO, "Second class exp: " + (int) hero.getExperience(sClass));
         String secondExp = sClass != null ? " | " + (int) hero.getExperience(sClass) : "";
         
         sender.sendMessage(ChatColor.RED + "-----[ " + ChatColor.WHITE + "Your Level Information" + ChatColor.RED + " ]-----");
