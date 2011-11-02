@@ -234,7 +234,7 @@ public class HeroClassManager {
                     wLimits.append(" ").append(s);
                     matched = true;
                 } else if (s.contains(w.toUpperCase())) {
-                    if (s.contains("PICK") && !w.contains("PICK"))
+                    if (s.contains("PICK") && !w.contains("PICK") && w.contains("AXE"))
                         continue;
                     else {
                         newClass.addAllowedWeapon(Material.matchMaterial(s));
