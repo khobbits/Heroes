@@ -73,7 +73,7 @@ public class ChooseCommand extends BasicInteractiveCommand {
                 return false;
             }
             
-            if (!hero.getHeroClass().isDefault() && hero.isMaster() && currentClass.getParents().isEmpty() && props.lockAtHighestTier) {
+            if (!hero.getHeroClass().isDefault() && hero.isMaster(currentClass) && currentClass.getParents().isEmpty() && props.lockAtHighestTier) {
                 Messaging.send(player, "You have mastered your class and can not choose a new one!");
                 return false;
             }
@@ -83,7 +83,7 @@ public class ChooseCommand extends BasicInteractiveCommand {
                 return false;
             }
             
-            if (!hero.isMaster() && props.lockPathTillMaster) {
+            if (!hero.isMaster(currentClass) && props.lockPathTillMaster) {
                 Messaging.send(player, "You must master this class before swapping to another.");
                 return false;
             }

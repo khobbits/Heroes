@@ -57,35 +57,32 @@ public class HBlockListener extends BlockListener {
 
         double addedExp = 0;
 
+        ExperienceType et = null;
         if (hero.hasExperienceType(ExperienceType.MINING)) {
             if (prop.miningExp.containsKey(block.getType())) {
                 addedExp = prop.miningExp.get(block.getType());
+                et = ExperienceType.MINING;
             }
-        }
-        
-        if(hero.hasExperienceType(ExperienceType.FARMING)) {
+        } else if(hero.hasExperienceType(ExperienceType.FARMING)) {
             if (prop.farmingExp.containsKey(block.getType())) {
                 addedExp = prop.farmingExp.get(block.getType());
+                et = ExperienceType.FARMING;
             }
-        }
-        
-        if (hero.hasExperienceType(ExperienceType.LOGGING)) {
+        } else if (hero.hasExperienceType(ExperienceType.LOGGING)) {
             if (prop.loggingExp.containsKey(block.getType())) {
                 addedExp = prop.loggingExp.get(block.getType());
+                et = ExperienceType.LOGGING;
             }
+        }
+        if (wasBlockPlaced(block)) {
+            if (hero.isVerbose()) {
+                Messaging.send(player, "No experience gained - block placed too recently.");
+            }
+            placedBlocks.remove(block.getLocation());
+            return;
         }
 
-        int postMultiplierExp = (int) (addedExp * hero.getHeroClass().getExpModifier());
-        if (postMultiplierExp != 0 && !hero.isMaster()) {
-            if (wasBlockPlaced(block)) {
-                if (hero.isVerbose()) {
-                    Messaging.send(player, "No experience gained - block placed too recently.");
-                }
-                placedBlocks.remove(block.getLocation());
-                return;
-            }
-        }
-        hero.gainExp(addedExp, prop.loggingExp.containsKey(block.getType()) ? ExperienceType.LOGGING : ExperienceType.MINING);
+        hero.gainExp(addedExp, et);
     }
 
     @Override
