@@ -10,7 +10,6 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.command.BasicInteractiveCommand;
 import com.herocraftonline.dev.heroes.command.BasicInteractiveCommandState;
-import com.herocraftonline.dev.heroes.command.CommandHandler;
 import com.herocraftonline.dev.heroes.command.InteractiveCommandState;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.util.Messaging;
@@ -26,6 +25,7 @@ public class ResetCommand extends BasicInteractiveCommand {
         this.setStates(new InteractiveCommandState[] { new StateA(), new StateB() });
         setDescription("Resets your XP and path");
         setUsage("/hero reset");
+        setPermission("heroes.reset");
     }
 
     @Override
@@ -76,11 +76,6 @@ public class ResetCommand extends BasicInteractiveCommand {
             if (!(executor instanceof Player))
                 return false;
             Player player = (Player) executor;
-
-            if (!CommandHandler.hasPermission(player, "heroes.reset")) {
-                Messaging.send(player, "You don't have permission to reset your hero");
-                return false;
-            }
 
             Hero hero = plugin.getHeroManager().getHero(player);
             HeroClass defaultClass = plugin.getClassManager().getDefaultClass();
