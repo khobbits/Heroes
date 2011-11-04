@@ -164,7 +164,7 @@ public class ProfessionCommand extends BasicInteractiveCommand {
             if (event.isCancelled())
                 return false;
 
-            if (prop.resetExpOnClassChange || prop.resetMasteryOnClassChange) {
+            if (prop.resetExpOnClassChange || prop.resetProfMasteryOnClassChange) {
                 if (currentClass != null)
                     if (!hero.isMaster(currentClass) || (prop.resetMasteryOnClassChange)) {
                         hero.setExperience(currentClass, 0);
