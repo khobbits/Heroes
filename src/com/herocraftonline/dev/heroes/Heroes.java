@@ -12,6 +12,8 @@ import javax.imageio.ImageIO;
 
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Creature;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
@@ -69,6 +71,7 @@ import com.herocraftonline.dev.heroes.ui.MapAPI;
 import com.herocraftonline.dev.heroes.ui.MapInfo;
 import com.herocraftonline.dev.heroes.util.ConfigManager;
 import com.herocraftonline.dev.heroes.util.DebugLog;
+import com.herocraftonline.dev.heroes.util.Util;
 import com.herocraftonline.economy.economies.BOSE;
 import com.herocraftonline.economy.economies.EssE;
 import com.herocraftonline.economy.economies.iCo4;
@@ -447,5 +450,25 @@ public class Heroes extends JavaPlugin {
     public static void log(Level level, String msg) {
         log.log(level, "[Heroes] " + msg);
         debugLog.log(level, "[Heroes] " + msg);
+    }
+    
+    public int getHealthPercent(LivingEntity lEntity) {
+        if (lEntity instanceof Player) {
+            Hero hero = getHeroManager().getHero((Player) lEntity);
+            double current = hero.getHealth();
+            int percent = (int) (current / hero.getMaxHealth()) * 100;
+            if (current > 0 && percent == 0)
+                percent = 1;
+            return percent;
+        } else if (lEntity instanceof Creature) {
+            Integer maxHealth = getDamageManager().getCreatureHealth(Util.getCreatureFromEntity(lEntity));
+            if (maxHealth == null)
+                maxHealth = lEntity.getHealth();
+            int percent = (int) (lEntity.getHealth() / Double.valueOf(maxHealth)) * 100;
+            if (lEntity.getHealth() > 0 && percent == 0)
+                percent = 1;
+            return percent;
+        }
+        return 0;
     }
 }
