@@ -5,6 +5,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.inventory.ItemStack;
 
+/**
+ * Represents a hero taking damage from an attack - (not a skill)
+ * @author sleak
+ *
+ */
 public class HeroAttackDamageCause extends HeroDamageCause {
 
     private ItemStack weapon = null;

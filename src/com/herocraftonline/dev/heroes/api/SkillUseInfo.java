@@ -3,6 +3,11 @@ package com.herocraftonline.dev.heroes.api;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
 
+/**
+ * Holds skill info for initiating a skill use event 
+ * @author sleak
+ *
+ */
 public class SkillUseInfo {
 
     private final Hero hero;

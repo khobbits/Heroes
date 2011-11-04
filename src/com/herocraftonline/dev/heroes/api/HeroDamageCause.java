@@ -2,6 +2,11 @@ package com.herocraftonline.dev.heroes.api;
 
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
+/**
+ * Represents a reason for the Hero to be taking damage and the amount of damage they are taking
+ * @author sleak
+ *
+ */
 public class HeroDamageCause {
 
     private final DamageCause cause;

@@ -24,6 +24,9 @@ import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.util.Properties;
 import com.herocraftonline.dev.heroes.util.Util;
 
+/**
+ * Manages all classes for the server
+ */
 @SuppressWarnings("deprecation")
 public class HeroClassManager {
 
@@ -39,10 +42,20 @@ public class HeroClassManager {
         this.classes = new HashSet<HeroClass>();
     }
 
+    /**
+     * Adds a HeroClass to the classmanager
+     * @param c
+     * @return true if the class was added
+     */
     public boolean addClass(HeroClass c) {
         return classes.add(c);
     }
 
+    /**
+     * Attempts to get the class of the given name, this will return the HeroClass if found, or null
+     * @param name
+     * @return the class
+     */
     public HeroClass getClass(String name) {
         for (HeroClass c : classes) {
             if (name.equalsIgnoreCase(c.getName()))
@@ -51,14 +64,24 @@ public class HeroClassManager {
         return null;
     }
 
+    /**
+     * @return The list of loaded Classes
+     */
     public Set<HeroClass> getClasses() {
         return classes;
     }
 
+    /**
+     * @return The default primary class on the server - there is only ever 1
+     */
     public HeroClass getDefaultClass() {
         return defaultClass;
     }
 
+    /**
+     * Loads all classes from the given directory
+     * @param file
+     */
     public void loadClasses(File file) {
         if (file.listFiles().length == 0) {
             Heroes.log(Level.WARNING, "You have no classes defined in your setup!");
@@ -92,6 +115,11 @@ public class HeroClassManager {
             registerClassPermissions();
     }
 
+    /**
+     * Loads an individual HeroClass from the given file
+     * @param file
+     * @return the HeroClass loaded - or null if there was an error
+     */
     private HeroClass loadClass(File file) {
         Configuration config = new Configuration(file);
         config.load();
@@ -170,6 +198,7 @@ public class HeroClassManager {
 
         return newClass;
     }
+    
     private void registerClassPermissions() {
         Map<String, Boolean> classPermissions = new HashMap<String, Boolean>();
         for (HeroClass heroClass : classes) {
@@ -180,7 +209,7 @@ public class HeroClassManager {
         plugin.getServer().getPluginManager().addPermission(wildcardClassPermission);
     }
 
-    public void loadDamages(HeroClass newClass, ConfigurationNode config) {
+    private void loadDamages(HeroClass newClass, ConfigurationNode config) {
         String className = newClass.getName();
 
         // Load in item/weapon damages for this class
@@ -217,7 +246,7 @@ public class HeroClassManager {
         }
     }
 
-    public void loadWeapons(HeroClass newClass, ConfigurationNode config) {
+    private void loadWeapons(HeroClass newClass, ConfigurationNode config) {
         StringBuilder wLimits = new StringBuilder();
         String className = newClass.getName();
         // Get the list of allowed weapons for this class
@@ -252,10 +281,19 @@ public class HeroClassManager {
         plugin.debugLog(Level.INFO, "Allowed Weapons - " + wLimits.toString());
     }
 
+    /**
+     * Remove a HeroClass from the server
+     * @param c
+     * @return true if the class was found and remvoed
+     */
     public boolean removeClass(HeroClass c) {
         return classes.remove(c);
     }
 
+    /**
+     * Sets the deault primary class to the given HeroClass
+     * @param defaultClass
+     */
     public void setDefaultClass(HeroClass defaultClass) {
         this.defaultClass = defaultClass;
     }

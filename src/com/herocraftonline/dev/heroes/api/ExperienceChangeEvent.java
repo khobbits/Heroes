@@ -6,11 +6,11 @@ import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
 import com.herocraftonline.dev.heroes.hero.Hero;
 
-@SuppressWarnings("serial")
 /**
  * This event is fired whenever a hero gains or loses experience.  It is a cancellable event, but
  * if it is called via an admin command the cancelled state will be ignored.
  */
+@SuppressWarnings("serial")
 public class ExperienceChangeEvent extends HeroEvent implements Cancellable {
 
     protected boolean cancelled = false;

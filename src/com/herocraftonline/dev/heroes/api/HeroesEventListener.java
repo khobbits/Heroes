@@ -7,7 +7,6 @@ import org.bukkit.event.Event;
  * This is the main CustomEventListener for all Heroes events - plugins should extend this listener and override the respective
  * events to hook
  * @author sleak
- *
  */
 public class HeroesEventListener extends CustomEventListener {
 

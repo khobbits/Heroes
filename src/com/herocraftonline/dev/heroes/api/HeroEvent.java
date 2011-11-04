@@ -2,10 +2,10 @@ package com.herocraftonline.dev.heroes.api;
 
 import org.bukkit.event.Event;
 
-@SuppressWarnings("serial")
 /**
  * Represents a Custom HeroEvent - this should not be used external to the heroes plugin.
  */
+@SuppressWarnings("serial")
 public class HeroEvent extends Event {
     
     private final HeroEventType type;

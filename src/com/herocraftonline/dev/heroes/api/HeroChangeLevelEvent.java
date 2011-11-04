@@ -3,11 +3,12 @@ package com.herocraftonline.dev.heroes.api;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.hero.Hero;
 
-@SuppressWarnings("serial")
+
 /**
  * Called when a Hero changes levels, either through admin commands or when Experience adjusts their level higher/lower..\
  * Data during this event is unable to be changed.
  */
+@SuppressWarnings("serial")
 public class HeroChangeLevelEvent extends HeroEvent {
 
     private final int from;

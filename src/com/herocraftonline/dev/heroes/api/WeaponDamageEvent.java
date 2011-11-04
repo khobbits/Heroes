@@ -5,12 +5,12 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
-@SuppressWarnings("serial")
 /**
  * This event is called when a DamageCause.ATTACK event is registered in the heroesdamagelistener
  * Both creatures & Players can cause this event to be fired even if they aren't using a 'weapon' per se.
  * This event is cancellable.
  */
+@SuppressWarnings("serial")
 public class WeaponDamageEvent extends HeroEvent implements Cancellable {
 
     private int damage;

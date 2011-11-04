@@ -5,6 +5,10 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
 import com.herocraftonline.dev.heroes.skill.Skill;
 
+/**
+ * Represents a hero taking damage from a skill
+ * @author sleak
+ */
 public class HeroSkillDamageCause extends HeroDamageCause {
 
     private final Entity attacker;

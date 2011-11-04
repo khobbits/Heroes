@@ -18,9 +18,12 @@ import org.bukkit.util.config.ConfigurationNode;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.damage.DamageManager.ProjectileType;
 
+/**
+ * A Hero's class
+ */
 public class HeroClass {
 
-    private String name;
+    private final String name;
     private String description;
     private Set<HeroClass> strongParents = new HashSet<HeroClass>();
     private Set<HeroClass> weakParents = new HashSet<HeroClass>();
@@ -44,10 +47,15 @@ public class HeroClass {
     private double maxHealthPerLevel;
     private boolean userClass = true;
     private final Heroes plugin;
-
-    public HeroClass(Heroes plugin) {
+    
+    /**
+     * Constructs a new HeroClass with the given name
+     * @param name
+     * @param plugin
+     */
+    public HeroClass(String name, Heroes plugin) {
+        this.name = name;
         this.plugin = plugin;
-        name = "";
         description = "";
         expModifier = 1.0D;
         baseMaxHealth = 20;
@@ -56,20 +64,15 @@ public class HeroClass {
         cost = 0;
     }
 
-    public HeroClass(String name, Heroes plugin) {
-        this(plugin);
-        this.name = name;
-    }
-
-    public void addAllowedArmor(Material armor) {
+    protected void addAllowedArmor(Material armor) {
         this.allowedArmor.add(armor);
     }
 
-    public void addAllowedWeapon(Material weapon) {
+    protected void addAllowedWeapon(Material weapon) {
         this.allowedWeapons.add(weapon);
     }
 
-    public void addSkill(String name, ConfigurationNode settings) {
+    protected void addSkill(String name, ConfigurationNode settings) {
         skills.put(name.toLowerCase(), settings);
     }
 
@@ -91,6 +94,12 @@ public class HeroClass {
         weakParents.add(parent);
     }
     
+    /**
+     * Gets a set of all Parent HeroClasses
+     * This will recursively loop through all parent classes and include their parents until
+     * it reaches classes with no parents
+     * @return Set of HeroClasses
+     */
     public Set<HeroClass> getAllParents() {
         Set<HeroClass> classes = new HashSet<HeroClass>();
         for (HeroClass hClass : this.getParents()) {
@@ -99,7 +108,7 @@ public class HeroClass {
         return classes;
     }
     
-    public Set<HeroClass> getAllParents(Set<HeroClass> parents) {
+    private Set<HeroClass> getAllParents(Set<HeroClass> parents) {
         for (HeroClass hClass : this.getParents()) {
             parents.addAll(hClass.getAllParents(new HashSet<HeroClass>(parents)));
         }
@@ -114,7 +123,8 @@ public class HeroClass {
     }
     
     /**
-     * @return the primary
+     * Checks if this HeroClass can be selected as a primary HeroClass
+     * @return true if the HeroClass is a primary HeroClass
      */
     public boolean isPrimary() {
         return primary;
@@ -124,22 +134,19 @@ public class HeroClass {
      * Allows this class to be selected as a primary class
      * @param primary the primary to set
      */
-    public void setPrimary(boolean primary) {
+    protected void setPrimary(boolean primary) {
         this.primary = primary;
     }
 
     /**
-     * Allows this class to be selected as a secondary class
-     * @return the secondary
+     * Checks if this HeroClass can be selected as a secondary HeroClass (profession)
+     * @return true if the HeroClass is a secondary HeroClass
      */
     public boolean isSecondary() {
         return secondary;
     }
 
-    /**
-     * @param secondary the secondary to set
-     */
-    public void setSecondary(boolean secondary) {
+    protected void setSecondary(boolean secondary) {
         this.secondary = secondary;
     }
 
@@ -151,10 +158,7 @@ public class HeroClass {
         return tier;
     }
 
-    /**
-     * @param tier the tier to set
-     */
-    public void setTier(int tier) {
+    protected void setTier(int tier) {
         this.tier = tier;
     }
 
@@ -178,7 +182,7 @@ public class HeroClass {
     /**
      * Returns true if this class is allowed to wear the specified armor
      * @param mat
-     * @return
+     * @return true if the given material is an allowed armor type
      */
     public boolean isAllowedArmor(Material mat) {
         return this.allowedArmor.contains(mat);
@@ -235,6 +239,11 @@ public class HeroClass {
         return Collections.unmodifiableSet(experienceSources);
     }
 
+    /**
+     * Checks if the ExperienceType is a valid experience source for the HeroClass
+     * @param type - ExperienceType
+     * @return true if this HeroClass can gain exp from the given ExperienceType
+     */
     public boolean hasExperiencetype(ExperienceType type) {
         return experienceSources.contains(type);
     }
@@ -245,36 +254,65 @@ public class HeroClass {
         return expLoss;
     }
 
+    /**
+     * @return the HeroClass specific experience modifier
+     */
     public double getExpModifier() {
         return this.expModifier;
     }
 
+    /**
+     * @param material
+     * @return Integer damage for the given Material
+     */
     public Integer getItemDamage(Material material) {
         return itemDamage.get(material);
     }
 
+    /**
+     * @return double - amount of Health gained per level
+     */
     public double getMaxHealthPerLevel() {
         return maxHealthPerLevel;
     }
 
+    /**
+     * @return int - max level this HeroClass can be leveled up till
+     */
     public int getMaxLevel() {
         return maxLevel;
     }
 
+    /**
+     * @return String - the Name of the HeroClass
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Returns a Set containing only the direct Weak & Strong parents this class contains
+     * @return List of all HeroClass parents
+     */
     public List<HeroClass> getParents() {
         List<HeroClass> parents = new ArrayList<HeroClass>(strongParents);
         parents.addAll(weakParents);
         return Collections.unmodifiableList(parents);
     }
-
+    
+    /**
+     * This returns the Integer value of the given ProjectileTypes damage.  This can return null if the class
+     * doesn't have a value assigned for the Projectile
+     * @param type
+     * @return Integer - damage for the given projectile type
+     */
     public Integer getProjectileDamage(ProjectileType type) {
         return projectileDamage.get(type);
     }
 
+    /**
+     * @return Set of all names of skills this class contains
+     */
     public Set<String> getSkillNames() {
         return new TreeSet<String>(skills.keySet());
     }
@@ -283,14 +321,23 @@ public class HeroClass {
         return skills.get(name.toLowerCase());
     }
 
+    /**
+     * @return Set of all child classes
+     */
     public Set<HeroClass> getSpecializations() {
         return Collections.unmodifiableSet(specializations);
     }
 
+    /**
+     * @return the Set of all Strong parent HeroClasses
+     */
     public Set<HeroClass> getStrongParents() {
         return Collections.unmodifiableSet(strongParents);
     }
 
+    /**
+     * @return the Set of all weak parent HeroClasses
+     */
     public Set<HeroClass> getWeakParents() {
         return Collections.unmodifiableSet(weakParents);
     }
@@ -300,14 +347,22 @@ public class HeroClass {
         return name == null ? 0 : name.hashCode();
     }
 
+    /**
+     * @param name
+     * @return true if this class contains the given skill
+     */
     public boolean hasSkill(String name) {
         return skills.containsKey(name.toLowerCase());
     }
 
+    /**
+     * @return true if this HeroClass has no weak or strong parent classes
+     */
     public boolean hasNoParents() {
         return strongParents.isEmpty() && weakParents.isEmpty();
     }
-
+    
+    /*
     public void removeDamageValue(Material material) {
         itemDamage.remove(material);
     }
@@ -315,56 +370,49 @@ public class HeroClass {
     public void removeSkill(String name) {
         skills.remove(name.toLowerCase());
     }
+    */
 
-    public void setBaseMaxHealth(double baseMaxHealth) {
+    protected void setBaseMaxHealth(double baseMaxHealth) {
         this.baseMaxHealth = baseMaxHealth;
     }
 
-    public void setCost(int cost) {
+    protected void setCost(int cost) {
         this.cost = cost;
     }
 
-    public void setDescription(String description) {
+    protected void setDescription(String description) {
         this.description = description;
     }
 
-    public void setExperienceSources(Set<ExperienceType> experienceSources) {
+    protected void setExperienceSources(Set<ExperienceType> experienceSources) {
         this.experienceSources = experienceSources;
     }
 
-    /**
-     * @param expLoss
-     *            the expLoss to set
-     */
-    public void setExpLoss(double expLoss) {
+    protected void setExpLoss(double expLoss) {
         this.expLoss = expLoss;
     }
 
-    public void setExpModifier(double modifier) {
+    protected void setExpModifier(double modifier) {
         this.expModifier = modifier;
     }
 
-    public void setItemDamage(Material material, int damage) {
+    protected void setItemDamage(Material material, int damage) {
         itemDamage.put(material, damage);
     }
 
-    public void setMaxHealthPerLevel(double maxHealthPerLevel) {
+    protected void setMaxHealthPerLevel(double maxHealthPerLevel) {
         this.maxHealthPerLevel = maxHealthPerLevel;
     }
 
-    public void setMaxLevel(int maxLevel) {
+    protected void setMaxLevel(int maxLevel) {
         this.maxLevel = maxLevel;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setProjectileDamage(ProjectileType type, int damage) {
+    protected void setProjectileDamage(ProjectileType type, int damage) {
         projectileDamage.put(type, damage);
     }
 
-    public void setSpecializations(Set<HeroClass> specializations) {
+    protected void setSpecializations(Set<HeroClass> specializations) {
         this.specializations = specializations;
     }
 
@@ -373,14 +421,21 @@ public class HeroClass {
         return name;
     }
 
+    /**
+     * @return true if this class is a user-class and was added to the heroes.classes.* permission
+     */
     public boolean isUserClass() {
         return userClass;
     }
 
-    public void setUserClass(boolean userClass) {
+    protected void setUserClass(boolean userClass) {
         this.userClass = userClass;
     }
 
+    /**
+     * Stores Experience Source Names
+     *
+     */
     public static enum ExperienceType {
         SKILL,
         KILLING,

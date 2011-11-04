@@ -7,10 +7,10 @@ import org.bukkit.inventory.ItemStack;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
 
-@SuppressWarnings("serial")
 /**
  * Called when a hero uses a skill. This event is cancellable.
  */
+@SuppressWarnings("serial")
 public class SkillUseEvent extends HeroEvent implements Cancellable {
 
     private final Player player;
