@@ -445,13 +445,37 @@ public class Hero {
 
     /**
      * 
-     * @return the level of the character - int
+     * @return the level of the character - returns the highest value of the secondclass or primary class
      */
     public int getLevel() {
-        plugin.getConfigManager().getProperties();
-        return Properties.getLevel(getExperience());
+        int primary = getLevel(heroClass);
+        int second = 0;
+        if (secondClass != null)
+            second = getLevel(secondClass);
+        
+        return primary > second ? primary : second;
     }
 
+    /**
+     * Returns a hero's level based on the skill they are attempting to use
+     * @param skill
+     * @return
+     */
+    public int getLevel(Skill skill) {
+        if (!hasSkill(skill))
+            return 1;
+        
+        int level = 0;
+        int secondLevel = 0;
+        if (heroClass.hasSkill(skill.getName())) {
+            level = getLevel(heroClass);
+        }
+        if (secondClass != null && secondClass.hasSkill(skill.getName())) {
+            secondLevel = getLevel(secondClass);
+        }
+        return secondLevel > level ? secondLevel : level;
+    }
+    
     public int getLevel(HeroClass heroClass) {
         plugin.getConfigManager().getProperties();
         return Properties.getLevel(getExperience(heroClass));
@@ -476,7 +500,7 @@ public class Hero {
      */
     public int getTieredLevel(HeroClass heroclass) {
         if (heroClass.hasNoParents())
-            return getLevel();
+            return getLevel(heroClass);
 
         Set<HeroClass> classes = new HashSet<HeroClass>();
         for (HeroClass hClass : heroClass.getParents()) {
@@ -485,7 +509,7 @@ public class Hero {
                 classes.add(hClass);
             }
         }
-        int level = getLevel();
+        int level = getLevel(heroClass);
         for (HeroClass hClass : classes) {
             level += getLevel(hClass);
         }
@@ -924,7 +948,7 @@ public class Hero {
      */
     public void syncExperience() {
         Properties props = plugin.getConfigManager().getProperties();
-        int level = getLevel();
+        int level = getLevel(heroClass);
         int currentLevelXP = Properties.getExperience(level);
 
         double maxLevelXP = Properties.getExperience(level + 1) - currentLevelXP;

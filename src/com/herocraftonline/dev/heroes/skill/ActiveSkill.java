@@ -86,7 +86,7 @@ public abstract class ActiveSkill extends Skill {
             return false;
         }
         int level = getSetting(hero, Setting.LEVEL.node(), 1, true);
-        if (hero.getLevel() < level) {
+        if (hero.getLevel(this) < level) {
             Messaging.send(player, "You must be level $1 to use $2.", String.valueOf(level), name);
             return false;
         }

@@ -52,7 +52,7 @@ public class SkillPort extends ActiveSkill {
                 Messaging.send(player, "That teleport location no longer exists!");
             }
 
-            if (hero.getLevel() < levelRequirement) {
+            if (hero.getLevel(this) < levelRequirement) {
                 Messaging.send(player, "Sorry, you need to be level $1 to use that!", levelRequirement);
                 return false;
             }

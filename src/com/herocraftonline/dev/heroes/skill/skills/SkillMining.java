@@ -14,6 +14,7 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.PassiveSkill;
+import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Setting;
 import com.herocraftonline.dev.heroes.util.Util;
@@ -26,7 +27,7 @@ public class SkillMining extends PassiveSkill {
         setEffectTypes(EffectType.BENEFICIAL);
         setTypes(SkillType.KNOWLEDGE, SkillType.EARTH, SkillType.BUFF);
         
-        registerEvent(Type.BLOCK_BREAK, new SkillBlockListener(), Priority.Monitor);
+        registerEvent(Type.BLOCK_BREAK, new SkillBlockListener(this), Priority.Monitor);
     }
 
     @Override
@@ -39,6 +40,12 @@ public class SkillMining extends PassiveSkill {
 
     public class SkillBlockListener extends BlockListener {
 
+        private Skill skill;
+        
+        SkillBlockListener(Skill skill) {
+            this.skill = skill;
+        }
+        
         @Override
         public void onBlockBreak(BlockBreakEvent event) {
             Heroes.debug.startTask("HeroesSkillListener");
@@ -88,7 +95,7 @@ public class SkillMining extends PassiveSkill {
 
             double chance = Util.rand.nextDouble();
             
-            if (isStone && chance <= getSetting(hero, "chance-from-stone", .0005, false) * hero.getLevel()) {
+            if (isStone && chance <= getSetting(hero, "chance-from-stone", .0005, false) * hero.getLevel(skill)) {
                 block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(getMatFromHeight(block), 1));
                 Heroes.debug.stopTask("HeroesSkillListener");
                 return;
@@ -97,7 +104,7 @@ public class SkillMining extends PassiveSkill {
                 return;
             }
             
-            if (chance >= getSetting(hero, "chance-per-level", .001, false) * hero.getLevel()) {
+            if (chance >= getSetting(hero, "chance-per-level", .001, false) * hero.getLevel(skill)) {
                 Heroes.debug.stopTask("HeroesSkillListener");
                 return;
             }

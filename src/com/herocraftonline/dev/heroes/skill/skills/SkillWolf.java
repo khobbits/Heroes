@@ -147,7 +147,7 @@ public class SkillWolf extends ActiveSkill {
     private void setWolfSettings(Hero hero, Wolf wolf) {
         Player player = hero.getPlayer();
         int health = getSetting(hero, Setting.HEALTH.node(), 30, false);
-        health = (int) (health + getSetting(hero, "health-per-level", .25, false) * hero.getLevel());
+        health = (int) (health + getSetting(hero, "health-per-level", .25, false) * hero.getLevel(this));
         wolf.setOwner(player);
         wolf.setTamed(true);
         wolf.setHealth(health);
@@ -280,7 +280,7 @@ public class SkillWolf extends ActiveSkill {
             }
 
             double damagePerLevel = skill.getSetting(hero, "damage-per-level", .1, false);
-            int damage = skill.getSetting(hero, Setting.DAMAGE.node(), 3, false) + (int) (hero.getLevel() * damagePerLevel);
+            int damage = skill.getSetting(hero, Setting.DAMAGE.node(), 3, false) + (int) (hero.getLevel(skill) * damagePerLevel);
             event.setDamage(damage);
             Heroes.debug.stopTask("HeroesSkillListener.Wolf");
         }

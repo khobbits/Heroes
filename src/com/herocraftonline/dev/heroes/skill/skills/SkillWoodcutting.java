@@ -13,6 +13,7 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.PassiveSkill;
+import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Setting;
 import com.herocraftonline.dev.heroes.util.Util;
@@ -25,7 +26,7 @@ public class SkillWoodcutting extends PassiveSkill {
         setEffectTypes(EffectType.BENEFICIAL);
         setTypes(SkillType.KNOWLEDGE, SkillType.EARTH, SkillType.BUFF);
         
-        registerEvent(Type.BLOCK_BREAK, new SkillBlockListener(), Priority.Monitor);
+        registerEvent(Type.BLOCK_BREAK, new SkillBlockListener(this), Priority.Monitor);
     }
 
     @Override
@@ -37,6 +38,12 @@ public class SkillWoodcutting extends PassiveSkill {
 
     public class SkillBlockListener extends BlockListener {
 
+        private Skill skill;
+        
+        SkillBlockListener(Skill skill) {
+            this.skill = skill;
+        }
+        
         @Override
         public void onBlockBreak(BlockBreakEvent event) {
             Heroes.debug.startTask("HeroesSkillListener");
@@ -61,7 +68,7 @@ public class SkillWoodcutting extends PassiveSkill {
             }
 
             Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
-            if (!hero.hasEffect("Woodcutting") || Util.rand.nextDouble() > getSetting(hero, "chance-per-level", .001, false) * hero.getLevel()) {
+            if (!hero.hasEffect("Woodcutting") || Util.rand.nextDouble() > getSetting(hero, "chance-per-level", .001, false) * hero.getLevel(skill)) {
                 Heroes.debug.stopTask("HeroesSkillListener");
                 return;
             }

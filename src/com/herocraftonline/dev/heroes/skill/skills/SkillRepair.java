@@ -147,7 +147,7 @@ public class SkillRepair extends ActiveSkill {
             return false;
         }
         
-        if (hero.getLevel() < level) {
+        if (hero.getLevel(this) < level) {
             Messaging.send(player, "You must be level $1 to repair $2", level, is.getType().name().replace("_", " ").toLowerCase());
             return false;
         }
