@@ -289,7 +289,9 @@ public abstract class ActiveSkill extends Skill {
         int amount = 0;
         for (ItemStack stack : player.getInventory().all(itemStack.getType()).values()) {
             amount += stack.getAmount();
+            if (amount >= itemStack.getAmount())
+                return true;
         }
-        return amount >= itemStack.getAmount();
+        return false;
     }
 }
