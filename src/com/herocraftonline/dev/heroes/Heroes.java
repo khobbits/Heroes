@@ -65,6 +65,7 @@ import com.herocraftonline.dev.heroes.party.PartyManager;
 import com.herocraftonline.dev.heroes.skill.OutsourcedSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.SkillManager;
+import com.herocraftonline.dev.heroes.spout.SpoutData;
 import com.herocraftonline.dev.heroes.spout.SpoutInventoryListener;
 import com.herocraftonline.dev.heroes.ui.ColorMap;
 import com.herocraftonline.dev.heroes.ui.MapAPI;
@@ -114,6 +115,7 @@ public class Heroes extends JavaPlugin {
     private PartyManager partyManager;
     private DamageManager damageManager;
     private SkillManager skillManager;
+    private SpoutData spoutData;
     // Variable for the Permissions plugin handler.
     public static PermissionHandler Permissions;
     public static com.herocraftonline.economy.Economy econ;
@@ -354,6 +356,7 @@ public class Heroes extends JavaPlugin {
         // If it was found, then lets register our custom event for spout
         if (useSpout) {
             siListener = new SpoutInventoryListener(this);
+            spoutData = new SpoutData(this);
             getServer().getPluginManager().registerEvent(Type.CUSTOM_EVENT, siListener, Priority.Monitor, this);
         }
     }
@@ -470,5 +473,13 @@ public class Heroes extends JavaPlugin {
             return percent;
         }
         return 0;
+    }
+
+    public SpoutData getSpoutData() {
+        return spoutData;
+    }
+    
+    public void setSpoutData(SpoutData sd) {
+        this.spoutData = sd;
     }
 }

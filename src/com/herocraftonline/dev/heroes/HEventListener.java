@@ -50,8 +50,8 @@ public class HEventListener extends HeroesEventListener {
             return;
 
         HeroParty party = event.getHero().getParty();
-        if (event.getAmount() > 0 && !party.updateMapDisplay()) {
-            party.setUpdateMapDisplay(true);
+        if (event.getAmount() > 0) {
+            party.update();
         }
     }
 }

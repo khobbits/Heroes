@@ -26,8 +26,8 @@ public class HPartyListener extends EntityListener {
         if (!hero.hasParty())
             return;
         HeroParty party = hero.getParty();
-        if (event.getAmount() > 0 && !party.updateMapDisplay()) {
-            party.setUpdateMapDisplay(true);
+        if (event.getAmount() > 0) {
+            party.update();
         }
     }
 }

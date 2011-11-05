@@ -19,6 +19,8 @@ import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.getspout.spoutapi.SpoutManager;
+import org.getspout.spoutapi.player.SpoutPlayer;
 
 import com.herocraftonline.dev.heroes.command.Command;
 import com.herocraftonline.dev.heroes.effects.Effect;
@@ -159,6 +161,13 @@ public class HPlayerListener extends PlayerListener {
                 hero.checkInventory();
             }
         }, 5);
+        
+        //Spout stuff
+        if (Heroes.useSpout) {
+            SpoutPlayer sPlayer = SpoutManager.getPlayer(player);
+            if (sPlayer.isSpoutCraftEnabled())
+                plugin.getSpoutData().createPartyContainer(sPlayer);
+        }
     }
 
     @Override
@@ -190,6 +199,11 @@ public class HPlayerListener extends PlayerListener {
     @Override
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
+        //Spout cleanup stuff
+        if (Heroes.useSpout) {
+            SpoutPlayer sPlayer = SpoutManager.getPlayer(player);
+            plugin.getSpoutData().removePartyContainer(sPlayer);
+        }
         HeroManager heroManager = plugin.getHeroManager();
         Hero hero = heroManager.getHero(player);
         hero.cancelDelayedSkill();
@@ -201,6 +215,7 @@ public class HPlayerListener extends PlayerListener {
                 command.cancelInteraction(player);
             }
         }
+
     }
 
     @Override

@@ -17,6 +17,10 @@ import org.bukkit.entity.Tameable;
 import org.bukkit.entity.WaterMob;
 import org.bukkit.inventory.ItemStack;
 import org.getspout.spoutapi.SpoutManager;
+import org.getspout.spoutapi.gui.Container;
+import org.getspout.spoutapi.gui.GenericContainer;
+import org.getspout.spoutapi.gui.WidgetAnchor;
+import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class SpoutUI {
 
@@ -175,5 +179,51 @@ public class SpoutUI {
             return armor;
         }
         return 0;
+    }
+    
+    /**
+     * Get the container for use by this plugin, anchor and position
+     * @param player the player this is for
+     * @param anchorName the name of the WidgetAnchor
+     * @param offsetX the horizontal offset to use
+     * @param offsetY the vertical offset to use
+     * @return the Container
+     */
+    public static Container getContainer(SpoutPlayer player, String anchorName, int offsetX, int offsetY, Heroes plugin) {
+        WidgetAnchor anchor = WidgetAnchor.SCALE;
+        if ("TOP_LEFT".equalsIgnoreCase(anchorName)) {
+            anchor = WidgetAnchor.TOP_LEFT;
+        } else if ("TOP_CENTER".equalsIgnoreCase(anchorName)) {
+            anchor = WidgetAnchor.TOP_CENTER;
+            offsetX -= 213;
+        } else if ("TOP_RIGHT".equalsIgnoreCase(anchorName)) {
+            anchor = WidgetAnchor.TOP_RIGHT;
+            offsetX = -427 - offsetX;
+        } else if ("CENTER_LEFT".equalsIgnoreCase(anchorName)) {
+            anchor = WidgetAnchor.CENTER_LEFT;
+            offsetY -= 120;
+        } else if ("CENTER_CENTER".equalsIgnoreCase(anchorName)) {
+            anchor = WidgetAnchor.CENTER_CENTER;
+            offsetX -= 213;
+            offsetY -= 120;
+        } else if ("CENTER_RIGHT".equalsIgnoreCase(anchorName)) {
+            anchor = WidgetAnchor.CENTER_RIGHT;
+            offsetX = -427 - offsetX;
+            offsetY -= 120;
+        } else if ("BOTTOM_LEFT".equalsIgnoreCase(anchorName)) {
+            anchor = WidgetAnchor.BOTTOM_LEFT;
+            offsetY = -240 - offsetY;
+        } else if ("BOTTOM_CENTER".equalsIgnoreCase(anchorName)) {
+            anchor = WidgetAnchor.BOTTOM_CENTER;
+            offsetX -= 213;
+            offsetY = -240 - offsetY;
+        } else if ("BOTTOM_RIGHT".equalsIgnoreCase(anchorName)) {
+            anchor = WidgetAnchor.BOTTOM_RIGHT;
+            offsetX = -427 - offsetX;
+            offsetY = -240 - offsetY;
+        }
+        Container container = (Container) new GenericContainer().setAlign(anchor).setAnchor(anchor).setFixed(true).setX(offsetX).setY(offsetY).setWidth(427).setHeight(240);
+        player.getMainScreen().attachWidget(plugin, container);
+        return container;
     }
 }
