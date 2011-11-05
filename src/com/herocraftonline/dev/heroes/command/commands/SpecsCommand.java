@@ -73,8 +73,10 @@ public class SpecsCommand extends BasicCommand {
                 childClasses.addAll(hero.getHeroClass().getSpecializations());
                 classNames = hero.getHeroClass().getName();
             } else if (args[0].toLowerCase().contains("prof")) {
-                childClasses.addAll(hero.getSecondClass().getSpecializations());
-                classNames = hero.getSecondClass().getName();
+                if (hero.getSecondClass() != null) {
+                    childClasses.addAll(hero.getSecondClass().getSpecializations());
+                    classNames = hero.getSecondClass().getName();
+                } 
             } else {
                 Messaging.send(sender, getUsage());
                 return false;

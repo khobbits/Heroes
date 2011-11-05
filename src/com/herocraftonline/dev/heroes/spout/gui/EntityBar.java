@@ -35,6 +35,10 @@ import org.getspout.spoutapi.gui.WidgetAnchor;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.spout.SpoutUI;
 
+/**
+ * Represents a GUI Bar for a Spoutcraft Client
+ * TODO: this stuff should get transfered to a client mod
+ */
 public class EntityBar extends GenericContainer {
 
     private Container bar;
