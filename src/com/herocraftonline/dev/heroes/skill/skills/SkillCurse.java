@@ -62,7 +62,6 @@ public class SkillCurse extends TargettedSkill {
     public boolean use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
 
-        HeroClass heroClass = hero.getHeroClass();
         long duration = getSetting(hero, Setting.DURATION.node(), 5000, false);
         double missChance = getSetting(hero, "miss-chance", .50, false);
         CurseEffect cEffect = new CurseEffect(this, duration, missChance);

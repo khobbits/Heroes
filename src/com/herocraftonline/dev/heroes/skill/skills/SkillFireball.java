@@ -79,7 +79,6 @@ public class SkillFireball extends ActiveSkill {
                         Entity dmger = ((Snowball) subEvent.getDamager()).getShooter();
                         if (dmger instanceof Player) {
                             Hero hero = plugin.getHeroManager().getHero((Player) dmger);
-                            HeroClass heroClass = hero.getHeroClass();
                             LivingEntity livingEntity = (LivingEntity) entity;
 
                             if (!damageCheck((Player) dmger, livingEntity)) {

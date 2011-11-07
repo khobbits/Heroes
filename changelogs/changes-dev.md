@@ -55,16 +55,15 @@ Version dev
 
 ==== **API:** ====
 
-* New 
-** SkillManager - skills are now loaded into the SkillManager rather than the CommandHandler
-** Skills are now loaded on Demand (only when a class has them)
-** New SkillType - STEALTHY - can be used without breaking Invisibility - though the skills sideeffects may break it (like damage)
-** CombustEffect - it's used for tracking who last applied FireTicks to a player
-** FormEffect - only 1 can be active a time. work like 'stances'
-** ImbueEffect - like FormEffects but are weapon related to prevent classes from stacking multiple weapon buffs at one time
-** SafeFallEffect is now universal - the damagemanager now checks if the hero has the effect before allowing fall damage
-** InvisibleEffect is now universal - it will automatically break on damage & use events
-** SneakEffect is now universal
+* SkillManager - skills are now loaded into the SkillManager rather than the CommandHandler
+* Skills are now loaded on Demand (only when a class has them)
+* New SkillType - STEALTHY - can be used without breaking Invisibility - though the skills sideeffects may break it (like damage)
+* CombustEffect - it's used for tracking who last applied FireTicks to a player
+* FormEffect - only 1 can be active a time. work like 'stances'
+* ImbueEffect - like FormEffects but are weapon related to prevent classes from stacking multiple weapon buffs at one time
+* SafeFallEffect is now universal - the damagemanager now checks if the hero has the effect before allowing fall damage
+* InvisibleEffect is now universal - it will automatically break on damage & use events
+* SneakEffect is now universal
 * getRemaingTime added to expirable effects
 * TargettedSkills now have built-in - PvP/Party/Summon checking.
 * PeriodicEffect is now PeriodicExpirableEffect - there is now a non-expirable PeriodicEffect
