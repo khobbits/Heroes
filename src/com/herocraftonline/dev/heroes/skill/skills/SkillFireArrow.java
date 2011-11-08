@@ -75,7 +75,7 @@ public class SkillFireArrow extends ActiveSkill {
         @Override
         public void onEntityDamage(EntityDamageEvent event) {
             Heroes.debug.startTask("HeroesSkillListener");
-            if (event.isCancelled() || !(event instanceof EntityDamageByEntityEvent)) {
+            if (event.isCancelled() || !(event instanceof EntityDamageByEntityEvent) || !(event.getEntity() instanceof LivingEntity)) {
                 Heroes.debug.stopTask("HeroesSkillListener");
                 return;
             }
@@ -85,30 +85,38 @@ public class SkillFireArrow extends ActiveSkill {
                 Heroes.debug.stopTask("HeroesSkillListener");
                 return;
             }
-            
+
             Player player = (Player) ((Projectile) projectile).getShooter();
             Hero hero = plugin.getHeroManager().getHero(player);
             if (!hero.hasEffect("FireArrowBuff")) {
                 Heroes.debug.stopTask("HeroesSkillListener");
                 return;
             }
+            
+            LivingEntity entity = (LivingEntity) event.getEntity();
+            addSpellTarget(entity, hero);
+            if (!damageCheck((Player) player, entity)) {
+                Heroes.debug.stopTask("HeroesSkillListener");
+                event.setCancelled(true);
+                return;
+            }
+
             //Get the duration of the fire damage
             int fireTicks = getSetting(hero, "fire-ticks", 100, false);
-            if (event.getEntity() instanceof LivingEntity) {
-                //Light the target on fire
-                event.getEntity().setFireTicks(fireTicks);
-                checkBuff(hero);
-                //Add our combust effect so we can track fire-tick damage
-                if (event.getEntity() instanceof Player) {
-                    Hero targetHero = plugin.getHeroManager().getHero((Player) event.getEntity());
-                    targetHero.addEffect(new CombustEffect(skill, player));
-                } else if (event.getEntity() instanceof Creature) {
-                    plugin.getEffectManager().addCreatureEffect((Creature) event.getEntity(), new CombustEffect(skill, player));
-                }
+            //Light the target on fire
+            entity.setFireTicks(fireTicks);
+            checkBuff(hero);
+            //Add our combust effect so we can track fire-tick damage
+            if (entity instanceof Player) {
+                Hero targetHero = plugin.getHeroManager().getHero((Player) entity);
+                targetHero.addEffect(new CombustEffect(skill, player));
+            } else if (entity instanceof Creature) {
+                plugin.getEffectManager().addCreatureEffect((Creature) entity, new CombustEffect(skill, player));
             }
+
             Heroes.debug.stopTask("HeroesSkillListener");
         }
-        
+
         private void checkBuff(Hero hero) {
             FireArrowBuff faBuff = (FireArrowBuff) hero.getEffect("FireArrowBuff");
             if (faBuff.hasNoApplications())

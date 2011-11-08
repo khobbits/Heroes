@@ -84,6 +84,7 @@ public class SkillFireball extends ActiveSkill {
                 addSpellTarget(entity, hero);
                 if (!damageCheck((Player) dmger, entity)) {
                     Heroes.debug.stopTask("HeroesSkillListener");
+                    event.setCancelled(true);
                     return;
                 }
 
