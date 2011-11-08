@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 public class DelayedSkill {
     private final String identifier;
     private final String[] args;
-    private final long time;
+    private final long startTime;
     private final long warmup;
     private final Skill skill;
     private final Player player;
@@ -16,15 +16,15 @@ public class DelayedSkill {
         this.args = args;
         this.warmup = warmup;
         this.skill = skill;
-        this.time = System.currentTimeMillis();
+        this.startTime = System.currentTimeMillis();
     }
     
     public boolean isReady() {
-        return time + warmup >= System.currentTimeMillis();
+        return  System.currentTimeMillis() >= startTime + warmup;
     }
     
     public long startTime() {
-        return time;
+        return startTime;
     }
     
     public String getIdentifier() {

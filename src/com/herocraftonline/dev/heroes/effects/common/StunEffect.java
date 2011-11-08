@@ -23,7 +23,7 @@ public class StunEffect extends PeriodicExpirableEffect {
         this.types.add(EffectType.DISABLE);
         addMobEffect(9, (int) (duration / 1000) * 20, 127, false);
     }
-
+    
     @Override
     public void apply(Hero hero) {
         super.apply(hero);
