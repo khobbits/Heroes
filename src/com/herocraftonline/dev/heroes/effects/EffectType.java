@@ -33,6 +33,7 @@ public enum EffectType {
     SLOW,
     SNEAK,
     STUN, 
+    UNBREAKABLE, // denotes an unbreakable root/stun
     WATER,
     WATER_BREATHING,
     WOUNDING; // Prevents/Limits Healing

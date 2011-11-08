@@ -225,7 +225,7 @@ public class HeroesDamageListener extends EntityListener {
                 return;
             }
             for (Effect effect : hero.getEffects()) {
-                if (effect.isType(EffectType.ROOT) || effect.isType(EffectType.INVIS)) {
+                if ((effect.isType(EffectType.ROOT) || effect.isType(EffectType.INVIS)) && !effect.isType(EffectType.UNBREAKABLE))  {
                     hero.removeEffect(effect);
                 }
             }
