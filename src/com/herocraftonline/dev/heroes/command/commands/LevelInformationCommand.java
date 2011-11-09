@@ -1,7 +1,5 @@
 package com.herocraftonline.dev.heroes.command.commands;
 
-import java.util.logging.Level;
-
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
