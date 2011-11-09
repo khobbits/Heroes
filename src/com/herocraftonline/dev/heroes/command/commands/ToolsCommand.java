@@ -34,7 +34,8 @@ public class ToolsCommand extends BasicCommand {
         Hero hero = plugin.getHeroManager().getHero(player);
         HeroClass heroClass = hero.getHeroClass();
 
-        Set<Material> allTools = EnumSet.copyOf(heroClass.getAllowedWeapons());
+        Set<Material> allTools = EnumSet.noneOf(Material.class);
+        allTools.addAll(heroClass.getAllowedWeapons());
         if (hero.getSecondClass() != null)
             allTools.addAll(hero.getSecondClass().getAllowedWeapons());
         String[] categories = { "Sword", "Spade", "Pickaxe", "Axe", "Hoe" };

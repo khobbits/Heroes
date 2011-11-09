@@ -1,5 +1,6 @@
 package com.herocraftonline.dev.heroes.command.commands;
 
+import java.util.EnumSet;
 import java.util.Set;
 
 import org.bukkit.Material;
@@ -34,7 +35,11 @@ public class ArmorCommand extends BasicCommand {
         Hero hero = plugin.getHeroManager().getHero(player);
         HeroClass heroClass = hero.getHeroClass();
 
-        Set<Material> allArmors = heroClass.getAllowedArmor();
+        Set<Material> allArmors = EnumSet.noneOf(Material.class);
+        allArmors.addAll(heroClass.getAllowedArmor());
+        if (hero.getSecondClass() != null)
+            allArmors.addAll(hero.getSecondClass().getAllowedArmor());
+        
         String[] categories = { "Helmet", "Chestplate", "Leggings", "Boots" };
         String[] categorizedArmors = new String[categories.length];
 
