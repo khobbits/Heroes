@@ -38,6 +38,12 @@ public class ToolsCommand extends BasicCommand {
         allTools.addAll(heroClass.getAllowedWeapons());
         if (hero.getSecondClass() != null)
             allTools.addAll(hero.getSecondClass().getAllowedWeapons());
+        
+        if (allTools.isEmpty()) {
+            player.sendMessage("Your classes do not allow you to use any tools or weapons");
+            return false;
+        }
+        
         String[] categories = { "Sword", "Spade", "Pickaxe", "Axe", "Hoe" };
         String[] categorizedTools = new String[categories.length];
 

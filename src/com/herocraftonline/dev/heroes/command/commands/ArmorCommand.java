@@ -40,6 +40,10 @@ public class ArmorCommand extends BasicCommand {
         if (hero.getSecondClass() != null)
             allArmors.addAll(hero.getSecondClass().getAllowedArmor());
         
+        if (allArmors.isEmpty()) {
+            player.sendMessage("Your classes do not allow you to wear any armors");
+            return false;
+        }
         String[] categories = { "Helmet", "Chestplate", "Leggings", "Boots" };
         String[] categorizedArmors = new String[categories.length];
 
