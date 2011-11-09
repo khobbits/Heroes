@@ -171,16 +171,6 @@ public class EffectManager {
             }
 
             for (ManagedEffect managed : managedEffects) {
-                if (managed.effect instanceof Expirable) {
-                    if (((Expirable) managed.effect).isExpired()) {
-                        if (managed instanceof ManagedHeroEffect) {
-                            ((ManagedHeroEffect) managed).hero.removeEffect(managed.effect);
-                        } else {
-                            removeCreatureEffect(((ManagedCreatureEffect) managed).creature, managed.effect);
-                        }
-                    }
-                }
-
                 if (managed.effect instanceof Periodic) {
                     Periodic periodic = (Periodic) managed.effect;
                     if (managed instanceof ManagedHeroEffect) {
@@ -191,6 +181,16 @@ public class EffectManager {
                             periodic.tick(((ManagedCreatureEffect) managed).creature);
                     }
                 }
+                if (managed.effect instanceof Expirable) {
+                    if (((Expirable) managed.effect).isExpired()) {
+                        if (managed instanceof ManagedHeroEffect) {
+                            ((ManagedHeroEffect) managed).hero.removeEffect(managed.effect);
+                        } else {
+                            removeCreatureEffect(((ManagedCreatureEffect) managed).creature, managed.effect);
+                        }
+                    }
+                }
+
             }
             Heroes.debug.stopTask("EffectUpdater.run");
         }
