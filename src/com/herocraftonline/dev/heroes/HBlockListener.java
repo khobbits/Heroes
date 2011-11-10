@@ -98,11 +98,8 @@ public class HBlockListener extends BlockListener {
         Properties prop = plugin.getConfigManager().getProperties();
         if (prop.disabledWorlds.contains(block.getWorld().getName()))
             return;
-        if (prop.miningExp.containsKey(material) || prop.loggingExp.containsKey(material)) {
+        if (prop.miningExp.containsKey(material) || prop.loggingExp.containsKey(material) || prop.farmingExp.containsKey(material)) {
             Location loc = block.getLocation();
-            if (placedBlocks.containsKey(loc)) {
-                placedBlocks.remove(loc);
-            }
             placedBlocks.put(loc, System.currentTimeMillis());
         }
     }
