@@ -5,6 +5,7 @@ Version 1.3.0
 * /bind now properly allows usage of shortened skill name identifiers (ablade, parrow, mshield, etc)
 * Fixed issue with bukkit permissions not being set if Permissions3 wasn't detected
 * SuperPerms is now fully supported - permission skills now work at all times
+* Permissions for classes are now checked after the hero is loaded - this means that classes can now grant permissions for other classes, or themselves
 * Player's displaynames will be updated properly when they choose a new path or reset.
 * Player HP is now ceiled when synched preventing high HP classes from dying before they actually hit 0 HP. - for real
 * creatures added in 1.8 will no longer crash the effect system

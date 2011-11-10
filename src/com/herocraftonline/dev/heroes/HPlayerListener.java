@@ -148,6 +148,7 @@ public class HPlayerListener extends PlayerListener {
         Player player = event.getPlayer();
         HeroManager hm = plugin.getHeroManager();
         final Hero hero = hm.getHero(player);
+        hm.checkClasses(hero); // check to make sure player has permission for the classes
         hero.syncExperience();
         hero.syncHealth();
         hero.checkInventory();

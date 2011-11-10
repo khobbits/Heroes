@@ -17,6 +17,8 @@ import org.bukkit.entity.Player;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.HeroRegainManaEvent;
+import com.herocraftonline.dev.heroes.classes.HeroClass;
+import com.herocraftonline.dev.heroes.command.CommandHandler;
 import com.herocraftonline.dev.heroes.party.HeroParty;
 import com.herocraftonline.dev.heroes.party.PartyManager;
 import com.herocraftonline.dev.heroes.persistence.HeroStorage;
@@ -107,6 +109,17 @@ public class HeroManager {
         return hero;
     }
 
+    public void checkClasses(Hero hero) {
+        Player player = hero.getPlayer();
+        HeroClass playerClass = hero.getHeroClass();
+        HeroClass secondClass = hero.getSecondClass();
+        if(!CommandHandler.hasPermission(player, "heroes.classes." + playerClass.getName().toLowerCase()))
+            hero.setHeroClass(plugin.getClassManager().getDefaultClass(), false);
+        
+        if (secondClass != null && !CommandHandler.hasPermission(player, "heroes.classes." + secondClass.getName().toLowerCase()))
+            hero.setHeroClass(null, true);
+    }
+    
     public Collection<Hero> getHeroes() {
         return Collections.unmodifiableCollection(heroes.values());
     }
