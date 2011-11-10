@@ -94,6 +94,9 @@ Version 1.3.0
 ** Summons now clear properly when changing classes.
 * Confuse
 ** Screen now wobbles when under this skill's effect
+* Excavate - (NEW!)
+** Allows the player to instant break dirt type blocks (sand, gravel, etc)
+** Works with any drop modification plugins, and Logging
 * Herbalism - (NEW!)
 ** Passive skill that gives double-drops for herb related stuff
 ** Also allows players to have a chance to pickup dead shrubs & tall-grass
