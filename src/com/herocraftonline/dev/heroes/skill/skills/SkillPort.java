@@ -44,12 +44,14 @@ public class SkillPort extends ActiveSkill {
             return false;
         }
 
-        if (getSetting(hero, args[0].toLowerCase(), (String) null) != null) {
-            String[] splitArg = getSetting(hero, args[0].toLowerCase(), (String) null).split(":");
+        String portInfo = getSetting(hero, args[0].toLowerCase(), (String) null);
+        if (portInfo != null) {
+            String[] splitArg = portInfo.split(":");
             int levelRequirement = Integer.parseInt(splitArg[4]);
             World world = plugin.getServer().getWorld(splitArg[0]);
             if (world == null) {
                 Messaging.send(player, "That teleport location no longer exists!");
+                return false;
             }
 
             if (hero.getLevel(this) < levelRequirement) {
