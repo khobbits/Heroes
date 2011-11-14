@@ -232,9 +232,6 @@ public class Hero {
             return;
         Properties prop = plugin.getConfigManager().getProperties();
 
-        if (prop.disabledWorlds.contains(player.getWorld().getName()))
-            return;
-
         if (distributeToParty && party != null && party.getExp() && expChange > 0) {
             Location location = player.getLocation();
 
@@ -265,10 +262,10 @@ public class Hero {
         for (HeroClass hc : classes) {
             if (hc == null)
                 continue;
-            
+
             if (source != ExperienceType.ADMIN && !hc.hasExperiencetype(source))
                 continue;
-            
+
             double gainedExp = expChange;
             double exp = getExperience(hc);
 
@@ -290,7 +287,7 @@ public class Hero {
             int currentLevel = Properties.getLevel(exp);
             int newLevel = Properties.getLevel(exp + gainedExp);
 
-            if (isMaster(hc) && source != ExperienceType.ADMIN) {
+            if (isMaster(hc) && source != ExperienceType.ADMIN && !prop.masteryLoss) {
                 gainedExp = 0;
                 continue;
             } else if (currentLevel > newLevel && !prop.levelsViaExpLoss && source != ExperienceType.ADMIN) {
@@ -348,6 +345,83 @@ public class Hero {
                 plugin.getHeroManager().saveHero(this);
             }
         }
+        syncExperience();
+    }
+
+    public void loseExpFromDeath() {
+        if (player.getGameMode() == GameMode.CREATIVE || plugin.getConfigManager().getProperties().disabledWorlds.contains(player.getWorld().getName()))
+            return;
+        Properties prop = plugin.getConfigManager().getProperties();
+
+        HeroClass[] classes = new HeroClass[] {heroClass, secondClass};
+
+        for (HeroClass hc : classes) {
+            if (hc == null)
+                continue;
+            double expLossPercent = prop.expLoss;
+
+            if (hc.getExpLoss() != -1)
+                expLossPercent = hc.getExpLoss();
+
+            double nextXP = Properties.getExperience(getLevel(hc) + 1);
+            double currXP = Properties.getExperience(getLevel(hc));
+            double gainedXP = -(expLossPercent * (nextXP - currXP));
+
+            if (prop.resetOnDeath) {
+                gainedXP = getExperience(hc);
+            } else if (gainedXP + getExperience(hc) < currXP && !prop.levelsViaExpLoss)
+                gainedXP = -(getExperience(hc) - currXP);
+
+            //This is called once for each class
+            ExperienceChangeEvent expEvent = new ExperienceChangeEvent(this, hc, gainedXP, ExperienceType.DEATH);
+            plugin.getServer().getPluginManager().callEvent(expEvent);
+            if (expEvent.isCancelled())
+                return;
+
+            double exp = getExperience(hc);
+            gainedXP = expEvent.getExpChange();
+
+            int currentLevel = Properties.getLevel(exp);
+            int newLevel = Properties.getLevel(exp + gainedXP);
+
+            if (isMaster(hc) && !prop.masteryLoss) {
+                gainedXP = 0;
+                continue;
+            } else if (currentLevel > newLevel && !prop.levelsViaExpLoss) {
+                gainedXP = Properties.getExperience(currentLevel) - (exp - 1);
+            }
+
+            exp += gainedXP;
+            // If we went negative lets reset our values so that we would hit 0
+            if (exp < 0) {
+                gainedXP = -(gainedXP + exp);
+                exp = 0;
+            }
+
+            // Reset our new level - in case xp adjustement settings actually don't cause us to change
+            newLevel = Properties.getLevel(exp);
+            setExperience(hc, exp);
+            // notify the user
+
+            if (gainedXP != 0) {
+                if (verbose && gainedXP < 0) {
+                    Messaging.send(player, "$1: Lost $2 Exp", hc.getName(), decFormat.format(-gainedXP));
+                }
+                if (newLevel != currentLevel) {
+                    HeroChangeLevelEvent hLEvent = new HeroChangeLevelEvent(this, hc, currentLevel, newLevel);
+                    plugin.getServer().getPluginManager().callEvent(hLEvent);
+                    if (newLevel >= hc.getMaxLevel()) {
+                        setExperience(Properties.getExperience(hc.getMaxLevel()));
+                        Messaging.broadcast(plugin, "$1 has become a master $2!", player.getName(), hc.getName());
+                    }
+                    //SpoutUI.sendPlayerNotification(player, ChatColor.GOLD + "Level Lost!", ChatColor.DARK_RED + "Level - " + String.valueOf(newLevel), Material.DIAMOND_HELMET);
+                    Messaging.send(player, "You lost a level! (Lvl $1 $2)", String.valueOf(newLevel), hc.getName());
+                }
+            }
+
+
+        }
+        plugin.getHeroManager().saveHero(this);
         syncExperience();
     }
 
@@ -452,7 +526,7 @@ public class Hero {
         int second = 0;
         if (secondClass != null)
             second = getLevel(secondClass);
-        
+
         return primary > second ? primary : second;
     }
 
@@ -464,7 +538,7 @@ public class Hero {
     public int getLevel(Skill skill) {
         if (!hasSkill(skill))
             return 1;
-        
+
         int level = 0;
         int secondLevel = 0;
         if (heroClass.hasSkill(skill.getName())) {
@@ -475,7 +549,7 @@ public class Hero {
         }
         return secondLevel > level ? secondLevel : level;
     }
-    
+
     public int getLevel(HeroClass heroClass) {
         plugin.getConfigManager().getProperties();
         return Properties.getLevel(getExperience(heroClass));
@@ -484,7 +558,7 @@ public class Hero {
     public int getTieredLevel(boolean recache) {
         if (tieredLevel != null && !recache)
             return tieredLevel;
-        
+
         if (secondClass == null) {
             tieredLevel = getTieredLevel(heroClass);
         } else {
@@ -843,7 +917,7 @@ public class Hero {
             this.secondClass = heroClass;
         else
             this.heroClass = heroClass;
-        
+
         double newMaxHP = getMaxHealth();
         health *= newMaxHP / currentMaxHP;
         if (health > newMaxHP) {
@@ -947,7 +1021,6 @@ public class Hero {
      * Syncs the Hero's current Experience with the minecraft experience
      */
     public void syncExperience() {
-        Properties props = plugin.getConfigManager().getProperties();
         int level = getLevel(heroClass);
         int currentLevelXP = Properties.getExperience(level);
 

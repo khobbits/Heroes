@@ -121,29 +121,13 @@ public class HEntityListener extends EntityListener {
             player.setLevel(0);
             Hero heroDefender = heroManager.getHero(player);
             Util.deaths.put(player.getName(), event.getEntity().getLocation());
-            double exp = heroDefender.getExperience();
-            int level = Properties.getLevel(exp);
-            
+         
             // check to see if this death was caused by FireTick
             if (attacker == null && heroDefender.hasEffect("Combust")) {
                 attacker = ((CombustEffect) heroDefender.getEffect("Combust")).getApplier();
             }
 
-            if (prop.resetOnDeath) {
-                // Wipe xp if we are in hardcore mode
-                heroDefender.gainExp(-heroDefender.getExperience(), ExperienceType.DEATH, false);
-                heroDefender.changeHeroClass(plugin.getClassManager().getDefaultClass(), false);
-            } else {
-                // otherwise just do standard loss
-                int currentLevelExp = Properties.getExperience(level);
-                int nextLevelExp = Properties.getExperience(level + 1);
-                double expLossPercent = prop.expLoss;
-                if (heroDefender.getHeroClass().getExpLoss() != -1) {
-                    expLossPercent = heroDefender.getHeroClass().getExpLoss();
-                }
-                double expLoss = (nextLevelExp - currentLevelExp) * expLossPercent;
-                heroDefender.gainExp(-expLoss, ExperienceType.DEATH, false);
-            }
+            heroDefender.loseExpFromDeath();
 
             // Remove any nonpersistent effects
             for (Effect effect : heroDefender.getEffects()) {
