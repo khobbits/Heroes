@@ -33,7 +33,7 @@ public class SkillSuperheat extends ActiveSkill {
         setIdentifiers("skill superheat");
         setTypes(SkillType.FIRE, SkillType.EARTH, SkillType.BUFF, SkillType.SILENCABLE);
 
-        registerEvent(Type.BLOCK_BREAK, playerListener, Priority.Normal);
+        registerEvent(Type.BLOCK_BREAK, playerListener, Priority.Highest);
     }
 
     @Override
@@ -67,6 +67,12 @@ public class SkillSuperheat extends ActiveSkill {
         @Override
         public void onBlockBreak(BlockBreakEvent event) {
             Heroes.debug.startTask("HeroesSkillListener");
+            
+            if (event.isCancelled()) {
+                Heroes.debug.stopTask("HeroesSkillListener");
+                return;
+            }
+            
             Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
             if (hero.hasEffect("Superheat")) {
                 Block block = event.getBlock();
