@@ -151,7 +151,7 @@ public class SkillRepair extends ActiveSkill {
         }
         ItemStack reagentStack = new ItemStack(reagent, getRepairCost(is));
         if (!hasReagentCost(player, reagentStack)) {
-            Messaging.send(player, "Sorry, you need to have $1 $2 to repait that!", reagentStack.getAmount(), reagentStack.getType().name().toLowerCase().replace("_", " "));
+            Messaging.send(player, "Sorry, you need to have $1 $2 to repair that!", reagentStack.getAmount(), reagentStack.getType().name().toLowerCase().replace("_", " "));
             return false;
         }
         
