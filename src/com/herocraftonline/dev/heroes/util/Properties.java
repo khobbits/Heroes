@@ -23,6 +23,7 @@ public class Properties {
     public static int maxLevel;
     public static int[] levels;
     public double expLoss;
+    public double pvpExpLossMultiplier = 0;
     public boolean levelsViaExpLoss = false;
     public boolean masteryLoss = false;
     public boolean lockPathTillMaster = false;

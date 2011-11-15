@@ -126,8 +126,12 @@ public class HEntityListener extends EntityListener {
             if (attacker == null && heroDefender.hasEffect("Combust")) {
                 attacker = ((CombustEffect) heroDefender.getEffect("Combust")).getApplier();
             }
-
-            heroDefender.loseExpFromDeath();
+            
+            double multiplier = 1.0;
+            if (attacker != null)
+                multiplier = plugin.getConfigManager().getProperties().pvpExpLossMultiplier;
+            
+            heroDefender.loseExpFromDeath(multiplier);
 
             // Remove any nonpersistent effects
             for (Effect effect : heroDefender.getEffects()) {

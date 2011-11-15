@@ -3,6 +3,7 @@ leveling:
     maxExperience: 100000 #be cautious on changing this after it has been set)
     maxLevel: 50 #max level to master/change from PARENT to Child)
     expLoss: 0.10 #exp loss on death, is taken from current LEVEL not ALL exp.
+    pvpExpLossMultiplier: 1.0 #exp loss multiplier used during pvp
     max-tracked-blocks: 2000 #max blocks to track for no-exp
     block-tracking-duration: 900000 #duration to track for no-exp
     resetExpOnClassChange: true #will reset the exp if the player switches without mastering

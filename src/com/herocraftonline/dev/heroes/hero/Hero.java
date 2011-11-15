@@ -348,8 +348,8 @@ public class Hero {
         syncExperience();
     }
 
-    public void loseExpFromDeath() {
-        if (player.getGameMode() == GameMode.CREATIVE || plugin.getConfigManager().getProperties().disabledWorlds.contains(player.getWorld().getName()))
+    public void loseExpFromDeath(double multiplier) {
+        if (player.getGameMode() == GameMode.CREATIVE || plugin.getConfigManager().getProperties().disabledWorlds.contains(player.getWorld().getName()) || multiplier <= 0)
             return;
         Properties prop = plugin.getConfigManager().getProperties();
 
@@ -358,7 +358,8 @@ public class Hero {
         for (HeroClass hc : classes) {
             if (hc == null)
                 continue;
-            double expLossPercent = prop.expLoss;
+            
+            double expLossPercent = prop.expLoss * multiplier;
 
             if (hc.getExpLoss() != -1)
                 expLossPercent = hc.getExpLoss();

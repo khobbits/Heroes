@@ -211,6 +211,7 @@ public class ConfigManager {
         Properties.maxLevel = config.getInt(root + "maxLevel", 20);
         properties.partyBonus = config.getDouble(root + "partyBonus", 0.20);
         properties.expLoss = config.getDouble(root + "expLoss", 0.05);
+        properties.pvpExpLossMultiplier = config.getDouble(root + "pvpExpLossMultiplier", 1.0);
         properties.blockTrackingDuration = config.getInt(root + "block-tracking-duration", 10 * 60 * 1000);
         properties.maxTrackedBlocks = config.getInt(root + "max-tracked-blocks", 1000);
         properties.resetExpOnClassChange = config.getBoolean(root + "resetExpOnClassChange", true);
