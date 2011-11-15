@@ -19,7 +19,7 @@ public class SkillDispel extends TargettedSkill {
 
     public SkillDispel(Heroes plugin) {
         super(plugin, "Dispel");
-        setDescription("Removes all magical effects from your target.");
+        setDescription("Removes all magical effects from your target");
         setUsage("/skill dispel");
         setArgumentRange(0, 1);
         setIdentifiers("skill dispel");
