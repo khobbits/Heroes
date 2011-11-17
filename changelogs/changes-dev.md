@@ -10,3 +10,6 @@ Version dev
 
 
 ==== **Skills:** ====
+
+* EscapeArtist - (NEW!)
+** Removes all movement impairing effects (stuns, roots, slows)s
