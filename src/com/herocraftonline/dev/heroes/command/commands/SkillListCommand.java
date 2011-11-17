@@ -82,8 +82,9 @@ public class SkillListCommand extends BasicCommand {
             if (count >= start && count < end) {
                 Skill skill = entry.getKey();
                 int level = entry.getValue();
+                HeroClass hc = heroClass.hasSkill(skill.getName()) ? heroClass : secondClass;
                 ChatColor color;
-                if (level > hero.getLevel()) {
+                if (level > hero.getLevel(hc)) {
                     color = ChatColor.RED;
                 } else {
                     color = ChatColor.GREEN;
