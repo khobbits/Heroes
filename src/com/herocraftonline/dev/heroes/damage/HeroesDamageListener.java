@@ -236,6 +236,7 @@ public class HeroesDamageListener extends EntityListener {
                 // If the players aren't within the level range then deny the PvP
                 int aLevel = plugin.getHeroManager().getHero((Player) attacker).getTieredLevel(false);
                 if (Math.abs(aLevel - hero.getTieredLevel(false)) > plugin.getConfigManager().getProperties().pvpLevelRange) {
+                    Messaging.send((Player) attacker, "That player is outside of your level range!");
                     event.setCancelled(true);
                     return;
                 }
