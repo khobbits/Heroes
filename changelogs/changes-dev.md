@@ -12,5 +12,7 @@ Version dev
 
 ==== **Skills:** ====
 
+* Curse
+** Now properly tagged as a debuff skill
 * EscapeArtist - (NEW!)
 ** Removes all movement impairing effects (stuns, roots, slows)s

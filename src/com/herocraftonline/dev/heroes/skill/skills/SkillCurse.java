@@ -34,7 +34,7 @@ public class SkillCurse extends TargettedSkill {
         setUsage("/skill curse <target>");
         setArgumentRange(0, 1);
         setIdentifiers("skill curse");
-        setTypes(SkillType.DARK, SkillType.SILENCABLE, SkillType.HARMFUL);
+        setTypes(SkillType.DARK, SkillType.SILENCABLE, SkillType.HARMFUL, SkillType.DEBUFF);
 
         registerEvent(Type.CUSTOM_EVENT, new SkillEventListener(), Priority.Highest);
     }
