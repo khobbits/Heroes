@@ -2,6 +2,7 @@ Version dev
 
 ==== **Bug Fixes:** ====
 
+* /hero skills - now shows Permission-skills properly
 
 ==== **General:** ====
 
@@ -15,4 +16,4 @@ Version dev
 * Curse
 ** Now properly tagged as a debuff skill
 * EscapeArtist - (NEW!)
-** Removes all movement impairing effects (stuns, roots, slows)s
+** Removes all movement impairing effects (stuns, roots, slows)

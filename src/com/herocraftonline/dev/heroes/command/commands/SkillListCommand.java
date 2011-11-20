@@ -2,8 +2,10 @@ package com.herocraftonline.dev.heroes.command.commands;
 
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -48,16 +50,15 @@ public class SkillListCommand extends BasicCommand {
                 page = Integer.parseInt(args[0]) - 1;
             } catch (NumberFormatException e) {}
         }
-
+        
         Map<Skill, Integer> skills = new HashMap<Skill, Integer>();
-        // Filter out Skills from the command list.
-        for (Skill skill : plugin.getSkillManager().getSkills()) {
-            String skillName = skill.getName();
-            if (heroClass.hasSkill(skillName)  && !skills.containsKey(skill)) {
-                skills.put(skill, skill.getSetting(hero, Setting.LEVEL.node(), 1, true));
-            } else if (secondClass != null && secondClass.hasSkill(skillName) && !skills.containsKey(skill)) {
-                skills.put(skill, skill.getSetting(hero, Setting.LEVEL.node(), 1, true));
-            }
+        Set<String> skillNames = new HashSet<String>(heroClass.getSkillNames());
+        if (secondClass != null)
+            skillNames.addAll(secondClass.getSkillNames());
+        
+        for (String skillName : skillNames) {
+            Skill skill = plugin.getSkillManager().getSkill(skillName);
+            skills.put(skill, skill.getSetting(hero, Setting.LEVEL.node(), 1, true));
         }
 
         int numPages = skills.size() / SKILLS_PER_PAGE;

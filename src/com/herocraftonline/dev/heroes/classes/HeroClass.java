@@ -348,6 +348,14 @@ public class HeroClass {
     }
 
     /**
+     * Gets an unmodifiable Map of the skill mapping for this class.
+     * @return the skills map
+     */
+    public Map<String, ConfigurationNode> getSkillMap() {
+        return Collections.unmodifiableMap(skills);
+    }
+    
+    /**
      * @param name
      * @return true if this class contains the given skill
      */
