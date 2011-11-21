@@ -84,7 +84,7 @@ public class ProfessionCommand extends BasicInteractiveCommand {
                     return false;
                 }
 
-            if (!hero.isMaster() && props.lockPathTillMaster) {
+            if (!hero.isMaster(currentClass) && props.lockPathTillMaster) {
                 Messaging.send(player, "You must master this class before swapping to another.");
                 return false;
             }

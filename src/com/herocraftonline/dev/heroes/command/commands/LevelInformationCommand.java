@@ -30,6 +30,7 @@ public class LevelInformationCommand extends BasicCommand {
 
         Player player = (Player) sender;
         Hero hero = plugin.getHeroManager().getHero(player);
+        HeroClass hc = hero.getHeroClass();
         int exp = (int) hero.getExperience();
         int level = Properties.getLevel(exp);
         int current = Properties.getExperience(level);
@@ -39,11 +40,11 @@ public class LevelInformationCommand extends BasicCommand {
         String secondExp = sClass != null ? " | " + (int) hero.getExperience(sClass) : "";
         
         sender.sendMessage(ChatColor.RED + "-----[ " + ChatColor.WHITE + "Your Level Information" + ChatColor.RED + " ]-----");
-        sender.sendMessage(ChatColor.GREEN + "  Class: " + ChatColor.WHITE + hero.getHeroClass().getName() + secondClassName);
-        sender.sendMessage(ChatColor.GREEN + "  Level: " + ChatColor.WHITE + level + ChatColor.GREEN + "/" + ChatColor.WHITE + hero.getHeroClass().getMaxLevel()
+        sender.sendMessage(ChatColor.GREEN + "  Class: " + ChatColor.WHITE + hc.getName() + secondClassName);
+        sender.sendMessage(ChatColor.GREEN + "  Level: " + ChatColor.WHITE + level + ChatColor.GREEN + "/" + ChatColor.WHITE + hc.getMaxLevel()
                 + secondLevelInfo);
         sender.sendMessage(ChatColor.GREEN + "  Total Exp: " + ChatColor.WHITE + exp + secondExp);
-        if (!hero.isMaster()) {
+        if (!hero.isMaster(hc)) {
             int next = Properties.getExperience(level + 1);
             sender.sendMessage(ChatColor.DARK_GREEN + "  EXP.  " + Messaging.createExperienceBar(exp, current, next));
         } else {
