@@ -218,6 +218,8 @@ public class HeroesDamageListener extends EntityListener {
                 return;
             }
             final Hero hero = plugin.getHeroManager().getHero(player);
+            //check player inventory to make sure they aren't wearing restricted items
+            hero.checkInventory();
             
             //Loop through the player's effects and check to see if we need to remove them
             if (hero.hasEffectType(EffectType.INVULNERABILITY)) {

@@ -3,6 +3,7 @@ Version dev
 ==== **Bug Fixes:** ====
 
 * /hero skills - now shows Permission-skills properly
+* armor is removed properly when a player is about to take damage.
 
 ==== **General:** ====
 
