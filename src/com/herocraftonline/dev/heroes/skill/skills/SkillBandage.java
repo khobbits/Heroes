@@ -36,11 +36,10 @@ public class SkillBandage extends TargettedSkill {
     }
 
     @Override
-    public boolean use(Hero hero, LivingEntity target, String[] args) {
+    public SkillResult use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
         if (!(target instanceof Player)) {
-            Messaging.send(player, "Invalid Target!");
-            return false;
+            return SkillResult.INVALID_TARGET;
         }
 
         Hero targetHero = plugin.getHeroManager().getHero((Player) target);
@@ -53,14 +52,14 @@ public class SkillBandage extends TargettedSkill {
             } else {
                 Messaging.send(player, "Target is already fully healed.");
             }
-            return false;
+            return SkillResult.FAIL;
         }
 
         HeroRegainHealthEvent hrhEvent = new HeroRegainHealthEvent(targetHero, hpPlus, this);
         plugin.getServer().getPluginManager().callEvent(hrhEvent);
         if (hrhEvent.isCancelled()) {
             Messaging.send(player, "Unable to heal the target at this time!");
-            return false;
+            return SkillResult.FAIL;
         }
 
         targetHero.setHealth(targetHealth + hrhEvent.getAmount());
@@ -74,6 +73,6 @@ public class SkillBandage extends TargettedSkill {
         }
 
         broadcastExecuteText(hero, target);
-        return true;
+        return SkillResult.NORMAL;
     }
 }

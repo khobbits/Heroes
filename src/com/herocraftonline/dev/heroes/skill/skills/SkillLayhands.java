@@ -7,7 +7,6 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
-import com.herocraftonline.dev.heroes.util.Messaging;
 
 public class SkillLayhands extends TargettedSkill {
 
@@ -21,10 +20,9 @@ public class SkillLayhands extends TargettedSkill {
     }
 
     @Override
-    public boolean use(Hero hero, LivingEntity target, String[] args) {
+    public SkillResult use(Hero hero, LivingEntity target, String[] args) {
         if (!(target instanceof Player)) {
-            Messaging.send(hero.getPlayer(), "You need a target!");
-            return false;
+            return SkillResult.INVALID_TARGET;
         }
 
         Hero targetHero = plugin.getHeroManager().getHero((Player) target);
@@ -33,6 +31,6 @@ public class SkillLayhands extends TargettedSkill {
         targetHero.syncHealth();
 
         broadcastExecuteText(hero, target);
-        return true;
+        return SkillResult.NORMAL;
     }
 }

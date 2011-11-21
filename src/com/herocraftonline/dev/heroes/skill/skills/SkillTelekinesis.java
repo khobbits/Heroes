@@ -37,7 +37,7 @@ public class SkillTelekinesis extends ActiveSkill {
     }
 
     @Override
-    public boolean use(Hero hero, String[] args) {
+    public SkillResult use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
         HashSet<Byte> transparent = new HashSet<Byte>();
         transparent.add((byte) Material.AIR.getId());
@@ -57,11 +57,11 @@ public class SkillTelekinesis extends ActiveSkill {
             // lever.setPowered(!lever.isPowered());
             // block.getState().update();
             broadcastExecuteText(hero);
-            return true;
+            return SkillResult.NORMAL;
         }
 
         Messaging.send(player, "You must target a lever or button!");
-        return false;
+        return SkillResult.FAIL;
     }
 
 }

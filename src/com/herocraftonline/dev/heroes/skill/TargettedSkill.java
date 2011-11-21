@@ -90,7 +90,7 @@ public abstract class TargettedSkill extends ActiveSkill {
      *            the arguments provided with the command
      * @return <code>true</code> if the skill executed properly, <code>false</code> otherwise
      */
-    public abstract boolean use(Hero hero, LivingEntity target, String[] args);
+    public abstract SkillResult use(Hero hero, LivingEntity target, String[] args);
 
     /**
      * Handles target acquisition before calling {@link #use(Hero, LivingEntity, String[])}.
@@ -102,7 +102,7 @@ public abstract class TargettedSkill extends ActiveSkill {
      * @return <code>true</code> if the skill executed properly, <code>false</code> otherwise
      */
     @Override
-    public boolean use(Hero hero, String[] args) {
+    public SkillResult use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
         int maxDistance = getSetting(hero, Setting.MAX_DISTANCE.node(), 15, false);
         LivingEntity target = null;
@@ -110,18 +110,18 @@ public abstract class TargettedSkill extends ActiveSkill {
             target = plugin.getServer().getPlayer(args[0]);
             if (target == null) {
                 Messaging.send(player, "Target not found.");
-                return false;
+                return SkillResult.INVALID_TARGET;
             }
             if (target.getLocation().toVector().distance(player.getLocation().toVector()) > maxDistance) {
                 Messaging.send(player, "Target is too far away.");
-                return false;
+                return SkillResult.FAIL;
             }
             if (!inLineOfSight(player, (Player) target)) {
                 Messaging.send(player, "Sorry, target is not in your line of sight!");
-                return false;
+                return SkillResult.FAIL;
             }
             if (target.isDead() || target.getHealth() == 0)
-                return false;
+                return SkillResult.INVALID_TARGET;
         }
         if (target == null) {
             target = getPlayerTarget(player, maxDistance);
@@ -137,8 +137,7 @@ public abstract class TargettedSkill extends ActiveSkill {
         // Do a PvP check automatically for any harmful skill
         if (this.isType(SkillType.HARMFUL)) {
             if (player.equals(target) || hero.getSummons().contains(target) || !damageCheck(player, target)) {
-                Messaging.send(player, "Invalid Target!");
-                return false;
+                return SkillResult.INVALID_TARGET;
             }
         }
 

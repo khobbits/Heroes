@@ -57,7 +57,7 @@ public class SkillSneak extends ActiveSkill {
     }
 
     @Override
-    public boolean use(Hero hero, String[] args) {
+    public SkillResult use(Hero hero, String[] args) {
         if (hero.hasEffect("Sneak")) {
             hero.removeEffect(hero.getEffect("Sneak"));
         } else {
@@ -67,7 +67,7 @@ public class SkillSneak extends ActiveSkill {
             int period = getSetting(hero, "refresh-interval", 5000, true);
             hero.addEffect(new SneakEffect(this, period, duration));
         }
-        return true;
+        return SkillResult.NORMAL;
     }
 
     public class SneakDamageListener extends EntityListener {

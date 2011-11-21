@@ -5,6 +5,7 @@ Version dev
 * /hero skills - now shows Permission-skills properly
 * armor is removed properly when a player is about to take damage.
 * /hero prof <path> can now be used when the player's primary class is Mastered.
+* cooldowns are no longer called everytime a skill finishes (only when returning NORMAL)
 
 ==== **General:** ====
 
@@ -13,6 +14,7 @@ Version dev
 
 ==== **API:** ====
 
+* Skill's use method now returns a PostSkillReturn - to better identify different return conditions
 
 ==== **Skills:** ====
 

@@ -48,7 +48,7 @@ public class SkillRepair extends ActiveSkill {
     }
 
     @Override
-    public boolean use(Hero hero, String[] args) {
+    public SkillResult use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
         ItemStack is = player.getItemInHand();
         Material reagent = null;
@@ -142,24 +142,24 @@ public class SkillRepair extends ActiveSkill {
             break;
         default:
             Messaging.send(player, "You are not holding a repairable tool.");
-            return false;
+            return SkillResult.FAIL;
         }
         
         if (hero.getLevel(this) < level) {
             Messaging.send(player, "You must be level $1 to repair $2", level, is.getType().name().replace("_", " ").toLowerCase());
-            return false;
+            return SkillResult.FAIL;
         }
         ItemStack reagentStack = new ItemStack(reagent, getRepairCost(is));
         if (!hasReagentCost(player, reagentStack)) {
             Messaging.send(player, "Sorry, you need to have $1 $2 to repair that!", reagentStack.getAmount(), reagentStack.getType().name().toLowerCase().replace("_", " "));
-            return false;
+            return SkillResult.FAIL;
         }
         
         is.setDurability((short) 0);
         player.getInventory().removeItem(reagentStack);
         Util.syncInventory(player, plugin);
         broadcastExecuteText(hero);
-        return true;
+        return SkillResult.NORMAL;
     }
 
     private int getRepairCost(ItemStack is) {

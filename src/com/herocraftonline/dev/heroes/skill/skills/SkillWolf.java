@@ -81,7 +81,7 @@ public class SkillWolf extends ActiveSkill {
     }
 
     @Override
-    public boolean use(Hero hero, String[] args) {
+    public SkillResult use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
 
         if (args.length == 0) {
@@ -94,7 +94,7 @@ public class SkillWolf extends ActiveSkill {
             int maxWolves = getSetting(hero, "max-wolves", 3, false);
             if (wolves >= maxWolves) {
                 Messaging.send(player, "You already have the maximum number of summons.");
-                return false;
+                return SkillResult.FAIL;
             }
 
             int distance = getSetting(hero, Setting.MAX_DISTANCE.node(), 5, false);
@@ -105,14 +105,14 @@ public class SkillWolf extends ActiveSkill {
 
             if (castLoc.getBlock().getType() != Material.AIR) {
                 Messaging.send(player, "No room to summon a wolf at that locatioN!");
-                return false;
+                return SkillResult.FAIL;
             }
 
             Wolf wolf = (Wolf) player.getWorld().spawnCreature(castLoc, CreatureType.WOLF);
             setWolfSettings(hero, wolf);
             hero.setSkillSetting(this, "wolves", wolves + 1);
             broadcastExecuteText(hero);
-            return true;
+            return SkillResult.NORMAL;
         } else if (args[0].equals("summon")) {
             boolean summoned = false;
             for (Creature creature : hero.getSummons()) {
@@ -125,7 +125,7 @@ public class SkillWolf extends ActiveSkill {
                 Messaging.send(player, "You have no wolves to summon.");
             } else {
                 broadcast(player.getLocation(), "$1 has summoned wolves to their side!", player.getDisplayName());
-                return true;
+                return SkillResult.NORMAL;
             }
         } else if (args[0].equals("release")) {
             Iterator<Creature> iter = hero.getSummons().iterator();
@@ -141,7 +141,7 @@ public class SkillWolf extends ActiveSkill {
             broadcast(player.getLocation(), "$1 has released their wolves into the wild", player.getDisplayName());
         }
 
-        return false;
+        return SkillResult.FAIL;
     }
 
     private void setWolfSettings(Hero hero, Wolf wolf) {

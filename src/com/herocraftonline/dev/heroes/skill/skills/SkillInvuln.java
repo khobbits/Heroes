@@ -38,7 +38,7 @@ public class SkillInvuln extends ActiveSkill {
     }
 
     @Override
-    public boolean use(Hero hero, String[] args) {
+    public SkillResult use(Hero hero, String[] args) {
         broadcastExecuteText(hero);
         int duration = getSetting(hero, Setting.DURATION.node(), 10000, false);
         // Remove any harmful effects on the caster
@@ -48,6 +48,6 @@ public class SkillInvuln extends ActiveSkill {
             }
         }
         hero.addEffect(new InvulnerabilityEffect(this, duration));
-        return true;
+        return SkillResult.NORMAL;
     }
 }

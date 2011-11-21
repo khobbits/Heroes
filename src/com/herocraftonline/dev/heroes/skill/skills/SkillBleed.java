@@ -48,11 +48,10 @@ public class SkillBleed extends TargettedSkill {
     }
 
     @Override
-    public boolean use(Hero hero, LivingEntity target, String[] args) {
+    public SkillResult use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
         if (target.equals(player) || hero.getSummons().contains(target)) {
-            Messaging.send(player, "You need a target!");
-            return false;
+            return SkillResult.INVALID_TARGET;
         }
 
         long duration = getSetting(hero, Setting.DURATION.node(), 10000, false);
@@ -65,12 +64,11 @@ public class SkillBleed extends TargettedSkill {
         } else if (target instanceof Creature) {
             plugin.getEffectManager().addCreatureEffect((Creature) target, bEffect);
         } else {
-            Messaging.send(player, "Invalid target!");
-            return false;
+            return SkillResult.INVALID_TARGET;
         }
 
         broadcastExecuteText(hero, target);
-        return true;
+        return SkillResult.NORMAL;
     }
 
     public class BleedSkillEffect extends PeriodicDamageEffect {

@@ -44,7 +44,7 @@ public class SkillOne extends ActiveSkill {
     }
 
     @Override
-    public boolean use(Hero hero, String[] args) {
+    public SkillResult use(Hero hero, String[] args) {
         broadcastExecuteText(hero);
 
         int duration = getSetting(hero, Setting.DURATION.node(), 15000, false);
@@ -54,7 +54,7 @@ public class SkillOne extends ActiveSkill {
         }
         hero.addEffect(new OneEffect(this, duration, multiplier));
 
-        return true;
+        return SkillResult.NORMAL;
     }
 
     public class OneEffect extends ExpirableEffect {

@@ -29,7 +29,7 @@ public class SkillBolt extends TargettedSkill {
     }
 
     @Override
-    public boolean use(Hero hero, LivingEntity target, String[] args) {
+    public SkillResult use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
 
         plugin.getDamageManager().addSpellTarget(target, hero, this);
@@ -37,6 +37,6 @@ public class SkillBolt extends TargettedSkill {
         target.damage(getSetting(hero, Setting.DAMAGE.node(), 4, false), player);
 
         broadcastExecuteText(hero, target);
-        return true;
+        return SkillResult.NORMAL;
     }
 }

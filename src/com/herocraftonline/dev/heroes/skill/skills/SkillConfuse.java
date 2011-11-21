@@ -15,6 +15,7 @@ import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
+import com.herocraftonline.dev.heroes.skill.ActiveSkill.SkillResult;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Setting;
 
@@ -53,7 +54,7 @@ public class SkillConfuse extends TargettedSkill {
     }
 
     @Override
-    public boolean use(Hero hero, LivingEntity target, String[] args) {
+    public SkillResult use(Hero hero, LivingEntity target, String[] args) {
         long duration = getSetting(hero, Setting.DURATION.node(), 10000, false);
         long period = getSetting(hero, Setting.PERIOD.node(), 2000, true);
         float maxDrift = (float) getSetting(hero, "max-drift", 0.35, false);
@@ -62,10 +63,10 @@ public class SkillConfuse extends TargettedSkill {
         } else if (target instanceof Creature) {
             plugin.getEffectManager().addCreatureEffect((Creature) target, new ConfuseEffect(this, duration, period, maxDrift));
         } else
-            return false;
+            return SkillResult.INVALID_TARGET;
 
         broadcastExecuteText(hero, target);
-        return true;
+        return SkillResult.NORMAL;
     }
 
     public class ConfuseEffect extends PeriodicExpirableEffect {

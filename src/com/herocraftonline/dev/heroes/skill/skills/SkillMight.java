@@ -55,7 +55,7 @@ public class SkillMight extends ActiveSkill {
     }
 
     @Override
-    public boolean use(Hero hero, String[] args) {
+    public SkillResult use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
         int duration = getSetting(hero, Setting.DURATION.node(), 600000, false);
         double damageBonus = getSetting(hero, "damage-bonus", 1.25, false);
@@ -90,7 +90,7 @@ public class SkillMight extends ActiveSkill {
         }
 
         broadcastExecuteText(hero);
-        return true;
+        return SkillResult.NORMAL;
     }
 
     public class MightEffect extends ExpirableEffect {

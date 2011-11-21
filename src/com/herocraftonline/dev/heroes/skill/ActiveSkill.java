@@ -165,7 +165,10 @@ public abstract class ActiveSkill extends Skill {
             hm.addCompletedSkill(hero);
         }
 
-        if (use(hero, args)) {
+        SkillResult psr = use(hero, args);
+        if (psr == SkillResult.INVALID_TARGET) {
+            Messaging.send(player, "Invalid Target!");
+        } else if (psr == SkillResult.NORMAL){
             // Set cooldown
             if (cooldown > 0) {
                 hero.setCooldown(name, time + cooldown);
@@ -198,9 +201,8 @@ public abstract class ActiveSkill extends Skill {
                 player.updateInventory();
             }
 
-            return true;
-        } else
-            return false;
+        }
+        return true;
     }
 
     /**
@@ -263,9 +265,9 @@ public abstract class ActiveSkill extends Skill {
      *            the {@link Hero} using the skill
      * @param args
      *            the arguments provided with the command
-     * @return <code>true</code> if the skill executed properly, <code>false</code> otherwise
+     * @return {@link SkillResult} if skill completed normally, or with an execution error
      */
-    public abstract boolean use(Hero hero, String[] args);
+    public abstract SkillResult use(Hero hero, String[] args);
 
     private void awardExp(Hero hero) {
         if (hero.hasExperienceType(ExperienceType.SKILL)) {
@@ -293,5 +295,13 @@ public abstract class ActiveSkill extends Skill {
                 return true;
         }
         return false;
+    } 
+
+    public enum SkillResult {
+        NORMAL,
+        SKIP_POST_USAGE,
+        INVALID_TARGET,
+        REMOVED_EFFECT,
+        FAIL;
     }
 }

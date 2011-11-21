@@ -34,7 +34,7 @@ public class SkillDispel extends TargettedSkill {
     }
 
     @Override
-    public boolean use(Hero hero, LivingEntity target, String[] args) {
+    public SkillResult use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
 
         boolean removed = false;
@@ -110,16 +110,15 @@ public class SkillDispel extends TargettedSkill {
                 }
             }
         } else {
-            Messaging.send(player, "That is not a valid target!");
-            return false;
+            return SkillResult.INVALID_TARGET;
         }
 
         if (removed) {
             broadcastExecuteText(hero, target);
-            return true;
+            return SkillResult.NORMAL;
         }
         Messaging.send(player, "The target has nothing to dispel!");
-        return false;
+        return SkillResult.FAIL;
     }
 
 }

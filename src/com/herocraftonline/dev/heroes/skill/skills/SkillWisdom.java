@@ -50,7 +50,7 @@ public class SkillWisdom extends ActiveSkill {
     }
 
     @Override
-    public boolean use(Hero hero, String[] args) {
+    public SkillResult use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
         int duration = getSetting(hero, Setting.DURATION.node(), 600000, false);
         double manaMultiplier = getSetting(hero, "regen-multiplier", 1.2, false);
@@ -83,7 +83,7 @@ public class SkillWisdom extends ActiveSkill {
         }
 
         broadcastExecuteText(hero);
-        return true;
+        return SkillResult.NORMAL;
     }
 
     public class SkillHeroListener extends HeroesEventListener {

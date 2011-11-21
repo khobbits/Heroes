@@ -25,24 +25,24 @@ public class SkillRecall extends ActiveSkill {
     }
 
     @Override
-    public boolean use(Hero hero, String[] args) {
+    public SkillResult use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
         Map<String, String> skillSettings = hero.getSkillSettings(this);
 
         // Try to teleport back to the location
         World world = validateLocation(skillSettings, player);
         if (world == null)
-            return false;
+            return SkillResult.FAIL;
 
         if (hero.hasEffectType(EffectType.ROOT)) {
             Messaging.send(player, "Teleport fizzled.");
-            return false;
+            return SkillResult.FAIL;
         }
 
         double[] xyzyp = getStoredData(skillSettings);
         broadcastExecuteText(hero);
         player.teleport(new Location(world, xyzyp[0], xyzyp[1], xyzyp[2], (float) xyzyp[3], (float) xyzyp[4]));
-        return true;
+        return SkillResult.NORMAL;
     }
 
     private double[] getStoredData(Map<String, String> skillSettings) {

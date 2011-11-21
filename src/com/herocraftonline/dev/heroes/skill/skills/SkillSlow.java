@@ -10,7 +10,6 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.effects.common.SlowEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
-import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillSlow extends TargettedSkill {
@@ -45,11 +44,9 @@ public class SkillSlow extends TargettedSkill {
     }
 
     @Override
-    public boolean use(Hero hero, LivingEntity target, String[] args) {
-        if (!(target instanceof Player)) {
-            Messaging.send(hero.getPlayer(), "Invalid Target!");
-            return false;
-        }
+    public SkillResult use(Hero hero, LivingEntity target, String[] args) {
+        if (!(target instanceof Player))
+            return SkillResult.INVALID_TARGET;
         
         int duration = getSetting(hero, Setting.DURATION.node(), 15000, false);
         int multiplier = getSetting(hero, "speed-multiplier", 2, false);
@@ -58,6 +55,6 @@ public class SkillSlow extends TargettedSkill {
         }
         SlowEffect effect = new SlowEffect(this, duration, multiplier, true, applyText, expireText, hero);
         plugin.getHeroManager().getHero((Player) target).addEffect(effect);
-        return true;
+        return SkillResult.NORMAL;
     }
 }

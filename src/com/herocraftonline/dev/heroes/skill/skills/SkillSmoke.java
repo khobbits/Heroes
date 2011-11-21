@@ -42,7 +42,7 @@ public class SkillSmoke extends ActiveSkill {
     }
 
     @Override
-    public boolean use(Hero hero, String[] args) {
+    public SkillResult use(Hero hero, String[] args) {
         broadcastExecuteText(hero);
 
         long duration = getSetting(hero, Setting.DURATION.node(), 20000, false);
@@ -50,6 +50,6 @@ public class SkillSmoke extends ActiveSkill {
         player.getWorld().playEffect(player.getLocation(), org.bukkit.Effect.SMOKE, 4);
         hero.addEffect(new InvisibleEffect(this, duration, applyText, expireText));
 
-        return true;
+        return SkillResult.NORMAL;
     }
 }

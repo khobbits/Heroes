@@ -53,13 +53,13 @@ public class SkillSuperheat extends ActiveSkill {
     }
 
     @Override
-    public boolean use(Hero hero, String[] args) {
+    public SkillResult use(Hero hero, String[] args) {
         broadcastExecuteText(hero);
 
         int duration = getSetting(hero, Setting.DURATION.node(), 20000, false);
         hero.addEffect(new SuperheatEffect(this, duration));
 
-        return true;
+        return SkillResult.NORMAL;
     }
 
     public class SkillPlayerListener extends BlockListener {

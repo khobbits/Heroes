@@ -58,7 +58,7 @@ public class SkillWeb extends TargettedSkill {
     }
 
     @Override
-    public boolean use(Hero hero, LivingEntity target, String[] args) {
+    public SkillResult use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
 
         String name = "";
@@ -72,7 +72,7 @@ public class SkillWeb extends TargettedSkill {
         int duration = getSetting(hero, Setting.DURATION.node(), 5000, false);
         WebEffect wEffect = new WebEffect(this, duration, target.getLocation().getBlock().getLocation());
         hero.addEffect(wEffect);
-        return true;
+        return SkillResult.NORMAL;
     }
 
     public class WebBlockListener extends BlockListener {

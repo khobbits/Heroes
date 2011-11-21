@@ -44,14 +44,14 @@ public class SkillFireball extends ActiveSkill {
     }
 
     @Override
-    public boolean use(Hero hero, String[] args) {
+    public SkillResult use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
 
         Snowball snowball = player.throwSnowball();
         snowball.setFireTicks(1000);
 
         broadcastExecuteText(hero);
-        return true;
+        return SkillResult.NORMAL;
     }
 
     public class SkillEntityListener extends EntityListener {

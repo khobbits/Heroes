@@ -40,9 +40,9 @@ public class SkillGills extends ActiveSkill {
     }
 
     @Override
-    public boolean use(Hero hero, String[] args) {
+    public SkillResult use(Hero hero, String[] args) {
         int duration = getSetting(hero, Setting.DURATION.node(), 30000, false);
         hero.addEffect(new WaterBreatheEffect(this, duration, applyText, expireText));
-        return true;
+        return SkillResult.NORMAL;
     }
 }

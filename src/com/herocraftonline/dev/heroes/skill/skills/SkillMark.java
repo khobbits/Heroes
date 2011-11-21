@@ -24,7 +24,7 @@ public class SkillMark extends ActiveSkill {
     }
 
     @Override
-    public boolean use(Hero hero, String[] args) {
+    public SkillResult use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
         Map<String, String> skillSetting = hero.getSkillSettings("Recall");
 
@@ -32,10 +32,10 @@ public class SkillMark extends ActiveSkill {
             // Display the info about the current mark
             World world = validateLocation(skillSetting, player);
             if (world == null)
-                return false;
+                return SkillResult.FAIL;
             double[] xyzyp = getStoredData(skillSetting);
             Messaging.send(player, "Your recall is currently marked on $1 at: $2, $3, $4", world.getName(), (int) xyzyp[0], (int) xyzyp[1], (int) xyzyp[2]);
-            return false;
+            return SkillResult.SKIP_POST_USAGE;
         } else {
             // Save a new mark
             Location loc = player.getLocation();
@@ -49,7 +49,7 @@ public class SkillMark extends ActiveSkill {
             Messaging.send(player, "You have marked a new location on $1 at: $2, $3, $4", obj);
 
             plugin.getHeroManager().saveHero(hero);
-            return true;
+            return SkillResult.NORMAL;
         }
     }
 

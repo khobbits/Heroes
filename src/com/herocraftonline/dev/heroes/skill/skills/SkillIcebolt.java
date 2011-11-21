@@ -62,7 +62,7 @@ public class SkillIcebolt extends ActiveSkill {
     }
     
     @Override
-    public boolean use(Hero hero, String[] args) {
+    public SkillResult use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
         Location location = player.getEyeLocation();
 
@@ -79,7 +79,7 @@ public class SkillIcebolt extends ActiveSkill {
         snowballs.add(snowball);
 
         broadcastExecuteText(hero);
-        return true;
+        return SkillResult.NORMAL;
     }
 
     public class SkillEntityListener extends EntityListener {

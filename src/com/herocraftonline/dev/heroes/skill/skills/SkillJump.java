@@ -44,12 +44,12 @@ public class SkillJump extends ActiveSkill {
     }
     
     @Override
-    public boolean use(Hero hero, String[] args) {
+    public SkillResult use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
         Material mat = player.getLocation().getBlock().getRelative(BlockFace.DOWN).getType();
         if ((getSetting(hero, "no-air-jump", true) && noJumpMaterials.contains(mat)) || player.isInsideVehicle()) {
             Messaging.send(player, "You can't jump while mid-air or from inside a vehicle!");
-            return false;
+            return SkillResult.FAIL;
         }
         float pitch = player.getEyeLocation().getPitch();
         int jumpForwards = 1;
@@ -65,6 +65,6 @@ public class SkillJump extends ActiveSkill {
         player.setFallDistance(-8f);
         broadcastExecuteText(hero);
         
-        return true;
+        return SkillResult.NORMAL;
     }
 }

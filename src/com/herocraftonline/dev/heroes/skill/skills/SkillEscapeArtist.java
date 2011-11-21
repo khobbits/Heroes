@@ -20,7 +20,7 @@ public class SkillEscapeArtist extends ActiveSkill {
     }
 
     @Override
-    public boolean use(Hero hero, String[] args) {
+    public SkillResult use(Hero hero, String[] args) {
         boolean removed = false;
         for (Effect effect : hero.getEffects()) {
             if (effect.isType(EffectType.SLOW) || effect.isType(EffectType.STUN) || effect.isType(EffectType.ROOT)) {
@@ -31,10 +31,10 @@ public class SkillEscapeArtist extends ActiveSkill {
 
         if (removed) {
             broadcastExecuteText(hero);
-            return true;
+            return SkillResult.NORMAL;
         } else  {
             Messaging.send(hero.getPlayer(), "There is no effect impeding your movement!");
-            return false;
+            return SkillResult.FAIL;
         }
     }
 

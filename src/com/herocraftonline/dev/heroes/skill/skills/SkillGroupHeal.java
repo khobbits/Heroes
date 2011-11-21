@@ -32,7 +32,7 @@ public class SkillGroupHeal extends ActiveSkill {
     }
 
     @Override
-    public boolean use(Hero hero, String[] args) {
+    public SkillResult use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
         int healAmount = getSetting(hero, "heal-amount", 2, false);
         if (hero.getParty() == null) {
@@ -41,7 +41,7 @@ public class SkillGroupHeal extends ActiveSkill {
             plugin.getServer().getPluginManager().callEvent(hrhEvent);
             if (hrhEvent.isCancelled()) {
                 Messaging.send(player, "Unable to heal the target at this time!");
-                return false;
+                return SkillResult.FAIL;
             }
             hero.setHealth(hero.getHealth() + hrhEvent.getAmount());
             hero.syncHealth();
@@ -58,7 +58,7 @@ public class SkillGroupHeal extends ActiveSkill {
                     plugin.getServer().getPluginManager().callEvent(hrhEvent);
                     if (hrhEvent.isCancelled()) {
                         Messaging.send(player, "Unable to heal the target at this time!");
-                        return false;
+                        return SkillResult.FAIL;
                     }
                     partyHero.setHealth(partyHero.getHealth() + hrhEvent.getAmount());
                     partyHero.syncHealth();
@@ -67,6 +67,6 @@ public class SkillGroupHeal extends ActiveSkill {
         }
 
         broadcastExecuteText(hero);
-        return true;
+        return SkillResult.NORMAL;
     }
 }

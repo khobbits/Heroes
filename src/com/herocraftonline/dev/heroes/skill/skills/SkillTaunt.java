@@ -22,7 +22,7 @@ public class SkillTaunt extends ActiveSkill {
     }
 
     @Override
-    public boolean use(Hero hero, String[] args) {
+    public SkillResult use(Hero hero, String[] args) {
         List<Entity> entities = hero.getPlayer().getNearbyEntities(5, 5, 5);
         for (Entity n : entities) {
             if (n instanceof Monster) {
@@ -30,7 +30,7 @@ public class SkillTaunt extends ActiveSkill {
             }
         }
         broadcastExecuteText(hero);
-        return true;
+        return SkillResult.NORMAL;
     }
 
 }

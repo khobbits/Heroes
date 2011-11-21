@@ -10,7 +10,6 @@ import com.herocraftonline.dev.heroes.effects.common.RootEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
-import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillRoot extends TargettedSkill {
@@ -32,9 +31,7 @@ public class SkillRoot extends TargettedSkill {
     }
 
     @Override
-    public boolean use(Hero hero, LivingEntity target, String[] args) {
-        Player player = hero.getPlayer();
-
+    public SkillResult use(Hero hero, LivingEntity target, String[] args) {
         long duration = getSetting(hero, Setting.DURATION.node(), 5000, false);
         RootEffect rEffect = new RootEffect(this, duration);
 
@@ -42,12 +39,10 @@ public class SkillRoot extends TargettedSkill {
             plugin.getHeroManager().getHero((Player) target).addEffect(rEffect);
         } else if (target instanceof Creature) {
             plugin.getEffectManager().addCreatureEffect((Creature) target, rEffect);
-        } else {
-            Messaging.send(player, "Invalid target!");
-            return false;
-        }
+        } else
+            return SkillResult.INVALID_TARGET;
 
         broadcastExecuteText(hero, target);
-        return true;
+        return SkillResult.NORMAL;
     }
 }

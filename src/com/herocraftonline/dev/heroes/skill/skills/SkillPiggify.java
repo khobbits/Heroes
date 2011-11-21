@@ -22,7 +22,6 @@ import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
-import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillPiggify extends TargettedSkill {
@@ -48,9 +47,7 @@ public class SkillPiggify extends TargettedSkill {
     }
 
     @Override
-    public boolean use(Hero hero, LivingEntity target, String[] args) {
-        Player player = hero.getPlayer();
-
+    public SkillResult use(Hero hero, LivingEntity target, String[] args) {
         CreatureType type = CreatureType.PIG;
         if (target.getLocation().getBlock().getType() == Material.WATER) {
             type = CreatureType.SQUID;
@@ -63,12 +60,11 @@ public class SkillPiggify extends TargettedSkill {
             plugin.getHeroManager().getHero((Player) target).addEffect(pEffect);
         } else if (target instanceof Creature) {
             plugin.getEffectManager().addCreatureEffect((Creature) target, pEffect);
-        } else {
-            Messaging.send(player, "Invalid Target!");
-            return false;
-        }
+        } else
+            return SkillResult.INVALID_TARGET;
+        
         broadcastExecuteText(hero, target);
-        return true;
+        return SkillResult.NORMAL;
     }
 
     public class PigEffect extends ExpirableEffect {

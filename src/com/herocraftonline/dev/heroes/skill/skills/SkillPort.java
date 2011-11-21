@@ -31,7 +31,7 @@ public class SkillPort extends ActiveSkill {
     }
 
     @Override
-    public boolean use(Hero hero, String[] args) {
+    public SkillResult use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
 
         if (args[0].equalsIgnoreCase("list")) {
@@ -41,7 +41,7 @@ public class SkillPort extends ActiveSkill {
                     Messaging.send(player, "$1 - $2", n, retrievedNode);
                 }
             }
-            return false;
+            return SkillResult.SKIP_POST_USAGE;
         }
 
         String portInfo = getSetting(hero, args[0].toLowerCase(), (String) null);
@@ -51,12 +51,12 @@ public class SkillPort extends ActiveSkill {
             World world = plugin.getServer().getWorld(splitArg[0]);
             if (world == null) {
                 Messaging.send(player, "That teleport location no longer exists!");
-                return false;
+                return SkillResult.FAIL;
             }
 
             if (hero.getLevel(this) < levelRequirement) {
                 Messaging.send(player, "Sorry, you need to be level $1 to use that!", levelRequirement);
-                return false;
+                return SkillResult.FAIL;
             }
 
             int range = (int) Math.pow(getSetting(hero, Setting.RADIUS.node(), 10, false), 2);
@@ -64,7 +64,7 @@ public class SkillPort extends ActiveSkill {
             broadcastExecuteText(hero);
             if (!hero.hasParty()) {
                 player.teleport(loc);
-                return true;
+                return SkillResult.NORMAL;
             }
 
             Location castLocation = player.getLocation();
@@ -78,8 +78,8 @@ public class SkillPort extends ActiveSkill {
                 }
             }
 
-            return true;
+            return SkillResult.NORMAL;
         } else
-            return false;
+            return SkillResult.FAIL;
     }
 }

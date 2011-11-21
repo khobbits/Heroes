@@ -45,7 +45,7 @@ public class SkillExcavate extends ActiveSkill {
     }
     
     @Override
-    public boolean use(Hero hero, String[] args) {
+    public SkillResult use(Hero hero, String[] args) {
         broadcastExecuteText(hero);
 
         int duration = getSetting(hero, "duration-per-level", 100, false);
@@ -55,7 +55,7 @@ public class SkillExcavate extends ActiveSkill {
         }
         hero.addEffect(new ExcavateEffect(this, duration, multiplier));
 
-        return true;
+        return SkillResult.NORMAL;
     }
     
     public class ExcavateEffect extends ExpirableEffect {

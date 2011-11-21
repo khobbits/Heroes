@@ -23,7 +23,7 @@ public class SkillAntidote extends TargettedSkill {
     }
 
     @Override
-    public boolean use(Hero hero, LivingEntity target, String[] args) {
+    public SkillResult use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
         if (target instanceof Player) {
             Hero targetHero = plugin.getHeroManager().getHero((Player) target);
@@ -36,14 +36,13 @@ public class SkillAntidote extends TargettedSkill {
             }
             if (!cured) {
                 Messaging.send(player, "Your target is not poisoned!");
-                return false;
+                return SkillResult.FAIL;
             } else {
                 broadcastExecuteText(hero, target);
             }
-            return true;
+            return SkillResult.NORMAL;
         }
-        Messaging.send(player, "You must target a player!");
-        return false;
+        return SkillResult.INVALID_TARGET;
     }
 
 }

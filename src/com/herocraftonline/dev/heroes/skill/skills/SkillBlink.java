@@ -34,12 +34,12 @@ public class SkillBlink extends ActiveSkill {
     }
 
     @Override
-    public boolean use(Hero hero, String[] args) {
+    public SkillResult use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
         Location loc = player.getLocation();
         if (loc.getBlockY() > loc.getWorld().getMaxHeight() || loc.getBlockY() < 1) {
             Messaging.send(player, "The void prevents you from blinking!");
-            return false;
+            return SkillResult.FAIL;
         }
         int distance = getSetting(hero, Setting.MAX_DISTANCE.node(), 6, false);
         Block prev = null;
@@ -49,7 +49,7 @@ public class SkillBlink extends ActiveSkill {
             iter = new BlockIterator(player, distance);
         } catch (IllegalStateException e) {
             Messaging.send(player, "There was an error getting your blink location!");
-            return false;
+            return SkillResult.FAIL;
         }
         while (iter.hasNext()) {
             b = iter.next();
@@ -65,10 +65,10 @@ public class SkillBlink extends ActiveSkill {
             teleport.setPitch(player.getLocation().getPitch());
             teleport.setYaw(player.getLocation().getYaw());
             player.teleport(teleport);
-            return true;
+            return SkillResult.NORMAL;
         } else {
             Messaging.send(player, "No location to blink to.");
-            return false;
+            return SkillResult.FAIL;
         }
     }
 }

@@ -28,12 +28,12 @@ public class SkillSafefall extends ActiveSkill {
     }
 
     @Override
-    public boolean use(Hero hero, String[] args) {
+    public SkillResult use(Hero hero, String[] args) {
         broadcastExecuteText(hero);
 
         int duration = getSetting(hero, Setting.DURATION.node(), 20000, false);
         hero.addEffect(new SafeFallEffect(this, duration));
 
-        return true;
+        return SkillResult.NORMAL;
     }
 }

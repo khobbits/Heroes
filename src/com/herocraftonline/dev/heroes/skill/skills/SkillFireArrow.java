@@ -47,12 +47,12 @@ public class SkillFireArrow extends ActiveSkill {
     }
 
     @Override
-    public boolean use(Hero hero, String[] args) {
+    public SkillResult use(Hero hero, String[] args) {
         long duration = getSetting(hero, Setting.DURATION.node(), 600000, false);
         int numAttacks = getSetting(hero, "attacks", 1, false);
         hero.addEffect(new FireArrowBuff(this, duration, numAttacks));
         broadcastExecuteText(hero);
-        return true;
+        return SkillResult.NORMAL;
     }
 
     public class FireArrowBuff extends ImbueEffect {
