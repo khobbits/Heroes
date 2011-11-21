@@ -3,6 +3,7 @@ package com.herocraftonline.dev.heroes.skill.skills;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
+import com.herocraftonline.dev.heroes.api.SkillResult;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.SkillType;

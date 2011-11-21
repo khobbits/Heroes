@@ -14,7 +14,7 @@ Version dev
 
 ==== **API:** ====
 
-* Skill's use method now returns a PostSkillReturn - to better identify different return conditions
+* Skill's use method now returns a SkillResult - to better identify different return conditions
 
 ==== **Skills:** ====
 

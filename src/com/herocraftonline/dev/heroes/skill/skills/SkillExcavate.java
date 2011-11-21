@@ -1,5 +1,6 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
+import com.herocraftonline.dev.heroes.api.SkillResult;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockDamageEvent;

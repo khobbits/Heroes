@@ -1,5 +1,6 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
+import com.herocraftonline.dev.heroes.api.SkillResult;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import org.bukkit.entity.Player;
 import org.bukkit.util.config.ConfigurationNode;

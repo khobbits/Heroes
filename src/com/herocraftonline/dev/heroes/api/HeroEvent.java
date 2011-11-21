@@ -31,6 +31,7 @@ public class HeroEvent extends Event {
         HERO_LEAVE_PARTY,
         HERO_REGAIN_HEALTH,
         HERO_REGAIN_MANA,
+        SKILL_COMPLETE,
         SKILL_DAMAGE,
         SKILL_USE,
         WEAPON_DAMAGE;

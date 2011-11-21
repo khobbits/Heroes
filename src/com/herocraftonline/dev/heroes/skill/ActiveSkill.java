@@ -9,6 +9,9 @@ import org.bukkit.util.config.Configuration;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.api.SkillCompleteEvent;
+import com.herocraftonline.dev.heroes.api.SkillResult;
+import com.herocraftonline.dev.heroes.api.SkillResult.ResultType;
 import com.herocraftonline.dev.heroes.api.SkillUseEvent;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
@@ -83,26 +86,26 @@ public abstract class ActiveSkill extends Skill {
         HeroClass secondClass = hero.getSecondClass();
         if (!heroClass.hasSkill(name) && (secondClass == null || !secondClass.hasSkill(name))) {
             Messaging.send(player, "Your classes don't have the skill: $1.", name);
-            return false;
+            return true;
         }
         int level = getSetting(hero, Setting.LEVEL.node(), 1, true);
         if (hero.getLevel(this) < level) {
-            Messaging.send(player, "You must be level $1 to use $2.", String.valueOf(level), name);
-            return false;
+            messageAndEvent(hero, new SkillResult(ResultType.LOW_LEVEL, true, String.valueOf(level)));
+            return true;
         }
 
         long time = System.currentTimeMillis();
         Long global = hero.getCooldown("Global");
         if (global != null && time < global) {
-            Messaging.send(hero.getPlayer(), "Sorry, you must wait $1 seconds longer before using another skill.", (global - time) / 1000);
-            return false;
+            messageAndEvent(hero, new SkillResult(ResultType.ON_GLOBAL_COOLDOWN, true, String.valueOf((global - time) / 1000)));
+            return true;
         }
         int cooldown = getSetting(hero, Setting.COOLDOWN.node(), 0, true);
         if (cooldown > 0) {
             Long expiry = hero.getCooldown(name);
             if (expiry != null && time < expiry) {
                 long remaining = expiry - time;
-                Messaging.send(hero.getPlayer(), "Sorry, $1 still has $2 seconds left on cooldown!", name, remaining / 1000);
+                messageAndEvent(hero, new SkillResult(ResultType.ON_COOLDOWN, true, name, String.valueOf(remaining / 1000)));
                 return false;
             }
         }
@@ -120,36 +123,37 @@ public abstract class ActiveSkill extends Skill {
 
         SkillUseEvent skillEvent = new SkillUseEvent(this, player, hero, manaCost, healthCost, itemStack, args);
         plugin.getServer().getPluginManager().callEvent(skillEvent);
-        if (skillEvent.isCancelled())
-            return false;
+        if (skillEvent.isCancelled()) {
+            messageAndEvent(hero, SkillResult.CANCELLED);
+            return true;
+        }
 
         // Update manaCost with result of SkillUseEvent
         manaCost = skillEvent.getManaCost();
         if (manaCost > hero.getMana()) {
-            Messaging.send(player, "Not enough mana!");
-            return false;
+            messageAndEvent(hero, SkillResult.LOW_MANA);
+            return true;
         }
 
         // Update healthCost with results of SkillUseEvent
         healthCost = skillEvent.getHealthCost();
         if (healthCost > 0 && hero.getHealth() <= healthCost) {
-            Messaging.send(player, "Not enough health!");
-            return false;
+            messageAndEvent(hero, SkillResult.LOW_HEALTH);
+            return true;
         }
 
         itemStack = skillEvent.getReagentCost();
-        if (itemStack != null) {
-            if (itemStack.getAmount() != 0 && !hasReagentCost(player, itemStack)) {
-                reagentName = itemStack.getType().name().toLowerCase().replace("_", " ");
-                Messaging.send(player, "Sorry, you need to have $1 $2 to use that skill!", itemStack.getAmount(), reagentName);
-                return false;
-            }
+        if (itemStack != null && itemStack.getAmount() != 0 && !hasReagentCost(player, itemStack)) {
+            reagentName = itemStack.getType().name().toLowerCase().replace("_", " ");
+            messageAndEvent(hero, new SkillResult(ResultType.MISSING_REAGENT, true, String.valueOf(itemStack.getAmount()), reagentName));
+            return true;
         }
 
         int delay = getSetting(hero, Setting.DELAY.node(), 0, true);
         if (delay > 0 && !hm.getDelayedSkills().containsKey(hero)) {
             addDelayedSkill(hero, delay, identifier, args);
-            return false;
+            messageAndEvent(hero, SkillResult.START_DELAY);
+            return true;
         } else if (hm.getDelayedSkills().containsKey(hero)) {
             DelayedSkill dSkill = hm.getDelayedSkills().get(hero);
             if (dSkill.getSkill() != this) {
@@ -159,16 +163,15 @@ public abstract class ActiveSkill extends Skill {
                 //If the new skill is also a delayed skill lets add it to the warmups and proceed
                 if (delay > 0) {
                     addDelayedSkill(hero, delay, identifier, args);
-                    return false;
+                    messageAndEvent(hero, SkillResult.START_DELAY);
+                    return true;
                 }
             }
             hm.addCompletedSkill(hero);
         }
 
-        SkillResult psr = use(hero, args);
-        if (psr == SkillResult.INVALID_TARGET) {
-            Messaging.send(player, "Invalid Target!");
-        } else if (psr == SkillResult.NORMAL){
+        SkillResult skillResult = use(hero, args);
+        if (skillResult.type == ResultType.NORMAL){
             // Set cooldown
             if (cooldown > 0) {
                 hero.setCooldown(name, time + cooldown);
@@ -202,6 +205,7 @@ public abstract class ActiveSkill extends Skill {
             }
 
         }
+        messageAndEvent(hero, skillResult);
         return true;
     }
 
@@ -297,11 +301,38 @@ public abstract class ActiveSkill extends Skill {
         return false;
     } 
 
-    public enum SkillResult {
-        NORMAL,
-        SKIP_POST_USAGE,
-        INVALID_TARGET,
-        REMOVED_EFFECT,
-        FAIL;
+    private void messageAndEvent(Hero hero, SkillResult sr) {
+        Player player = hero.getPlayer();
+        if (sr.showMessage)
+            switch (sr.type) {
+            case INVALID_TARGET:
+                Messaging.send(player, "Invalid Target!");
+                break;
+            case LOW_HEALTH:
+                Messaging.send(player, "Not enough health!");
+                break;
+            case LOW_LEVEL:
+                Messaging.send(player, "You must be level $1 to do that.", sr.args);
+                break;
+            case LOW_MANA: 
+                Messaging.send(player, "Not enough mana!");
+                break;
+            case ON_COOLDOWN:
+                Messaging.send(hero.getPlayer(), "Sorry, $1 still has $2 seconds left on cooldown!", sr.args);
+                break;
+            case ON_GLOBAL_COOLDOWN:
+                Messaging.send(hero.getPlayer(), "Sorry, you must wait $1 seconds longer before using another skill.", sr.args);
+                break;
+            case MISSING_REAGENT:
+                Messaging.send(player, "Sorry, you need to have $1 $2 to use $3!", sr.args, getName());
+                break;
+            case SKIP_POST_USAGE:
+                return;
+            default: 
+                break;
+            }
+
+        SkillCompleteEvent sce = new SkillCompleteEvent(hero, this, sr);
+        plugin.getServer().getPluginManager().callEvent(sce);
     }
 }

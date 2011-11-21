@@ -2,6 +2,7 @@ package com.herocraftonline.dev.heroes.skill.skills;
 
 import org.bukkit.util.config.ConfigurationNode;
 
+import com.herocraftonline.dev.heroes.api.SkillResult;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.effects.common.SafeFallEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;

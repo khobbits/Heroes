@@ -16,6 +16,7 @@ import org.bukkit.util.config.Configuration;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.api.SkillResult;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Setting;
@@ -109,7 +110,6 @@ public abstract class TargettedSkill extends ActiveSkill {
         if (args.length > 0) {
             target = plugin.getServer().getPlayer(args[0]);
             if (target == null) {
-                Messaging.send(player, "Target not found.");
                 return SkillResult.INVALID_TARGET;
             }
             if (target.getLocation().toVector().distance(player.getLocation().toVector()) > maxDistance) {
