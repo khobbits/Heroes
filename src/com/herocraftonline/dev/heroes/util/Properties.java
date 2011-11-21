@@ -62,6 +62,7 @@ public class Properties {
     public ChatColor cColor;
     public String prefix;
     public int swapCost;
+    public int oldClassSwapCost;
     public boolean firstSwitchFree;
     public boolean swapMasteryCost;
     public double foodHealPercent = .05;

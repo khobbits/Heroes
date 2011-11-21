@@ -115,6 +115,9 @@ public class ChooseCommand extends BasicInteractiveCommand {
             }
 
             int cost = newClass.getCost();
+            if (hero.getExperience(newClass) > 0)
+                cost = prop.oldClassSwapCost;
+            
             boolean chargePlayer = true;
             if (prop.firstSwitchFree && currentClass.isDefault()) {
                 chargePlayer = false;
@@ -175,6 +178,8 @@ public class ChooseCommand extends BasicInteractiveCommand {
             }
 
             int cost = newClass.getCost();
+            if (hero.getExperience(newClass) > 0)
+                cost = prop.oldClassSwapCost;
 
             if (pendingClassCostStatus.get(player)) {
                 if (Heroes.econ.has(player.getName(), cost)) {

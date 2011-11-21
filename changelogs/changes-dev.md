@@ -7,6 +7,7 @@ Version dev
 ==== **General:** ====
 
 * Added a display message for players when they attempt to attack another player outside of their pvp level range.
+* Added optional alternative cost for swapping back to a class that a player has xp in
 
 ==== **API:** ====
 
