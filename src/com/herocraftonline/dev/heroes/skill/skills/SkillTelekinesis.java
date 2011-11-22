@@ -62,7 +62,7 @@ public class SkillTelekinesis extends ActiveSkill {
         }
 
         Messaging.send(player, "You must target a lever or button!");
-        return SkillResult.INVALID_TARGET_NO_MESSAGE;
+        return SkillResult.INVALID_TARGET_NO_MSG;
     }
 
 }
