@@ -3,6 +3,7 @@ package com.herocraftonline.dev.heroes.skill.skills;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.api.SkillResult;
+import com.herocraftonline.dev.heroes.api.SkillResult.ResultType;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
@@ -148,12 +149,11 @@ public class SkillRepair extends ActiveSkill {
         
         if (hero.getLevel(this) < level) {
             Messaging.send(player, "You must be level $1 to repair $2", level, is.getType().name().replace("_", " ").toLowerCase());
-            return SkillResult.FAIL;
+            return new SkillResult(ResultType.LOW_LEVEL, false);
         }
         ItemStack reagentStack = new ItemStack(reagent, getRepairCost(is));
         if (!hasReagentCost(player, reagentStack)) {
-            Messaging.send(player, "Sorry, you need to have $1 $2 to repair that!", reagentStack.getAmount(), reagentStack.getType().name().toLowerCase().replace("_", " "));
-            return SkillResult.FAIL;
+            return new SkillResult(ResultType.MISSING_REAGENT, true, reagentStack.getAmount(), reagentStack.getType().name().toLowerCase().replace("_", " "));
         }
         
         is.setDurability((short) 0);

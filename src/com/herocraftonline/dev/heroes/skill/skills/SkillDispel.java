@@ -119,7 +119,7 @@ public class SkillDispel extends TargettedSkill {
             return SkillResult.NORMAL;
         }
         Messaging.send(player, "The target has nothing to dispel!");
-        return SkillResult.FAIL;
+        return SkillResult.INVALID_TARGET_NO_MSG;
     }
 
 }

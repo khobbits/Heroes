@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.api.SkillResult;
+import com.herocraftonline.dev.heroes.api.SkillResult.ResultType;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
@@ -52,12 +53,11 @@ public class SkillPort extends ActiveSkill {
             World world = plugin.getServer().getWorld(splitArg[0]);
             if (world == null) {
                 Messaging.send(player, "That teleport location no longer exists!");
-                return SkillResult.FAIL;
+                return SkillResult.INVALID_TARGET_NO_MSG;
             }
 
             if (hero.getLevel(this) < levelRequirement) {
-                Messaging.send(player, "Sorry, you need to be level $1 to use that!", levelRequirement);
-                return SkillResult.FAIL;
+                return new SkillResult(ResultType.LOW_LEVEL, true, levelRequirement);
             }
 
             int range = (int) Math.pow(getSetting(hero, Setting.RADIUS.node(), 10, false), 2);

@@ -105,7 +105,7 @@ public class SkillWolf extends ActiveSkill {
             }
 
             if (castLoc.getBlock().getType() != Material.AIR) {
-                Messaging.send(player, "No room to summon a wolf at that locatioN!");
+                Messaging.send(player, "No room to summon a wolf at that location!");
                 return SkillResult.FAIL;
             }
 
@@ -142,7 +142,7 @@ public class SkillWolf extends ActiveSkill {
             broadcast(player.getLocation(), "$1 has released their wolves into the wild", player.getDisplayName());
         }
 
-        return SkillResult.FAIL;
+        return SkillResult.SKIP_POST_USAGE;
     }
 
     private void setWolfSettings(Hero hero, Wolf wolf) {

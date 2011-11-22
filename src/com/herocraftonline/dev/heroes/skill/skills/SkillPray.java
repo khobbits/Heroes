@@ -49,14 +49,14 @@ public class SkillPray extends TargettedSkill {
             } else {
                 Messaging.send(player, "Target is already fully healed.");
             }
-            return SkillResult.FAIL;
+            return SkillResult.INVALID_TARGET_NO_MSG;
         }
 
         HeroRegainHealthEvent hrhEvent = new HeroRegainHealthEvent(targetHero, hpPlus, this);
         plugin.getServer().getPluginManager().callEvent(hrhEvent);
         if (hrhEvent.isCancelled()) {
             Messaging.send(player, "Unable to heal the target at this time!");
-            return SkillResult.FAIL;
+            return SkillResult.CANCELLED;
         }
 
         targetHero.setHealth(targetHealth + hrhEvent.getAmount());

@@ -50,7 +50,7 @@ public class SkillBlink extends ActiveSkill {
             iter = new BlockIterator(player, distance);
         } catch (IllegalStateException e) {
             Messaging.send(player, "There was an error getting your blink location!");
-            return SkillResult.FAIL;
+            return SkillResult.INVALID_TARGET_NO_MSG;
         }
         while (iter.hasNext()) {
             b = iter.next();
@@ -69,7 +69,7 @@ public class SkillBlink extends ActiveSkill {
             return SkillResult.NORMAL;
         } else {
             Messaging.send(player, "No location to blink to.");
-            return SkillResult.FAIL;
+            return SkillResult.INVALID_TARGET_NO_MSG;
         }
     }
 }

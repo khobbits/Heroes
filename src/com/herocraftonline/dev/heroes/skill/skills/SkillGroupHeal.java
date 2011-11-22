@@ -43,7 +43,7 @@ public class SkillGroupHeal extends ActiveSkill {
             plugin.getServer().getPluginManager().callEvent(hrhEvent);
             if (hrhEvent.isCancelled()) {
                 Messaging.send(player, "Unable to heal the target at this time!");
-                return SkillResult.FAIL;
+                return SkillResult.CANCELLED;
             }
             hero.setHealth(hero.getHealth() + hrhEvent.getAmount());
             hero.syncHealth();
@@ -60,7 +60,7 @@ public class SkillGroupHeal extends ActiveSkill {
                     plugin.getServer().getPluginManager().callEvent(hrhEvent);
                     if (hrhEvent.isCancelled()) {
                         Messaging.send(player, "Unable to heal the target at this time!");
-                        return SkillResult.FAIL;
+                        return SkillResult.CANCELLED;
                     }
                     partyHero.setHealth(partyHero.getHealth() + hrhEvent.getAmount());
                     partyHero.syncHealth();

@@ -16,6 +16,7 @@ public class SkillResult {
     public static final SkillResult START_DELAY = new SkillResult(ResultType.START_DELAY, false);
     public static final SkillResult CANCELLED = new SkillResult(ResultType.CANCELLED, false);
     public static final SkillResult REMOVED_EFFECT = new SkillResult(ResultType.REMOVED_EFFECT, false);
+    public static final SkillResult INVALID_TARGET_NO_MSG = new SkillResult(ResultType.INVALID_TARGET, false);
     
     public SkillResult(ResultType type, boolean showMessage, Object...args) {
         this.type = type;

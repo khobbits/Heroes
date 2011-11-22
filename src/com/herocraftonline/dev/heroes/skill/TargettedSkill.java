@@ -114,11 +114,11 @@ public abstract class TargettedSkill extends ActiveSkill {
             }
             if (target.getLocation().toVector().distance(player.getLocation().toVector()) > maxDistance) {
                 Messaging.send(player, "Target is too far away.");
-                return SkillResult.FAIL;
+                return SkillResult.INVALID_TARGET_NO_MSG;
             }
             if (!inLineOfSight(player, (Player) target)) {
                 Messaging.send(player, "Sorry, target is not in your line of sight!");
-                return SkillResult.FAIL;
+                return SkillResult.INVALID_TARGET_NO_MSG;
             }
             if (target.isDead() || target.getHealth() == 0)
                 return SkillResult.INVALID_TARGET;

@@ -37,7 +37,7 @@ public class SkillAntidote extends TargettedSkill {
             }
             if (!cured) {
                 Messaging.send(player, "Your target is not poisoned!");
-                return SkillResult.FAIL;
+                return SkillResult.INVALID_TARGET_NO_MSG;
             } else {
                 broadcastExecuteText(hero, target);
             }

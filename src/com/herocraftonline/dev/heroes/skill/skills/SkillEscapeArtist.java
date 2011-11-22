@@ -35,7 +35,7 @@ public class SkillEscapeArtist extends ActiveSkill {
             return SkillResult.NORMAL;
         } else  {
             Messaging.send(hero.getPlayer(), "There is no effect impeding your movement!");
-            return SkillResult.FAIL;
+            return SkillResult.INVALID_TARGET_NO_MSG;
         }
     }
 
