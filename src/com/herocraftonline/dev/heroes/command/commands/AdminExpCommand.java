@@ -50,6 +50,7 @@ public class AdminExpCommand extends BasicCommand {
         try {
             double expChange = Integer.parseInt(args[2]);
             hero.addExp(expChange, hc);
+            plugin.getHeroManager().saveHero(hero);
             Messaging.send(sender, "Experience changed.");
             Messaging.send(hero.getPlayer(), "You have been awarded $1 exp", expChange);
             return true;
