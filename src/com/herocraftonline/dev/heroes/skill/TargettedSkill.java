@@ -146,7 +146,7 @@ public abstract class TargettedSkill extends ActiveSkill {
 
     protected void broadcastExecuteText(Hero hero, LivingEntity target) {
         Player player = hero.getPlayer();
-        broadcast(player.getLocation(), getUseText(), player.getDisplayName(), getName(), target == player ? "himself" : getEntityName(target));
+        broadcast(player.getLocation(), getUseText(), player.getDisplayName(), getName(), target == player ? "themself" : getEntityName(target));
     }
 
     /**
