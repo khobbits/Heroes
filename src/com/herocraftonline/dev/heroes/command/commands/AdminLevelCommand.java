@@ -4,7 +4,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
+import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.command.BasicCommand;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.util.Messaging;
@@ -15,11 +15,11 @@ public class AdminLevelCommand extends BasicCommand {
     private final Heroes plugin;
 
     public AdminLevelCommand(Heroes plugin) {
-        super("AdminExpCommand");
+        super("AdminLevelCommand");
         this.plugin = plugin;
         setDescription("Changes a users level");
-        setUsage("/hero admin level §9<player> <level>");
-        setArgumentRange(2, 2);
+        setUsage("/hero admin level §9<player> <heroclass> <level>");
+        setArgumentRange(3, 3);
         setIdentifiers("hero admin level");
         setPermission("heroes.admin.level");
     }
@@ -33,14 +33,19 @@ public class AdminLevelCommand extends BasicCommand {
             return false;
         }
         Hero hero = plugin.getHeroManager().getHero(player);
-
+        HeroClass hc = plugin.getClassManager().getClass(args[1]);
+        if (hc == null) {
+            Messaging.send(sender, "$1 is not a valid HeroClass!", args[1]);
+            return false;
+        }
+            
         try {
-            int levelChange = Integer.parseInt(args[1]);
+            int levelChange = Integer.parseInt(args[2]);
             if (levelChange < 1)
                 throw new NumberFormatException();
 
             int experience = Properties.levels[levelChange - 1];
-            hero.gainExp(experience - hero.getExperience(), ExperienceType.ADMIN, false);
+            hero.addExp(experience - hero.getExperience(), hc);
             Messaging.send(sender, "Level changed.");
             return true;
         } catch (NumberFormatException e) {
