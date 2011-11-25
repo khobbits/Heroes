@@ -10,18 +10,18 @@ import com.herocraftonline.dev.heroes.command.BasicCommand;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.util.Messaging;
 
-public class AdminClassCommand extends BasicCommand {
+public class AdminProfCommand extends BasicCommand {
 
     private final Heroes plugin;
 
-    public AdminClassCommand(Heroes plugin) {
+    public AdminProfCommand(Heroes plugin) {
         super("AdminClassCommand");
         this.plugin = plugin;
-        setDescription("Changes a users class");
-        setUsage("/hero admin class §9<player> <class>");
+        setDescription("Changes a users secondary class");
+        setUsage("/hero admin prof §9<player> <class>");
         setArgumentRange(2, 2);
-        setIdentifiers("hero admin class");
-        setPermission("heroes.admin.class");
+        setIdentifiers("hero admin prof");
+        setPermission("heroes.admin.prof");
     }
 
     @Override
@@ -37,14 +37,13 @@ public class AdminClassCommand extends BasicCommand {
         if (heroClass == null) {
             Messaging.send(sender, "Failed to find a matching HeroClass for '$1'.", args[1]);
             return false;
-        } else if (!heroClass.isPrimary()) {
-            Messaging.send(sender, "$1 is not a primary class!", args[1]);
+        } else if (!heroClass.isSecondary()) {
+            Messaging.send(sender, "$1 is not a secondary class!", args[1]);
             return false;
         }
-        
         // Check the Player is not the same HeroClass as we are trying to assign.
         Hero hero = plugin.getHeroManager().getHero(player);
-        if (hero.getHeroClass().equals(heroClass)) {
+        if (heroClass.equals(hero.getSecondClass())) {
             Messaging.send(sender, "$1 is already a $2.", player.getName(), heroClass.getName());
             return false;
         }

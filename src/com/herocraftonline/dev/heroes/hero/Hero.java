@@ -230,6 +230,10 @@ public class Hero {
         int currentLevel = getLevel(hc);
         setExperience(hc, 0);
 
+        //This is called but ignores cancellation.
+        ExperienceChangeEvent expEvent = new ExperienceChangeEvent(this, hc, expChange, ExperienceType.ADMIN);
+        plugin.getServer().getPluginManager().callEvent(expEvent);
+        
         int newLevel = Properties.getLevel(exp);
         if (currentLevel != newLevel) {
             HeroChangeLevelEvent hLEvent = new HeroChangeLevelEvent(this, hc, currentLevel, newLevel);

@@ -343,6 +343,7 @@ public class Heroes extends JavaPlugin {
             adminPermissions.put("heroes.admin.exp", true);
             adminPermissions.put("heroes.admin.reload", true);
             adminPermissions.put("heroes.admin.saveall", true);
+            adminPermissions.put("heroes.admin.prof", true);
             Permission wildcardAdminPermission = new Permission("heroes.admin.*", "Grants access to all admin commands.", adminPermissions);
             this.getServer().getPluginManager().addPermission(wildcardAdminPermission);
         }

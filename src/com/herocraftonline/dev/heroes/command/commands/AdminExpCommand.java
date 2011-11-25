@@ -4,7 +4,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
+import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.command.BasicCommand;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.util.Messaging;
@@ -16,9 +16,9 @@ public class AdminExpCommand extends BasicCommand {
     public AdminExpCommand(Heroes plugin) {
         super("AdminExpCommand");
         this.plugin = plugin;
-        setDescription("Changes a users exp");
-        setUsage("/hero admin exp §9<player> <exp>");
-        setArgumentRange(2, 2);
+        setDescription("Changes a users class exp");
+        setUsage("/hero admin exp §9<player> <class> <exp>");
+        setArgumentRange(3, 3);
         setIdentifiers("hero admin exp");
         setPermission("heroes.admin.exp");
     }
@@ -32,10 +32,16 @@ public class AdminExpCommand extends BasicCommand {
             return false;
         }
         Hero hero = plugin.getHeroManager().getHero(player);
-
+        HeroClass hc = plugin.getClassManager().getClass(args[1]);
+        
+        if (hc == null) {
+            Messaging.send(sender, "$1 is not a valid HeroClass!", args[1]);
+            return false;
+        }
+        
         try {
-            double expChange = Integer.parseInt(args[1]);
-            hero.gainExp(expChange, ExperienceType.ADMIN, false);
+            double expChange = Integer.parseInt(args[2]);
+            hero.addExp(expChange, hc);
             Messaging.send(sender, "Experience changed.");
             Messaging.send(hero.getPlayer(), "You have been awarded $1 exp", expChange);
             return true;
