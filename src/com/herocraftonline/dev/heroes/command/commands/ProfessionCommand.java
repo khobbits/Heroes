@@ -78,17 +78,18 @@ public class ProfessionCommand extends BasicInteractiveCommand {
                 return false;
             }
 
-            if (currentClass != null)
+            if (currentClass != null) {
                 if (!hero.getHeroClass().isDefault() && hero.isMaster(currentClass) && currentClass.getParents().isEmpty() && props.lockAtHighestTier) {
                     Messaging.send(player, "You have mastered your class and can not choose a new one!");
                     return false;
                 }
 
-            if (!hero.isMaster(currentClass) && props.lockPathTillMaster) {
-                Messaging.send(player, "You must master this class before swapping to another.");
-                return false;
+                if (!hero.isMaster(currentClass) && props.lockPathTillMaster) {
+                    Messaging.send(player, "You must master this class before swapping to another.");
+                    return false;
+                }
             }
-
+            
             if (!newClass.hasNoParents()) {
                 for (HeroClass parentClass : newClass.getStrongParents()) {
                     if (!hero.isMaster(parentClass)) {
