@@ -33,6 +33,14 @@ public class AdminExpCommand extends BasicCommand {
         }
         Hero hero = plugin.getHeroManager().getHero(player);
         HeroClass hc = plugin.getClassManager().getClass(args[1]);
+
+        if (hc == null) {
+            if (args[1].equalsIgnoreCase("prim")) {
+                hc = hero.getHeroClass();
+            } else if (args[1].equalsIgnoreCase("prof")) {
+                hc = hero.getSecondClass();
+            }
+        }
         
         if (hc == null) {
             Messaging.send(sender, "$1 is not a valid HeroClass!", args[1]);
