@@ -216,6 +216,47 @@ public class Hero {
         gainExp(expGain, source, true);
     }
 
+
+    /**
+     * Alters the experience for the given class on the Hero
+     * This is used for admin commands or direct alterations to the Hero's classes
+     * @param expChange - amount of xp to change (positive or negative)
+     * @param hc - HeroClass to change the experience of
+     */
+    public void addExp(double expChange, HeroClass hc) {
+        double exp = getExperience(hc) + expChange;
+        if (exp < 0)
+            exp = 0;
+        int currentLevel = getLevel(hc);
+        setExperience(hc, 0);
+
+        int newLevel = Properties.getLevel(exp);
+        if (currentLevel != newLevel) {
+            HeroChangeLevelEvent hLEvent = new HeroChangeLevelEvent(this, hc, currentLevel, newLevel);
+            plugin.getServer().getPluginManager().callEvent(hLEvent);
+            if (newLevel >= hc.getMaxLevel()) {
+                setExperience(Properties.getExperience(hc.getMaxLevel()));
+                Messaging.broadcast(plugin, "$1 has become a master $2!", player.getName(), hc.getName());
+            }
+            if (newLevel > currentLevel) {
+                //SpoutUI.sendPlayerNotification(player, ChatColor.GOLD + "Level Up!", ChatColor.DARK_RED + "Level - " + String.valueOf(newLevel), Material.DIAMOND_HELMET);
+                Messaging.send(player, "You gained a level! (Lvl $1 $2)", String.valueOf(newLevel), hc.getName());
+                setHealth(getMaxHealth());
+                //Reset food stuff on level up
+                if (player.getFoodLevel() < 20)
+                    player.setFoodLevel(20);
+
+                player.setSaturation(20);
+                player.setExhaustion(0);
+                syncHealth();
+                getTieredLevel(true);
+            } else {
+                //SpoutUI.sendPlayerNotification(player, ChatColor.GOLD + "Level Lost!", ChatColor.DARK_RED + "Level - " + String.valueOf(newLevel), Material.DIAMOND_HELMET);
+                Messaging.send(player, "You lost a level! (Lvl $1 $2)", String.valueOf(newLevel), hc.getName());
+            }
+        }
+    }
+    
     /**
      * Adds the specified experience to the hero before modifiers from the given source.
      * expChange value supports negatives for experience loss.
