@@ -1,5 +1,11 @@
 package com.herocraftonline.dev.heroes.api;
 
+/**
+ * Defines a SkillResult for a Skill to return. Includes Arguments for the default messages, and a boolean to display the message, or ignore it
+ * If you are unsure about return types for Skills, use the Default static return types for your skill.
+ * 
+ *
+ */
 public class SkillResult {
     
     public final Object[] args;
@@ -18,12 +24,23 @@ public class SkillResult {
     public static final SkillResult REMOVED_EFFECT = new SkillResult(ResultType.REMOVED_EFFECT, false);
     public static final SkillResult INVALID_TARGET_NO_MSG = new SkillResult(ResultType.INVALID_TARGET, false);
     
+    /**
+     * Constructs a new SkillResult from the provided arguments for use with a SkillCompleteEvent
+     * args passed are used for default messages which can be found in {@link ActiveSkill}
+     * 
+     * @param type
+     * @param showMessage
+     * @param args
+     */
     public SkillResult(ResultType type, boolean showMessage, Object...args) {
         this.type = type;
         this.args = args;
         this.showMessage = showMessage;
     }
     
+    /**
+     * Defines the ResultType of the SkillReturn
+     */
     public enum ResultType {
         CANCELLED,
         INVALID_TARGET,

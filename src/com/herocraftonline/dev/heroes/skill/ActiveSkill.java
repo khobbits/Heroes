@@ -301,6 +301,12 @@ public abstract class ActiveSkill extends Skill {
         return false;
     } 
 
+    /**
+     * Uses the {@link SkillResult} arguments to display a message to the skill-user or ignore the message altogether
+     * 
+     * @param hero - {@link Hero} using the skill
+     * @param sr - the {@link SkillResult} that holds the {@link ResultType} and information
+     */
     private void messageAndEvent(Hero hero, SkillResult sr) {
         Player player = hero.getPlayer();
         if (sr.showMessage)
