@@ -318,19 +318,19 @@ public abstract class ActiveSkill extends Skill {
                 Messaging.send(player, "Not enough health!");
                 break;
             case LOW_LEVEL:
-                Messaging.send(player, "You must be level $1 to do that.", sr.args);
+                Messaging.send(player, "You must be level $1 to do that.", sr.args[0]);
                 break;
             case LOW_MANA: 
                 Messaging.send(player, "Not enough mana!");
                 break;
             case ON_COOLDOWN:
-                Messaging.send(hero.getPlayer(), "Sorry, $1 still has $2 seconds left on cooldown!", sr.args);
+                Messaging.send(hero.getPlayer(), "Sorry, $1 still has $2 seconds left on cooldown!", sr.args[0], sr.args[1]);
                 break;
             case ON_GLOBAL_COOLDOWN:
-                Messaging.send(hero.getPlayer(), "Sorry, you must wait $1 seconds longer before using another skill.", sr.args);
+                Messaging.send(hero.getPlayer(), "Sorry, you must wait $1 seconds longer before using another skill.", sr.args[0]);
                 break;
             case MISSING_REAGENT:
-                Messaging.send(player, "Sorry, you need to have $1 $2 to use $3!", sr.args, getName());
+                Messaging.send(player, "Sorry, you need to have $1 $2 to use $3!", sr.args[0], sr.args[1], getName());
                 break;
             case SKIP_POST_USAGE:
                 return;
