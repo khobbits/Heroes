@@ -19,6 +19,7 @@ import org.bukkit.entity.Creature;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.util.config.Configuration;
 import org.bukkit.util.config.ConfigurationNode;
@@ -97,6 +98,15 @@ public class Hero {
      * @param permission
      */
     public void addPermission(String permission) {
+        transientPerms.setPermission(permission, true);
+    }
+    
+    /**
+     * Adds the given permission to the hero
+     * 
+     * @param permission
+     */
+    public void addPermission(Permission permission) {
         transientPerms.setPermission(permission, true);
     }
 
@@ -905,7 +915,17 @@ public class Hero {
         transientPerms.unsetPermission(permission);
         player.recalculatePermissions();
     }
-
+    
+    /**
+     * Removes the given permission from the hero
+     * 
+     * @param permission
+     */
+    public void removePermission(Permission permission) {
+        transientPerms.unsetPermission(permission);
+        player.recalculatePermissions();
+    }
+    
     public void removeSkill(String skill) {
         skills.remove(skill);
     }
