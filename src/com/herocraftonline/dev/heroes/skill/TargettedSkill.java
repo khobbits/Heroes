@@ -137,7 +137,8 @@ public abstract class TargettedSkill extends ActiveSkill {
         // Do a PvP check automatically for any harmful skill
         if (this.isType(SkillType.HARMFUL)) {
             if (player.equals(target) || hero.getSummons().contains(target) || !damageCheck(player, target)) {
-                return SkillResult.INVALID_TARGET;
+                Messaging.send(player, "Sorry, You can't damage that target!");
+                return SkillResult.INVALID_TARGET_NO_MSG;
             }
         }
 
