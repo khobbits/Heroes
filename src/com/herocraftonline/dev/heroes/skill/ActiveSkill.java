@@ -90,14 +90,14 @@ public abstract class ActiveSkill extends Skill {
         }
         int level = getSetting(hero, Setting.LEVEL.node(), 1, true);
         if (hero.getLevel(this) < level) {
-            messageAndEvent(hero, new SkillResult(ResultType.LOW_LEVEL, true, String.valueOf(level)));
+            messageAndEvent(hero, new SkillResult(ResultType.LOW_LEVEL, true, level));
             return true;
         }
 
         long time = System.currentTimeMillis();
         Long global = hero.getCooldown("Global");
         if (global != null && time < global) {
-            messageAndEvent(hero, new SkillResult(ResultType.ON_GLOBAL_COOLDOWN, true, String.valueOf((global - time) / 1000)));
+            messageAndEvent(hero, new SkillResult(ResultType.ON_GLOBAL_COOLDOWN, true, (global - time) / 1000));
             return true;
         }
         int cooldown = getSetting(hero, Setting.COOLDOWN.node(), 0, true);
@@ -105,7 +105,7 @@ public abstract class ActiveSkill extends Skill {
             Long expiry = hero.getCooldown(name);
             if (expiry != null && time < expiry) {
                 long remaining = expiry - time;
-                messageAndEvent(hero, new SkillResult(ResultType.ON_COOLDOWN, true, name, String.valueOf(remaining / 1000)));
+                messageAndEvent(hero, new SkillResult(ResultType.ON_COOLDOWN, true, name, remaining / 1000));
                 return false;
             }
         }
