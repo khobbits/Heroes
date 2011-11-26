@@ -228,7 +228,7 @@ public class Hero {
         if (exp < 0)
             exp = 0;
         int currentLevel = getLevel(hc);
-        setExperience(hc, expChange);
+        setExperience(hc, exp);
 
         //This is called but ignores cancellation.
         ExperienceChangeEvent expEvent = new ExperienceChangeEvent(this, hc, expChange, ExperienceType.ADMIN);
