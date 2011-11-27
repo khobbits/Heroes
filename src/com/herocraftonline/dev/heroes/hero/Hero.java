@@ -1083,7 +1083,7 @@ public class Hero {
     }
 
     /**
-     * Syncs the Hero's current Experience with the minecraft experience
+     * Syncs the Hero's current Experience with the minecraft experience (should also sync the level bar)
      */
     public void syncExperience() {
         int level = getLevel(heroClass);
@@ -1091,14 +1091,11 @@ public class Hero {
 
         double maxLevelXP = Properties.getExperience(level + 1) - currentLevelXP;
         double currentXP = getExperience() - currentLevelXP;
-        int syncedXP = (int) (currentXP / maxLevelXP * 100);
-
-        CraftPlayer craftPlayer = (CraftPlayer) player;
-        EntityPlayer entityPlayer = craftPlayer.getHandle();
-        entityPlayer.exp = 0;
-        entityPlayer.expTotal = 0;
-        entityPlayer.expLevel = 0;
-        entityPlayer.d(450 + syncedXP);
+        int syncedXP = (int) ((currentXP / maxLevelXP) * Util.getMCExperience(level +1));
+        
+        player.setTotalExperience(Util.getMCExperience(level));
+        player.setExperience(syncedXP);
+        player.setLevel(level);
     }
 
     /**

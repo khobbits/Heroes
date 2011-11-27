@@ -10,6 +10,8 @@ import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 
+import net.milkbowl.vault.economy.Economy;
+
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Creature;
@@ -20,6 +22,7 @@ import org.bukkit.event.Event.Type;
 import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.herocraftonline.dev.heroes.classes.HeroClass;
@@ -73,11 +76,6 @@ import com.herocraftonline.dev.heroes.ui.MapInfo;
 import com.herocraftonline.dev.heroes.util.ConfigManager;
 import com.herocraftonline.dev.heroes.util.DebugLog;
 import com.herocraftonline.dev.heroes.util.Util;
-import com.herocraftonline.economy.economies.BOSE;
-import com.herocraftonline.economy.economies.EssE;
-import com.herocraftonline.economy.economies.iCo4;
-import com.herocraftonline.economy.economies.iCo5;
-import com.herocraftonline.economy.economies.iCo6;
 import com.nijiko.permissions.PermissionHandler;
 import com.nijikokun.bukkit.Permissions.Permissions;
 
@@ -118,7 +116,7 @@ public class Heroes extends JavaPlugin {
     private SpoutData spoutData;
     // Variable for the Permissions plugin handler.
     public static PermissionHandler Permissions;
-    public static com.herocraftonline.economy.Economy econ;
+    public static Economy econ;
 
     // Variable for Spout.
     public static boolean useSpout = false;
@@ -275,32 +273,13 @@ public class Heroes extends JavaPlugin {
         this.heroClassManager = heroClassManager;
     }
 
-    public void setupEconomy() {
-        PluginManager pm = this.getServer().getPluginManager();
-        Plugin test = pm.getPlugin("iConomy");
-        if (test != null) {
-            if (test.getClass().getName().equals("com.iCo6.iConomy")) {
-                Heroes.econ = new iCo6();
-            } else if (test.getClass().getName().equals("com.iConomy.iConomy")) {
-                Heroes.econ = new iCo5();
-            } else if (test.getClass().getName().equals("com.nijiko.coelho.iConomy.iConomy")) {
-                Heroes.econ = new iCo4();
-            }
-        } else {
-            test = pm.getPlugin("Essentials");
-            if (test != null) {
-                Heroes.econ = new EssE();
-            } else {
-                test = pm.getPlugin("BOSEconomy");
-                if (test != null) {
-                    Heroes.econ = new BOSE();
-                }
-            }
+    public boolean setupEconomy() {
+        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+        if (rsp != null) {
+            econ = rsp.getProvider();
         }
-
-        if (econ != null) {
-            econ.setPlugin(test);
-        }
+        
+        return econ != null;
     }
 
     /**

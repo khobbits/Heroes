@@ -392,4 +392,8 @@ public final class Util {
             }
         }
     }
+    
+    public static int getMCExperience(int level) {
+        return level * 7;
+    }
 }

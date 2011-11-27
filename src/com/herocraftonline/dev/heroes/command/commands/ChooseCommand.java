@@ -183,7 +183,7 @@ public class ChooseCommand extends BasicInteractiveCommand {
 
             if (pendingClassCostStatus.get(player)) {
                 if (Heroes.econ.has(player.getName(), cost)) {
-                    Heroes.econ.withdraw(player.getName(), cost);
+                    Heroes.econ.withdrawPlayer(player.getName(), cost);
                     Messaging.send(hero.getPlayer(), "The Gods are pleased with your offering of $1.", Heroes.econ.format(cost));
                 } else {
                     Messaging.send(hero.getPlayer(), "You're unable to meet the offering of $1 to become $2.", Heroes.econ.format(cost), newClass.getName());
