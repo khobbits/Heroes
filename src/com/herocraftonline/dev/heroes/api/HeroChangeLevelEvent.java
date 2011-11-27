@@ -25,16 +25,14 @@ public class HeroChangeLevelEvent extends HeroEvent {
     }
 
     /**
-     * The level the hero is changing from
-     * @return
+     * @return The level the hero is changing from
      */
     public final int getFrom() {
         return from;
     }
 
     /**
-     * Returns the hero being adjusted
-     * @return
+     * @return Returns the hero being adjusted
      */
     public Hero getHero() {
         return hero;
@@ -42,7 +40,7 @@ public class HeroChangeLevelEvent extends HeroEvent {
 
     /**
      * Returns the level the hero will be after the event
-     * @return
+     * @return the level the hero is attaining
      */
     public final int getTo() {
         return to;
@@ -50,7 +48,7 @@ public class HeroChangeLevelEvent extends HeroEvent {
 
     /**
      * Returns the class gaining the level
-     * @return
+     * @return the HeroClass gaining the level(s)
      */
     public HeroClass getHeroClass() {
         return heroClass;

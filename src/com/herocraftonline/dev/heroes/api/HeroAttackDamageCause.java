@@ -25,7 +25,7 @@ public class HeroAttackDamageCause extends HeroDamageCause {
 
     /**
      * Returns the entity attacker
-     * @return
+     * @return the Entity attacker
      */
     public Entity getAttacker() {
         return attacker;
@@ -34,7 +34,7 @@ public class HeroAttackDamageCause extends HeroDamageCause {
     /**
      * Supports null value if the attacker is not a player
      * Will return an ItemStack of the weapon being used to damage
-     * @return
+     * @return ItemStack weapon being used.
      */
     public ItemStack getWeapon() {
         return weapon == null ? null : weapon.clone();

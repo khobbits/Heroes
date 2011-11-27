@@ -28,17 +28,17 @@ public class ExperienceChangeEvent extends HeroEvent implements Cancellable {
     }
 
     /**
-     * Returns the player's experience
+     * Returns the player's experience change
+     * Can be either positive or negative
      * 
-     * @return
+     * @return the amount of experience being changed
      */
     public double getExpChange() {
         return expChange;
     }
 
     /**
-     * Returns the hero
-     * @return
+     * @return the Hero
      */
     public final Hero getHero() {
         return hero;
@@ -46,7 +46,7 @@ public class ExperienceChangeEvent extends HeroEvent implements Cancellable {
 
     /**
      * Returns the ExperienceType source
-     * @return
+     * @return the ExperienceType source
      */
     public final ExperienceType getSource() {
         return source;
@@ -73,7 +73,7 @@ public class ExperienceChangeEvent extends HeroEvent implements Cancellable {
     
     /**
      * The class gaining the xp
-     * @return
+     * @return HeroClass gaining the xp
      */
     public HeroClass getHeroClass() {
         return heroClass;
