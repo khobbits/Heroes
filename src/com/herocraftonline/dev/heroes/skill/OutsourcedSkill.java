@@ -1,11 +1,14 @@
 package com.herocraftonline.dev.heroes.skill;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
+import org.bukkit.permissions.Permission;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.ClassChangeEvent;
@@ -34,17 +37,29 @@ import com.herocraftonline.dev.heroes.util.Setting;
 public class OutsourcedSkill extends Skill {
 
     private String[] permissions;
-    
+    private Permission permission;
+
     public OutsourcedSkill(Heroes plugin, String name) {
         super(plugin, name);
         setConfig(getDefaultConfig());
         registerEvent(Type.CUSTOM_EVENT, new SkillHeroListener(), Priority.Monitor);
     }
-    
+
     public void setPermissions(String[] permissions) {
         this.permissions = permissions;
+        // Because Permissions can only be loaded once, 
+        this.permission = plugin.getServer().getPluginManager().getPermission(getName());
+        if (permission != null)
+            plugin.getServer().getPluginManager().removePermission(this.permission);
+
+        Map<String, Boolean> children = new HashMap<String, Boolean>();
+        for (String s : permissions) {
+            children.put(s, true);
+        }
+        this.permission = new Permission(getName(), "Permission-Skill " + getName(), children);
+        plugin.getServer().getPluginManager().addPermission(this.permission);
     }
-    
+
     /**
      * Serves no purpose for an outsourced skill.
      */
@@ -78,15 +93,17 @@ public class OutsourcedSkill extends Skill {
                     if (Heroes.Permissions != null && !hasPermission(world, playerName, permission)) {
                         addPermission(world, playerName, permission);
                     }
-                    hero.addPermission(permission);
+                    
                 }
+                hero.addPermission(this.permission);
             } else {
                 for (String permission : permissions) {
                     if (Heroes.Permissions != null && hasPermission(world, playerName, permission)) {
                         removePermission(world, playerName, permission);
                     }
-                    hero.removePermission(permission);
+                    
                 }
+                hero.removePermission(this.permission);
             }
         } else {
             if (permissions == null) {
@@ -97,8 +114,9 @@ public class OutsourcedSkill extends Skill {
                 if (Heroes.Permissions != null && hasPermission(world, playerName, permission)) {
                     removePermission(world, playerName, permission);
                 }
-                hero.removePermission(permission);
+                
             }
+            hero.removePermission(this.permission);
         }
     }
 
@@ -138,14 +156,14 @@ public class OutsourcedSkill extends Skill {
         public void onClassChange(final ClassChangeEvent event) {
             if (event.isCancelled())
                 return;
-            
+
             plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 
                 @Override
                 public void run() {
                     tryLearningSkill(event.getHero());
                 }
-                
+
             }, 1);
         }
 
@@ -157,7 +175,7 @@ public class OutsourcedSkill extends Skill {
                 public void run() {
                     tryLearningSkill(event.getHero());
                 }
-                
+
             }, 1);
         }
     }

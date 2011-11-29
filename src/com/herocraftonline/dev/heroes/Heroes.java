@@ -3,8 +3,6 @@ package com.herocraftonline.dev.heroes;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -19,7 +17,6 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
-import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -274,6 +271,9 @@ public class Heroes extends JavaPlugin {
     }
 
     public boolean setupEconomy() {
+        if (getServer().getPluginManager().getPlugin("Vault") == null)
+            return false;
+        
         RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
         if (rsp != null) {
             econ = rsp.getProvider();
@@ -313,18 +313,6 @@ public class Heroes extends JavaPlugin {
                     hero.setHeroClass(heroClassManager.getDefaultClass(), false);
                 }
             }
-        }
-        if (this.getServer().getPluginManager().getPermission("heroes.admin.*") == null) {
-            Map<String, Boolean> adminPermissions = new HashMap<String, Boolean>();
-            adminPermissions.put("heroes.admin.class", true);
-            adminPermissions.put("heroes.admin.level", true);
-            adminPermissions.put("heroes.admin.health", true);
-            adminPermissions.put("heroes.admin.exp", true);
-            adminPermissions.put("heroes.admin.reload", true);
-            adminPermissions.put("heroes.admin.saveall", true);
-            adminPermissions.put("heroes.admin.prof", true);
-            Permission wildcardAdminPermission = new Permission("heroes.admin.*", "Grants access to all admin commands.", adminPermissions);
-            this.getServer().getPluginManager().addPermission(wildcardAdminPermission);
         }
     }
 
