@@ -89,61 +89,38 @@ public class OutsourcedSkill extends Skill {
         String playerName = player.getName();
         if (hero.getHeroClass().getSkillSettings(getName()) != null || (hero.getSecondClass() != null && hero.getSecondClass().getSkillSettings(getName()) != null)) {
             if (hero.getLevel(this) >= getSetting(hero, Setting.LEVEL.node(), 1, true) && !plugin.getConfigManager().getProperties().disabledWorlds.contains(world)) {
-                for (String permission : permissions) {
-                    if (Heroes.Permissions != null && !hasPermission(world, playerName, permission)) {
-                        addPermission(world, playerName, permission);
+                if (Heroes.perms.getName().equals("Permissions3") || Heroes.perms.getName().equals("PermissionsEx")) {
+                    for (String permission : permissions) {
+                        if (!Heroes.perms.has(world, playerName, permission)) {
+                            Heroes.perms.playerRemoveTransient(player, permission);
+                        }
                     }
-                    
                 }
-                hero.addPermission(this.permission);
+                Heroes.perms.playerAddTransient(player, this.permission.getName());
             } else {
-                for (String permission : permissions) {
-                    if (Heroes.Permissions != null && hasPermission(world, playerName, permission)) {
-                        removePermission(world, playerName, permission);
+                if (Heroes.perms.getName().equals("Permissions3") || Heroes.perms.getName().equals("PermissionsEx")) {
+                    for (String permission : permissions) {
+                        if (Heroes.perms.has(world, playerName, permission)) {
+                            Heroes.perms.playerRemoveTransient(player, permission);
+                        }
                     }
-                    
                 }
-                hero.removePermission(this.permission);
+                Heroes.perms.playerRemoveTransient(player, this.permission.getName());
             }
         } else {
             if (permissions == null) {
                 Heroes.log(Level.SEVERE, "No permissions detected for skill: " + this.getName() + " fix your config!");
                 return;
             }
-            for (String permission : permissions) {
-                if (Heroes.Permissions != null && hasPermission(world, playerName, permission)) {
-                    removePermission(world, playerName, permission);
+            if (Heroes.perms.getName().equals("Permissions3") || Heroes.perms.getName().equals("PermissionsEx")) {
+                for (String permission : permissions) {
+                    if (Heroes.perms.has(world, playerName, permission)) {
+                        Heroes.perms.playerRemoveTransient(player, permission);
+                    }
+
                 }
-                
             }
-            hero.removePermission(this.permission);
-        }
-    }
-
-    private void addPermission(String world, String player, String permission) {
-        try {
-            // Heroes.Permissions.safeGetUser(world, player).addPermission(permission); -- Incase we need it.
-            Heroes.Permissions.safeGetUser(world, player).addTransientPermission(permission);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private boolean hasPermission(String world, String player, String permission) {
-        try {
-            return Heroes.Permissions.safeGetUser(world, player).hasPermission(permission);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    private void removePermission(String world, String player, String permission) {
-        try {
-            Heroes.Permissions.safeGetUser(world, player).removePermission(permission);
-            Heroes.Permissions.safeGetUser(world, player).removeTransientPermission(permission);
-        } catch (Exception e) {
-            e.printStackTrace();
+            Heroes.perms.playerRemoveTransient(player, this.permission.getName());
         }
     }
 

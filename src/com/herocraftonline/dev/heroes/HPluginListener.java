@@ -36,17 +36,9 @@ public class HPluginListener extends ServerListener {
     public void onPluginEnable(PluginEnableEvent event) {
         Plugin plugin = event.getPlugin();
         String name = plugin.getDescription().getName();
-        // Check if the name is Permissions.
-        if (name.equals("Permissions")) {
-            // Check if we haven't already setup Permissions.
-            if (Heroes.Permissions == null) {
-                // Run the Permissions Setup.
-                this.plugin.setupPermissions();
-            }
-        }
 
-        // Check if the name is BukkitContrib.
-        if (name.equals("BukkitContrib")) {
+        // Check if the name is Spout.
+        if (name.equals("Spout")) {
             this.plugin.setupSpout();
         }
 

@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 
 import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.permission.Permission;
 
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
@@ -17,7 +18,6 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -73,8 +73,6 @@ import com.herocraftonline.dev.heroes.ui.MapInfo;
 import com.herocraftonline.dev.heroes.util.ConfigManager;
 import com.herocraftonline.dev.heroes.util.DebugLog;
 import com.herocraftonline.dev.heroes.util.Util;
-import com.nijiko.permissions.PermissionHandler;
-import com.nijikokun.bukkit.Permissions.Permissions;
 
 /**
  * Heroes Plugin for Herocraft
@@ -87,7 +85,7 @@ public class Heroes extends JavaPlugin {
     // Name. We wan't a constant folder name.
     public static final File dataFolder = new File("plugins" + File.separator + "Heroes");
     public static final DebugTimer debug = new DebugTimer();
-    
+
     // Simple hook to Minecraft's logger so we can output to the console.
     private static final Logger log = Logger.getLogger("Minecraft");
     private static DebugLog debugLog;
@@ -111,9 +109,9 @@ public class Heroes extends JavaPlugin {
     private DamageManager damageManager;
     private SkillManager skillManager;
     private SpoutData spoutData;
-    // Variable for the Permissions plugin handler.
-    public static PermissionHandler Permissions;
+
     public static Economy econ;
+    public static Permission perms;
 
     // Variable for Spout.
     public static boolean useSpout = false;
@@ -186,7 +184,6 @@ public class Heroes extends JavaPlugin {
             hero.clearPermissions();
         }
         Heroes.econ = null; // When it Enables again it performs the checks anyways.
-        Heroes.Permissions = null; // When it Enables again it performs the checks anyways.
         log.info(getDescription().getName() + " version " + getDescription().getVersion() + " is disabled!");
         debugLog.close();
     }
@@ -270,15 +267,12 @@ public class Heroes extends JavaPlugin {
         this.heroClassManager = heroClassManager;
     }
 
-    public boolean setupEconomy() {
-        if (getServer().getPluginManager().getPlugin("Vault") == null)
-            return false;
-        
+    public boolean setupEconomy() {        
         RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
         if (rsp != null) {
             econ = rsp.getProvider();
         }
-        
+
         return econ != null;
     }
 
@@ -286,17 +280,10 @@ public class Heroes extends JavaPlugin {
      * Perform a Permissions check and setup Permissions if found.
      */
     public void setupPermissions() {
-        Plugin test = this.getServer().getPluginManager().getPlugin("Permissions");
-        if (Heroes.Permissions == null) {
-            if (test != null) {
-                // Ignore fake permissions or Bukkit Permissions
-                if (!test.getDescription().getVersion().startsWith("3") || this.getServer().getPluginManager().getPlugin("GroupManager") != null || this.getServer().getPluginManager().getPlugin("PermissionsBukkit") != null || this.getServer().getPluginManager().getPlugin("bPermissions") != null || this.getServer().getPluginManager().getPlugin("PermissionsEx") != null)
-                    return;
+        RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
+        if (rsp != null)
+            perms = rsp.getProvider();
 
-                Heroes.Permissions = ((Permissions) test).getHandler();
-                log(Level.INFO, "Permissions found.");
-            }
-        }
         final Player[] players = getServer().getOnlinePlayers();
         for (Player player : players) {
             Hero hero = heroManager.getHero(player);
@@ -308,10 +295,8 @@ public class Heroes extends JavaPlugin {
                 }
             }
 
-            if (Heroes.Permissions != null && heroClass != heroClassManager.getDefaultClass()) {
-                if (!Heroes.Permissions.has(player, "heroes.classes." + heroClass.getName().toLowerCase())) {
-                    hero.setHeroClass(heroClassManager.getDefaultClass(), false);
-                }
+            if (heroClass != heroClassManager.getDefaultClass() && !perms.has(player, "heroes.classes." + heroClass.getName().toLowerCase())) {
+                hero.setHeroClass(heroClassManager.getDefaultClass(), false);
             }
         }
     }
@@ -342,7 +327,7 @@ public class Heroes extends JavaPlugin {
         commandHandler.addCommand(new SkillListCommand(this));
         commandHandler.addCommand(new BindSkillCommand(this));
         commandHandler.addCommand(new ArmorCommand(this));
-        
+
 
         // Page 2
         commandHandler.addCommand(new ToolsCommand(this));
@@ -353,7 +338,7 @@ public class Heroes extends JavaPlugin {
         commandHandler.addCommand(new WhoCommand(this));
         commandHandler.addCommand(new PartyAcceptCommand(this));
         commandHandler.addCommand(new PartyInviteCommand(this));
-        
+
 
         // Page 3
         commandHandler.addCommand(new PartyWhoCommand(this));
@@ -364,7 +349,7 @@ public class Heroes extends JavaPlugin {
         commandHandler.addCommand(new ConfigReloadCommand(this));
         commandHandler.addCommand(new HelpCommand(this));
         commandHandler.addCommand(new AdminExpCommand(this));
-        
+
 
         // Page 4
         commandHandler.addCommand(new AdminLevelCommand(this));
@@ -403,7 +388,6 @@ public class Heroes extends JavaPlugin {
 
         pluginManager.registerEvent(Type.CUSTOM_EVENT, hEventListener, Priority.Monitor, this);
         pluginManager.registerEvent(Type.CUSTOM_EVENT, new HSkillListener(this), Priority.Highest, this);
-        pluginManager.registerEvent(Type.CUSTOM_EVENT, new HPermissionsListener(this), Priority.Monitor, this);
 
         // Map Party UI
         pluginManager.registerEvent(Type.ENTITY_REGAIN_HEALTH, partyListener, Priority.Monitor, this);
@@ -422,7 +406,7 @@ public class Heroes extends JavaPlugin {
         log.log(level, "[Heroes] " + msg);
         debugLog.log(level, "[Heroes] " + msg);
     }
-    
+
     public int getHealthPercent(LivingEntity lEntity) {
         if (lEntity instanceof Player) {
             Hero hero = getHeroManager().getHero((Player) lEntity);
@@ -446,7 +430,7 @@ public class Heroes extends JavaPlugin {
     public SpoutData getSpoutData() {
         return spoutData;
     }
-    
+
     public void setSpoutData(SpoutData sd) {
         this.spoutData = sd;
     }
