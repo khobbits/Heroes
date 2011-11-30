@@ -250,7 +250,7 @@ public class Hero {
             HeroChangeLevelEvent hLEvent = new HeroChangeLevelEvent(this, hc, currentLevel, newLevel);
             plugin.getServer().getPluginManager().callEvent(hLEvent);
             if (newLevel >= hc.getMaxLevel()) {
-                setExperience(Properties.getExperience(hc.getMaxLevel()));
+                setExperience(hc, Properties.getExperience(hc.getMaxLevel()));
                 Messaging.broadcast(plugin, "$1 has become a master $2!", player.getName(), hc.getName());
             }
             if (newLevel > currentLevel) {
@@ -372,7 +372,7 @@ public class Hero {
                     HeroChangeLevelEvent hLEvent = new HeroChangeLevelEvent(this, hc, currentLevel, newLevel);
                     plugin.getServer().getPluginManager().callEvent(hLEvent);
                     if (newLevel >= hc.getMaxLevel()) {
-                        setExperience(Properties.getExperience(hc.getMaxLevel()));
+                        setExperience(hc, Properties.getExperience(hc.getMaxLevel()));
                         Messaging.broadcast(plugin, "$1 has become a master $2!", player.getName(), hc.getName());
                     }
                     if (newLevel > currentLevel) {
@@ -466,7 +466,7 @@ public class Hero {
                     HeroChangeLevelEvent hLEvent = new HeroChangeLevelEvent(this, hc, currentLevel, newLevel);
                     plugin.getServer().getPluginManager().callEvent(hLEvent);
                     if (newLevel >= hc.getMaxLevel()) {
-                        setExperience(Properties.getExperience(hc.getMaxLevel()));
+                        setExperience(hc, Properties.getExperience(hc.getMaxLevel()));
                         Messaging.broadcast(plugin, "$1 has become a master $2!", player.getName(), hc.getName());
                     }
                     //SpoutUI.sendPlayerNotification(player, ChatColor.GOLD + "Level Lost!", ChatColor.DARK_RED + "Level - " + String.valueOf(newLevel), Material.DIAMOND_HELMET);
@@ -816,14 +816,6 @@ public class Hero {
     }
 
     /**
-     * 
-     * @return if the hero is a master of his current class (max level)
-     */
-    public boolean isMaster() {
-        return isMaster(heroClass);
-    }
-
-    /**
      * Checks if the hero is a master of the given class
      * 
      * @param heroClass
@@ -932,15 +924,6 @@ public class Hero {
 
     public void setCooldown(String name, long cooldown) {
         cooldowns.put(name.toLowerCase(), cooldown);
-    }
-
-    /**
-     * Sets the hero's experience to the given value - this circumvents the standard Exp change event
-     * 
-     * @param experience
-     */
-    public void setExperience(double experience) {
-        setExperience(heroClass, experience);
     }
 
     /**

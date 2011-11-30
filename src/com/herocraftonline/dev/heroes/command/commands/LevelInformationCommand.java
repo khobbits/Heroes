@@ -31,7 +31,7 @@ public class LevelInformationCommand extends BasicCommand {
         Player player = (Player) sender;
         Hero hero = plugin.getHeroManager().getHero(player);
         HeroClass hc = hero.getHeroClass();
-        int exp = (int) hero.getExperience();
+        int exp = (int) hero.getExperience(hc);
         int level = Properties.getLevel(exp);
         int current = Properties.getExperience(level);
         HeroClass sClass = hero.getSecondClass();
