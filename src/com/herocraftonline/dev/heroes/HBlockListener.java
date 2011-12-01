@@ -27,8 +27,8 @@ public class HBlockListener extends BlockListener {
     }
 
     public void init() {
-        final int maxTrackedBlocks = plugin.getConfigManager().getProperties().maxTrackedBlocks;
-        blockTrackingDuration = plugin.getConfigManager().getProperties().blockTrackingDuration;
+        final int maxTrackedBlocks = Heroes.properties.maxTrackedBlocks;
+        blockTrackingDuration = Heroes.properties.blockTrackingDuration;
         placedBlocks = new LinkedHashMap<Location, Long>() {
             private static final long serialVersionUID = 2623620773233514414L;
             private final int MAX_ENTRIES = maxTrackedBlocks;
@@ -44,7 +44,7 @@ public class HBlockListener extends BlockListener {
     public void onBlockBreak(BlockBreakEvent event) {
         if (event.isCancelled())
             return;
-        Properties prop = plugin.getConfigManager().getProperties();
+        Properties prop = Heroes.properties;
         Player player = event.getPlayer();
 
         if (prop.disabledWorlds.contains(player.getWorld().getName()))
@@ -89,7 +89,7 @@ public class HBlockListener extends BlockListener {
         Block block = event.getBlock();
         Material material = block.getType();
 
-        Properties prop = plugin.getConfigManager().getProperties();
+        Properties prop = Heroes.properties;
         if (prop.disabledWorlds.contains(block.getWorld().getName()))
             return;
         if (prop.miningExp.containsKey(material) || prop.loggingExp.containsKey(material) || prop.farmingExp.containsKey(material)) {

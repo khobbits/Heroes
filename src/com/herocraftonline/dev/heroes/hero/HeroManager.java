@@ -1,6 +1,5 @@
 package com.herocraftonline.dev.heroes.hero;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -20,17 +19,12 @@ import com.herocraftonline.dev.heroes.api.HeroRegainManaEvent;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.command.CommandHandler;
 import com.herocraftonline.dev.heroes.party.HeroParty;
-import com.herocraftonline.dev.heroes.party.PartyManager;
 import com.herocraftonline.dev.heroes.persistence.HeroStorage;
 import com.herocraftonline.dev.heroes.persistence.YMLHeroStorage;
 import com.herocraftonline.dev.heroes.skill.OutsourcedSkill;
 import com.herocraftonline.dev.heroes.skill.PassiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.DelayedSkill;
-import com.herocraftonline.dev.heroes.ui.MapAPI;
-import com.herocraftonline.dev.heroes.ui.MapInfo;
-import com.herocraftonline.dev.heroes.ui.TextRenderer;
-import com.herocraftonline.dev.heroes.ui.TextRenderer.CharacterSprite;
 import com.herocraftonline.dev.heroes.util.Messaging;
 
 /**
@@ -44,7 +38,7 @@ public class HeroManager {
     private Map<String, Hero> heroes;
     private HeroStorage heroStorage;
     private final static int manaInterval = 5;
-    private final static int partyUpdateInterval = 5;
+    // private final static int partyUpdateInterval = 5;
     private final static int warmupInterval = 5;
     private Map<Hero, DelayedSkill> delayedSkills;
     private List<Hero> completedSkills;
@@ -55,13 +49,15 @@ public class HeroManager {
         // if (plugin.getConfigManager().getProperties().storageType.toLowerCase().equals("yml"))
         heroStorage = new YMLHeroStorage(plugin);
 
-        int regenAmount = plugin.getConfigManager().getProperties().manaRegenPercent;
-        long regenInterval = plugin.getConfigManager().getProperties().manaRegenInterval * 1000L;
+        int regenAmount = Heroes.properties.manaRegenPercent;
+        long regenInterval = Heroes.properties.manaRegenInterval * 1000L;
         Runnable manaTimer = new ManaUpdater(this, regenInterval, regenAmount);
         plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, manaTimer, 0, manaInterval);
-
+        
+        /*
         Runnable partyUpdater = new PartyUpdater(this, plugin, plugin.getPartyManager());
         plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, partyUpdater, 0, partyUpdateInterval);
+        */
         
         delayedSkills = new HashMap<Hero, DelayedSkill>();
         completedSkills = new ArrayList<Hero>();
@@ -258,7 +254,7 @@ class DelayedSkillExecuter implements Runnable {
         Heroes.debug.stopTask("WarmupExecuter.run");
     }
 }
-
+/*
 class PartyUpdater implements Runnable {
 
     private final HeroManager manager;
@@ -274,7 +270,7 @@ class PartyUpdater implements Runnable {
     @Override
     public void run() {
         Heroes.debug.startTask("PartyUpdater.run");
-        if (!this.plugin.getConfigManager().getProperties().mapUI) {
+        if (!Heroes.properties.mapUI) {
             Heroes.debug.stopTask("PartyUpdater.run");
             return;
         }
@@ -302,7 +298,7 @@ class PartyUpdater implements Runnable {
 
     private void updateMapView(Player[] players) {
         MapAPI mapAPI = new MapAPI();
-        short mapId = this.plugin.getConfigManager().getProperties().mapID;
+        short mapId = Heroes.properties.mapID;
 
         TextRenderer text = new TextRenderer(this.plugin);
         CharacterSprite sword = CharacterSprite.make("      XX", "     XXX", "    XXX ", "X  XXX  ", " XXXX   ", "  XX    ", " X X    ", "X   X   ");
@@ -348,7 +344,7 @@ class PartyUpdater implements Runnable {
         text.fancyRender(info, 10, 3, map);
 
         for (Player player : players) {
-            mapAPI.sendMap(player, mapId, info.getData(), this.plugin.getConfigManager().getProperties().mapPacketInterval);
+            mapAPI.sendMap(player, mapId, info.getData(), Heroes.properties.mapPacketInterval);
         }
     }
 
@@ -368,4 +364,6 @@ class PartyUpdater implements Runnable {
         DecimalFormat df = new DecimalFormat("#.##");
         return manaBar + " - " + com.herocraftonline.dev.heroes.ui.MapColor.GREEN + df.format(percent) + "%";
     }
+
 }
+    */

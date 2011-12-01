@@ -92,7 +92,7 @@ public class ResetCommand extends BasicInteractiveCommand {
             hero.syncHealth(); // re-sync health just in-case the display isn't 100% accurate
             
             plugin.getHeroManager().performSkillChecks(hero);
-            if (plugin.getConfigManager().getProperties().prefixClassName) {
+            if (Heroes.properties.prefixClassName) {
                 player.setDisplayName("[" + hero.getHeroClass().getName() + "]" + player.getName());
             }
 

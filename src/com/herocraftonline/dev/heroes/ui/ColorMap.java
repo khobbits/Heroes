@@ -15,6 +15,7 @@ public final class ColorMap {
      * This is an indexed array of the RGB values of each notchcolor - encoded in a String.
      * The actual RGB values are retrieved using String.split();
      */
+    /*
     private static final String[] colors = {
                                             // ID 0-3
                                             "", "", "", "",
@@ -45,13 +46,13 @@ public final class ColorMap {
                                             // ID 52-55
                                             "73,58,35", "89,71,43", "104,83,50", "89,71,43", };
 
-    /**
+
      * Convert a byte[] to an Image using the palette.
      * 
      * @param bytes
      *            The byte[128 * 128] to convert.
      * @return A BufferedImage containing the pixels from bytes.
-     */
+
     public static BufferedImage bytesToImage(byte[] bytes) {
         int[] pixels = new int[128 * 128];
         for (int i = 0; i < pixels.length; i++) {
@@ -63,13 +64,13 @@ public final class ColorMap {
         return result;
     }
 
-    /**
+
      * Get the value of the given color in the palette.
      * 
      * @param index
      *            The index in the palette.
      * @return The Color of the palette entry.
-     */
+ 
     public static Color get(byte index) {
         if (index < 4)
             return new Color(0, 0, 0, 0);
@@ -82,13 +83,13 @@ public final class ColorMap {
         return new Color(r, g, b);
     }
 
-    /**
+    
      * Convert an Image to a byte[] using the palette.
      * 
      * @param originalImage
      *            The image to convert.
      * @return A byte[128 * 128] containing the pixels of the image.
-     */
+     
     public static byte[] imageToBytes(Image originalImage) {
         BufferedImage image = resizeImage(originalImage);
 
@@ -112,20 +113,20 @@ public final class ColorMap {
         return result;
     }
 
-    /**
+    
      * Get the index of the closest matching color in the palette to the given color.
      * 
      * @param color
      *            The Color to match.
      * @return The index in the palette.
-     */
+     
     public static byte indexOf(Color color) {
         if (color.getAlpha() < 128)
             return 0;
         return indexOf(color.getRed(), color.getGreen(), color.getBlue());
     }
 
-    /**
+    /
      * Get the index of the closest matching color in the palette to the given color.
      * 
      * @param r
@@ -135,7 +136,7 @@ public final class ColorMap {
      * @param g
      *            The green component of the color.
      * @return The index in the palette.
-     */
+     
     public static byte indexOf(int r, int g, int b) {
         int index = 0;
         double best = -1;
@@ -163,13 +164,13 @@ public final class ColorMap {
         return (byte) index;
     }
 
-    /**
+    /
      * Resize an image to fit on a map.
      * 
      * @param image
      *            The image to resize.
      * @return The resized image.
-     */
+     
     public static BufferedImage resizeImage(Image image) {
         BufferedImage result = new BufferedImage(128, 128, BufferedImage.TYPE_INT_RGB);
         Graphics2D graphics = result.createGraphics();
@@ -177,5 +178,5 @@ public final class ColorMap {
         graphics.dispose();
         return result;
     }
-
+*/
 }

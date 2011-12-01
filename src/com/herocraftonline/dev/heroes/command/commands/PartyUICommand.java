@@ -27,7 +27,7 @@ public class PartyUICommand extends BasicCommand {
         if (!(sender instanceof Player))
             return false;
 
-        if (!this.plugin.getConfigManager().getProperties().mapUI) {
+        if (!Heroes.properties.mapUI) {
             Messaging.send(sender, "Map UI is not enabled so this command has been disabled.");
             return false;
         }
@@ -40,12 +40,12 @@ public class PartyUICommand extends BasicCommand {
             return false;
         }
 
-        if (itemInHand.getDurability() == this.plugin.getConfigManager().getProperties().mapID) {
+        if (itemInHand.getDurability() == Heroes.properties.mapID) {
             Messaging.send(sender, "This Map is already linked to the Party UI!");
             return false;
         }
 
-        itemInHand.setDurability(this.plugin.getConfigManager().getProperties().mapID);
+        itemInHand.setDurability(Heroes.properties.mapID);
 
         Messaging.send(sender, "Your map has been converted to the Party UI");
 

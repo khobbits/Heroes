@@ -56,12 +56,11 @@ public class ProfessionCommand extends BasicInteractiveCommand {
             if (!(executor instanceof Player))
                 return false;
 
-            Properties props = plugin.getConfigManager().getProperties();
+            Properties props = Heroes.properties;
             Player player = (Player) executor;
             Hero hero = plugin.getHeroManager().getHero(player);
             HeroClass currentClass = hero.getSecondClass();
             HeroClass newClass = plugin.getClassManager().getClass(args[0]);
-            Properties prop = plugin.getConfigManager().getProperties();
 
             if (newClass == null) {
                 Messaging.send(player, "Class not found.");
@@ -118,9 +117,9 @@ public class ProfessionCommand extends BasicInteractiveCommand {
 
             int cost = newClass.getCost();
             boolean chargePlayer = true;
-            if (hero.isMaster(newClass) && !prop.swapMasteryCost) {
+            if (hero.isMaster(newClass) && !props.swapMasteryCost) {
                 chargePlayer = false;
-            } else if (!prop.iConomy || Heroes.econ == null || cost <= 0) {
+            } else if (!props.iConomy || Heroes.econ == null || cost <= 0) {
                 chargePlayer = false;
             }
 
@@ -158,7 +157,7 @@ public class ProfessionCommand extends BasicInteractiveCommand {
             Hero hero = plugin.getHeroManager().getHero(player);
             HeroClass currentClass = hero.getSecondClass();
             HeroClass newClass = pendingClassSelections.get(player);
-            Properties prop = plugin.getConfigManager().getProperties();
+            Properties prop = Heroes.properties;
 
             ClassChangeEvent event = new ClassChangeEvent(hero, currentClass, newClass);
             plugin.getServer().getPluginManager().callEvent(event);

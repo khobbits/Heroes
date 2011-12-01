@@ -155,7 +155,6 @@ public class HeroClassManager {
         // Get the class expLoss
         newClass.setExpLoss(config.getDouble("expLoss", -1));
 
-        plugin.getConfigManager().getProperties();
         // Get the maximum level or use the default if it's not specified
         int defaultMaxLevel = Properties.maxLevel;
         int maxLevel = config.getInt("max-level", defaultMaxLevel);
@@ -168,7 +167,7 @@ public class HeroClassManager {
         }
         newClass.setMaxLevel(maxLevel);
 
-        int defaultCost = plugin.getConfigManager().getProperties().swapCost;
+        int defaultCost = Heroes.properties.swapCost;
         int cost = config.getInt("cost", defaultCost);
         if (cost < 0) {
             Heroes.log(Level.WARNING, "Class (" + className + ") cost is too low. Setting cost to 0.");

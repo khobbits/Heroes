@@ -7,7 +7,7 @@ Version dev
 
 ==== **General:** ====
 
-* Now using Vault for Economy hooks.
+* Now using Vault for Economy & Permission hooks.
 * Adjusted XP methods so that the Level display operates properly in 1.0
 
 ==== **API:** ====

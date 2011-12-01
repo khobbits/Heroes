@@ -1,11 +1,7 @@
 package com.herocraftonline.dev.heroes.ui;
 
-import net.minecraft.server.EntityPlayer;
-import net.minecraft.server.Packet;
-import net.minecraft.server.Packet131;
-
 public class UIUpdater extends Thread {
-
+/*
     private EntityPlayer player;
     private byte[] bytes;
     private byte mapid;
@@ -42,4 +38,5 @@ public class UIUpdater extends Thread {
         }
         interrupt();
     }
+    */
 }

@@ -1,20 +1,11 @@
 package com.herocraftonline.dev.heroes.ui;
 
-import net.minecraft.server.Item;
-import net.minecraft.server.ItemStack;
-import net.minecraft.server.WorldMap;
-
-import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.craftbukkit.CraftWorld;
-import org.bukkit.craftbukkit.entity.CraftPlayer;
-import org.bukkit.entity.Player;
-
 /**
  * Map API implementation for CraftBukkit. Do not use directly.
  */
 public final class MapAPI {
-
+/*
+    
     public MapAPI() {}
 
     public WorldMap getWorldMap(World world, short mapId) {
@@ -39,7 +30,7 @@ public final class MapAPI {
     }
 
     public void sendMap(Player player, short mapId, byte[] data, int interval) {
-        /*
+        
          * for (int col = 0; col < 128; ++col) {
          * byte[] raw = new byte[131];
          * raw[0] = 0;
@@ -52,7 +43,7 @@ public final class MapAPI {
          * 
          * sendRawData(player, mapId, raw);
          * }
-         */
+         
 
         UIUpdater updater = new UIUpdater(((CraftPlayer) player).getHandle(), data, (byte) mapId, interval);
         updater.start();
@@ -63,4 +54,5 @@ public final class MapAPI {
         // EntityPlayer entity = ((CraftPlayer) player).getHandle();
         // entity.netServerHandler.sendPacket(packet);
     }
+    */
 }

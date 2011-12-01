@@ -54,7 +54,7 @@ public class HPlayerListener extends PlayerListener {
 
     @Override
     public void onPlayerBedEnter(PlayerBedEnterEvent event) {
-        Properties props = plugin.getConfigManager().getProperties();
+        Properties props = Heroes.properties;
         if (event.isCancelled() || !props.bedHeal || props.disabledWorlds.contains(event.getPlayer().getWorld().getName()))
             return;
 
@@ -67,7 +67,7 @@ public class HPlayerListener extends PlayerListener {
 
     @Override
     public void onPlayerBedLeave(PlayerBedLeaveEvent event) {
-        if (!plugin.getConfigManager().getProperties().bedHeal)
+        if (!Heroes.properties.bedHeal)
             return;
 
         // This player is no longer in bed so remove them from the bedHealer set
@@ -152,7 +152,7 @@ public class HPlayerListener extends PlayerListener {
         hero.syncExperience();
         hero.syncHealth();
         hero.checkInventory();
-        if (plugin.getConfigManager().getProperties().prefixClassName) {
+        if (Heroes.properties.prefixClassName) {
             player.setDisplayName("[" + hero.getHeroClass().getName() + "]" + player.getName());
         }
         plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
@@ -173,7 +173,7 @@ public class HPlayerListener extends PlayerListener {
 
     @Override
     public void onPlayerPickupItem(PlayerPickupItemEvent event) {
-        if (event.isCancelled() || plugin.getConfigManager().getProperties().disabledWorlds.contains(event.getPlayer().getWorld().getName()))
+        if (event.isCancelled() || Heroes.properties.disabledWorlds.contains(event.getPlayer().getWorld().getName()))
             return;
 
         final Hero hero = plugin.getHeroManager().getHero(event.getPlayer());

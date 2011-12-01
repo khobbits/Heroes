@@ -177,8 +177,8 @@ public abstract class ActiveSkill extends Skill {
                 hero.setCooldown(name, time + cooldown);
             }
 
-            if (plugin.getConfigManager().getProperties().globalCooldown > 0) {
-                hero.setCooldown("Global", plugin.getConfigManager().getProperties().globalCooldown + time);
+            if (Heroes.properties.globalCooldown > 0) {
+                hero.setCooldown("Global", Heroes.properties.globalCooldown + time);
             }
 
             // Award XP for skill usage

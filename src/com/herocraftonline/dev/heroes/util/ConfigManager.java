@@ -4,13 +4,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Player;
@@ -26,17 +24,14 @@ import com.herocraftonline.dev.heroes.skill.OutsourcedSkill;
 public class ConfigManager {
 
     protected final Heroes plugin;
-    protected final File primaryConfigFile;
     protected final File classConfigFolder;
     protected final File expConfigFile;
     protected final File skillConfigFile;
     protected final File outsourcedSkillConfigFile;
     protected final File damageConfigFile;
-    protected final Properties properties = new Properties();
 
     public ConfigManager(Heroes plugin) {
         this.plugin = plugin;
-        this.primaryConfigFile = new File(plugin.getDataFolder(), "config.yml");
         this.classConfigFolder = new File(plugin.getDataFolder() + File.separator + "classes");
         this.expConfigFile = new File(plugin.getDataFolder(), "experience.yml");
         this.skillConfigFile = new File(plugin.getDataFolder(), "skills.yml");
@@ -44,12 +39,7 @@ public class ConfigManager {
         this.damageConfigFile = new File(plugin.getDataFolder(), "damages.yml");
     }
 
-    public Properties getProperties() {
-        return properties;
-    }
-
     public void load() throws Exception {
-        checkForConfig(primaryConfigFile);
         checkForConfig(expConfigFile);
         checkForConfig(damageConfigFile);
         checkForConfig(new File(plugin.getDataFolder(), "font.png"));
@@ -59,18 +49,6 @@ public class ConfigManager {
             classConfigFolder.mkdirs();
             checkForConfig(new File(classConfigFolder, "vagrant.yml"));
         }
-
-        Configuration primaryConfig = new Configuration(primaryConfigFile);
-        primaryConfig.load();
-        loadLevelConfig(primaryConfig);
-        loadDefaultConfig(primaryConfig);
-        loadProperties(primaryConfig);
-        loadBedConfig(primaryConfig);
-        loadManaConfig(primaryConfig);
-        loadMapConfig(primaryConfig);
-        loadStorageConfig(primaryConfig);
-        loadWorldConfig(primaryConfig);
-        primaryConfig.save();
     }
 
     public void loadManagers() {
@@ -161,24 +139,6 @@ public class ConfigManager {
         }
     }
 
-    private void loadBedConfig(Configuration config) {
-        String root = "bed.";
-        properties.bedHeal = config.getBoolean(root + "bedHeal", true);
-        properties.healInterval = config.getInt(root + "healInterval", 30);
-        properties.healPercent = config.getInt(root + "healPercent", 5);
-    }
-
-    private void loadDefaultConfig(Configuration config) {
-        String root = "default.";
-        properties.defClass = config.getString(root + "class");
-        properties.defLevel = config.getInt(root + "level", 1);
-        properties.allowHats = config.getBoolean(root + "allowhatsplugin", false);
-        properties.prefixClassName = config.getBoolean(root + "prefixClassName", false);
-        properties.resetOnDeath = config.getBoolean(root + "resetOnDeath", false);
-        properties.orbExp = config.getBoolean(root + "orbExp", false);
-        properties.globalCooldown = config.getInt(root + "globalCooldown", 1);
-        properties.pvpLevelRange = config.getInt(root + "pvpLevelRange", 50);
-    }
 
     private void loadExperience(Configuration config) {
         List<String> keys = config.getKeys("killing");
@@ -187,10 +147,10 @@ public class ConfigManager {
                 try {
                     double exp = config.getDouble("killing." + item, 0);
                     if (item.equals("player")) {
-                        properties.playerKillingExp = exp;
+                        Heroes.properties.playerKillingExp = exp;
                     } else {
                         CreatureType type = CreatureType.valueOf(item.toUpperCase());
-                        properties.creatureKillingExp.put(type, exp);
+                        Heroes.properties.creatureKillingExp.put(type, exp);
                     }
                 } catch (IllegalArgumentException e) {
                     Heroes.log(Level.WARNING, "Invalid creature type (" + item + ") found in experience.yml.");
@@ -198,52 +158,10 @@ public class ConfigManager {
             }
         }
 
-        properties.miningExp = loadMaterialExperience(config, "mining");
-        properties.farmingExp = loadMaterialExperience(config, "farming");
-        properties.loggingExp = loadMaterialExperience(config, "logging");
-        properties.craftingExp = loadMaterialExperience(config, "crafting");
-    }
-
-    private void loadLevelConfig(Configuration config) {
-        String root = "leveling.";
-        properties.power = config.getDouble(root + "power", 1.03);
-        Properties.maxExp = config.getInt(root + "maxExperience", 90000);
-        Properties.maxLevel = config.getInt(root + "maxLevel", 20);
-        properties.partyBonus = config.getDouble(root + "partyBonus", 0.20);
-        properties.expLoss = config.getDouble(root + "expLoss", 0.05);
-        properties.pvpExpLossMultiplier = config.getDouble(root + "pvpExpLossMultiplier", 1.0);
-        properties.blockTrackingDuration = config.getInt(root + "block-tracking-duration", 10 * 60 * 1000);
-        properties.maxTrackedBlocks = config.getInt(root + "max-tracked-blocks", 1000);
-        properties.resetExpOnClassChange = config.getBoolean(root + "resetExpOnClassChange", true);
-        properties.resetMasteryOnClassChange = config.getBoolean(root + "resetMasteryOnClassChange", false);
-        properties.resetProfMasteryOnClassChange = config.getBoolean(root + "resetProfMasteryOnClassChange", false);
-        properties.resetProfOnPrimaryChange = config.getBoolean(root + "resetProfOnPrimaryChange", false);
-        properties.swapMasteryCost = config.getBoolean(root + "swapMasteryCost", false);
-        properties.levelsViaExpLoss = config.getBoolean(root + "levelsViaExpLoss", false);
-        properties.masteryLoss = config.getBoolean(root + "mastery-loss", false);
-        properties.lockPathTillMaster = config.getBoolean(root + "lockPathTillMaster", false);
-        properties.lockAtHighestTier = config.getBoolean(root + "lockAtHighestTier", false);
-        properties.noSpawnCamp = config.getBoolean(root + "noSpawnCamp", false);
-        properties.spawnCampRadius = config.getInt(root + "spawnCampRadius", 7);
-        properties.spawnCampExpMult = config.getDouble(root + "spawnCampExpMult", .5);
-        properties.calcExp();
-    }
-
-    private void loadManaConfig(Configuration config) {
-        String root = "mana.";
-        properties.manaRegenInterval = config.getInt(root + "regenInterval", 5);
-        properties.manaRegenPercent = config.getInt(root + "regenPercent", 5);
-        // Out of bounds check
-        if (properties.manaRegenPercent > 100 || properties.manaRegenPercent < 0) {
-            properties.manaRegenPercent = 5;
-        }
-    }
-
-    private void loadMapConfig(Configuration config) {
-        String root = "mappartyui.";
-        properties.mapUI = config.getBoolean(root + "enabled", false);
-        properties.mapID = (byte) config.getInt(root + "id", 0);
-        properties.mapPacketInterval = config.getInt(root + "packetinterval", 20);
+        Heroes.properties.miningExp = loadMaterialExperience(config, "mining");
+        Heroes.properties.farmingExp = loadMaterialExperience(config, "farming");
+        Heroes.properties.loggingExp = loadMaterialExperience(config, "logging");
+        Heroes.properties.craftingExp = loadMaterialExperience(config, "crafting");
     }
 
     private Map<Material, Double> loadMaterialExperience(ConfigurationNode config, String path) {
@@ -262,28 +180,6 @@ public class ConfigManager {
             }
         }
         return expMap;
-    }
-
-    private void loadProperties(Configuration config) {
-        String root = "properties.";
-        properties.iConomy = config.getBoolean(root + "iConomy", false);
-        properties.cColor = ChatColor.valueOf(config.getString(root + "color", "WHITE"));
-        properties.swapCost = config.getInt(root + "swapcost", 0);
-        properties.oldClassSwapCost = config.getInt(root + "oldClassSwapCost", 0);
-        properties.firstSwitchFree = config.getBoolean(root + "firstSwitchFree", true);
-        properties.debug = config.getBoolean(root + "debug", false);
-        properties.foodHealPercent = config.getDouble(root + "foodHealPercent", .05);
-    }
-
-    private void loadStorageConfig(Configuration config) {
-        String root = "storage.";
-        properties.storageType = config.getString(root + "type", "yml");
-    }
-
-    private void loadWorldConfig(Configuration config) {
-        String root = "worlds.";
-        List<String> worlds = config.getStringList(root + "disabledWorlds", new ArrayList<String>());
-        properties.disabledWorlds.addAll(worlds);
     }
 
     private void mergeNodeToConfig(Configuration config, ConfigurationNode node, String path) {

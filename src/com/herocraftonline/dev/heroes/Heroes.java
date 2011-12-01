@@ -1,17 +1,12 @@
 package com.herocraftonline.dev.heroes;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.imageio.ImageIO;
 
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 
-import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.LivingEntity;
@@ -67,11 +62,9 @@ import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.SkillManager;
 import com.herocraftonline.dev.heroes.spout.SpoutData;
 import com.herocraftonline.dev.heroes.spout.SpoutInventoryListener;
-import com.herocraftonline.dev.heroes.ui.ColorMap;
-import com.herocraftonline.dev.heroes.ui.MapAPI;
-import com.herocraftonline.dev.heroes.ui.MapInfo;
 import com.herocraftonline.dev.heroes.util.ConfigManager;
 import com.herocraftonline.dev.heroes.util.DebugLog;
+import com.herocraftonline.dev.heroes.util.Properties;
 import com.herocraftonline.dev.heroes.util.Util;
 
 /**
@@ -109,7 +102,7 @@ public class Heroes extends JavaPlugin {
     private DamageManager damageManager;
     private SkillManager skillManager;
     private SpoutData spoutData;
-
+    public static final Properties properties = new Properties();
     public static Economy econ;
     public static Permission perms;
 
@@ -124,7 +117,7 @@ public class Heroes extends JavaPlugin {
      * @param msg
      */
     public void debugLog(Level level, String msg) {
-        if (this.configManager.getProperties().debug) {
+        if (properties.debug) {
             log.log(level, "[Debug] " + msg);
         }
         debugLog.log(level, "[Debug] " + msg);
@@ -191,6 +184,7 @@ public class Heroes extends JavaPlugin {
     @Override
     public void onEnable() {
         debug.reset();
+        properties.load(this);
         configManager = new ConfigManager(this);
 
         // Attempt to load the Configuration file.
@@ -237,9 +231,10 @@ public class Heroes extends JavaPlugin {
         }
 
         // Set the Party UI map to a nice splash screen.
-        if (getConfigManager().getProperties().mapUI) {
+        /*
+        if (properties.mapUI) {
             MapAPI mapAPI = new MapAPI();
-            short mapId = getConfigManager().getProperties().mapID;
+            short mapId = properties.mapID;
 
             BufferedImage image = null;
             try {
@@ -255,6 +250,7 @@ public class Heroes extends JavaPlugin {
             info.setData(pixels);
             mapAPI.saveMap(world, mapId, info);
         }
+        */
     }
 
     @Override
@@ -387,7 +383,7 @@ public class Heroes extends JavaPlugin {
         pluginManager.registerEvent(Type.PLUGIN_DISABLE, pluginListener, Priority.Monitor, this);
 
         pluginManager.registerEvent(Type.CUSTOM_EVENT, hEventListener, Priority.Monitor, this);
-        pluginManager.registerEvent(Type.CUSTOM_EVENT, new HSkillListener(this), Priority.Highest, this);
+        pluginManager.registerEvent(Type.CUSTOM_EVENT, new HSkillListener(), Priority.Highest, this);
 
         // Map Party UI
         pluginManager.registerEvent(Type.ENTITY_REGAIN_HEALTH, partyListener, Priority.Monitor, this);
@@ -433,5 +429,12 @@ public class Heroes extends JavaPlugin {
 
     public void setSpoutData(SpoutData sd) {
         this.spoutData = sd;
+    }
+
+    /**
+     * @return the properties
+     */
+    public Properties getProperties() {
+        return properties;
     }
 }

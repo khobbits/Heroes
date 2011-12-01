@@ -67,7 +67,7 @@ public class HeroesDamageListener extends EntityListener {
     }
 
     private void onEntityDamageCore(EntityDamageEvent event) {
-        if (event.isCancelled() || plugin.getConfigManager().getProperties().disabledWorlds.contains(event.getEntity().getWorld().getName()))
+        if (event.isCancelled() || Heroes.properties.disabledWorlds.contains(event.getEntity().getWorld().getName()))
             return;
 
         if (ignoreNextDamageEventBecauseBukkitCallsTwoEventsGRRR) {
@@ -237,7 +237,7 @@ public class HeroesDamageListener extends EntityListener {
             if (attacker instanceof Player) {
                 // If the players aren't within the level range then deny the PvP
                 int aLevel = plugin.getHeroManager().getHero((Player) attacker).getTieredLevel(false);
-                if (Math.abs(aLevel - hero.getTieredLevel(false)) > plugin.getConfigManager().getProperties().pvpLevelRange) {
+                if (Math.abs(aLevel - hero.getTieredLevel(false)) > Heroes.properties.pvpLevelRange) {
                     Messaging.send((Player) attacker, "That player is outside of your level range!");
                     event.setCancelled(true);
                     return;
@@ -326,7 +326,7 @@ public class HeroesDamageListener extends EntityListener {
         
         // Satiated players regenerate % of total HP rather than 1 HP
         if (event.getRegainReason() == RegainReason.SATIATED) {
-            double healPercent = plugin.getConfigManager().getProperties().foodHealPercent;
+            double healPercent = Heroes.properties.foodHealPercent;
             amount = maxHealth * healPercent;
         }
         

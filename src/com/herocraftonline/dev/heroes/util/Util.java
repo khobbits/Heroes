@@ -173,7 +173,7 @@ public final class Util {
             }
         };
     }
-
+    
     /**
      * Converts an entity into its CreatureType
      * 

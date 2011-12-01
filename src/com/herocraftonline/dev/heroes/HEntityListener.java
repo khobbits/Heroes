@@ -60,7 +60,7 @@ public class HEntityListener extends EntityListener {
     }
 
     private void awardKillExp(Hero attacker, Entity defender) {
-        Properties prop = plugin.getConfigManager().getProperties();
+        Properties prop = Heroes.properties;
 
         double addedExp = 0;
         ExperienceType experienceType = null;
@@ -101,7 +101,7 @@ public class HEntityListener extends EntityListener {
     public void onEntityDeath(EntityDeathEvent event) {
         Heroes.debug.startTask("HEntityListener.onEntityDeath");
         Entity defender = event.getEntity();
-        Properties prop = plugin.getConfigManager().getProperties();
+        Properties prop = Heroes.properties;
         //If this is a disabled world ignore it
         if (prop.disabledWorlds.contains(defender.getWorld().getName())) {
             Heroes.debug.stopTask("HEntityListener.onEntityDeath");
@@ -129,7 +129,7 @@ public class HEntityListener extends EntityListener {
             
             double multiplier = 1.0;
             if (attacker != null)
-                multiplier = plugin.getConfigManager().getProperties().pvpExpLossMultiplier;
+                multiplier = Heroes.properties.pvpExpLossMultiplier;
             
             heroDefender.loseExpFromDeath(multiplier);
 

@@ -9,12 +9,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import net.minecraft.server.EntityPlayer;
-
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -144,7 +141,7 @@ public class Hero {
 
         setHeroClass(heroClass, secondary);
 
-        if (plugin.getConfigManager().getProperties().prefixClassName) {
+        if (Heroes.properties.prefixClassName) {
             player.setDisplayName("[" + getHeroClass().getName() + "]" + player.getName());
         }
         plugin.getHeroManager().performSkillChecks(this);
@@ -282,9 +279,9 @@ public class Hero {
      * @param boolean - distributeToParty
      */
     public void gainExp(double expChange, ExperienceType source, boolean distributeToParty) {
-        if (player.getGameMode() == GameMode.CREATIVE || plugin.getConfigManager().getProperties().disabledWorlds.contains(player.getWorld().getName()))
+        if (player.getGameMode() == GameMode.CREATIVE || Heroes.properties.disabledWorlds.contains(player.getWorld().getName()))
             return;
-        Properties prop = plugin.getConfigManager().getProperties();
+        Properties prop = Heroes.properties;
 
         if (distributeToParty && party != null && party.getExp() && expChange > 0) {
             Location location = player.getLocation();
@@ -403,9 +400,9 @@ public class Hero {
     }
 
     public void loseExpFromDeath(double multiplier) {
-        if (player.getGameMode() == GameMode.CREATIVE || plugin.getConfigManager().getProperties().disabledWorlds.contains(player.getWorld().getName()) || multiplier <= 0)
+        if (player.getGameMode() == GameMode.CREATIVE || Heroes.properties.disabledWorlds.contains(player.getWorld().getName()) || multiplier <= 0)
             return;
-        Properties prop = plugin.getConfigManager().getProperties();
+        Properties prop = Heroes.properties;
 
         HeroClass[] classes = new HeroClass[] {heroClass, secondClass};
 
@@ -606,7 +603,6 @@ public class Hero {
     }
 
     public int getLevel(HeroClass heroClass) {
-        plugin.getConfigManager().getProperties();
         return Properties.getLevel(getExperience(heroClass));
     }
 
@@ -682,12 +678,10 @@ public class Hero {
      * @return the hero's maximum health
      */
     public double getMaxHealth() {
-        plugin.getConfigManager().getProperties();
         int level = Properties.getLevel(getExperience(heroClass));
         double primaryHp = heroClass.getBaseMaxHealth() + (level - 1) * heroClass.getMaxHealthPerLevel();
         double secondHp = 0;
         if (secondClass != null) {
-            plugin.getConfigManager().getProperties();
             level = Properties.getLevel(getExperience(secondClass));
             secondHp = secondClass.getBaseMaxHealth() + (level - 1) * secondClass.getMaxHealthPerLevel();
         }
@@ -1105,7 +1099,7 @@ public class Hero {
     }
 
     public void checkInventory() {
-        if (player.getGameMode() == GameMode.CREATIVE || plugin.getConfigManager().getProperties().disabledWorlds.contains(player.getWorld().getName()))
+        if (player.getGameMode() == GameMode.CREATIVE || Heroes.properties.disabledWorlds.contains(player.getWorld().getName()))
             return;
         int removedCount = checkArmorSlots();
 
@@ -1128,7 +1122,7 @@ public class Hero {
         Material item;
         int removedCount = 0;
 
-        if (inv.getHelmet() != null && inv.getHelmet().getTypeId() != 0 && !plugin.getConfigManager().getProperties().allowHats) {
+        if (inv.getHelmet() != null && inv.getHelmet().getTypeId() != 0 && !Heroes.properties.allowHats) {
             item = inv.getHelmet().getType();
             if (!heroClass.isAllowedArmor(item) && (secondClass == null || !secondClass.isAllowedArmor(item))) {
                 Util.moveItem(this, -1, inv.getHelmet());
@@ -1166,7 +1160,7 @@ public class Hero {
     }
 
     public boolean canEquipItem(int slot) {
-        if (plugin.getConfigManager().getProperties().disabledWorlds.contains(player.getWorld().getName()))
+        if (Heroes.properties.disabledWorlds.contains(player.getWorld().getName()))
             return true;
 
         ItemStack itemStack = player.getInventory().getItem(slot);
