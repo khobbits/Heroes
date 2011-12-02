@@ -7,9 +7,10 @@ Version dev
 
 ==== **General:** ====
 
-* Now using Vault for Economy & Permission hooks.
+* Now using Vault for Economy & Permission hooks. (It's required)
 * Adjusted XP methods so that the Level display operates properly in 1.0
 * MapPartyUI has been removed.
+* The config.yml format has changed drastically. Some old options have been removed, or moved to make it easier.
 
 ==== **API:** ====
 
@@ -17,3 +18,7 @@ Version dev
 * The MapUI has been removed
 
 ==== **Skills:** ====
+
+* PickPocket - (NEW!)
+** allows a player to steal an item from another 
+** Will not steal armor/items in the hotbar
