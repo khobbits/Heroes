@@ -7,13 +7,12 @@ import java.util.List;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.BlockIterator;
 import org.bukkit.util.Vector;
-import org.bukkit.util.config.Configuration;
-import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.SkillResult;
@@ -63,11 +62,11 @@ public abstract class TargettedSkill extends ActiveSkill {
      * @return a default configuration
      */
     @Override
-    public ConfigurationNode getDefaultConfig() {
-        ConfigurationNode node = Configuration.getEmptyNode();
-        node.setProperty(Setting.USE_TEXT.node(), "%hero% used %skill% on %target%!");
-        node.setProperty(Setting.MAX_DISTANCE.node(), 15);
-        return node;
+    public ConfigurationSection getDefaultConfig() {
+        ConfigurationSection section = super.getDefaultConfig();
+        section.set(Setting.USE_TEXT.node(), "%hero% used %skill% on %target%!");
+        section.set(Setting.MAX_DISTANCE.node(), 15);
+        return section;
     }
 
     /**

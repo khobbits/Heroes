@@ -25,7 +25,6 @@ public class HeroParty {
     private Boolean exp = true;
     private final Heroes plugin;
     private LinkedList<String> invites = new LinkedList<String>();
-    private boolean updateMapDisplay = true;
 
     public HeroParty(Hero leader, Heroes plugin) {
         this.plugin = plugin;
@@ -171,17 +170,8 @@ public class HeroParty {
     }
     
     public void update() {
-        this.updateMapDisplay = true;
         if (Heroes.useSpout) 
             for (Hero hero : members)
                 update(hero.getPlayer());   
     }
-    public void setUpdateMapDisplay(boolean updateMapDisplay) {
-        this.updateMapDisplay = updateMapDisplay;
-    }
-
-    public boolean updateMapDisplay() {
-        return updateMapDisplay;
-    }
-
 }

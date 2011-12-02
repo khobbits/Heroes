@@ -7,10 +7,12 @@ import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
 
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.Configuration;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -19,8 +21,6 @@ import org.bukkit.event.Event.Type;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.util.config.Configuration;
-import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
@@ -48,7 +48,8 @@ import com.herocraftonline.dev.heroes.util.Messaging;
 public abstract class Skill extends BasicCommand {
 
     public final Heroes plugin;
-    private ConfigurationNode config;
+    private Configuration defaultConfig = new MemoryConfiguration();
+    private ConfigurationSection config;
 
     private final Set<SkillType> types = EnumSet.noneOf(SkillType.class);
 
@@ -146,7 +147,9 @@ public abstract class Skill extends BasicCommand {
     @Override
     public abstract boolean execute(CommandSender sender, String identifier, String[] args);
 
-    public ConfigurationNode getConfig() {
+    public ConfigurationSection getConfig() {
+        if (config == null)
+            config = SkillManager.allSkillsConfig.getConfigurationSection(getName());
         return config;
     }
 
@@ -156,8 +159,8 @@ public abstract class Skill extends BasicCommand {
      * 
      * @return an empty configuration
      */
-    public ConfigurationNode getDefaultConfig() {
-        return Configuration.getEmptyNode();
+    public ConfigurationSection getDefaultConfig() {
+        return defaultConfig;
     }
 
     public Heroes getPlugin() {
@@ -181,12 +184,21 @@ public abstract class Skill extends BasicCommand {
     public boolean getSetting(Hero hero, String setting, boolean def) {
         if (hero == null)
             return config.getBoolean(setting, def);
-        if (hasSetting(hero.getHeroClass(), setting))
-            return hero.getHeroClass().getSkillSettings(getName()).getBoolean(setting, def);
-        else if (hasSetting(hero.getSecondClass(), setting))
-            return hero.getSecondClass().getSkillSettings(getName()).getBoolean(setting, def);
+        int val1 = -1;
+        int val2 = -1;
+        
+        if (hero.getHeroClass().hasSkill(this.getName()))
+            val1 = hero.getHeroClass().getSkillSettings(getName()).getBoolean(setting, def) ? 1 : 0;
+        
+        if (hero.getSecondClass() != null && hero.getSecondClass().hasSkill(this.getName()))
+            val2 = hero.getSecondClass().getSkillSettings(getName()).getBoolean(setting, def) ? 1 :0;
+
+        if (val1 == -1 && val2 == -1)
+            return def;
+        else if (val2 != -1 && val2 <= val1)
+            return val2 == 1 ? true : false;
         else
-            return config.getBoolean(setting, def);
+            return val1 == 1 ? true : false;
     }
 
     /**
@@ -279,19 +291,31 @@ public abstract class Skill extends BasicCommand {
      * @return the stored setting
      */
     public List<String> getSetting(Hero hero, String setting, List<String> def) {
-        if (hero == null)
-            return config.getStringList(setting, def);
+        if (hero == null) {
+            List<String> list = config.getStringList(setting);
+            return list != null ? list : def;
+        }
 
         List<String> vals = new ArrayList<String>();
-        if (hasSetting(hero.getHeroClass(), setting))
-            vals.addAll(hero.getHeroClass().getSkillSettings(getName()).getStringList(setting, def));
-        if (hasSetting(hero.getSecondClass(), setting))
-            vals.addAll(hero.getSecondClass().getSkillSettings(getName()).getStringList(setting, def));
-
+        if (hasSetting(hero.getHeroClass(), setting)) {
+            List<String> list = hero.getHeroClass().getSkillSettings(getName()).getStringList(setting);
+            if (list.isEmpty())
+                vals.addAll(def);
+            else
+                vals.addAll(list);
+        } if (hasSetting(hero.getSecondClass(), setting)) {
+            List<String> list = hero.getSecondClass().getSkillSettings(getName()).getStringList(setting);
+            if (list.isEmpty())
+                vals.addAll(def);
+            else
+                vals.addAll(list);
+        }
         if (!vals.isEmpty())
             return vals;
-        else
-            return config.getStringList(setting, def);
+        else {
+            List<String> list = config.getStringList(setting);
+            return list != null ? list : def;
+        }
     }
 
     /**
@@ -329,13 +353,13 @@ public abstract class Skill extends BasicCommand {
      */
     public List<String> getSettingKeys(Hero hero) {
         Set<String> keys = new HashSet<String>();
-        keys.addAll(config.getKeys());
+        keys.addAll(config.getKeys(false));
 
-        if (hasNode(hero.getHeroClass(), null)) {
-            keys.addAll(hero.getHeroClass().getSkillSettings(getName()).getKeys());
+        if (hasSection(hero.getHeroClass(), null)) {
+            keys.addAll(hero.getHeroClass().getSkillSettings(getName()).getKeys(false));
         }
-        if (hero.getSecondClass() != null && hasNode(hero.getSecondClass(), null)) {
-            keys.addAll(hero.getSecondClass().getSkillSettings(getName()).getKeys());
+        if (hero.getSecondClass() != null && hasSection(hero.getSecondClass(), null)) {
+            keys.addAll(hero.getSecondClass().getSkillSettings(getName()).getKeys(false));
         }
         return new ArrayList<String>(keys);
     }
@@ -351,12 +375,18 @@ public abstract class Skill extends BasicCommand {
      */
     public List<String> getSettingKeys(Hero hero, String setting) {
         Set<String> keys = new HashSet<String>();
-        keys.addAll(config.getKeys(setting));
-        if (hasNode(hero.getHeroClass(), setting)) {
-            keys.addAll(hero.getHeroClass().getSkillSettings(getName()).getKeys(setting));
+        
+        ConfigurationSection section = config.getConfigurationSection(setting);
+        if (section != null)
+            keys.addAll(section.getKeys(false));
+        
+        if (hasSection(hero.getHeroClass(), setting)) {
+            section = hero.getHeroClass().getSkillSettings(getName()).getConfigurationSection(setting);
+            keys.addAll(section.getKeys(false));
         }
-        if (hasNode(hero.getSecondClass(), setting)) {
-            keys.addAll(hero.getSecondClass().getSkillSettings(getName()).getKeys(setting));
+        if (hasSection(hero.getSecondClass(), setting)) {
+            section = hero.getSecondClass().getSkillSettings(getName()).getConfigurationSection(setting);
+            keys.addAll(section.getKeys(false));
         }
         return new ArrayList<String>(keys);
     }
@@ -365,15 +395,15 @@ public abstract class Skill extends BasicCommand {
         return Collections.unmodifiableSet(this.types);
     }
 
-    public boolean hasNode(HeroClass heroClass, String setting) {
+    public boolean hasSection(HeroClass heroClass, String setting) {
         if (heroClass == null)
             return false;
         if (heroClass.getSkillSettings(getName()) == null)
             return false;
         if (setting == null)
-            return !heroClass.getSkillSettings(getName()).getKeys().isEmpty();
+            return !heroClass.getSkillSettings(getName()).getKeys(false).isEmpty();
 
-        return heroClass.getSkillSettings(getName()).getNode(setting) != null;
+        return heroClass.getSkillSettings(getName()).getConfigurationSection(setting) != null;
     }
 
     /**
@@ -397,7 +427,7 @@ public abstract class Skill extends BasicCommand {
      * @param config
      *            the new skill configuration
      */
-    public void setConfig(ConfigurationNode config) {
+    public void setConfig(ConfigurationSection config) {
         this.config = config;
     }
 

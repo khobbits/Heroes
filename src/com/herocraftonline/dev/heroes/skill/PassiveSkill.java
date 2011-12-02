@@ -1,11 +1,10 @@
 package com.herocraftonline.dev.heroes.skill;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
-import org.bukkit.util.config.Configuration;
-import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.ClassChangeEvent;
@@ -71,11 +70,11 @@ public abstract class PassiveSkill extends Skill {
      * @return a default configuration
      */
     @Override
-    public ConfigurationNode getDefaultConfig() {
-        ConfigurationNode node = Configuration.getEmptyNode();
-        node.setProperty(Setting.APPLY_TEXT.node(), "%hero% gained %skill%!");
-        node.setProperty(Setting.UNAPPLY_TEXT.node(), "%hero% lost %skill%!");
-        return node;
+    public ConfigurationSection getDefaultConfig() {
+        ConfigurationSection section = super.getDefaultConfig();
+        section.set(Setting.APPLY_TEXT.node(), "%hero% gained %skill%!");
+        section.set(Setting.UNAPPLY_TEXT.node(), "%hero% lost %skill%!");
+        return section;
     }
 
     /**
@@ -105,7 +104,8 @@ public abstract class PassiveSkill extends Skill {
         HeroClass heroClass = hero.getHeroClass();
         if (!heroClass.hasSkill(getName()))
             return;
-        ConfigurationNode settings = heroClass.getSkillSettings(getName());
+        
+        ConfigurationSection settings = heroClass.getSkillSettings(getName());
         if (settings != null) {
             if (hero.getLevel(this) >= getSetting(hero, Setting.LEVEL.node(), 1, true)) {
                 apply(hero);

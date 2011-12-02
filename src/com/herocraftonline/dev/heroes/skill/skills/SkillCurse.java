@@ -1,12 +1,12 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
-import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.HeroesEventListener;
@@ -40,13 +40,13 @@ public class SkillCurse extends TargettedSkill {
     }
 
     @Override
-    public ConfigurationNode getDefaultConfig() {
-        ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty(Setting.DURATION.node(), 5000); // in milliseconds
-        node.setProperty("miss-chance", .50); // decimal representation of miss-chance
-        node.setProperty("miss-text", "%target% misses an attack!");
-        node.setProperty(Setting.APPLY_TEXT.node(), "%target% has been cursed!");
-        node.setProperty(Setting.EXPIRE_TEXT.node(), "%target% has recovered from the curse!");
+    public ConfigurationSection getDefaultConfig() {
+        ConfigurationSection node = super.getDefaultConfig();
+        node.set(Setting.DURATION.node(), 5000); // in milliseconds
+        node.set("miss-chance", .50); // decimal representation of miss-chance
+        node.set("miss-text", "%target% misses an attack!");
+        node.set(Setting.APPLY_TEXT.node(), "%target% has been cursed!");
+        node.set(Setting.EXPIRE_TEXT.node(), "%target% has recovered from the curse!");
         return node;
     }
 

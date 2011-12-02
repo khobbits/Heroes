@@ -38,7 +38,6 @@ public class HeroManager {
     private Map<String, Hero> heroes;
     private HeroStorage heroStorage;
     private final static int manaInterval = 5;
-    // private final static int partyUpdateInterval = 5;
     private final static int warmupInterval = 5;
     private Map<Hero, DelayedSkill> delayedSkills;
     private List<Hero> completedSkills;
@@ -53,11 +52,6 @@ public class HeroManager {
         long regenInterval = Heroes.properties.manaRegenInterval * 1000L;
         Runnable manaTimer = new ManaUpdater(this, regenInterval, regenAmount);
         plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, manaTimer, 0, manaInterval);
-        
-        /*
-        Runnable partyUpdater = new PartyUpdater(this, plugin, plugin.getPartyManager());
-        plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, partyUpdater, 0, partyUpdateInterval);
-        */
         
         delayedSkills = new HashMap<Hero, DelayedSkill>();
         completedSkills = new ArrayList<Hero>();
@@ -254,116 +248,3 @@ class DelayedSkillExecuter implements Runnable {
         Heroes.debug.stopTask("WarmupExecuter.run");
     }
 }
-/*
-class PartyUpdater implements Runnable {
-
-    private final HeroManager manager;
-    private final Heroes plugin;
-    private final PartyManager partyManager;
-
-    PartyUpdater(HeroManager manager, Heroes plugin, PartyManager partyManager) {
-        this.manager = manager;
-        this.plugin = plugin;
-        this.partyManager = partyManager;
-    }
-
-    @Override
-    public void run() {
-        Heroes.debug.startTask("PartyUpdater.run");
-        if (!Heroes.properties.mapUI) {
-            Heroes.debug.stopTask("PartyUpdater.run");
-            return;
-        }
-
-        if (partyManager.getParties().size() == 0) {
-            Heroes.debug.stopTask("PartyUpdater.run");
-            return;
-        }
-
-        for (HeroParty party : partyManager.getParties()) {
-            if (party.updateMapDisplay()) {
-                party.setUpdateMapDisplay(false);
-                Player[] players = new Player[party.getMembers().size()];
-                int count = 0;
-                for (Hero heroes : party.getMembers()) {
-                    players[count] = heroes.getPlayer();
-                    count++;
-                }
-                updateMapView(players);
-            }
-        }
-
-        Heroes.debug.stopTask("PartyUpdater.run");
-    }
-
-    private void updateMapView(Player[] players) {
-        MapAPI mapAPI = new MapAPI();
-        short mapId = Heroes.properties.mapID;
-
-        TextRenderer text = new TextRenderer(this.plugin);
-        CharacterSprite sword = CharacterSprite.make("      XX", "     XXX", "    XXX ", "X  XXX  ", " XXXX   ", "  XX    ", " X X    ", "X   X   ");
-        CharacterSprite crown = CharacterSprite.make("        ", "        ", "XX XX XX", "X XXXX X", "XX XX XX", " XXXXXX ", " XXXXXX ", "        ");
-        CharacterSprite shield = CharacterSprite.make("   XX   ", "X  XX  X", "XXXXXXXX", "XXXXXXXX", "XXXXXXXX", " XXXXXX ", "  XXXX  ", "   XX   ");
-        CharacterSprite heal = CharacterSprite.make("        ", "  XXX   ", "  XXX   ", "XXXXXXX ", "XXXXXXX ", "XXXXXXX ", "  XXX   ", "  XXX   ");
-        CharacterSprite bow = CharacterSprite.make("XXXX   X", "X  XX X ", " X   X  ", "  X X X ", "   X  XX", "  X X  X", "XX   X X", " X    XX");
-        text.setChar('\u0001', crown);
-        text.setChar('\u0002', sword);
-        text.setChar('\u0003', shield);
-        text.setChar('\u0004', heal);
-        text.setChar('\u0005', bow);
-
-        MapInfo info = mapAPI.loadMap(Bukkit.getServer().getWorlds().get(0), mapId);
-        mapAPI.getWorldMap(Bukkit.getServer().getWorlds().get(0), mapId).map = (byte) 9;
-
-        info.setData(new byte[128 * 128]);
-
-        String map = "§22;Party Members -\n";
-
-        for (Player player : players) {
-            if (!player.isOnline())
-                continue;
-            Hero hero = this.manager.getHero(player);
-            if (!hero.hasParty() || hero.getParty().getLeader() == null) {
-                Heroes.log(Level.SEVERE, "Error in party of player: " + player.getDisplayName());
-                continue;
-            }
-            if (hero.getParty().getLeader().equals(hero)) {
-                map += "§42;\u0001";
-            } else {
-                map += "§27;\u0002";
-            }
-            double currentHP;
-            double maxHP;
-
-            currentHP = hero.getHealth();
-            maxHP = hero.getMaxHealth();
-
-            map += " §12;" + player.getName() + "\n" + createHealthBar(currentHP, maxHP) + "\n";
-        }
-
-        text.fancyRender(info, 10, 3, map);
-
-        for (Player player : players) {
-            mapAPI.sendMap(player, mapId, info.getData(), Heroes.properties.mapPacketInterval);
-        }
-    }
-
-    private static String createHealthBar(double health, double maxHealth) {
-        String manaBar = com.herocraftonline.dev.heroes.ui.MapColor.DARK_RED + "[" + com.herocraftonline.dev.heroes.ui.MapColor.DARK_GREEN;
-        int bars = 40;
-        int progress = (int) (health / maxHealth * bars);
-        for (int i = 0; i < progress; i++) {
-            manaBar += "|";
-        }
-        manaBar += com.herocraftonline.dev.heroes.ui.MapColor.DARK_GRAY;
-        for (int i = 0; i < bars - progress; i++) {
-            manaBar += "|";
-        }
-        manaBar += com.herocraftonline.dev.heroes.ui.MapColor.RED + "]";
-        double percent = health / maxHealth * 100;
-        DecimalFormat df = new DecimalFormat("#.##");
-        return manaBar + " - " + com.herocraftonline.dev.heroes.ui.MapColor.GREEN + df.format(percent) + "%";
-    }
-
-}
-    */

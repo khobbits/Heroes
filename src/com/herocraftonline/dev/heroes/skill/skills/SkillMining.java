@@ -2,12 +2,12 @@ package com.herocraftonline.dev.heroes.skill.skills;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockListener;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.HBlockListener;
 import com.herocraftonline.dev.heroes.Heroes;
@@ -31,10 +31,10 @@ public class SkillMining extends PassiveSkill {
     }
 
     @Override
-    public ConfigurationNode getDefaultConfig() {
-        ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty(Setting.CHANCE_LEVEL.node(), .001);
-        node.setProperty("chance-from-stone", .0005);
+    public ConfigurationSection getDefaultConfig() {
+        ConfigurationSection node = super.getDefaultConfig();
+        node.set(Setting.CHANCE_LEVEL.node(), .001);
+        node.set("chance-from-stone", .0005);
         return node;
     }
 

@@ -1,20 +1,23 @@
 package com.herocraftonline.dev.heroes.persistence;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.logging.Level;
 
 import org.bukkit.Material;
+import org.bukkit.configuration.Configuration;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.util.config.Configuration;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
-import com.herocraftonline.dev.heroes.command.CommandHandler;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.util.Util;
 
@@ -45,8 +48,7 @@ public class YMLHeroStorage extends HeroStorage {
         }
         // Check if it already exists, if so we load the data.
         if (playerFile.exists()) {
-            Configuration playerConfig = new Configuration(playerFile); // Setup the Configuration
-            playerConfig.load(); // Load the Config File
+            Configuration playerConfig = YamlConfiguration.loadConfiguration(playerFile); // Setup the Configuration
 
             HeroClass playerClass = loadClass(player, playerConfig);
             if (playerClass == null) {
@@ -55,14 +57,15 @@ public class YMLHeroStorage extends HeroStorage {
             }
             HeroClass secondClass = loadSecondaryClass(player, playerConfig);
             Hero playerHero = new Hero(plugin, player, playerClass, secondClass);
-            loadCooldowns(playerHero, playerConfig);
-            loadExperience(playerHero, playerConfig);
-            loadBinds(playerHero, playerConfig);
-            loadSkillSettings(playerHero, playerConfig);
+            
+            loadCooldowns(playerHero, playerConfig.getConfigurationSection("cooldowns"));
+            loadExperience(playerHero, playerConfig.getConfigurationSection("experience"));
+            loadBinds(playerHero, playerConfig.getConfigurationSection("binds"));
+            loadSkillSettings(playerHero, playerConfig.getConfigurationSection("skill-settings"));
             playerHero.setMana(playerConfig.getInt("mana", 0));
             playerHero.setHealth(playerConfig.getDouble("health", playerClass.getBaseMaxHealth()));
             playerHero.setVerbose(playerConfig.getBoolean("verbose", true));
-            playerHero.setSuppressedSkills(new HashSet<String>(playerConfig.getStringList("suppressed", null)));
+            playerHero.setSuppressedSkills(new HashSet<String>(playerConfig.getStringList("suppressed")));
 
             Heroes.log(Level.INFO, "Loaded hero: " + player.getName() + " with EID: " + player.getEntityId());
             return playerHero;
@@ -77,24 +80,31 @@ public class YMLHeroStorage extends HeroStorage {
     public boolean saveHero(Hero hero) {
         String name = hero.getPlayer().getName();
         File playerFile = new File(playerFolder + File.separator + name.substring(0, 1).toLowerCase(), name + ".yml");
-        Configuration playerConfig = new Configuration(playerFile);
+        FileConfiguration playerConfig = new YamlConfiguration();
 
-        playerConfig.setProperty("class", hero.getHeroClass().toString());
+        playerConfig.set("class", hero.getHeroClass().toString());
         if (hero.getSecondClass() != null) {
-            playerConfig.setProperty("secondary-class", hero.getSecondClass().toString());
+            playerConfig.set("secondary-class", hero.getSecondClass().toString());
         }
-        playerConfig.setProperty("verbose", hero.isVerbose());
-        playerConfig.setProperty("suppressed", new ArrayList<String>(hero.getSuppressedSkills()));
-        playerConfig.setProperty("mana", hero.getMana());
-        playerConfig.removeProperty("itemrecovery");
-        playerConfig.setProperty("health", hero.getHealth());
+        playerConfig.set("verbose", hero.isVerbose());
+        playerConfig.set("suppressed", new ArrayList<String>(hero.getSuppressedSkills()));
+        playerConfig.set("mana", hero.getMana());
+        playerConfig.set("itemrecovery", null);
+        playerConfig.set("health", hero.getHealth());
 
-        saveSkillSettings(hero, playerConfig);
-        saveCooldowns(hero, playerConfig);
-        saveExperience(hero, playerConfig);
-        saveBinds(hero, playerConfig);
 
-        playerConfig.save();
+        
+        saveSkillSettings(hero, playerConfig.createSection("skill-settings"));
+        saveCooldowns(hero, playerConfig.createSection("cooldowns"));
+        saveExperience(hero, playerConfig.createSection("experience"));
+        saveBinds(hero, playerConfig.createSection("binds"));
+
+        try {
+            playerConfig.save(playerFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
         return true;
     }
 
@@ -102,15 +112,15 @@ public class YMLHeroStorage extends HeroStorage {
      * Loads a hero's bindings
      * 
      * @param hero
-     * @param config
+     * @param section
      */
-    private void loadBinds(Hero hero, Configuration config) {
-        List<String> bindKeys = config.getKeys("binds");
+    private void loadBinds(Hero hero, ConfigurationSection section) {
+        Set<String> bindKeys = section.getKeys(false);
         if (bindKeys != null && bindKeys.size() > 0) {
             for (String material : bindKeys) {
                 try {
                     Material item = Material.valueOf(material);
-                    String bind = config.getString("binds." + material, "");
+                    String bind = section.getString(material, "");
                     if (bind.length() > 0) {
                         hero.bind(item, bind.split(" "));
                     }
@@ -171,17 +181,16 @@ public class YMLHeroStorage extends HeroStorage {
      * Loads the hero's saved cooldowns
      * 
      * @param hero
-     * @param config
+     * @param section
      */
-    private void loadCooldowns(Hero hero, Configuration config) {
+    private void loadCooldowns(Hero hero, ConfigurationSection section) {
         HeroClass heroClass = hero.getHeroClass();
 
-        String path = "cooldowns";
-        List<String> storedCooldowns = config.getKeys(path);
+        Set<String> storedCooldowns = section.getKeys(false);
         if (storedCooldowns != null) {
             long time = System.currentTimeMillis();
             for (String skillName : storedCooldowns) {
-                long cooldown = (long) config.getDouble(path + "." + skillName, 0);
+                long cooldown = (long) section.getDouble(skillName, 0);
                 if (heroClass.hasSkill(skillName) && cooldown > time) {
                     hero.setCooldown(skillName, cooldown);
                 }
@@ -193,57 +202,46 @@ public class YMLHeroStorage extends HeroStorage {
      * Loads the Hero's experience
      * 
      * @param hero
-     * @param config
+     * @param section
      */
-    private void loadExperience(Hero hero, Configuration config) {
-        if (hero == null || hero.getClass() == null || config == null)
+    private void loadExperience(Hero hero, ConfigurationSection section) {
+        if (hero == null || hero.getClass() == null || section == null)
             return;
 
-        String root = "experience";
-        List<String> expList = config.getKeys(root);
+        Set<String> expList = section.getKeys(false);
         if (expList != null) {
             for (String className : expList) {
-                double exp = config.getDouble(root + "." + className, 0);
+                double exp = section.getDouble(className, 0);
                 HeroClass heroClass = plugin.getClassManager().getClass(className);
                 if (heroClass == null || hero.getExperience(heroClass) != 0) {
                     continue;
                 }
 
                 hero.setExperience(heroClass, exp);
-                /*
-                 * We shouldn't be needing to alter XP values when a player loads back
-                 * this causes confusion/issues on how XP is determined.
-                 * if (!heroClass.isPrimary() && exp > 0) {
-                 * HeroClass parent = heroClass.getParent();
-                 * hero.setExperience(parent, plugin.getConfigManager().getProperties().levels[parent.getMaxLevel()]);
-                 * }
-                 */
             }
         }
     }
 
     /**
      * Loads hero-specific Skill settings
-     * 
+     * TODO: Rewrite-me
      * @param hero
      * @param config
      */
-    private void loadSkillSettings(Hero hero, Configuration config) {
-        String path = "skill-settings";
+    private void loadSkillSettings(Hero hero, ConfigurationSection config) {
 
-        if (config.getKeys(path) != null) {
-            for (String skill : config.getKeys(path)) {
-                if (config.getNode(path).getKeys(skill) != null) {
-                    for (String node : config.getNode(path).getKeys(skill)) {
-                        hero.setSkillSetting(skill, node, config.getNode(path).getNode(skill).getString(node));
+        if (config.getKeys(false) != null) {
+            for (String skill : config.getKeys(false)) {
+                if (config.isConfigurationSection(skill)) {
+                    for (String node : config.getConfigurationSection(skill).getKeys(false)) {
+                        hero.setSkillSetting(skill, node, config.getConfigurationSection(skill).getString(node));
                     }
                 }
             }
         }
     }
 
-    private void saveBinds(Hero hero, Configuration config) {
-        config.removeProperty("binds");
+    private void saveBinds(Hero hero, ConfigurationSection section) {
         Map<Material, String[]> binds = hero.getBinds();
         for (Material material : binds.keySet()) {
             String[] bindArgs = binds.get(material);
@@ -251,42 +249,38 @@ public class YMLHeroStorage extends HeroStorage {
             for (String arg : bindArgs) {
                 bind.append(arg).append(" ");
             }
-            config.setProperty("binds." + material.toString(), bind.toString().substring(0, bind.toString().length() - 1));
+            section.set(material.toString(), bind.toString().substring(0, bind.toString().length() - 1));
         }
     }
 
-    private void saveCooldowns(Hero hero, Configuration config) {
-        String path = "cooldowns";
+    private void saveCooldowns(Hero hero, ConfigurationSection section) {
         long time = System.currentTimeMillis();
         Map<String, Long> cooldowns = hero.getCooldowns();
         for (Map.Entry<String, Long> entry : cooldowns.entrySet()) {
             String skillName = entry.getKey();
             long cooldown = entry.getValue();
             if (cooldown > time) {
-                System.out.println(path + "." + skillName);
-                config.setProperty(path + "." + skillName, cooldown);
+                section.set(skillName, cooldown);
             }
         }
     }
 
-    private void saveExperience(Hero hero, Configuration config) {
-        if (hero == null || hero.getClass() == null || config == null)
+    private void saveExperience(Hero hero, ConfigurationSection section) {
+        if (hero == null || hero.getClass() == null || section == null)
             return;
 
-        String root = "experience";
         Map<String, Double> expMap = hero.getExperienceMap();
         for (Map.Entry<String, Double> entry : expMap.entrySet()) {
-            config.setProperty(root + "." + entry.getKey(), (double) entry.getValue());
+            section.set(entry.getKey(), (double) entry.getValue());
         }
     }
 
-    private void saveSkillSettings(Hero hero, Configuration config) {
-        String path = "skill-settings";
+    //TODO: this needs to be re-written to jut be a dump
+    private void saveSkillSettings(Hero hero, ConfigurationSection config) {
         for (Entry<String, Map<String, String>> entry : hero.getSkillSettings().entrySet()) {
             for (Entry<String, String> node : entry.getValue().entrySet()) {
-                config.setProperty(path + "." + entry.getKey() + "." + node.getKey(), node.getValue());
+                config.set(entry.getKey() + "." + node.getKey(), node.getValue());
             }
         }
-
     }
 }

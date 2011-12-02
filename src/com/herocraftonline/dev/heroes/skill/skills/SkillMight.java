@@ -1,16 +1,16 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
 import org.bukkit.Location;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.util.config.ConfigurationNode;
 
-import com.herocraftonline.dev.heroes.api.SkillResult;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.HeroesEventListener;
+import com.herocraftonline.dev.heroes.api.SkillResult;
 import com.herocraftonline.dev.heroes.api.WeaponDamageEvent;
 import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
@@ -38,13 +38,13 @@ public class SkillMight extends ActiveSkill {
     }
 
     @Override
-    public ConfigurationNode getDefaultConfig() {
-        ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty("damage-bonus", 1.25);
-        node.setProperty(Setting.RADIUS.node(), 10);
-        node.setProperty(Setting.APPLY_TEXT.node(), "Your muscles bulge with power!");
-        node.setProperty(Setting.EXPIRE_TEXT.node(), "You feel strength leave your body!");
-        node.setProperty(Setting.DURATION.node(), 600000); // in Milliseconds - 10 minutes
+    public ConfigurationSection getDefaultConfig() {
+        ConfigurationSection node = super.getDefaultConfig();
+        node.set("damage-bonus", 1.25);
+        node.set(Setting.RADIUS.node(), 10);
+        node.set(Setting.APPLY_TEXT.node(), "Your muscles bulge with power!");
+        node.set(Setting.EXPIRE_TEXT.node(), "You feel strength leave your body!");
+        node.set(Setting.DURATION.node(), 600000); // in Milliseconds - 10 minutes
         return node;
     }
 

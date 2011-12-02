@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -13,10 +12,13 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.bukkit.Material;
-import org.bukkit.util.config.ConfigurationNode;
+import org.bukkit.configuration.Configuration;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.MemoryConfiguration;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.damage.DamageManager.ProjectileType;
+import com.herocraftonline.dev.heroes.skill.SkillManager;
 
 /**
  * A Hero's class
@@ -36,9 +38,10 @@ public class HeroClass {
     private int tier = 0;
     private Map<Material, Integer> itemDamage = new EnumMap<Material, Integer>(Material.class);
     private Map<ProjectileType, Integer> projectileDamage = new EnumMap<ProjectileType, Integer>(ProjectileType.class);
-    private Map<String, ConfigurationNode> skills = new LinkedHashMap<String, ConfigurationNode>();
-
-    // private Map<String, SkillData> skillData;
+    private Set<String> skills = new LinkedHashSet<String>();
+    
+    private Configuration skillConfig = new MemoryConfiguration();
+    
     private int maxLevel;
     private int cost;
     private double expModifier;
@@ -62,6 +65,7 @@ public class HeroClass {
         maxHealthPerLevel = 0;
         maxLevel = 1;
         cost = 0;
+        skillConfig.addDefaults(SkillManager.allSkillsConfig);
     }
 
     protected void addAllowedArmor(Material armor) {
@@ -72,8 +76,12 @@ public class HeroClass {
         this.allowedWeapons.add(weapon);
     }
 
-    protected void addSkill(String name, ConfigurationNode settings) {
-        skills.put(name.toLowerCase(), settings);
+    protected void addSkill(String name, ConfigurationSection settings) {
+        ConfigurationSection section = skillConfig.getConfigurationSection(name);
+        if (section == null)
+            skillConfig.createSection(name, settings.getValues(true));
+            
+        skills.add(name.toLowerCase());
     }
 
     public void addSpecialization(HeroClass heroClass) {
@@ -314,11 +322,11 @@ public class HeroClass {
      * @return Set of all names of skills this class contains
      */
     public Set<String> getSkillNames() {
-        return new TreeSet<String>(skills.keySet());
+        return new TreeSet<String>(skills);
     }
 
-    public ConfigurationNode getSkillSettings(String name) {
-        return skills.get(name.toLowerCase());
+    public ConfigurationSection getSkillSettings(String name) {        
+        return skillConfig.getConfigurationSection(name);
     }
 
     /**
@@ -346,21 +354,13 @@ public class HeroClass {
     public int hashCode() {
         return name == null ? 0 : name.hashCode();
     }
-
-    /**
-     * Gets an unmodifiable Map of the skill mapping for this class.
-     * @return the skills map
-     */
-    public Map<String, ConfigurationNode> getSkillMap() {
-        return Collections.unmodifiableMap(skills);
-    }
     
     /**
      * @param name
      * @return true if this class contains the given skill
      */
     public boolean hasSkill(String name) {
-        return skills.containsKey(name.toLowerCase());
+        return skills.contains(name);
     }
 
     /**

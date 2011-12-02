@@ -43,9 +43,5 @@ mana:
 hats:
     level: 1 #Level to use HATS!
     allowHatsPlugin: false
-mappartyui:
-    id: 1 #Map ID number, 0 or 1 is desired
-    enabled: true
-    packetinterval: 20 #Rate of packets
 worlds:
     disabledWorlds: ['World1', 'World2', 'World3'] #If your worlds are in a seperate folder, include the path. E.g. 'worlds/world1'

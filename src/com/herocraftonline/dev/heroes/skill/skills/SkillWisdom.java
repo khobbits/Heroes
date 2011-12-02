@@ -1,14 +1,14 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
-import org.bukkit.util.config.ConfigurationNode;
 
-import com.herocraftonline.dev.heroes.api.SkillResult;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.HeroRegainManaEvent;
 import com.herocraftonline.dev.heroes.api.HeroesEventListener;
+import com.herocraftonline.dev.heroes.api.SkillResult;
 import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;
@@ -35,11 +35,11 @@ public class SkillWisdom extends ActiveSkill {
     }
 
     @Override
-    public ConfigurationNode getDefaultConfig() {
-        ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty("regen-multiplier", 1.2);
-        node.setProperty(Setting.RADIUS.node(), 10);
-        node.setProperty(Setting.DURATION.node(), 600000); // in Milliseconds - 10 minutes
+    public ConfigurationSection getDefaultConfig() {
+        ConfigurationSection node = super.getDefaultConfig();
+        node.set("regen-multiplier", 1.2);
+        node.set(Setting.RADIUS.node(), 10);
+        node.set(Setting.DURATION.node(), 600000); // in Milliseconds - 10 minutes
         return node;
     }
 

@@ -12,14 +12,13 @@ import java.util.Set;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionAttachment;
-import org.bukkit.util.config.Configuration;
-import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.ExperienceChangeEvent;
@@ -57,7 +56,7 @@ public class Hero {
     private Map<Material, String[]> binds = new EnumMap<Material, String[]>(Material.class);
     private Set<String> suppressedSkills = new HashSet<String>();
     private Map<String, Map<String, String>> skillSettings = new HashMap<String, Map<String, String>>();
-    private Map<String, ConfigurationNode> skills = new HashMap<String, ConfigurationNode>();
+    private Map<String, ConfigurationSection> skills = new HashMap<String, ConfigurationSection>();
     private Integer tieredLevel;
     private double health;
     private PermissionAttachment transientPerms;
@@ -107,8 +106,8 @@ public class Hero {
         transientPerms.setPermission(permission, true);
     }
 
-    public void addSkill(String skill) {
-        skills.put(skill, Configuration.getEmptyNode());
+    public void addSkill(String skill, ConfigurationSection section) {
+        skills.put(skill, section);
     }
 
     public boolean hasExperienceType(ExperienceType type) {
@@ -705,8 +704,8 @@ public class Hero {
         return player;
     }
 
-    public Map<String, ConfigurationNode> getSkills() {
-        return skills;
+    public Map<String, ConfigurationSection> getSkills() {
+        return new HashMap<String, ConfigurationSection>(skills);
     }
 
     public Map<String, Map<String, String>> getSkillSettings() {
@@ -1062,16 +1061,17 @@ public class Hero {
     /**
      * Syncs the Hero's current Experience with the minecraft experience (should also sync the level bar)
      */
+    @SuppressWarnings("deprecation")
     public void syncExperience() {
         int level = getLevel(heroClass);
         int currentLevelXP = Properties.getExperience(level);
 
         double maxLevelXP = Properties.getExperience(level + 1) - currentLevelXP;
         double currentXP = getExperience() - currentLevelXP;
-        int syncedXP = (int) ((currentXP / maxLevelXP) * Util.getMCExperience(level +1));
+        int syncedPercent = (int) ((currentXP / maxLevelXP) * 100);
         
         player.setTotalExperience(Util.getMCExperience(level));
-        player.setExperience(syncedXP);
+        player.setExperience(syncedPercent);
         player.setLevel(level);
     }
 

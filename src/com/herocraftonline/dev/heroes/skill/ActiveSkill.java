@@ -3,10 +3,9 @@ package com.herocraftonline.dev.heroes.skill;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.config.Configuration;
-import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.SkillCompleteEvent;
@@ -216,10 +215,10 @@ public abstract class ActiveSkill extends Skill {
      * @return a default configuration
      */
     @Override
-    public ConfigurationNode getDefaultConfig() {
-        ConfigurationNode node = Configuration.getEmptyNode();
-        node.setProperty(Setting.USE_TEXT.node(), "%hero% used %skill%!");
-        return node;
+    public ConfigurationSection getDefaultConfig() {
+        ConfigurationSection section = super.getDefaultConfig();
+        section.set(Setting.USE_TEXT.node(), "%hero% used %skill%!");
+        return section;
     }
 
     private void addDelayedSkill(Hero hero, int delay, final String identifier, final String[] args) {

@@ -21,7 +21,8 @@ import java.util.jar.JarFile;
 import java.util.logging.Level;
 
 import org.bukkit.command.CommandSender;
-import org.bukkit.util.config.ConfigurationNode;
+import org.bukkit.configuration.Configuration;
+import org.bukkit.configuration.ConfigurationSection;
 
 import com.herocraftonline.dev.heroes.Heroes;
 
@@ -34,6 +35,10 @@ public class SkillManager {
     private final File dir;
     private final ClassLoader classLoader;
 
+    public static Configuration allSkillsConfig;
+    public static Configuration skillConfig;
+    public static Configuration defaultSkillConfig;
+    
     public SkillManager(Heroes plugin) {
         skills = new LinkedHashMap<String, Skill>();
         identifiers = new HashMap<String, Skill>();
@@ -98,9 +103,9 @@ public class SkillManager {
             return true;
         
         OutsourcedSkill oSkill = new OutsourcedSkill(plugin, name);
-        plugin.getConfigManager().loadSkillConfig(oSkill);
-        ConfigurationNode config = oSkill.getConfig();
-        List<String> perms = config.getStringList("permissions", new ArrayList<String>());
+        loadSkillConfig(oSkill);
+        ConfigurationSection config = oSkill.getConfig();
+        List<String> perms = config.getStringList("permissions");
         if (perms.isEmpty()) {
             Heroes.log(Level.SEVERE, "There are no permissions defined for " + oSkill.getName());
             return false;
@@ -177,7 +182,7 @@ public class SkillManager {
                 Class<? extends Skill> skillClass = clazz.asSubclass(Skill.class);
                 Constructor<? extends Skill> ctor = skillClass.getConstructor(plugin.getClass());
                 Skill skill = ctor.newInstance(plugin);
-                plugin.getConfigManager().loadSkillConfig(skill);
+                loadSkillConfig(skill);
                 return skill;
             } else
                 throw new Exception();
@@ -203,7 +208,6 @@ public class SkillManager {
                 plugin.debugLog(Level.INFO, "Skill " + skill.getName() + " Loaded");
             }
         }
-
     }
 
     /**
@@ -236,5 +240,11 @@ public class SkillManager {
 
         addSkill(skill);
         return true;
+    }
+    
+    public void loadSkillConfig(Skill skill) {
+        ConfigurationSection dSection = skill.getDefaultConfig();
+        defaultSkillConfig.createSection(skill.getName(), dSection.getValues(true));
+        skill.init();
     }
 }

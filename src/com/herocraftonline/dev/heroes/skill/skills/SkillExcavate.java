@@ -1,13 +1,13 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
-import com.herocraftonline.dev.heroes.api.SkillResult;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.block.BlockListener;
-import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.api.SkillResult;
 import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;
@@ -29,12 +29,12 @@ public class SkillExcavate extends ActiveSkill {
         setTypes(SkillType.BUFF, SkillType.EARTH, SkillType.SILENCABLE);
     }
     @Override
-    public ConfigurationNode getDefaultConfig() {
-        ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty("speed-multiplier", 2);
-        node.setProperty("duration-per-level", 100);
-        node.setProperty("apply-text", "%hero% begins excavating!");
-        node.setProperty("expire-text", "%hero% is no longer excavating!");
+    public ConfigurationSection getDefaultConfig() {
+        ConfigurationSection node = super.getDefaultConfig();
+        node.set("speed-multiplier", 2);
+        node.set("duration-per-level", 100);
+        node.set("apply-text", "%hero% begins excavating!");
+        node.set("expire-text", "%hero% is no longer excavating!");
         return node;
     }
 

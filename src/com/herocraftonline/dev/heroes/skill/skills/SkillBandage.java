@@ -1,8 +1,8 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.HeroRegainHealthEvent;
@@ -27,13 +27,13 @@ public class SkillBandage extends TargettedSkill {
     }
 
     @Override
-    public ConfigurationNode getDefaultConfig() {
-        ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty("health", 5);
-        node.setProperty(Setting.MAX_DISTANCE.node(), 5);
-        node.setProperty(Setting.REAGENT.node(), "PAPER");
-        node.setProperty(Setting.REAGENT_COST.node(), 1);
-        return node;
+    public ConfigurationSection getDefaultConfig() {
+        ConfigurationSection section = super.getDefaultConfig();
+        section.set("health", 5);
+        section.set(Setting.MAX_DISTANCE.node(), 5);
+        section.set(Setting.REAGENT.node(), "PAPER");
+        section.set(Setting.REAGENT_COST.node(), 1);
+        return section;
     }
 
     @Override

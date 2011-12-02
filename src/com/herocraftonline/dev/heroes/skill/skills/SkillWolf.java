@@ -8,6 +8,7 @@ import java.util.Set;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.CreatureType;
@@ -24,12 +25,11 @@ import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.event.world.WorldListener;
-import org.bukkit.util.config.ConfigurationNode;
 
-import com.herocraftonline.dev.heroes.api.SkillResult;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.ClassChangeEvent;
 import com.herocraftonline.dev.heroes.api.HeroesEventListener;
+import com.herocraftonline.dev.heroes.api.SkillResult;
 import com.herocraftonline.dev.heroes.api.WeaponDamageEvent;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
@@ -63,15 +63,15 @@ public class SkillWolf extends ActiveSkill {
     }
 
     @Override
-    public ConfigurationNode getDefaultConfig() {
-        ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty(Setting.MAX_DISTANCE.node(), 5);
-        node.setProperty("max-wolves", 3);
-        node.setProperty(Setting.HEALTH.node(), 30);
-        node.setProperty("health-per-level", .25);
-        node.setProperty(Setting.DAMAGE.node(), 3);
-        node.setProperty("damage-per-level", .1);
-        node.setProperty("tame-requires-skill", true);
+    public ConfigurationSection getDefaultConfig() {
+        ConfigurationSection node = super.getDefaultConfig();
+        node.set(Setting.MAX_DISTANCE.node(), 5);
+        node.set("max-wolves", 3);
+        node.set(Setting.HEALTH.node(), 30);
+        node.set("health-per-level", .25);
+        node.set(Setting.DAMAGE.node(), 3);
+        node.set("damage-per-level", .1);
+        node.set("tame-requires-skill", true);
         return node;
     }
 

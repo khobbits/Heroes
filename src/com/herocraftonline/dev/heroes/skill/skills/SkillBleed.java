@@ -1,9 +1,9 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.SkillResult;
@@ -31,13 +31,13 @@ public class SkillBleed extends TargettedSkill {
     }
 
     @Override
-    public ConfigurationNode getDefaultConfig() {
-        ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty(Setting.DURATION.node(), 10000);
-        node.setProperty(Setting.PERIOD.node(), 2000);
-        node.setProperty("tick-damage", 1);
-        node.setProperty(Setting.APPLY_TEXT.node(), "%target% is bleeding!");
-        node.setProperty(Setting.EXPIRE_TEXT.node(), "%target% has stopped bleeding!");
+    public ConfigurationSection getDefaultConfig() {
+        ConfigurationSection node = super.getDefaultConfig();
+        node.set(Setting.DURATION.node(), 10000);
+        node.set(Setting.PERIOD.node(), 2000);
+        node.set("tick-damage", 1);
+        node.set(Setting.APPLY_TEXT.node(), "%target% is bleeding!");
+        node.set(Setting.EXPIRE_TEXT.node(), "%target% has stopped bleeding!");
         return node;
     }
 

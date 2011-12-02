@@ -1,5 +1,6 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.Event.Priority;
@@ -9,10 +10,9 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityListener;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
-import org.bukkit.util.config.ConfigurationNode;
 
-import com.herocraftonline.dev.heroes.api.SkillResult;
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.api.SkillResult;
 import com.herocraftonline.dev.heroes.effects.common.SneakEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
@@ -38,12 +38,12 @@ public class SkillSneak extends ActiveSkill {
     }
 
     @Override
-    public ConfigurationNode getDefaultConfig() {
-        ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty(Setting.DURATION.node(), 600000); // 10 minutes in milliseconds
-        node.setProperty("damage-cancels", true);
-        node.setProperty("atacking-cancels", true);
-        node.setProperty("refresh-interval", 5000); // in milliseconds
+    public ConfigurationSection getDefaultConfig() {
+        ConfigurationSection node = super.getDefaultConfig();
+        node.set(Setting.DURATION.node(), 600000); // 10 minutes in milliseconds
+        node.set("damage-cancels", true);
+        node.set("atacking-cancels", true);
+        node.set("refresh-interval", 5000); // in milliseconds
         return node;
     }
 

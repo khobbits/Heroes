@@ -5,6 +5,7 @@ import java.util.HashSet;
 import net.minecraft.server.MathHelper;
 
 import org.bukkit.Location;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -16,10 +17,9 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityListener;
 import org.bukkit.util.Vector;
-import org.bukkit.util.config.ConfigurationNode;
 
-import com.herocraftonline.dev.heroes.api.SkillResult;
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.api.SkillResult;
 import com.herocraftonline.dev.heroes.effects.common.SlowEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
@@ -46,13 +46,13 @@ public class SkillIcebolt extends ActiveSkill {
     }
 
     @Override
-    public ConfigurationNode getDefaultConfig() {
-        ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty(Setting.DAMAGE.node(), 3);
-        node.setProperty("slow-duration", 5000); // 5 seconds
-        node.setProperty("speed-multiplier", 2);
-        node.setProperty(Setting.APPLY_TEXT.node(), "%target% has been slowed by %hero%!");
-        node.setProperty(Setting.EXPIRE_TEXT.node(), "%target% is no longer slowed!");
+    public ConfigurationSection getDefaultConfig() {
+        ConfigurationSection node = super.getDefaultConfig();
+        node.set(Setting.DAMAGE.node(), 3);
+        node.set("slow-duration", 5000); // 5 seconds
+        node.set("speed-multiplier", 2);
+        node.set(Setting.APPLY_TEXT.node(), "%target% has been slowed by %hero%!");
+        node.set(Setting.EXPIRE_TEXT.node(), "%target% is no longer slowed!");
         return node;
         
     }

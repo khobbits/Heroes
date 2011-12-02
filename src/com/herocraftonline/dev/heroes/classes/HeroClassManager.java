@@ -1,7 +1,6 @@
 package com.herocraftonline.dev.heroes.classes;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -11,9 +10,10 @@ import java.util.Set;
 import java.util.logging.Level;
 
 import org.bukkit.Material;
+import org.bukkit.configuration.Configuration;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.permissions.Permission;
-import org.bukkit.util.config.Configuration;
-import org.bukkit.util.config.ConfigurationNode;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClass.CircularParentException;
@@ -27,7 +27,6 @@ import com.herocraftonline.dev.heroes.util.Util;
 /**
  * Manages all classes for the server
  */
-@SuppressWarnings("deprecation")
 public class HeroClassManager {
 
     private final Heroes plugin;
@@ -121,8 +120,7 @@ public class HeroClassManager {
      * @return the HeroClass loaded - or null if there was an error
      */
     private HeroClass loadClass(File file) {
-        Configuration config = new Configuration(file);
-        config.load();
+        Configuration config = YamlConfiguration.loadConfiguration(file);
         String className = config.getString("name");
         if (className == null) {
             return null;
@@ -138,12 +136,12 @@ public class HeroClassManager {
             newClass.setTier(0);
         // Load class allowed Armor + Weapons
 
-        loadArmor(newClass, config);
-        loadWeapons(newClass, config);
+        loadArmor(newClass, config.getStringList("permitted-armor"));
+        loadWeapons(newClass, config.getStringList("permitted-weapon"));
         loadDamages(newClass, config);
-        loadPermittedSkills(newClass, config);
-        loadPermissionSkills(newClass, config);
-        loadExperienceTypes(newClass, config);
+        loadPermittedSkills(newClass, config.getConfigurationSection("permitted-skills"));
+        loadPermissionSkills(newClass, config.getConfigurationSection("permission-skills"));
+        loadExperienceTypes(newClass, config.getStringList("experience-sources"));
 
         Double baseMaxHealth = config.getDouble("base-max-health", 20);
         Double maxHealthPerLevel = config.getDouble("max-health-per-level", 0);
@@ -183,8 +181,8 @@ public class HeroClassManager {
             strongParents.add(oldStyleParentName);
             this.strongParents.put(newClass, strongParents);
         } else {
-            strongParents.addAll(config.getStringList("parents.strong", new ArrayList<String>()));
-            Set<String> weakParents = new HashSet<String>(config.getStringList("parents.weak", new ArrayList<String>()));
+            strongParents.addAll(config.getStringList("parents.strong"));
+            Set<String> weakParents = new HashSet<String>(config.getStringList("parents.weak"));
             this.weakParents.put(newClass, weakParents);
             this.strongParents.put(newClass, strongParents);
         }
@@ -208,18 +206,19 @@ public class HeroClassManager {
         plugin.getServer().getPluginManager().addPermission(wildcardClassPermission);
     }
 
-    private void loadDamages(HeroClass newClass, ConfigurationNode config) {
+    private void loadDamages(HeroClass newClass, Configuration config) {
         String className = newClass.getName();
 
         // Load in item/weapon damages for this class
-        List<String> itemDamages = config.getKeys("item-damage");
+        ConfigurationSection section = config.getConfigurationSection("item-damage");
+        Set<String> itemDamages = section.getKeys(false);
         if (itemDamages == null || itemDamages.isEmpty()) {
             plugin.debugLog(Level.WARNING, className + " has no item damage section");
         } else {
             for (String materialName : itemDamages) {
                 Material material = Material.matchMaterial(materialName);
                 if (material != null) {
-                    int damage = config.getInt("item-damage." + materialName, 0);
+                    int damage = section.getInt(materialName, 0);
                     newClass.setItemDamage(material, damage);
                 } else {
                     Heroes.log(Level.WARNING, "Invalid material (" + material + ") defined for " + className);
@@ -228,7 +227,8 @@ public class HeroClassManager {
         }
 
         // Load in Projectile Damages for the class
-        List<String> projectileDamages = config.getKeys("projectile-damage");
+        section = config.getConfigurationSection("projectile-damage");
+        Set<String> projectileDamages = section.getKeys(false);
         if (projectileDamages == null || projectileDamages.isEmpty()) {
             plugin.debugLog(Level.WARNING, className + " has no projectile damage section");
         } else {
@@ -236,7 +236,7 @@ public class HeroClassManager {
                 try {
                     ProjectileType type = ProjectileType.matchProjectile(projectileName);
 
-                    int damage = config.getInt("projectile-damage." + projectileName, 0);
+                    int damage = section.getInt(projectileName, 0);
                     newClass.setProjectileDamage(type, damage);
                 } catch (IllegalArgumentException e) {
                     Heroes.log(Level.WARNING, "Invalid projectile type (" + projectileName + ") defined for " + className);
@@ -245,16 +245,15 @@ public class HeroClassManager {
         }
     }
 
-    private void loadWeapons(HeroClass newClass, ConfigurationNode config) {
+    private void loadWeapons(HeroClass newClass, List<String> weapons) {
         StringBuilder wLimits = new StringBuilder();
         String className = newClass.getName();
         // Get the list of allowed weapons for this class
-        List<String> weapon = config.getStringList("permitted-weapon", new ArrayList<String>());
-        if (weapon.isEmpty()) {
+        if (weapons.isEmpty()) {
             plugin.debugLog(Level.WARNING, className + " has no permitted-weapon section");
             return;
         }
-        for (String w : weapon) {
+        for (String w : weapons) {
             boolean matched = false;
             for (String s : Util.weapons) {
                 if (w.equals("*") || w.equalsIgnoreCase("ALL")) {
@@ -344,11 +343,10 @@ public class HeroClassManager {
         this.weakParents = null;
     }
 
-    private void loadArmor(HeroClass newClass, ConfigurationNode config) {
+    private void loadArmor(HeroClass newClass, List<String> armors) {
         StringBuilder aLimits = new StringBuilder();
         String className = newClass.getName();
         // Get the list of Allowed armors for this class
-        List<String> armors = config.getStringList("permitted-armor", new ArrayList<String>());
         if (armors.isEmpty()) {
             plugin.debugLog(Level.WARNING, className + " has no permitted-armor section");
             return;
@@ -372,10 +370,9 @@ public class HeroClassManager {
         plugin.debugLog(Level.INFO, "Allowed Armor - " + aLimits.toString());
     }
 
-    private void loadExperienceTypes(HeroClass newClass, ConfigurationNode config) {
+    private void loadExperienceTypes(HeroClass newClass, List<String> experienceNames) {
         String className = newClass.getName();
         // Get experience for each class
-        List<String> experienceNames = config.getStringList("experience-sources", null);
         Set<ExperienceType> experienceSources = EnumSet.noneOf(ExperienceType.class);
         if (experienceNames == null) {
             plugin.debugLog(Level.WARNING, className + " has no experience-sources section");
@@ -394,10 +391,10 @@ public class HeroClassManager {
         newClass.setExperienceSources(experienceSources);
     }
 
-    private void loadPermissionSkills(HeroClass newClass, ConfigurationNode config) {
+    private void loadPermissionSkills(HeroClass newClass, ConfigurationSection section) {
         String className = newClass.getName();
         // Load in the Permission-Skills
-        List<String> permissionSkillNames = config.getKeys("permission-skills");
+        Set<String> permissionSkillNames = section.getKeys(false);
         if (permissionSkillNames != null) {
             for (String skill : permissionSkillNames) {
                 // Ignore Overlapping Skill names that are already loaded as permitted-skills
@@ -410,13 +407,10 @@ public class HeroClassManager {
                         if (!plugin.getSkillManager().loadOutsourcedSkill(skill))
                             continue;
                     }
-                    ConfigurationNode skillSettings = Configuration.getEmptyNode();
-                    List<String> settings = config.getKeys("permission-skills." + skill);
-                    if (settings != null) {
-                        for (String key : settings) {
-                            skillSettings.setProperty(key, config.getProperty("permission-skills." + skill + "." + key));
-                        }
-                    }
+                    ConfigurationSection skillSettings = section.getConfigurationSection(skill);
+                    if (skillSettings == null)
+                        skillSettings = section.createSection(skill);
+                    
                     newClass.addSkill(skill, skillSettings);
 
                 } catch (IllegalArgumentException e) {
@@ -426,14 +420,14 @@ public class HeroClassManager {
         }
     }
 
-    private void loadPermittedSkills(HeroClass newClass, ConfigurationNode config) {
+    private void loadPermittedSkills(HeroClass newClass, ConfigurationSection section) {
         String className = newClass.getName();
         // Load in Permitted Skills for the class
-        if (config.getKeys("permitted-skills") == null) {
+        if (section.getKeys(false) == null) {
             plugin.debugLog(Level.WARNING, className + " has no permitted-skills section");
         } else {
             Set<String> skillNames = new HashSet<String>();
-            skillNames.addAll(config.getKeys("permitted-skills"));
+            skillNames.addAll(section.getKeys(false));
             boolean allSkills = false;
             for (String skillName : skillNames) {
                 if (skillName.equals("*") || skillName.toLowerCase().equals("all")) {
@@ -446,13 +440,10 @@ public class HeroClassManager {
                     continue;
                 }
 
-                ConfigurationNode skillSettings = Configuration.getEmptyNode();
-                List<String> settings = config.getKeys("permitted-skills." + skillName);
-                if (settings != null) {
-                    for (String key : settings) {
-                        skillSettings.setProperty(key, config.getProperty("permitted-skills." + skillName + "." + key));
-                    }
-                }
+                ConfigurationSection skillSettings = section.getConfigurationSection(skillName);
+                if (skillSettings == null)
+                    skillSettings = section.createSection(skillName);
+
                 newClass.addSkill(skillName, skillSettings);
             }
 
@@ -467,13 +458,9 @@ public class HeroClassManager {
                         continue;
                     }
 
-                    ConfigurationNode skillSettings = Configuration.getEmptyNode();
-                    List<String> settings = config.getKeys("permitted-skills." + skill.getName());
-                    if (settings != null) {
-                        for (String key : settings) {
-                            skillSettings.setProperty(key, config.getProperty("permitted-skills." + skill.getName() + "." + key));
-                        }
-                    }
+                    ConfigurationSection skillSettings = section.getConfigurationSection(skill.getName());
+                    if (skillSettings == null)
+                        skillSettings = section.createSection(skill.getName());
                     newClass.addSkill(skill.getName(), skillSettings);
                 }
             }

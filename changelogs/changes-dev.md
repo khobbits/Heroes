@@ -9,9 +9,11 @@ Version dev
 
 * Now using Vault for Economy & Permission hooks.
 * Adjusted XP methods so that the Level display operates properly in 1.0
+* MapPartyUI has been removed.
 
 ==== **API:** ====
 
 * removed hero.setExperience(double) and isMaster() - use isMaster(heroClass) and setExperience(heroClass, double)
+* The MapUI has been removed
 
 ==== **Skills:** ====

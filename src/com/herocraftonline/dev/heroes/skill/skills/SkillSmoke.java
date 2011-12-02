@@ -1,10 +1,10 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import org.bukkit.util.config.ConfigurationNode;
 
-import com.herocraftonline.dev.heroes.api.SkillResult;
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.api.SkillResult;
 import com.herocraftonline.dev.heroes.effects.common.InvisibleEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
@@ -27,11 +27,11 @@ public class SkillSmoke extends ActiveSkill {
     }
 
     @Override
-    public ConfigurationNode getDefaultConfig() {
-        ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty(Setting.DURATION.node(), 20000);
-        node.setProperty(Setting.APPLY_TEXT.node(), "%hero% vanished in a cloud of smoke!");
-        node.setProperty(Setting.EXPIRE_TEXT.node(), "%hero% reappeared!");
+    public ConfigurationSection getDefaultConfig() {
+        ConfigurationSection node = super.getDefaultConfig();
+        node.set(Setting.DURATION.node(), 20000);
+        node.set(Setting.APPLY_TEXT.node(), "%hero% vanished in a cloud of smoke!");
+        node.set(Setting.EXPIRE_TEXT.node(), "%hero% reappeared!");
         return node;
     }
 

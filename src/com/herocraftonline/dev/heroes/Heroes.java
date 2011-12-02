@@ -41,7 +41,6 @@ import com.herocraftonline.dev.heroes.command.commands.PartyChatCommand;
 import com.herocraftonline.dev.heroes.command.commands.PartyInviteCommand;
 import com.herocraftonline.dev.heroes.command.commands.PartyLeaveCommand;
 import com.herocraftonline.dev.heroes.command.commands.PartyModeCommand;
-import com.herocraftonline.dev.heroes.command.commands.PartyUICommand;
 import com.herocraftonline.dev.heroes.command.commands.PartyWhoCommand;
 import com.herocraftonline.dev.heroes.command.commands.PathsCommand;
 import com.herocraftonline.dev.heroes.command.commands.ProfessionCommand;
@@ -340,15 +339,14 @@ public class Heroes extends JavaPlugin {
         commandHandler.addCommand(new PartyWhoCommand(this));
         commandHandler.addCommand(new PartyLeaveCommand(this));
         commandHandler.addCommand(new PartyModeCommand(this));
-        commandHandler.addCommand(new PartyUICommand(this));
         commandHandler.addCommand(new PartyChatCommand(this));
         commandHandler.addCommand(new ConfigReloadCommand(this));
         commandHandler.addCommand(new HelpCommand(this));
         commandHandler.addCommand(new AdminExpCommand(this));
+        commandHandler.addCommand(new AdminLevelCommand(this));
 
 
         // Page 4
-        commandHandler.addCommand(new AdminLevelCommand(this));
         commandHandler.addCommand(new AdminClassCommand(this));
         commandHandler.addCommand(new AdminHealthCommand(this));
         commandHandler.addCommand(new HealthCommand(this));

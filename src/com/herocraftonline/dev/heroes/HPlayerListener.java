@@ -28,7 +28,6 @@ import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.effects.PeriodicEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.hero.HeroManager;
-import com.herocraftonline.dev.heroes.party.HeroParty;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Properties;
@@ -188,13 +187,6 @@ public class HPlayerListener extends PlayerListener {
                 hero.checkInventory();
             }
         });
-
-        if (!hero.hasParty())
-            return;
-        HeroParty party = hero.getParty();
-        if (!party.updateMapDisplay() && event.getItem().getItemStack().getType().toString().equalsIgnoreCase("MAP")) {
-            party.setUpdateMapDisplay(true);
-        }
     }
 
     @Override

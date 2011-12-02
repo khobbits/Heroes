@@ -2,10 +2,12 @@ package com.herocraftonline.dev.heroes.damage;
 
 import java.util.EnumMap;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.bukkit.Material;
+import org.bukkit.configuration.Configuration;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Egg;
@@ -17,7 +19,6 @@ import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.plugin.PluginManager;
-import org.bukkit.util.config.Configuration;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.SkillUseInfo;
@@ -92,65 +93,70 @@ public class DamageManager {
     }
 
     public void load(Configuration config) {
-        List<String> keys;
+        Set<String> keys;
 
         creatureHealth = new EnumMap<CreatureType, Integer>(CreatureType.class);
-        keys = config.getKeys("creature-health");
+        ConfigurationSection section = config.getConfigurationSection("creature-health");
+        keys = section.getKeys(false);
         if (keys != null) {
             for (String key : keys) {
                 CreatureType type = CreatureType.fromName(key);
                 if (type == null)
                     continue;
 
-                creatureHealth.put(type, config.getInt("creature-health." + key, 10));
+                creatureHealth.put(type, section.getInt(key, 10));
             }
         }
 
         creatureDamage = new EnumMap<CreatureType, Integer>(CreatureType.class);
-        keys = config.getKeys("creature-damage");
+        section = config.getConfigurationSection("creature-damage");
+        keys = section.getKeys(false);
         if (keys != null) {
             for (String key : keys) {
                 CreatureType type = CreatureType.fromName(key);
                 if (type == null)
                     continue;
 
-                creatureDamage.put(type, config.getInt("creature-damage." + key, 10));
+                creatureDamage.put(type, section.getInt(key, 10));
             }
         }
 
         itemDamage = new EnumMap<Material, Integer>(Material.class);
-        keys = config.getKeys("item-damage");
+        section = config.getConfigurationSection("item-damage");
+        keys = section.getKeys(false);
         if (keys != null) {
             for (String key : keys) {
                 Material item = Material.matchMaterial(key);
                 if (item == null)
                     continue;
 
-                itemDamage.put(item, config.getInt("item-damage." + key, 2));
+                itemDamage.put(item, section.getInt(key, 2));
             }
         }
 
         environmentalDamage = new EnumMap<DamageCause, Double>(DamageCause.class);
-        keys = config.getKeys("environmental-damage");
+        section = config.getConfigurationSection("environmental-damage");
+        keys = section.getKeys(false);
         if (keys != null) {
             for (String key : keys) {
                 try {
                     DamageCause cause = DamageCause.valueOf(key.toUpperCase());
-                    double damage = config.getDouble("environmental-damage." + key, 0.0);
+                    double damage = section.getDouble(key, 0.0);
                     environmentalDamage.put(cause, damage);
                 } catch (IllegalArgumentException e) {}
             }
         }
 
         projectileDamage = new EnumMap<ProjectileType, Integer>(ProjectileType.class);
-        keys = config.getKeys("projectile-damage");
+        section = config.getConfigurationSection("projectile-damage");
+        keys = section.getKeys(false);
         if (keys != null) {
             for (String key : keys) {
                 ProjectileType type = ProjectileType.valueOf(key.toUpperCase());
                 if (type == null)
                     continue;
 
-                projectileDamage.put(type, config.getInt("projectile-damage." + key, 0));
+                projectileDamage.put(type, section.getInt(key, 0));
             }
         }
     }

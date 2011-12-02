@@ -2,12 +2,12 @@ package com.herocraftonline.dev.heroes.skill.skills;
 
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import org.bukkit.util.config.ConfigurationNode;
 
+import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.SkillResult;
 import com.herocraftonline.dev.heroes.api.SkillResult.ResultType;
-import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.SkillType;
@@ -26,9 +26,9 @@ public class SkillPort extends ActiveSkill {
     }
 
     @Override
-    public ConfigurationNode getDefaultConfig() {
-        ConfigurationNode node = super.getDefaultConfig();
-        node.setProperty(Setting.RADIUS.node(), 10);
+    public ConfigurationSection getDefaultConfig() {
+        ConfigurationSection node = super.getDefaultConfig();
+        node.set(Setting.RADIUS.node(), 10);
         return node;
     }
 
@@ -37,7 +37,7 @@ public class SkillPort extends ActiveSkill {
         Player player = hero.getPlayer();
 
         if (args[0].equalsIgnoreCase("list")) {
-            for (String n : getConfig().getKeys()) {
+            for (String n : getConfig().getKeys(false)) {
                 String retrievedNode = getSetting(hero, n, (String) null);
                 if (retrievedNode != null && retrievedNode.split(":").length == 5) {
                     Messaging.send(player, "$1 - $2", n, retrievedNode);
