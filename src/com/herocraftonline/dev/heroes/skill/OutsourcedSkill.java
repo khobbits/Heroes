@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.logging.Level;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
@@ -41,7 +42,6 @@ public class OutsourcedSkill extends Skill {
 
     public OutsourcedSkill(Heroes plugin, String name) {
         super(plugin, name);
-        setConfig(getDefaultConfig());
         registerEvent(Type.CUSTOM_EVENT, new SkillHeroListener(), Priority.Monitor);
     }
 

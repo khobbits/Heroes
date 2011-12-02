@@ -70,6 +70,7 @@ public abstract class Skill extends BasicCommand {
      */
     public Skill(Heroes plugin, String name) {
         super(name);
+        config = SkillManager.allSkillsConfig.getConfigurationSection(getName());
         this.plugin = plugin;
     }
 
@@ -148,8 +149,6 @@ public abstract class Skill extends BasicCommand {
     public abstract boolean execute(CommandSender sender, String identifier, String[] args);
 
     public ConfigurationSection getConfig() {
-        if (config == null)
-            config = SkillManager.allSkillsConfig.getConfigurationSection(getName());
         return config;
     }
 
@@ -183,7 +182,7 @@ public abstract class Skill extends BasicCommand {
      */
     public boolean getSetting(Hero hero, String setting, boolean def) {
         if (hero == null)
-            return config.getBoolean(setting, def);
+            return getConfig().getBoolean(setting, def);
         int val1 = -1;
         int val2 = -1;
         
@@ -216,7 +215,7 @@ public abstract class Skill extends BasicCommand {
      */
     public double getSetting(Hero hero, String setting, double def, boolean lower) {
         if (hero == null)
-            return config.getDouble(setting, def);
+            return getConfig().getDouble(setting, def);
 
         double val1 = -1;
         double val2 = -1;
@@ -274,7 +273,7 @@ public abstract class Skill extends BasicCommand {
         else if (val2 != -1)
             return val2;
         else
-            return config.getInt(setting, def);
+            return getConfig().getInt(setting, def);
     }
 
     /**
@@ -292,7 +291,7 @@ public abstract class Skill extends BasicCommand {
      */
     public List<String> getSetting(Hero hero, String setting, List<String> def) {
         if (hero == null) {
-            List<String> list = config.getStringList(setting);
+            List<String> list = getConfig().getStringList(setting);
             return list != null ? list : def;
         }
 
@@ -333,13 +332,13 @@ public abstract class Skill extends BasicCommand {
      */
     public String getSetting(Hero hero, String setting, String def) {
         if (hero == null)
-            return config.getString(setting, def);
+            return getConfig().getString(setting, def);
         else if (hasSetting(hero.getHeroClass(), setting))
             return hero.getHeroClass().getSkillSettings(getName()).getString(setting, def);
         else if (hasSetting(hero.getSecondClass(), setting))
             return hero.getSecondClass().getSkillSettings(getName()).getString(setting, def);
         else
-            return config.getString(setting, def);
+            return getConfig().getString(setting, def);
     }
 
     /**
@@ -353,7 +352,7 @@ public abstract class Skill extends BasicCommand {
      */
     public List<String> getSettingKeys(Hero hero) {
         Set<String> keys = new HashSet<String>();
-        keys.addAll(config.getKeys(false));
+        keys.addAll(getConfig().getKeys(false));
 
         if (hasSection(hero.getHeroClass(), null)) {
             keys.addAll(hero.getHeroClass().getSkillSettings(getName()).getKeys(false));
@@ -376,7 +375,7 @@ public abstract class Skill extends BasicCommand {
     public List<String> getSettingKeys(Hero hero, String setting) {
         Set<String> keys = new HashSet<String>();
         
-        ConfigurationSection section = config.getConfigurationSection(setting);
+        ConfigurationSection section = getConfig().getConfigurationSection(setting);
         if (section != null)
             keys.addAll(section.getKeys(false));
         

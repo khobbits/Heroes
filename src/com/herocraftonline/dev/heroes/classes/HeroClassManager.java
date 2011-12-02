@@ -180,7 +180,7 @@ public class HeroClassManager {
         if (oldStyleParentName != null) {
             strongParents.add(oldStyleParentName);
             this.strongParents.put(newClass, strongParents);
-        } else {
+        } else if (config.isConfigurationSection("parents")) {
             List<String> list = config.getStringList("parents.strong");
             if (list != null)
                 strongParents.addAll(list);

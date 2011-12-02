@@ -38,7 +38,7 @@ public class SkillManager {
     public static Configuration allSkillsConfig;
     public static Configuration skillConfig;
     public static Configuration defaultSkillConfig;
-    
+
     public SkillManager(Heroes plugin) {
         skills = new LinkedHashMap<String, Skill>();
         identifiers = new HashMap<String, Skill>();
@@ -97,15 +97,16 @@ public class SkillManager {
         }
         return skills.get(name.toLowerCase());
     }
-    
+
     public boolean loadOutsourcedSkill(String name) {
         if (name == null || skills.get(name.toLowerCase()) != null)
             return true;
-        
+
         OutsourcedSkill oSkill = new OutsourcedSkill(plugin, name);
-        loadSkillConfig(oSkill);
         ConfigurationSection config = oSkill.getConfig();
-        List<String> perms = config.getStringList("permissions");
+        List<String> perms = new ArrayList<String>();
+        if (config != null)
+            perms = config.getStringList("permissions");
         if (perms.isEmpty()) {
             Heroes.log(Level.SEVERE, "There are no permissions defined for " + oSkill.getName());
             return false;
@@ -241,10 +242,19 @@ public class SkillManager {
         addSkill(skill);
         return true;
     }
-    
+
     public void loadSkillConfig(Skill skill) {
+        if (skill instanceof OutsourcedSkill)
+            return;
         ConfigurationSection dSection = skill.getDefaultConfig();
-        defaultSkillConfig.createSection(skill.getName(), dSection.getValues(true));
+        ConfigurationSection newSection = defaultSkillConfig.createSection(skill.getName());
+        for (String key : dSection.getKeys(true)) {
+            if (dSection.isConfigurationSection(key)) {
+                newSection.createSection(key);
+                continue;
+            }
+            newSection.set(key, dSection.get(key));
+        }
         skill.init();
     }
 }
