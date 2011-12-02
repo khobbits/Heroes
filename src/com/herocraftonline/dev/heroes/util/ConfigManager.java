@@ -26,20 +26,23 @@ public class ConfigManager {
     protected final Heroes plugin;
     protected static File classConfigFolder;
     protected static File expConfigFile;
-    protected static File skillConfigFile;
+    public static File skillConfigFile;
     protected static File outsourcedSkillConfigFile;
     protected static File damageConfigFile;
+    protected static File recipesConfigFile;
 
     private static Configuration damageConfig;
     private static Configuration expConfig;
 
     public ConfigManager(Heroes plugin) {
         this.plugin = plugin;
-        classConfigFolder = new File(plugin.getDataFolder() + File.separator + "classes");
-        expConfigFile = new File(plugin.getDataFolder(), "experience.yml");
-        skillConfigFile = new File(plugin.getDataFolder(), "skills.yml");
-        outsourcedSkillConfigFile = new File(plugin.getDataFolder(), "permission-skills.yml");
-        damageConfigFile = new File(plugin.getDataFolder(), "damages.yml");
+        File dataFolder = plugin.getDataFolder();
+        classConfigFolder = new File(dataFolder + File.separator + "classes");
+        expConfigFile = new File(dataFolder, "experience.yml");
+        skillConfigFile = new File(dataFolder, "skills.yml");
+        outsourcedSkillConfigFile = new File(dataFolder, "permission-skills.yml");
+        damageConfigFile = new File(dataFolder, "damages.yml");
+        recipesConfigFile = new File(dataFolder, "recipes.yml");
 
         // Load the default Configuration for the skill Manager
         SkillManager.skillConfig = YamlConfiguration.loadConfiguration(skillConfigFile);

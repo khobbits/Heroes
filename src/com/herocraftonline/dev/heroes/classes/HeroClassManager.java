@@ -21,6 +21,7 @@ import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
 import com.herocraftonline.dev.heroes.damage.DamageManager.ProjectileType;
 import com.herocraftonline.dev.heroes.skill.OutsourcedSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
+import com.herocraftonline.dev.heroes.skill.SkillManager;
 import com.herocraftonline.dev.heroes.util.Properties;
 import com.herocraftonline.dev.heroes.util.Util;
 
@@ -101,10 +102,14 @@ public class HeroClassManager {
                 }
             }
         }
-
+        
         // After all classes are loaded we need to link them all together
         checkClassHeirarchy();
 
+        // We also need to resave the defaults for the skill configurations in case the file was empty
+        SkillManager.saveSkillConfig();
+        SkillManager.allSkillsConfig.options().copyDefaults(true);
+        
         if (defaultClass == null) {
             Heroes.log(Level.SEVERE, "You are missing a default class, this will cause A LOT of issues!");
         }

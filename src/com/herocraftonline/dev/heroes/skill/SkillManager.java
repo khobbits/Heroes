@@ -2,6 +2,7 @@ package com.herocraftonline.dev.heroes.skill;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
 import java.net.MalformedURLException;
@@ -23,8 +24,10 @@ import java.util.logging.Level;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.util.ConfigManager;
 
 public class SkillManager {
 
@@ -256,5 +259,14 @@ public class SkillManager {
             newSection.set(key, dSection.get(key));
         }
         skill.init();
+    }
+
+    public static void saveSkillConfig() {
+        skillConfig.options().copyDefaults(true);
+        try {
+            ((FileConfiguration) skillConfig).save(ConfigManager.skillConfigFile);
+        } catch (IOException e) {
+            Heroes.log(Level.WARNING, "Unable to save default skills file!");
+        }
     }
 }
