@@ -195,7 +195,7 @@ public class HeroClassManager {
 
         return newClass;
     }
-    
+
     private void registerClassPermissions() {
         Map<String, Boolean> classPermissions = new HashMap<String, Boolean>();
         for (HeroClass heroClass : classes) {
@@ -211,35 +211,39 @@ public class HeroClassManager {
 
         // Load in item/weapon damages for this class
         ConfigurationSection section = config.getConfigurationSection("item-damage");
-        Set<String> itemDamages = section.getKeys(false);
-        if (itemDamages == null || itemDamages.isEmpty()) {
-            plugin.debugLog(Level.WARNING, className + " has no item damage section");
-        } else {
-            for (String materialName : itemDamages) {
-                Material material = Material.matchMaterial(materialName);
-                if (material != null) {
-                    int damage = section.getInt(materialName, 0);
-                    newClass.setItemDamage(material, damage);
-                } else {
-                    Heroes.log(Level.WARNING, "Invalid material (" + material + ") defined for " + className);
+        if (section != null) {
+            Set<String> itemDamages = section.getKeys(false);
+            if (itemDamages == null || itemDamages.isEmpty()) {
+                plugin.debugLog(Level.WARNING, className + " has no item damage section");
+            } else {
+                for (String materialName : itemDamages) {
+                    Material material = Material.matchMaterial(materialName);
+                    if (material != null) {
+                        int damage = section.getInt(materialName, 0);
+                        newClass.setItemDamage(material, damage);
+                    } else {
+                        Heroes.log(Level.WARNING, "Invalid material (" + material + ") defined for " + className);
+                    }
                 }
             }
         }
 
         // Load in Projectile Damages for the class
         section = config.getConfigurationSection("projectile-damage");
-        Set<String> projectileDamages = section.getKeys(false);
-        if (projectileDamages == null || projectileDamages.isEmpty()) {
-            plugin.debugLog(Level.WARNING, className + " has no projectile damage section");
-        } else {
-            for (String projectileName : projectileDamages) {
-                try {
-                    ProjectileType type = ProjectileType.matchProjectile(projectileName);
+        if (section != null) {
+            Set<String> projectileDamages = section.getKeys(false);
+            if (projectileDamages == null || projectileDamages.isEmpty()) {
+                plugin.debugLog(Level.WARNING, className + " has no projectile damage section");
+            } else {
+                for (String projectileName : projectileDamages) {
+                    try {
+                        ProjectileType type = ProjectileType.matchProjectile(projectileName);
 
-                    int damage = section.getInt(projectileName, 0);
-                    newClass.setProjectileDamage(type, damage);
-                } catch (IllegalArgumentException e) {
-                    Heroes.log(Level.WARNING, "Invalid projectile type (" + projectileName + ") defined for " + className);
+                        int damage = section.getInt(projectileName, 0);
+                        newClass.setProjectileDamage(type, damage);
+                    } catch (IllegalArgumentException e) {
+                        Heroes.log(Level.WARNING, "Invalid projectile type (" + projectileName + ") defined for " + className);
+                    }
                 }
             }
         }
@@ -392,6 +396,8 @@ public class HeroClassManager {
     }
 
     private void loadPermissionSkills(HeroClass newClass, ConfigurationSection section) {
+        if (section == null)
+            return;
         String className = newClass.getName();
         // Load in the Permission-Skills
         Set<String> permissionSkillNames = section.getKeys(false);
@@ -410,7 +416,7 @@ public class HeroClassManager {
                     ConfigurationSection skillSettings = section.getConfigurationSection(skill);
                     if (skillSettings == null)
                         skillSettings = section.createSection(skill);
-                    
+
                     newClass.addSkill(skill, skillSettings);
 
                 } catch (IllegalArgumentException e) {
@@ -421,6 +427,8 @@ public class HeroClassManager {
     }
 
     private void loadPermittedSkills(HeroClass newClass, ConfigurationSection section) {
+        if (section == null)
+            return;
         String className = newClass.getName();
         // Load in Permitted Skills for the class
         if (section.getKeys(false) == null) {

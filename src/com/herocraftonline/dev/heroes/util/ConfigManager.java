@@ -29,10 +29,10 @@ public class ConfigManager {
     protected static File skillConfigFile;
     protected static File outsourcedSkillConfigFile;
     protected static File damageConfigFile;
-    
+
     private static Configuration damageConfig;
     private static Configuration expConfig;
-    
+
     public ConfigManager(Heroes plugin) {
         this.plugin = plugin;
         classConfigFolder = new File(plugin.getDataFolder() + File.separator + "classes");
@@ -40,7 +40,7 @@ public class ConfigManager {
         skillConfigFile = new File(plugin.getDataFolder(), "skills.yml");
         outsourcedSkillConfigFile = new File(plugin.getDataFolder(), "permission-skills.yml");
         damageConfigFile = new File(plugin.getDataFolder(), "damages.yml");
-        
+
         // Load the default Configuration for the skill Manager
         SkillManager.skillConfig = YamlConfiguration.loadConfiguration(skillConfigFile);
         SkillManager.defaultSkillConfig = new MemoryConfiguration();
@@ -69,7 +69,7 @@ public class ConfigManager {
         }
         plugin.getDamageManager().load(damageConfig);
 
-            
+
         expConfig = YamlConfiguration.loadConfiguration(expConfigFile);
         defConfigStream = plugin.getResource("defaults" + File.separator + "experience.yml");
         if (defConfigStream != null) {
@@ -140,6 +140,8 @@ public class ConfigManager {
 
     private void loadExperience() {
         ConfigurationSection section = expConfig.getConfigurationSection("killing");
+        if (section == null)
+            return;
         Set<String> keys = section.getKeys(false);
         if (keys != null) {
             for (String item : keys) {
@@ -165,8 +167,8 @@ public class ConfigManager {
 
     private Map<Material, Double> loadMaterialExperience(ConfigurationSection section) {
         Map<Material, Double> expMap = new HashMap<Material, Double>();
-        Set<String> keys = section.getKeys(false);
-        if (keys != null) {
+        if (section != null) {
+            Set<String> keys = section.getKeys(false);
             for (String item : keys) {
                 double exp = section.getDouble(item, 0);
                 Material type = Material.matchMaterial(item);

@@ -97,66 +97,76 @@ public class DamageManager {
 
         creatureHealth = new EnumMap<CreatureType, Integer>(CreatureType.class);
         ConfigurationSection section = config.getConfigurationSection("creature-health");
-        keys = section.getKeys(false);
-        if (keys != null) {
-            for (String key : keys) {
-                CreatureType type = CreatureType.fromName(key);
-                if (type == null)
-                    continue;
+        if (section != null) {
+            keys = section.getKeys(false);
+            if (keys != null) {
+                for (String key : keys) {
+                    CreatureType type = CreatureType.fromName(key);
+                    if (type == null)
+                        continue;
 
-                creatureHealth.put(type, section.getInt(key, 10));
+                    creatureHealth.put(type, section.getInt(key, 10));
+                }
             }
         }
 
         creatureDamage = new EnumMap<CreatureType, Integer>(CreatureType.class);
         section = config.getConfigurationSection("creature-damage");
-        keys = section.getKeys(false);
-        if (keys != null) {
-            for (String key : keys) {
-                CreatureType type = CreatureType.fromName(key);
-                if (type == null)
-                    continue;
+        if (section != null) {
+            keys = section.getKeys(false);
+            if (keys != null) {
+                for (String key : keys) {
+                    CreatureType type = CreatureType.fromName(key);
+                    if (type == null)
+                        continue;
 
-                creatureDamage.put(type, section.getInt(key, 10));
+                    creatureDamage.put(type, section.getInt(key, 10));
+                }
             }
         }
 
         itemDamage = new EnumMap<Material, Integer>(Material.class);
         section = config.getConfigurationSection("item-damage");
-        keys = section.getKeys(false);
-        if (keys != null) {
-            for (String key : keys) {
-                Material item = Material.matchMaterial(key);
-                if (item == null)
-                    continue;
+        if (section != null) {
+            keys = section.getKeys(false);
+            if (keys != null) {
+                for (String key : keys) {
+                    Material item = Material.matchMaterial(key);
+                    if (item == null)
+                        continue;
 
-                itemDamage.put(item, section.getInt(key, 2));
+                    itemDamage.put(item, section.getInt(key, 2));
+                }
             }
         }
 
         environmentalDamage = new EnumMap<DamageCause, Double>(DamageCause.class);
         section = config.getConfigurationSection("environmental-damage");
-        keys = section.getKeys(false);
-        if (keys != null) {
-            for (String key : keys) {
-                try {
-                    DamageCause cause = DamageCause.valueOf(key.toUpperCase());
-                    double damage = section.getDouble(key, 0.0);
-                    environmentalDamage.put(cause, damage);
-                } catch (IllegalArgumentException e) {}
+        if (section != null) {
+            keys = section.getKeys(false);
+            if (keys != null) {
+                for (String key : keys) {
+                    try {
+                        DamageCause cause = DamageCause.valueOf(key.toUpperCase());
+                        double damage = section.getDouble(key, 0.0);
+                        environmentalDamage.put(cause, damage);
+                    } catch (IllegalArgumentException e) {}
+                }
             }
         }
 
         projectileDamage = new EnumMap<ProjectileType, Integer>(ProjectileType.class);
         section = config.getConfigurationSection("projectile-damage");
-        keys = section.getKeys(false);
-        if (keys != null) {
-            for (String key : keys) {
-                ProjectileType type = ProjectileType.valueOf(key.toUpperCase());
-                if (type == null)
-                    continue;
+        if (section != null) {
+            keys = section.getKeys(false);
+            if (keys != null) {
+                for (String key : keys) {
+                    ProjectileType type = ProjectileType.valueOf(key.toUpperCase());
+                    if (type == null)
+                        continue;
 
-                projectileDamage.put(type, section.getInt(key, 0));
+                    projectileDamage.put(type, section.getInt(key, 0));
+                }
             }
         }
     }

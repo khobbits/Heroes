@@ -65,7 +65,7 @@ public class HeroClass {
         maxHealthPerLevel = 0;
         maxLevel = 1;
         cost = 0;
-        skillConfig.addDefaults(SkillManager.allSkillsConfig);
+        skillConfig.setDefaults(SkillManager.allSkillsConfig);
     }
 
     protected void addAllowedArmor(Material armor) {
