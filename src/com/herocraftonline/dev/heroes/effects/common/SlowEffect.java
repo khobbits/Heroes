@@ -46,13 +46,13 @@ public class SlowEffect extends ExpirableEffect {
     @Override
     public void apply(Creature creature) {
         super.apply(creature);
-        broadcast(creature.getLocation(), applyText, Messaging.getCreatureName(creature), applier.getPlayer().getDisplayName());
+        broadcast(creature.getLocation(), applyText, Messaging.getLivingEntityName(creature), applier.getPlayer().getDisplayName());
     }
     
     @Override
     public void remove(Creature creature) {
         super.remove(creature);
-        broadcast(creature.getLocation(), expireText, Messaging.getCreatureName(creature));
+        broadcast(creature.getLocation(), expireText, Messaging.getLivingEntityName(creature));
     }
 
 }

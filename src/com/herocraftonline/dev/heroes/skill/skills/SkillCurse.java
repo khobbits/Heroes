@@ -89,7 +89,7 @@ public class SkillCurse extends TargettedSkill {
         @Override
         public void apply(Creature creature) {
             super.apply(creature);
-            broadcast(creature.getLocation(), applyText, Messaging.getCreatureName(creature).toLowerCase());
+            broadcast(creature.getLocation(), applyText, Messaging.getLivingEntityName(creature).toLowerCase());
         }
 
         @Override
@@ -106,7 +106,7 @@ public class SkillCurse extends TargettedSkill {
         @Override
         public void remove(Creature creature) {
             super.remove(creature);
-            broadcast(creature.getLocation(), expireText, Messaging.getCreatureName(creature).toLowerCase());
+            broadcast(creature.getLocation(), expireText, Messaging.getLivingEntityName(creature).toLowerCase());
         }
 
         @Override
@@ -160,7 +160,7 @@ public class SkillCurse extends TargettedSkill {
                     CurseEffect cEffect = (CurseEffect) plugin.getEffectManager().getCreatureEffect(creature, "Curse");
                     if (Util.rand.nextDouble() < cEffect.missChance) {
                         event.setCancelled(true);
-                        broadcast(creature.getLocation(), missText, Messaging.getCreatureName(creature).toLowerCase());
+                        broadcast(creature.getLocation(), missText, Messaging.getLivingEntityName(creature).toLowerCase());
                     }
                 }
             }

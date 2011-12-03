@@ -66,7 +66,7 @@ public class SkillWeb extends TargettedSkill {
         if (target instanceof Player) {
             name = ((Player) target).getDisplayName();
         } else if (target instanceof Creature) {
-            name = Messaging.getCreatureName((Creature) target).toLowerCase();
+            name = Messaging.getLivingEntityName((Creature) target).toLowerCase();
         }
 
         broadcast(player.getLocation(), applyText, player.getDisplayName(), name);

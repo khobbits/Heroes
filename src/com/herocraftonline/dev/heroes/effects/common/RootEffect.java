@@ -33,7 +33,7 @@ public class RootEffect extends PeriodicExpirableEffect {
         y = location.getY();
         z = location.getZ();
 
-        broadcast(location, applyText, Messaging.getCreatureName(creature));
+        broadcast(location, applyText, Messaging.getLivingEntityName(creature));
     }
 
     @Override
@@ -52,7 +52,7 @@ public class RootEffect extends PeriodicExpirableEffect {
     @Override
     public void remove(Creature creature) {
         super.remove(creature);
-        broadcast(creature.getLocation(), expireText, Messaging.getCreatureName(creature));
+        broadcast(creature.getLocation(), expireText, Messaging.getLivingEntityName(creature));
     }
 
     @Override

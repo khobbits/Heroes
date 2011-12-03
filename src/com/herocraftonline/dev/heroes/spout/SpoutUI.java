@@ -153,7 +153,7 @@ public class SpoutUI {
                 }
             }
             if (target instanceof Creature) {
-                name += Messaging.getCreatureName((Creature) target);
+                name += Messaging.getLivingEntityName((Creature) target);
             } else {
                 name += "Unknown";
             }

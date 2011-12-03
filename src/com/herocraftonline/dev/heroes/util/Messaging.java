@@ -2,22 +2,27 @@ package com.herocraftonline.dev.heroes.util;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Blaze;
 import org.bukkit.entity.CaveSpider;
 import org.bukkit.entity.Chicken;
 import org.bukkit.entity.Cow;
-import org.bukkit.entity.Creature;
 import org.bukkit.entity.Creeper;
+import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.Enderman;
 import org.bukkit.entity.Ghast;
 import org.bukkit.entity.Giant;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.MagmaCube;
 import org.bukkit.entity.Pig;
 import org.bukkit.entity.PigZombie;
 import org.bukkit.entity.Sheep;
 import org.bukkit.entity.Silverfish;
 import org.bukkit.entity.Skeleton;
 import org.bukkit.entity.Slime;
+import org.bukkit.entity.Snowman;
 import org.bukkit.entity.Spider;
 import org.bukkit.entity.Squid;
+import org.bukkit.entity.Villager;
 import org.bukkit.entity.Wolf;
 import org.bukkit.entity.Zombie;
 
@@ -84,40 +89,48 @@ public final class Messaging {
         return createExperienceBar((int) hero.getExperience(heroClass), Properties.getExperience(level), Properties.getExperience(level + 1));
     }
 
-    public static String getCreatureName(Creature creature) {
-        if (creature instanceof CaveSpider)
+    public static String getLivingEntityName(LivingEntity lEntity) {
+        if (lEntity instanceof Blaze)
+            return "Blaze";
+        else if (lEntity instanceof CaveSpider)
             return "Cave Spider";
-        else if (creature instanceof Cow)
+        else if (lEntity instanceof Cow)
             return "Cow";
-        else if (creature instanceof Chicken)
+        else if (lEntity instanceof Chicken)
             return "Chicken";
-        else if (creature instanceof Creeper)
+        else if (lEntity instanceof Creeper)
             return "Creeper";
-        else if (creature instanceof Enderman)
+        else if (lEntity instanceof EnderDragon)
+            return "Ender Dragon";
+        else if (lEntity instanceof Enderman)
             return "Enderman";
-        else if (creature instanceof Ghast)
+        else if (lEntity instanceof Ghast)
             return "Ghast";
-        else if (creature instanceof Giant)
+        else if (lEntity instanceof Giant)
             return "Giant";
-        else if (creature instanceof Pig)
+        else if (lEntity instanceof Pig)
             return "Pig";
-        else if (creature instanceof PigZombie)
+        else if (lEntity instanceof PigZombie)
             return "Pig Zombie";
-        else if (creature instanceof Sheep)
+        else if (lEntity instanceof Sheep)
             return "Sheep";
-        else if (creature instanceof Skeleton)
+        else if (lEntity instanceof Skeleton)
             return "Skeleton";
-        else if (creature instanceof Silverfish)
+        else if (lEntity instanceof Silverfish)
             return "Silverfish";
-        else if (creature instanceof Slime)
+        else if (lEntity instanceof Slime)
             return "Slime";
-        else if (creature instanceof Spider)
+        else if (lEntity instanceof Snowman)
+            return "Snowman";
+        else if (lEntity instanceof Spider)
             return "Spider";
-        else if (creature instanceof Squid)
+        else if (lEntity instanceof Squid)
             return "Squid";
-        else if (creature instanceof Wolf)
+        else if (lEntity instanceof Wolf)
             return "Wolf";
-        else if (creature instanceof Zombie)
+        else if (lEntity instanceof Villager)
+            return "Villager";
+        else if (lEntity instanceof Zombie)
             return "Zombie";
         else
             return null;

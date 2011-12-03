@@ -99,7 +99,7 @@ public class HeroesDamageListener extends EntityListener {
                     if (defender instanceof Player)
                         skillInfo.getSkill().broadcast(defender.getLocation(), "$1 has resisted $2", ((Player) defender).getDisplayName(), skillInfo.getSkill().getName());
                     if (defender instanceof Creature)
-                        skillInfo.getSkill().broadcast(defender.getLocation(), "$1 has resisted $2", Messaging.getCreatureName((Creature) defender), skillInfo.getSkill().getName());
+                        skillInfo.getSkill().broadcast(defender.getLocation(), "$1 has resisted $2", Messaging.getLivingEntityName((Creature) defender), skillInfo.getSkill().getName());
                     event.setCancelled(true);
                     return;
                 }
