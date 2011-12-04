@@ -11,7 +11,6 @@ leveling:
     spawnCampRadius: 7 #how close to the spawner the creature needs to be to deny xp
     spawnCampExpMult: .5 #if noSpawnCamp is true, all xp gained from killing is multiplied by this number. setting to 0 gives no xp.
     resetOnDeath: false
-    orbExp: false
     pvpLevelRange: 50 #Level that players must be within to PvP with each other
 classes:
     swapcost: 0 #cost to swap

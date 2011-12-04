@@ -111,9 +111,7 @@ public class HEntityListener extends EntityListener {
         Player attacker = getAttacker(defender.getLastDamageCause());
         HeroManager heroManager = plugin.getHeroManager();
 
-        if (!prop.orbExp)  {
-            event.setDroppedExp(0);
-        }
+        event.setDroppedExp(0);
         
         if (defender instanceof Player) {
             Player player = (Player) defender;

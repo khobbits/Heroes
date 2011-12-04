@@ -132,7 +132,6 @@ public class Properties {
         spawnCampExpMult = section.getDouble("spawnCampExpMult", .5);
         resetOnDeath = section.getBoolean("resetOnDeath", false);
         pvpLevelRange = section.getInt("pvpLevelRange", 50);
-        orbExp = section.getBoolean("orbExp", false);
         calcExp();
     }
     
