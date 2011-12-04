@@ -104,6 +104,8 @@ public class Properties {
     }
     
     private void loadBedConfig(ConfigurationSection section) {
+        if (section == null)
+            return;
         bedHeal = section.getBoolean("bedHeal", true);
         healInterval = section.getInt("healInterval", 30);
         healPercent = section.getInt("healPercent", 5);
@@ -115,6 +117,8 @@ public class Properties {
     }
 
     private void loadLevelConfig(ConfigurationSection section) {
+        if (section == null)
+            return;
         power = section.getDouble("power", 1.03);
         maxExp = section.getInt("maxExperience", 90000);
         maxLevel = section.getInt("maxLevel", 20);
@@ -133,6 +137,8 @@ public class Properties {
     }
     
     private void loadClassConfig(ConfigurationSection section) {
+        if (section == null)
+            return;
         prefixClassName = section.getBoolean("prefixClassName", false);
         resetExpOnClassChange = section.getBoolean("resetExpOnClassChange", true);
         resetMasteryOnClassChange = section.getBoolean("resetMasteryOnClassChange", false);
@@ -147,6 +153,8 @@ public class Properties {
     }
 
     private void loadManaConfig(ConfigurationSection section) {
+        if (section == null)
+            return;
         manaRegenInterval = section.getInt("regenInterval", 5);
         manaRegenPercent = section.getInt("regenPercent", 5);
         // Out of bounds check
@@ -156,12 +164,16 @@ public class Properties {
     }
 
     private void loadMapConfig(ConfigurationSection section) {
+        if (section == null)
+            return;
         mapUI = section.getBoolean("enabled", false);
         mapID = (byte) section.getInt("id", 0);
         mapPacketInterval = section.getInt("packetinterval", 20);
     }
     
     private void loadProperties(ConfigurationSection section) {
+        if (section == null)
+            return;
         storageType = section.getString("storage-type");
         iConomy = section.getBoolean("iConomy", false);
         debug = section.getBoolean("debug", false);
@@ -172,6 +184,8 @@ public class Properties {
     }
 
     private void loadWorldConfig(ConfigurationSection section) {
+        if (section == null)
+            return;
         List<String> worlds = section.getStringList("disabledWorlds");
         disabledWorlds.addAll(worlds);
     }
