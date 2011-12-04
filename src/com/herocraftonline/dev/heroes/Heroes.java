@@ -214,8 +214,12 @@ public class Heroes extends JavaPlugin {
         // Call our function to setup Heroes Commands.
         registerCommands();
         // Perform the Permissions check.
-        setupPermissions();
-        // Perform Economy Tests
+        if (!setupPermissions()) {
+            log.warning("Heroes requires Vault! Please install it to use Heroes!");
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
+        
         setupEconomy();
         log(Level.INFO, "version " + getDescription().getVersion() + " is enabled!");
 
@@ -228,28 +232,6 @@ public class Heroes extends JavaPlugin {
             // Make sure all the hero's are loaded and that we check inventories
             heroManager.getHero(player).checkInventory();
         }
-
-        // Set the Party UI map to a nice splash screen.
-        /*
-        if (properties.mapUI) {
-            MapAPI mapAPI = new MapAPI();
-            short mapId = properties.mapID;
-
-            BufferedImage image = null;
-            try {
-                image = ImageIO.read(new File(this.getDataFolder(), "heroes.png"));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            byte[] pixels = ColorMap.imageToBytes(image);
-
-            World world = this.getServer().getWorlds().get(0);
-            MapInfo info = mapAPI.loadMap(world, mapId);
-            info.setDimension((byte) 9);
-            info.setData(pixels);
-            mapAPI.saveMap(world, mapId, info);
-        }
-        */
     }
 
     @Override
@@ -274,7 +256,10 @@ public class Heroes extends JavaPlugin {
     /**
      * Perform a Permissions check and setup Permissions if found.
      */
-    public void setupPermissions() {
+    public boolean setupPermissions() {
+        if (getServer().getPluginManager().getPlugin("Vault") == null)
+            return false;
+        
         RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
         if (rsp != null)
             perms = rsp.getProvider();
@@ -294,6 +279,7 @@ public class Heroes extends JavaPlugin {
                 hero.setHeroClass(heroClassManager.getDefaultClass(), false);
             }
         }
+        return perms != null;
     }
 
     /**

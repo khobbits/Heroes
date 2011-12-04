@@ -72,7 +72,6 @@ public class ConfigManager {
         }
         plugin.getDamageManager().load(damageConfig);
 
-
         expConfig = YamlConfiguration.loadConfiguration(expConfigFile);
         defConfigStream = plugin.getResource("defaults" + File.separator + "experience.yml");
         if (defConfigStream != null) {
