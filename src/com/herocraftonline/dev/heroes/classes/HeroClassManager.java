@@ -439,15 +439,15 @@ public class HeroClassManager {
     }
 
     private void loadPermittedSkills(HeroClass newClass, ConfigurationSection section) {
-        if (section == null)
+        if (section == null) {
             return;
+        }
         String className = newClass.getName();
+        Set<String> skillNames = section.getKeys(false);
         // Load in Permitted Skills for the class
-        if (section.getKeys(false) == null) {
-            plugin.debugLog(Level.WARNING, className + " has no permitted-skills section");
+        if (skillNames.isEmpty()) {
+            Heroes.log(Level.WARNING, className + " has no permitted-skills section");
         } else {
-            Set<String> skillNames = new HashSet<String>();
-            skillNames.addAll(section.getKeys(false));
             boolean allSkills = false;
             for (String skillName : skillNames) {
                 if (skillName.equals("*") || skillName.toLowerCase().equals("all")) {

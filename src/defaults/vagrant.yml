@@ -9,7 +9,7 @@ permitted-armor:
 permitted-weapon:
 - '*'
 permitted-skills:
-  ALL:
+  ALL: true
 experience-sources:
 - KILLING
 permission-skills:
