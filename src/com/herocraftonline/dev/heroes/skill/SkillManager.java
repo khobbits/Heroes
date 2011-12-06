@@ -253,7 +253,7 @@ public class SkillManager {
         ConfigurationSection newSection = defaultSkillConfig.createSection(skill.getName());
         for (String key : dSection.getKeys(true)) {
             if (dSection.isConfigurationSection(key)) {
-                newSection.createSection(key);
+            	//Skip section as they would overwrite data here
                 continue;
             }
             newSection.set(key, dSection.get(key));
