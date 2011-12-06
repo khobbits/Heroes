@@ -89,7 +89,13 @@ public class HeroClassManager {
         }
         for (File f : file.listFiles()) {
             if (f.isFile() && f.getName().contains(".yml")) {
-                HeroClass newClass = loadClass(f);
+            	HeroClass newClass = null;
+            	//TODO: figure out why NPEs are happening here, and fix
+                try {
+                	newClass = loadClass(f);
+                } catch (Exception e) {
+                	e.printStackTrace();
+                }
                 if (newClass == null) {
                     Heroes.log(Level.WARNING, "Attempted to load " + f.getName() + " but failed. Skipping.");
                     continue;
@@ -124,7 +130,7 @@ public class HeroClassManager {
      * @param file
      * @return the HeroClass loaded - or null if there was an error
      */
-    private HeroClass loadClass(File file) {
+    private HeroClass loadClass(File file) throws Exception {
         Configuration config = YamlConfiguration.loadConfiguration(file);
         String className = config.getString("name");
         if (className == null) {
