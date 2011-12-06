@@ -1,3 +1,17 @@
+fishing: 1
+farming:
+    crops: 1
+    sugar_cane_block: 1
+    melon: 2
+    pumpkin: 2
+    pumpkin_stem: .2
+    melon_stem: .2
+    vine: .2
+    huge_mushroom_1: .1
+    huge_mushroom_2: .1
+    red_mushroom: 1
+    brown_mushroom: 1
+    long_grass: .1
 killing:
     chicken: 1
     cow: 1
@@ -39,6 +53,8 @@ mining:
     stone: 1
 logging:
     log: 3
+    cactus: 1
+    sapling: .1
 crafting:
     Arrow: 1
     Bed: 1
