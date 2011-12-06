@@ -1,6 +1,6 @@
 package com.herocraftonline.dev.heroes.effects;
 
-import org.bukkit.entity.Creature;
+import org.bukkit.entity.LivingEntity;
 
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
@@ -31,8 +31,8 @@ public class PeriodicExpirableEffect extends ExpirableEffect implements Periodic
     }
 
     @Override
-    public void remove(Creature creature) {
-        super.remove(creature);
+    public void remove(LivingEntity lEntity) {
+        super.remove(lEntity);
     }
 
     @Override
@@ -41,7 +41,7 @@ public class PeriodicExpirableEffect extends ExpirableEffect implements Periodic
     }
 
     @Override
-    public void tick(Creature creature) {
+    public void tick(LivingEntity lEntity) {
         lastTickTime = System.currentTimeMillis();
     }
 

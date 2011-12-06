@@ -7,7 +7,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import org.bukkit.entity.Creature;
+import org.bukkit.entity.LivingEntity;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.hero.Hero;
@@ -17,7 +17,7 @@ public class EffectManager {
     private Set<ManagedEffect> managedEffects = new HashSet<ManagedEffect>();
     private Set<ManagedEffect> pendingRemovals = new HashSet<ManagedEffect>();
     private Set<ManagedEffect> pendingAdditions = new HashSet<ManagedEffect>();
-    private Map<Creature, Set<Effect>> creatureEffects = new HashMap<Creature, Set<Effect>>();
+    private Map<LivingEntity, Set<Effect>> entityEffects = new HashMap<LivingEntity, Set<Effect>>();
     private final static int effectInterval = 2;
 
     public EffectManager(Heroes plugin) {
@@ -30,9 +30,9 @@ public class EffectManager {
             pendingAdditions.add(new ManagedHeroEffect(hero, effect));
     }
 
-    public void manageEffect(Creature creature, Effect effect) {
+    public void manageEffect(LivingEntity lEntity, Effect effect) {
         if (effect instanceof Expirable || effect instanceof Periodic)
-            pendingAdditions.add(new ManagedCreatureEffect(creature, effect));
+            pendingAdditions.add(new ManagedEntityEffect(lEntity, effect));
     }
 
     public void queueForRemoval(Hero hero, Effect effect) {
@@ -41,79 +41,79 @@ public class EffectManager {
             pendingRemovals.add(mEffect);
     }
 
-    public void queueForRemoval(Creature creature, Effect effect) {
-        ManagedEffect mEffect = new ManagedCreatureEffect(creature, effect);
+    public void queueForRemoval(LivingEntity lEntity, Effect effect) {
+        ManagedEffect mEffect = new ManagedEntityEffect(lEntity, effect);
         if (managedEffects.contains(mEffect))
             pendingRemovals.add(mEffect);
     }
 
-    public void addCreatureEffect(Creature creature, Effect effect) {
-        Set<Effect> effects = creatureEffects.get(creature);
+    public void addEntityEffect(LivingEntity lEntity, Effect effect) {
+        Set<Effect> effects = entityEffects.get(lEntity);
         if (effects == null) {
             effects = new HashSet<Effect>();
-            creatureEffects.put(creature, effects);
+            entityEffects.put(lEntity, effects);
         }
 
         if (effect instanceof Periodic || effect instanceof Expirable) {
-            manageEffect(creature, effect);
+            manageEffect(lEntity, effect);
         }
 
         effects.add(effect);
-        effect.apply(creature);
+        effect.apply(lEntity);
     }
 
-    public void manualRemoveCreatureEffect(Creature creature, Effect effect) {
+    public void manualRemoveEntityEffect(LivingEntity lEntity, Effect effect) {
         if (effect == null)
             return;
-        Set<Effect> effects = creatureEffects.get(creature);
+        Set<Effect> effects = entityEffects.get(lEntity);
         if (effects != null) {
             if (effect instanceof Expirable || effect instanceof Periodic) {
-                queueForRemoval(creature, effect);
+                queueForRemoval(lEntity, effect);
             }
             effects.remove(effect);
             if (effects.isEmpty()) {
-                creatureEffects.remove(creature);
+                entityEffects.remove(lEntity);
             }
         }
     }
     
-    public void removeCreatureEffect(Creature creature, Effect effect) {
+    public void removeEntityEffect(LivingEntity lEntity, Effect effect) {
         if (effect == null)
             return;
-        Set<Effect> effects = creatureEffects.get(creature);
+        Set<Effect> effects = entityEffects.get(lEntity);
         if (effects != null) {
             if (effect instanceof Expirable || effect instanceof Periodic) {
-                queueForRemoval(creature, effect);
+                queueForRemoval(lEntity, effect);
             }
-            effect.remove(creature);
+            effect.remove(lEntity);
             effects.remove(effect);
             if (effects.isEmpty()) {
-                creatureEffects.remove(creature);
+                entityEffects.remove(lEntity);
             }
         }
     }
 
-    public void clearCreatureEffects(Creature creature) {
-        if (creatureEffects.containsKey(creature)) {
-            Iterator<Effect> iter = creatureEffects.get(creature).iterator();
+    public void clearEntityEffects(LivingEntity lEntity) {
+        if (entityEffects.containsKey(lEntity)) {
+            Iterator<Effect> iter = entityEffects.get(lEntity).iterator();
             while (iter.hasNext()) {
                 Effect effect = iter.next();
                 if (effect instanceof Expirable || effect instanceof Periodic) {
-                    queueForRemoval(creature, effect);
+                    queueForRemoval(lEntity, effect);
                 } else {
-                    effect.remove(creature);
+                    effect.remove(lEntity);
                     iter.remove();
                 }
             }
-            creatureEffects.remove(creature);
+            entityEffects.remove(lEntity);
         }
     }
 
-    public boolean creatureHasEffectType(Creature creature, EffectType type) {
-        if (!creatureEffects.containsKey(creature))
+    public boolean entityHasEffectType(LivingEntity lEntity, EffectType type) {
+        if (!entityEffects.containsKey(lEntity))
             return false;
         
-        for (Effect effect : creatureEffects.get(creature)) {
+        for (Effect effect : entityEffects.get(lEntity)) {
             if (effect.isType(type))
                 return true;
         }
@@ -121,11 +121,11 @@ public class EffectManager {
         return false;
     }
     
-    public boolean creatureHasEffect(Creature creature, String name) {
-        if (!creatureEffects.containsKey(creature))
+    public boolean entityHasEffect(LivingEntity lEntity, String name) {
+        if (!entityEffects.containsKey(lEntity))
             return false;
 
-        for (Effect effect : creatureEffects.get(creature)) {
+        for (Effect effect : entityEffects.get(lEntity)) {
             if (effect.getName().equalsIgnoreCase(name))
                 return true;
         }
@@ -133,8 +133,8 @@ public class EffectManager {
         return false;
     }
 
-    public Effect getCreatureEffect(Creature creature, String name) {
-        Set<Effect> effects = creatureEffects.get(creature);
+    public Effect getEntityEffect(LivingEntity lEntity, String name) {
+        Set<Effect> effects = entityEffects.get(lEntity);
         if (effects == null)
             return null;
 
@@ -146,11 +146,11 @@ public class EffectManager {
         return null;
     }
 
-    public Set<Effect> getCreatureEffects(Creature creature) {
-        if (!creatureEffects.containsKey(creature))
+    public Set<Effect> getEntityEffects(LivingEntity lEntity) {
+        if (!entityEffects.containsKey(lEntity))
             return new HashSet<Effect>();
 
-        return Collections.unmodifiableSet(creatureEffects.get(creature));
+        return Collections.unmodifiableSet(entityEffects.get(lEntity));
     }
 
     class EffectUpdater implements Runnable {
@@ -177,7 +177,7 @@ public class EffectManager {
                             ((ManagedHeroEffect) managed).hero.removeEffect(managed.effect);
                             continue;
                         } else {
-                            removeCreatureEffect(((ManagedCreatureEffect) managed).creature, managed.effect);
+                            removeEntityEffect(((ManagedEntityEffect) managed).lEntity, managed.effect);
                             continue;
                         }
                     }
@@ -189,7 +189,7 @@ public class EffectManager {
                             periodic.tick(((ManagedHeroEffect) managed).hero);
                     } else {
                         if (periodic.isReady())
-                            periodic.tick(((ManagedCreatureEffect) managed).creature);
+                            periodic.tick(((ManagedEntityEffect) managed).lEntity);
                     }
                 }
             }

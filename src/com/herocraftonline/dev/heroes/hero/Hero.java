@@ -13,7 +13,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Creature;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -52,7 +52,7 @@ public class Hero {
     private Map<String, Effect> effects = new HashMap<String, Effect>();
     private Map<String, Double> experience = new HashMap<String, Double>();
     private Map<String, Long> cooldowns = new HashMap<String, Long>();
-    private Set<Creature> summons = new HashSet<Creature>();
+    private Set<LivingEntity> summons = new HashSet<LivingEntity>();
     private Map<Material, String[]> binds = new EnumMap<Material, String[]>(Material.class);
     private Set<String> suppressedSkills = new HashSet<String>();
     private Map<String, Map<String, String>> skillSettings = new HashMap<String, Map<String, String>>();
@@ -188,7 +188,7 @@ public class Hero {
      * 
      */
     public void clearSummons() {
-        for (Creature summon : summons) {
+        for (LivingEntity summon : summons) {
             summon.remove();
         }
         summons.clear();
@@ -739,7 +739,7 @@ public class Hero {
      * 
      * @return set of all summons the hero currently has
      */
-    public Set<Creature> getSummons() {
+    public Set<LivingEntity> getSummons() {
         return summons;
     }
 

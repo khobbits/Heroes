@@ -1,6 +1,6 @@
 package com.herocraftonline.dev.heroes.effects;
 
-import org.bukkit.entity.Creature;
+import org.bukkit.entity.LivingEntity;
 
 import com.herocraftonline.dev.heroes.hero.Hero;
 
@@ -30,7 +30,7 @@ public interface Periodic {
      * 
      * @param creature
      */
-    public void tick(Creature creature);
+    public void tick(LivingEntity lEntity);
 
     /**
      * runs the effect on the specified hero

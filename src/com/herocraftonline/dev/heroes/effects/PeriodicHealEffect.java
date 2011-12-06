@@ -1,7 +1,7 @@
 package com.herocraftonline.dev.heroes.effects;
 
-import org.bukkit.entity.Creature;
 import org.bukkit.entity.CreatureType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 import com.herocraftonline.dev.heroes.api.HeroRegainHealthEvent;
@@ -35,16 +35,16 @@ public class PeriodicHealEffect extends PeriodicExpirableEffect {
     }
 
     @Override
-    public void tick(Creature creature) {
-        super.tick(creature);
+    public void tick(LivingEntity lEntity) {
+        super.tick(lEntity);
 
-        CreatureType cType = Util.getCreatureFromEntity(creature);
+        CreatureType cType = Util.getCreatureFromEntity(lEntity);
         if (cType == null)
             return;
         int maxHealth = plugin.getDamageManager().getCreatureHealth(cType);
-        creature.setHealth(tickHealth + creature.getHealth());
-        if (creature.getHealth() > maxHealth) {
-            creature.setHealth(maxHealth);
+        lEntity.setHealth(tickHealth + lEntity.getHealth());
+        if (lEntity.getHealth() > maxHealth) {
+            lEntity.setHealth(maxHealth);
         }
     }
 

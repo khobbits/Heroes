@@ -27,15 +27,15 @@ import com.herocraftonline.dev.heroes.skill.Skill;
         }
 
         @Override
-        public void apply(Creature creature) {
-            super.apply(creature);
-            summoner.getSummons().add(creature);
+        public void apply(LivingEntity lEntity) {
+            super.apply(lEntity);
+            summoner.getSummons().add(lEntity);
             FollowEffect fEffect = new FollowEffect(skill, 1500);
             summoner.addEffect(fEffect);
         }
 
         @Override
-        public void remove(Creature creature) {
+        public void remove(LivingEntity creature) {
             super.remove(creature);
             summoner.getSummons().remove(creature);
             broadcast(creature.getLocation(), expireText);
@@ -45,8 +45,8 @@ import com.herocraftonline.dev.heroes.skill.Skill;
             creature.remove();
 
             // Check if the summoner has anymore creatures with Summon
-            for (Creature c : summoner.getSummons()) {
-                if (plugin.getEffectManager().creatureHasEffect(c, name))
+            for (LivingEntity le : summoner.getSummons()) {
+                if (plugin.getEffectManager().entityHasEffect(le, name))
                     return;
             }
             // If there are no more summoned skeletons lets remove the follow effect
@@ -77,10 +77,15 @@ import com.herocraftonline.dev.heroes.skill.Skill;
             @Override
             public void tick(Hero hero) {
                 super.tick(hero);
-                for (Creature creature : hero.getSummons()) {
-                    if (plugin.getEffectManager().creatureHasEffect(creature, "Summon")) {
+                for (LivingEntity le : hero.getSummons()) {
+                    if (!(le instanceof Creature))
+                        continue;
+                    
+                    Creature creature = (Creature) le;
+                        
+                    if (plugin.getEffectManager().entityHasEffect(creature, "Summon")) {
                         if (creature.getTarget() != null && creature.getTarget() instanceof LivingEntity)
-                            return;
+                            continue;
 
                         follow(creature, hero);
                     }

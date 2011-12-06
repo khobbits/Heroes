@@ -391,7 +391,7 @@ public class HeroesDamageListener extends EntityListener {
      */
     private int onEntityDrown(double percent, Entity entity) {
         if (entity instanceof Creature) {
-            if (plugin.getEffectManager().creatureHasEffectType((Creature) entity, EffectType.WATER_BREATHING))
+            if (plugin.getEffectManager().entityHasEffectType((Creature) entity, EffectType.WATER_BREATHING))
                 return 0;
             Integer creatureHealth = damageManager.getCreatureHealth(Util.getCreatureFromEntity(entity));
             if (creatureHealth != null)
@@ -424,7 +424,7 @@ public class HeroesDamageListener extends EntityListener {
             if (cause != DamageCause.FIRE_TICK)
                 damage *= hero.getMaxHealth();
         } else if (entity instanceof Creature) {
-            if (plugin.getEffectManager().creatureHasEffectType((Creature) entity, EffectType.RESIST_FIRE))
+            if (plugin.getEffectManager().entityHasEffectType((Creature) entity, EffectType.RESIST_FIRE))
                 return 0;
             if (cause != DamageCause.FIRE_TICK) {
                 Integer creatureHealth = damageManager.getCreatureHealth(Util.getCreatureFromEntity(entity));
@@ -452,7 +452,7 @@ public class HeroesDamageListener extends EntityListener {
 
             damage = (int) (damage * damagePercent * dHero.getMaxHealth());
         } else if (entity instanceof Creature) {
-            if (plugin.getEffectManager().creatureHasEffectType((Creature) entity, EffectType.SAFEFALL)) 
+            if (plugin.getEffectManager().entityHasEffectType((Creature) entity, EffectType.SAFEFALL)) 
                 return 0;
 
             Integer creatureHealth = damageManager.getCreatureHealth(Util.getCreatureFromEntity(entity));
@@ -522,15 +522,15 @@ public class HeroesDamageListener extends EntityListener {
         } else if (defender instanceof Creature) {
             EffectManager em = plugin.getEffectManager();
             Creature c = (Creature) defender;
-            if (em.creatureHasEffectType(c, EffectType.RESIST_FIRE) && skill.isType(SkillType.FIRE))
+            if (em.entityHasEffectType(c, EffectType.RESIST_FIRE) && skill.isType(SkillType.FIRE))
                 return true;
-            else if (em.creatureHasEffectType(c, EffectType.RESIST_DARK) && skill.isType(SkillType.DARK))
+            else if (em.entityHasEffectType(c, EffectType.RESIST_DARK) && skill.isType(SkillType.DARK))
                 return true;
-            else if (em.creatureHasEffectType(c, EffectType.LIGHT) && skill.isType(SkillType.LIGHT))
+            else if (em.entityHasEffectType(c, EffectType.LIGHT) && skill.isType(SkillType.LIGHT))
                 return true;
-            else if (em.creatureHasEffectType(c, EffectType.RESIST_LIGHTNING) && skill.isType(SkillType.LIGHTNING))
+            else if (em.entityHasEffectType(c, EffectType.RESIST_LIGHTNING) && skill.isType(SkillType.LIGHTNING))
                 return true;
-            else if (em.creatureHasEffectType(c, EffectType.RESIST_ICE) && skill.isType(SkillType.ICE))
+            else if (em.entityHasEffectType(c, EffectType.RESIST_ICE) && skill.isType(SkillType.ICE))
                 return true;
         }
         return false;

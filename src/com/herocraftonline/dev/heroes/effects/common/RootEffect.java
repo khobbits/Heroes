@@ -1,7 +1,7 @@
 package com.herocraftonline.dev.heroes.effects.common;
 
 import org.bukkit.Location;
-import org.bukkit.entity.Creature;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 import com.herocraftonline.dev.heroes.effects.EffectType;
@@ -26,14 +26,14 @@ public class RootEffect extends PeriodicExpirableEffect {
     }
 
     @Override
-    public void apply(Creature creature) {
-        super.apply(creature);
-        Location location = creature.getLocation();
+    public void apply(LivingEntity lEntity) {
+        super.apply(lEntity);
+        Location location = lEntity.getLocation();
         x = location.getX();
         y = location.getY();
         z = location.getZ();
 
-        broadcast(location, applyText, Messaging.getLivingEntityName(creature));
+        broadcast(location, applyText, Messaging.getLivingEntityName(lEntity));
     }
 
     @Override
@@ -50,9 +50,9 @@ public class RootEffect extends PeriodicExpirableEffect {
     }
 
     @Override
-    public void remove(Creature creature) {
-        super.remove(creature);
-        broadcast(creature.getLocation(), expireText, Messaging.getLivingEntityName(creature));
+    public void remove(LivingEntity lEntity) {
+        super.remove(lEntity);
+        broadcast(lEntity.getLocation(), expireText, Messaging.getLivingEntityName(lEntity));
     }
 
     @Override
@@ -63,17 +63,17 @@ public class RootEffect extends PeriodicExpirableEffect {
     }
 
     @Override
-    public void tick(Creature creature) {
-        super.tick(creature);
+    public void tick(LivingEntity lEntity) {
+        super.tick(lEntity);
         
-        Location location = creature.getLocation();
+        Location location = lEntity.getLocation();
         if (location.getX() != x || location.getY() != y || location.getZ() != z) {
             location.setX(x);
             location.setY(y);
             location.setZ(z);
-            location.setYaw(creature.getLocation().getYaw());
-            location.setPitch(creature.getLocation().getPitch());
-            creature.teleport(location);
+            location.setYaw(lEntity.getLocation().getYaw());
+            location.setPitch(lEntity.getLocation().getPitch());
+            lEntity.teleport(location);
         }
     }
     

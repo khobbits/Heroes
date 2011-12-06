@@ -10,9 +10,9 @@ import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.AnimalTamer;
-import org.bukkit.entity.Creature;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
 import org.bukkit.event.Event.Priority;
@@ -116,10 +116,10 @@ public class SkillWolf extends ActiveSkill {
             return SkillResult.NORMAL;
         } else if (args[0].equals("summon")) {
             boolean summoned = false;
-            for (Creature creature : hero.getSummons()) {
-                if (creature instanceof Wolf) {
+            for (LivingEntity lEntity : hero.getSummons()) {
+                if (lEntity instanceof Wolf) {
                     summoned = true;
-                    creature.teleport(player);
+                    lEntity.teleport(player);
                 }
             }
             if (!summoned) {
@@ -129,12 +129,12 @@ public class SkillWolf extends ActiveSkill {
                 return SkillResult.NORMAL;
             }
         } else if (args[0].equals("release")) {
-            Iterator<Creature> iter = hero.getSummons().iterator();
+            Iterator<LivingEntity> iter = hero.getSummons().iterator();
             while (iter.hasNext()) {
-                Creature creature = iter.next();
-                if (creature instanceof Wolf) {
+                LivingEntity lEntity = iter.next();
+                if (lEntity instanceof Wolf) {
                     iter.remove();
-                    creature.remove();
+                    lEntity.remove();
                 }
             }
 
@@ -205,8 +205,8 @@ public class SkillWolf extends ActiveSkill {
             Player player = (Player) owner;
             Hero hero = plugin.getHeroManager().getHero(player);
             int numWolves = 0;
-            for (Creature creature : hero.getSummons()) {
-                if (creature instanceof Wolf) {
+            for (LivingEntity lEntity : hero.getSummons()) {
+                if (lEntity instanceof Wolf) {
                     numWolves++;
                 }
             }
@@ -243,12 +243,12 @@ public class SkillWolf extends ActiveSkill {
 
             Hero hero = event.getHero();
 
-            Iterator<Creature> iter = hero.getSummons().iterator();
+            Iterator<LivingEntity> iter = hero.getSummons().iterator();
             while (iter.hasNext()) {
-                Creature creature = iter.next();
-                if (creature instanceof Wolf) {
-                    creature.remove();
-                    wolves.remove(creature);
+                LivingEntity lEntity = iter.next();
+                if (lEntity instanceof Wolf) {
+                    lEntity.remove();
+                    wolves.remove(lEntity);
                     iter.remove();
                 }
             }
@@ -353,13 +353,13 @@ public class SkillWolf extends ActiveSkill {
                 return;
             }
 
-            Iterator<Creature> iter = hero.getSummons().iterator();
+            Iterator<LivingEntity> iter = hero.getSummons().iterator();
             while (iter.hasNext()) {
-                Creature creature = iter.next();
-                if (creature instanceof Wolf) {
+                LivingEntity lEntity = iter.next();
+                if (lEntity instanceof Wolf) {
                     System.out.println("removing wolf");
-                    creature.remove();
-                    wolves.remove(creature);
+                    lEntity.remove();
+                    wolves.remove(lEntity);
                     iter.remove();
                 }
             }

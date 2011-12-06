@@ -39,7 +39,7 @@ public class SkillRoot extends TargettedSkill {
         if (target instanceof Player) {
             plugin.getHeroManager().getHero((Player) target).addEffect(rEffect);
         } else if (target instanceof Creature) {
-            plugin.getEffectManager().addCreatureEffect((Creature) target, rEffect);
+            plugin.getEffectManager().addEntityEffect((Creature) target, rEffect);
         } else
             return SkillResult.INVALID_TARGET;
 

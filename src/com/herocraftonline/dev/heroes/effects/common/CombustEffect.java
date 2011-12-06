@@ -1,6 +1,6 @@
 package com.herocraftonline.dev.heroes.effects.common;
 
-import org.bukkit.entity.Creature;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 import com.herocraftonline.dev.heroes.effects.EffectType;
@@ -21,8 +21,8 @@ public class CombustEffect extends PeriodicExpirableEffect {
     }
 
     @Override
-    public void apply(Creature creature) {
-        super.apply(creature);
+    public void apply(LivingEntity lEntity) {
+        super.apply(lEntity);
     }
     
     @Override
@@ -40,8 +40,8 @@ public class CombustEffect extends PeriodicExpirableEffect {
     }
 
     @Override
-    public void remove(Creature creature) {
-        super.remove(creature);
+    public void remove(LivingEntity lEntity) {
+        super.remove(lEntity);
     }
 
     @Override
@@ -50,9 +50,9 @@ public class CombustEffect extends PeriodicExpirableEffect {
     }
     
     @Override
-    public void tick(Creature creature) {
-        super.tick(creature);
-        if (creature.getFireTicks() == 0) {
+    public void tick(LivingEntity lEntity) {
+        super.tick(lEntity);
+        if (lEntity.getFireTicks() == 0) {
             this.expired = true;
         }
     }

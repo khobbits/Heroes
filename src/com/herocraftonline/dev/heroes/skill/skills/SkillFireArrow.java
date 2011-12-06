@@ -112,7 +112,7 @@ public class SkillFireArrow extends ActiveSkill {
                 Hero targetHero = plugin.getHeroManager().getHero((Player) entity);
                 targetHero.addEffect(new CombustEffect(skill, player));
             } else if (entity instanceof Creature) {
-                plugin.getEffectManager().addCreatureEffect((Creature) entity, new CombustEffect(skill, player));
+                plugin.getEffectManager().addEntityEffect((Creature) entity, new CombustEffect(skill, player));
             }
 
             Heroes.debug.stopTask("HeroesSkillListener");

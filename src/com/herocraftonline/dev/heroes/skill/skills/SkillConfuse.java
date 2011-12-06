@@ -60,8 +60,8 @@ public class SkillConfuse extends TargettedSkill {
         float maxDrift = (float) getSetting(hero, "max-drift", 0.35, false);
         if (target instanceof Player) {
             plugin.getHeroManager().getHero((Player) target).addEffect(new ConfuseEffect(this, duration, period, maxDrift));
-        } else if (target instanceof Creature) {
-            plugin.getEffectManager().addCreatureEffect((Creature) target, new ConfuseEffect(this, duration, period, maxDrift));
+        } else if (target instanceof LivingEntity) {
+            plugin.getEffectManager().addEntityEffect((LivingEntity) target, new ConfuseEffect(this, duration, period, maxDrift));
         } else
             return SkillResult.INVALID_TARGET;
 
@@ -94,8 +94,8 @@ public class SkillConfuse extends TargettedSkill {
         }
 
         @Override
-        public void apply(Creature creature) {
-            super.apply(creature);
+        public void apply(LivingEntity lEntity) {
+            super.apply(lEntity);
         }
 
         @Override
@@ -106,9 +106,9 @@ public class SkillConfuse extends TargettedSkill {
         }
 
         @Override
-        public void remove(Creature creature) {
-            super.remove(creature);
-            broadcast(creature.getLocation(), expireText, Messaging.getLivingEntityName(creature));
+        public void remove(LivingEntity lEntity) {
+            super.remove(lEntity);
+            broadcast(lEntity.getLocation(), expireText, Messaging.getLivingEntityName(lEntity));
         }
 
         @Override
@@ -119,10 +119,11 @@ public class SkillConfuse extends TargettedSkill {
         }
 
         @Override
-        public void tick(Creature creature) {
-            super.tick(creature);
-            adjustVelocity(creature);
-            creature.setTarget(null);
+        public void tick(LivingEntity lEntity) {
+            super.tick(lEntity);
+            adjustVelocity(lEntity);
+            if (lEntity instanceof Creature)
+                ((Creature) lEntity).setTarget(null);
         }
 
         @Override

@@ -40,8 +40,8 @@ public class HEntityListener extends EntityListener {
                 Projectile projectile = (Projectile) damager;
                 if (projectile.getShooter() instanceof Player) {
                     return (Player) projectile.getShooter();
-                } else if (projectile.getShooter() instanceof Skeleton && plugin.getEffectManager().creatureHasEffect((Creature) projectile.getShooter(), "Summon")) {
-                    SummonEffect sEffect = (SummonEffect) plugin.getEffectManager().getCreatureEffect((Skeleton) projectile.getShooter(), "Summon");
+                } else if (projectile.getShooter() instanceof Skeleton && plugin.getEffectManager().entityHasEffect((Creature) projectile.getShooter(), "Summon")) {
+                    SummonEffect sEffect = (SummonEffect) plugin.getEffectManager().getEntityEffect((Skeleton) projectile.getShooter(), "Summon");
                     return sEffect.getSummoner().getPlayer();
                 }
             } else if (damager instanceof Creature) {
@@ -50,8 +50,8 @@ public class HEntityListener extends EntityListener {
                     if (tamed.isTamed() && tamed.getOwner() instanceof Player)
                         return (Player) tamed.getOwner();
                 }
-                if (plugin.getEffectManager().creatureHasEffect((Creature) damager, "Summon")) {
-                    SummonEffect sEffect = (SummonEffect) plugin.getEffectManager().getCreatureEffect((Creature) damager, "Summon");
+                if (plugin.getEffectManager().entityHasEffect((Creature) damager, "Summon")) {
+                    SummonEffect sEffect = (SummonEffect) plugin.getEffectManager().getEntityEffect((Creature) damager, "Summon");
                     return sEffect.getSummoner().getPlayer();
                 }
             }
@@ -138,10 +138,10 @@ public class HEntityListener extends EntityListener {
         } else if (defender instanceof Creature) {
             EffectManager effectManager = plugin.getEffectManager();
             Creature creatureDefender = (Creature) defender;
-            if (attacker == null && effectManager.creatureHasEffect(creatureDefender, "Combust")) {
-                attacker = ((CombustEffect) effectManager.getCreatureEffect(creatureDefender, "Combust")).getApplier();
+            if (attacker == null && effectManager.entityHasEffect(creatureDefender, "Combust")) {
+                attacker = ((CombustEffect) effectManager.getEntityEffect(creatureDefender, "Combust")).getApplier();
             }
-            effectManager.clearCreatureEffects(creatureDefender);
+            effectManager.clearEntityEffects(creatureDefender);
         }
 
         if (attacker != null && !attacker.equals(defender)) {

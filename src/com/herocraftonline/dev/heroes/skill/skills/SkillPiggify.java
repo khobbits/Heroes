@@ -60,7 +60,7 @@ public class SkillPiggify extends TargettedSkill {
         if (target instanceof Player) {
             plugin.getHeroManager().getHero((Player) target).addEffect(pEffect);
         } else if (target instanceof Creature) {
-            plugin.getEffectManager().addCreatureEffect((Creature) target, pEffect);
+            plugin.getEffectManager().addEntityEffect((Creature) target, pEffect);
         } else
             return SkillResult.INVALID_TARGET;
         
@@ -81,7 +81,7 @@ public class SkillPiggify extends TargettedSkill {
         }
 
         @Override
-        public void apply(Creature rider) {
+        public void apply(LivingEntity rider) {
             super.apply(rider);
             creature.setPassenger(rider);
             creatures.add(creature);
@@ -96,7 +96,7 @@ public class SkillPiggify extends TargettedSkill {
         }
 
         @Override
-        public void remove(Creature rider) {
+        public void remove(LivingEntity rider) {
             super.remove(rider);
             creatures.remove(creature);
             creature.remove();

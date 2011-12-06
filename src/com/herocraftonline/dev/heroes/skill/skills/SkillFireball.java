@@ -94,7 +94,7 @@ public class SkillFireball extends ActiveSkill {
                 if (entity instanceof Player) {
                     plugin.getHeroManager().getHero((Player) entity).addEffect(new CombustEffect(skill, (Player) dmger));
                 } else if (entity instanceof Creature) {
-                    plugin.getEffectManager().addCreatureEffect((Creature) entity, new CombustEffect(skill, (Player) dmger));
+                    plugin.getEffectManager().addEntityEffect((Creature) entity, new CombustEffect(skill, (Player) dmger));
                 }
                 addSpellTarget(entity, hero);
                 int damage = getSetting(hero, Setting.DAMAGE.node(), 4, false);

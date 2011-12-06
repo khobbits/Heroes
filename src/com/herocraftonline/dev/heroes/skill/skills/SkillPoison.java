@@ -1,7 +1,6 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Creature;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
@@ -55,9 +54,9 @@ public class SkillPoison extends TargettedSkill {
         PoisonSkillEffect pEffect = new PoisonSkillEffect(this, period, duration, tickDamage, player);
         if (target instanceof Player) {
             plugin.getHeroManager().getHero((Player) target).addEffect(pEffect);
-        } else if (target instanceof Creature) {
-            Creature creature = (Creature) target;
-            plugin.getEffectManager().addCreatureEffect(creature, pEffect);
+        } else if (target instanceof LivingEntity) {
+            LivingEntity lEntity = (LivingEntity) target;
+            plugin.getEffectManager().addEntityEffect(lEntity, pEffect);
         } else 
             return SkillResult.INVALID_TARGET;
 
@@ -74,8 +73,8 @@ public class SkillPoison extends TargettedSkill {
         }
 
         @Override
-        public void apply(Creature creature) {
-            super.apply(creature);
+        public void apply(LivingEntity lEntity) {
+            super.apply(lEntity);
         }
 
         @Override
@@ -84,9 +83,9 @@ public class SkillPoison extends TargettedSkill {
         }
 
         @Override
-        public void remove(Creature creature) {
-            super.remove(creature);
-            broadcast(creature.getLocation(), expireText, Messaging.getLivingEntityName(creature).toLowerCase());
+        public void remove(LivingEntity lEntity) {
+            super.remove(lEntity);
+            broadcast(lEntity.getLocation(), expireText, Messaging.getLivingEntityName(lEntity).toLowerCase());
         }
 
         @Override

@@ -7,16 +7,16 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import net.minecraft.server.EntityCreature;
+import net.minecraft.server.EntityLiving;
 import net.minecraft.server.EntityPlayer;
 import net.minecraft.server.MobEffect;
 import net.minecraft.server.Packet41MobEffect;
 import net.minecraft.server.Packet42RemoveMobEffect;
 
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.entity.CraftCreature;
+import org.bukkit.craftbukkit.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
-import org.bukkit.entity.Creature;
+import org.bukkit.entity.LivingEntity;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.hero.Hero;
@@ -52,12 +52,12 @@ public class Effect {
         }
     }
 
-    public void apply(Creature creature) {
+    public void apply(LivingEntity lEntity) {
         this.applyTime = System.currentTimeMillis();
         if (!mobEffects.isEmpty()) {
-            EntityCreature eCreature = ((CraftCreature) creature).getHandle();
+            EntityLiving eLiving = ((CraftLivingEntity) lEntity).getHandle();
             for (MobEffect mobEffect : mobEffects.keySet()) {
-                eCreature.addEffect(mobEffect);
+                eLiving.addEffect(mobEffect);
             }
         }
     }
@@ -76,11 +76,11 @@ public class Effect {
         }
     }
 
-    public void remove(Creature creature) {
+    public void remove(LivingEntity lEntity) {
         if (!mobEffects.isEmpty()) {
-            EntityCreature eCreature = ((CraftCreature) creature).getHandle();
+            EntityLiving eLiving = ((CraftLivingEntity) lEntity).getHandle();
             for (MobEffect mobEffect : mobEffects.keySet()) {
-                eCreature.addEffect(new MobEffect(mobEffect.getEffectId(), 0, 0));
+                eLiving.addEffect(new MobEffect(mobEffect.getEffectId(), 0, 0));
             }
         }
     }

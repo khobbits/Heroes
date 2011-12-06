@@ -1,6 +1,6 @@
 package com.herocraftonline.dev.heroes.effects;
 
-import org.bukkit.entity.Creature;
+import org.bukkit.entity.LivingEntity;
 
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
@@ -16,8 +16,8 @@ public class ExpirableEffect extends Effect implements Expirable {
     }
 
     @Override
-    public void apply(Creature creature) {
-        super.apply(creature);
+    public void apply(LivingEntity lEntity) {
+        super.apply(lEntity);
         this.expireTime = applyTime + duration;
     }
 
@@ -59,8 +59,8 @@ public class ExpirableEffect extends Effect implements Expirable {
     }
 
     @Override
-    public void remove(Creature creature) {
-        super.remove(creature);
+    public void remove(LivingEntity lEntity) {
+        super.remove(lEntity);
     }
 
     @Override

@@ -1,6 +1,6 @@
 package com.herocraftonline.dev.heroes.effects.common;
 
-import org.bukkit.entity.Creature;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 import com.herocraftonline.dev.heroes.effects.EffectType;
@@ -44,15 +44,14 @@ public class SlowEffect extends ExpirableEffect {
     }
     
     @Override
-    public void apply(Creature creature) {
-        super.apply(creature);
-        broadcast(creature.getLocation(), applyText, Messaging.getLivingEntityName(creature), applier.getPlayer().getDisplayName());
+    public void apply(LivingEntity lEntity) {
+        super.apply(lEntity);
+        broadcast(lEntity.getLocation(), applyText, Messaging.getLivingEntityName(lEntity), applier.getPlayer().getDisplayName());
     }
     
     @Override
-    public void remove(Creature creature) {
-        super.remove(creature);
-        broadcast(creature.getLocation(), expireText, Messaging.getLivingEntityName(creature));
+    public void remove(LivingEntity lEntity) {
+        super.remove(lEntity);
+        broadcast(lEntity.getLocation(), expireText, Messaging.getLivingEntityName(lEntity));
     }
-
 }
