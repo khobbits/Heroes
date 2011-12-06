@@ -26,3 +26,4 @@
 
 # Mac filesystem dust
 /.DS_Store
+/buildLocal.xml
