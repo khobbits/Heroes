@@ -11,6 +11,7 @@ import org.bukkit.event.Event.Result;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerBedLeaveEvent;
+import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -22,6 +23,7 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
+import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
 import com.herocraftonline.dev.heroes.command.Command;
 import com.herocraftonline.dev.heroes.effects.Effect;
 import com.herocraftonline.dev.heroes.effects.EffectType;
@@ -39,6 +41,23 @@ public class HPlayerListener extends PlayerListener {
 
     public HPlayerListener(Heroes instance) {
         plugin = instance;
+    }
+
+    @Override
+    public void onPlayerFish(PlayerFishEvent event) {
+        if (event.isCancelled())
+            return;
+        
+        switch (event.getState()) {
+        case CAUGHT_FISH :
+        case CAUGHT_ENTITY :
+            Player player = event.getPlayer();
+            Hero hero = plugin.getHeroManager().getHero(player);
+            if (hero.hasExperienceType(ExperienceType.FISHING))
+                hero.gainExp(plugin.getProperties().fishingExp, ExperienceType.FISHING);
+        default: 
+            return;
+        }
     }
 
     @Override

@@ -165,6 +165,7 @@ public class ConfigManager {
         Heroes.properties.farmingExp = loadMaterialExperience(expConfig.getConfigurationSection("farming"));
         Heroes.properties.loggingExp = loadMaterialExperience(expConfig.getConfigurationSection("logging"));
         Heroes.properties.craftingExp = loadMaterialExperience(expConfig.getConfigurationSection("crafting"));
+        Heroes.properties.fishingExp = expConfig.getDouble("fishing", 0);
     }
 
     private Map<Material, Double> loadMaterialExperience(ConfigurationSection section) {

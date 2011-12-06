@@ -86,6 +86,7 @@ public class Properties {
     public Map<Material, Double> craftingExp = new EnumMap<Material, Double>(Material.class);
     public Map<String, String> skillInfo = new HashMap<String, String>();
     public Map<Player, Location> playerDeaths = new HashMap<Player, Location>();
+    public double fishingExp = 0;
     
     public void load(Heroes plugin) {
         FileConfiguration config = plugin.getConfig();

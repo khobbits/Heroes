@@ -454,7 +454,8 @@ public class HeroClass {
         LOGGING,
         DEATH,
         ADMIN,
-        EXTERNAL
+        EXTERNAL,
+        FISHING;
     }
 
 
