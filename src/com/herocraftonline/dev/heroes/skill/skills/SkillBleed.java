@@ -61,11 +61,8 @@ public class SkillBleed extends TargettedSkill {
 
         if (target instanceof Player) {
             plugin.getHeroManager().getHero((Player) target).addEffect(bEffect);
-        } else if (target instanceof LivingEntity) {
-            plugin.getEffectManager().addEntityEffect((LivingEntity) target, bEffect);
-        } else {
-            return SkillResult.INVALID_TARGET;
-        }
+        } else 
+            plugin.getEffectManager().addEntityEffect(target, bEffect);
 
         broadcastExecuteText(hero, target);
         return SkillResult.NORMAL;

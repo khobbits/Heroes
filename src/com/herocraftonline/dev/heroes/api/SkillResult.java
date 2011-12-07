@@ -1,5 +1,7 @@
 package com.herocraftonline.dev.heroes.api;
 
+import com.herocraftonline.dev.heroes.skill.ActiveSkill;
+
 /**
  * Defines a SkillResult for a Skill to return. Includes Arguments for the default messages, and a boolean to display the message, or ignore it
  * If you are unsure about return types for Skills, use the Default static return types for your skill.

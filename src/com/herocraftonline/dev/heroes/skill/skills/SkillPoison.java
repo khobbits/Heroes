@@ -54,11 +54,8 @@ public class SkillPoison extends TargettedSkill {
         PoisonSkillEffect pEffect = new PoisonSkillEffect(this, period, duration, tickDamage, player);
         if (target instanceof Player) {
             plugin.getHeroManager().getHero((Player) target).addEffect(pEffect);
-        } else if (target instanceof LivingEntity) {
-            LivingEntity lEntity = (LivingEntity) target;
-            plugin.getEffectManager().addEntityEffect(lEntity, pEffect);
         } else 
-            return SkillResult.INVALID_TARGET;
+            plugin.getEffectManager().addEntityEffect(target, pEffect);
 
         broadcastExecuteText(hero, target);
         return SkillResult.NORMAL;

@@ -60,10 +60,9 @@ public class SkillConfuse extends TargettedSkill {
         float maxDrift = (float) getSetting(hero, "max-drift", 0.35, false);
         if (target instanceof Player) {
             plugin.getHeroManager().getHero((Player) target).addEffect(new ConfuseEffect(this, duration, period, maxDrift));
-        } else if (target instanceof LivingEntity) {
-            plugin.getEffectManager().addEntityEffect((LivingEntity) target, new ConfuseEffect(this, duration, period, maxDrift));
         } else
-            return SkillResult.INVALID_TARGET;
+            plugin.getEffectManager().addEntityEffect(target, new ConfuseEffect(this, duration, period, maxDrift));
+
 
         broadcastExecuteText(hero, target);
         return SkillResult.NORMAL;
