@@ -1061,17 +1061,16 @@ public class Hero {
     /**
      * Syncs the Hero's current Experience with the minecraft experience (should also sync the level bar)
      */
-    @SuppressWarnings("deprecation")
     public void syncExperience() {
         int level = getLevel(heroClass);
         int currentLevelXP = Properties.getExperience(level);
 
         double maxLevelXP = Properties.getExperience(level + 1) - currentLevelXP;
         double currentXP = getExperience() - currentLevelXP;
-        int syncedPercent = (int) ((currentXP / maxLevelXP) * 100);
+        float syncedPercent = (float) (currentXP / maxLevelXP);
         
         player.setTotalExperience(Util.getMCExperience(level));
-        player.setExperience(syncedPercent);
+        player.setExp(syncedPercent);
         player.setLevel(level);
     }
 
