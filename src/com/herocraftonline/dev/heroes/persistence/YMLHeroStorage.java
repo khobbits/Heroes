@@ -37,7 +37,7 @@ public class YMLHeroStorage extends HeroStorage {
         File pFolder = new File(playerFolder + File.separator + player.getName().toLowerCase().substring(0, 1));
         pFolder.mkdirs();
         File newPlayerFile = new File(pFolder, player.getName() + ".yml");
-        
+
         if (newPlayerFile.exists())
             playerFile = newPlayerFile;
         else if (playerFile.exists()) {
@@ -57,7 +57,7 @@ public class YMLHeroStorage extends HeroStorage {
             }
             HeroClass secondClass = loadSecondaryClass(player, playerConfig);
             Hero playerHero = new Hero(plugin, player, playerClass, secondClass);
-            
+
             loadCooldowns(playerHero, playerConfig.getConfigurationSection("cooldowns"));
             loadExperience(playerHero, playerConfig.getConfigurationSection("experience"));
             loadBinds(playerHero, playerConfig.getConfigurationSection("binds"));
@@ -93,7 +93,7 @@ public class YMLHeroStorage extends HeroStorage {
         playerConfig.set("health", hero.getHealth());
 
 
-        
+
         saveSkillSettings(hero, playerConfig.createSection("skill-settings"));
         saveCooldowns(hero, playerConfig.createSection("cooldowns"));
         saveExperience(hero, playerConfig.createSection("experience"));
@@ -115,6 +115,9 @@ public class YMLHeroStorage extends HeroStorage {
      * @param section
      */
     private void loadBinds(Hero hero, ConfigurationSection section) {
+        if (section == null)
+            return;
+
         Set<String> bindKeys = section.getKeys(false);
         if (bindKeys != null && bindKeys.size() > 0) {
             for (String material : bindKeys) {
@@ -146,7 +149,7 @@ public class YMLHeroStorage extends HeroStorage {
 
         if (config.getString("class") != null) {
             playerClass = plugin.getClassManager().getClass(config.getString("class"));
-            
+
             if (playerClass == null) {
                 playerClass = defaultClass;
             } else if (!playerClass.isPrimary()) {
@@ -186,7 +189,7 @@ public class YMLHeroStorage extends HeroStorage {
     private void loadCooldowns(Hero hero, ConfigurationSection section) {
         if (section == null)
             return;
-        
+
         HeroClass heroClass = hero.getHeroClass();
 
         Set<String> storedCooldowns = section.getKeys(false);
@@ -229,15 +232,16 @@ public class YMLHeroStorage extends HeroStorage {
      * Loads hero-specific Skill settings
      * TODO: Rewrite-me
      * @param hero
-     * @param config
+     * @param section
      */
-    private void loadSkillSettings(Hero hero, ConfigurationSection config) {
-        if (config.getKeys(false) != null) {
-            for (String skill : config.getKeys(false)) {
-                if (config.isConfigurationSection(skill)) {
-                    for (String node : config.getConfigurationSection(skill).getKeys(false)) {
-                        hero.setSkillSetting(skill, node, config.getConfigurationSection(skill).getString(node));
-                    }
+    private void loadSkillSettings(Hero hero, ConfigurationSection section) {
+        if (section == null || section.getKeys(false) == null)
+            return;
+        
+        for (String skill : section.getKeys(false)) {
+            if (section.isConfigurationSection(skill)) {
+                for (String node : section.getConfigurationSection(skill).getKeys(false)) {
+                    hero.setSkillSetting(skill, node, section.getConfigurationSection(skill).getString(node));
                 }
             }
         }
@@ -246,7 +250,7 @@ public class YMLHeroStorage extends HeroStorage {
     private void saveBinds(Hero hero, ConfigurationSection section) {
         if (section == null)
             return;
-        
+
         Map<Material, String[]> binds = hero.getBinds();
         for (Material material : binds.keySet()) {
             String[] bindArgs = binds.get(material);
@@ -261,7 +265,7 @@ public class YMLHeroStorage extends HeroStorage {
     private void saveCooldowns(Hero hero, ConfigurationSection section) {
         if (section == null)
             return;
-        
+
         long time = System.currentTimeMillis();
         Map<String, Long> cooldowns = hero.getCooldowns();
         for (Map.Entry<String, Long> entry : cooldowns.entrySet()) {
