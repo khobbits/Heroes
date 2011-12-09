@@ -360,7 +360,7 @@ public class HeroClass {
      * @return true if this class contains the given skill
      */
     public boolean hasSkill(String name) {
-        return skills.contains(name);
+        return skills.contains(name.toLowerCase());
     }
 
     /**
