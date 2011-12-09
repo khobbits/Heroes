@@ -1,7 +1,6 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -93,9 +92,9 @@ public class SkillFireball extends ActiveSkill {
                 entity.setFireTicks(getSetting(hero, "fire-ticks", 100, false));
                 if (entity instanceof Player) {
                     plugin.getHeroManager().getHero((Player) entity).addEffect(new CombustEffect(skill, (Player) dmger));
-                } else if (entity instanceof Creature) {
-                    plugin.getEffectManager().addEntityEffect((Creature) entity, new CombustEffect(skill, (Player) dmger));
-                }
+                } else
+                    plugin.getEffectManager().addEntityEffect(entity, new CombustEffect(skill, (Player) dmger));
+                
                 addSpellTarget(entity, hero);
                 int damage = getSetting(hero, Setting.DAMAGE.node(), 4, false);
                 event.setDamage(damage);

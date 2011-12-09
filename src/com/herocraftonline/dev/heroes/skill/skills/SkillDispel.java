@@ -3,7 +3,6 @@ package com.herocraftonline.dev.heroes.skill.skills;
 import java.util.Set;
 
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Creature;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
@@ -83,8 +82,8 @@ public class SkillDispel extends TargettedSkill {
                     }
                 }
             }
-        } else if (target instanceof Creature) {
-            Set<Effect> cEffects = plugin.getEffectManager().getEntityEffects((Creature) target);
+        } else {
+            Set<Effect> cEffects = plugin.getEffectManager().getEntityEffects(target);
             if (cEffects != null) {
                 boolean removeHarmful = false;
                 if (hero.getSummons().contains(target)) {
@@ -93,14 +92,14 @@ public class SkillDispel extends TargettedSkill {
                 for (Effect effect : cEffects) {
                     if (effect.isType(EffectType.DISPELLABLE)) {
                         if (removeHarmful && effect.isType(EffectType.HARMFUL)) {
-                            plugin.getEffectManager().removeEntityEffect((Creature) target, effect);
+                            plugin.getEffectManager().removeEntityEffect(target, effect);
                             removed = true;
                             maxRemovals--;
                             if (maxRemovals == 0) {
                                 break;
                             }
                         } else if (!removeHarmful && effect.isType(EffectType.BENEFICIAL)) {
-                            plugin.getEffectManager().removeEntityEffect((Creature) target, effect);
+                            plugin.getEffectManager().removeEntityEffect(target, effect);
                             removed = true;
                             maxRemovals--;
                             if (maxRemovals == 0) {
@@ -110,9 +109,7 @@ public class SkillDispel extends TargettedSkill {
                     }
                 }
             }
-        } else {
-            return SkillResult.INVALID_TARGET;
-        }
+        } 
 
         if (removed) {
             broadcastExecuteText(hero, target);

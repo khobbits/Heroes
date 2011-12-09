@@ -3,7 +3,6 @@ package com.herocraftonline.dev.heroes.spout;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Animals;
-import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Flying;
 import org.bukkit.entity.HumanEntity;
@@ -151,16 +150,12 @@ public class SpoutUI {
                         name += "Pet ";
                     }
                 }
-            }
-            if (target instanceof Creature) {
-                name += Messaging.getLivingEntityName((Creature) target);
-            } else {
-                name += "Unknown";
-            }
+            } else
+                name += Messaging.getLivingEntityName(target);
         }
         return name;
     }
-    
+
     /**
      * Get the percentage armour of a Player.
      * @param player the Player we're interested in
@@ -180,7 +175,7 @@ public class SpoutUI {
         }
         return 0;
     }
-    
+
     /**
      * Get the container for use by this plugin, anchor and position
      * @param player the player this is for

@@ -56,11 +56,11 @@ public class DamageManager {
         return spellTargs.get(o);
     }
 
-    public Integer getCreatureDamage(CreatureType type) {
+    public Integer getEntityDamage(CreatureType type) {
         return creatureDamage.get(type);
     }
 
-    public Integer getCreatureHealth(CreatureType type) {
+    public Integer getEntityHealth(CreatureType type) {
         if (creatureHealth.containsKey(type)) {
             int health = creatureHealth.get(type);
             return health > 200 ? 200 : health < 0 ? 0 : health;

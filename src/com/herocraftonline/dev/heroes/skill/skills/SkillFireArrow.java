@@ -2,7 +2,6 @@ package com.herocraftonline.dev.heroes.skill.skills;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Arrow;
-import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -111,9 +110,9 @@ public class SkillFireArrow extends ActiveSkill {
             if (entity instanceof Player) {
                 Hero targetHero = plugin.getHeroManager().getHero((Player) entity);
                 targetHero.addEffect(new CombustEffect(skill, player));
-            } else if (entity instanceof Creature) {
-                plugin.getEffectManager().addEntityEffect((Creature) entity, new CombustEffect(skill, player));
-            }
+            } else
+                plugin.getEffectManager().addEntityEffect(entity, new CombustEffect(skill, player));
+            
 
             Heroes.debug.stopTask("HeroesSkillListener");
         }

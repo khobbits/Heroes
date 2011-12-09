@@ -8,7 +8,6 @@ import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Creature;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Priority;
@@ -395,8 +394,8 @@ public class Heroes extends JavaPlugin {
             if (current > 0 && percent == 0)
                 percent = 1;
             return percent;
-        } else if (lEntity instanceof Creature) {
-            Integer maxHealth = getDamageManager().getCreatureHealth(Util.getCreatureFromEntity(lEntity));
+        } else {
+            Integer maxHealth = getDamageManager().getEntityHealth(Util.getCreatureFromEntity(lEntity));
             if (maxHealth == null)
                 maxHealth = lEntity.getHealth();
             int percent = (int) (lEntity.getHealth() / Double.valueOf(maxHealth)) * 100;
@@ -404,7 +403,6 @@ public class Heroes extends JavaPlugin {
                 percent = 1;
             return percent;
         }
-        return 0;
     }
 
     public SpoutData getSpoutData() {

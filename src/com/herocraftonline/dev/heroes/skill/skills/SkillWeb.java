@@ -10,7 +10,6 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Creature;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Priority;
@@ -65,9 +64,8 @@ public class SkillWeb extends TargettedSkill {
         String name = "";
         if (target instanceof Player) {
             name = ((Player) target).getDisplayName();
-        } else if (target instanceof Creature) {
-            name = Messaging.getLivingEntityName((Creature) target).toLowerCase();
-        }
+        } else
+            name = Messaging.getLivingEntityName(target).toLowerCase();
 
         broadcast(player.getLocation(), applyText, player.getDisplayName(), name);
         int duration = getSetting(hero, Setting.DURATION.node(), 5000, false);

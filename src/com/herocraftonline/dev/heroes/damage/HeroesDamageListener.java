@@ -7,7 +7,6 @@ import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.entity.Creature;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -60,7 +59,7 @@ public class HeroesDamageListener extends EntityListener {
     public void onCreatureSpawn(CreatureSpawnEvent event) {
         LivingEntity entity = (LivingEntity) event.getEntity();
         CreatureType type = event.getCreatureType();
-        Integer maxHealth = damageManager.getCreatureHealth(type);
+        Integer maxHealth = damageManager.getEntityHealth(type);
         if (maxHealth != null) {
             entity.setHealth(maxHealth);
         }
@@ -98,8 +97,8 @@ public class HeroesDamageListener extends EntityListener {
                 if (resistanceCheck(defender, skillInfo.getSkill())) {
                     if (defender instanceof Player)
                         skillInfo.getSkill().broadcast(defender.getLocation(), "$1 has resisted $2", ((Player) defender).getDisplayName(), skillInfo.getSkill().getName());
-                    if (defender instanceof Creature)
-                        skillInfo.getSkill().broadcast(defender.getLocation(), "$1 has resisted $2", Messaging.getLivingEntityName((Creature) defender), skillInfo.getSkill().getName());
+                    else if (defender instanceof LivingEntity)
+                        skillInfo.getSkill().broadcast(defender.getLocation(), "$1 has resisted $2", Messaging.getLivingEntityName((LivingEntity) defender), skillInfo.getSkill().getName());
                     event.setCancelled(true);
                     return;
                 }
@@ -137,7 +136,7 @@ public class HeroesDamageListener extends EntityListener {
                                 ignoreNextDamageEventBecauseWolvesAreOnCrack = true;
                             }
                         }
-                        Integer tmpDamage = damageManager.getCreatureDamage(type);
+                        Integer tmpDamage = damageManager.getEntityDamage(type);
                         if (tmpDamage != null) {
                             damage = tmpDamage;
                         }
@@ -153,7 +152,7 @@ public class HeroesDamageListener extends EntityListener {
                         attacker = projectile.getShooter();
                         CreatureType type = Util.getCreatureFromEntity(projectile.getShooter());
                         if (type != null) {
-                            Integer tmpDamage = damageManager.getCreatureDamage(type);
+                            Integer tmpDamage = damageManager.getEntityDamage(type);
                             if (tmpDamage != null) {
                                 damage = tmpDamage;
                             }
@@ -352,13 +351,13 @@ public class HeroesDamageListener extends EntityListener {
      * @return
      */
     private int onEntityStarve(double percent, Entity entity) {
-        if (entity instanceof Creature) {
-            Integer creatureHealth = damageManager.getCreatureHealth(Util.getCreatureFromEntity(entity));
-            if (creatureHealth != null)
-                percent *= creatureHealth;
-        } else if (entity instanceof Player) {
+        if (entity instanceof Player) {
             Hero hero = plugin.getHeroManager().getHero((Player) entity);
             percent *= hero.getMaxHealth();
+        } else if (entity instanceof LivingEntity) {
+            Integer creatureHealth = damageManager.getEntityHealth(Util.getCreatureFromEntity(entity));
+            if (creatureHealth != null)
+                percent *= creatureHealth;
         }
         return percent < 1 ? 1 : (int) percent;
     }
@@ -371,13 +370,13 @@ public class HeroesDamageListener extends EntityListener {
      * @return
      */
     private int onEntitySuffocate(double percent, Entity entity) {
-        if (entity instanceof Creature) {
-            Integer creatureHealth = damageManager.getCreatureHealth(Util.getCreatureFromEntity(entity));
-            if (creatureHealth != null)
-                percent *= creatureHealth;
-        } else if (entity instanceof Player) {
+        if (entity instanceof Player) {
             Hero hero = plugin.getHeroManager().getHero((Player) entity);
             percent *= hero.getMaxHealth();
+        } else if (entity instanceof LivingEntity) {
+            Integer creatureHealth = damageManager.getEntityHealth(Util.getCreatureFromEntity(entity));
+            if (creatureHealth != null)
+                percent *= creatureHealth;
         }
         return percent < 1 ? 1 : (int) percent;
     }
@@ -390,17 +389,17 @@ public class HeroesDamageListener extends EntityListener {
      * @return
      */
     private int onEntityDrown(double percent, Entity entity) {
-        if (entity instanceof Creature) {
-            if (plugin.getEffectManager().entityHasEffectType((Creature) entity, EffectType.WATER_BREATHING))
-                return 0;
-            Integer creatureHealth = damageManager.getCreatureHealth(Util.getCreatureFromEntity(entity));
-            if (creatureHealth != null)
-                percent *= creatureHealth;
-        } else if (entity instanceof Player) {
+        if (entity instanceof Player) {
             Hero hero = plugin.getHeroManager().getHero((Player) entity);
             if (hero.hasEffectType(EffectType.WATER_BREATHING))
                 return 0;
             percent *= hero.getMaxHealth();
+        } else if (entity instanceof LivingEntity) {
+            if (plugin.getEffectManager().entityHasEffectType((LivingEntity) entity, EffectType.WATER_BREATHING))
+                return 0;
+            Integer creatureHealth = damageManager.getEntityHealth(Util.getCreatureFromEntity(entity));
+            if (creatureHealth != null)
+                percent *= creatureHealth;
         }
         return percent < 1 ? 1 : (int) percent;
     }
@@ -423,11 +422,11 @@ public class HeroesDamageListener extends EntityListener {
             }
             if (cause != DamageCause.FIRE_TICK)
                 damage *= hero.getMaxHealth();
-        } else if (entity instanceof Creature) {
-            if (plugin.getEffectManager().entityHasEffectType((Creature) entity, EffectType.RESIST_FIRE))
+        } else if (entity instanceof LivingEntity) {
+            if (plugin.getEffectManager().entityHasEffectType((LivingEntity) entity, EffectType.RESIST_FIRE))
                 return 0;
             if (cause != DamageCause.FIRE_TICK) {
-                Integer creatureHealth = damageManager.getCreatureHealth(Util.getCreatureFromEntity(entity));
+                Integer creatureHealth = damageManager.getEntityHealth(Util.getCreatureFromEntity(entity));
                 if (creatureHealth != null)
                     damage *= creatureHealth;
             }
@@ -451,11 +450,11 @@ public class HeroesDamageListener extends EntityListener {
                 return 0;
 
             damage = (int) (damage * damagePercent * dHero.getMaxHealth());
-        } else if (entity instanceof Creature) {
-            if (plugin.getEffectManager().entityHasEffectType((Creature) entity, EffectType.SAFEFALL)) 
+        } else if (entity instanceof LivingEntity) {
+            if (plugin.getEffectManager().entityHasEffectType((LivingEntity) entity, EffectType.SAFEFALL)) 
                 return 0;
 
-            Integer creatureHealth = damageManager.getCreatureHealth(Util.getCreatureFromEntity(entity));
+            Integer creatureHealth = damageManager.getEntityHealth(Util.getCreatureFromEntity(entity));
             if (creatureHealth != null)
                 damage = (int) (damage * damagePercent * creatureHealth);
         }
@@ -519,9 +518,9 @@ public class HeroesDamageListener extends EntityListener {
                 return true;
             else if (hero.hasEffectType(EffectType.RESIST_ICE) && skill.isType(SkillType.ICE))
                 return true;
-        } else if (defender instanceof Creature) {
+        } else if (defender instanceof LivingEntity) {
             EffectManager em = plugin.getEffectManager();
-            Creature c = (Creature) defender;
+            LivingEntity c = (LivingEntity) defender;
             if (em.entityHasEffectType(c, EffectType.RESIST_FIRE) && skill.isType(SkillType.FIRE))
                 return true;
             else if (em.entityHasEffectType(c, EffectType.RESIST_DARK) && skill.isType(SkillType.DARK))

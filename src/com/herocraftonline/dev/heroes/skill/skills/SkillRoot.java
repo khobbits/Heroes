@@ -1,7 +1,6 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Creature;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
@@ -38,10 +37,8 @@ public class SkillRoot extends TargettedSkill {
 
         if (target instanceof Player) {
             plugin.getHeroManager().getHero((Player) target).addEffect(rEffect);
-        } else if (target instanceof Creature) {
-            plugin.getEffectManager().addEntityEffect((Creature) target, rEffect);
         } else
-            return SkillResult.INVALID_TARGET;
+            plugin.getEffectManager().addEntityEffect(target, rEffect);
 
         broadcastExecuteText(hero, target);
         return SkillResult.NORMAL;

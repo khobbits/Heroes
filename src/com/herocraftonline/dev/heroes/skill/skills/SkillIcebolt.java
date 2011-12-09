@@ -6,7 +6,6 @@ import net.minecraft.server.MathHelper;
 
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -122,9 +121,8 @@ public class SkillIcebolt extends ActiveSkill {
                 if (target instanceof Player) {
                     Hero tHero = plugin.getHeroManager().getHero((Player) target);
                     tHero.addEffect(iceSlowEffect);
-                } else if (target instanceof Creature) {
-                    plugin.getEffectManager().addEntityEffect((Creature) target, iceSlowEffect);
-                }
+                } else
+                    plugin.getEffectManager().addEntityEffect(target, iceSlowEffect);
                 
                 addSpellTarget(event.getEntity(), hero);
                 event.setDamage(damage);
