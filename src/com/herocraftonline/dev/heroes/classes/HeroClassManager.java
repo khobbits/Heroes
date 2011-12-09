@@ -191,7 +191,7 @@ public class HeroClassManager {
             List<String> list = config.getStringList("parents.strong");
             if (list != null)
                 strongParents.addAll(list);
-
+            
             list = config.getStringList("parents.weak");
             Set<String> weakParents = new HashSet<String>();
             if (list != null)

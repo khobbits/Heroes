@@ -184,6 +184,9 @@ public class YMLHeroStorage extends HeroStorage {
      * @param section
      */
     private void loadCooldowns(Hero hero, ConfigurationSection section) {
+        if (section == null)
+            return;
+        
         HeroClass heroClass = hero.getHeroClass();
 
         Set<String> storedCooldowns = section.getKeys(false);
@@ -229,7 +232,6 @@ public class YMLHeroStorage extends HeroStorage {
      * @param config
      */
     private void loadSkillSettings(Hero hero, ConfigurationSection config) {
-
         if (config.getKeys(false) != null) {
             for (String skill : config.getKeys(false)) {
                 if (config.isConfigurationSection(skill)) {
@@ -242,6 +244,9 @@ public class YMLHeroStorage extends HeroStorage {
     }
 
     private void saveBinds(Hero hero, ConfigurationSection section) {
+        if (section == null)
+            return;
+        
         Map<Material, String[]> binds = hero.getBinds();
         for (Material material : binds.keySet()) {
             String[] bindArgs = binds.get(material);
@@ -254,6 +259,9 @@ public class YMLHeroStorage extends HeroStorage {
     }
 
     private void saveCooldowns(Hero hero, ConfigurationSection section) {
+        if (section == null)
+            return;
+        
         long time = System.currentTimeMillis();
         Map<String, Long> cooldowns = hero.getCooldowns();
         for (Map.Entry<String, Long> entry : cooldowns.entrySet()) {
