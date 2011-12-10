@@ -46,7 +46,7 @@ public class HeroesDamageListener extends EntityListener {
     private DamageManager damageManager;
 
     private static final Map<Material, Integer> armorPoints;
-
+    private Map<LivingEntity, Integer> entityHPs = new HashMap<LivingEntity, Integer>();
     private boolean ignoreNextDamageEventBecauseBukkitCallsTwoEventsGRRR = false;
     private boolean ignoreNextDamageEventBecauseWolvesAreOnCrack = true;
 
@@ -66,29 +66,12 @@ public class HeroesDamageListener extends EntityListener {
     }
 
     private void onEntityDamageCore(EntityDamageEvent event) {
-        if (event.isCancelled() || Heroes.properties.disabledWorlds.contains(event.getEntity().getWorld().getName()))
-            return;
-
-        if (ignoreNextDamageEventBecauseBukkitCallsTwoEventsGRRR) {
-            ignoreNextDamageEventBecauseBukkitCallsTwoEventsGRRR = false;
-            plugin.debugLog(Level.SEVERE, "Detected second projectile damage attack on: " + event.getEntity().toString() + " with event type: " + event.getType().toString());
-            return;
-        }
-
-        if (event.getCause() == DamageCause.SUICIDE && event.getEntity() instanceof Player) {
-            Player player = (Player) event.getEntity();
-            plugin.getHeroManager().getHero(player).setHealth(0D);
-            return;
-        }
 
         Entity defender = event.getEntity();
         Entity attacker = null;
         HeroDamageCause heroLastDamage = null;
         DamageCause cause = event.getCause();
         int damage = event.getDamage();
-
-        if (cause == DamageCause.PROJECTILE)
-            ignoreNextDamageEventBecauseBukkitCallsTwoEventsGRRR = true;
 
         if (damageManager.isSpellTarget(defender)) {
             SkillUseInfo skillInfo = damageManager.getSpellTargetInfo(defender);
@@ -219,7 +202,7 @@ public class HeroesDamageListener extends EntityListener {
             final Hero hero = plugin.getHeroManager().getHero(player);
             //check player inventory to make sure they aren't wearing restricted items
             hero.checkInventory();
-            
+
             //Loop through the player's effects and check to see if we need to remove them
             if (hero.hasEffectType(EffectType.INVULNERABILITY)) {
                 event.setCancelled(true);
@@ -231,7 +214,7 @@ public class HeroesDamageListener extends EntityListener {
                 }
             }
 
-            
+
             // Party damage & PvPable test
             if (attacker instanceof Player) {
                 // If the players aren't within the level range then deny the PvP
@@ -306,9 +289,47 @@ public class HeroesDamageListener extends EntityListener {
     @Override
     public void onEntityDamage(EntityDamageEvent event) {
         Heroes.debug.startTask("HeroesDamageListener.onEntityDamage");
+        // Reasons to immediately ignore damage event
+        if (event.isCancelled() || Heroes.properties.disabledWorlds.contains(event.getEntity().getWorld().getName()) || ignoreNextDamageEventBecauseBukkitCallsTwoEventsGRRR) {
+            ignoreNextDamageEventBecauseBukkitCallsTwoEventsGRRR = false;
+            Heroes.debug.stopTask("HeroesDamageListener.onEntityDamage");
+            return;
+        }
+
+
+        Entity defender = event.getEntity();
+        Entity attacker = null;
+
+        if (damageManager.isSpellTarget(defender)) {
+
+        } else {
+            DamageCause cause = event.getCause();
+            //If it's suicide, don't process the event just set the hero health to 0
+            if (cause == DamageCause.SUICIDE && event.getEntity() instanceof Player) {
+                Player player = (Player) event.getEntity();
+                plugin.getHeroManager().getHero(player).setHealth(0D);
+                event.setDamage(1000); //OVERKILLLLL!!
+                Heroes.debug.stopTask("HeroesDamageListener.onEntityDamage");
+                return;
+            } else if (cause == DamageCause.PROJECTILE) {
+                ignoreNextDamageEventBecauseBukkitCallsTwoEventsGRRR = true;
+            }
+            
+        }
+
+        //Lets figure out who the attacker is
+        if (event instanceof EntityDamageByEntityEvent) {
+            EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
+            if (subEvent.getDamager() instanceof Projectile) {
+                attacker = ((Projectile) subEvent.getDamager()).getShooter();
+            } else {
+                attacker = subEvent.getDamager();
+            }
+        }
         onEntityDamageCore(event);
         Heroes.debug.stopTask("HeroesDamageListener.onEntityDamage");
     }
+
 
     @Override
     public void onEntityRegainHealth(EntityRegainHealthEvent event) {
@@ -322,19 +343,19 @@ public class HeroesDamageListener extends EntityListener {
         Player player = (Player) event.getEntity();
         Hero hero = plugin.getHeroManager().getHero(player);
         double maxHealth = hero.getMaxHealth();
-        
+
         // Satiated players regenerate % of total HP rather than 1 HP
         if (event.getRegainReason() == RegainReason.SATIATED) {
             double healPercent = Heroes.properties.foodHealPercent;
             amount = maxHealth * healPercent;
         }
-        
+
         double newHeroHealth = hero.getHealth() + amount;
         if (newHeroHealth > maxHealth)
             newHeroHealth = maxHealth;
         int newPlayerHealth = (int) (newHeroHealth / maxHealth * 20);
         hero.setHealth(newHeroHealth);
-        
+
         //Sanity test
         int newAmount = newPlayerHealth - player.getHealth();
         if (newAmount < 0)
@@ -512,7 +533,7 @@ public class HeroesDamageListener extends EntityListener {
                 return true;
             else if (hero.hasEffectType(EffectType.RESIST_DARK) && skill.isType(SkillType.DARK))
                 return true;
-            else if (hero.hasEffectType(EffectType.LIGHT) && skill.isType(SkillType.LIGHT))
+            else if (hero.hasEffectType(EffectType.RESIST_LIGHT) && skill.isType(SkillType.LIGHT))
                 return true;
             else if (hero.hasEffectType(EffectType.RESIST_LIGHTNING) && skill.isType(SkillType.LIGHTNING))
                 return true;
@@ -534,6 +555,29 @@ public class HeroesDamageListener extends EntityListener {
         }
         return false;
     }
+
+    private int convertHeroesDamage(double d, LivingEntity lEntity) {
+        int maxHealth = getMaxHealth(lEntity);
+        int damage = (int) ((lEntity.getMaxHealth() / maxHealth) * d);
+        return damage;
+    }
+
+    public int getHealth(LivingEntity lEntity) {
+        if (lEntity instanceof Player)
+            return (int) plugin.getHeroManager().getHero((Player) lEntity).getHealth();
+        else if (entityHPs.containsKey(lEntity))
+            return entityHPs.get(lEntity);
+        else //TODO: this stuff probably need to be null checked
+            return plugin.getDamageManager().getEntityHealth(Util.getCreatureFromEntity(lEntity));
+    }
+
+    public int getMaxHealth(LivingEntity lEntity) {
+        if (lEntity instanceof Player)
+            return (int) plugin.getHeroManager().getHero((Player) lEntity).getMaxHealth();
+        else //TODO: this stuff probably need to be null checked
+            return plugin.getDamageManager().getEntityHealth(Util.getCreatureFromEntity(lEntity));
+    }
+
 
     static {
         Map<Material, Integer> aMap = new HashMap<Material, Integer>();
