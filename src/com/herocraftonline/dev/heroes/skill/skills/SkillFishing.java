@@ -28,7 +28,6 @@ public class SkillFishing extends PassiveSkill {
         setDescription("Double Drops for fishing!");
         setEffectTypes(EffectType.BENEFICIAL);
         setTypes(SkillType.KNOWLEDGE, SkillType.EARTH, SkillType.BUFF);
-        
         registerEvent(Type.PLAYER_FISH, new SkillPlayerListener(this), Priority.Monitor);
     }
 
@@ -48,7 +47,6 @@ public class SkillFishing extends PassiveSkill {
         SkillPlayerListener(Skill skill) {
             this.skill = skill;
         }
-        
         
         @Override
         public void onPlayerFish(PlayerFishEvent event){
