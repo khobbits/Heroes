@@ -120,8 +120,8 @@ public class Properties {
     private void loadLevelConfig(ConfigurationSection section) {
         if (section == null)
             return;
-        power = section.getDouble("power", 1.03);
-        maxExp = section.getInt("maxExperience", 90000);
+        power = section.getDouble("power", 1.00);
+        maxExp = section.getInt("maxExperience", 100000);
         maxLevel = section.getInt("maxLevel", 20);
         partyBonus = section.getDouble("partyBonus", 0.20);
         expLoss = section.getDouble("expLoss", 0.05);
@@ -201,7 +201,7 @@ public class Properties {
             levels[i] = (int) (A * Math.pow(i, power + 1));
         }
         levels[maxLevel - 1] = maxExp;
-        levels[maxLevel] = (int) (A * Math.pow(maxLevel, power + 1));
+        levels[maxLevel] = (int) (A * Math.pow(maxLevel + 1, power + 1));
     }
 
     public static int getExperience(int level) {
