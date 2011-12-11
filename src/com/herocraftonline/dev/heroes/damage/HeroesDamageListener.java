@@ -1,8 +1,5 @@
 package com.herocraftonline.dev.heroes.damage;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.bukkit.Material;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Entity;
@@ -41,7 +38,6 @@ public class HeroesDamageListener extends EntityListener {
     private Heroes plugin;
     private DamageManager damageManager;
 
-    private Map<LivingEntity, Integer> entityHPs = new HashMap<LivingEntity, Integer>();
     private boolean ignoreNextDamageEventBecauseBukkitCallsTwoEventsGRRR = false;
     private boolean ignoreNextDamageEventBecauseWolvesAreOnCrack = true;
 
@@ -588,19 +584,12 @@ public class HeroesDamageListener extends EntityListener {
         return damage;
     }
 
-    public int getHealth(LivingEntity lEntity) {
-        if (lEntity instanceof Player)
-            return (int) plugin.getHeroManager().getHero((Player) lEntity).getHealth();
-        else if (entityHPs.containsKey(lEntity))
-            return entityHPs.get(lEntity);
-        else //TODO: this stuff probably need to be null checked
-            return plugin.getDamageManager().getEntityHealth(Util.getCreatureFromEntity(lEntity));
-    }
-
     public int getMaxHealth(LivingEntity lEntity) {
         if (lEntity instanceof Player)
             return (int) plugin.getHeroManager().getHero((Player) lEntity).getMaxHealth();
-        else //TODO: this stuff probably need to be null checked
-            return plugin.getDamageManager().getEntityHealth(Util.getCreatureFromEntity(lEntity));
+        else {
+            Integer maxHP = plugin.getDamageManager().getEntityHealth(Util.getCreatureFromEntity(lEntity));
+            return maxHP != null ? maxHP : lEntity.getMaxHealth();
+        }
     }
 }
