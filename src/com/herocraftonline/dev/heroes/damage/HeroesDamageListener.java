@@ -280,18 +280,29 @@ public class HeroesDamageListener extends EntityListener {
             default:
                 hero.setHealth(hero.getHealth() - damage);
             }
-            
+
             event.setDamage(convertHeroesDamage(damage, player));
-   
+
             HeroParty party = hero.getParty();
             if (party != null && event.getDamage() > 0) {
                 party.update();
             }
 
+            // Make sure health syncs on the next tick
+            if (hero.getHealth() == 0)
+                event.setDamage(200);
+            else
+                Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+                    @Override
+                    public void run() {
+                        hero.syncHealth();
+                    }
+                }, 1);
+
         } else if (defender instanceof LivingEntity) {
             event.setDamage(convertHeroesDamage(damage, (LivingEntity) defender));
         }
-        
+
         Heroes.debug.stopTask("HeroesDamageListener.onEntityDamage");
     }
 
