@@ -1,6 +1,7 @@
 package com.herocraftonline.dev.heroes.damage;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Entity;
@@ -163,6 +164,8 @@ public class HeroesDamageListener extends EntityListener {
         }
 
         if (defender instanceof Player) {
+            if (((Player) defender).getGameMode() == GameMode.CREATIVE)
+                return;
             lastDamage = plugin.getHeroManager().getHero((Player) defender).getLastDamageCause();
         }
 
@@ -297,7 +300,11 @@ public class HeroesDamageListener extends EntityListener {
             }
 
         } else if (defender instanceof LivingEntity) {
-            event.setDamage(convertHeroesDamage(damage, (LivingEntity) defender));
+            damage = convertHeroesDamage(damage, (LivingEntity) defender);
+            if (damage == ((LivingEntity) defender).getHealth())
+                damage = 100;
+            
+            event.setDamage(damage);
         }
 
         Heroes.debug.stopTask("HeroesDamageListener.onEntityDamage");

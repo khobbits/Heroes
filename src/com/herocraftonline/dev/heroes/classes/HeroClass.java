@@ -332,7 +332,17 @@ public class HeroClass {
     public ConfigurationSection getSkillSettings(String name) {        
         return skillConfig.getConfigurationSection(name);
     }
-
+    
+    /**
+     * Checks if the class has settings for the given skill
+     * 
+     * @param path
+     * @return true if the class has the skill settings
+     */
+    public boolean hasSkillSettings(String path) {
+        return skillConfig.get(path, null) != null;
+    }
+    
     /**
      * @return Set of all child classes
      */

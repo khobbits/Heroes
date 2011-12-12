@@ -431,12 +431,10 @@ public abstract class Skill extends BasicCommand {
     }
 
     private boolean hasSetting(HeroClass heroClass, String setting) {
-        if (heroClass == null)
+        if (heroClass == null || !heroClass.hasSkill(getName()))
             return false;
-        if (heroClass.getSkillSettings(getName()) == null)
-            return false;
-
-        return heroClass.getSkillSettings(getName()).getString(setting) != null;
+        
+        return heroClass.hasSkillSettings(getName() + "." + setting);
     }
 
     /**
