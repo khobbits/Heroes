@@ -81,8 +81,11 @@ public class HeroClass {
         if (section == null) {
             skillConfig.createSection(name, settings.getValues(true));
         } else {
-            for (Map.Entry<String, Object> entry : settings.getValues(true).entrySet())
-                section.set(entry.getKey(), entry.getValue());
+            for (String key : settings.getKeys(true)) {
+                if (settings.isConfigurationSection(key))
+                    continue;
+                section.set(key, settings.get(key));
+            }
         }
 
         skills.add(name.toLowerCase());
