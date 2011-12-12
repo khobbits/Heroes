@@ -91,7 +91,7 @@ public class OutsourcedSkill extends Skill {
                 if (Heroes.perms.getName().equals("Permissions3") || Heroes.perms.getName().equals("PermissionsEx")) {
                     for (String permission : permissions) {
                         if (!Heroes.perms.has(world, playerName, permission)) {
-                            Heroes.perms.playerRemoveTransient(player, permission);
+                            Heroes.perms.playerAddTransient(player, permission);
                         }
                     }
                 }
