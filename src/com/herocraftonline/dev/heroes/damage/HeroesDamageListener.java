@@ -300,7 +300,11 @@ public class HeroesDamageListener extends EntityListener {
             }
 
         } else if (defender instanceof LivingEntity) {
-            event.setDamage(convertHeroesDamage(damage, (LivingEntity) defender));
+            damage = convertHeroesDamage(damage, (LivingEntity) defender);
+            if (damage == ((LivingEntity) defender).getHealth())
+                damage = 100;
+            
+            event.setDamage(damage);
         }
 
         Heroes.debug.stopTask("HeroesDamageListener.onEntityDamage");
