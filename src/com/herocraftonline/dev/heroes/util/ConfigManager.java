@@ -142,10 +142,12 @@ public class ConfigManager {
 
     private void loadExperience() {
         ConfigurationSection section = expConfig.getConfigurationSection("killing");
-        if (section == null)
+        if (section == null) {
+            Heroes.log(Level.WARNING, "No Experience Section Killing defined!");
             return;
+        }
         Set<String> keys = section.getKeys(false);
-        if (keys != null) {
+        if (keys != null && !keys.isEmpty()) {
             for (String item : keys) {
                 try {
                     double exp = section.getDouble(item, 0);
@@ -159,6 +161,8 @@ public class ConfigManager {
                     Heroes.log(Level.WARNING, "Invalid creature type (" + item + ") found in experience.yml.");
                 }
             }
+        } else {
+            Heroes.log(Level.WARNING, "No Experience Section Killing defined!");
         }
 
         Heroes.properties.miningExp = loadMaterialExperience(expConfig.getConfigurationSection("mining"));
@@ -182,6 +186,8 @@ public class ConfigManager {
                     Heroes.log(Level.WARNING, "Invalid material type (" + item + ") found in experience.yml.");
                 }
             }
+        } else {
+            Heroes.log(Level.WARNING, "No Exp values defined for this section");
         }
         return expMap;
     }

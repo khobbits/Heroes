@@ -38,7 +38,6 @@ public class HeroesDamageListener extends EntityListener {
     private Heroes plugin;
     private DamageManager damageManager;
 
-    private boolean ignoreNextDamageEventBecauseBukkitCallsTwoEventsGRRR = false;
     private boolean ignoreNextDamageEventBecauseWolvesAreOnCrack = true;
 
     public HeroesDamageListener(Heroes plugin, DamageManager damageManager) {
@@ -142,8 +141,7 @@ public class HeroesDamageListener extends EntityListener {
     public void onEntityDamage(EntityDamageEvent event) {
         Heroes.debug.startTask("HeroesDamageListener.onEntityDamage");
         // Reasons to immediately ignore damage event
-        if (event.isCancelled() || Heroes.properties.disabledWorlds.contains(event.getEntity().getWorld().getName()) || ignoreNextDamageEventBecauseBukkitCallsTwoEventsGRRR) {
-            ignoreNextDamageEventBecauseBukkitCallsTwoEventsGRRR = false;
+        if (event.isCancelled() || Heroes.properties.disabledWorlds.contains(event.getEntity().getWorld().getName())) {
             Heroes.debug.stopTask("HeroesDamageListener.onEntityDamage");
             return;
         }
@@ -214,11 +212,6 @@ public class HeroesDamageListener extends EntityListener {
                     plugin.getHeroManager().getHero((Player) defender).setLastDamageCause(lastDamage); 
                 }
                 return;
-            }
-
-            //If it's suicide, don't process the event just set the hero health to 0
-            if (cause == DamageCause.PROJECTILE) {
-                ignoreNextDamageEventBecauseBukkitCallsTwoEventsGRRR = true;
             }
         }
 

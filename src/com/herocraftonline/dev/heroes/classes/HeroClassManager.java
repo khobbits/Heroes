@@ -150,8 +150,10 @@ public class HeroClassManager {
         loadExperienceTypes(newClass, config.getStringList("experience-sources"));
 
         Double baseMaxHealth = config.getDouble("base-max-health", 20);
+        Heroes.log(Level.INFO, "Base Health Loaded: " + baseMaxHealth);
         Double maxHealthPerLevel = config.getDouble("max-health-per-level", 0);
-        boolean userClass= config.getBoolean("user-class", true);
+        Heroes.log(Level.INFO, "Health Per Level Loaded: " + maxHealthPerLevel);
+        boolean userClass = config.getBoolean("user-class", true);
         newClass.setBaseMaxHealth(baseMaxHealth);
         newClass.setMaxHealthPerLevel(maxHealthPerLevel);
         newClass.setUserClass(userClass);
