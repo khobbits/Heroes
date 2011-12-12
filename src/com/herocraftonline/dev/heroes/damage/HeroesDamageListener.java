@@ -1,6 +1,5 @@
 package com.herocraftonline.dev.heroes.damage;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Entity;
@@ -288,7 +287,9 @@ public class HeroesDamageListener extends EntityListener {
             if (party != null && event.getDamage() > 0) {
                 party.update();
             }
-
+            
+            /*
+             * Unecessary to re-sync at the moment.
             // Make sure health syncs on the next tick
             if (hero.getHealth() == 0)
                 event.setDamage(200);
@@ -299,7 +300,7 @@ public class HeroesDamageListener extends EntityListener {
                         hero.syncHealth();
                     }
                 }, 1);
-
+            */
         } else if (defender instanceof LivingEntity) {
             event.setDamage(convertHeroesDamage(damage, (LivingEntity) defender));
         }
