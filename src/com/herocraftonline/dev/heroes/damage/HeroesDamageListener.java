@@ -1,5 +1,6 @@
 package com.herocraftonline.dev.heroes.damage;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Entity;
@@ -275,14 +276,9 @@ public class HeroesDamageListener extends EntityListener {
             }
 
             event.setDamage(convertHeroesDamage(damage, player));
-
-            HeroParty party = hero.getParty();
-            if (party != null && event.getDamage() > 0) {
-                party.update();
-            }
-            
-            /*
-             * Unecessary to re-sync at the moment.
+            //If the player would drop to 0 but they still have HP left, don't let them die.
+            if (hero.getHealth() != 0 && player.getHealth() == 1 && event.getDamage() == 1)
+                player.setHealth(2);
             // Make sure health syncs on the next tick
             if (hero.getHealth() == 0)
                 event.setDamage(200);
@@ -293,7 +289,13 @@ public class HeroesDamageListener extends EntityListener {
                         hero.syncHealth();
                     }
                 }, 1);
-            */
+
+            //Update the party display
+            HeroParty party = hero.getParty();
+            if (party != null && damage > 0) {
+                party.update();
+            }
+
         } else if (defender instanceof LivingEntity) {
             event.setDamage(convertHeroesDamage(damage, (LivingEntity) defender));
         }
@@ -587,6 +589,8 @@ public class HeroesDamageListener extends EntityListener {
     private int convertHeroesDamage(double d, LivingEntity lEntity) {
         int maxHealth = getMaxHealth(lEntity);
         int damage = (int) ((lEntity.getMaxHealth() / maxHealth) * d);
+        if (damage == 0)
+            damage = 1;
         return damage;
     }
 
