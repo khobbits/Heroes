@@ -1,5 +1,6 @@
 package com.herocraftonline.dev.heroes.damage;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Entity;
