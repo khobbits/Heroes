@@ -97,7 +97,7 @@ public class HPlayerListener extends PlayerListener {
 
     @Override
     public void onPlayerInteract(PlayerInteractEvent event) {
-        if (event.isCancelled() || event.useItemInHand() == Result.DENY)
+        if (event.useItemInHand() == Result.DENY)
             return;
         
         Player player = event.getPlayer();
