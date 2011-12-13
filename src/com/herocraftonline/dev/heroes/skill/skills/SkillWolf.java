@@ -67,8 +67,6 @@ public class SkillWolf extends ActiveSkill {
         ConfigurationSection node = super.getDefaultConfig();
         node.set(Setting.MAX_DISTANCE.node(), 5);
         node.set("max-wolves", 3);
-        node.set(Setting.HEALTH.node(), 30);
-        node.set("health-per-level", .25);
         node.set(Setting.DAMAGE.node(), 3);
         node.set("damage-per-level", .1);
         node.set("tame-requires-skill", true);
@@ -147,11 +145,8 @@ public class SkillWolf extends ActiveSkill {
 
     private void setWolfSettings(Hero hero, Wolf wolf) {
         Player player = hero.getPlayer();
-        int health = getSetting(hero, Setting.HEALTH.node(), 30, false);
-        health = (int) (health + getSetting(hero, "health-per-level", .25, false) * hero.getLevel(this));
         wolf.setOwner(player);
         wolf.setTamed(true);
-        wolf.setHealth(health);
         hero.getSummons().add(wolf);
         wolves.add(wolf);
     }
