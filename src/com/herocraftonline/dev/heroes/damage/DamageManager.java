@@ -100,10 +100,12 @@ public class DamageManager {
                     CreatureType type = CreatureType.fromName(key);
                     if (type == null)
                         continue;
-
-                    creatureHealth.put(type, section.getInt(key, 20));
-                    if (creatureHealth.get(type) < 0)
-                        creatureHealth.put(type, 20);
+                    
+                    int health = section.getInt(key, 20);
+                    if (health <= 0)
+                        health = 20;
+                    
+                    creatureHealth.put(type, health);
                 }
             }
         }
