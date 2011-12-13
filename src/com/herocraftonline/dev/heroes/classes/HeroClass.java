@@ -78,9 +78,16 @@ public class HeroClass {
 
     protected void addSkill(String name, ConfigurationSection settings) {
         ConfigurationSection section = skillConfig.getConfigurationSection(name);
-        if (section == null)
+        if (section == null) {
             skillConfig.createSection(name, settings.getValues(true));
-            
+        } else {
+            for (String key : settings.getKeys(true)) {
+                if (settings.isConfigurationSection(key))
+                    continue;
+                section.set(key, settings.get(key));
+            }
+        }
+
         skills.add(name.toLowerCase());
     }
 
