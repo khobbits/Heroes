@@ -169,8 +169,10 @@ public class HeroesDamageListener extends EntityListener {
         }
 
         if (defender instanceof Player) {
-            if (((Player) defender).getGameMode() == GameMode.CREATIVE)
+            if (((Player) defender).getGameMode() == GameMode.CREATIVE || ((Player) defender).isDead()) {
+                Heroes.debug.stopTask("HeroesDamageListener.onEntityDamage");
                 return;
+            }
             lastDamage = plugin.getHeroManager().getHero((Player) defender).getLastDamageCause();
         }
 
@@ -228,6 +230,7 @@ public class HeroesDamageListener extends EntityListener {
             Player player = (Player) defender;
             if (player.getNoDamageTicks() > 10 || player.isDead() || player.getHealth() <= 0) {
                 event.setCancelled(true);
+                Heroes.debug.stopTask("HeroesDamageListener.onEntityDamage");
                 return;
             }
             final Hero hero = plugin.getHeroManager().getHero(player);
@@ -237,6 +240,7 @@ public class HeroesDamageListener extends EntityListener {
             //Loop through the player's effects and check to see if we need to remove them
             if (hero.hasEffectType(EffectType.INVULNERABILITY)) {
                 event.setCancelled(true);
+                Heroes.debug.stopTask("HeroesDamageListener.onEntityDamage");
                 return;
             }
             for (Effect effect : hero.getEffects()) {
@@ -253,12 +257,14 @@ public class HeroesDamageListener extends EntityListener {
                 if (Math.abs(aLevel - hero.getTieredLevel(false)) > Heroes.properties.pvpLevelRange) {
                     Messaging.send((Player) attacker, "That player is outside of your level range!");
                     event.setCancelled(true);
+                    Heroes.debug.stopTask("HeroesDamageListener.onEntityDamage");
                     return;
                 }
                 HeroParty party = hero.getParty();
                 if (party != null && party.isNoPvp()) {
                     if (party.isPartyMember((Player) attacker)) {
                         event.setCancelled(true);
+                        Heroes.debug.stopTask("HeroesDamageListener.onEntityDamage");
                         return;
                     }
                 }
