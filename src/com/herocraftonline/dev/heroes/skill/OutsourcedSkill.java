@@ -86,7 +86,7 @@ public class OutsourcedSkill extends Skill {
         Player player = hero.getPlayer();
         String world = player.getWorld().getName();
         String playerName = player.getName();
-        if (hero.getHeroClass().getSkillSettings(getName()) != null || (hero.getSecondClass() != null && hero.getSecondClass().getSkillSettings(getName()) != null)) {
+        if (hero.getHeroClass().hasSkill(getName()) || (hero.getSecondClass() != null && hero.getSecondClass().hasSkill(getName()))) {
             if (hero.getLevel(this) >= getSetting(hero, Setting.LEVEL.node(), 1, true) && !Heroes.properties.disabledWorlds.contains(world)) {
                 if (Heroes.perms.getName().equals("Permissions3") || Heroes.perms.getName().equals("PermissionsEx")) {
                     for (String permission : permissions) {
