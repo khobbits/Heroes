@@ -258,6 +258,8 @@ public class SkillManager {
             }
             newSection.set(key, dSection.get(key));
         }
+        // Flip-Flop default copying to prevent intialization NPEs
+        skill.setConfig(SkillManager.allSkillsConfig.getConfigurationSection(skill.getName()));
         skill.init();
     }
 

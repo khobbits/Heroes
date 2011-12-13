@@ -7,6 +7,7 @@ import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
 
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
@@ -70,7 +71,6 @@ public abstract class Skill extends BasicCommand {
      */
     public Skill(Heroes plugin, String name) {
         super(name);
-        config = SkillManager.allSkillsConfig.getConfigurationSection(getName());
         this.plugin = plugin;
     }
 
@@ -331,8 +331,11 @@ public abstract class Skill extends BasicCommand {
      * @return the stored setting
      */
     public String getSetting(Hero hero, String setting, String def) {
-        if (hero == null)
+        if (hero == null) {
+            if (getConfig() == null)
+                Heroes.log(Level.WARNING, "Null config during intialization! woops!");
             return getConfig().getString(setting, def);
+        }
         else if (hasSetting(hero.getHeroClass(), setting))
             return hero.getHeroClass().getSkillSettings(getName()).getString(setting, def);
         else if (hasSetting(hero.getSecondClass(), setting))
