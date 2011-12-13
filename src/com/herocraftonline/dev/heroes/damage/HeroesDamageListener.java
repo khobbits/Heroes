@@ -1,5 +1,8 @@
 package com.herocraftonline.dev.heroes.damage;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -39,6 +42,8 @@ public class HeroesDamageListener extends EntityListener {
 
     private Heroes plugin;
     private DamageManager damageManager;
+
+    private Map<Integer, Integer> healthMap = new HashMap<Integer, Integer>();
 
     private boolean ignoreNextDamageEventBecauseWolvesAreOnCrack = true;
 
@@ -300,10 +305,39 @@ public class HeroesDamageListener extends EntityListener {
             }
 
         } else if (defender instanceof LivingEntity) {
-            damage = convertHeroesDamage(damage, (LivingEntity) defender);
-            if (damage == ((LivingEntity) defender).getHealth())
+            // Do Damage calculations based on maximum health and current health
+            final LivingEntity lEntity = (LivingEntity) defender;
+            int maxHealth = getMaxHealth(lEntity);
+            Integer currentHealth = healthMap.get(lEntity.getEntityId());
+            if (currentHealth == null)
+                currentHealth = maxHealth;
+
+            currentHealth -= damage;
+            if (currentHealth <= 0) {
+                healthMap.remove(lEntity.getEntityId());
                 damage = 100;
-            
+            } else {
+                damage = convertHeroesDamage(damage, (LivingEntity) defender);
+                int difference = lEntity.getHealth() - damage;
+                if (difference <= 0) {
+                    lEntity.setHealth(lEntity.getHealth() + 1 - difference);
+                }
+                
+                //Only re-sync if the max health for this 
+                if (maxHealth != lEntity.getMaxHealth()) {
+                    Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+                        @Override
+                        public void run() {
+                            int maxMCHP = lEntity.getMaxHealth();
+                            double percent = healthMap.get(lEntity.getEntityId()) / (double) getMaxHealth(lEntity);
+                            int newHP = (int) (maxMCHP * percent);
+                            if (newHP == 0)
+                                newHP = 1;
+                            lEntity.setHealth(newHP);
+                        }
+                    }, 1);
+                }
+            }
             event.setDamage(damage);
         }
 
@@ -595,7 +629,7 @@ public class HeroesDamageListener extends EntityListener {
 
     private int convertHeroesDamage(double d, LivingEntity lEntity) {
         int maxHealth = getMaxHealth(lEntity);
-        int damage = (int) ((lEntity.getMaxHealth() / maxHealth) * d);
+        int damage = (int) ((lEntity.getMaxHealth() / (double) maxHealth) * d);
         if (damage == 0)
             damage = 1;
         return damage;
