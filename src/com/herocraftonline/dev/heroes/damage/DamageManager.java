@@ -61,11 +61,7 @@ public class DamageManager {
     }
 
     public Integer getEntityHealth(CreatureType type) {
-        if (creatureHealth.containsKey(type)) {
-            int health = creatureHealth.get(type);
-            return health > 200 ? 200 : health < 0 ? 0 : health;
-        } else
-            return null;
+        return creatureHealth.get(type);
     }
 
     public Double getEnvironmentalDamage(DamageCause cause) {
@@ -105,7 +101,9 @@ public class DamageManager {
                     if (type == null)
                         continue;
 
-                    creatureHealth.put(type, section.getInt(key, 10));
+                    creatureHealth.put(type, section.getInt(key, 20));
+                    if (creatureHealth.get(type) < 0)
+                        creatureHealth.put(type, 20);
                 }
             }
         }
