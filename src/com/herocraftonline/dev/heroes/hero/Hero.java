@@ -1163,6 +1163,8 @@ public class Hero {
             return true;
 
         ItemStack itemStack = player.getInventory().getItem(slot);
+        if (itemStack == null)
+            return true;
         Material itemType = itemStack.getType();
         if (!Util.isWeapon(itemType))
             return true;

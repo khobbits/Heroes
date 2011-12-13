@@ -97,9 +97,10 @@ public class HPlayerListener extends PlayerListener {
 
     @Override
     public void onPlayerInteract(PlayerInteractEvent event) {
-        Player player = event.getPlayer();
-        if (event.useItemInHand() == Result.DENY)
+        if (event.isCancelled() || event.useItemInHand() == Result.DENY)
             return;
+        
+        Player player = event.getPlayer();
 
         Hero hero = plugin.getHeroManager().getHero(player);
         if (hero.hasEffectType(EffectType.DISARM))

@@ -309,14 +309,16 @@ public class HeroesDamageListener extends EntityListener {
             final LivingEntity lEntity = (LivingEntity) defender;
             int maxHealth = getMaxHealth(lEntity);
             Integer currentHealth = healthMap.get(lEntity.getEntityId());
-            if (currentHealth == null)
-                currentHealth = maxHealth;
+            if (currentHealth == null) {
+                currentHealth = (int) (lEntity.getHealth() / (double) lEntity.getMaxHealth()) * maxHealth;
+            }
 
             currentHealth -= damage;
             if (currentHealth <= 0) {
                 healthMap.remove(lEntity.getEntityId());
                 damage = 100;
             } else {
+                healthMap.put(lEntity.getEntityId(), currentHealth);
                 damage = convertHeroesDamage(damage, (LivingEntity) defender);
                 int difference = lEntity.getHealth() - damage;
                 if (difference <= 0) {
