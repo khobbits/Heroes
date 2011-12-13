@@ -9,11 +9,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionDefault;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClass.CircularParentException;
@@ -215,8 +217,14 @@ public class HeroClassManager {
     private void registerClassPermissions() {
         Map<String, Boolean> classPermissions = new HashMap<String, Boolean>();
         for (HeroClass heroClass : classes) {
-            if (heroClass.isUserClass())
+            if (heroClass.isUserClass()) {
+                Permission p = new Permission("heroes.classes." + heroClass.getName().toLowerCase(), PermissionDefault.TRUE);
+                Bukkit.getServer().getPluginManager().addPermission(p);
                 classPermissions.put("heroes.classes." + heroClass.getName().toLowerCase(), true);
+            } else {
+                Permission p = new Permission("heroes.classes." + heroClass.getName().toLowerCase(), PermissionDefault.OP);
+                Bukkit.getServer().getPluginManager().addPermission(p);
+            }
         }
         Permission wildcardClassPermission = new Permission("heroes.classes.*", "Grants access to all classes.", classPermissions);
         plugin.getServer().getPluginManager().addPermission(wildcardClassPermission);
