@@ -3,7 +3,7 @@ default: true
 user-class: true
 primary: true
 secondary: false
-description: The vagrant, starter PATH
+description: The Default Starter Path
 permitted-armor:
 - '*'
 permitted-weapon:
@@ -12,6 +12,8 @@ permitted-skills:
   ALL: true
 experience-sources:
 - KILLING
+- CRAFTING
+- MINING
 permission-skills:
   Example:
     level: 1
@@ -23,4 +25,3 @@ item-damage:
 projectile-damage:
   Arrow: 3
 expLoss: 0
-tier: 0
