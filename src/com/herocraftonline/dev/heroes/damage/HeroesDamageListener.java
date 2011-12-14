@@ -327,9 +327,10 @@ public class HeroesDamageListener extends EntityListener {
                 healthMap.put(lEntity.getEntityId(), currentHealth);
                 damage = convertHeroesDamage(damage, (LivingEntity) defender);
                 int difference = lEntity.getHealth() - damage;
-                if (difference <= 0) {
+                if (difference <= 0 && lEntity.getHealth() + 1 - difference > lEntity.getMaxHealth())
+                    event.setDamage(0);
+                else if (difference <= 0)
                     lEntity.setHealth(lEntity.getHealth() + 1 - difference);
-                }
                 
                 //Only re-sync if the max health for this 
                 if (maxHealth != lEntity.getMaxHealth()) {
