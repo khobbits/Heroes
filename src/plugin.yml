@@ -1,6 +1,6 @@
 name: Heroes
 main: com.herocraftonline.dev.heroes.Heroes
-version: 1.3.2
+version: 1.4.0
 website: http://www.herocraftonline.com
 authors: [Herocraft Coding, DThielke, Rigby, RightLegRed, Sleaker, Kainzo]
 description: Experience, leveling, skills and class system for Minecraft developed by Herocraft Development.
