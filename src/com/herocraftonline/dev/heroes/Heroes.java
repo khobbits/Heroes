@@ -182,6 +182,13 @@ public class Heroes extends JavaPlugin {
     @Override
     public void onEnable() {
         debug.reset();
+        // Perform the Permissions check.
+        if (!setupPermissions()) {
+            log.warning("Heroes requires Vault! Please install it to use Heroes!");
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
+        setupEconomy();
         properties.load(this);
         configManager = new ConfigManager(this);
 
@@ -212,14 +219,7 @@ public class Heroes extends JavaPlugin {
         registerEvents();
         // Call our function to setup Heroes Commands.
         registerCommands();
-        // Perform the Permissions check.
-        if (!setupPermissions()) {
-            log.warning("Heroes requires Vault! Please install it to use Heroes!");
-            getServer().getPluginManager().disablePlugin(this);
-            return;
-        }
         
-        setupEconomy();
         log(Level.INFO, "version " + getDescription().getVersion() + " is enabled!");
 
         final Player[] players = getServer().getOnlinePlayers();
