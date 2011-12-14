@@ -336,6 +336,8 @@ public class HeroesDamageListener extends EntityListener {
                     Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
                         @Override
                         public void run() {
+                            if (lEntity == null || lEntity.isDead())
+                                    return;
                             int maxMCHP = lEntity.getMaxHealth();
                             double percent = healthMap.get(lEntity.getEntityId()) / (double) getMaxHealth(lEntity);
                             int newHP = (int) (maxMCHP * percent);
