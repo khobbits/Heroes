@@ -1,4 +1,4 @@
-fishing: 1
+fishing: 5
 farming:
     crops: 1
     sugar_cane_block: 1
@@ -28,6 +28,12 @@ killing:
     slime: 15
     giant: 300
     player: 31
+    blaze: 25
+    magma_cube: 12
+    ender_dragon: 500
+    villager: 1
+    snowman: 5
+    mushroom_cow: 1
 mining:
     coal: 5
     cobblestone: 1
