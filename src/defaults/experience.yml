@@ -22,6 +22,7 @@ killing:
     sheep: 1
     wolf: 6
     skeleton: 22
+    cave_spider: 10
     spider: 18
     zombie: 15
     squid: 1

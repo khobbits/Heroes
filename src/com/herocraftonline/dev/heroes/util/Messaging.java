@@ -12,6 +12,8 @@ import org.bukkit.entity.Enderman;
 import org.bukkit.entity.Ghast;
 import org.bukkit.entity.Giant;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.MagmaCube;
+import org.bukkit.entity.MushroomCow;
 import org.bukkit.entity.Pig;
 import org.bukkit.entity.PigZombie;
 import org.bukkit.entity.Sheep;
@@ -93,6 +95,8 @@ public final class Messaging {
             return "Blaze";
         else if (lEntity instanceof CaveSpider)
             return "Cave Spider";
+        else if (lEntity instanceof MushroomCow)
+            return "Mushroom Cow"; // Must resolve before Cow as it extends Cow
         else if (lEntity instanceof Cow)
             return "Cow";
         else if (lEntity instanceof Chicken)
@@ -107,6 +111,8 @@ public final class Messaging {
             return "Ghast";
         else if (lEntity instanceof Giant)
             return "Giant";
+        else if (lEntity instanceof MagmaCube)
+            return "Magma Cube";
         else if (lEntity instanceof Pig)
             return "Pig";
         else if (lEntity instanceof PigZombie)
