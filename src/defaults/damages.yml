@@ -1,4 +1,3 @@
-#In order for damages.yml to be used, useDamageSystem must be set to 'true' in the config.yml
 creature-health:
     Creeper: 10
     Zombie: 10
