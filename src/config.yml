@@ -10,14 +10,14 @@ leveling:
     noSpawnCamp: false #allow xp gain when near a spawner if false
     spawnCampRadius: 7 #how close to the spawner the creature needs to be to deny xp
     spawnCampExpMult: .5 #if noSpawnCamp is true, all xp gained from killing is multiplied by this number. setting to 0 gives no xp.
-    resetOnDeath: false
+    resetOnDeath: false #Hardcore mode to reset all levels/exp on death
     pvpLevelRange: 50 #Level that players must be within to PvP with each other
 classes:
     swapcost: 0 #cost to swap
     oldClassSwapCost: 0 #cost to swap back to a class you already have xp in
     swapMasteryCost: false #will allow for users to change back to their mastered class freely
     firstSwitchFree: true #toggles charging for the first class switch
-    prefixClassName: false
+    prefixClassName: false #basic name prefixing of heroclass, may not work correctly
     resetExpOnClassChange: true #will reset the exp if the player switches without mastering
     resetMasteryOnClassChange: false #will reset all xp including masteries if the player switches classes
     resetProfMasteryOnClassChange: false #will reset all xp including masteries if the player switches professions
