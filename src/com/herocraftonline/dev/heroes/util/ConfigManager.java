@@ -24,13 +24,17 @@ import com.herocraftonline.dev.heroes.skill.SkillManager;
 public class ConfigManager {
 
     protected final Heroes plugin;
+    // Files
     protected static File classConfigFolder;
     protected static File expConfigFile;
     public static File skillConfigFile;
     protected static File outsourcedSkillConfigFile;
     protected static File damageConfigFile;
     protected static File recipesConfigFile;
-
+    
+    public static boolean saveSkillDefaults = false;
+    
+    //Configurations
     private static Configuration damageConfig;
     private static Configuration expConfig;
 
@@ -48,7 +52,6 @@ public class ConfigManager {
         SkillManager.skillConfig = YamlConfiguration.loadConfiguration(skillConfigFile);
         SkillManager.defaultSkillConfig = new MemoryConfiguration();
         SkillManager.skillConfig.setDefaults(SkillManager.defaultSkillConfig);
-        SkillManager.skillConfig.options().copyDefaults(true);
         SkillManager.allSkillsConfig = YamlConfiguration.loadConfiguration(outsourcedSkillConfigFile);
         SkillManager.allSkillsConfig.setDefaults(SkillManager.skillConfig);
     }
@@ -64,6 +67,7 @@ public class ConfigManager {
     }
 
     public void loadManagers() {
+        saveSkillDefaults = !skillConfigFile.exists();
         damageConfig = YamlConfiguration.loadConfiguration(damageConfigFile);
         InputStream defConfigStream = plugin.getResource("defaults" + File.separator + "damages.yml");
         if (defConfigStream != null) {

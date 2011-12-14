@@ -253,7 +253,7 @@ public class SkillManager {
         ConfigurationSection newSection = defaultSkillConfig.createSection(skill.getName());
         for (String key : dSection.getKeys(true)) {
             if (dSection.isConfigurationSection(key)) {
-            	//Skip section as they would overwrite data here
+                //Skip section as they would overwrite data here
                 continue;
             }
             newSection.set(key, dSection.get(key));
@@ -264,11 +264,14 @@ public class SkillManager {
     }
 
     public static void saveSkillConfig() {
-        skillConfig.options().copyDefaults(true);
-        try {
-            ((FileConfiguration) skillConfig).save(ConfigManager.skillConfigFile);
-        } catch (IOException e) {
-            Heroes.log(Level.WARNING, "Unable to save default skills file!");
+        if (ConfigManager.saveSkillDefaults) {
+            skillConfig.options().copyDefaults(true);
+            try {
+                ((FileConfiguration) skillConfig).save(ConfigManager.skillConfigFile);
+            } catch (IOException e) {
+                Heroes.log(Level.WARNING, "Unable to save default skills file!");
+            }
+            skillConfig.options().copyDefaults(false);
         }
     }
 }
