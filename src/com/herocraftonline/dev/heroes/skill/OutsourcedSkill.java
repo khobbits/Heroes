@@ -41,6 +41,7 @@ public class OutsourcedSkill extends Skill {
 
     public OutsourcedSkill(Heroes plugin, String name) {
         super(plugin, name);
+        setConfig(SkillManager.allSkillsConfig.getConfigurationSection(getName()));
         registerEvent(Type.CUSTOM_EVENT, new SkillHeroListener(), Priority.Monitor);
     }
 
