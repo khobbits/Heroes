@@ -132,7 +132,7 @@ public abstract class TargettedSkill extends ActiveSkill {
         if (target == null) {
             // don't self-target harmful skills
             if (this.isType(SkillType.HARMFUL))
-                return SkillResult.INVALID_TARGET;
+                return SkillResult.INVALID_TARGET_NO_MSG;
             target = player;
         }
 
