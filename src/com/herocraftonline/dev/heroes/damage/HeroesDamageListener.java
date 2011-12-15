@@ -160,7 +160,8 @@ public class HeroesDamageListener extends EntityListener {
         }
 
         if (defender instanceof Player) {
-            if (((Player) defender).getGameMode() == GameMode.CREATIVE || ((Player) defender).isDead()) {
+            Player player = (Player) defender;
+            if (player.getGameMode() == GameMode.CREATIVE || player.isDead() || player.getHealth() == 0) {
                 Heroes.debug.stopTask("HeroesDamageListener.onEntityDamage");
                 return;
             }
@@ -291,6 +292,8 @@ public class HeroesDamageListener extends EntityListener {
                 Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
                     @Override
                     public void run() {
+                        if (hero.getPlayer().getHealth() == 0 || hero.getPlayer().isDead())
+                            return;
                         hero.syncHealth();
                     }
                 }, 1);
