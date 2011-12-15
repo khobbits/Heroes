@@ -81,12 +81,12 @@ public class HeroClass {
         if (section == null) {
             skillConfig.createSection(name);
         }
-        
-        for (String key : settings.getKeys(true)) {
-            if (settings.isConfigurationSection(key))
-                continue;
-            section.set(key, settings.get(key));
-        }
+        if (settings.getKeys(true) != null)
+            for (String key : settings.getKeys(true)) {
+                if (settings.isConfigurationSection(key))
+                    continue;
+                section.set(key, settings.get(key));
+            }
 
         skills.add(name.toLowerCase());
     }
