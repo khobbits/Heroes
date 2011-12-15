@@ -39,9 +39,9 @@ public class HeroClass {
     private Map<Material, Integer> itemDamage = new EnumMap<Material, Integer>(Material.class);
     private Map<ProjectileType, Integer> projectileDamage = new EnumMap<ProjectileType, Integer>(ProjectileType.class);
     private Set<String> skills = new LinkedHashSet<String>();
-    
+
     private Configuration skillConfig = new MemoryConfiguration();
-    
+
     private int maxLevel;
     private int cost;
     private double expModifier;
@@ -50,7 +50,7 @@ public class HeroClass {
     private double maxHealthPerLevel;
     private boolean userClass = true;
     private final Heroes plugin;
-    
+
     /**
      * Constructs a new HeroClass with the given name
      * @param name
@@ -79,13 +79,13 @@ public class HeroClass {
     protected void addSkill(String name, ConfigurationSection settings) {
         ConfigurationSection section = skillConfig.getConfigurationSection(name);
         if (section == null) {
-            skillConfig.createSection(name, settings.getValues(true));
-        } else {
-            for (String key : settings.getKeys(true)) {
-                if (settings.isConfigurationSection(key))
-                    continue;
-                section.set(key, settings.get(key));
-            }
+            skillConfig.createSection(name);
+        }
+        
+        for (String key : settings.getKeys(true)) {
+            if (settings.isConfigurationSection(key))
+                continue;
+            section.set(key, settings.get(key));
         }
 
         skills.add(name.toLowerCase());
@@ -96,19 +96,19 @@ public class HeroClass {
     }
 
     public void addStrongParent(HeroClass parent) throws CircularParentException {
-       if (parent.getAllParents().contains(this))
-           throw new CircularParentException();
-       
+        if (parent.getAllParents().contains(this))
+            throw new CircularParentException();
+
         strongParents.add(parent);
     }
 
     public void addWeakParent(HeroClass parent) throws CircularParentException {
         if (parent.getAllParents().contains(this))
             throw new CircularParentException();
-        
+
         weakParents.add(parent);
     }
-    
+
     /**
      * Gets a set of all Parent HeroClasses
      * This will recursively loop through all parent classes and include their parents until
@@ -122,21 +122,21 @@ public class HeroClass {
         }
         return classes;
     }
-    
+
     private Set<HeroClass> getAllParents(Set<HeroClass> parents) {
         for (HeroClass hClass : this.getParents()) {
             parents.addAll(hClass.getAllParents(new HashSet<HeroClass>(parents)));
         }
         return parents;
     }
-    
+
     /**
      * @return if this class is the default class
      */
     public boolean isDefault() {
         return plugin.getClassManager().getDefaultClass().equals(this);
     }
-    
+
     /**
      * Checks if this HeroClass can be selected as a primary HeroClass
      * @return true if the HeroClass is a primary HeroClass
@@ -202,14 +202,14 @@ public class HeroClass {
     public boolean isAllowedArmor(Material mat) {
         return this.allowedArmor.contains(mat);
     }
-    
+
     /**
      * @return the Set of Allowed Armor materials
      */
     public Set<Material> getAllowedArmor() {
         return Collections.unmodifiableSet(allowedArmor);
     }
-    
+
     /**
      * Returns true if this class is allowed to wear the specified weapon
      * @param mat
@@ -218,7 +218,7 @@ public class HeroClass {
     public boolean isAllowedWeapon(Material mat) {
         return this.allowedWeapons.contains(mat);
     }
-    
+
     /**
      * @return the set of Allowed Weapon materials
      */
@@ -314,7 +314,7 @@ public class HeroClass {
         parents.addAll(weakParents);
         return Collections.unmodifiableList(parents);
     }
-    
+
     /**
      * This returns the Integer value of the given ProjectileTypes damage.  This can return null if the class
      * doesn't have a value assigned for the Projectile
@@ -335,7 +335,7 @@ public class HeroClass {
     public ConfigurationSection getSkillSettings(String name) {        
         return skillConfig.getConfigurationSection(name);
     }
-    
+
     /**
      * Checks if the class has settings for the given skill
      * 
@@ -345,7 +345,7 @@ public class HeroClass {
     public boolean hasSkillSettings(String path) {
         return skillConfig.get(path, null) != null;
     }
-    
+
     /**
      * @return Set of all child classes
      */
@@ -371,7 +371,7 @@ public class HeroClass {
     public int hashCode() {
         return name == null ? 0 : name.hashCode();
     }
-    
+
     /**
      * @param name
      * @return true if this class contains the given skill
@@ -386,7 +386,7 @@ public class HeroClass {
     public boolean hasNoParents() {
         return strongParents.isEmpty() && weakParents.isEmpty();
     }
-    
+
     /*
     public void removeDamageValue(Material material) {
         itemDamage.remove(material);
@@ -395,7 +395,7 @@ public class HeroClass {
     public void removeSkill(String name) {
         skills.remove(name.toLowerCase());
     }
-    */
+     */
 
     protected void setBaseMaxHealth(double baseMaxHealth) {
         this.baseMaxHealth = baseMaxHealth;
