@@ -11,6 +11,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
+import org.bukkit.entity.Wolf;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
@@ -44,8 +45,6 @@ public class HeroesDamageListener extends EntityListener {
     private DamageManager damageManager;
 
     private Map<Integer, Integer> healthMap = new HashMap<Integer, Integer>();
-
-    private boolean ignoreNextDamageEventBecauseWolvesAreOnCrack = true;
 
     public HeroesDamageListener(Heroes plugin, DamageManager damageManager) {
         this.plugin = plugin;
@@ -98,14 +97,6 @@ public class HeroesDamageListener extends EntityListener {
         } else if (attacker instanceof LivingEntity) {
             CreatureType type = Util.getCreatureFromEntity(attacker);
             if (type != null) {
-                if (type == CreatureType.WOLF) {
-                    if (ignoreNextDamageEventBecauseWolvesAreOnCrack) {
-                        ignoreNextDamageEventBecauseWolvesAreOnCrack = false;
-                        return 0;
-                    } else {
-                        ignoreNextDamageEventBecauseWolvesAreOnCrack = true;
-                    }
-                }
                 Integer tmpDamage = damageManager.getEntityDamage(type);
                 if (tmpDamage != null) {
                     damage = tmpDamage;
@@ -160,12 +151,12 @@ public class HeroesDamageListener extends EntityListener {
 
         //Lets figure out who the attacker is
         if (event instanceof EntityDamageByEntityEvent) {
-            EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
-            if (subEvent.getDamager() instanceof Projectile) {
-                attacker = ((Projectile) subEvent.getDamager()).getShooter();
-            } else {
-                attacker = subEvent.getDamager();
-            }
+                attacker = ((EntityDamageByEntityEvent) event).getDamager();
+                //We now ignore wolf attacks - let bukkit handle them for now as they are buggy
+                if (attacker instanceof Wolf) {
+                    Heroes.debug.stopTask("HeroesDamageListener.onEntityDamage");
+                    return;
+                }
         }
 
         if (defender instanceof Player) {
