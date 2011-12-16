@@ -81,11 +81,8 @@ public class SkillConfigManager {
         if (classSection == null)
             classSection = config.createSection(skillName);
 
-        for (String key : section.getKeys(true)) {
-            if (section.isConfigurationSection(key))
-                continue;
-
-            classSection.set(key, section.get(key));
+        for (Map.Entry<String, Object> entry : section.getValues(true).entrySet()) {
+            classSection.set(entry.getKey(), entry.getValue());
         }
     }
 
@@ -102,7 +99,11 @@ public class SkillConfigManager {
             newSection.set(key, dSection.get(key));
         }
     }
-
+    
+    //------------------------//
+    // Data retrieval methods //
+    //------------------------//
+    
     public static String getRaw(Skill skill, String setting, String def) {
         return outsourcedSkillConfig.getString(skill.getName() + "." + setting, def);
     }
