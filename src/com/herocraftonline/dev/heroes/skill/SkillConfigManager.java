@@ -13,7 +13,6 @@ import java.util.logging.Level;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.herocraftonline.dev.heroes.Heroes;
@@ -53,7 +52,7 @@ public class SkillConfigManager {
 
     public static void saveSkillConfig() {
         try {
-            ((FileConfiguration) standardSkillConfig).save(skillConfigFile);
+            ((YamlConfiguration) standardSkillConfig).save(skillConfigFile);
         } catch (IOException e) {
             Heroes.log(Level.WARNING, "Unable to save default skills file!");
         }
