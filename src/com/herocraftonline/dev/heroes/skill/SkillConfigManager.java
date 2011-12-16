@@ -187,7 +187,7 @@ public class SkillConfigManager {
         return config.getConfigurationSection(path).getKeys(false);
     }
 
-    public static Set<String> getSettingKeys(Hero hero, Skill skill, String setting) {
+    public static Set<String> getUseSettingKeys(Hero hero, Skill skill, String setting) {
         Set<String> vals = new HashSet<String>();
         if (hero.canPrimaryUseSkill(skill))
             vals.addAll(getSettingKeys(hero.getHeroClass(), skill, setting));

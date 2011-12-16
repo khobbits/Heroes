@@ -47,8 +47,8 @@ public class SkillWisdom extends ActiveSkill {
     @Override
     public void init() {
         super.init();
-        applyText = SkillConfigManager.getRaw(null, Setting.APPLY_TEXT, "Your feel a bit wiser!");
-        expireText = SkillConfigManager.getRaw(null, Setting.EXPIRE_TEXT, "You no longer feel as wise!");
+        applyText = SkillConfigManager.getRaw(this, Setting.APPLY_TEXT, "Your feel a bit wiser!");
+        expireText = SkillConfigManager.getRaw(this, Setting.EXPIRE_TEXT, "You no longer feel as wise!");
     }
 
     @Override

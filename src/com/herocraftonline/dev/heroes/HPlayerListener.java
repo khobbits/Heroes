@@ -112,6 +112,11 @@ public class HPlayerListener extends PlayerListener {
             return;
         }
 
+        if (hero.hasEffectType(EffectType.STUN)) {
+            event.setCancelled(true);
+            return;
+        }
+        
         Block clickedBlock = event.getClickedBlock();
         if (clickedBlock != null) {
             switch (clickedBlock.getType()) {
@@ -154,11 +159,6 @@ public class HPlayerListener extends PlayerListener {
                 if (effect.isType(EffectType.INVIS))
                     hero.removeEffect(effect);
             }
-        }
-        
-        if (hero.hasEffectType(EffectType.STUN)) {
-            event.setCancelled(true);
-            return;
         }
     }
 

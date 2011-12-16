@@ -6,7 +6,10 @@ import java.util.Map;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.entity.ComplexEntityPart;
+import org.bukkit.entity.ComplexLivingEntity;
 import org.bukkit.entity.CreatureType;
+import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -217,7 +220,14 @@ public class HeroesDamageListener extends EntityListener {
                 return;
             }
         }
-
+        
+        //TODO: figure out how to fix ender-dragons
+        if (defender instanceof EnderDragon || defender instanceof ComplexLivingEntity || defender instanceof ComplexEntityPart) {
+            event.setDamage(damage);
+            Heroes.debug.stopTask("HeroesDamageListener.onEntityDamage");
+            return;
+        }
+        
         if (defender instanceof Player) {
             Player player = (Player) defender;
             if (player.getNoDamageTicks() > 10 || player.isDead() || player.getHealth() <= 0) {
@@ -345,7 +355,7 @@ public class HeroesDamageListener extends EntityListener {
             }
             event.setDamage(damage);
         }
-
+        
         Heroes.debug.stopTask("HeroesDamageListener.onEntityDamage");
     }
 

@@ -211,4 +211,8 @@ public class DamageManager {
                 return null;
         }
     }
+    
+    public HeroesDamageListener getListener() {
+        return listener;
+    }
 }
