@@ -111,7 +111,8 @@ public class HeroClassManager {
 
         // We also need to resave the defaults for the skill configurations in case the file was empty
         SkillConfigManager.saveSkillConfig();
-
+        SkillConfigManager.setClassDefaults();
+        
         if (defaultClass == null) {
             Heroes.log(Level.SEVERE, "You are missing a default class, this will cause A LOT of issues!");
         }

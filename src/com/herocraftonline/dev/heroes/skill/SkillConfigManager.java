@@ -71,7 +71,6 @@ public class SkillConfigManager {
         Configuration config = classSkillConfigs.get(className);
         if (config == null) {
             config = new MemoryConfiguration();
-            config.setDefaults(outsourcedSkillConfig);
             classSkillConfigs.put(className, config);
         }
         if (section == null)
@@ -97,6 +96,13 @@ public class SkillConfigManager {
                 continue;
             }
             newSection.set(key, dSection.get(key));
+        }
+    }
+    
+    // Because bukkit can't handle setting defaults before sections exist
+    public static void setClassDefaults() {
+        for (Configuration config : classSkillConfigs.values()) {
+            config.setDefaults(outsourcedSkillConfig);
         }
     }
     
