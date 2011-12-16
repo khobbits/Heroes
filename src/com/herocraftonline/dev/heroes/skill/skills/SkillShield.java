@@ -13,6 +13,8 @@ import com.herocraftonline.dev.heroes.api.WeaponDamageEvent;
 import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.PassiveSkill;
+import com.herocraftonline.dev.heroes.skill.Skill;
+import com.herocraftonline.dev.heroes.skill.SkillConfigManager;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 
 public class SkillShield extends PassiveSkill {
@@ -24,7 +26,7 @@ public class SkillShield extends PassiveSkill {
         setEffectTypes(EffectType.BENEFICIAL, EffectType.PHYSICAL);
         setTypes(SkillType.PHYSICAL);
 
-        registerEvent(Type.CUSTOM_EVENT, new CustomListener(), Priority.Highest);
+        registerEvent(Type.CUSTOM_EVENT, new CustomListener(this), Priority.Highest);
     }
 
     @Override
@@ -38,6 +40,11 @@ public class SkillShield extends PassiveSkill {
 
     public class CustomListener extends HeroesEventListener {
 
+        private final Skill skill;
+        
+        public CustomListener(Skill skill) {
+            this.skill = skill;
+        }
 
         @Override
         public void onWeaponDamage(WeaponDamageEvent event) {
@@ -52,11 +59,11 @@ public class SkillShield extends PassiveSkill {
             if (hero.hasEffect(getName())) {
                 double multiplier = 1;
                 if (player.getItemInHand().getType() == Material.IRON_DOOR) {
-                    multiplier = getSetting(hero, "iron-door", 0.75, true);
+                    multiplier = SkillConfigManager.getUseSetting(hero, skill, "iron-door", 0.75, true);
                 } else if (player.getItemInHand().getType() == Material.WOOD_DOOR) {
-                    multiplier = getSetting(hero, "wooden-door", 0.85, true);
+                    multiplier = SkillConfigManager.getUseSetting(hero, skill, "wooden-door", 0.85, true);
                 } else if (player.getItemInHand().getType() == Material.TRAP_DOOR) {
-                    multiplier = getSetting(hero, "trapdoor", 0.60, true);
+                    multiplier = SkillConfigManager.getUseSetting(hero, skill, "trapdoor", 0.60, true);
                 }
                 event.setDamage((int) (event.getDamage() * multiplier));
             }

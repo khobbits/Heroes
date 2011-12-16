@@ -20,6 +20,7 @@ import com.herocraftonline.dev.heroes.effects.common.ImbueEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
+import com.herocraftonline.dev.heroes.skill.SkillConfigManager;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Setting;
 
@@ -48,8 +49,8 @@ public class SkillFireArrow extends ActiveSkill {
 
     @Override
     public SkillResult use(Hero hero, String[] args) {
-        long duration = getSetting(hero, Setting.DURATION.node(), 600000, false);
-        int numAttacks = getSetting(hero, "attacks", 1, false);
+        long duration = SkillConfigManager.getUseSetting(hero, this, Setting.DURATION, 600000, false);
+        int numAttacks = SkillConfigManager.getUseSetting(hero, this, "attacks", 1, false);
         hero.addEffect(new FireArrowBuff(this, duration, numAttacks));
         broadcastExecuteText(hero);
         return SkillResult.NORMAL;
@@ -102,7 +103,7 @@ public class SkillFireArrow extends ActiveSkill {
             }
 
             //Get the duration of the fire damage
-            int fireTicks = getSetting(hero, "fire-ticks", 100, false);
+            int fireTicks = SkillConfigManager.getUseSetting(hero, skill, "fire-ticks", 100, false);
             //Light the target on fire
             entity.setFireTicks(fireTicks);
             checkBuff(hero);

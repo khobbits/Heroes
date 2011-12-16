@@ -23,6 +23,7 @@ import com.herocraftonline.dev.heroes.effects.common.SlowEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
+import com.herocraftonline.dev.heroes.skill.SkillConfigManager;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Setting;
 
@@ -57,8 +58,8 @@ public class SkillIcebolt extends ActiveSkill {
     }
     @Override
     public void init() {
-        applyText = getSetting(null, Setting.APPLY_TEXT.node(), "%target% has been slowed by %hero%!").replace("%target%", "$1").replace("%hero%", "$2");
-        expireText = getSetting(null, Setting.EXPIRE_TEXT.node(), "%target% is no longer slowed!").replace("%target%", "$1");
+        applyText = SkillConfigManager.getRaw(this, Setting.APPLY_TEXT, "%target% has been slowed by %hero%!").replace("%target%", "$1").replace("%hero%", "$2");
+        expireText = SkillConfigManager.getRaw(this, Setting.EXPIRE_TEXT, "%target% is no longer slowed!").replace("%target%", "$1");
     }
     
     @Override
@@ -111,10 +112,10 @@ public class SkillIcebolt extends ActiveSkill {
                 Hero hero = plugin.getHeroManager().getHero((Player) dmger);
 
                 event.getEntity().setFireTicks(0);
-                int damage = getSetting(hero, Setting.DAMAGE.node(), 3, false);
+                int damage = SkillConfigManager.getUseSetting(hero, skill, Setting.DAMAGE, 3, false);
                 
-                long duration = getSetting(hero, "slow-duration", 10000, false);
-                int amplifier = getSetting(hero, "speed-multiplier", 2, false);
+                long duration = SkillConfigManager.getUseSetting(hero, skill, "slow-duration", 10000, false);
+                int amplifier = SkillConfigManager.getUseSetting(hero, skill, "speed-multiplier", 2, false);
                 
                 SlowEffect iceSlowEffect = new SlowEffect(skill, duration, amplifier, false, applyText, expireText, hero);
                 LivingEntity target = (LivingEntity) event.getEntity();

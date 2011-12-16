@@ -14,6 +14,7 @@ import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
+import com.herocraftonline.dev.heroes.skill.SkillConfigManager;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Setting;
@@ -31,7 +32,7 @@ public class SkillWisdom extends ActiveSkill {
         setIdentifiers("skill wisdom");
         setTypes(SkillType.BUFF, SkillType.MANA, SkillType.SILENCABLE);
 
-        registerEvent(Type.CUSTOM_EVENT, new SkillHeroListener(), Priority.Normal);
+        registerEvent(Type.CUSTOM_EVENT, new SkillHeroListener(this), Priority.Normal);
     }
 
     @Override
@@ -46,15 +47,15 @@ public class SkillWisdom extends ActiveSkill {
     @Override
     public void init() {
         super.init();
-        applyText = getSetting(null, Setting.APPLY_TEXT.node(), "Your feel a bit wiser!");
-        expireText = getSetting(null, Setting.EXPIRE_TEXT.node(), "You no longer feel as wise!");
+        applyText = SkillConfigManager.getRaw(null, Setting.APPLY_TEXT, "Your feel a bit wiser!");
+        expireText = SkillConfigManager.getRaw(null, Setting.EXPIRE_TEXT, "You no longer feel as wise!");
     }
 
     @Override
     public SkillResult use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
-        int duration = getSetting(hero, Setting.DURATION.node(), 600000, false);
-        double manaMultiplier = getSetting(hero, "regen-multiplier", 1.2, false);
+        int duration = SkillConfigManager.getUseSetting(hero, this, Setting.DURATION, 600000, false);
+        double manaMultiplier = SkillConfigManager.getUseSetting(hero, this, "regen-multiplier", 1.2, false);
 
         WisdomEffect mEffect = new WisdomEffect(this, duration, manaMultiplier);
         if (!hero.hasParty()) {
@@ -65,7 +66,7 @@ public class SkillWisdom extends ActiveSkill {
             }
             hero.addEffect(mEffect);
         } else {
-            int rangeSquared = (int) Math.pow(getSetting(hero, Setting.RADIUS.node(), 10, false), 2);
+            int rangeSquared = (int) Math.pow(SkillConfigManager.getUseSetting(hero, this, Setting.RADIUS, 10, false), 2);
             for (Hero pHero : hero.getParty().getMembers()) {
                 Player pPlayer = pHero.getPlayer();
                 if (!pPlayer.getWorld().equals(player.getWorld())) {
@@ -89,6 +90,12 @@ public class SkillWisdom extends ActiveSkill {
 
     public class SkillHeroListener extends HeroesEventListener {
 
+        private final Skill skill;
+        
+        public SkillHeroListener(Skill skill) {
+            this.skill = skill;
+        }
+        
         @Override
         public void onHeroRegainMana(HeroRegainManaEvent event) {
             Heroes.debug.startTask("HeroesSkillListener");
@@ -98,7 +105,7 @@ public class SkillWisdom extends ActiveSkill {
             }
 
             if (event.getHero().hasEffect("Wisdom")) {
-                event.setAmount((int) (event.getAmount() * getSetting(event.getHero(), "regen-multiplier", 1.2, false)));
+                event.setAmount((int) (event.getAmount() * SkillConfigManager.getUseSetting(event.getHero(), skill, "regen-multiplier", 1.2, false)));
             }
             Heroes.debug.stopTask("HeroesSkillListener");
         }

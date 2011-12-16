@@ -15,6 +15,7 @@ import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.PassiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
+import com.herocraftonline.dev.heroes.skill.SkillConfigManager;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Setting;
 import com.herocraftonline.dev.heroes.util.Util;
@@ -90,7 +91,7 @@ public class SkillHerbalism extends PassiveSkill {
             }
 
             Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
-            if (!hero.hasEffect("Herbalism") || Util.rand.nextDouble() >= getSetting(hero, "chance-per-level", .001, false) * hero.getLevel(skill)) {
+            if (!hero.hasEffect("Herbalism") || Util.rand.nextDouble() >= SkillConfigManager.getUseSetting(hero, skill, Setting.CHANCE_LEVEL, .001, false) * hero.getSkillLevel(skill)) {
                 Heroes.debug.stopTask("HeroesSkillListener");
                 return;
             }

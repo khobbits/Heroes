@@ -15,6 +15,7 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.SkillResult;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
+import com.herocraftonline.dev.heroes.skill.SkillConfigManager;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Setting;
@@ -48,7 +49,7 @@ public class SkillTelekinesis extends ActiveSkill {
         transparent.add((byte) Material.REDSTONE_WIRE.getId());
         transparent.add((byte) Material.TORCH.getId());
         transparent.add((byte) Material.SNOW.getId());
-        Block block = player.getTargetBlock(transparent, getSetting(hero, Setting.MAX_DISTANCE.node(), 15, false));
+        Block block = player.getTargetBlock(transparent, SkillConfigManager.getUseSetting(hero, this, Setting.MAX_DISTANCE, 15, false));
         if (block.getType() == Material.LEVER || block.getType() == Material.STONE_BUTTON) {
             EntityHuman eH = ((CraftPlayer) player).getHandle();
             // Can't adjust levers/Buttons through CB

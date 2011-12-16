@@ -11,6 +11,7 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.SkillResult;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
+import com.herocraftonline.dev.heroes.skill.SkillConfigManager;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Setting;
@@ -42,7 +43,7 @@ public class SkillBlink extends ActiveSkill {
             Messaging.send(player, "The void prevents you from blinking!");
             return SkillResult.FAIL;
         }
-        int distance = getSetting(hero, Setting.MAX_DISTANCE.node(), 6, false);
+        int distance = SkillConfigManager.getUseSetting(hero, this, Setting.MAX_DISTANCE, 6, false);
         Block prev = null;
         Block b;
         BlockIterator iter = null;

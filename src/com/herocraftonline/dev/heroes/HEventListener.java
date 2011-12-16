@@ -7,6 +7,7 @@ import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.party.HeroParty;
 import com.herocraftonline.dev.heroes.skill.Skill;
+import com.herocraftonline.dev.heroes.skill.SkillConfigManager;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Setting;
 
@@ -21,13 +22,13 @@ public class HEventListener extends HeroesEventListener {
     @Override
     public void onHeroChangeLevel(HeroChangeLevelEvent event) {
         Hero hero = event.getHero();
-        HeroClass heroClass = hero.getHeroClass();
+        HeroClass heroClass = event.getHeroClass();
 
         int level = event.getTo();
         if (level > event.getFrom()) {
             for (Skill skill : plugin.getSkillManager().getSkills()) {
-                if (heroClass.hasSkill(skill.getName())) {
-                    int levelRequired = skill.getSetting(hero, Setting.LEVEL.node(), 1, true);
+                if (heroClass.hasSkill(skill.getName()) && hero.canUseSkill(skill)) {
+                    int levelRequired = SkillConfigManager.getUseSetting(hero, skill, Setting.LEVEL, 1, true);
                     if (levelRequired == level) {
                         Messaging.send(event.getHero().getPlayer(), "You have learned $1.", skill.getName());
                     }
@@ -36,7 +37,8 @@ public class HEventListener extends HeroesEventListener {
         } else {
             for (Skill skill : plugin.getSkillManager().getSkills()) {
                 if (heroClass.hasSkill(skill.getName())) {
-                    if (skill.getSetting(hero, Setting.LEVEL.node(), 1, true) > level) {
+                    int levelRequired = SkillConfigManager.getUseSetting(hero, skill, Setting.LEVEL, 1, true);
+                    if (levelRequired > level && levelRequired <= event.getFrom()) {
                         Messaging.send(event.getHero().getPlayer(), "You have forgotton how to use $1", skill.getName());
                     }
                 }

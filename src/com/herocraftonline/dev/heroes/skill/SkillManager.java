@@ -2,7 +2,6 @@ package com.herocraftonline.dev.heroes.skill;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
 import java.net.MalformedURLException;
@@ -22,12 +21,9 @@ import java.util.jar.JarFile;
 import java.util.logging.Level;
 
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.util.ConfigManager;
 
 public class SkillManager {
 
@@ -37,10 +33,6 @@ public class SkillManager {
     private final Heroes plugin;
     private final File dir;
     private final ClassLoader classLoader;
-
-    public static Configuration allSkillsConfig;
-    public static Configuration skillConfig;
-    public static Configuration defaultSkillConfig;
 
     public SkillManager(Heroes plugin) {
         skills = new LinkedHashMap<String, Skill>();
@@ -106,7 +98,7 @@ public class SkillManager {
             return true;
 
         OutsourcedSkill oSkill = new OutsourcedSkill(plugin, name);
-        ConfigurationSection config = oSkill.getConfig();
+        ConfigurationSection config = SkillConfigManager.outsourcedSkillConfig.getConfigurationSection(oSkill.getName());
         List<String> perms = new ArrayList<String>();
         if (config != null)
             perms = config.getStringList("permissions");
@@ -186,7 +178,8 @@ public class SkillManager {
                 Class<? extends Skill> skillClass = clazz.asSubclass(Skill.class);
                 Constructor<? extends Skill> ctor = skillClass.getConstructor(plugin.getClass());
                 Skill skill = ctor.newInstance(plugin);
-                loadSkillConfig(skill);
+                plugin.getSkillConfigs().loadSkillConfig(skill);
+                skill.init();
                 return skill;
             } else
                 throw new Exception();
@@ -244,34 +237,5 @@ public class SkillManager {
 
         addSkill(skill);
         return true;
-    }
-
-    public void loadSkillConfig(Skill skill) {
-        if (skill instanceof OutsourcedSkill)
-            return;
-        ConfigurationSection dSection = skill.getDefaultConfig();
-        ConfigurationSection newSection = defaultSkillConfig.createSection(skill.getName());
-        for (String key : dSection.getKeys(true)) {
-            if (dSection.isConfigurationSection(key)) {
-                //Skip section as they would overwrite data here
-                continue;
-            }
-            newSection.set(key, dSection.get(key));
-        }
-        // Flip-Flop default copying to prevent intialization NPEs
-        skill.setConfig(SkillManager.allSkillsConfig.getConfigurationSection(skill.getName()));
-        skill.init();
-    }
-
-    public static void saveSkillConfig() {
-        if (ConfigManager.saveSkillDefaults) {
-            skillConfig.options().copyDefaults(true);
-            try {
-                ((FileConfiguration) skillConfig).save(ConfigManager.skillConfigFile);
-            } catch (IOException e) {
-                Heroes.log(Level.WARNING, "Unable to save default skills file!");
-            }
-            skillConfig.options().copyDefaults(false);
-        }
     }
 }

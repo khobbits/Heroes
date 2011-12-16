@@ -8,6 +8,7 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.HeroRegainHealthEvent;
 import com.herocraftonline.dev.heroes.api.SkillResult;
 import com.herocraftonline.dev.heroes.hero.Hero;
+import com.herocraftonline.dev.heroes.skill.SkillConfigManager;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
@@ -39,7 +40,7 @@ public class SkillPray extends TargettedSkill {
             return SkillResult.INVALID_TARGET;
 
         Hero targetHero = plugin.getHeroManager().getHero((Player) target);
-        int hpPlus = getSetting(hero, "health", 10, false);
+        int hpPlus = SkillConfigManager.getUseSetting(hero, this, Setting.HEALTH, 10, false);
         double targetHealth = targetHero.getHealth();
 
         if (targetHealth >= targetHero.getMaxHealth()) {

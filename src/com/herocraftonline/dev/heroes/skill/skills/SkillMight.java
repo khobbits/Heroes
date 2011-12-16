@@ -17,6 +17,7 @@ import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
+import com.herocraftonline.dev.heroes.skill.SkillConfigManager;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Setting;
@@ -51,15 +52,15 @@ public class SkillMight extends ActiveSkill {
     @Override
     public void init() {
         super.init();
-        applyText = getSetting(null, Setting.APPLY_TEXT.node(), "Your muscles bulge with power!");
-        expireText = getSetting(null, Setting.EXPIRE_TEXT.node(), "You feel strength leave your body!");
+        applyText = SkillConfigManager.getRaw(this, Setting.APPLY_TEXT, "Your muscles bulge with power!");
+        expireText = SkillConfigManager.getRaw(this, Setting.EXPIRE_TEXT, "You feel strength leave your body!");
     }
 
     @Override
     public SkillResult use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
-        int duration = getSetting(hero, Setting.DURATION.node(), 600000, false);
-        double damageBonus = getSetting(hero, "damage-bonus", 1.25, false);
+        int duration = SkillConfigManager.getUseSetting(hero, this, Setting.DURATION, 600000, false);
+        double damageBonus = SkillConfigManager.getUseSetting(hero, this, "damage-bonus", 1.25, false);
 
         MightEffect mEffect = new MightEffect(this, duration, damageBonus);
         if (!hero.hasParty()) {
@@ -70,7 +71,7 @@ public class SkillMight extends ActiveSkill {
             }
             hero.addEffect(mEffect);
         } else {
-            int range = getSetting(hero, Setting.RADIUS.node(), 10, false);
+            int range = SkillConfigManager.getUseSetting(hero, this, Setting.RADIUS, 10, false);
             int rangeSquared = range * range;
             Location loc = player.getLocation();
             for (Hero pHero : hero.getParty().getMembers()) {

@@ -8,6 +8,7 @@ import com.herocraftonline.dev.heroes.api.SkillResult;
 import com.herocraftonline.dev.heroes.effects.common.InvisibleEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
+import com.herocraftonline.dev.heroes.skill.SkillConfigManager;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Setting;
 
@@ -38,15 +39,15 @@ public class SkillSmoke extends ActiveSkill {
     @Override
     public void init() {
         super.init();
-        applyText = getSetting(null, Setting.APPLY_TEXT.node(), "%hero% vanished in a cloud of smoke!").replace("%hero%", "$1");
-        expireText = getSetting(null, Setting.EXPIRE_TEXT.node(), "%hero% reappeard!").replace("%hero%", "$1");
+        applyText = SkillConfigManager.getRaw(this, Setting.APPLY_TEXT, "%hero% vanished in a cloud of smoke!").replace("%hero%", "$1");
+        expireText = SkillConfigManager.getRaw(this, Setting.EXPIRE_TEXT, "%hero% reappeard!").replace("%hero%", "$1");
     }
 
     @Override
     public SkillResult use(Hero hero, String[] args) {
         broadcastExecuteText(hero);
 
-        long duration = getSetting(hero, Setting.DURATION.node(), 20000, false);
+        long duration = SkillConfigManager.getUseSetting(hero, this, Setting.DURATION, 20000, false);
         Player player = hero.getPlayer();
         player.getWorld().playEffect(player.getLocation(), org.bukkit.Effect.SMOKE, 4);
         hero.addEffect(new InvisibleEffect(this, duration, applyText, expireText));

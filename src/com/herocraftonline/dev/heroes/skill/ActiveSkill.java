@@ -87,8 +87,8 @@ public abstract class ActiveSkill extends Skill {
             Messaging.send(player, "Your classes don't have the skill: $1.", name);
             return true;
         }
-        int level = getSetting(hero, Setting.LEVEL.node(), 1, true);
-        if (hero.getLevel(this) < level) {
+        int level = SkillConfigManager.getUseSetting(hero, this, Setting.LEVEL, 1, true);
+        if (hero.getSkillLevel(this) < level) {
             messageAndEvent(hero, new SkillResult(ResultType.LOW_LEVEL, true, level));
             return true;
         }
@@ -99,7 +99,7 @@ public abstract class ActiveSkill extends Skill {
             messageAndEvent(hero, new SkillResult(ResultType.ON_GLOBAL_COOLDOWN, true, (global - time) / 1000));
             return true;
         }
-        int cooldown = getSetting(hero, Setting.COOLDOWN.node(), 0, true);
+        int cooldown = SkillConfigManager.getUseSetting(hero, this, Setting.COOLDOWN, 0, true);
         if (cooldown > 0) {
             Long expiry = hero.getCooldown(name);
             if (expiry != null && time < expiry) {
@@ -108,19 +108,21 @@ public abstract class ActiveSkill extends Skill {
                 return false;
             }
         }
-        int manaCost = getSetting(hero, Setting.MANA.node(), 0, true);
-        String reagentName = getSetting(hero, Setting.REAGENT.node(), (String) null);
+        int manaCost = SkillConfigManager.getUseSetting(hero, this, Setting.MANA, 0, true);
+        String reagentName = SkillConfigManager.getUseSetting(hero, this, Setting.REAGENT, (String) null);
         ItemStack itemStack = null;
-        if (reagentName != null) {
+        if (reagentName != null && reagentName != "") {
             if (Material.matchMaterial(reagentName) != null) {
-                int reagentCost = getSetting(hero, Setting.REAGENT_COST.node(), 0, true);
-                itemStack = new ItemStack(Material.matchMaterial(reagentName), reagentCost);
+                int reagentCost = SkillConfigManager.getUseSetting(hero, this, Setting.REAGENT_COST, 0, true);
+                if (reagentCost > 0)
+                    itemStack = new ItemStack(Material.matchMaterial(reagentName), reagentCost);
             }
         }
 
-        int healthCost = getSetting(hero, Setting.HEALTH_COST.node(), 0, true);
+        int healthCost = SkillConfigManager.getUseSetting(hero, this, Setting.HEALTH_COST, 0, true);
+        int staminaCost = SkillConfigManager.getUseSetting(hero, this, Setting.STAMINA, 0, true);
 
-        SkillUseEvent skillEvent = new SkillUseEvent(this, player, hero, manaCost, healthCost, itemStack, args);
+        SkillUseEvent skillEvent = new SkillUseEvent(this, player, hero, manaCost, healthCost, staminaCost, itemStack, args);
         plugin.getServer().getPluginManager().callEvent(skillEvent);
         if (skillEvent.isCancelled()) {
             messageAndEvent(hero, SkillResult.CANCELLED);
@@ -141,6 +143,13 @@ public abstract class ActiveSkill extends Skill {
             return true;
         }
 
+        //Update staminaCost with results of SkilluseEvent
+        staminaCost = skillEvent.getStaminaCost();
+        if (staminaCost > 0 && hero.getPlayer().getFoodLevel() < staminaCost) {
+            messageAndEvent(hero, SkillResult.LOW_STAMINA);
+            return true;
+        }
+
         itemStack = skillEvent.getReagentCost();
         if (itemStack != null && itemStack.getAmount() != 0 && !hasReagentCost(player, itemStack)) {
             reagentName = itemStack.getType().name().toLowerCase().replace("_", " ");
@@ -148,7 +157,7 @@ public abstract class ActiveSkill extends Skill {
             return true;
         }
 
-        int delay = getSetting(hero, Setting.DELAY.node(), 0, true);
+        int delay = SkillConfigManager.getUseSetting(hero, this, Setting.DELAY, 0, true);
         if (delay > 0 && !hm.getDelayedSkills().containsKey(hero)) {
             addDelayedSkill(hero, delay, identifier, args);
             messageAndEvent(hero, SkillResult.START_DELAY);
@@ -195,6 +204,10 @@ public abstract class ActiveSkill extends Skill {
             if (healthCost > 0) {
                 plugin.getDamageManager().addSpellTarget(player, hero, this);
                 player.damage(healthCost, player);
+            }
+
+            if (staminaCost > 0) {
+                player.setFoodLevel(player.getFoodLevel() - staminaCost);
             }
 
             // Only charge the item cost if it's non-null
@@ -245,7 +258,7 @@ public abstract class ActiveSkill extends Skill {
      */
     @Override
     public void init() {
-        String useText = getSetting(null, Setting.USE_TEXT.node(), "%hero% used %skill%!");
+        String useText = SkillConfigManager.getRaw(this, Setting.USE_TEXT, "%hero% used %skill%!");
         useText = useText.replace("%hero%", "$1").replace("%skill%", "$2");
         setUseText(useText);
     }
@@ -274,7 +287,7 @@ public abstract class ActiveSkill extends Skill {
 
     private void awardExp(Hero hero) {
         if (hero.hasExperienceType(ExperienceType.SKILL)) {
-            hero.gainExp(this.getSetting(hero, Setting.EXP.node(), 0, false), ExperienceType.SKILL);
+            hero.gainExp(SkillConfigManager.getUseSetting(hero, this, Setting.EXP, 0, false), ExperienceType.SKILL);
         }
     }
 
@@ -321,6 +334,9 @@ public abstract class ActiveSkill extends Skill {
                 break;
             case LOW_MANA: 
                 Messaging.send(player, "Not enough mana!");
+                break;
+            case LOW_STAMINA:
+                Messaging.send(player, "You are too fatigued!");
                 break;
             case ON_COOLDOWN:
                 Messaging.send(hero.getPlayer(), "Sorry, $1 still has $2 seconds left on cooldown!", sr.args[0], sr.args[1]);

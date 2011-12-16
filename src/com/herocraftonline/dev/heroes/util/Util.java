@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -395,5 +396,40 @@ public final class Util {
     
     public static int getMCExperience(int level) {
         return level * 7;
+    }
+    
+    public static Integer toInt(Object val) {
+        if (!(val instanceof Number))
+            return null;
+        
+        if (val instanceof Integer)
+            return (Integer) val;
+        else if (val instanceof Double)
+            return ((Double) val).intValue();
+        else if (val instanceof Float)
+            return ((Float) val).intValue();
+        else if (val instanceof Long)
+            return ((Long) val).intValue();
+        else if (val instanceof BigDecimal)
+            return ((BigDecimal) val).intValue();
+        else
+            return null;
+    }
+    
+    public static Double toDouble(Object val) {
+        if (!(val instanceof Number))
+            return null;
+        if (val instanceof Integer)
+            return ((Integer) val).doubleValue();
+        else if (val instanceof Double)
+            return ((Double) val);
+        else if (val instanceof Float)
+            return ((Float) val).doubleValue();
+        else if (val instanceof Long)
+            return ((Long) val).doubleValue();
+        else if (val instanceof BigDecimal)
+            return ((BigDecimal) val).doubleValue();
+        else
+            return null;
     }
 }

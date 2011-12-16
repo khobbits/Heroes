@@ -11,6 +11,7 @@ import com.herocraftonline.dev.heroes.api.SkillResult;
 import com.herocraftonline.dev.heroes.effects.Effect;
 import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.hero.Hero;
+import com.herocraftonline.dev.heroes.skill.SkillConfigManager;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
@@ -38,7 +39,7 @@ public class SkillDispel extends TargettedSkill {
         Player player = hero.getPlayer();
 
         boolean removed = false;
-        int maxRemovals = getSetting(hero, "max-removals", 3, false);
+        int maxRemovals = SkillConfigManager.getUseSetting(hero, this, "max-removals", 3, false);
         if (target instanceof Player) {
             Player targetPlayer = (Player) target;
             // if player is targetting itself

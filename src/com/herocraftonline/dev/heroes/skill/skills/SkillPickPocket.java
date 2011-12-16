@@ -16,6 +16,7 @@ import org.bukkit.inventory.ItemStack;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.SkillResult;
 import com.herocraftonline.dev.heroes.hero.Hero;
+import com.herocraftonline.dev.heroes.skill.SkillConfigManager;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
@@ -52,8 +53,8 @@ public class SkillPickPocket extends TargettedSkill {
     @Override
     public void init() {
         super.init();
-        failMessage = getSetting(null, "failure-message","%hero% failed to steal from %target%!").replace("%hero%", "$1").replace("%target%", "$2");
-        noisySuccessMessage = getSetting(null, "noisy-success-message", "%hero% stole %target%s %item%!").replace("%hero", "$1").replace("%target%", "$2").replace("%item%", "$3");
+        failMessage = SkillConfigManager.getRaw(this, "failure-message", "%hero% failed to steal from %target%!").replace("%hero%", "$1").replace("%target%", "$2");
+        noisySuccessMessage = SkillConfigManager.getRaw(this, "noisy-success-message", "%hero% stole %target%s %item%!").replace("%hero", "$1").replace("%target%", "$2").replace("%item%", "$3");
     }
 
     @SuppressWarnings("deprecation")
@@ -63,10 +64,10 @@ public class SkillPickPocket extends TargettedSkill {
         if (!(target instanceof Player))
             return SkillResult.INVALID_TARGET;
 
-        Hero tHero = getPlugin().getHeroManager().getHero((Player) target);
+        Hero tHero = plugin.getHeroManager().getHero((Player) target);
         Player tPlayer = tHero.getPlayer();
 
-        double chance = getSetting(hero, "base-chance", 0.1, false) + (getSetting(hero, "chance-per-level", 0.02, false) * hero.getLevel());
+        double chance = SkillConfigManager.getUseSetting(hero, this, "base-chance", 0.1, false) + (SkillConfigManager.getUseSetting(hero, this, Setting.CHANCE_LEVEL, 0.02, false) * hero.getLevel());
 
         if (Util.rand.nextDouble() >= chance) {
             if (Util.rand.nextDouble() >= chance) {
@@ -80,15 +81,15 @@ public class SkillPickPocket extends TargettedSkill {
         ItemStack[] items = tInventory.getContents();
         // Never steal items in the hotbar - We consider these 'active' and in the players hand.
         int slot = Util.rand.nextInt(27) + 9;
-        Set<String> disallowed = new HashSet<String>(getSetting(hero, "disallowed-items", new ArrayList<String>()));
+        Set<String> disallowed = new HashSet<String>(SkillConfigManager.getUseSetting(hero, this, "disallowed-items", new ArrayList<String>()));
         if (items[slot] == null || items[slot].getType() == Material.AIR || disallowed.contains(items[slot].getType().name())) {
             Messaging.send(player, "You failed to steal anything from $1", tPlayer.getDisplayName());
             return SkillResult.FAIL;
         }
         // Lets make sure we don't have any setting limits.
         int stealAmount = items[slot].getAmount();
-        if (!getSetting(hero, "always-steal-all", true)) {
-            int maxSteal = getSetting(hero, "max-stolen", 64, false);
+        if (!SkillConfigManager.getUseSetting(hero, this, "always-steal-all", true)) {
+            int maxSteal = SkillConfigManager.getUseSetting(hero, this, "max-stolen", 64, false);
             if (stealAmount > maxSteal)
                 stealAmount = maxSteal;
 

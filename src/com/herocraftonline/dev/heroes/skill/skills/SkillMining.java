@@ -15,6 +15,7 @@ import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.PassiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
+import com.herocraftonline.dev.heroes.skill.SkillConfigManager;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Setting;
 import com.herocraftonline.dev.heroes.util.Util;
@@ -95,7 +96,7 @@ public class SkillMining extends PassiveSkill {
 
             double chance = Util.rand.nextDouble();
             
-            if (isStone && chance <= getSetting(hero, "chance-from-stone", .0005, false) * hero.getLevel(skill)) {
+            if (isStone && chance <= SkillConfigManager.getUseSetting(hero, skill, Setting.CHANCE_LEVEL, .0005, false) * hero.getSkillLevel(skill)) {
                 block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(getMatFromHeight(block), 1));
                 Heroes.debug.stopTask("HeroesSkillListener");
                 return;
@@ -104,7 +105,7 @@ public class SkillMining extends PassiveSkill {
                 return;
             }
             
-            if (chance >= getSetting(hero, "chance-per-level", .001, false) * hero.getLevel(skill)) {
+            if (chance >= SkillConfigManager.getUseSetting(hero, skill, Setting.CHANCE_LEVEL, .001, false) * hero.getSkillLevel(skill)) {
                 Heroes.debug.stopTask("HeroesSkillListener");
                 return;
             }

@@ -41,7 +41,6 @@ public class OutsourcedSkill extends Skill {
 
     public OutsourcedSkill(Heroes plugin, String name) {
         super(plugin, name);
-        setConfig(SkillManager.allSkillsConfig.getConfigurationSection(getName()));
         registerEvent(Type.CUSTOM_EVENT, new SkillHeroListener(), Priority.Monitor);
     }
 
@@ -88,7 +87,7 @@ public class OutsourcedSkill extends Skill {
         String world = player.getWorld().getName();
         String playerName = player.getName();
         if (hero.getHeroClass().hasSkill(getName()) || (hero.getSecondClass() != null && hero.getSecondClass().hasSkill(getName()))) {
-            if (hero.getLevel(this) >= getSetting(hero, Setting.LEVEL.node(), 1, true) && !Heroes.properties.disabledWorlds.contains(world)) {
+            if (hero.getSkillLevel(this) >= SkillConfigManager.getUseSetting(hero, this, Setting.LEVEL, 1, true) && !Heroes.properties.disabledWorlds.contains(world)) {
                 if (Heroes.perms.getName().equals("Permissions3") || Heroes.perms.getName().equals("PermissionsEx")) {
                     for (String permission : permissions) {
                         if (!Heroes.perms.has(world, playerName, permission)) {

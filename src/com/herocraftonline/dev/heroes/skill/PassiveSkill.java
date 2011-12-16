@@ -10,7 +10,6 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.ClassChangeEvent;
 import com.herocraftonline.dev.heroes.api.HeroChangeLevelEvent;
 import com.herocraftonline.dev.heroes.api.HeroesEventListener;
-import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.effects.Effect;
 import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.hero.Hero;
@@ -39,7 +38,7 @@ public abstract class PassiveSkill extends Skill {
     private String applyText = null;
     private String unapplyText = null;
     private EffectType[] effectTypes = null;
-    
+
     /**
      * Typical skill constructor, except that it automatically sets the usage text to <i>Passive Skill</i>, which should
      * not be changed for normal use. There should be no identifiers defined as a passive skill is not meant to be
@@ -51,7 +50,7 @@ public abstract class PassiveSkill extends Skill {
     public PassiveSkill(Heroes plugin, String name) {
         super(plugin, name);
         setUsage("Passive Skill");
-        
+
         registerEvent(Type.CUSTOM_EVENT, new SkillCustomEventListener(), Priority.Monitor);
     }
 
@@ -84,16 +83,16 @@ public abstract class PassiveSkill extends Skill {
      */
     @Override
     public void init() {
-        applyText = getSetting(null, Setting.APPLY_TEXT.node(), "%hero% gained %skill%!");
+        applyText = SkillConfigManager.getRaw(this, Setting.APPLY_TEXT, "%hero% gained %skill%!");
         applyText = applyText.replace("%hero%", "$1").replace("%skill%", "$2");
-        unapplyText = getSetting(null, Setting.UNAPPLY_TEXT.node(), "%hero% lost %skill%!");
+        unapplyText = SkillConfigManager.getRaw(this, Setting.UNAPPLY_TEXT, "%hero% lost %skill%!");
         unapplyText = unapplyText.replace("%hero%", "$1").replace("%skill%", "$2");
     }
 
     public void setEffectTypes(EffectType...effectTypes) {
         this.effectTypes = effectTypes;
     }
-    
+
     /**
      * Attempts to apply this skill's effect to the provided {@link Hero} if the it is the correct class and level.
      * 
@@ -101,18 +100,13 @@ public abstract class PassiveSkill extends Skill {
      *            the Hero to try applying the effect to
      */
     public void tryApplying(Hero hero) {
-        HeroClass heroClass = hero.getHeroClass();
-        if (!heroClass.hasSkill(getName()))
+        if (!hero.hasAccessToSkill(this))
             return;
-        
-        ConfigurationSection settings = heroClass.getSkillSettings(getName());
-        if (settings != null) {
-            if (hero.getLevel(this) >= getSetting(hero, Setting.LEVEL.node(), 1, true)) {
-                apply(hero);
-            } else {
-                unapply(hero);
-            }
-        }
+
+        if (hero.canUseSkill(this))
+            apply(hero);
+        else
+            unapply(hero);
     }
 
     /**

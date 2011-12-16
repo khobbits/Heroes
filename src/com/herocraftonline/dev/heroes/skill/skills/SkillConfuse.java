@@ -14,6 +14,7 @@ import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.effects.PeriodicExpirableEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
+import com.herocraftonline.dev.heroes.skill.SkillConfigManager;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
@@ -49,15 +50,15 @@ public class SkillConfuse extends TargettedSkill {
     @Override
     public void init() {
         super.init();
-        applyText = getSetting(null, Setting.APPLY_TEXT.node(), "%target% is confused!").replace("%target%", "$1");
-        expireText = getSetting(null, Setting.EXPIRE_TEXT.node(), "%target% has regained his wit!").replace("%target%", "$1");
+        applyText = SkillConfigManager.getRaw(this, Setting.APPLY_TEXT.node(), "%target% is confused!").replace("%target%", "$1");
+        expireText = SkillConfigManager.getRaw(this, Setting.EXPIRE_TEXT.node(), "%target% has regained his wit!").replace("%target%", "$1");
     }
 
     @Override
     public SkillResult use(Hero hero, LivingEntity target, String[] args) {
-        long duration = getSetting(hero, Setting.DURATION.node(), 10000, false);
-        long period = getSetting(hero, Setting.PERIOD.node(), 2000, true);
-        float maxDrift = (float) getSetting(hero, "max-drift", 0.35, false);
+        long duration = SkillConfigManager.getUseSetting(hero, this, Setting.DURATION, 10000, false);
+        long period = SkillConfigManager.getUseSetting(hero, this, Setting.PERIOD, 2000, true);
+        float maxDrift = (float) SkillConfigManager.getUseSetting(hero, this, "max-drift", 0.35, false);
         if (target instanceof Player) {
             plugin.getHeroManager().getHero((Player) target).addEffect(new ConfuseEffect(this, duration, period, maxDrift));
         } else

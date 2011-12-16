@@ -10,6 +10,7 @@ import com.herocraftonline.dev.heroes.api.SkillResult;
 import com.herocraftonline.dev.heroes.api.SkillResult.ResultType;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
+import com.herocraftonline.dev.heroes.skill.SkillConfigManager;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Setting;
@@ -37,8 +38,8 @@ public class SkillPort extends ActiveSkill {
         Player player = hero.getPlayer();
 
         if (args[0].equalsIgnoreCase("list")) {
-            for (String n : getConfig().getKeys(false)) {
-                String retrievedNode = getSetting(hero, n, (String) null);
+            for (String n : SkillConfigManager.getSettingKeys(hero, this, null)) {
+                String retrievedNode = SkillConfigManager.getUseSetting(hero, this, n, (String) null);
                 if (retrievedNode != null && retrievedNode.split(":").length == 5) {
                     Messaging.send(player, "$1 - $2", n, retrievedNode);
                 }
@@ -46,7 +47,7 @@ public class SkillPort extends ActiveSkill {
             return SkillResult.SKIP_POST_USAGE;
         }
 
-        String portInfo = getSetting(hero, args[0].toLowerCase(), (String) null);
+        String portInfo = SkillConfigManager.getUseSetting(hero, this, args[0].toLowerCase(), (String) null);
         if (portInfo != null) {
             String[] splitArg = portInfo.split(":");
             int levelRequirement = Integer.parseInt(splitArg[4]);
@@ -56,11 +57,11 @@ public class SkillPort extends ActiveSkill {
                 return SkillResult.INVALID_TARGET_NO_MSG;
             }
 
-            if (hero.getLevel(this) < levelRequirement) {
+            if (hero.getSkillLevel(this) < levelRequirement) {
                 return new SkillResult(ResultType.LOW_LEVEL, true, levelRequirement);
             }
 
-            int range = (int) Math.pow(getSetting(hero, Setting.RADIUS.node(), 10, false), 2);
+            int range = (int) Math.pow(SkillConfigManager.getUseSetting(hero, this, Setting.RADIUS, 10, false), 2);
             Location loc = new Location(world, Double.parseDouble(splitArg[1]), Double.parseDouble(splitArg[2]), Double.parseDouble(splitArg[3]));
             broadcastExecuteText(hero);
             if (!hero.hasParty()) {

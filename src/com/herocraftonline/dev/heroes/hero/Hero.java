@@ -33,8 +33,10 @@ import com.herocraftonline.dev.heroes.effects.Periodic;
 import com.herocraftonline.dev.heroes.party.HeroParty;
 import com.herocraftonline.dev.heroes.skill.DelayedSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
+import com.herocraftonline.dev.heroes.skill.SkillConfigManager;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Properties;
+import com.herocraftonline.dev.heroes.util.Setting;
 import com.herocraftonline.dev.heroes.util.Util;
 
 public class Hero {
@@ -96,7 +98,7 @@ public class Hero {
     public void addPermission(String permission) {
         transientPerms.setPermission(permission, true);
     }
-    
+
     /**
      * Adds the given permission to the hero
      * 
@@ -107,7 +109,7 @@ public class Hero {
     }
 
     public void addSkill(String skill, ConfigurationSection section) {
-        skills.put(skill, section);
+        skills.put(skill.toLowerCase(), section);
     }
 
     public boolean hasExperienceType(ExperienceType type) {
@@ -239,7 +241,7 @@ public class Hero {
         //This is called but ignores cancellation.
         ExperienceChangeEvent expEvent = new ExperienceChangeEvent(this, hc, expChange, ExperienceType.ADMIN);
         plugin.getServer().getPluginManager().callEvent(expEvent);
-        
+
         syncExperience();
         int newLevel = Properties.getLevel(exp);
         if (currentLevel != newLevel) {
@@ -267,7 +269,7 @@ public class Hero {
             }
         }
     }
-    
+
     /**
      * Adds the specified experience to the hero before modifiers from the given source.
      * expChange value supports negatives for experience loss.
@@ -408,7 +410,7 @@ public class Hero {
         for (HeroClass hc : classes) {
             if (hc == null)
                 continue;
-            
+
             double expLossPercent = prop.expLoss * multiplier;
 
             if (hc.getExpLoss() != -1)
@@ -586,17 +588,21 @@ public class Hero {
      * @param skill
      * @return
      */
-    public int getLevel(Skill skill) {
-        if (!hasSkill(skill))
-            return 1;
-
-        int level = 0;
-        int secondLevel = 0;
+    public int getSkillLevel(Skill skill) {
+        int level = -1;
+        int secondLevel = -1;
         if (heroClass.hasSkill(skill.getName())) {
+            int requiredLevel = SkillConfigManager.getSetting(heroClass, skill, Setting.LEVEL.node(), 1);
             level = getLevel(heroClass);
+            // If this class doesn't meet the level requirement reset it to -1
+            if (level < requiredLevel)
+                level = -1;
         }
         if (secondClass != null && secondClass.hasSkill(skill.getName())) {
+            int requiredLevel = SkillConfigManager.getSetting(secondClass, skill, Setting.LEVEL.node(), 1);
             secondLevel = getLevel(secondClass);
+            if (secondLevel < requiredLevel)
+                secondLevel = -1;
         }
         return secondLevel > level ? secondLevel : level;
     }
@@ -789,13 +795,62 @@ public class Hero {
     }
 
     /**
+     * Checks if the hero can use the given skill
+     * @param skill
+     * @return
+     */
+    public boolean canUseSkill(Skill skill) {
+        if (canPrimaryUseSkill(skill))
+            return true;
+        else if (canSecondUseSkill(skill))
+            return true;
+
+        ConfigurationSection section = skills.get(skill.getName().toLowerCase());
+        if (section != null) {
+            int level = section.getInt(Setting.LEVEL.node(), 1);
+            if (getLevel(heroClass) >= level || (secondClass != null && getLevel(secondClass) >= level))
+                return true;
+        }
+
+        return false;
+    }
+
+    public boolean canPrimaryUseSkill(Skill skill) {
+        if (heroClass.hasSkill(skill.getName())) {
+            int level = SkillConfigManager.getSetting(heroClass, skill, Setting.LEVEL.node(), 1);
+            if (getLevel(heroClass) >= level)
+                return true;
+        }
+        return false;
+    }
+    
+    public boolean canSecondUseSkill(Skill skill) {
+        if (secondClass != null && secondClass.hasSkill(skill.getName())) {
+            int level = SkillConfigManager.getSetting(secondClass, skill, Setting.LEVEL.node(), 1);
+            if (getLevel(secondClass) >= level)
+                return true;
+        }
+        return false;
+    }
+    
+    /**
+     * Checks if the hero can use the given skill
+     * This does a level check to make sure the hero has a class with a high enough level to use the skill
+     * @param name
+     * @return
+     */
+    public boolean canUseSkill(String name) {
+        return canUseSkill(plugin.getSkillManager().getSkill(name));
+    }
+
+    /**
      * Checks if the hero has access to the given Skill
      * 
      * @param skill
      * @return
      */
-    public boolean hasSkill(Skill skill) {
-        return hasSkill(skill.getName());
+    public boolean hasAccessToSkill(Skill skill) {
+        return hasAccessToSkill(skill.getName());
     }
 
     /**
@@ -804,8 +859,8 @@ public class Hero {
      * @param name
      * @return
      */
-    public boolean hasSkill(String name) {
-        return heroClass.hasSkill(name) || (secondClass != null && secondClass.hasSkill(name)) || skills.containsKey(name);
+    public boolean hasAccessToSkill(String name) {
+        return heroClass.hasSkill(name) || (secondClass != null && secondClass.hasSkill(name)) || skills.containsKey(name.toLowerCase());
     }
 
     /**
@@ -900,7 +955,7 @@ public class Hero {
         transientPerms.unsetPermission(permission);
         player.recalculatePermissions();
     }
-    
+
     /**
      * Removes the given permission from the hero
      * 
@@ -910,11 +965,21 @@ public class Hero {
         transientPerms.unsetPermission(permission);
         player.recalculatePermissions();
     }
-    
+
+    /**
+     * Remove a skill from the hero's skill 
+     * @param skill
+     */
     public void removeSkill(String skill) {
-        skills.remove(skill);
+        skills.remove(skill.toLowerCase());
     }
 
+    /**
+     * Sets the cooldown for a specific skill
+     * 
+     * @param name
+     * @param cooldown
+     */
     public void setCooldown(String name, long cooldown) {
         cooldowns.put(name.toLowerCase(), cooldown);
     }
@@ -1068,7 +1133,7 @@ public class Hero {
         double maxLevelXP = Properties.getExperience(level + 1) - currentLevelXP;
         double currentXP = getExperience() - currentLevelXP;
         float syncedPercent = (float) (currentXP / maxLevelXP);
-        
+
         player.setTotalExperience(Util.getMCExperience(level));
         player.setExp(syncedPercent);
         player.setLevel(level);

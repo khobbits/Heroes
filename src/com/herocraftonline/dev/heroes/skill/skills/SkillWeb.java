@@ -22,6 +22,7 @@ import com.herocraftonline.dev.heroes.api.SkillResult;
 import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
+import com.herocraftonline.dev.heroes.skill.SkillConfigManager;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
@@ -54,7 +55,7 @@ public class SkillWeb extends TargettedSkill {
     @Override
     public void init() {
         super.init();
-        applyText = getSetting(null, Setting.APPLY_TEXT.node(), "%hero% conjured a web at %target%'s feet!").replace("%hero%", "$1").replace("%target%", "$2");
+        applyText = SkillConfigManager.getRaw(this, Setting.APPLY_TEXT, "%hero% conjured a web at %target%'s feet!").replace("%hero%", "$1").replace("%target%", "$2");
     }
 
     @Override
@@ -68,7 +69,7 @@ public class SkillWeb extends TargettedSkill {
             name = Messaging.getLivingEntityName(target).toLowerCase();
 
         broadcast(player.getLocation(), applyText, player.getDisplayName(), name);
-        int duration = getSetting(hero, Setting.DURATION.node(), 5000, false);
+        int duration = SkillConfigManager.getUseSetting(hero, this, Setting.DURATION, 5000, false);
         WebEffect wEffect = new WebEffect(this, duration, target.getLocation().getBlock().getLocation());
         hero.addEffect(wEffect);
         return SkillResult.NORMAL;

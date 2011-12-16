@@ -9,6 +9,7 @@ import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.effects.common.InvulnerabilityEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
+import com.herocraftonline.dev.heroes.skill.SkillConfigManager;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Setting;
 
@@ -41,7 +42,7 @@ public class SkillInvuln extends ActiveSkill {
     @Override
     public SkillResult use(Hero hero, String[] args) {
         broadcastExecuteText(hero);
-        int duration = getSetting(hero, Setting.DURATION.node(), 10000, false);
+        int duration = SkillConfigManager.getUseSetting(hero, this, Setting.DURATION, 10000, false);
         // Remove any harmful effects on the caster
         for (Effect effect : hero.getEffects()) {
             if (effect.isType(EffectType.HARMFUL)) {

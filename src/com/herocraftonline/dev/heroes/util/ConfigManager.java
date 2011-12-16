@@ -12,14 +12,13 @@ import java.util.logging.Level;
 import org.bukkit.Material;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Player;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClassManager;
-import com.herocraftonline.dev.heroes.skill.SkillManager;
+import com.herocraftonline.dev.heroes.skill.SkillConfigManager;
 
 public class ConfigManager {
 
@@ -27,12 +26,8 @@ public class ConfigManager {
     // Files
     protected static File classConfigFolder;
     protected static File expConfigFile;
-    public static File skillConfigFile;
-    protected static File outsourcedSkillConfigFile;
     protected static File damageConfigFile;
     protected static File recipesConfigFile;
-    
-    public static boolean saveSkillDefaults = false;
     
     //Configurations
     private static Configuration damageConfig;
@@ -43,31 +38,22 @@ public class ConfigManager {
         File dataFolder = plugin.getDataFolder();
         classConfigFolder = new File(dataFolder + File.separator + "classes");
         expConfigFile = new File(dataFolder, "experience.yml");
-        skillConfigFile = new File(dataFolder, "skills.yml");
-        outsourcedSkillConfigFile = new File(dataFolder, "permission-skills.yml");
         damageConfigFile = new File(dataFolder, "damages.yml");
         recipesConfigFile = new File(dataFolder, "recipes.yml");
-
-        // Load the default Configuration for the skill Manager
-        SkillManager.skillConfig = YamlConfiguration.loadConfiguration(skillConfigFile);
-        SkillManager.defaultSkillConfig = new MemoryConfiguration();
-        SkillManager.skillConfig.setDefaults(SkillManager.defaultSkillConfig);
-        SkillManager.allSkillsConfig = YamlConfiguration.loadConfiguration(outsourcedSkillConfigFile);
-        SkillManager.allSkillsConfig.setDefaults(SkillManager.skillConfig);
     }
 
     public void load() throws Exception {
         checkForConfig(expConfigFile);
         checkForConfig(damageConfigFile);
-        checkForConfig(outsourcedSkillConfigFile);
         if (!classConfigFolder.exists()) {
             classConfigFolder.mkdirs();
             checkForConfig(new File(classConfigFolder, "vagrant.yml"));
         }
+        plugin.setSkillConfigs(new SkillConfigManager(plugin));
+        plugin.getSkillConfigs().load();
     }
 
     public void loadManagers() {
-        saveSkillDefaults = !skillConfigFile.exists();
         damageConfig = YamlConfiguration.loadConfiguration(damageConfigFile);
         InputStream defConfigStream = plugin.getResource("defaults" + File.separator + "damages.yml");
         if (defConfigStream != null) {
@@ -119,7 +105,7 @@ public class ConfigManager {
         return true;
     }
 
-    private void checkForConfig(File config) {
+    public void checkForConfig(File config) {
         if (!config.exists()) {
             try {
                 Heroes.log(Level.WARNING, "File " + config.getName() + " not found - generating defaults.");

@@ -10,6 +10,7 @@ import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
+import com.herocraftonline.dev.heroes.skill.SkillConfigManager;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Setting;
 
@@ -40,16 +41,16 @@ public class SkillOne extends ActiveSkill {
     @Override
     public void init() {
         super.init();
-        applyText = getSetting(null, "apply-text", "%hero% gained a burst of speed!").replace("%hero%", "$1");
-        expireText = getSetting(null, "expire-text", "%hero% returned to normal speed!").replace("%hero%", "$1");
+        applyText = SkillConfigManager.getRaw(null, "apply-text", "%hero% gained a burst of speed!").replace("%hero%", "$1");
+        expireText = SkillConfigManager.getRaw(null, "expire-text", "%hero% returned to normal speed!").replace("%hero%", "$1");
     }
 
     @Override
     public SkillResult use(Hero hero, String[] args) {
         broadcastExecuteText(hero);
 
-        int duration = getSetting(hero, Setting.DURATION.node(), 15000, false);
-        int multiplier = getSetting(hero, "speed-multiplier", 2, false);
+        int duration = SkillConfigManager.getUseSetting(hero, this, Setting.DURATION, 15000, false);
+        int multiplier = SkillConfigManager.getUseSetting(hero, this, "speed-multiplier", 2, false);
         if (multiplier > 20) {
             multiplier = 20;
         }

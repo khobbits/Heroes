@@ -7,6 +7,7 @@ import com.herocraftonline.dev.heroes.api.SkillResult;
 import com.herocraftonline.dev.heroes.effects.common.SafeFallEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
+import com.herocraftonline.dev.heroes.skill.SkillConfigManager;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Setting;
 
@@ -32,7 +33,7 @@ public class SkillSafefall extends ActiveSkill {
     public SkillResult use(Hero hero, String[] args) {
         broadcastExecuteText(hero);
 
-        int duration = getSetting(hero, Setting.DURATION.node(), 20000, false);
+        int duration = SkillConfigManager.getUseSetting(hero, this, Setting.DURATION, 20000, false);
         hero.addEffect(new SafeFallEffect(this, duration));
 
         return SkillResult.NORMAL;

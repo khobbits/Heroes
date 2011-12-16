@@ -24,7 +24,8 @@ public enum Setting {
     PERIOD("period"),
     RADIUS("radius"),
     REAGENT("reagent"),
-    REAGENT_COST("reagent-cost"),
+    REAGENT_COST("reagent-cost"), 
+    STAMINA("stamina"),
     UNAPPLY_TEXT("unapply-text"),
     USE_TEXT("use-text"),
     DEATH_TEXT("death-text");
@@ -36,6 +37,11 @@ public enum Setting {
     }
 
     public String node() {
+        return this.node;
+    }
+    
+    @Override
+    public String toString() {
         return this.node;
     }
 }

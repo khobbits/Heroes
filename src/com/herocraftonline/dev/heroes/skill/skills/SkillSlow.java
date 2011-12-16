@@ -8,6 +8,7 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.SkillResult;
 import com.herocraftonline.dev.heroes.effects.common.SlowEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;
+import com.herocraftonline.dev.heroes.skill.SkillConfigManager;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 import com.herocraftonline.dev.heroes.util.Setting;
@@ -39,8 +40,8 @@ public class SkillSlow extends TargettedSkill {
 
     @Override
     public void init() {
-        applyText = getSetting(null, Setting.APPLY_TEXT.node(), "%target% has been slowed by %hero%!").replace("%target%", "$1").replace("%hero%", "$2");
-        expireText = getSetting(null, Setting.EXPIRE_TEXT.node(), "%target% is no longer slowed!").replace("%target%", "$1");
+        applyText = SkillConfigManager.getRaw(this, Setting.APPLY_TEXT, "%target% has been slowed by %hero%!").replace("%target%", "$1").replace("%hero%", "$2");
+        expireText = SkillConfigManager.getRaw(this, Setting.EXPIRE_TEXT, "%target% is no longer slowed!").replace("%target%", "$1");
     }
 
     @Override
@@ -48,8 +49,8 @@ public class SkillSlow extends TargettedSkill {
         if (!(target instanceof Player))
             return SkillResult.INVALID_TARGET;
         
-        int duration = getSetting(hero, Setting.DURATION.node(), 15000, false);
-        int multiplier = getSetting(hero, "speed-multiplier", 2, false);
+        int duration = SkillConfigManager.getUseSetting(hero, this, Setting.DURATION, 15000, false);
+        int multiplier = SkillConfigManager.getUseSetting(hero, this, "speed-multiplier", 2, false);
         if (multiplier > 20) {
             multiplier = 20;
         }

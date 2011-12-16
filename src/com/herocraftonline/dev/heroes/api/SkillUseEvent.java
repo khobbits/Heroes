@@ -18,11 +18,12 @@ public class SkillUseEvent extends HeroEvent implements Cancellable {
     private final Hero hero;
     private int manaCost = 0;
     private int healthCost = 0;
+    private int staminaCost = 0;
     private String[] args;
     private ItemStack reagentCost;
     private boolean cancelled = false;
 
-    public SkillUseEvent(Skill skill, Player player, Hero hero, int manaCost, int healthCost, ItemStack reagentCost, String[] args) {
+    public SkillUseEvent(Skill skill, Player player, Hero hero, int manaCost, int healthCost, int staminaCost, ItemStack reagentCost, String[] args) {
         super("SkillUseEvent", HeroEventType.SKILL_USE);
         this.player = player;
         this.skill = skill;
@@ -31,6 +32,7 @@ public class SkillUseEvent extends HeroEvent implements Cancellable {
         this.manaCost = manaCost;
         this.healthCost = healthCost;
         this.reagentCost = reagentCost;
+        this.staminaCost = staminaCost;
     }
 
     /**
@@ -47,6 +49,14 @@ public class SkillUseEvent extends HeroEvent implements Cancellable {
         return healthCost;
     }
 
+    /**
+     * 
+     * @return the staminaCost
+     */
+    public int getStaminaCost() {
+        return staminaCost;
+    }
+    
     /**
      * @return the hero
      */
@@ -105,6 +115,15 @@ public class SkillUseEvent extends HeroEvent implements Cancellable {
         this.healthCost = healthCost;
     }
 
+    /**
+     * 
+     * @param staminaCost
+     *          the staminaCost to set
+     */
+    public void setStaminaCost(int staminaCost) {
+        this.staminaCost = staminaCost;
+    }
+    
     /**
      * @param manaCost
      *            the manaCost to set

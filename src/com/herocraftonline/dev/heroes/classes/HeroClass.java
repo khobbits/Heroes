@@ -12,13 +12,9 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.bukkit.Material;
-import org.bukkit.configuration.Configuration;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.MemoryConfiguration;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.damage.DamageManager.ProjectileType;
-import com.herocraftonline.dev.heroes.skill.SkillManager;
 
 /**
  * A Hero's class
@@ -39,8 +35,6 @@ public class HeroClass {
     private Map<Material, Integer> itemDamage = new EnumMap<Material, Integer>(Material.class);
     private Map<ProjectileType, Integer> projectileDamage = new EnumMap<ProjectileType, Integer>(ProjectileType.class);
     private Set<String> skills = new LinkedHashSet<String>();
-
-    private Configuration skillConfig = new MemoryConfiguration();
 
     private int maxLevel;
     private int cost;
@@ -65,7 +59,6 @@ public class HeroClass {
         maxHealthPerLevel = 0;
         maxLevel = 1;
         cost = 0;
-        skillConfig.setDefaults(SkillManager.allSkillsConfig);
     }
 
     protected void addAllowedArmor(Material armor) {
@@ -76,18 +69,7 @@ public class HeroClass {
         this.allowedWeapons.add(weapon);
     }
 
-    protected void addSkill(String name, ConfigurationSection settings) {
-        ConfigurationSection section = skillConfig.getConfigurationSection(name);
-        if (section == null) {
-            section = skillConfig.createSection(name);
-        }
-
-        for (String key : settings.getKeys(true)) {
-            if (settings.isConfigurationSection(key))
-                continue;
-            section.set(key, settings.get(key));
-        }
-
+    protected void addSkill(String name) {
         skills.add(name.toLowerCase());
     }
 
@@ -330,20 +312,6 @@ public class HeroClass {
      */
     public Set<String> getSkillNames() {
         return new TreeSet<String>(skills);
-    }
-
-    public ConfigurationSection getSkillSettings(String name) {        
-        return skillConfig.getConfigurationSection(name);
-    }
-
-    /**
-     * Checks if the class has settings for the given skill
-     * 
-     * @param path
-     * @return true if the class has the skill settings
-     */
-    public boolean hasSkillSettings(String path) {
-        return skillConfig.get(path, null) != null;
     }
 
     /**

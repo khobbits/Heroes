@@ -23,7 +23,7 @@ import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
 import com.herocraftonline.dev.heroes.damage.DamageManager.ProjectileType;
 import com.herocraftonline.dev.heroes.skill.OutsourcedSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
-import com.herocraftonline.dev.heroes.skill.SkillManager;
+import com.herocraftonline.dev.heroes.skill.SkillConfigManager;
 import com.herocraftonline.dev.heroes.util.Properties;
 import com.herocraftonline.dev.heroes.util.Util;
 
@@ -110,7 +110,7 @@ public class HeroClassManager {
         checkClassHeirarchy();
 
         // We also need to resave the defaults for the skill configurations in case the file was empty
-        SkillManager.saveSkillConfig();
+        SkillConfigManager.saveSkillConfig();
 
         if (defaultClass == null) {
             Heroes.log(Level.SEVERE, "You are missing a default class, this will cause A LOT of issues!");
@@ -436,11 +436,13 @@ public class HeroClassManager {
                         if (!plugin.getSkillManager().loadOutsourcedSkill(skill))
                             continue;
                     }
+
+                    newClass.addSkill(skill);
+                    // Load the skill settings into the class skill config
                     ConfigurationSection skillSettings = section.getConfigurationSection(skill);
                     if (skillSettings == null)
                         skillSettings = section.createSection(skill);
-
-                    newClass.addSkill(skill, skillSettings);
+                    plugin.getSkillConfigs().addClassSkillSettings(className, plugin.getSkillManager().getSkill(skill).getName(), skillSettings);
 
                 } catch (IllegalArgumentException e) {
                     Heroes.log(Level.WARNING, "Invalid permission skill (" + skill + ") defined for " + className + ". Skipping this skill.");
@@ -470,12 +472,14 @@ public class HeroClassManager {
                     Heroes.log(Level.WARNING, "Skill " + skillName + " defined for " + className + " not found.");
                     continue;
                 }
-
+                
+                newClass.addSkill(skillName);
+                
+                // Copy the settings from the class configuration to the class skill configuration
                 ConfigurationSection skillSettings = section.getConfigurationSection(skillName);
                 if (skillSettings == null)
                     skillSettings = section.createSection(skillName);
-
-                newClass.addSkill(skillName, skillSettings);
+                plugin.getSkillConfigs().addClassSkillSettings(className, skill.getName(), skillSettings);
             }
 
             // Load all skills onto the Class if we found ALL
@@ -489,10 +493,14 @@ public class HeroClassManager {
                         continue;
                     }
 
+
+                    newClass.addSkill(skill.getName());
+                    
+                    // Load the skill settings into the class skill config
                     ConfigurationSection skillSettings = section.getConfigurationSection(skill.getName());
                     if (skillSettings == null)
                         skillSettings = section.createSection(skill.getName());
-                    newClass.addSkill(skill.getName(), skillSettings);
+                    plugin.getSkillConfigs().addClassSkillSettings(newClass.getName(), skill.getName(), skillSettings);
                 }
             }
         }

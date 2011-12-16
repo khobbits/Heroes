@@ -15,6 +15,7 @@ import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
+import com.herocraftonline.dev.heroes.skill.SkillConfigManager;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
@@ -52,15 +53,15 @@ public class SkillCurse extends TargettedSkill {
     @Override
     public void init() {
         super.init();
-        missText = getSetting(null, "miss-text", "%target% misses an attack!").replace("%target%", "$1");
-        applyText = getSetting(null, Setting.APPLY_TEXT.node(), "%target% has been cursed!").replace("%target%", "$1");
-        expireText = getSetting(null, Setting.EXPIRE_TEXT.node(), "%target% has recovered from the curse!").replace("%target%", "$1");
+        missText = SkillConfigManager.getRaw(this, "miss-text", "%target% misses an attack!").replace("%target%", "$1");
+        applyText = SkillConfigManager.getRaw(this, Setting.APPLY_TEXT.node(), "%target% has been cursed!").replace("%target%", "$1");
+        expireText = SkillConfigManager.getRaw(this, Setting.EXPIRE_TEXT.node(), "%target% has recovered from the curse!").replace("%target%", "$1");
     }
 
     @Override
     public SkillResult use(Hero hero, LivingEntity target, String[] args) {
-        long duration = getSetting(hero, Setting.DURATION.node(), 5000, false);
-        double missChance = getSetting(hero, "miss-chance", .50, false);
+        long duration = SkillConfigManager.getUseSetting(hero, this, Setting.DURATION, 5000, false);
+        double missChance = SkillConfigManager.getUseSetting(hero, this, "miss-chance", .50, false);
         CurseEffect cEffect = new CurseEffect(this, duration, missChance);
 
         if (target instanceof Player)

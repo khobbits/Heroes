@@ -13,6 +13,7 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.SkillResult;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
+import com.herocraftonline.dev.heroes.skill.SkillConfigManager;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Messaging;
 
@@ -48,7 +49,7 @@ public class SkillJump extends ActiveSkill {
     public SkillResult use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
         Material mat = player.getLocation().getBlock().getRelative(BlockFace.DOWN).getType();
-        if ((getSetting(hero, "no-air-jump", true) && noJumpMaterials.contains(mat)) || player.isInsideVehicle()) {
+        if ((SkillConfigManager.getUseSetting(hero, this, "no-air-jump", true) && noJumpMaterials.contains(mat)) || player.isInsideVehicle()) {
             Messaging.send(player, "You can't jump while mid-air or from inside a vehicle!");
             return SkillResult.FAIL;
         }

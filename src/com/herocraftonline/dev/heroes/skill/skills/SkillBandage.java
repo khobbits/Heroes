@@ -10,6 +10,7 @@ import com.herocraftonline.dev.heroes.api.SkillResult;
 import com.herocraftonline.dev.heroes.effects.Effect;
 import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.hero.Hero;
+import com.herocraftonline.dev.heroes.skill.SkillConfigManager;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 import com.herocraftonline.dev.heroes.util.Messaging;
@@ -29,7 +30,7 @@ public class SkillBandage extends TargettedSkill {
     @Override
     public ConfigurationSection getDefaultConfig() {
         ConfigurationSection section = super.getDefaultConfig();
-        section.set("health", 5);
+        section.set(Setting.HEALTH.node(), 5);
         section.set(Setting.MAX_DISTANCE.node(), 5);
         section.set(Setting.REAGENT.node(), "PAPER");
         section.set(Setting.REAGENT_COST.node(), 1);
@@ -44,7 +45,7 @@ public class SkillBandage extends TargettedSkill {
         }
 
         Hero targetHero = plugin.getHeroManager().getHero((Player) target);
-        int hpPlus = getSetting(hero, "health", 5, false);
+        int hpPlus = SkillConfigManager.getUseSetting(hero, this, Setting.HEALTH, 5, false);
         double targetHealth = targetHero.getHealth();
 
         if (targetHealth >= targetHero.getMaxHealth()) {

@@ -2,10 +2,8 @@ package com.herocraftonline.dev.heroes.command.commands;
 
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -18,6 +16,7 @@ import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.command.BasicCommand;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
+import com.herocraftonline.dev.heroes.skill.SkillConfigManager;
 import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillListCommand extends BasicCommand {
@@ -51,14 +50,18 @@ public class SkillListCommand extends BasicCommand {
             } catch (NumberFormatException e) {}
         }
         
-        Map<Skill, Integer> skills = new HashMap<Skill, Integer>();
-        Set<String> skillNames = new HashSet<String>(heroClass.getSkillNames());
-        if (secondClass != null)
-            skillNames.addAll(secondClass.getSkillNames());
-        
-        for (String skillName : skillNames) {
-            Skill skill = plugin.getSkillManager().getSkill(skillName);
-            skills.put(skill, skill.getSetting(hero, Setting.LEVEL.node(), 1, true));
+        Map<SkillListInfo, Integer> skills = new HashMap<SkillListInfo, Integer>();
+        for (String name : heroClass.getSkillNames()) {
+            Skill skill = plugin.getSkillManager().getSkill(name);
+            int level = SkillConfigManager.getSetting(heroClass, skill, Setting.LEVEL.node(), 1);
+            skills.put(new SkillListInfo(heroClass, skill), level);
+        }
+        if (secondClass != null) {
+            for (String name : secondClass.getSkillNames()) {
+                Skill skill = plugin.getSkillManager().getSkill(name);
+                int level = SkillConfigManager.getSetting(secondClass, skill, Setting.LEVEL.node(), 1);
+                skills.put(new SkillListInfo(secondClass, skill), level);
+            }
         }
 
         int numPages = skills.size() / SKILLS_PER_PAGE;
@@ -79,18 +82,18 @@ public class SkillListCommand extends BasicCommand {
 
         int count = 0;
 
-        for (Entry<Skill, Integer> entry : entriesSortedByValues(skills)) {
+        for (Entry<SkillListInfo, Integer> entry : entriesSortedByValues(skills)) {
             if (count >= start && count < end) {
-                Skill skill = entry.getKey();
+                SkillListInfo sli = entry.getKey();
                 int level = entry.getValue();
-                HeroClass hc = heroClass.hasSkill(skill.getName()) ? heroClass : secondClass;
+                HeroClass hc = sli.heroClass;
                 ChatColor color;
                 if (level > hero.getLevel(hc)) {
                     color = ChatColor.RED;
                 } else {
                     color = ChatColor.GREEN;
                 }
-                sender.sendMessage("  " + color + "Level " + level + " " + ChatColor.YELLOW + skill.getName() + ": " + ChatColor.GOLD + skill.getDescription());
+                sender.sendMessage("  " + color + " " + hc.getName().substring(0, 3 > hc.getName().length() ? hc.getName().length() : 3) + " " + level + " " + ChatColor.YELLOW + sli.skill.getName() + ": " + ChatColor.GOLD + sli.skill.getDescription());
             }
             count++;
         }
@@ -99,13 +102,13 @@ public class SkillListCommand extends BasicCommand {
         return true;
     }
 
-    private static SortedSet<Entry<Skill, Integer>> entriesSortedByValues(Map<Skill, Integer> map) {
-        SortedSet<Entry<Skill, Integer>> sortedEntries = new TreeSet<Map.Entry<Skill, Integer>>(new Comparator<Map.Entry<Skill, Integer>>() {
+    private static SortedSet<Entry<SkillListInfo, Integer>> entriesSortedByValues(Map<SkillListInfo, Integer> map) {
+        SortedSet<Entry<SkillListInfo, Integer>> sortedEntries = new TreeSet<Map.Entry<SkillListInfo, Integer>>(new Comparator<Map.Entry<SkillListInfo, Integer>>() {
             @Override
-            public int compare(Map.Entry<Skill, Integer> e1, Map.Entry<Skill, Integer> e2) {
+            public int compare(Map.Entry<SkillListInfo, Integer> e1, Map.Entry<SkillListInfo, Integer> e2) {
                 int res = e1.getValue().compareTo(e2.getValue());
                 if (res == 0)
-                    return e1.getKey().getName().compareTo(e2.getKey().getName());
+                    return e1.getKey().skill.getName().compareTo(e2.getKey().skill.getName());
                 else
                     return res;
             }
@@ -113,5 +116,31 @@ public class SkillListCommand extends BasicCommand {
 
         sortedEntries.addAll(map.entrySet());
         return sortedEntries;
+    }
+    
+    public class SkillListInfo {
+        
+        protected final HeroClass heroClass;
+        protected final Skill skill;
+        
+        public SkillListInfo(HeroClass heroClass, Skill skill) {
+            this.heroClass = heroClass;
+            this.skill = skill;
+        }
+        
+        public int hashCode() {
+            return 3 + heroClass.hashCode() * 17 + skill.hashCode();
+        }
+        
+        public boolean equals(Object obj) {
+            if (this == obj)
+                return true;
+            
+            if (!(obj instanceof SkillListInfo))
+                return false;
+            
+            SkillListInfo sli = (SkillListInfo) obj;
+            return sli.heroClass.equals(this.heroClass) && sli.skill.equals(this.skill);
+        }
     }
 }

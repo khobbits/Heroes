@@ -13,6 +13,7 @@ import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
+import com.herocraftonline.dev.heroes.skill.SkillConfigManager;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 
 public class SkillExcavate extends ActiveSkill {
@@ -41,16 +42,16 @@ public class SkillExcavate extends ActiveSkill {
     @Override
     public void init() {
         super.init();
-        applyText = getSetting(null, "apply-text", "%hero% begins excavating!").replace("%hero%", "$1");
-        expireText = getSetting(null, "expire-text", "%hero% is no longer excavating!").replace("%hero%", "$1");
+        applyText = SkillConfigManager.getRaw(this, "apply-text", "%hero% begins excavating!").replace("%hero%", "$1");
+        expireText = SkillConfigManager.getRaw(this, "expire-text", "%hero% is no longer excavating!").replace("%hero%", "$1");
     }
     
     @Override
     public SkillResult use(Hero hero, String[] args) {
         broadcastExecuteText(hero);
 
-        int duration = getSetting(hero, "duration-per-level", 100, false);
-        int multiplier = getSetting(hero, "speed-multiplier", 2, false);
+        int duration = SkillConfigManager.getUseSetting(hero, this, "duration-per-level", 100, false);
+        int multiplier = SkillConfigManager.getUseSetting(hero, this, "speed-multiplier", 2, false);
         if (multiplier > 20) {
             multiplier = 20;
         }

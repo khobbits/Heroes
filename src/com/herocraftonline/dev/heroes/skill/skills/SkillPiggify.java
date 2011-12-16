@@ -21,6 +21,7 @@ import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
+import com.herocraftonline.dev.heroes.skill.SkillConfigManager;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.skill.TargettedSkill;
 import com.herocraftonline.dev.heroes.util.Setting;
@@ -55,7 +56,7 @@ public class SkillPiggify extends TargettedSkill {
         }
 
         Entity creature = target.getWorld().spawnCreature(target.getLocation(), type);
-        long duration = getSetting(hero, Setting.DURATION.node(), 10000, false);
+        long duration = SkillConfigManager.getUseSetting(hero, this, Setting.DURATION, 10000, false);
         PigEffect pEffect = new PigEffect(this, duration, (Creature) creature);
         if (target instanceof Player) {
             plugin.getHeroManager().getHero((Player) target).addEffect(pEffect);

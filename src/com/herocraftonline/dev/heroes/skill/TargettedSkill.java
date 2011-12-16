@@ -76,7 +76,7 @@ public abstract class TargettedSkill extends ActiveSkill {
      */
     @Override
     public void init() {
-        String useText = getSetting(null, Setting.USE_TEXT.node(), "%hero% used %skill% on %target%!");
+        String useText = SkillConfigManager.getRaw(this, Setting.USE_TEXT.node(), "%hero% used %skill% on %target%!");
         useText = useText.replace("%hero%", "$1").replace("%skill%", "$2").replace("%target%", "$3");
         setUseText(useText);
     }
@@ -104,7 +104,7 @@ public abstract class TargettedSkill extends ActiveSkill {
     @Override
     public SkillResult use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
-        int maxDistance = getSetting(hero, Setting.MAX_DISTANCE.node(), 15, false);
+        int maxDistance = SkillConfigManager.getUseSetting(hero, this, Setting.MAX_DISTANCE, 15, false);
         LivingEntity target = null;
         if (args.length > 0) {
             target = plugin.getServer().getPlayer(args[0]);

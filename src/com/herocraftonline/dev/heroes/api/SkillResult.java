@@ -25,6 +25,7 @@ public class SkillResult {
     public static final SkillResult CANCELLED = new SkillResult(ResultType.CANCELLED, false);
     public static final SkillResult REMOVED_EFFECT = new SkillResult(ResultType.REMOVED_EFFECT, false);
     public static final SkillResult INVALID_TARGET_NO_MSG = new SkillResult(ResultType.INVALID_TARGET, false);
+    public static final SkillResult LOW_STAMINA = new SkillResult(ResultType.LOW_STAMINA, true);
     
     /**
      * Constructs a new SkillResult from the provided arguments for use with a SkillCompleteEvent
@@ -50,6 +51,7 @@ public class SkillResult {
         LOW_MANA,
         LOW_HEALTH,
         LOW_LEVEL,
+        LOW_STAMINA,
         MISSING_REAGENT,
         NORMAL,
         ON_GLOBAL_COOLDOWN,

@@ -57,6 +57,7 @@ import com.herocraftonline.dev.heroes.hero.HeroManager;
 import com.herocraftonline.dev.heroes.party.PartyManager;
 import com.herocraftonline.dev.heroes.skill.OutsourcedSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
+import com.herocraftonline.dev.heroes.skill.SkillConfigManager;
 import com.herocraftonline.dev.heroes.skill.SkillManager;
 import com.herocraftonline.dev.heroes.spout.SpoutData;
 import com.herocraftonline.dev.heroes.spout.SpoutInventoryListener;
@@ -99,6 +100,7 @@ public class Heroes extends JavaPlugin {
     private PartyManager partyManager;
     private DamageManager damageManager;
     private SkillManager skillManager;
+    private SkillConfigManager skillConfigs;
     private SpoutData spoutData;
     public static final Properties properties = new Properties();
     public static Economy econ;
@@ -151,6 +153,14 @@ public class Heroes extends JavaPlugin {
 
     public EffectManager getEffectManager() {
         return effectManager;
+    }
+    
+    public SkillConfigManager getSkillConfigs() {
+        return skillConfigs;
+    }
+    
+    public void setSkillConfigs(SkillConfigManager config) {
+        this.skillConfigs = config;
     }
 
     /**
