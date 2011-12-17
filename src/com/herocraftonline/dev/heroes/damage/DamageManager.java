@@ -13,6 +13,7 @@ import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Egg;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
 import org.bukkit.event.Event.Priority;
@@ -212,7 +213,11 @@ public class DamageManager {
         }
     }
     
-    public HeroesDamageListener getListener() {
-        return listener;
+    public int getEntityHealth(LivingEntity lEntity) {
+        return listener.getHealth(lEntity);
+    }
+    
+    public int getEntityMaxHealth(LivingEntity lEntity) {
+        return listener.getMaxHealth(lEntity);
     }
 }
