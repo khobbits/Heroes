@@ -62,11 +62,6 @@ public class SkillConfigManager {
         return classSkillConfigs.get(name);
     }
 
-    public void setClassSkillConfig(String name, Configuration config) {
-        classSkillConfigs.put(name, config);
-        config.setDefaults(outsourcedSkillConfig);
-    }
-
     public void addClassSkillSettings(String className, String skillName, ConfigurationSection section) {
         Configuration config = classSkillConfigs.get(className);
         if (config == null) {
@@ -112,20 +107,75 @@ public class SkillConfigManager {
     // Data retrieval methods //
     //------------------------//
     
+    /**
+     * Gets a string setting at the given path, if the value does not exist in the standard configuration
+     * this will instead return the default value
+     * 
+     * @param skill
+     * @param setting
+     * @param def
+     * @return the String at the path
+     */
     public static String getRaw(Skill skill, String setting, String def) {
         return outsourcedSkillConfig.getString(skill.getName() + "." + setting, def);
     }
     
+    /**
+     * Gets a string setting at the given path, if the value does not exist in the standard configuration
+     * this will instead return the default value
+     * 
+     * @param skill
+     * @param setting
+     * @param def
+     * @return the String at the path
+     */
     public static String getRaw(Skill skill, Setting setting, String def) {
         return getRaw(skill, setting.node(), def);
     }
     
+    /**
+     * Gets a boolean setting at the given path, if the value does not exist in the standard configuration
+     * this will instead return the default value
+     * 
+     * @param skill
+     * @param setting
+     * @param def
+     * @return the boolean at the path
+     */
     public static boolean getRaw(Skill skill, Setting setting, boolean def) {
         return getRaw(skill, setting.node(), def);
     }
     
+    /**
+     * Gets a boolean setting at the given path, if the value does not exist in the standard configuration
+     * this will instead return the default value
+     * 
+     * @param skill
+     * @param setting
+     * @param def
+     * @return the boolean at the path
+     */
     public static boolean getRaw(Skill skill, String setting, boolean def) {
         return outsourcedSkillConfig.getBoolean(skill.getName() + "." + setting, def);
+    }
+    
+    /**
+     * Gets the default Keys for the given skill at the given path.
+     * If no keys are found or if the path is not a configuration section an empty set will be returned
+     * 
+     * @param skill
+     * @param setting
+     * @return Set<String> of keys
+     */
+    public static Set<String> getRawKeys(Skill skill, String setting) {
+        String path = skill.getName();
+        if (setting != null)
+            path += "." + setting;
+
+        if (!outsourcedSkillConfig.isConfigurationSection(path))
+            return new HashSet<String>();
+
+        return outsourcedSkillConfig.getConfigurationSection(path).getKeys(false);
     }
     
     public static Object getSetting(HeroClass hc, Skill skill, String setting) {
@@ -172,7 +222,6 @@ public class SkillConfigManager {
         else
             return (Boolean) val;
     }
-
 
     public static List<String> getSetting(HeroClass hc, Skill skill, String setting, List<String> def) {
         Configuration config = classSkillConfigs.get(hc.getName());

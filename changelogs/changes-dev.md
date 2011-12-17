@@ -4,13 +4,16 @@ Version dev
 
 * Fixed multiple issues when mastering, or gaining exp on profession resulting in primary class having it's exp adjusted.
 * Farming/Logging exp sources now award exp properly when a class also has Mining.
+* Creature Health now adjusts properly and works with values above normal maximums
 
 ==== **General:** ====
 
+* Fishing is now an experience source
 * Now using Vault for Economy & Permission hooks. (It's required)
 * Adjusted XP methods so that the Level display operates properly in 1.0
 * MapPartyUI has been removed.
 * The config.yml format has changed drastically. Some old options have been removed, or moved to make it easier.
+* Wolves & Enderdragons are currently ignored (wolves are still buggy in vanilla)
 
 ==== **API:** ====
 
