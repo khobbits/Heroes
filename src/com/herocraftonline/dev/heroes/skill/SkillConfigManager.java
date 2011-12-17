@@ -78,7 +78,7 @@ public class SkillConfigManager {
 
         ConfigurationSection classSection = config.getConfigurationSection(skillName);
         if (classSection == null)
-            classSection = config.createSection(skillName);
+            classSection = config.createSection(skillName); 
 
         for (String key : section.getKeys(true)) {
             if (section.isConfigurationSection(key))
