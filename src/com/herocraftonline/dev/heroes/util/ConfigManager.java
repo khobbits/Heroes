@@ -75,18 +75,6 @@ public class ConfigManager {
         plugin.setClassManager(heroClassManager);
     }
 
-    @SuppressWarnings({ "unchecked" })
-    public void print(Map<String, Object> map, String indent) {
-        for (Map.Entry<String, Object> entry : map.entrySet()) {
-            if (entry.getValue() instanceof Map) {
-                plugin.debugLog(Level.INFO, indent + entry.getKey());
-                print((Map<String, Object>) entry.getValue(), indent + "  ");
-            } else {
-                plugin.debugLog(Level.INFO, indent + entry.getKey() + ": " + entry.getValue());
-            }
-        }
-    }
-
     public boolean reload() {
         try {
             final Player[] players = plugin.getServer().getOnlinePlayers();

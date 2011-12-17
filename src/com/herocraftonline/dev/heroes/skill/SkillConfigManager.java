@@ -80,8 +80,10 @@ public class SkillConfigManager {
         if (classSection == null)
             classSection = config.createSection(skillName);
 
-        for (Map.Entry<String, Object> entry : section.getValues(true).entrySet()) {
-            classSection.set(entry.getKey(), entry.getValue());
+        for (String key : section.getKeys(true)) {
+            if (section.isConfigurationSection(key))
+                continue;
+            classSection.set(key, section.get(key));
         }
     }
 
