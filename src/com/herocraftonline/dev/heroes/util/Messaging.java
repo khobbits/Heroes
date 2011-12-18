@@ -16,6 +16,7 @@ import org.bukkit.entity.MagmaCube;
 import org.bukkit.entity.MushroomCow;
 import org.bukkit.entity.Pig;
 import org.bukkit.entity.PigZombie;
+import org.bukkit.entity.Player;
 import org.bukkit.entity.Sheep;
 import org.bukkit.entity.Silverfish;
 import org.bukkit.entity.Skeleton;
@@ -91,7 +92,9 @@ public final class Messaging {
     }
 
     public static String getLivingEntityName(LivingEntity lEntity) {
-        if (lEntity instanceof Blaze)
+        if (lEntity instanceof Player)
+            return ((Player) lEntity).getDisplayName();
+        else if (lEntity instanceof Blaze)
             return "Blaze";
         else if (lEntity instanceof CaveSpider)
             return "Cave Spider";

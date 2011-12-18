@@ -37,7 +37,7 @@ public class DamageManager {
     private Map<CreatureType, Integer> creatureHealth;
     private Map<CreatureType, Integer> creatureDamage;
     private Map<DamageCause, Double> environmentalDamage;
-    private Map<Entity, SkillUseInfo> spellTargs = new HashMap<Entity, SkillUseInfo>();
+    private Map<Integer, SkillUseInfo> spellTargs = new HashMap<Integer, SkillUseInfo>();
 
     public DamageManager(Heroes plugin) {
         this.plugin = plugin;
@@ -46,15 +46,15 @@ public class DamageManager {
 
     public void addSpellTarget(Entity o, Hero hero, Skill skill) {
         SkillUseInfo skillInfo = new SkillUseInfo(hero, skill);
-        spellTargs.put(o, skillInfo);
+        spellTargs.put(o.getEntityId(), skillInfo);
     }
 
     public boolean isSpellTarget(Entity o) {
-        return spellTargs.containsKey(o);
+        return spellTargs.containsKey(o.getEntityId());
     }
 
     public SkillUseInfo getSpellTargetInfo(Entity o) {
-        return spellTargs.get(o);
+        return spellTargs.get(o.getEntityId());
     }
 
     public Integer getEntityDamage(CreatureType type) {
@@ -101,11 +101,11 @@ public class DamageManager {
                     CreatureType type = CreatureType.fromName(key);
                     if (type == null)
                         continue;
-                    
+
                     int health = section.getInt(key, 20);
                     if (health <= 0)
                         health = 20;
-                    
+
                     creatureHealth.put(type, health);
                 }
             }
@@ -181,8 +181,8 @@ public class DamageManager {
         pluginManager.registerEvent(Type.ENTITY_REGAIN_HEALTH, listener, Priority.Highest, plugin);
     }
 
-    public void removeSpellTarget(Entity o) {
-        spellTargs.remove(o);
+    public SkillUseInfo removeSpellTarget(Entity o) {
+       return spellTargs.remove(o.getEntityId());
     }
 
     public enum ProjectileType {
@@ -212,11 +212,11 @@ public class DamageManager {
                 return null;
         }
     }
-    
+
     public int getEntityHealth(LivingEntity lEntity) {
         return listener.getHealth(lEntity);
     }
-    
+
     public int getEntityMaxHealth(LivingEntity lEntity) {
         return listener.getMaxHealth(lEntity);
     }

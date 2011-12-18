@@ -1,5 +1,7 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
+import java.util.logging.Level;
+
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -36,7 +38,9 @@ public class SkillBolt extends TargettedSkill {
 
         plugin.getDamageManager().addSpellTarget(target, hero, this);
         target.getWorld().strikeLightningEffect(target.getLocation());
-        target.damage(SkillConfigManager.getUseSetting(hero, this, Setting.DAMAGE, 4, false), player);
+        int damage = SkillConfigManager.getUseSetting(hero, this, Setting.DAMAGE, 4, false);
+        Heroes.log(Level.INFO, "Damage found: " + damage);
+        target.damage(damage, player);
 
         broadcastExecuteText(hero, target);
         return SkillResult.NORMAL;
