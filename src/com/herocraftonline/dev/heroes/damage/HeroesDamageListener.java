@@ -2,6 +2,7 @@ package com.herocraftonline.dev.heroes.damage;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -99,7 +100,7 @@ public class HeroesDamageListener extends EntityListener {
             damage = getPlayerDamage(attackingPlayer, damage);
         } else if (attacker instanceof LivingEntity) {
             CreatureType type = Util.getCreatureFromEntity(attacker);
-            if (type != null) {
+            if (type != null || type != CreatureType.WOLF) {
                 Integer tmpDamage = damageManager.getEntityDamage(type);
                 if (tmpDamage != null) {
                     damage = tmpDamage;
@@ -154,21 +155,20 @@ public class HeroesDamageListener extends EntityListener {
 
         //Lets figure out who the attacker is
         if (event instanceof EntityDamageByEntityEvent) {
-                attacker = ((EntityDamageByEntityEvent) event).getDamager();
-                //We now ignore wolf attacks - let bukkit handle them for now as they are buggy
-                if (attacker instanceof Wolf) {
+            attacker = ((EntityDamageByEntityEvent) event).getDamager();
+        }
+
+        if (defender instanceof LivingEntity) {
+            if (defender.isDead() || ((LivingEntity) defender).getHealth() <= 0) {
+                Heroes.debug.stopTask("HeroesDamageListener.onEntityDamage");
+            } else if (defender instanceof Player) { 
+                Player player = (Player) defender;
+                if (player.getGameMode() == GameMode.CREATIVE) {
                     Heroes.debug.stopTask("HeroesDamageListener.onEntityDamage");
                     return;
                 }
-        }
-
-        if (defender instanceof Player) {
-            Player player = (Player) defender;
-            if (player.getGameMode() == GameMode.CREATIVE || player.isDead() || player.getHealth() == 0) {
-                Heroes.debug.stopTask("HeroesDamageListener.onEntityDamage");
-                return;
+                lastDamage = plugin.getHeroManager().getHero((Player) defender).getLastDamageCause();
             }
-            lastDamage = plugin.getHeroManager().getHero((Player) defender).getLastDamageCause();
         }
 
         if (damageManager.isSpellTarget(defender)) {
@@ -220,14 +220,14 @@ public class HeroesDamageListener extends EntityListener {
                 return;
             }
         }
-        
+
         //TODO: figure out how to fix ender-dragons
         if (defender instanceof EnderDragon || defender instanceof ComplexLivingEntity || defender instanceof ComplexEntityPart) {
             event.setDamage(damage);
             Heroes.debug.stopTask("HeroesDamageListener.onEntityDamage");
             return;
         }
-        
+
         if (defender instanceof Player) {
             Player player = (Player) defender;
             if (player.getNoDamageTicks() > 10 || player.isDead() || player.getHealth() <= 0) {
@@ -322,8 +322,10 @@ public class HeroesDamageListener extends EntityListener {
             if (currentHealth == null) {
                 currentHealth = (int) (lEntity.getHealth() / (double) lEntity.getMaxHealth()) * maxHealth;
             }
+            Heroes.log(Level.INFO, "Current HP of Target: " + currentHealth + " Current Damage: " + damage);
 
             currentHealth -= damage;
+            Heroes.log(Level.INFO, "HP After Damage: " + currentHealth);
             if (currentHealth <= 0) {
                 healthMap.remove(lEntity.getEntityId());
                 damage = 100;
@@ -335,14 +337,14 @@ public class HeroesDamageListener extends EntityListener {
                     event.setDamage(0);
                 else if (difference <= 0)
                     lEntity.setHealth(lEntity.getHealth() + 1 - difference);
-                
+
                 //Only re-sync if the max health for this 
                 if (maxHealth != lEntity.getMaxHealth()) {
                     Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
                         @Override
                         public void run() {
                             if (lEntity == null || lEntity.isDead())
-                                    return;
+                                return;
                             int maxMCHP = lEntity.getMaxHealth();
                             double percent = healthMap.get(lEntity.getEntityId()) / (double) getMaxHealth(lEntity);
                             int newHP = (int) (maxMCHP * percent);
@@ -355,19 +357,16 @@ public class HeroesDamageListener extends EntityListener {
             }
             event.setDamage(damage);
         }
-        
+
         Heroes.debug.stopTask("HeroesDamageListener.onEntityDamage");
     }
 
     private int onSpellDamage(EntityDamageEvent event, int damage, Entity defender) {
-        SkillUseInfo skillInfo = damageManager.getSpellTargetInfo(defender);
-        damageManager.removeSpellTarget(defender);
+        SkillUseInfo skillInfo = damageManager.removeSpellTarget(defender);
+        Heroes.log(Level.INFO, "Damage from Spell: " + damage);
         if (event instanceof EntityDamageByEntityEvent) {
             if (resistanceCheck(defender, skillInfo.getSkill())) {
-                if (defender instanceof Player)
-                    skillInfo.getSkill().broadcast(defender.getLocation(), "$1 has resisted $2", ((Player) defender).getDisplayName(), skillInfo.getSkill().getName());
-                else if (defender instanceof LivingEntity)
-                    skillInfo.getSkill().broadcast(defender.getLocation(), "$1 has resisted $2", Messaging.getLivingEntityName((LivingEntity) defender), skillInfo.getSkill().getName());
+                skillInfo.getSkill().broadcast(defender.getLocation(), "$1 has resisted $2", Messaging.getLivingEntityName((LivingEntity) defender), skillInfo.getSkill().getName());
                 event.setCancelled(true);
                 return 0;
             }
@@ -382,6 +381,7 @@ public class HeroesDamageListener extends EntityListener {
                 plugin.getHeroManager().getHero((Player) defender).setLastDamageCause(new HeroSkillDamageCause(damage, event.getCause(), skillInfo.getHero().getPlayer(), skillInfo.getSkill()));
             }
         }
+        Heroes.log(Level.INFO, "Damage value: " + damage + " from skill: " + skillInfo.getSkill().getName());
         return damage;
     }
     /**
@@ -658,7 +658,7 @@ public class HeroesDamageListener extends EntityListener {
             return maxHP != null ? maxHP : lEntity.getMaxHealth();
         }
     }
-    
+
     public int getHealth(LivingEntity lEntity) {
         if (lEntity instanceof Player)
             return (int) plugin.getHeroManager().getHero((Player) lEntity).getHealth();
