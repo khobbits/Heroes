@@ -28,7 +28,7 @@ public class SkillListCommand extends BasicCommand {
         super("List Skills");
         this.plugin = plugin;
         setDescription("Displays a list of your class skills");
-        setUsage("/skills §8<prim|prof> [page#]");
+        setUsage("/skills §8<prim|prof|heroclass> [page#]");
         setArgumentRange(0, 2);
         setIdentifiers("skills", "hero skills");
     }
@@ -46,6 +46,7 @@ public class SkillListCommand extends BasicCommand {
         int page = 0;
         boolean prim = true;
         boolean sec = true;
+        HeroClass hc = null;
         if (args.length != 0) {
             try {
                 page = Integer.parseInt(args[0]) - 1;
@@ -55,6 +56,13 @@ public class SkillListCommand extends BasicCommand {
                 else if (args[0].toLowerCase().contains("pro"))
                     prim = false;
                 // If we have 2 arguments lets try to get the page
+                else {
+                    hc = plugin.getClassManager().getClass(args[0]);
+                    if (hc != null) {
+                        prim = false;
+                        sec = false;
+                    }
+                }
                 if (args.length > 1) {
                     try {
                         page = Integer.parseInt(args[1]) -1;
@@ -80,7 +88,13 @@ public class SkillListCommand extends BasicCommand {
                 skills.put(new SkillListInfo(secondClass, skill), level);
             }
         }
-
+        if (hc != null) {
+            for (String name : hc.getSkillNames()) {
+                Skill skill = plugin.getSkillManager().getSkill(name);
+                int level = SkillConfigManager.getSetting(hc, skill, Setting.LEVEL.node(), 1);
+                skills.put(new SkillListInfo(hc, skill), level);
+            }
+        }
         int numPages = skills.size() / SKILLS_PER_PAGE;
         if (skills.size() % SKILLS_PER_PAGE != 0) {
             numPages++;
@@ -103,7 +117,7 @@ public class SkillListCommand extends BasicCommand {
             if (count >= start && count < end) {
                 SkillListInfo sli = entry.getKey();
                 int level = entry.getValue();
-                HeroClass hc = sli.heroClass;
+                hc = sli.heroClass;
                 ChatColor color;
                 if (level > hero.getLevel(hc)) {
                     color = ChatColor.RED;
