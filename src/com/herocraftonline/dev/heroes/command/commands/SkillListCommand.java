@@ -28,8 +28,8 @@ public class SkillListCommand extends BasicCommand {
         super("List Skills");
         this.plugin = plugin;
         setDescription("Displays a list of your class skills");
-        setUsage("/skills §8[page#]");
-        setArgumentRange(0, 1);
+        setUsage("/skills §8<prim|prof> [page#]");
+        setArgumentRange(0, 2);
         setIdentifiers("skills", "hero skills");
     }
 
@@ -42,21 +42,38 @@ public class SkillListCommand extends BasicCommand {
         Hero hero = plugin.getHeroManager().getHero(player);
         HeroClass heroClass = hero.getHeroClass();
         HeroClass secondClass = hero.getSecondClass();
-        
+
         int page = 0;
+        boolean prim = true;
+        boolean sec = true;
         if (args.length != 0) {
             try {
                 page = Integer.parseInt(args[0]) - 1;
-            } catch (NumberFormatException e) {}
+            } catch (NumberFormatException e) {
+                if (args[0].toLowerCase().contains("prim"))
+                    sec = false;
+                else if (args[0].toLowerCase().contains("pro"))
+                    prim = false;
+                // If we have 2 arguments lets try to get the page
+                if (args.length > 1) {
+                    try {
+                        page = Integer.parseInt(args[1]) -1;
+                    } catch (NumberFormatException f) {
+                        // Ignore second exception
+                    }
+                }
+            }
         }
-        
+
         Map<SkillListInfo, Integer> skills = new HashMap<SkillListInfo, Integer>();
-        for (String name : heroClass.getSkillNames()) {
-            Skill skill = plugin.getSkillManager().getSkill(name);
-            int level = SkillConfigManager.getSetting(heroClass, skill, Setting.LEVEL.node(), 1);
-            skills.put(new SkillListInfo(heroClass, skill), level);
+        if (prim) {
+            for (String name : heroClass.getSkillNames()) {
+                Skill skill = plugin.getSkillManager().getSkill(name);
+                int level = SkillConfigManager.getSetting(heroClass, skill, Setting.LEVEL.node(), 1);
+                skills.put(new SkillListInfo(heroClass, skill), level);
+            }
         }
-        if (secondClass != null) {
+        if (sec && secondClass != null) {
             for (String name : secondClass.getSkillNames()) {
                 Skill skill = plugin.getSkillManager().getSkill(name);
                 int level = SkillConfigManager.getSetting(secondClass, skill, Setting.LEVEL.node(), 1);
@@ -117,28 +134,28 @@ public class SkillListCommand extends BasicCommand {
         sortedEntries.addAll(map.entrySet());
         return sortedEntries;
     }
-    
+
     public class SkillListInfo {
-        
+
         protected final HeroClass heroClass;
         protected final Skill skill;
-        
+
         public SkillListInfo(HeroClass heroClass, Skill skill) {
             this.heroClass = heroClass;
             this.skill = skill;
         }
-        
+
         public int hashCode() {
             return 3 + heroClass.hashCode() * 17 + skill.hashCode();
         }
-        
+
         public boolean equals(Object obj) {
             if (this == obj)
                 return true;
-            
+
             if (!(obj instanceof SkillListInfo))
                 return false;
-            
+
             SkillListInfo sli = (SkillListInfo) obj;
             return sli.heroClass.equals(this.heroClass) && sli.skill.equals(this.skill);
         }
