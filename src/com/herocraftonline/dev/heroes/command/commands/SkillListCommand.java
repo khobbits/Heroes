@@ -17,6 +17,7 @@ import com.herocraftonline.dev.heroes.command.BasicCommand;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.SkillConfigManager;
+import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillListCommand extends BasicCommand {
@@ -47,20 +48,32 @@ public class SkillListCommand extends BasicCommand {
         boolean prim = true;
         boolean sec = true;
         HeroClass hc = null;
+        String title = "";
         if (args.length != 0) {
             try {
                 page = Integer.parseInt(args[0]) - 1;
+                title = "Your Class(es)";
             } catch (NumberFormatException e) {
-                if (args[0].toLowerCase().contains("prim"))
+                if (args[0].toLowerCase().contains("prim")) {
                     sec = false;
-                else if (args[0].toLowerCase().contains("pro"))
+                    title = heroClass.getName();
+                } else if (args[0].toLowerCase().contains("pro")) {
                     prim = false;
+                    if (secondClass == null) {
+                        Messaging.send(sender, "You don't have a secondary class!");
+                        return true;
+                    }
+                    title = secondClass.getName();
                 // If we have 2 arguments lets try to get the page
-                else {
+                } else {
                     hc = plugin.getClassManager().getClass(args[0]);
                     if (hc != null) {
                         prim = false;
                         sec = false;
+                        title = hc.getName();
+                    } else {
+                        Messaging.send(sender, "That class does not exist!");
+                        return true;
                     }
                 }
                 if (args.length > 1) {
@@ -104,7 +117,7 @@ public class SkillListCommand extends BasicCommand {
             page = 0;
         }
 
-        sender.sendMessage(ChatColor.RED + "-----[ " + ChatColor.WHITE + heroClass.getName() + " Skills <" + (page + 1) + "/" + numPages + ">" + ChatColor.RED + " ]-----");
+        sender.sendMessage(ChatColor.RED + "-----[ " + ChatColor.WHITE + title + " Skills <" + (page + 1) + "/" + numPages + ">" + ChatColor.RED + " ]-----");
         int start = page * SKILLS_PER_PAGE;
         int end = start + SKILLS_PER_PAGE;
         if (end > skills.size()) {
