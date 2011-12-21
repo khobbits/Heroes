@@ -177,8 +177,6 @@ public class SkillRepair extends ActiveSkill {
         case GOLD_PICKAXE:
         case DIAMOND_AXE:
         case DIAMOND_PICKAXE:
-            amt = (int) (is.getDurability() / (mat.getMaxDurability() / 1.0));
-            return amt < 1 ? 1 : amt;
         case WOOD_SWORD:
         case WOOD_HOE:
         case STONE_SWORD:
@@ -191,31 +189,30 @@ public class SkillRepair extends ActiveSkill {
         case DIAMOND_HOE:
         case SHEARS:
         case FISHING_ROD:
-            amt = (int) (is.getDurability() / (mat.getMaxDurability() / 1.0));
-            return amt < 1 ? 1 : amt;
+            return 1;
         case LEATHER_BOOTS:
         case IRON_BOOTS:
         case GOLD_BOOTS:
         case DIAMOND_BOOTS:
-            amt = (int) (is.getDurability() / (mat.getMaxDurability() / 1.0));
+            amt = (int) ((is.getDurability() / (double) mat.getMaxDurability()) * 3.0);
             return amt < 1 ? 1 : amt;
         case LEATHER_HELMET:
         case IRON_HELMET:
         case GOLD_HELMET:
         case DIAMOND_HELMET:
-            amt = (int) (is.getDurability() / (mat.getMaxDurability() / 1.0));
+            amt = (int) ((is.getDurability() / (double) mat.getMaxDurability()) * 4.0);
             return amt < 1 ? 1 : amt;
         case LEATHER_CHESTPLATE:
         case IRON_CHESTPLATE:
         case GOLD_CHESTPLATE:
         case DIAMOND_CHESTPLATE:
-            amt = (int) (is.getDurability() / (mat.getMaxDurability() / 4.0));
+            amt = (int) ((is.getDurability() / (double) mat.getMaxDurability()) * 7.0);
             return amt < 1 ? 1 : amt;
         case LEATHER_LEGGINGS:
         case IRON_LEGGINGS:
         case GOLD_LEGGINGS:
         case DIAMOND_LEGGINGS:
-            amt = (int) (is.getDurability() / (mat.getMaxDurability() / 2.0));
+            amt = (int) ((is.getDurability() / (double) mat.getMaxDurability()) * 6.0);
             return amt < 1 ? 1 : amt;
         default:
             return 1;
