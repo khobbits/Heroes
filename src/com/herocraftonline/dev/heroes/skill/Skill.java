@@ -187,4 +187,15 @@ public abstract class Skill extends BasicCommand {
     protected void setTypes(SkillType... types) {
         this.types.addAll(Arrays.asList(types));
     }
+    
+    public boolean damageEntity(LivingEntity target, LivingEntity attacker, int damage, DamageCause cause) {
+        //Do it ourselves cause bukkit is stubborn
+        EntityDamageByEntityEvent edbe = new EntityDamageByEntityEvent(attacker, target, cause, damage);
+        plugin.getServer().getPluginManager().callEvent(edbe);
+        if (edbe.isCancelled())
+            return false;
+        
+        target.damage(edbe.getDamage(), attacker);
+        return true;
+    }
 }

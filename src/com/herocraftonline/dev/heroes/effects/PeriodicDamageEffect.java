@@ -2,6 +2,7 @@ package com.herocraftonline.dev.heroes.effects;
 
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
@@ -40,7 +41,7 @@ public class PeriodicDamageEffect extends PeriodicExpirableEffect {
     public void tick(LivingEntity lEntity) {
         super.tick(lEntity);
         skill.addSpellTarget(lEntity, applyHero);
-        lEntity.damage(tickDamage, applier);
+        skill.damageEntity(lEntity, applier, tickDamage, DamageCause.ENTITY_ATTACK);
     }
 
     @Override
@@ -53,7 +54,7 @@ public class PeriodicDamageEffect extends PeriodicExpirableEffect {
             return;
 
         skill.addSpellTarget(player, applyHero);
-        player.damage(tickDamage, applier);
+        skill.damageEntity(player, applier, tickDamage, DamageCause.ENTITY_ATTACK);
     }
 
 }
