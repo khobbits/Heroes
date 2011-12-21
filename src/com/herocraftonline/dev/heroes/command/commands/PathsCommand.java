@@ -18,7 +18,7 @@ public class PathsCommand extends BasicCommand {
     public PathsCommand(Heroes plugin) {
         super("Paths");
         this.plugin = plugin;
-        setDescription("Lists all paths available to you");
+        setDescription("Lists all paths available to you, primary and professions!");
         setUsage("/hero paths §8[page#]");
         setArgumentRange(0, 1);
         setIdentifiers("hero paths");
@@ -33,9 +33,8 @@ public class PathsCommand extends BasicCommand {
             } catch (NumberFormatException ignored) {}
         }
 
-        Set<HeroClass> classes = plugin.getClassManager().getClasses();
         Set<HeroClass> primaryClasses = new HashSet<HeroClass>();
-        for (HeroClass heroClass : classes) {
+        for (HeroClass heroClass : plugin.getClassManager().getClasses()) {
             if (heroClass.hasNoParents()) {
                 primaryClasses.add(heroClass);
             }
@@ -62,12 +61,27 @@ public class PathsCommand extends BasicCommand {
             if (!heroClass.isDefault() && !CommandHandler.hasPermission(sender, "heroes.classes." + heroClass.getName().toLowerCase())) {
                 continue;
             }
-
+            
+            String prefix = "";
+            if (heroClass.isPrimary()) {
+                prefix += "Pri";
+            }
+            if (heroClass.isSecondary()) {
+                if (prefix != "") {
+                    prefix += " | ";
+                    prefix = "  §d" + prefix;
+                } else {
+                    prefix += "  §c";
+                }
+                prefix += "Prof";
+            } else if (heroClass.isPrimary())
+                prefix = "  §9" + prefix;
+            
             String description = heroClass.getDescription();
             if (description == null || description.isEmpty()) {
-                sender.sendMessage("  §a" + heroClass.getName());
+                sender.sendMessage(prefix + "§a" + heroClass.getName());
             } else {
-                sender.sendMessage("  §a" + heroClass.getName() + " - " + heroClass.getDescription());
+                sender.sendMessage(prefix + "§a" + heroClass.getName() + " - " + heroClass.getDescription());
             }
         }
 
