@@ -1188,11 +1188,12 @@ public class Hero {
 
         if (inv.getHelmet() != null && inv.getHelmet().getTypeId() != 0 && !Heroes.properties.allowHats) {
             item = inv.getHelmet().getType();
-            if (!heroClass.isAllowedArmor(item) && (secondClass == null || !secondClass.isAllowedArmor(item))) {
+            if (!Util.isArmor(item) && Heroes.properties.allowHats) {
+              // Do nothing!  
+            } else if (!heroClass.isAllowedArmor(item) && (secondClass == null || !secondClass.isAllowedArmor(item))) {
                 Util.moveItem(this, -1, inv.getHelmet());
                 inv.setHelmet(null);
                 removedCount++;
-
             }
         }
         if (inv.getChestplate() != null && inv.getChestplate().getTypeId() != 0) {
