@@ -343,19 +343,7 @@ public class HeroesDamageListener extends EntityListener {
 
                 //Only re-sync if the max health for this 
                 if (maxHealth != lEntity.getMaxHealth()) {
-                    Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-                        @Override
-                        public void run() {
-                            if (lEntity == null || lEntity.isDead())
-                                return;
-                            int maxMCHP = lEntity.getMaxHealth();
-                            double percent = healthMap.get(lEntity.getEntityId()) / (double) getMaxHealth(lEntity);
-                            int newHP = (int) (maxMCHP * percent);
-                            if (newHP == 0)
-                                newHP = 1;
-                            lEntity.setHealth(newHP);
-                        }
-                    });
+                    Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new EntityHealthSync(lEntity));
                 }
             }
         }
@@ -665,6 +653,29 @@ public class HeroesDamageListener extends EntityListener {
         else {
             Integer hp = healthMap.get(lEntity);
             return hp != null ? hp : lEntity.getMaxHealth();
+        }
+    }
+
+    private class EntityHealthSync implements Runnable {
+
+        private final LivingEntity lEntity;
+        public EntityHealthSync(LivingEntity lEntity) {
+            this.lEntity = lEntity;
+        }
+        
+        @Override
+        public void run() {
+            if (lEntity == null || lEntity.isDead() || lEntity.getHealth() == 0)
+                return;
+            int maxMCHP = lEntity.getMaxHealth();
+            Integer currentHealth = healthMap.get(lEntity.getEntityId());
+            if (currentHealth == null)
+                return;
+            double percent =  currentHealth / (double) getMaxHealth(lEntity);
+            int newHP = (int) (maxMCHP * percent);
+            if (newHP == 0)
+                newHP = 1;
+            lEntity.setHealth(newHP);
         }
     }
 }
