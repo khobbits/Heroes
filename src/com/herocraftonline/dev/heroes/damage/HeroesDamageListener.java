@@ -2,7 +2,6 @@ package com.herocraftonline.dev.heroes.damage;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -321,10 +320,8 @@ public class HeroesDamageListener extends EntityListener {
             if (currentHealth == null) {
                 currentHealth = (int) (lEntity.getHealth() / (double) lEntity.getMaxHealth()) * maxHealth;
             }
-            Heroes.log(Level.INFO, "Current HP of Target: " + currentHealth + " Current Damage: " + damage);
 
             currentHealth -= damage;
-            Heroes.log(Level.INFO, "HP After Damage: " + currentHealth);
             if (currentHealth <= 0) {
                 healthMap.remove(lEntity.getEntityId());
                 damage = 100;
@@ -369,7 +366,6 @@ public class HeroesDamageListener extends EntityListener {
                 plugin.getHeroManager().getHero((Player) defender).setLastDamageCause(new HeroSkillDamageCause(damage, event.getCause(), skillInfo.getHero().getPlayer(), skillInfo.getSkill()));
             }
         }
-        Heroes.log(Level.INFO, "Damage value: " + damage + " from skill: " + skillInfo.getSkill().getName());
         return damage;
     }
     /**
