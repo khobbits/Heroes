@@ -334,8 +334,12 @@ public class HeroesDamageListener extends EntityListener {
                 int difference = lEntity.getHealth() - damage;
                 if (difference <= 0 && lEntity.getHealth() + 1 - difference > lEntity.getMaxHealth())
                     event.setDamage(0);
-                else if (difference <= 0)
+                else if (difference <= 0) {
                     lEntity.setHealth(lEntity.getHealth() + 1 - difference);
+                    event.setDamage(damage);
+                } else {
+                    event.setDamage(damage);
+                }
 
                 //Only re-sync if the max health for this 
                 if (maxHealth != lEntity.getMaxHealth()) {
@@ -351,18 +355,15 @@ public class HeroesDamageListener extends EntityListener {
                                 newHP = 1;
                             lEntity.setHealth(newHP);
                         }
-                    }, 1);
+                    });
                 }
             }
-            event.setDamage(damage);
         }
-
         Heroes.debug.stopTask("HeroesDamageListener.onEntityDamage");
     }
 
     private int onSpellDamage(EntityDamageEvent event, int damage, Entity defender) {
         SkillUseInfo skillInfo = damageManager.removeSpellTarget(defender);
-        Heroes.log(Level.INFO, "Damage from Spell: " + damage);
         if (event instanceof EntityDamageByEntityEvent) {
             if (resistanceCheck(defender, skillInfo.getSkill())) {
                 skillInfo.getSkill().broadcast(defender.getLocation(), "$1 has resisted $2", Messaging.getLivingEntityName((LivingEntity) defender), skillInfo.getSkill().getName());
