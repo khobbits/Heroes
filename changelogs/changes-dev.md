@@ -25,6 +25,7 @@ Version dev
 
 ==== **Skills:** ====
 
+* Backstab - (Re-Added!)
 * PickPocket - (NEW!)
 ** allows a player to steal an item from another 
 ** Will not steal armor/items in the hotbar
