@@ -8,6 +8,7 @@ import java.util.logging.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.craftbukkit.entity.CraftLivingEntity;
 import org.bukkit.entity.ComplexEntityPart;
 import org.bukkit.entity.ComplexLivingEntity;
 import org.bukkit.entity.CreatureType;
@@ -320,6 +321,11 @@ public class HeroesDamageListener extends EntityListener {
             }
 
         } else if (defender instanceof LivingEntity) {
+            if (((CraftLivingEntity) defender).getNoDamageTicks() > 10 || defender.isDead() || ((LivingEntity) defender).getHealth() <= 0) {
+                event.setCancelled(true);
+                Heroes.debug.stopTask("HeroesDamageListener.onEntityDamage");
+                return;
+            }
             // Do Damage calculations based on maximum health and current health
             final LivingEntity lEntity = (LivingEntity) defender;
             int maxHealth = getMaxHealth(lEntity);
@@ -362,9 +368,9 @@ public class HeroesDamageListener extends EntityListener {
                 event.setDamage(damage);
 
                 //Only re-sync if the max health for this is different than the 
-                // if (maxHealth != lEntity.getMaxHealth() && damage > 0) {
+                //if (maxHealth != lEntity.getMaxHealth() && damage > 0) {
                 //     Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new EntityHealthSync(lEntity));
-                // }
+                //}
             }
         }
         Heroes.debug.stopTask("HeroesDamageListener.onEntityDamage");

@@ -10,6 +10,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
+import org.bukkit.craftbukkit.entity.CraftLivingEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -190,11 +191,15 @@ public abstract class Skill extends BasicCommand {
     
     public boolean damageEntity(LivingEntity target, LivingEntity attacker, int damage, DamageCause cause) {
         //Do it ourselves cause bukkit is stubborn
+        ((CraftLivingEntity) target).setNoDamageTicks(0);
         EntityDamageByEntityEvent edbe = new EntityDamageByEntityEvent(attacker, target, cause, damage);
         plugin.getServer().getPluginManager().callEvent(edbe);
         if (edbe.isCancelled())
             return false;
         
+        //Reset the ticks again just in case n.m.s is stubborn too
+        ((CraftLivingEntity) target).setNoDamageTicks(0);
+        // Issue the damage
         target.damage(edbe.getDamage(), attacker);
         return true;
     }
