@@ -362,9 +362,9 @@ public class HeroesDamageListener extends EntityListener {
                 event.setDamage(damage);
 
                 //Only re-sync if the max health for this is different than the 
-                if (maxHealth != lEntity.getMaxHealth() && damage > 0) {
-                    Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new EntityHealthSync(lEntity));
-                }
+                // if (maxHealth != lEntity.getMaxHealth() && damage > 0) {
+                //     Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new EntityHealthSync(lEntity));
+                // }
             }
         }
         Heroes.debug.stopTask("HeroesDamageListener.onEntityDamage");
