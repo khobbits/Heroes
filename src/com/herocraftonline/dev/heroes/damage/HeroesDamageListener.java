@@ -87,6 +87,10 @@ public class HeroesDamageListener extends EntityListener {
     }
 
     private int onEntityDamageCore(EntityDamageEvent event, Entity attacker, int damage) {
+        // In case bukkit is firing multiple damage events quickly
+        if (event.getDamage() == 0)
+            return 0;
+        
         if (attacker instanceof Player) {
             Player attackingPlayer = (Player) attacker;
             Hero hero = plugin.getHeroManager().getHero(attackingPlayer);
@@ -658,7 +662,7 @@ public class HeroesDamageListener extends EntityListener {
         public EntityHealthSync(LivingEntity lEntity) {
             this.lEntity = lEntity;
         }
-        
+
         @Override
         public void run() {
             if (lEntity == null || lEntity.isDead() || lEntity.getHealth() == 0)
