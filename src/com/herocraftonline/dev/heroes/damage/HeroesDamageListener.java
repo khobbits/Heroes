@@ -3,7 +3,6 @@ package com.herocraftonline.dev.heroes.damage;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -340,7 +339,6 @@ public class HeroesDamageListener extends EntityListener {
             if (currentHealth <= 0) {
                 healthMap.remove(lEntity.getUniqueId());
                 damage = 100;
-                Heroes.log(Level.INFO, "Entity: " + lEntity.getEntityId() + " got last hit! NewHealth: " + currentHealth);
             } else {
                 // Otherwise lets put the entity back into the health mapping
                 healthMap.put(lEntity.getUniqueId(), currentHealth);
@@ -364,7 +362,6 @@ public class HeroesDamageListener extends EntityListener {
                 } else if (newHealth <= 0) {
                     lEntity.setHealth(lEntity.getHealth() + 1 - newHealth);
                 }
-                Heroes.log(Level.INFO, "Entity: " + lEntity.getEntityId() + " got hit! MCHealth: " + lEntity.getHealth() + " MCDamage: " + damage + " HeroHP: " + healthMap.get(lEntity.getUniqueId()));
                 event.setDamage(damage);
 
                 //Only re-sync if the max health for this is different than the 
@@ -681,6 +678,9 @@ public class HeroesDamageListener extends EntityListener {
         }
     }
 
+    /*
+     * This is just in case entity HP needs to be re-synched currently we don't need it
+     * 
     private class EntityHealthSync implements Runnable {
 
         private final LivingEntity lEntity;
@@ -703,4 +703,5 @@ public class HeroesDamageListener extends EntityListener {
             lEntity.setHealth(newHP);
         }
     }
+    */
 }
