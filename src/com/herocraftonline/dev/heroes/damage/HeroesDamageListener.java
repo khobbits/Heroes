@@ -165,6 +165,7 @@ public class HeroesDamageListener extends EntityListener {
         if (defender instanceof LivingEntity) {
             if (defender.isDead() || ((LivingEntity) defender).getHealth() <= 0) {
                 Heroes.debug.stopTask("HeroesDamageListener.onEntityDamage");
+                return;
             } else if (defender instanceof Player) { 
                 Player player = (Player) defender;
                 if (player.getGameMode() == GameMode.CREATIVE) {
