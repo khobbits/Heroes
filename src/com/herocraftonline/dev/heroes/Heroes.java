@@ -234,8 +234,16 @@ public class Heroes extends JavaPlugin {
 
         final Player[] players = getServer().getOnlinePlayers();
         for (Player player : players) {
-            if (heroManager.containsPlayer(player)) {
-                continue;
+            Hero hero = heroManager.getHero(player);
+            HeroClass heroClass = hero.getHeroClass();
+            
+            if (heroClass != heroClassManager.getDefaultClass() && !perms.has(player, "heroes.classes." + heroClass.getName().toLowerCase())) {
+                hero.setHeroClass(heroClassManager.getDefaultClass(), false);
+            }
+            for (Skill skill : skillManager.getSkills()) {
+                if (skill instanceof OutsourcedSkill) {
+                    ((OutsourcedSkill) skill).tryLearningSkill(hero);
+                }
             }
 
             // Make sure all the hero's are loaded and that we check inventories
@@ -269,25 +277,10 @@ public class Heroes extends JavaPlugin {
         if (getServer().getPluginManager().getPlugin("Vault") == null)
             return false;
         
-        RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
+        RegisteredServiceProvider<net.milkbowl.vault.permission.Permission> rsp = getServer().getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class);
         if (rsp != null)
             perms = rsp.getProvider();
 
-        final Player[] players = getServer().getOnlinePlayers();
-        for (Player player : players) {
-            Hero hero = heroManager.getHero(player);
-            HeroClass heroClass = hero.getHeroClass();
-
-            for (Skill skill : skillManager.getSkills()) {
-                if (skill instanceof OutsourcedSkill) {
-                    ((OutsourcedSkill) skill).tryLearningSkill(hero);
-                }
-            }
-
-            if (heroClass != heroClassManager.getDefaultClass() && !perms.has(player, "heroes.classes." + heroClass.getName().toLowerCase())) {
-                hero.setHeroClass(heroClassManager.getDefaultClass(), false);
-            }
-        }
         return perms != null;
     }
 
