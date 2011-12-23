@@ -2,6 +2,7 @@ package com.herocraftonline.dev.heroes.damage;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -46,7 +47,7 @@ public class HeroesDamageListener extends EntityListener {
     private Heroes plugin;
     private DamageManager damageManager;
 
-    private Map<Integer, Integer> healthMap = new HashMap<Integer, Integer>();
+    private Map<UUID, Integer> healthMap = new HashMap<UUID, Integer>();
 
     public HeroesDamageListener(Heroes plugin, DamageManager damageManager) {
         this.plugin = plugin;
@@ -90,7 +91,7 @@ public class HeroesDamageListener extends EntityListener {
         // In case bukkit is firing multiple damage events quickly
         if (event.getDamage() == 0)
             return 0;
-        
+
         if (attacker instanceof Player) {
             Player attackingPlayer = (Player) attacker;
             Hero hero = plugin.getHeroManager().getHero(attackingPlayer);
@@ -320,30 +321,44 @@ public class HeroesDamageListener extends EntityListener {
             // Do Damage calculations based on maximum health and current health
             final LivingEntity lEntity = (LivingEntity) defender;
             int maxHealth = getMaxHealth(lEntity);
-            Integer currentHealth = healthMap.get(lEntity.getEntityId());
+            Integer currentHealth = healthMap.get(lEntity.getUniqueId());
             if (currentHealth == null) {
                 currentHealth = (int) (lEntity.getHealth() / (double) lEntity.getMaxHealth()) * maxHealth;
             }
 
+            // Health-Syncing 
             currentHealth -= damage;
+            // If the entity would die from damage, set the damage really high, this should kill any entity in MC outright
             if (currentHealth <= 0) {
-                healthMap.remove(lEntity.getEntityId());
+                healthMap.remove(lEntity.getUniqueId());
                 damage = 100;
             } else {
-                healthMap.put(lEntity.getEntityId(), currentHealth);
+                // Otherwise lets put the entity back into the health mapping
+                healthMap.put(lEntity.getUniqueId(), currentHealth);
                 damage = convertHeroesDamage(damage, (LivingEntity) defender);
-                int difference = lEntity.getHealth() - damage;
-                if (difference <= 0 && lEntity.getHealth() + 1 - difference > lEntity.getMaxHealth())
-                    event.setDamage(0);
-                else if (difference <= 0) {
-                    lEntity.setHealth(lEntity.getHealth() + 1 - difference);
-                    event.setDamage(damage);
-                } else {
-                    event.setDamage(damage);
+                int newHealth = lEntity.getHealth() - damage;
+                // If newHealth would go negative (or 0) - this happens with High Heroes HP monsters
+                // We don't want them to die at this point, so we need to either increase their current health
+                // or adjust the damage being dealt.  The first check is to see if we can adjust health up by the 
+                // newHealth amount + 1 - if not, then adjust the damage down.
+                if (newHealth <= 0 && lEntity.getHealth() + 1 - newHealth > lEntity.getMaxHealth()) {
+                    damage = damage + newHealth - 1;
+                    // if damage would go negative lets check if we can set damage to 1 so that we still get the 'knockback' effect
+                    // from the damage system.  Otherwise just 0 the damage and handle it all internally
+                    if (damage < 1) {
+                        if (lEntity.getHealth() + 1 <= lEntity.getMaxHealth()) {
+                            lEntity.setHealth(lEntity.getHealth() + 1);
+                            damage = 1;
+                        } else 
+                            damage = 0;
+                    }
+                } else if (newHealth <= 0) {
+                    lEntity.setHealth(lEntity.getHealth() + 1 - newHealth);
                 }
+                event.setDamage(damage);
 
-                //Only re-sync if the max health for this 
-                if (maxHealth != lEntity.getMaxHealth()) {
+                //Only re-sync if the max health for this is different than the 
+                if (maxHealth != lEntity.getMaxHealth() && damage > 0) {
                     Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new EntityHealthSync(lEntity));
                 }
             }
