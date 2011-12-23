@@ -116,6 +116,18 @@ public class Hero {
         return heroClass.hasExperiencetype(type) || (secondClass != null && secondClass.hasExperiencetype(type));
     }
 
+    public boolean canGain(ExperienceType type) {
+        boolean prim = false;
+        if (heroClass.hasExperiencetype(type))
+            prim = !isMaster(heroClass);
+
+        boolean prof = false;
+        if (secondClass != null && secondClass.hasExperiencetype(type))
+            prof = !isMaster(secondClass);
+
+        return prim || prof;
+    }
+
     /**
      * Adds a skill binding to the given Material.
      * Ignores Air/Null values
@@ -823,7 +835,7 @@ public class Hero {
         }
         return false;
     }
-    
+
     public boolean canSecondUseSkill(Skill skill) {
         if (secondClass != null && secondClass.hasSkill(skill.getName())) {
             int level = SkillConfigManager.getSetting(secondClass, skill, Setting.LEVEL.node(), 1);
@@ -832,7 +844,7 @@ public class Hero {
         }
         return false;
     }
-    
+
     /**
      * Checks if the hero can use the given skill
      * This does a level check to make sure the hero has a class with a high enough level to use the skill
@@ -1189,7 +1201,7 @@ public class Hero {
         if (inv.getHelmet() != null && inv.getHelmet().getTypeId() != 0 && !Heroes.properties.allowHats) {
             item = inv.getHelmet().getType();
             if (!Util.isArmor(item) && Heroes.properties.allowHats) {
-              // Do nothing!  
+                // Do nothing!  
             } else if (!heroClass.isAllowedArmor(item) && (secondClass == null || !secondClass.isAllowedArmor(item))) {
                 Util.moveItem(this, -1, inv.getHelmet());
                 inv.setHelmet(null);

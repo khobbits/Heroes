@@ -68,12 +68,12 @@ public class HEntityListener extends EntityListener {
         if (attacker.getSummons().contains(defender) || attacker.getPlayer().equals(defender))
             return;
 
-        if (defender instanceof Player && attacker.hasExperienceType(ExperienceType.PVP)) {
+        if (defender instanceof Player && attacker.canGain(ExperienceType.PVP)) {
             // Don't award XP for Players killing themselves
             prop.playerDeaths.put((Player) defender, defender.getLocation());
             addedExp = prop.playerKillingExp;
             experienceType = ExperienceType.PVP;
-        } else if (defender instanceof LivingEntity && !(defender instanceof Player) && attacker.hasExperienceType(ExperienceType.KILLING)) {
+        } else if (defender instanceof LivingEntity && !(defender instanceof Player) && attacker.canGain(ExperienceType.KILLING)) {
 
             // Get the dying entity's CreatureType
             CreatureType type = Util.getCreatureFromEntity(defender);

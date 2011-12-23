@@ -53,7 +53,7 @@ public class HPlayerListener extends PlayerListener {
         case CAUGHT_ENTITY :
             Player player = event.getPlayer();
             Hero hero = plugin.getHeroManager().getHero(player);
-            if (hero.hasExperienceType(ExperienceType.FISHING))
+            if (hero.canGain(ExperienceType.FISHING))
                 hero.gainExp(plugin.getProperties().fishingExp, ExperienceType.FISHING);
         default: 
             return;

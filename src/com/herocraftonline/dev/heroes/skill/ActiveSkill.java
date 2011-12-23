@@ -286,7 +286,7 @@ public abstract class ActiveSkill extends Skill {
     public abstract SkillResult use(Hero hero, String[] args);
 
     private void awardExp(Hero hero) {
-        if (hero.hasExperienceType(ExperienceType.SKILL)) {
+        if (hero.canGain(ExperienceType.SKILL)) {
             hero.gainExp(SkillConfigManager.getUseSetting(hero, this, Setting.EXP, 0, false), ExperienceType.SKILL);
         }
     }
