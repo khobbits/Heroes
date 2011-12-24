@@ -34,5 +34,6 @@ Version dev
 * PickPocket - (NEW!)
 ** allows a player to steal an item from another 
 ** Will not steal armor/items in the hotbar
+* IceArrow - (Re-Added!)
 * Wolf 
 ** Now a passive that forces anyone on the server to have the skill to tame
