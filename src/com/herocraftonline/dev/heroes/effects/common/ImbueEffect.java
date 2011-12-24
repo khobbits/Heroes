@@ -53,6 +53,10 @@ public class ImbueEffect extends ExpirableEffect {
         this.applicationsLeft = applicationsLeft;
     }
     
+    public void useApplication() {
+        this.applicationsLeft -= 1;
+   }
+    
     public boolean hasNoApplications() {
         return this.applicationsLeft == 0;
     }

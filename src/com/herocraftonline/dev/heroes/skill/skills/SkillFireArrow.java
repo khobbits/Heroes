@@ -120,6 +120,7 @@ public class SkillFireArrow extends ActiveSkill {
 
         private void checkBuff(Hero hero) {
             FireArrowBuff faBuff = (FireArrowBuff) hero.getEffect("FireArrowBuff");
+            faBuff.useApplication();
             if (faBuff.hasNoApplications())
                 hero.removeEffect(faBuff);
         }
