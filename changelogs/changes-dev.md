@@ -6,15 +6,19 @@ Version dev
 * Farming/Logging exp sources now award exp properly when a class also has Mining.
 * Creature Health now adjusts properly and works with values above normal maximums
 * A player will only have a skill if they are the proper level in the class that gets the skill at that level.
+* Players that craft with shift-right-clicking will now gain xp for all items crafted
 
 ==== **General:** ====
 
 * Fishing is now an experience source
 * Now using Vault for Economy & Permission hooks. (It's required)
 * Adjusted XP methods so that the Level display operates properly in 1.0
-* MapPartyUI has been removed.
+* MapPartyUI has been removed
 * The config.yml format has changed drastically. Some old options have been removed, or moved to make it easier.
 * Wolves & Enderdragons are currently ignored (wolves are still buggy in vanilla)
+* Classes now have item crafting restrictions
+** Restrict item groups based on level in recipes.yml
+** add the recipe groups a class should gain in the classfile under the 'recipes' key
 
 ==== **API:** ====
 

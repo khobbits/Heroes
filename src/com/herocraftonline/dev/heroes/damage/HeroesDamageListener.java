@@ -3,7 +3,6 @@ package com.herocraftonline.dev.heroes.damage;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;

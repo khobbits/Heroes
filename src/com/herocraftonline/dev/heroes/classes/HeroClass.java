@@ -15,6 +15,7 @@ import org.bukkit.Material;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.damage.DamageManager.ProjectileType;
+import com.herocraftonline.dev.heroes.util.RecipeGroup;
 
 /**
  * A Hero's class
@@ -35,6 +36,7 @@ public class HeroClass {
     private Map<Material, Integer> itemDamage = new EnumMap<Material, Integer>(Material.class);
     private Map<ProjectileType, Integer> projectileDamage = new EnumMap<ProjectileType, Integer>(ProjectileType.class);
     private Set<String> skills = new LinkedHashSet<String>();
+    private List<RecipeGroup> recipes = new ArrayList<RecipeGroup>();
 
     private int maxLevel;
     private int cost;
@@ -110,6 +112,28 @@ public class HeroClass {
             parents.addAll(hClass.getAllParents(new HashSet<HeroClass>(parents)));
         }
         return parents;
+    }
+
+    /**
+     * Gets the level that this class can craft the item at
+     * The Object should be an ItemData, ItemStack, or Material
+     * 
+     * Returns -1 if this class can not craft the item
+     * 
+     * @param is
+     * @return the level that this class can craft the item at.
+     */
+    public int getCraftLevel(Object o) {
+        int level = -1;
+        for (RecipeGroup rg : recipes) {
+            if (rg.contains(o)) {
+                if (level == -1)
+                    level = rg.level;
+                else if (rg.level < level)
+                    level = rg.level;
+            }
+        }
+        return level;
     }
 
     /**
@@ -446,5 +470,13 @@ public class HeroClass {
 
     @SuppressWarnings("serial")
     public class CircularParentException extends Exception {
+    }
+    
+    /**
+     * Adds a recipegroup to the list of recipe groups
+     * @param rg
+     */
+    void addRecipe(RecipeGroup rg) {
+        recipes.add(rg);
     }
 }

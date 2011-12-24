@@ -25,6 +25,7 @@ import com.herocraftonline.dev.heroes.skill.OutsourcedSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.SkillConfigManager;
 import com.herocraftonline.dev.heroes.util.Properties;
+import com.herocraftonline.dev.heroes.util.RecipeGroup;
 import com.herocraftonline.dev.heroes.util.Util;
 
 /**
@@ -112,7 +113,7 @@ public class HeroClassManager {
         // We also need to resave the defaults for the skill configurations in case the file was empty
         SkillConfigManager.saveSkillConfig();
         SkillConfigManager.setClassDefaults();
-        
+
         if (defaultClass == null) {
             Heroes.log(Level.SEVERE, "You are missing a default class, this will cause A LOT of issues!");
         }
@@ -160,6 +161,21 @@ public class HeroClassManager {
         newClass.setMaxHealthPerLevel(maxHealthPerLevel);
         newClass.setUserClass(userClass);
 
+
+        if (Heroes.useSpout)
+            if (config.isSet("recipes"))
+                for (String s : config.getStringList("recipes")) {
+                    RecipeGroup rg = Heroes.properties.recipes.get(s.toLowerCase());
+                    if (rg == null)
+                        Heroes.log(Level.SEVERE, "No recipe group named " + s + " defined in recipes.yml. Check " + className + " for errors or add the recipe group!");
+                    else
+                        newClass.addRecipe(rg);
+                }
+            else
+                Heroes.log(Level.SEVERE, "Class " + className + " has no recipes set! They will not be able to craft items!");
+        else // Add the default recipe if spout is not being used, this is just to prevent issues & inconsistencies in the API
+            newClass.addRecipe(Heroes.properties.recipes.get("default"));
+
         // Get the class expLoss
         newClass.setExpLoss(config.getDouble("expLoss", -1));
 
@@ -195,7 +211,7 @@ public class HeroClassManager {
             List<String> list = config.getStringList("parents.strong");
             if (list != null)
                 strongParents.addAll(list);
-            
+
             list = config.getStringList("parents.weak");
             Set<String> weakParents = new HashSet<String>();
             if (list != null)
@@ -473,9 +489,9 @@ public class HeroClassManager {
                     Heroes.log(Level.WARNING, "Skill " + skillName + " defined for " + className + " not found.");
                     continue;
                 }
-                
+
                 newClass.addSkill(skillName);
-                
+
                 // Copy the settings from the class configuration to the class skill configuration
                 ConfigurationSection skillSettings = section.getConfigurationSection(skillName);
                 if (skillSettings == null)
@@ -496,7 +512,7 @@ public class HeroClassManager {
 
 
                     newClass.addSkill(skill.getName());
-                    
+
                     // Load the skill settings into the class skill config
                     ConfigurationSection skillSettings = section.getConfigurationSection(skill.getName());
                     if (skillSettings == null)

@@ -25,3 +25,4 @@ item-damage:
 projectile-damage:
   Arrow: 3
 expLoss: 0
+recipes: [ default ]

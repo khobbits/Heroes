@@ -1254,4 +1254,19 @@ public class Hero {
             return false;
         }
     }
+
+    /**
+     * Checks if the player is able to craft the object specified
+     * @param o - should be an ItemStack, ItemData, or Material
+     * @return true if the class can craft the item
+     */
+    public boolean canCraft(Object o) {
+        if (heroClass.getCraftLevel(o) <= getLevel(heroClass))
+            return true;
+
+        if (secondClass != null && secondClass.getCraftLevel(o) <= getLevel(secondClass))
+            return true;
+
+        return false;
+    }
 }

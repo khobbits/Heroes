@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
@@ -32,6 +33,7 @@ public class ConfigManager {
     //Configurations
     private static Configuration damageConfig;
     private static Configuration expConfig;
+    private static Configuration recipeConfig;
 
     public ConfigManager(Heroes plugin) {
         this.plugin = plugin;
@@ -45,6 +47,7 @@ public class ConfigManager {
     public void load() throws Exception {
         checkForConfig(expConfigFile);
         checkForConfig(damageConfigFile);
+        checkForConfig(recipesConfigFile);
         if (!classConfigFolder.exists()) {
             classConfigFolder.mkdirs();
             checkForConfig(new File(classConfigFolder, "vagrant.yml"));
@@ -69,7 +72,10 @@ public class ConfigManager {
             expConfig.setDefaults(defConfig);
         }
         loadExperience();
-
+        
+        recipeConfig = YamlConfiguration.loadConfiguration(recipesConfigFile);
+        loadRecipes();
+        
         HeroClassManager heroClassManager = new HeroClassManager(plugin);
         heroClassManager.loadClasses(classConfigFolder);
         plugin.setClassManager(heroClassManager);
@@ -117,6 +123,46 @@ public class ConfigManager {
         }
     }
 
+    private void loadRecipes() {
+        if (!Heroes.useSpout) {
+            RecipeGroup rg = new RecipeGroup("default", 1);
+            rg.setAllRecipes(true);
+            Heroes.properties.recipes.put("default", rg);
+            return;
+        }
+        
+        Set<String> recipes = recipeConfig.getKeys(false);
+        if (recipes.isEmpty()) {
+            Heroes.log(Level.WARNING, "No recipes found!");
+        }
+        for (String key : recipes) {
+            int level = recipeConfig.getInt(key + ".level", 1);
+            RecipeGroup rg = new RecipeGroup(key, level);
+            List<String> items = recipeConfig.getStringList(key + ".items");
+            if (items == null || items.isEmpty()) {
+                Heroes.log(Level.WARNING, "Null item list for recipe " + key + "! Check recipes.yml and fix this!");
+            }
+            for (String i : items) {
+                String[] vals = i.split(",");
+                if (vals[0].equalsIgnoreCase("*") || vals[0].equalsIgnoreCase("all")) {
+                    rg.setAllRecipes(true);
+                    break;
+                }
+                try {
+                    Material mat = Material.getMaterial(Integer.valueOf(vals[0]));
+                    short subType = 0;
+                    if (vals.length > 1)
+                        subType = Short.valueOf(vals[1]);
+                    
+                    rg.add(new ItemData(mat, subType));
+                } catch (NumberFormatException e) {
+                    Heroes.log(Level.SEVERE, "Invalid item ID in recipe group" + key);
+                    continue;
+                }
+            }
+            Heroes.properties.recipes.put(key.toLowerCase(), rg);
+        }
+    }
 
     private void loadExperience() {
         ConfigurationSection section = expConfig.getConfigurationSection("killing");
