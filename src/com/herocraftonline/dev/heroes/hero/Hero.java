@@ -1261,11 +1261,15 @@ public class Hero {
      * @return true if the class can craft the item
      */
     public boolean canCraft(Object o) {
-        if (heroClass.getCraftLevel(o) <= getLevel(heroClass))
+        int level = heroClass.getCraftLevel(o);
+        if (level != -1 && level <= getLevel(heroClass))
             return true;
 
-        if (secondClass != null && secondClass.getCraftLevel(o) <= getLevel(secondClass))
-            return true;
+        if (secondClass != null) {
+            level = secondClass.getCraftLevel(o);
+            if (level != -1 && level <= getLevel(secondClass))
+                return true;
+        }
 
         return false;
     }
