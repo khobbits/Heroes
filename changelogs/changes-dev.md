@@ -34,6 +34,11 @@ Version dev
 * PickPocket - (NEW!)
 ** allows a player to steal an item from another 
 ** Will not steal armor/items in the hotbar
+* FireArrow
+** Fixed not expiring properly
 * IceArrow - (Re-Added!)
+** Fixed not expiring properly
+* PoisonArrow - (Re-added!)
+** fixed not expiring properly
 * Wolf 
 ** Now a passive that forces anyone on the server to have the skill to tame
