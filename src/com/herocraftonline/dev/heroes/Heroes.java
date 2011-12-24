@@ -183,7 +183,6 @@ public class Heroes extends JavaPlugin {
             heroManager.saveHero(player);
             Hero hero = heroManager.getHero(player);
             hero.clearSummons();
-            hero.clearPermissions();
         }
         Heroes.econ = null; // When it Enables again it performs the checks anyways.
         log.info(getDescription().getName() + " version " + getDescription().getVersion() + " is disabled!");

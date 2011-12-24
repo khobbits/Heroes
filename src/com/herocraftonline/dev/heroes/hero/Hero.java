@@ -190,15 +190,6 @@ public class Hero {
     }
 
     /**
-     * Clears all set Permissions on the hero's permission attachment
-     */
-    public void clearPermissions() {
-        player.removeAttachment(transientPerms);
-        if (plugin.isEnabled())
-            transientPerms = player.addAttachment(plugin);
-    }
-
-    /**
      * Removes the summons from the game world - then removes them from the set
      * 
      */

@@ -7,6 +7,7 @@ Version dev
 * Creature Health now adjusts properly and works with values above normal maximums
 * A player will only have a skill if they are the proper level in the class that gets the skill at that level.
 * Players that craft with shift-right-clicking will now gain xp for all items crafted
+* 
 
 ==== **General:** ====
 
