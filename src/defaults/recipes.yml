@@ -2,6 +2,9 @@ default:
   level: 1
   items:
     - '*'
+example2:
+  level: 1
+  denied-items: [ 4 ]
 swords:
   level: 1
   items:

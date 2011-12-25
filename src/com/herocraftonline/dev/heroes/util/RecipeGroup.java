@@ -1,12 +1,12 @@
 package com.herocraftonline.dev.heroes.util;
 
-import java.util.HashSet;
+import java.util.HashMap;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 @SuppressWarnings("serial")
-public class RecipeGroup extends HashSet<ItemData> {
+public class RecipeGroup extends HashMap<ItemData, Boolean> {
 
     public final int level;
     public final String name;
@@ -27,20 +27,38 @@ public class RecipeGroup extends HashSet<ItemData> {
     
     
     @Override
-    public boolean contains(Object o) {
+    public boolean containsKey(Object o) {
+        if (o == null)
+            return false;
+        
         if (allRecipes)
             return true;
-        
-        if (o instanceof ItemStack) {
+        else if (o instanceof ItemStack) {
             ItemStack is = (ItemStack) o;
-            return super.contains(new ItemData(is.getType(), is.getType().getMaxDurability() > 16 ? (short) 0 : is.getDurability()));
+            return super.containsKey(new ItemData(is.getType(), is.getType().getMaxDurability() > 16 ? (short) 0 : is.getDurability()));
         } else if (o instanceof Material) {
-            Material m = (Material) o;
-            return super.contains(new ItemData(m));
+            return super.containsKey(new ItemData((Material) o));
         }
-        return super.contains(o);
+        return super.containsKey(o);
     }
 
+    @Override
+    public Boolean get(Object o) {
+        if (o == null)
+            return null;
+        
+        if (allRecipes)
+            return true;
+        else if (o instanceof ItemStack) {
+            ItemStack is = (ItemStack) o;
+            return super.get(new ItemData(is.getType(), is.getType().getMaxDurability() > 16 ? (short) 0 : is.getDurability()));
+        }
+        else if (o instanceof Material) {
+            return super.get(new ItemData((Material) o));
+        }
+        return super.get(o);
+    }
+    
     @Override
     public int hashCode() {
         return name.hashCode();

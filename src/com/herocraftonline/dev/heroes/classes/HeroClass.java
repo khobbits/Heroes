@@ -126,7 +126,12 @@ public class HeroClass {
     public int getCraftLevel(Object o) {
         int level = -1;
         for (RecipeGroup rg : recipes) {
-            if (rg.contains(o)) {
+            Boolean b = rg.get(o);
+            if (b == null)
+                continue;
+            if (!b) {
+                return -1;
+            } else {
                 if (level == -1)
                     level = rg.level;
                 else if (rg.level < level)

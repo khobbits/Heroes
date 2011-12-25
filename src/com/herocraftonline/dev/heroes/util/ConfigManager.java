@@ -29,7 +29,7 @@ public class ConfigManager {
     protected static File expConfigFile;
     protected static File damageConfigFile;
     protected static File recipesConfigFile;
-    
+
     //Configurations
     private static Configuration damageConfig;
     private static Configuration expConfig;
@@ -72,10 +72,10 @@ public class ConfigManager {
             expConfig.setDefaults(defConfig);
         }
         loadExperience();
-        
+
         recipeConfig = YamlConfiguration.loadConfiguration(recipesConfigFile);
         loadRecipes();
-        
+
         HeroClassManager heroClassManager = new HeroClassManager(plugin);
         heroClassManager.loadClasses(classConfigFolder);
         plugin.setClassManager(heroClassManager);
@@ -130,7 +130,7 @@ public class ConfigManager {
             Heroes.properties.recipes.put("default", rg);
             return;
         }
-        
+
         Set<String> recipes = recipeConfig.getKeys(false);
         if (recipes.isEmpty()) {
             Heroes.log(Level.WARNING, "No recipes found!");
@@ -138,26 +138,43 @@ public class ConfigManager {
         for (String key : recipes) {
             int level = recipeConfig.getInt(key + ".level", 1);
             RecipeGroup rg = new RecipeGroup(key, level);
+            // Load in the allowed items for this RecipeGroup
             List<String> items = recipeConfig.getStringList(key + ".items");
-            if (items == null || items.isEmpty()) {
-                Heroes.log(Level.WARNING, "Null item list for recipe " + key + "! Check recipes.yml and fix this!");
-            }
-            for (String i : items) {
-                String[] vals = i.split(",");
-                if (vals[0].equalsIgnoreCase("*") || vals[0].equalsIgnoreCase("all")) {
-                    rg.setAllRecipes(true);
-                    break;
+            if (items != null && !items.isEmpty()) {
+                for (String i : items) {
+                    String[] vals = i.split(",");
+                    if (vals[0].equalsIgnoreCase("*") || vals[0].equalsIgnoreCase("all")) {
+                        rg.setAllRecipes(true);
+                        break;
+                    }
+                    try {
+                        Material mat = Material.getMaterial(Integer.valueOf(vals[0]));
+                        short subType = 0;
+                        if (vals.length > 1)
+                            subType = Short.valueOf(vals[1]);
+
+                        rg.put(new ItemData(mat, subType), true);
+                    } catch (NumberFormatException e) {
+                        Heroes.log(Level.SEVERE, "Invalid item ID in recipe group" + key);
+                        continue;
+                    }
                 }
-                try {
-                    Material mat = Material.getMaterial(Integer.valueOf(vals[0]));
-                    short subType = 0;
-                    if (vals.length > 1)
-                        subType = Short.valueOf(vals[1]);
-                    
-                    rg.add(new ItemData(mat, subType));
-                } catch (NumberFormatException e) {
-                    Heroes.log(Level.SEVERE, "Invalid item ID in recipe group" + key);
-                    continue;
+            }
+            List<String> deniedItems = recipeConfig.getStringList(key + ".denied-items");
+            if (deniedItems != null && !deniedItems.isEmpty()) {
+                for (String i : deniedItems) {
+                    String[] vals = i.split(",");
+                    try {
+                        Material mat = Material.getMaterial(Integer.valueOf(vals[0]));
+                        short subType = 0;
+                        if (vals.length > 1)
+                            subType = Short.valueOf(vals[1]);
+
+                        rg.put(new ItemData(mat, subType), false);
+                    } catch (NumberFormatException e) {
+                        Heroes.log(Level.SEVERE, "Invalid item ID in recipe group" + key);
+                        continue;
+                    }
                 }
             }
             Heroes.properties.recipes.put(key.toLowerCase(), rg);
