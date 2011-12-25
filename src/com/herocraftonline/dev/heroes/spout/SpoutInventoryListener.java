@@ -30,15 +30,10 @@ public class SpoutInventoryListener extends InventoryListener {
             return;
         
         ItemStack result = event.getResult();
-        ItemStack current = event.getCursor();
-        int amountCrafted = 0;
+        int amountCrafted = result.getAmount();
         
-        if (current != null && current.getType() != result.getType())
+        if (event.getCursor() != null && event.getCursor().getType() != result.getType())
             return;
-        else if (current == null)
-            amountCrafted = result.getAmount();
-        else if (current != null && current.getType() == result.getType())
-            amountCrafted = result.getAmount() - current.getAmount();
         
         if (Heroes.properties.craftingExp.containsKey(result.getType())) {
             Player player = event.getPlayer();
