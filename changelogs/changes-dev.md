@@ -7,7 +7,7 @@ Version dev
 * Creature Health now adjusts properly and works with values above normal maximums
 * A player will only have a skill if they are the proper level in the class that gets the skill at that level.
 * Players that craft with shift-right-clicking will now gain xp for all items crafted
-* 
+* Heroes can no longer re-use a skill with a warmaup to immediately use the skill
 
 ==== **General:** ====
 
@@ -20,6 +20,7 @@ Version dev
 * Classes now have item crafting restrictions
 ** Restrict item groups based on level in recipes.yml
 ** add the recipe groups a class should gain in the classfile under the 'recipes' key
+** supports denied-items to prevent users from crafting certain items, no matter what
 
 ==== **API:** ====
 

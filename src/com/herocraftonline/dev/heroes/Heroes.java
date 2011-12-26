@@ -380,6 +380,7 @@ public class Heroes extends JavaPlugin {
         pluginManager.registerEvent(Type.PLAYER_RESPAWN, playerListener, Priority.Monitor, this);
         pluginManager.registerEvent(Type.PLAYER_BED_ENTER, playerListener, Priority.Monitor, this);
         pluginManager.registerEvent(Type.PLAYER_BED_LEAVE, playerListener, Priority.Monitor, this);
+        pluginManager.registerEvent(Type.PLAYER_FISH, playerListener, Priority.Monitor, this);
 
         pluginManager.registerEvent(Type.ENTITY_DEATH, entityListener, Priority.Highest, this);
         pluginManager.registerEvent(Type.ENTITY_TARGET, entityListener, Priority.Normal, this);
