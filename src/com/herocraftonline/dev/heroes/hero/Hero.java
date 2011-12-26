@@ -1190,9 +1190,9 @@ public class Hero {
         Material item;
         int removedCount = 0;
 
-        if (inv.getHelmet() != null && inv.getHelmet().getTypeId() != 0 && !Heroes.properties.allowHats) {
+        if (inv.getHelmet() != null && inv.getHelmet().getTypeId() != 0) {
             item = inv.getHelmet().getType();
-            if (!Util.isArmor(item) && Heroes.properties.allowHats) {
+            if (!Util.isArmor(item) && Heroes.properties.allowHats && (Heroes.properties.hatsLevel <= getLevel(heroClass) || (secondClass != null && Heroes.properties.hatsLevel <= getLevel(secondClass)))) {
                 // Do nothing!  
             } else if (!heroClass.isAllowedArmor(item) && (secondClass == null || !secondClass.isAllowedArmor(item))) {
                 Util.moveItem(this, -1, inv.getHelmet());
@@ -1200,6 +1200,7 @@ public class Hero {
                 removedCount++;
             }
         }
+        
         if (inv.getChestplate() != null && inv.getChestplate().getTypeId() != 0) {
             item = inv.getChestplate().getType();
             if (!heroClass.isAllowedArmor(item) && (secondClass == null || !secondClass.isAllowedArmor(item))) {
