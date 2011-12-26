@@ -75,6 +75,7 @@ public class SpoutUI {
         }
     }
 
+    @SuppressWarnings("deprecation")
     public static void cloakPlayer(Player player, String cloakName){
         if(!Heroes.useSpout)
             return;
