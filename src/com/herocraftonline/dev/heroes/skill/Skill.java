@@ -203,4 +203,22 @@ public abstract class Skill extends BasicCommand {
         target.damage(edbe.getDamage(), attacker);
         return true;
     }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null)
+            return false;
+        else if (obj.toString().equals(getName()))
+            return true;
+        else if (!(obj instanceof Skill))
+            return false;
+        
+        Skill s = (Skill) obj;
+        return s.getName().equals(getName());
+    }
+    
+    @Override
+    public int hashCode() {
+        return getName().hashCode();
+    }
 }

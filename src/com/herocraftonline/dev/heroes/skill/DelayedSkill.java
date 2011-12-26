@@ -20,7 +20,7 @@ public class DelayedSkill {
     }
     
     public boolean isReady() {
-        return  System.currentTimeMillis() >= startTime + warmup;
+        return System.currentTimeMillis() >= startTime + warmup;
     }
     
     public long startTime() {

@@ -164,7 +164,7 @@ public abstract class ActiveSkill extends Skill {
             return true;
         } else if (hm.getDelayedSkills().containsKey(hero)) {
             DelayedSkill dSkill = hm.getDelayedSkills().get(hero);
-            if (dSkill.getSkill() != this) {
+            if (!dSkill.getSkill().equals(this)) {
                 hm.getDelayedSkills().remove(hero);
                 hero.setDelayedSkill(null);
                 broadcast(player.getLocation(), "$1 has stopped using $2!", player.getDisplayName(), dSkill.getSkill().getName());
@@ -174,8 +174,11 @@ public abstract class ActiveSkill extends Skill {
                     messageAndEvent(hero, SkillResult.START_DELAY);
                     return true;
                 }
-            }
-            hm.addCompletedSkill(hero);
+            } else if (!dSkill.isReady()) {
+                Messaging.send(sender, "You have already begun to use that skill!");
+                return true;
+            } else
+                hm.addCompletedSkill(hero);
         }
 
         SkillResult skillResult = use(hero, args);
