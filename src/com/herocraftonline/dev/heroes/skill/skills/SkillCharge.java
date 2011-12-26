@@ -60,27 +60,19 @@ public class SkillCharge extends TargettedSkill {
     @Override
     public SkillResult use(Hero hero, LivingEntity target, String[] args) {
         final Player player = hero.getPlayer();
-        
+
         Location playerLoc = player.getLocation();
         Location targetLoc = target.getLocation();
-        
+
         double xDir = targetLoc.getX() - playerLoc.getX();
         double zDir = targetLoc.getZ() - playerLoc.getZ();
         double magnitude = Math.sqrt(xDir * xDir + zDir * zDir);
         double multiplier = targetLoc.distance(playerLoc) / 8;
         xDir = xDir / magnitude * multiplier;
         zDir = zDir / magnitude * multiplier;
-        
-        /*
-        float pitch = player.getEyeLocation().getPitch();
-        if (pitch > 0) {
-            pitch = -pitch;
-        }
-        
-        float yDir = ((90f + pitch) / 50f);
-        */
+
         player.setVelocity(new Vector(xDir, 1, zDir));
-        
+
         chargingPlayers.add(player);
         plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
             @Override
