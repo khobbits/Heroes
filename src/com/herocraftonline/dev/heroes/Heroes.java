@@ -4,14 +4,18 @@ import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import me.desht.scrollingmenusign.SMSHandler;
+import me.desht.scrollingmenusign.ScrollingMenuSign;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -106,6 +110,7 @@ public class Heroes extends JavaPlugin {
     public static final Properties properties = new Properties();
     public static Economy econ;
     public static Permission perms;
+    public static SMSHandler smsHandler;
 
     // Variable for Spout.
     public static boolean useSpout = false;
@@ -155,11 +160,11 @@ public class Heroes extends JavaPlugin {
     public EffectManager getEffectManager() {
         return effectManager;
     }
-    
+
     public SkillConfigManager getSkillConfigs() {
         return skillConfigs;
     }
-    
+
     public void setSkillConfigs(SkillConfigManager config) {
         this.skillConfigs = config;
     }
@@ -199,6 +204,7 @@ public class Heroes extends JavaPlugin {
             return;
         }
         setupEconomy();
+        setupSMS();
         properties.load(this);
         configManager = new ConfigManager(this);
 
@@ -217,7 +223,8 @@ public class Heroes extends JavaPlugin {
         heroManager = new HeroManager(this);
         damageManager = new DamageManager(this);
         skillManager = new SkillManager(this);
-        // Check for BukkitContrib
+
+        // Check for Spout
         setupSpout();
 
         // Load in the rest of the values into their managers
@@ -229,14 +236,14 @@ public class Heroes extends JavaPlugin {
         registerEvents();
         // Call our function to setup Heroes Commands.
         registerCommands();
-        
+
         log(Level.INFO, "version " + getDescription().getVersion() + " is enabled!");
 
         final Player[] players = getServer().getOnlinePlayers();
         for (Player player : players) {
             Hero hero = heroManager.getHero(player);
             HeroClass heroClass = hero.getHeroClass();
-            
+
             if (heroClass != heroClassManager.getDefaultClass() && !perms.has(player, "heroes.classes." + heroClass.getName().toLowerCase())) {
                 hero.setHeroClass(heroClassManager.getDefaultClass(), false);
             }
@@ -261,7 +268,7 @@ public class Heroes extends JavaPlugin {
         this.heroClassManager = heroClassManager;
     }
 
-    public boolean setupEconomy() {        
+    boolean setupEconomy() {        
         RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
         if (rsp != null) {
             econ = rsp.getProvider();
@@ -271,12 +278,26 @@ public class Heroes extends JavaPlugin {
     }
 
     /**
+     * Setup scrolling menu sign integration
+     */
+    private void setupSMS() {
+        if (smsHandler == null) {
+            Plugin p = Bukkit.getServer().getPluginManager().getPlugin("ScrollingMenuSign");
+            if (p != null && p instanceof ScrollingMenuSign) {
+                ScrollingMenuSign sms = (ScrollingMenuSign) p;
+                smsHandler = sms.getHandler();
+                Heroes.log(Level.INFO, "ScrollingMenuSign integration is enabled");
+            }
+        }
+    }
+
+    /**
      * Perform a Permissions check and setup Permissions if found.
      */
     public boolean setupPermissions() {
         if (getServer().getPluginManager().getPlugin("Vault") == null)
             return false;
-        
+
         RegisteredServiceProvider<net.milkbowl.vault.permission.Permission> rsp = getServer().getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class);
         if (rsp != null)
             perms = rsp.getProvider();

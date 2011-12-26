@@ -4,7 +4,7 @@ version: 1.4.0
 website: http://www.herocraftonline.com
 authors: [Herocraft Coding, DThielke, Rigby, RightLegRed, Sleaker, Kainzo]
 description: Experience, leveling, skills and class system for Minecraft developed by Herocraft Development.
-softdepend: [Vault, Spout]
+softdepend: [Vault, Spout, ScrollingMenuSigns]
 commands:
   heroes:
     aliases: ['hero']
