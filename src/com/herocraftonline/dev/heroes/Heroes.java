@@ -438,11 +438,4 @@ public class Heroes extends JavaPlugin {
     public void setSpoutData(SpoutData sd) {
         this.spoutData = sd;
     }
-
-    /**
-     * @return the properties
-     */
-    public Properties getProperties() {
-        return properties;
-    }
 }

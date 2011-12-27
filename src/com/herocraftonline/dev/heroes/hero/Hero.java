@@ -10,7 +10,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.bukkit.GameMode;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.LivingEntity;
@@ -118,6 +117,9 @@ public class Hero {
     }
 
     public boolean canGain(ExperienceType type) {
+        if (type == ExperienceType.ADMIN)
+            return true;
+
         boolean prim = false;
         if (heroClass.hasExperiencetype(type))
             prim = !isMaster(heroClass);
@@ -218,18 +220,6 @@ public class Hero {
     }
 
     /**
-     * Standard Experience gain Call - automatically splits the gain between party members
-     * expChange supports negative values for experience loss.
-     * 
-     * @param expGain
-     * @param source
-     */
-    public void gainExp(double expGain, ExperienceType source) {
-        gainExp(expGain, source, true);
-    }
-
-
-    /**
      * Alters the experience for the given class on the Hero
      * This is used for admin commands or direct alterations to the Hero's classes
      * @param expChange - amount of xp to change (positive or negative)
@@ -274,6 +264,14 @@ public class Hero {
         }
     }
 
+    @Deprecated
+    public void gainExp(double expChange, ExperienceType source, boolean party) {
+        if (party && this.getParty() != null) {
+            this.getParty().gainExp(expChange, source, player.getLocation());
+        } else
+            gainExp(expChange, source);
+    }
+    
     /**
      * Adds the specified experience to the hero before modifiers from the given source.
      * expChange value supports negatives for experience loss.
@@ -283,35 +281,10 @@ public class Hero {
      * @param source
      * @param boolean - distributeToParty
      */
-    public void gainExp(double expChange, ExperienceType source, boolean distributeToParty) {
+    public void gainExp(double expChange, ExperienceType source) {
         if (player.getGameMode() == GameMode.CREATIVE || Heroes.properties.disabledWorlds.contains(player.getWorld().getName()))
             return;
         Properties prop = Heroes.properties;
-
-        if (distributeToParty && party != null && party.getExp() && expChange > 0) {
-            Location location = player.getLocation();
-
-            Set<Hero> partyMembers = party.getMembers();
-            Set<Hero> inRangeMembers = new HashSet<Hero>();
-            for (Hero partyMember : partyMembers) {
-                if (!location.getWorld().equals(partyMember.player.getLocation().getWorld())) {
-                    continue;
-                }
-
-                if (location.distanceSquared(partyMember.player.getLocation()) <= 2500) {
-                    inRangeMembers.add(partyMember);
-                }
-            }
-
-            int partySize = inRangeMembers.size();
-            double sharedExpGain = expChange / partySize * ((partySize - 1) * prop.partyBonus + 1.0);
-
-            for (Hero partyMember : inRangeMembers) {
-                partyMember.gainExp(sharedExpGain, source, false);
-            }
-
-            return;
-        }
 
         HeroClass[] classes = new HeroClass[] {heroClass, secondClass};
 
@@ -1200,7 +1173,7 @@ public class Hero {
                 removedCount++;
             }
         }
-        
+
         if (inv.getChestplate() != null && inv.getChestplate().getTypeId() != 0) {
             item = inv.getChestplate().getType();
             if (!heroClass.isAllowedArmor(item) && (secondClass == null || !secondClass.isAllowedArmor(item))) {

@@ -21,10 +21,13 @@ Version dev
 ** Restrict item groups based on level in recipes.yml
 ** add the recipe groups a class should gain in the classfile under the 'recipes' key
 ** supports denied-items to prevent users from crafting certain items, no matter what
+* Party xp sharing now operates differently
+** the partyBonus - value in the config.yml should now be between 0 and 1 - update accordingly!
 
 ==== **API:** ====
 
 * removed hero.setExperience(double) and isMaster() - use isMaster(heroClass) and setExperience(heroClass, double)
+* party xp now needs to be handled through the party API, not the Hero.
 * The MapUI has been removed
 * All skills that damage a target must now use skill.entityDamage - bukkit no longer provides direct support for firing events via .damage anymore
 

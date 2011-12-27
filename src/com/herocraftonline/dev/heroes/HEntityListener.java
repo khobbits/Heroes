@@ -68,12 +68,12 @@ public class HEntityListener extends EntityListener {
         if (attacker.getSummons().contains(defender) || attacker.getPlayer().equals(defender))
             return;
 
-        if (defender instanceof Player && attacker.canGain(ExperienceType.PVP)) {
+        if (defender instanceof Player) {
             // Don't award XP for Players killing themselves
             prop.playerDeaths.put((Player) defender, defender.getLocation());
             addedExp = prop.playerKillingExp;
             experienceType = ExperienceType.PVP;
-        } else if (defender instanceof LivingEntity && !(defender instanceof Player) && attacker.canGain(ExperienceType.KILLING)) {
+        } else if (defender instanceof LivingEntity && !(defender instanceof Player)) {
 
             // Get the dying entity's CreatureType
             CreatureType type = Util.getCreatureFromEntity(defender);
@@ -92,7 +92,10 @@ public class HEntityListener extends EntityListener {
         }
 
         if (experienceType != null && addedExp > 0) {
-            attacker.gainExp(addedExp, experienceType);
+            if (attacker.hasParty())
+                attacker.getParty().gainExp(addedExp, experienceType, defender.getLocation());
+            else if (attacker.canGain(experienceType))
+                attacker.gainExp(addedExp, experienceType);
         }
     }
 
@@ -111,21 +114,21 @@ public class HEntityListener extends EntityListener {
         HeroManager heroManager = plugin.getHeroManager();
 
         event.setDroppedExp(0);
-        
+
         if (defender instanceof Player) {
             Player player = (Player) defender;
             Hero heroDefender = heroManager.getHero(player);
             Util.deaths.put(player.getName(), event.getEntity().getLocation());
-         
+
             // check to see if this death was caused by FireTick
             if (attacker == null && heroDefender.hasEffect("Combust")) {
                 attacker = ((CombustEffect) heroDefender.getEffect("Combust")).getApplier();
             }
-            
+
             double multiplier = 1.0;
             if (attacker != null)
                 multiplier = Heroes.properties.pvpExpLossMultiplier;
-            
+
             heroDefender.loseExpFromDeath(multiplier);
 
             // Remove any nonpersistent effects
@@ -147,7 +150,7 @@ public class HEntityListener extends EntityListener {
             Hero hero = heroManager.getHero(attacker);
             awardKillExp(hero, defender);
         }
-        
+
         Heroes.debug.stopTask("HEntityListener.onEntityDeath");
     }
 }

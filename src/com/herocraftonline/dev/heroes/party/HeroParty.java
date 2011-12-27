@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.Set;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Player;
 import org.getspout.spoutapi.SpoutManager;
@@ -13,6 +14,7 @@ import org.getspout.spoutapi.gui.Widget;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.spout.gui.EntityBar;
 import com.herocraftonline.dev.heroes.util.Messaging;
@@ -25,6 +27,16 @@ public class HeroParty {
     private Boolean exp = true;
     private final Heroes plugin;
     private LinkedList<String> invites = new LinkedList<String>();
+
+    private static final double xpmult2, xpmult3, xpmult4, xpmult5, xpmult6;
+    static {
+        xpmult2 = Math.log(2) * .4650922;
+        xpmult3 = Math.log(3) * .4650922;
+        xpmult4 = Math.log(4) * .4650922;
+        xpmult5 = Math.log(5) * .4650922;
+        xpmult6 = Math.log(6) * .4650922;
+    }
+
 
     public HeroParty(Hero leader, Heroes plugin) {
         this.plugin = plugin;
@@ -137,11 +149,11 @@ public class HeroParty {
         SpoutPlayer sPlayer = SpoutManager.getPlayer(player);
         if (!sPlayer.isSpoutCraftEnabled())
             return;
-        
+
         Container container = plugin.getSpoutData().getPartyContainer(player.getName());
         if (container == null)
             return;
-        
+
         int index = 0;
         Set<Hero> heroes = getMembers();
         Hero hero = plugin.getHeroManager().getHero(player);
@@ -153,7 +165,7 @@ public class HeroParty {
         Widget[] bars = container.getChildren();
         while (index < bars.length)
             container.removeChild(bars[index++]);
-        
+
         container.updateLayout();
     }
 
@@ -168,10 +180,54 @@ public class HeroParty {
         bar.setTargets(plugin, hero.getSummons().isEmpty() ? null : hero.getSummons().toArray(new Creature[0]));
         return index++;
     }
-    
+
     public void update() {
         if (Heroes.useSpout) 
             for (Hero hero : members)
                 update(hero.getPlayer());   
+    }
+
+    public void gainExp(double amount, ExperienceType type, Location location) {
+        Set<Hero> inRangeMembers = new HashSet<Hero>();
+        for (Hero partyMember : members) {
+            if (!location.getWorld().equals(partyMember.getPlayer().getLocation().getWorld()))
+                continue;
+
+            if (location.distanceSquared(partyMember.getPlayer().getLocation()) > 2500)
+                continue;
+
+            if (partyMember.canGain(type))
+                inRangeMembers.add(partyMember);
+        }
+
+        int partySize = inRangeMembers.size();
+        double sharedExp = amount / partySize;
+        double bonusExp = partySize > 1 ? sharedExp : 0;
+        switch (partySize) {
+        case 2:
+            bonusExp = amount * xpmult2;
+            break;
+        case 3:
+            bonusExp = amount * xpmult3;
+            break;
+        case 4:
+            bonusExp = amount * xpmult4;
+            break;
+        case 5:
+            bonusExp = amount * xpmult5;
+            break;
+        case 6:
+            bonusExp = amount * xpmult6;
+            break;
+        default:
+            bonusExp = 0;
+        }
+
+        bonusExp *= Heroes.properties.partyBonus;
+        
+        for (Hero partyMember : inRangeMembers) {
+            partyMember.gainExp(sharedExp + bonusExp, type);
+        }
+        return;
     }
 }

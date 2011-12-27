@@ -58,18 +58,18 @@ public class HBlockListener extends BlockListener {
         double addedExp = 0;
 
         ExperienceType et = null;
-        if (hero.canGain(ExperienceType.MINING) && prop.miningExp.containsKey(block.getType())) {
+        if (prop.miningExp.containsKey(block.getType())) {
             addedExp = prop.miningExp.get(block.getType());
             et = ExperienceType.MINING;
         }
-        if(hero.canGain(ExperienceType.FARMING) && prop.farmingExp.containsKey(block.getType())) {
+        if(prop.farmingExp.containsKey(block.getType())) {
             double newExp = prop.farmingExp.get(block.getType());
             if (newExp > addedExp) {
                 addedExp = newExp;
                 et = ExperienceType.FARMING;
             }
         }
-        if (hero.canGain(ExperienceType.LOGGING) && prop.loggingExp.containsKey(block.getType())) {
+        if (prop.loggingExp.containsKey(block.getType())) {
             double newExp = prop.loggingExp.get(block.getType());
             if (newExp > addedExp) {
                 addedExp = newExp;
@@ -85,7 +85,11 @@ public class HBlockListener extends BlockListener {
             placedBlocks.remove(block.getLocation());
             return;
         } else {
-            hero.gainExp(addedExp, et);
+            if (hero.hasParty()) {
+                hero.getParty().gainExp(addedExp, et, event.getBlock().getLocation());
+            } else if (hero.canGain(et)) {
+                hero.gainExp(addedExp, et);
+            }
         }
     }
 
