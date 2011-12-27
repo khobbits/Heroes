@@ -40,11 +40,11 @@ public class SkillSuperheat extends ActiveSkill {
 
     @Override
     public ConfigurationSection getDefaultConfig() {
-        ConfigurationSection node = super.getDefaultConfig();
-        node.set(Setting.DURATION.node(), 20000);
-        node.set(Setting.APPLY_TEXT.node(), "%hero%'s pick has become superheated!");
-        node.set(Setting.EXPIRE_TEXT.node(), "%hero%'s pick has cooled down!");
-        return node;
+        ConfigurationSection section = super.getDefaultConfig();
+        section.set(Setting.DURATION.node(), 20000);
+        section.set(Setting.APPLY_TEXT.node(), "%hero%'s pick has become superheated!");
+        section.set(Setting.EXPIRE_TEXT.node(), "%hero%'s pick has cooled down!");
+        return section;
     }
 
     @Override

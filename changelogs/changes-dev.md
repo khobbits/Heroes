@@ -35,6 +35,8 @@ Version dev
 ==== **Skills:** ====
 
 * Backstab - (Re-Added!)
+* Charge 
+** now 'jumps' toward the targeted player and can be configured to deal damage, stun, slow, or root nearby enemies on langing, or all of the above.
 * PickPocket - (NEW!)
 ** allows a player to steal an item from another 
 ** Will not steal armor/items in the hotbar
@@ -44,5 +46,7 @@ Version dev
 ** Fixed not expiring properly
 * PoisonArrow - (Re-added!)
 ** fixed not expiring properly
+* SuperJump - (NEW!) - Thanks Multitallented
+** powerful version of jump that gives safe-fall
 * Wolf 
 ** Now a passive that forces anyone on the server to have the skill to tame
