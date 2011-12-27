@@ -32,7 +32,7 @@ public class HeroClass {
     private Set<ExperienceType> experienceSources = null;
     private boolean primary = true;
     private boolean secondary = false;
-    private int tier = 0;
+    private int tier = 1;
     private Map<Material, Integer> itemDamage = new EnumMap<Material, Integer>(Material.class);
     private Map<ProjectileType, Integer> projectileDamage = new EnumMap<ProjectileType, Integer>(ProjectileType.class);
     private Set<String> skills = new LinkedHashSet<String>();

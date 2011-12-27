@@ -271,7 +271,7 @@ public class Hero {
         } else
             gainExp(expChange, source);
     }
-    
+
     /**
      * Adds the specified experience to the hero before modifiers from the given source.
      * expChange value supports negatives for experience loss.
@@ -618,6 +618,8 @@ public class Hero {
         }
         int level = getLevel(heroClass);
         for (HeroClass hClass : classes) {
+            if (hClass.getTier() == 0)
+                continue;
             level += getLevel(hClass);
         }
         return level;

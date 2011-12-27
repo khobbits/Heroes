@@ -140,7 +140,7 @@ public class HeroClassManager {
         newClass.setExpModifier(config.getDouble("expmodifier", 1.0D));
         newClass.setPrimary(config.getBoolean("primary", true));
         newClass.setSecondary(config.getBoolean("secondary", false));
-        newClass.setTier(config.getInt("tier", 0));
+        newClass.setTier(config.getInt("tier", 1));
         if (newClass.getTier() < 0)
             newClass.setTier(0);
         // Load class allowed Armor + Weapons
