@@ -50,7 +50,7 @@ public class SkillExcavate extends ActiveSkill {
     public SkillResult use(Hero hero, String[] args) {
         broadcastExecuteText(hero);
 
-        int duration = SkillConfigManager.getUseSetting(hero, this, "duration-per-level", 100, false);
+        int duration = SkillConfigManager.getUseSetting(hero, this, "duration-per-level", 100, false) * hero.getSkillLevel(this);
         int multiplier = SkillConfigManager.getUseSetting(hero, this, "speed-multiplier", 2, false);
         if (multiplier > 20) {
             multiplier = 20;
