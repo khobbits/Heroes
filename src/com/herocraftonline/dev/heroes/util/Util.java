@@ -432,4 +432,9 @@ public final class Util {
         else
             return null;
     }
+    
+    public static double formatDouble(double d) {
+        int val = (int) (d * 1000);
+        return val / 1000d;
+    }
 }

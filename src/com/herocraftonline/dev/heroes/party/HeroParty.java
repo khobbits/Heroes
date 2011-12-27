@@ -18,6 +18,7 @@ import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.spout.gui.EntityBar;
 import com.herocraftonline.dev.heroes.util.Messaging;
+import com.herocraftonline.dev.heroes.util.Util;
 
 public class HeroParty {
 
@@ -224,6 +225,7 @@ public class HeroParty {
         }
 
         bonusExp *= Heroes.properties.partyBonus;
+        bonusExp = Util.formatDouble(bonusExp);
         
         for (Hero partyMember : inRangeMembers) {
             partyMember.gainExp(sharedExp + bonusExp, type);
