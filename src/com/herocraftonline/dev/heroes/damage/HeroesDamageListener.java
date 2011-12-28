@@ -674,7 +674,7 @@ public class HeroesDamageListener extends EntityListener {
             return (int) plugin.getHeroManager().getHero((Player) lEntity).getHealth();
         else {
             Integer hp = healthMap.get(lEntity);
-            return hp != null ? hp : lEntity.getMaxHealth();
+            return hp != null ? hp : getMaxHealth(lEntity);
         }
     }
 
