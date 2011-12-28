@@ -61,7 +61,7 @@ public class DamageManager {
         return creatureDamage.get(type);
     }
 
-    public Integer getEntityHealth(CreatureType type) {
+    public Integer getEntityMaxHealth(CreatureType type) {
         return creatureHealth.get(type);
     }
 

@@ -415,7 +415,7 @@ public class HeroesDamageListener extends EntityListener {
             percent *= hero.getMaxHealth();
             hero.setLastDamageCause(new HeroDamageCause((int) (double) percent, DamageCause.STARVATION));
         } else if (entity instanceof LivingEntity) {
-            Integer creatureHealth = damageManager.getEntityHealth(Util.getCreatureFromEntity(entity));
+            Integer creatureHealth = damageManager.getEntityMaxHealth(Util.getCreatureFromEntity(entity));
             if (creatureHealth != null)
                 percent *= creatureHealth;
         }
@@ -443,7 +443,7 @@ public class HeroesDamageListener extends EntityListener {
             percent *= hero.getMaxHealth();
             hero.setLastDamageCause(new HeroDamageCause((int) (double) percent, DamageCause.SUFFOCATION));
         } else if (entity instanceof LivingEntity) {
-            Integer creatureHealth = damageManager.getEntityHealth(Util.getCreatureFromEntity(entity));
+            Integer creatureHealth = damageManager.getEntityMaxHealth(Util.getCreatureFromEntity(entity));
             if (creatureHealth != null)
                 percent *= creatureHealth;
         }
@@ -480,7 +480,7 @@ public class HeroesDamageListener extends EntityListener {
                 event.setCancelled(true);
                 return 0;
             }
-            Integer creatureHealth = damageManager.getEntityHealth(Util.getCreatureFromEntity(entity));
+            Integer creatureHealth = damageManager.getEntityMaxHealth(Util.getCreatureFromEntity(entity));
             if (creatureHealth != null)
                 percent *= creatureHealth;
         }
@@ -523,7 +523,7 @@ public class HeroesDamageListener extends EntityListener {
                 return 0;
             }
             if (cause != DamageCause.FIRE_TICK) {
-                Integer creatureHealth = damageManager.getEntityHealth(Util.getCreatureFromEntity(entity));
+                Integer creatureHealth = damageManager.getEntityMaxHealth(Util.getCreatureFromEntity(entity));
                 if (creatureHealth != null)
                     damage *= creatureHealth;
             }
@@ -555,7 +555,7 @@ public class HeroesDamageListener extends EntityListener {
             if (plugin.getEffectManager().entityHasEffectType((LivingEntity) entity, EffectType.SAFEFALL)) 
                 return 0;
 
-            Integer creatureHealth = damageManager.getEntityHealth(Util.getCreatureFromEntity(entity));
+            Integer creatureHealth = damageManager.getEntityMaxHealth(Util.getCreatureFromEntity(entity));
             if (creatureHealth != null)
                 damage = (int) (damage * damagePercent * creatureHealth);
         }
@@ -664,7 +664,7 @@ public class HeroesDamageListener extends EntityListener {
         if (lEntity instanceof Player)
             return (int) plugin.getHeroManager().getHero((Player) lEntity).getMaxHealth();
         else {
-            Integer maxHP = plugin.getDamageManager().getEntityHealth(Util.getCreatureFromEntity(lEntity));
+            Integer maxHP = plugin.getDamageManager().getEntityMaxHealth(Util.getCreatureFromEntity(lEntity));
             return maxHP != null ? maxHP : lEntity.getMaxHealth();
         }
     }
@@ -673,7 +673,7 @@ public class HeroesDamageListener extends EntityListener {
         if (lEntity instanceof Player)
             return (int) plugin.getHeroManager().getHero((Player) lEntity).getHealth();
         else {
-            Integer hp = healthMap.get(lEntity);
+            Integer hp = healthMap.get(lEntity.getUniqueId());
             return hp != null ? hp : getMaxHealth(lEntity);
         }
     }

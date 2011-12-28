@@ -421,7 +421,7 @@ public class Heroes extends JavaPlugin {
                 percent = 1;
             return percent;
         } else {
-            Integer maxHealth = getDamageManager().getEntityHealth(Util.getCreatureFromEntity(lEntity));
+            Integer maxHealth = getDamageManager().getEntityMaxHealth(Util.getCreatureFromEntity(lEntity));
             if (maxHealth == null)
                 maxHealth = lEntity.getHealth();
             int percent = (int) (lEntity.getHealth() / Double.valueOf(maxHealth)) * 100;

@@ -41,7 +41,7 @@ public class PeriodicHealEffect extends PeriodicExpirableEffect {
         CreatureType cType = Util.getCreatureFromEntity(lEntity);
         if (cType == null)
             return;
-        int maxHealth = plugin.getDamageManager().getEntityHealth(cType);
+        int maxHealth = plugin.getDamageManager().getEntityMaxHealth(cType);
         lEntity.setHealth(tickHealth + lEntity.getHealth());
         if (lEntity.getHealth() > maxHealth) {
             lEntity.setHealth(maxHealth);
