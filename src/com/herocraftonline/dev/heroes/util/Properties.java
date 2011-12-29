@@ -68,11 +68,6 @@ public class Properties {
     public int manaRegenPercent;
     public int manaRegenInterval;
 
-    // Map Stuffs
-    public boolean mapUI;
-    public byte mapID;
-    public int mapPacketInterval;
-
     // Hats...
     public int hatsLevel;
     public boolean allowHats;
@@ -100,7 +95,6 @@ public class Properties {
         loadClassConfig(config.getConfigurationSection("classes"));
         loadProperties(config.getConfigurationSection("properties"));
         loadManaConfig(config.getConfigurationSection("mana"));
-        loadMapConfig(config.getConfigurationSection("mappartyui"));
         loadBedConfig(config.getConfigurationSection("bed"));
         loadWorldConfig(config.getConfigurationSection("worlds"));
         loadHatsConfig(config.getConfigurationSection("hats"));
@@ -122,19 +116,19 @@ public class Properties {
     private void loadLevelConfig(ConfigurationSection section) {
         if (section == null)
             return;
-        power = section.getDouble("power", 1.00);
-        maxExp = section.getInt("maxExperience", 100000);
-        maxLevel = section.getInt("maxLevel", 20);
-        partyBonus = section.getDouble("partyBonus", 0.20);
-        expLoss = section.getDouble("expLoss", 0.05);
-        pvpExpLossMultiplier = section.getDouble("pvpExpLossMultiplier", 1.0);
+        power = Util.toDouble(section.get("power", 1.00));
+        maxExp = Util.toInt(section.get("maxExperience", 100000));
+        maxLevel = Util.toInt(section.get("maxLevel", 20));
+        partyBonus = Util.toDouble(section.get("partyBonus", 0.20));
+        expLoss = Util.toDouble(section.get("expLoss", 0.05));
+        pvpExpLossMultiplier = Util.toDouble(section.get("pvpExpLossMultiplier", 1.0));
         levelsViaExpLoss = section.getBoolean("levelsViaExpLoss", false);
         masteryLoss = section.getBoolean("mastery-loss", false);
         noSpawnCamp = section.getBoolean("noSpawnCamp", false);
-        spawnCampRadius = section.getInt("spawnCampRadius", 7);
-        spawnCampExpMult = section.getDouble("spawnCampExpMult", .5);
+        spawnCampRadius = Util.toInt(section.get("spawnCampRadius", 7));
+        spawnCampExpMult = Util.toDouble(section.get("spawnCampExpMult", .5));
         resetOnDeath = section.getBoolean("resetOnDeath", false);
-        pvpLevelRange = section.getInt("pvpLevelRange", 50);
+        pvpLevelRange = Util.toInt(section.get("pvpLevelRange", 50));
         calcExp();
     }
     
@@ -148,29 +142,21 @@ public class Properties {
         resetProfOnPrimaryChange = section.getBoolean("resetProfOnPrimaryChange", false);
         lockPathTillMaster = section.getBoolean("lockPathTillMaster", false);
         lockAtHighestTier = section.getBoolean("lockAtHighestTier", false);
-        swapCost = section.getInt("swapcost", 0);
+        swapCost = Util.toInt(section.get("swapcost", 0));
         swapMasteryCost = section.getBoolean("swapMasteryCost", false);
-        oldClassSwapCost = section.getInt("oldClassSwapCost", 0);
+        oldClassSwapCost = Util.toInt(section.get("oldClassSwapCost", 0));
         firstSwitchFree = section.getBoolean("firstSwitchFree", true);
     }
 
     private void loadManaConfig(ConfigurationSection section) {
         if (section == null)
             return;
-        manaRegenInterval = section.getInt("regenInterval", 5);
-        manaRegenPercent = section.getInt("regenPercent", 5);
+        manaRegenInterval = Util.toInt(section.get("regenInterval", 5));
+        manaRegenPercent = Util.toInt(section.get("regenPercent", 5));
         // Out of bounds check
         if (manaRegenPercent > 100 || manaRegenPercent < 0) {
             manaRegenPercent = 5;
         }
-    }
-
-    private void loadMapConfig(ConfigurationSection section) {
-        if (section == null)
-            return;
-        mapUI = section.getBoolean("enabled", false);
-        mapID = (byte) section.getInt("id", 0);
-        mapPacketInterval = section.getInt("packetinterval", 20);
     }
     
     private void loadProperties(ConfigurationSection section) {

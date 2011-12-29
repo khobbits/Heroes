@@ -41,8 +41,8 @@ public class SkillOne extends ActiveSkill {
     @Override
     public void init() {
         super.init();
-        applyText = SkillConfigManager.getRaw(this, "apply-text", "%hero% gained a burst of speed!").replace("%hero%", "$1");
-        expireText = SkillConfigManager.getRaw(this, "expire-text", "%hero% returned to normal speed!").replace("%hero%", "$1");
+        applyText = SkillConfigManager.getRaw(this, Setting.APPLY_TEXT, "%hero% gained a burst of speed!").replace("%hero%", "$1");
+        expireText = SkillConfigManager.getRaw(this, Setting.EXPIRE_TEXT, "%hero% returned to normal speed!").replace("%hero%", "$1");
     }
 
     @Override
