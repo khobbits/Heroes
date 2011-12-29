@@ -39,6 +39,7 @@ public final class Util {
     public final static List<String> hoes;
     public final static List<String> weapons;
     public final static List<String> armors;
+    public final static List<String> tools;
 
     // Blocks that we consider transparent for skills
     public final static Set<Material> transparentBlocks;
@@ -86,13 +87,18 @@ public final class Util {
         hoes.add("IRON_HOE");
         hoes.add("GOLD_HOE");
         hoes.add("DIAMOND_HOE");
-
+        
+        tools = new ArrayList<String>(2);
+        tools.add("SHEARS");
+        tools.add("FISHING_ROD");
+        tools.addAll(shovels);
+        tools.addAll(hoes);
+        
         weapons = new ArrayList<String>(26);
         weapons.addAll(picks);
-        weapons.addAll(shovels);
         weapons.addAll(axes);
         weapons.addAll(swords);
-        weapons.addAll(hoes);
+        weapons.addAll(tools);
         weapons.add("BOW");
 
         armors = new ArrayList<String>(21);
@@ -310,6 +316,8 @@ public final class Util {
         case DIAMOND_SPADE:
         case DIAMOND_SWORD:
         case BOW:
+        case FISHING_ROD:
+        case SHEARS:
             return true;
         default:
             return false;
