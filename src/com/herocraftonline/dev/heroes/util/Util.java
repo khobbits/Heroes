@@ -424,9 +424,26 @@ public final class Util {
             return null;
     }
     
+    public static int toIntNonNull(Object val, String name) {
+        Integer newVal = toInt(val);
+        if (newVal == null)
+            throw new IllegalArgumentException(name + " must be a numeral!");
+        else
+            return newVal;
+    }
+    
+    public static double toDoubleNonNull(Object val, String name) {
+        Double newVal = toDouble(val);
+        if (newVal == null)
+            throw new IllegalArgumentException(name + " must be a numeral!");
+        else
+            return newVal;
+    }
+    
     public static Double toDouble(Object val) {
         if (!(val instanceof Number))
             return null;
+        
         if (val instanceof Integer)
             return ((Integer) val).doubleValue();
         else if (val instanceof Double)

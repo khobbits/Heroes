@@ -104,37 +104,38 @@ public class Properties {
         if (section == null)
             return;
         bedHeal = section.getBoolean("bedHeal", true);
-        healInterval = section.getInt("healInterval", 30);
-        healPercent = section.getInt("healPercent", 5);
+        healInterval = Util.toIntNonNull(section.get("healInterval", 30), "healInterval");
+        healPercent = Util.toIntNonNull(section.get("healPercent", 5), "healPercent");
     }
 
     private void loadHatsConfig(ConfigurationSection section) {
-        hatsLevel = section.getInt("level", 1);
+        hatsLevel = Util.toIntNonNull(section.get("level", 1), "level");
         allowHats = section.getBoolean("allowhatsplugin", false);
     }
 
     private void loadLevelConfig(ConfigurationSection section) {
         if (section == null)
             return;
-        power = Util.toDouble(section.get("power", 1.00));
-        maxExp = Util.toInt(section.get("maxExperience", 100000));
-        maxLevel = Util.toInt(section.get("maxLevel", 20));
-        partyBonus = Util.toDouble(section.get("partyBonus", 0.20));
-        expLoss = Util.toDouble(section.get("expLoss", 0.05));
-        pvpExpLossMultiplier = Util.toDouble(section.get("pvpExpLossMultiplier", 1.0));
+        power = Util.toDoubleNonNull(section.get("power", 1.00), "power");
+        maxExp = Util.toIntNonNull(section.get("maxExperience", 100000), "maxExperience");
+        maxLevel = Util.toIntNonNull(section.get("maxLevel", 20), "maxLevel");
+        partyBonus = Util.toDoubleNonNull(section.get("partyBonus", 0.20), "partyBonus");
+        expLoss = Util.toDoubleNonNull(section.get("expLoss", 0.05), "expLoss");
+        pvpExpLossMultiplier = Util.toDoubleNonNull(section.get("pvpExpLossMultiplier", 1.0), "pvpExpLossMultiplier");
         levelsViaExpLoss = section.getBoolean("levelsViaExpLoss", false);
         masteryLoss = section.getBoolean("mastery-loss", false);
         noSpawnCamp = section.getBoolean("noSpawnCamp", false);
-        spawnCampRadius = Util.toInt(section.get("spawnCampRadius", 7));
-        spawnCampExpMult = Util.toDouble(section.get("spawnCampExpMult", .5));
+        spawnCampRadius = Util.toIntNonNull(section.get("spawnCampRadius", 7), "spawnCampRadius");
+        spawnCampExpMult = Util.toDoubleNonNull(section.get("spawnCampExpMult", .5), "spawnCampExpMult");
         resetOnDeath = section.getBoolean("resetOnDeath", false);
-        pvpLevelRange = Util.toInt(section.get("pvpLevelRange", 50));
+        pvpLevelRange = Util.toIntNonNull(section.get("pvpLevelRange", 50), "pvpLevelRange");
         calcExp();
     }
     
     private void loadClassConfig(ConfigurationSection section) {
         if (section == null)
             return;
+        
         prefixClassName = section.getBoolean("prefixClassName", false);
         resetExpOnClassChange = section.getBoolean("resetExpOnClassChange", true);
         resetMasteryOnClassChange = section.getBoolean("resetMasteryOnClassChange", false);
@@ -142,17 +143,17 @@ public class Properties {
         resetProfOnPrimaryChange = section.getBoolean("resetProfOnPrimaryChange", false);
         lockPathTillMaster = section.getBoolean("lockPathTillMaster", false);
         lockAtHighestTier = section.getBoolean("lockAtHighestTier", false);
-        swapCost = Util.toInt(section.get("swapcost", 0));
         swapMasteryCost = section.getBoolean("swapMasteryCost", false);
-        oldClassSwapCost = Util.toInt(section.get("oldClassSwapCost", 0));
         firstSwitchFree = section.getBoolean("firstSwitchFree", true);
+        swapCost = Util.toIntNonNull(section.get("swapcost", 0), "swapcost");
+        oldClassSwapCost = Util.toIntNonNull(section.get("oldClassSwapCost", 0), "oldClassSwapCost");
     }
 
     private void loadManaConfig(ConfigurationSection section) {
         if (section == null)
             return;
-        manaRegenInterval = Util.toInt(section.get("regenInterval", 5));
-        manaRegenPercent = Util.toInt(section.get("regenPercent", 5));
+        manaRegenInterval = Util.toIntNonNull(section.get("regenInterval", 5), "regenInterval");
+        manaRegenPercent = Util.toIntNonNull(section.get("regenPercent", 5), "regenPercent");
         // Out of bounds check
         if (manaRegenPercent > 100 || manaRegenPercent < 0) {
             manaRegenPercent = 5;
@@ -165,11 +166,11 @@ public class Properties {
         storageType = section.getString("storage-type");
         iConomy = section.getBoolean("iConomy", false);
         debug = section.getBoolean("debug", false);
-        foodHealPercent = Util.toDouble(section.get("foodHealPercent", .05));
-        globalCooldown = Util.toInt(section.get("globalCooldown", 1));
-        blockTrackingDuration = Util.toInt(section.get("block-tracking-duration", 10 * 60 * 1000));
-        maxTrackedBlocks = Util.toInt(section.get("max-tracked-blocks", 1000));
-        enchantXPMultiplier = Util.toDouble(section.get("enchant-exp-mult", 1));
+        foodHealPercent = Util.toDoubleNonNull(section.get("foodHealPercent", .05), "foodHealPercent");
+        globalCooldown = Util.toIntNonNull(section.get("globalCooldown", 1), "globalCooldown");
+        blockTrackingDuration = Util.toIntNonNull(section.get("block-tracking-duration", 10 * 60 * 1000), "block-tracking-duration");
+        maxTrackedBlocks = Util.toIntNonNull(section.get("max-tracked-blocks", 1000), "max-tracked-blocks");
+        enchantXPMultiplier = Util.toDoubleNonNull(section.get("enchant-exp-mult", 1), "enchant-exp-mult");
     }
 
     private void loadWorldConfig(ConfigurationSection section) {
