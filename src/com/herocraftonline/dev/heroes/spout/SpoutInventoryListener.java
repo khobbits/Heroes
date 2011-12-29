@@ -56,9 +56,15 @@ public class SpoutInventoryListener extends InventoryListener {
         if (event.isCancelled() || Heroes.properties.enchantXPMultiplier == 0)
             return;
         
+
+        Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
+        if (!hero.hasExperienceType(ExperienceType.ENCHANTING)) {
+            event.setCancelled(true);
+            return;
+        }
+        
         double xpCost = Heroes.properties.enchantXPMultiplier * (event.getLevelBefore() - event.getLevelAfter());
         event.setLevelAfter(event.getLevelBefore());
-        Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
         hero.gainExp(-xpCost, ExperienceType.ENCHANTING);
     }    
 }

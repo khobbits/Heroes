@@ -111,7 +111,6 @@ public class Hero {
         skills.put(skill.toLowerCase(), section);
     }
 
-    @Deprecated
     public boolean hasExperienceType(ExperienceType type) {
         return heroClass.hasExperiencetype(type) || (secondClass != null && secondClass.hasExperiencetype(type));
     }
