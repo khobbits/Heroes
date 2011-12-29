@@ -87,7 +87,7 @@ public abstract class Skill extends BasicCommand {
      *            this array
      */
     public void broadcast(Location source, String message, Object... args) {
-        if (message == null || message.isEmpty())
+        if (message == null || message.isEmpty() || message.equalsIgnoreCase("off"))
             return;
 
         final Player[] players = plugin.getServer().getOnlinePlayers();
