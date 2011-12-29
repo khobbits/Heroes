@@ -41,14 +41,15 @@ public class SpoutInventoryListener extends InventoryListener {
         if (event.getCursor() != null && event.getCursor().getType() != result.getType())
             return;
 
+        Player player = event.getPlayer();
+        Hero hero = plugin.getHeroManager().getHero(player);
+        if (!hero.canCraft(result)) {
+            Messaging.send(hero.getPlayer(), "You don't know how to craft $1", result.getType().name().toLowerCase().replace("_", " "));
+            event.setCancelled(true);
+            return;
+        }
+
         if (Heroes.properties.craftingExp.containsKey(result.getType())) {
-            Player player = event.getPlayer();
-            Hero hero = plugin.getHeroManager().getHero(player);
-            if (!hero.canCraft(result)) {
-                Messaging.send(hero.getPlayer(), "You don't know how to craft $1", result.getType().name().toLowerCase().replace("_", " "));
-                event.setCancelled(true);
-                return;
-            }
             if (hero.canGain(ExperienceType.CRAFTING)) {
                 hero.gainExp(Heroes.properties.craftingExp.get(result.getType()) * amountCrafted, ExperienceType.CRAFTING);
                 return;

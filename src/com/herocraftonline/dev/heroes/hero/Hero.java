@@ -1257,7 +1257,7 @@ public class Hero {
             if (level != -1 && level <= getLevel(secondClass))
                 return true;
         }
-
+        
         return false;
     }
 }
