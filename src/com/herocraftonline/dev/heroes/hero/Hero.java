@@ -1101,6 +1101,16 @@ public class Hero {
         this.verbose = verbose;
     }
 
+    public HeroClass getEnchantingClass() {
+        int level = 0;
+        if (heroClass.hasExperiencetype(ExperienceType.ENCHANTING))
+            level = getLevel(heroClass);
+        
+        if (secondClass != null && secondClass.hasExperiencetype(ExperienceType.ENCHANTING) && getLevel(secondClass) > level)
+            return secondClass;
+        
+        return level != 0 ? heroClass : null;
+    }
     /**
      * Syncs the Hero's current Experience with the minecraft experience (should also sync the level bar)
      */

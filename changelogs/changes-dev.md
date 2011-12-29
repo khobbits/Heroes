@@ -27,6 +27,8 @@ Version dev
 * New xp source Enchanting - only used for removing xp from enchanting right now
 ** enchanting can/will de-level
 ** Classes must have the xp source for enchanting to be effected.
+** Only players with XP source enchanting may open enchanting blocks
+** opening the enchanting display will now auto-swap your level bar to the best class for enchanting
 
 ==== **API:** ====
 
