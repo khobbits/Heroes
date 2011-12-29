@@ -3,6 +3,7 @@ package com.herocraftonline.dev.heroes.spout;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.getspout.spoutapi.event.inventory.InventoryCraftEvent;
+import org.getspout.spoutapi.event.inventory.InventoryEnchantEvent;
 import org.getspout.spoutapi.event.inventory.InventoryListener;
 
 import com.herocraftonline.dev.heroes.Heroes;
@@ -49,4 +50,15 @@ public class SpoutInventoryListener extends InventoryListener {
             }
         }
     }
+
+    @Override
+    public void onInventoryEnchant(InventoryEnchantEvent event) {
+        if (event.isCancelled() || Heroes.properties.enchantXPMultiplier == 0)
+            return;
+        
+        double xpCost = Heroes.properties.enchantXPMultiplier * (event.getLevelBefore() - event.getLevelAfter());
+        event.setLevelAfter(event.getLevelBefore());
+        Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
+        hero.gainExp(-xpCost, ExperienceType.ENCHANTING);
+    }    
 }

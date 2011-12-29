@@ -319,7 +319,7 @@ public class Hero {
             if (isMaster(hc) && source != ExperienceType.ADMIN && !prop.masteryLoss) {
                 gainedExp = 0;
                 continue;
-            } else if (currentLevel > newLevel && !prop.levelsViaExpLoss && source != ExperienceType.ADMIN) {
+            } else if (currentLevel > newLevel && !prop.levelsViaExpLoss && source != ExperienceType.ADMIN && source != ExperienceType.ENCHANTING) {
                 gainedExp = Properties.getExperience(currentLevel) - (exp - 1);
             }
 

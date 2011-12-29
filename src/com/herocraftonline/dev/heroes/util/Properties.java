@@ -57,6 +57,7 @@ public class Properties {
     public int maxTrackedBlocks;
     public double foodHealPercent = .05;
     public int globalCooldown = 0;
+    public double enchantXPMultiplier;
 
     // Bed Stuffs
     public boolean bedHeal;
@@ -182,6 +183,7 @@ public class Properties {
         globalCooldown = section.getInt("globalCooldown", 1);
         blockTrackingDuration = section.getInt("block-tracking-duration", 10 * 60 * 1000);
         maxTrackedBlocks = section.getInt("max-tracked-blocks", 1000);
+        enchantXPMultiplier = section.getInt("enchant-exp-mult", 1);
     }
 
     private void loadWorldConfig(ConfigurationSection section) {

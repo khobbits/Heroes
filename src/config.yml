@@ -28,6 +28,7 @@ properties:
     storage-type: yml #currently only supports yml
     iConomy: false #use of the cost system
     debug: false #use this at your own risk
+    enchant-exp-mult: 3 #XP cost multiplier for enchants - set to 0 to disable
     globalCooldown: 1 #Seconds a hero must wait before using a second skill
     block-tracking-duration: 900000 #duration to track for no-exp
     max-tracked-blocks: 2000 #max blocks to track for no-exp

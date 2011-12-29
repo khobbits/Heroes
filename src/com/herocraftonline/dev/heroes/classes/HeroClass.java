@@ -463,6 +463,7 @@ public class HeroClass {
         KILLING,
         PVP,
         MINING,
+        ENCHANTING,
         FARMING,
         CRAFTING,
         LOGGING,

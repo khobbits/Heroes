@@ -23,6 +23,10 @@ Version dev
 ** supports denied-items to prevent users from crafting certain items, no matter what
 * Party xp sharing now operates differently
 ** the partyBonus - value in the config.yml should now be between 0 and 1 - update accordingly!
+* XP Loss from enchanting
+* New xp source Enchanting - only used for removing xp from enchanting right now
+** enchanting can/will de-level
+** Classes must have the xp source for enchanting to be effected.
 
 ==== **API:** ====
 
