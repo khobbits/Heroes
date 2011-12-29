@@ -12,6 +12,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerBedLeaveEvent;
 import org.bukkit.event.player.PlayerFishEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -94,6 +95,21 @@ public class HPlayerListener extends PlayerListener {
         Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
         if (hero.hasEffect("BedHeal")) {
             hero.removeEffect(hero.getEffect("BedHeal"));
+        }
+    }
+
+    @Override
+    public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
+        if (event.isCancelled())
+            return;
+        
+        Player player = event.getPlayer();
+        Hero hero = plugin.getHeroManager().getHero(player);
+        
+        if (!hero.canEquipItem(player.getInventory().getHeldItemSlot())) {
+            event.setCancelled(true);
+            Util.syncInventory(player, plugin);
+            return;
         }
     }
 
