@@ -179,11 +179,11 @@ public class Properties {
         storageType = section.getString("storage-type");
         iConomy = section.getBoolean("iConomy", false);
         debug = section.getBoolean("debug", false);
-        foodHealPercent = section.getDouble("foodHealPercent", .05);
-        globalCooldown = section.getInt("globalCooldown", 1);
-        blockTrackingDuration = section.getInt("block-tracking-duration", 10 * 60 * 1000);
-        maxTrackedBlocks = section.getInt("max-tracked-blocks", 1000);
-        enchantXPMultiplier = section.getInt("enchant-exp-mult", 1);
+        foodHealPercent = Util.toDouble(section.get("foodHealPercent", .05));
+        globalCooldown = Util.toInt(section.get("globalCooldown", 1));
+        blockTrackingDuration = Util.toInt(section.get("block-tracking-duration", 10 * 60 * 1000));
+        maxTrackedBlocks = Util.toInt(section.get("max-tracked-blocks", 1000));
+        enchantXPMultiplier = Util.toDouble(section.get("enchant-exp-mult", 1));
     }
 
     private void loadWorldConfig(ConfigurationSection section) {
