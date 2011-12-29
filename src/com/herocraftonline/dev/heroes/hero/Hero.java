@@ -1105,7 +1105,18 @@ public class Hero {
      * Syncs the Hero's current Experience with the minecraft experience (should also sync the level bar)
      */
     public void syncExperience() {
-        int level = getLevel(heroClass);
+        if (!isMaster(heroClass) || secondClass == null)
+            syncExperience(heroClass);
+        else
+            syncExperience(secondClass);
+    }
+
+    /**
+     * Syncs the experience bar with the client from the given class
+     * @param hc
+     */
+    public void syncExperience(HeroClass hc) {
+        int level = getLevel(hc);
         int currentLevelXP = Properties.getExperience(level);
 
         double maxLevelXP = Properties.getExperience(level + 1) - currentLevelXP;
