@@ -29,17 +29,13 @@ public class HeroParty {
     private final Heroes plugin;
     private LinkedList<String> invites = new LinkedList<String>();
 
-    private static final double xpmult2, xpmult3, xpmult4, xpmult5, xpmult6, xpmult7, xpmult8, xpmult9 ,xpmult10;
+    private static final double xpmult2, xpmult3, xpmult4, xpmult5, xpmult6;
     static {
         xpmult2 = Math.log(2) * .4650922;
         xpmult3 = Math.log(3) * .4650922;
         xpmult4 = Math.log(4) * .4650922;
         xpmult5 = Math.log(5) * .4650922;
         xpmult6 = Math.log(6) * .4650922;
-        xpmult6 = Math.log(7) * .4650922;
-        xpmult6 = Math.log(8) * .4650922;
-        xpmult6 = Math.log(9) * .4650922;
-        xpmult6 = Math.log(10) * .4650922;
     }
 
 
@@ -223,18 +219,6 @@ public class HeroParty {
             break;
         case 6:
             bonusExp = amount * xpmult6;
-            break;
-        case 7:
-            bonusExp = amount * xpmult7;
-            break;
-        case 8:
-            bonusExp = amount * xpmult8;
-            break;
-        case 9:
-            bonusExp = amount * xpmult9;
-            break;
-        case 10:
-            bonusExp = amount * xpmult10;
             break;
         default:
             bonusExp = 0;
