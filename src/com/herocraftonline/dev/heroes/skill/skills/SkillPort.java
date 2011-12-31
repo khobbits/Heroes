@@ -69,7 +69,7 @@ public class SkillPort extends ActiveSkill {
                 return SkillResult.NORMAL;
             }
 
-            Location castLocation = player.getLocation();
+            Location castLocation = player.getLocation().clone();
             for (Hero pHero : hero.getParty().getMembers()) {
                 if (!castLocation.getWorld().equals(player.getWorld()))
                     continue;
