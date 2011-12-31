@@ -64,8 +64,7 @@ public class SkillPickPocket extends TargettedSkill {
         if (!(target instanceof Player))
             return SkillResult.INVALID_TARGET;
 
-        Hero tHero = plugin.getHeroManager().getHero((Player) target);
-        Player tPlayer = tHero.getPlayer();
+        Player tPlayer = (Player) target;        
 
         double chance = SkillConfigManager.getUseSetting(hero, this, "base-chance", 0.1, false) + (SkillConfigManager.getUseSetting(hero, this, Setting.CHANCE_LEVEL, 0.02, false) * hero.getLevel());
 
