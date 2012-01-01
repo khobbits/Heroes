@@ -26,7 +26,7 @@ public class SpoutInventoryListener extends InventoryListener {
 
     @Override
     public void onInventoryCraft(InventoryCraftEvent event) {
-        if (event.getResult() == null)
+        if (event.getResult() == null || event.isCancelled())
             return;
 
         if (event.isShiftClick() && event.getPlayer().getInventory().firstEmpty() == -1)

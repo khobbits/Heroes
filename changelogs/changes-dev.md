@@ -23,12 +23,12 @@ Version dev
 ** supports denied-items to prevent users from crafting certain items, no matter what
 * Party xp sharing now operates differently
 ** the partyBonus - value in the config.yml should now be between 0 and 1 - update accordingly!
-* XP Loss from enchanting
 * New xp source Enchanting - only used for removing xp from enchanting right now
 ** enchanting can/will de-level
-** Classes must have the xp source for enchanting to be effected.
-** Only players with XP source enchanting may open enchanting blocks
+** Classes must have the xp source to enchant any item.
+** Only players with XP source enchanting may open enchanting tables
 ** opening the enchanting display will now auto-swap your level bar to the best class for enchanting
+** REQUIRES SPOUTPLUGIN
 
 ==== **API:** ====
 
@@ -46,6 +46,9 @@ Version dev
 * PickPocket - (NEW!)
 ** allows a player to steal an item from another 
 ** Will not steal armor/items in the hotbar
+* Enchant - (NEW!)
+** Restricts classes so they must be the level specified to enchant an item with the given enchantment
+** REQUIRES SPOUTPLUGIN!
 * FireArrow
 ** Fixed not expiring properly
 * IceArrow - (Re-Added!)

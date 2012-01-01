@@ -314,7 +314,7 @@ public class Heroes extends JavaPlugin {
         if (useSpout) {
             siListener = new SpoutInventoryListener(this);
             spoutData = new SpoutData(this);
-            getServer().getPluginManager().registerEvent(Type.CUSTOM_EVENT, siListener, Priority.Monitor, this);
+            getServer().getPluginManager().registerEvent(Type.CUSTOM_EVENT, siListener, Priority.Highest, this);
         }
     }
 

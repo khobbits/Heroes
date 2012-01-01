@@ -1111,6 +1111,7 @@ public class Hero {
         
         return level != 0 ? heroClass : null;
     }
+    
     /**
      * Syncs the Hero's current Experience with the minecraft experience (should also sync the level bar)
      */
