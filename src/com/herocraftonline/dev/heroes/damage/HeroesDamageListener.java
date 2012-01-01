@@ -72,6 +72,9 @@ public class HeroesDamageListener extends EntityListener {
         if (event.getRegainReason() == RegainReason.SATIATED) {
             double healPercent = Heroes.properties.foodHealPercent;
             amount = maxHealth * healPercent;
+        } else if (event.getRegainReason() == RegainReason.CUSTOM) {
+            double healPercent = amount / 20.0;
+            amount = hero.getMaxHealth() * healPercent;
         }
 
         double newHeroHealth = hero.getHealth() + amount;
