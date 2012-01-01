@@ -37,8 +37,8 @@ public class SkillFishing extends PassiveSkill {
     public ConfigurationSection getDefaultConfig() {
         ConfigurationSection node = super.getDefaultConfig();
         node.set("chance-per-level", .001);
-        node.set("special-item-level", 5);
-        node.set("enable-special-item", false);
+        node.set("leather-level", 5);
+        node.set("enable-leather", false);
         return node;
     }
 
@@ -63,8 +63,8 @@ public class SkillFishing extends PassiveSkill {
                 Player player = hero.getPlayer();
                 if (chance < SkillConfigManager.getUseSetting(hero, skill, Setting.CHANCE_LEVEL, .001, false) * hero.getSkillLevel(skill)){ //if the chance
                     
-                        int specialitemlvl = SkillConfigManager.getUseSetting(hero, skill, "special-item-level", 5, true);
-                        if (hero.getLevel() >= specialitemlvl && SkillConfigManager.getUseSetting(hero, skill, "enable-special-item", false)){ //if fishing leather is enabled and have the level
+                        int leatherlvl = SkillConfigManager.getUseSetting(hero, skill, "leather-level", 5, true);
+                        if (hero.getLevel() >= leatherlvl && SkillConfigManager.getUseSetting(hero, skill, "enable-leather", false)){ //if fishing leather is enabled and have the level
                             
                             if (getCaught != null){ //If not null
                                 switch(Util.rand.nextInt(6)){
