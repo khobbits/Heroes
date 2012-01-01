@@ -29,6 +29,9 @@ Version dev
 ** Only players with XP source enchanting may open enchanting tables
 ** opening the enchanting display will now auto-swap your level bar to the best class for enchanting
 ** REQUIRES SPOUTPLUGIN
+* Added Building XP Type
+** It triggers whenever a player places a block of the type defined (similar to breakage)
+** It does NOT log recently broken blocks, so you'll want to set this to a lower value than gathering blocks as it could be used to chain gain xp easily.
 
 ==== **API:** ====
 

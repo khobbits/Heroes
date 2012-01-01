@@ -470,7 +470,8 @@ public class HeroClass {
         DEATH,
         ADMIN,
         EXTERNAL,
-        FISHING;
+        FISHING,
+        BUILDING;
     }
 
 

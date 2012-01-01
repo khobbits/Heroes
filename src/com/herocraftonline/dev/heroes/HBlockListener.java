@@ -104,12 +104,24 @@ public class HBlockListener extends BlockListener {
         Properties prop = Heroes.properties;
         if (prop.disabledWorlds.contains(block.getWorld().getName()))
             return;
+        
+        if (prop.buildingExp.containsKey(material)) {
+            Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
+            if (hero.hasExperienceType(ExperienceType.BUILDING) && !hero.hasParty()) {
+                hero.gainExp(prop.buildingExp.get(material), ExperienceType.BUILDING);
+            } else if (hero.hasParty()) {
+                hero.getParty().gainExp(prop.buildingExp.get(material), ExperienceType.BUILDING, event.getBlock().getLocation());
+            }
+        }
+        
+        
+        
         if (prop.miningExp.containsKey(material) || prop.loggingExp.containsKey(material) || prop.farmingExp.containsKey(material)) {
-            Location loc = block.getLocation();
-            placedBlocks.put(loc, System.currentTimeMillis());
+            placedBlocks.put(block.getLocation().clone(), System.currentTimeMillis());
         }
     }
 
+    
     private boolean wasBlockPlaced(Block block) {
         Location loc = block.getLocation();
 
