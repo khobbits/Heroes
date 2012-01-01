@@ -40,6 +40,9 @@ Version dev
 
 ==== **Skills:** ====
 
+* Alchemy - (NEW!)
+** Restricts players from using the brewing stand until they gain the appropraite level
+** REQUIRES SPOUT
 * Backstab - (Re-Added!)
 * Charge 
 ** now 'jumps' toward the targeted player and can be configured to deal damage, stun, slow, or root nearby enemies on langing, or all of the above.
