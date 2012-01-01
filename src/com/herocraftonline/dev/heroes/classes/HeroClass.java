@@ -471,6 +471,7 @@ public class HeroClass {
         ADMIN,
         EXTERNAL,
         FISHING,
+        QUESTING,
         BUILDING;
     }
 

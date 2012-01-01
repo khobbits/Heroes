@@ -39,6 +39,7 @@ Version dev
 * party xp now needs to be handled through the party API, not the Hero.
 * The MapUI has been removed
 * All skills that damage a target must now use skill.entityDamage - bukkit no longer provides direct support for firing events via .damage anymore
+* Added Questing XP source for external plugins
 
 
 ==== **Skills:** ====
@@ -52,6 +53,8 @@ Version dev
 * PickPocket - (NEW!)
 ** allows a player to steal an item from another 
 ** Will not steal armor/items in the hotbar
+* Port
+** Fixed a bug that caused it to think the cast location was the players current location (rather than saving it)
 * Enchant - (NEW!)
 ** Restricts classes so they must be the level specified to enchant an item with the given enchantment
 ** REQUIRES SPOUTPLUGIN!
