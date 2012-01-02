@@ -2,6 +2,7 @@ package com.herocraftonline.dev.heroes.skill.skills;
 
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
@@ -17,20 +18,23 @@ import com.herocraftonline.dev.heroes.skill.PassiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.SkillConfigManager;
 import com.herocraftonline.dev.heroes.skill.SkillType;
+import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillEnchant extends PassiveSkill {
-    
+
     public SkillEnchant(Heroes plugin) {
         super(plugin, "Enchant");
-        
+
         setDescription("You are able to enchant items!");
         setArgumentRange(0, 0);
         setTypes(SkillType.KNOWLEDGE, SkillType.ITEM);
         setEffectTypes(EffectType.BENEFICIAL);
-        
+
         if (Heroes.useSpout) {
             registerEvent(Type.CUSTOM_EVENT, new SkillEnchantListener(this), Priority.Lowest);
+        } else {
+            Heroes.log(Level.WARNING, "SkillEnchant requires Spout! Remove from your skills directory if you will not use!");
         }
     }
 
@@ -57,26 +61,27 @@ public class SkillEnchant extends PassiveSkill {
         section.set(Setting.APPLY_TEXT.node(), "");
         return section;
     }
-    
+
     public class SkillEnchantListener extends InventoryListener {
 
         private final Skill skill;
-        
+
         public SkillEnchantListener(Skill skill) {
             this.skill = skill;
         }
-        
+
         @Override
         public void onInventoryEnchant(InventoryEnchantEvent event) {
             if (event.isCancelled())
                 return;
-            
+
             Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
             if (!hero.hasEffect(getName())) {
+                Messaging.send(event.getPlayer(), "You don't have the skill to enchant an item!");
                 event.setCancelled(true);
                 return;
             }
-            
+
             List<String> enchants = SkillConfigManager.getUseSettingKeys(hero, skill);
             Map<Enchantment, Integer> newEnchants = event.getResult().getEnchantments();
             for (Enchantment enchant : newEnchants.keySet()) {

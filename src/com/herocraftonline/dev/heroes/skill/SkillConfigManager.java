@@ -28,12 +28,14 @@ public class SkillConfigManager {
     public static Configuration standardSkillConfig;
     public static Configuration defaultSkillConfig = new MemoryConfiguration();
 
+    public static File dataFolder;
+
     public static Map<String, Configuration> classSkillConfigs = new HashMap<String, Configuration>();
     public static File skillConfigFile;
     public static File outsourcedSkillConfigFile;
 
     public SkillConfigManager(Heroes plugin) {
-        File dataFolder = plugin.getDataFolder();
+        dataFolder = plugin.getDataFolder();
         skillConfigFile = new File(dataFolder, "skills.yml");
         outsourcedSkillConfigFile = new File(dataFolder, "permission-skills.yml");
         plugin.getConfigManager().checkForConfig(outsourcedSkillConfigFile);
@@ -44,10 +46,17 @@ public class SkillConfigManager {
         standardSkillConfig = YamlConfiguration.loadConfiguration(skillConfigFile);
         standardSkillConfig.setDefaults(defaultSkillConfig);
         standardSkillConfig.options().copyDefaults(true);
-
+        
         // Setup the outsourced skill configuration
         outsourcedSkillConfig = YamlConfiguration.loadConfiguration(outsourcedSkillConfigFile);
         outsourcedSkillConfig.setDefaults(standardSkillConfig);
+        
+        //MERGE!
+        for (String key : standardSkillConfig.getKeys(true)) {
+            if (standardSkillConfig.isConfigurationSection(key))
+                continue;
+            outsourcedSkillConfig.set(key, standardSkillConfig.get(key));
+        }
     }
 
     public static void saveSkillConfig() {
@@ -77,16 +86,27 @@ public class SkillConfigManager {
 
         for (String key : section.getKeys(true)) {
             if (section.isConfigurationSection(key))
+                classSection.createSection(key);
+        }
+
+        for (String key : section.getKeys(true)) {
+            if (section.isConfigurationSection(key))
                 continue;
+            
             classSection.set(key, section.get(key));
         }
     }
 
-    public void loadSkillConfig(Skill skill) {
+    public void loadSkillDefaults(Skill skill) {
         if (skill instanceof OutsourcedSkill)
             return;
         ConfigurationSection dSection = skill.getDefaultConfig();
         ConfigurationSection newSection = defaultSkillConfig.createSection(skill.getName());
+        //Loop through once and create all the keys
+        for (String key : dSection.getKeys(true)) {
+            if (dSection.isConfigurationSection(key))
+                newSection.createSection(key);
+        }
         for (String key : dSection.getKeys(true)) {
             if (dSection.isConfigurationSection(key)) {
                 //Skip section as they would overwrite data here
@@ -95,18 +115,18 @@ public class SkillConfigManager {
             newSection.set(key, dSection.get(key));
         }
     }
-    
+
     // Because bukkit can't handle setting defaults before sections exist
     public static void setClassDefaults() {
         for (Configuration config : classSkillConfigs.values()) {
             config.setDefaults(outsourcedSkillConfig);
         }
     }
-    
+
     //------------------------//
     // Data retrieval methods //
     //------------------------//
-    
+
     /**
      * Gets a string setting at the given path, if the value does not exist in the standard configuration
      * this will instead return the default value
@@ -119,7 +139,7 @@ public class SkillConfigManager {
     public static String getRaw(Skill skill, String setting, String def) {
         return outsourcedSkillConfig.getString(skill.getName() + "." + setting, def);
     }
-    
+
     /**
      * Gets a string setting at the given path, if the value does not exist in the standard configuration
      * this will instead return the default value
@@ -132,7 +152,7 @@ public class SkillConfigManager {
     public static String getRaw(Skill skill, Setting setting, String def) {
         return getRaw(skill, setting.node(), def);
     }
-    
+
     /**
      * Gets a boolean setting at the given path, if the value does not exist in the standard configuration
      * this will instead return the default value
@@ -145,7 +165,7 @@ public class SkillConfigManager {
     public static boolean getRaw(Skill skill, Setting setting, boolean def) {
         return getRaw(skill, setting.node(), def);
     }
-    
+
     /**
      * Gets a boolean setting at the given path, if the value does not exist in the standard configuration
      * this will instead return the default value
@@ -158,7 +178,7 @@ public class SkillConfigManager {
     public static boolean getRaw(Skill skill, String setting, boolean def) {
         return outsourcedSkillConfig.getBoolean(skill.getName() + "." + setting, def);
     }
-    
+
     /**
      * Gets the default Keys for the given skill at the given path.
      * If no keys are found or if the path is not a configuration section an empty set will be returned
@@ -177,7 +197,7 @@ public class SkillConfigManager {
 
         return outsourcedSkillConfig.getConfigurationSection(path).getKeys(false);
     }
-    
+
     public static Object getSetting(HeroClass hc, Skill skill, String setting) {
         Configuration config = classSkillConfigs.get(hc.getName());
         if (config == null || !config.isConfigurationSection(skill.getName()))
@@ -250,10 +270,10 @@ public class SkillConfigManager {
             vals.addAll(getSettingKeys(hero.getHeroClass(), skill, setting));
         if (hero.canSecondUseSkill(skill))
             vals.addAll(getSettingKeys(hero.getSecondClass(), skill, setting));
-        
+
         return vals;
     }
-    
+
     public static List<String> getUseSettingKeys(Hero hero, Skill skill) {
         Set<String> keys = new HashSet<String>();
         ConfigurationSection section = outsourcedSkillConfig.getConfigurationSection(skill.getName());
@@ -293,26 +313,26 @@ public class SkillConfigManager {
         else
             return outsourcedSkillConfig.getInt(name + "." + Setting.LEVEL.node(), def);
     }
-    
+
     public static int getUseSetting(Hero hero, Skill skill, Setting setting, int def, boolean lower) {
         if (setting == Setting.LEVEL)
             return getLevel(hero, skill, def);
         else
             return getUseSetting(hero, skill, setting.node(), def, lower);
     }
-    
+
     public static String getUseSetting(Hero hero, Skill skill, Setting setting, String def) {
         return getUseSetting(hero, skill, setting.node(), def);
     }
-    
+
     public static double getUseSetting(Hero hero, Skill skill, Setting setting, double def, boolean lower) {
         return getUseSetting(hero, skill, setting.node(), def, lower);
     }
-    
+
     public static boolean getUseSetting(Hero hero, Skill skill, Setting setting, boolean def) {
         return getUseSetting(hero, skill, setting.node(), def);
     }
-    
+
     public static int getUseSetting(Hero hero, Skill skill, String setting, int def, boolean lower) {
         if (setting.equalsIgnoreCase("level"))
             throw new IllegalArgumentException("Do not use getSetting() for grabbing a hero level!");

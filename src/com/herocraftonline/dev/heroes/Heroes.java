@@ -204,6 +204,8 @@ public class Heroes extends JavaPlugin {
             return;
         }
         setupEconomy();
+        // Check for Spout
+        setupSpout();
         setupSMS();
         properties.load(this);
         configManager = new ConfigManager(this);
@@ -223,9 +225,6 @@ public class Heroes extends JavaPlugin {
         heroManager = new HeroManager(this);
         damageManager = new DamageManager(this);
         skillManager = new SkillManager(this);
-
-        // Check for Spout
-        setupSpout();
 
         // Load in the rest of the values into their managers
         configManager.loadManagers();

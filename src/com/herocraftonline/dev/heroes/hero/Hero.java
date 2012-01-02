@@ -300,7 +300,7 @@ public class Hero {
             // adjust exp using the class modifier if it's positive
             if (gainedExp > 0 && source != ExperienceType.ADMIN) {
                 gainedExp *= hc.getExpModifier();
-            } else if (source != ExperienceType.ADMIN && isMaster(hc) && (!prop.masteryLoss || !prop.levelsViaExpLoss))
+            } else if (source != ExperienceType.ADMIN && source != ExperienceType.ENCHANTING  && isMaster(hc) && (!prop.masteryLoss || !prop.levelsViaExpLoss))
                 return;
 
             //This is called once for each class
@@ -315,7 +315,7 @@ public class Hero {
             int currentLevel = Properties.getLevel(exp);
             int newLevel = Properties.getLevel(exp + gainedExp);
 
-            if (isMaster(hc) && source != ExperienceType.ADMIN && !prop.masteryLoss) {
+            if (isMaster(hc) && source != ExperienceType.ADMIN && source != ExperienceType.ENCHANTING && !prop.masteryLoss) {
                 gainedExp = 0;
                 continue;
             } else if (currentLevel > newLevel && !prop.levelsViaExpLoss && source != ExperienceType.ADMIN && source != ExperienceType.ENCHANTING) {

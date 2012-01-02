@@ -178,7 +178,7 @@ public class SkillManager {
                 Class<? extends Skill> skillClass = clazz.asSubclass(Skill.class);
                 Constructor<? extends Skill> ctor = skillClass.getConstructor(plugin.getClass());
                 Skill skill = ctor.newInstance(plugin);
-                plugin.getSkillConfigs().loadSkillConfig(skill);
+                plugin.getSkillConfigs().loadSkillDefaults(skill);
                 skill.init();
                 return skill;
             } else

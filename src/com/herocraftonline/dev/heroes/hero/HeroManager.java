@@ -116,11 +116,11 @@ public class HeroManager {
 
     public void performSkillChecks(Hero hero) {
         for (Skill skill : plugin.getSkillManager().getSkills()) {
-            if (skill instanceof OutsourcedSkill)
+            if (skill instanceof OutsourcedSkill) {
                 ((OutsourcedSkill) skill).tryLearningSkill(hero);
-
-            if (skill instanceof PassiveSkill)
+            } else if (skill instanceof PassiveSkill) {
                 ((PassiveSkill) skill).tryApplying(hero);
+            }
         }
     }
 

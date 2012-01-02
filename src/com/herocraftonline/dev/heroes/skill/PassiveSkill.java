@@ -83,9 +83,9 @@ public abstract class PassiveSkill extends Skill {
      */
     @Override
     public void init() {
-        applyText = SkillConfigManager.getRaw(this, Setting.APPLY_TEXT, "%hero% gained %skill%!");
+        applyText = SkillConfigManager.getRaw(this, Setting.APPLY_TEXT, "");
         applyText = applyText.replace("%hero%", "$1").replace("%skill%", "$2");
-        unapplyText = SkillConfigManager.getRaw(this, Setting.UNAPPLY_TEXT, "%hero% lost %skill%!");
+        unapplyText = SkillConfigManager.getRaw(this, Setting.UNAPPLY_TEXT, "");
         unapplyText = unapplyText.replace("%hero%", "$1").replace("%skill%", "$2");
     }
 
@@ -103,10 +103,13 @@ public abstract class PassiveSkill extends Skill {
         if (!hero.hasAccessToSkill(this))
             return;
 
-        if (hero.canUseSkill(this))
-            apply(hero);
-        else
+        if (hero.canUseSkill(this)) {
+            if (!hero.hasEffect(getName())) {
+                apply(hero);
+            }
+        } else {
             unapply(hero);
+        }
     }
 
     /**

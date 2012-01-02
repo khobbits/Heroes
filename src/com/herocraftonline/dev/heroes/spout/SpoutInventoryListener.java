@@ -57,6 +57,7 @@ public class SpoutInventoryListener extends InventoryListener {
         }
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void onInventoryEnchant(InventoryEnchantEvent event) {
         if (event.isCancelled() || Heroes.properties.enchantXPMultiplier == 0)
@@ -66,6 +67,7 @@ public class SpoutInventoryListener extends InventoryListener {
         Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
         if (!hero.hasExperienceType(ExperienceType.ENCHANTING)) {
             event.setCancelled(true);
+            event.getPlayer().updateInventory();
             return;
         }
 
