@@ -16,6 +16,9 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
+import net.minecraft.server.MathHelper;
+import net.minecraft.server.Vec3D;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.CreatureType;
@@ -87,13 +90,13 @@ public final class Util {
         hoes.add("IRON_HOE");
         hoes.add("GOLD_HOE");
         hoes.add("DIAMOND_HOE");
-        
+
         tools = new ArrayList<String>(2);
         tools.add("SHEARS");
         tools.add("FISHING_ROD");
         tools.addAll(shovels);
         tools.addAll(hoes);
-        
+
         weapons = new ArrayList<String>(26);
         weapons.addAll(picks);
         weapons.addAll(axes);
@@ -180,7 +183,7 @@ public final class Util {
             }
         };
     }
-    
+
     /**
      * Converts an entity into its CreatureType
      * 
@@ -401,15 +404,15 @@ public final class Util {
             }
         }
     }
-    
+
     public static int getMCExperience(int level) {
         return level * 7;
     }
-    
+
     public static Integer toInt(Object val) {
         if (!(val instanceof Number))
             return null;
-        
+
         if (val instanceof Integer)
             return (Integer) val;
         else if (val instanceof Double)
@@ -423,7 +426,7 @@ public final class Util {
         else
             return null;
     }
-    
+
     public static int toIntNonNull(Object val, String name) {
         Integer newVal = toInt(val);
         if (newVal == null)
@@ -431,7 +434,7 @@ public final class Util {
         else
             return newVal;
     }
-    
+
     public static double toDoubleNonNull(Object val, String name) {
         Double newVal = toDouble(val);
         if (newVal == null)
@@ -439,11 +442,11 @@ public final class Util {
         else
             return newVal;
     }
-    
+
     public static Double toDouble(Object val) {
         if (!(val instanceof Number))
             return null;
-        
+
         if (val instanceof Integer)
             return ((Integer) val).doubleValue();
         else if (val instanceof Double)
@@ -457,9 +460,21 @@ public final class Util {
         else
             return null;
     }
-    
+
     public static double formatDouble(double d) {
         int val = (int) (d * 1000);
         return val / 1000d;
+    }
+
+    public static Vec3D getLocation(Player player) {
+        Location playerLoc = player.getLocation();
+        float rotationYaw = playerLoc.getYaw();
+        float rotationPitch = playerLoc.getPitch();
+
+        float f1 = MathHelper.cos(-rotationYaw * 0.01745329F - 3.141593F);
+        float f3 = MathHelper.sin(-rotationYaw * 0.01745329F - 3.141593F);
+        float f5 = -MathHelper.cos(-rotationPitch * 0.01745329F);
+        float f7 = MathHelper.sin(-rotationPitch * 0.01745329F);
+        return Vec3D.create(f3 * f5, f7, f1 * f5);
     }
 }

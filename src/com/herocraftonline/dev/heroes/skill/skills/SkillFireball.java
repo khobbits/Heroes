@@ -1,10 +1,18 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
+import net.minecraft.server.EntityLiving;
+import net.minecraft.server.EntitySmallFireball;
+import net.minecraft.server.Vec3D;
+
+import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.craftbukkit.CraftWorld;
+import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Snowball;
+import org.bukkit.entity.SmallFireball;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -20,6 +28,7 @@ import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.SkillConfigManager;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Setting;
+import com.herocraftonline.dev.heroes.util.Util;
 
 public class SkillFireball extends ActiveSkill {
 
@@ -47,12 +56,36 @@ public class SkillFireball extends ActiveSkill {
     @Override
     public SkillResult use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
+        Block target = player.getTargetBlock(Util.transparentIds, 100);
+        Location playerLoc = player.getLocation();
+
+        double dx = target.getX() - playerLoc.getX();
+        double height = 1;
+        double dy = target.getY() + (height / 2.0F) - (playerLoc.getY() + (height / 2.0F));
+        double dz = target.getZ() - playerLoc.getZ();
+
+        EntityLiving playerEntity = ((CraftPlayer) player).getHandle();
+        EntitySmallFireball fireball = new EntitySmallFireball(((CraftWorld) player.getWorld()).getHandle(), playerEntity, dx, dy, dz);
+        fireball.isIncendiary = false;
+        double d8 = 4D;
+        Vec3D vec3d = Util.getLocation(player);
+        fireball.locX = playerLoc.getX() + vec3d.a * d8;
+        fireball.locY = playerLoc.getY() + (height / 2.0F) + 0.5D;
+        fireball.locZ = playerLoc.getZ() + vec3d.c * d8;
+
+        ((CraftWorld) player.getWorld()).getHandle().addEntity(fireball);
+
+        broadcastExecuteText(hero);
+        return SkillResult.NORMAL;
+        /*
+        Player player = hero.getPlayer();
 
         Snowball snowball = player.throwSnowball();
         snowball.setFireTicks(1000);
 
         broadcastExecuteText(hero);
         return SkillResult.NORMAL;
+        */
     }
 
     public class SkillEntityListener extends EntityListener {
@@ -70,15 +103,16 @@ public class SkillFireball extends ActiveSkill {
                 Heroes.debug.stopTask("HeroesSkillListener");
                 return;
             }
+            
             EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
             Entity projectile = subEvent.getDamager();
-            if (!(projectile instanceof Snowball) || projectile.getFireTicks() < 1) {
+            if (!(projectile instanceof SmallFireball)) {
                 Heroes.debug.stopTask("HeroesSkillListener");
                 return;
             }
 
             LivingEntity entity = (LivingEntity) subEvent.getEntity();
-            Entity dmger = ((Snowball) subEvent.getDamager()).getShooter();
+            Entity dmger = ((SmallFireball) projectile).getShooter();
             if (dmger instanceof Player) {
                 Hero hero = plugin.getHeroManager().getHero((Player) dmger);
 
