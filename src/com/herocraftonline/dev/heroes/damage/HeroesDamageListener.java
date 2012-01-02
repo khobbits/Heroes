@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import net.minecraft.server.EntityLiving;
+import net.minecraft.server.MobEffectList;
+
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -507,7 +510,15 @@ public class HeroesDamageListener extends EntityListener {
             }
             return (int) defaultDamage;
         }
-
+        
+        if (entity instanceof LivingEntity) {
+            EntityLiving el = ((CraftLivingEntity) entity).getHandle();
+            if (el.hasEffect(MobEffectList.FIRE_RESISTANCE)) {
+                event.setCancelled(true);
+                return 0;
+            }
+        }
+        
         if (damage == 0)
             return 0;
         if (entity instanceof Player) {
