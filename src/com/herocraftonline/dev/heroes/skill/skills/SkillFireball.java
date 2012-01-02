@@ -67,11 +67,10 @@ public class SkillFireball extends ActiveSkill {
         EntityLiving playerEntity = ((CraftPlayer) player).getHandle();
         EntitySmallFireball fireball = new EntitySmallFireball(((CraftWorld) player.getWorld()).getHandle(), playerEntity, dx, dy, dz);
         fireball.isIncendiary = false;
-        double d8 = 4D;
         Vec3D vec3d = Util.getLocation(player);
-        fireball.locX = playerLoc.getX() + vec3d.a * d8;
+        fireball.locX = playerLoc.getX() + vec3d.a + .5D;
         fireball.locY = playerLoc.getY() + (height / 2.0F) + 0.5D;
-        fireball.locZ = playerLoc.getZ() + vec3d.c * d8;
+        fireball.locZ = playerLoc.getZ() + vec3d.c + .5D;
 
         ((CraftWorld) player.getWorld()).getHandle().addEntity(fireball);
 
