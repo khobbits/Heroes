@@ -68,7 +68,7 @@ public class SpoutUI {
 
 
     public static void sendPlayerNotification(Player player, String title, String Body, Material material) {
-        if (!Heroes.useSpout)
+        if (!Heroes.useSpout())
             return;
         if (SpoutManager.getPlayer(player).isSpoutCraftEnabled()) {
             SpoutManager.getPlayer(player).sendNotification(title, Body, material);
@@ -77,7 +77,7 @@ public class SpoutUI {
 
     @SuppressWarnings("deprecation")
     public static void cloakPlayer(Player player, String cloakName){
-        if(!Heroes.useSpout)
+        if(!Heroes.useSpout())
             return;
         if(SpoutManager.getPlayer(player).isSpoutCraftEnabled()){
             SpoutManager.getAppearanceManager().setGlobalCloak((HumanEntity) player, Cloaks.valueOf(cloakName).toString());

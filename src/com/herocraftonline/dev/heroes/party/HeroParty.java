@@ -18,6 +18,7 @@ import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.spout.gui.EntityBar;
 import com.herocraftonline.dev.heroes.util.Messaging;
+import com.herocraftonline.dev.heroes.util.Properties;
 import com.herocraftonline.dev.heroes.util.Util;
 
 public class HeroParty {
@@ -28,9 +29,7 @@ public class HeroParty {
     private Boolean exp = true;
     private final Heroes plugin;
     private LinkedList<String> invites = new LinkedList<String>();
-    
-    public static double partyMults[];
-    
+
     public HeroParty(Hero leader, Heroes plugin) {
         this.plugin = plugin;
         this.leader = leader;
@@ -175,7 +174,7 @@ public class HeroParty {
     }
 
     public void update() {
-        if (Heroes.useSpout) 
+        if (Heroes.useSpout()) 
             for (Hero hero : members)
                 update(hero.getPlayer());   
     }
@@ -197,11 +196,11 @@ public class HeroParty {
         double sharedExp = amount / partySize;
         double bonusExp = partySize > 1 ? sharedExp : 0;
         if (partySize > 1)
-            bonusExp *= partyMults[partySize - 1];
+            bonusExp *= Properties.partyMults[partySize - 1];
 
         bonusExp *= Heroes.properties.partyBonus;
         bonusExp = Util.formatDouble(bonusExp);
-        
+
         for (Hero partyMember : inRangeMembers) {
             partyMember.gainExp(sharedExp + bonusExp, type);
         }

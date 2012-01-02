@@ -113,7 +113,7 @@ public class Heroes extends JavaPlugin {
     public static SMSHandler smsHandler;
 
     // Variable for Spout.
-    public static boolean useSpout = false;
+    public static Plugin spout = null;
 
     /**
      * Print messages to the Debug Log, if the servers in Debug Mode then we also wan't to print the messages to the
@@ -308,9 +308,9 @@ public class Heroes extends JavaPlugin {
      * Check to see if Spout is enabled on the server, if so inform Heroes to use it for Craftin XP.
      */
     public void setupSpout() {
-        Heroes.useSpout = this.getServer().getPluginManager().getPlugin("Spout") != null;
+        Heroes.spout = this.getServer().getPluginManager().getPlugin("Spout");
         // If it was found, then lets register our custom event for spout
-        if (useSpout) {
+        if (spout != null) {
             siListener = new SpoutInventoryListener(this);
             spoutData = new SpoutData(this);
             getServer().getPluginManager().registerEvent(Type.CUSTOM_EVENT, siListener, Priority.Highest, this);
@@ -437,5 +437,9 @@ public class Heroes extends JavaPlugin {
 
     public void setSpoutData(SpoutData sd) {
         this.spoutData = sd;
+    }
+    
+    public static boolean useSpout() {
+        return spout != null;
     }
 }

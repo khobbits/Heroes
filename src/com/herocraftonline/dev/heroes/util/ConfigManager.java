@@ -124,7 +124,7 @@ public class ConfigManager {
     }
 
     private void loadRecipes() {
-        if (!Heroes.useSpout) {
+        if (!Heroes.useSpout()) {
             RecipeGroup rg = new RecipeGroup("default", 1);
             rg.setAllRecipes(true);
             Heroes.properties.recipes.put("default", rg);

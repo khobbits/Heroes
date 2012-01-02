@@ -160,7 +160,7 @@ public class HeroClassManager {
         newClass.setUserClass(userClass);
 
 
-        if (Heroes.useSpout)
+        if (Heroes.useSpout())
             if (config.isSet("recipes"))
                 for (String s : config.getStringList("recipes")) {
                     RecipeGroup rg = Heroes.properties.recipes.get(s.toLowerCase());

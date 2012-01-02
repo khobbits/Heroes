@@ -31,7 +31,7 @@ public class SkillEnchant extends PassiveSkill {
         setTypes(SkillType.KNOWLEDGE, SkillType.ITEM);
         setEffectTypes(EffectType.BENEFICIAL);
 
-        if (Heroes.useSpout) {
+        if (Heroes.useSpout()) {
             registerEvent(Type.CUSTOM_EVENT, new SkillEnchantListener(this), Priority.Lowest);
         } else {
             Heroes.log(Level.WARNING, "SkillEnchant requires Spout! Remove from your skills directory if you will not use!");

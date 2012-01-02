@@ -1,10 +1,11 @@
 name: Heroes
 main: com.herocraftonline.dev.heroes.Heroes
-version: 1.4.0
+version: 1.4.1
 website: http://www.herocraftonline.com
 authors: [Herocraft Coding, DThielke, Rigby, RightLegRed, Sleaker, Kainzo]
 description: Experience, leveling, skills and class system for Minecraft developed by Herocraft Development.
-softdepend: [Vault, Spout, ScrollingMenuSigns]
+depend: [ Vault ]
+softdepend: [ Spout, ScrollingMenuSigns]
 commands:
   heroes:
     aliases: ['hero']

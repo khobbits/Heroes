@@ -1,5 +1,7 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
+import java.util.logging.Level;
+
 import net.minecraft.server.ContainerBrewingStand;
 import net.minecraft.server.EntityPlayer;
 
@@ -27,8 +29,10 @@ public class SkillAlchemy extends PassiveSkill {
         setTypes(SkillType.KNOWLEDGE, SkillType.ITEM);
         setEffectTypes(EffectType.BENEFICIAL);
         
-        if (Heroes.useSpout) {
+        if (Heroes.useSpout()) {
             registerEvent(Type.CUSTOM_EVENT, new SkillAlchemyListener(this), Priority.Lowest);
+        }else {
+            Heroes.log(Level.WARNING, "SkillAlchemy requires Spout! Remove from your skills directory if you will not use!");
         }
     }
     

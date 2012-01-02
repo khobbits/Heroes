@@ -15,7 +15,6 @@ import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Player;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.party.HeroParty;
 
 public class Properties {
 
@@ -37,6 +36,8 @@ public class Properties {
     public boolean resetOnDeath;
     public int pvpLevelRange = 50;
     public boolean orbExp;
+    
+    public static double partyMults[];
     
     // Classes //
     public int swapCost;
@@ -200,9 +201,9 @@ public class Properties {
     }
     
     protected void calcPartyMultipliers() {
-        HeroParty.partyMults = new double[maxPartySize];
+        partyMults = new double[maxPartySize];
         for (int i = 0; i < maxPartySize; i++) {
-            HeroParty.partyMults[i] = ((maxPartySize - 1.0) / (maxPartySize * Math.log(maxPartySize))) * Math.log(i + 1);
+            partyMults[i] = ((maxPartySize - 1.0) / (maxPartySize * Math.log(maxPartySize))) * Math.log(i + 1);
         }
     }
     

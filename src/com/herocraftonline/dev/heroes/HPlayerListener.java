@@ -201,7 +201,7 @@ public class HPlayerListener extends PlayerListener {
         }, 5);
         
         //Spout stuff
-        if (Heroes.useSpout) {
+        if (Heroes.useSpout()) {
             SpoutPlayer sPlayer = SpoutManager.getPlayer(player);
             if (sPlayer.isSpoutCraftEnabled())
                 plugin.getSpoutData().createPartyContainer(sPlayer);
@@ -231,7 +231,7 @@ public class HPlayerListener extends PlayerListener {
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
         //Spout cleanup stuff
-        if (Heroes.useSpout) {
+        if (Heroes.useSpout()) {
             SpoutPlayer sPlayer = SpoutManager.getPlayer(player);
             plugin.getSpoutData().removePartyContainer(sPlayer);
         }

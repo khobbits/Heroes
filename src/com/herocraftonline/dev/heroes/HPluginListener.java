@@ -24,7 +24,7 @@ public class HPluginListener extends ServerListener {
         // Check if the name is Spout
         if (name.equals("Spout")) {
             // If Spout just Disabled then we tell Heroes to stop using Spout
-            Heroes.useSpout = false;
+            Heroes.spout = null;
         }
 
         if (name.equals("iConomy") || name.equals("BOSEconomy") || name.equals("Essentials")) {

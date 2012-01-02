@@ -172,9 +172,6 @@ public class SkillManager {
 
             if (mainClass != null) {
                 Class<?> clazz = Class.forName(mainClass, true, classLoader);
-                for (Class<?> subclazz : clazz.getClasses()) {
-                    Class.forName(subclazz.getName(), true, classLoader);
-                }
                 Class<? extends Skill> skillClass = clazz.asSubclass(Skill.class);
                 Constructor<? extends Skill> ctor = skillClass.getConstructor(plugin.getClass());
                 Skill skill = ctor.newInstance(plugin);
