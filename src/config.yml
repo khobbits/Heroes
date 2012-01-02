@@ -4,6 +4,7 @@ leveling:
     maxLevel: 50 #max level to master/change from PARENT to Child)
     expLoss: 0.10 #exp loss on death, is taken from current LEVEL not ALL exp.
     pvpExpLossMultiplier: 1.0 #exp loss multiplier used during pvp
+    maxPartySize: 6 #maximum party size
     partyBonus: 1.0 #multiplier of how much bonus xp should be awarded overall to parties
     levelsViaExpLoss: false #allow level loss when players lose xp
     masteryLoss: false #allow mastery loss when players lose xp

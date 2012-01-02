@@ -28,17 +28,9 @@ public class HeroParty {
     private Boolean exp = true;
     private final Heroes plugin;
     private LinkedList<String> invites = new LinkedList<String>();
-
-    private static final double xpmult2, xpmult3, xpmult4, xpmult5, xpmult6;
-    static {
-        xpmult2 = Math.log(2) * .4650922;
-        xpmult3 = Math.log(3) * .4650922;
-        xpmult4 = Math.log(4) * .4650922;
-        xpmult5 = Math.log(5) * .4650922;
-        xpmult6 = Math.log(6) * .4650922;
-    }
-
-
+    
+    public static double partyMults[];
+    
     public HeroParty(Hero leader, Heroes plugin) {
         this.plugin = plugin;
         this.leader = leader;
@@ -204,25 +196,8 @@ public class HeroParty {
         int partySize = inRangeMembers.size();
         double sharedExp = amount / partySize;
         double bonusExp = partySize > 1 ? sharedExp : 0;
-        switch (partySize) {
-        case 2:
-            bonusExp = amount * xpmult2;
-            break;
-        case 3:
-            bonusExp = amount * xpmult3;
-            break;
-        case 4:
-            bonusExp = amount * xpmult4;
-            break;
-        case 5:
-            bonusExp = amount * xpmult5;
-            break;
-        case 6:
-            bonusExp = amount * xpmult6;
-            break;
-        default:
-            bonusExp = 0;
-        }
+        if (partySize > 1)
+            bonusExp *= partyMults[partySize - 1];
 
         bonusExp *= Heroes.properties.partyBonus;
         bonusExp = Util.formatDouble(bonusExp);

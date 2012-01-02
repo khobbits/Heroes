@@ -32,6 +32,11 @@ Version dev
 * Added Building XP Type
 ** It triggers whenever a player places a block of the type defined (similar to breakage)
 ** It does NOT log recently broken blocks, so you'll want to set this to a lower value than gathering blocks as it could be used to chain gain xp easily.
+* Party Size is now configurable
+** Party XP Bonuses are now based on max party size.
+** a Value of 1 for the XP bonus will result in 100% XP for a full party (if all members are nearby and can gain the xp type)
+** a Value of 0 will split the XP evenly among all party members in range, with no party bonus.
+** Values above 1 will result in the ability to gain more XP than soloing in a full group (and even less players depending on how high it is)
 
 ==== **API:** ====
 

@@ -15,6 +15,7 @@ import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Player;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.party.HeroParty;
 
 public class Properties {
 
@@ -27,6 +28,7 @@ public class Properties {
     public double pvpExpLossMultiplier = 0;
     public boolean levelsViaExpLoss = false;
     public boolean masteryLoss = false;
+    public int maxPartySize = 6;
     public double partyBonus = 0;
     public double playerKillingExp = 0;
     public boolean noSpawnCamp = false;
@@ -120,6 +122,7 @@ public class Properties {
         power = Util.toDoubleNonNull(section.get("power", 1.00), "power");
         maxExp = Util.toIntNonNull(section.get("maxExperience", 100000), "maxExperience");
         maxLevel = Util.toIntNonNull(section.get("maxLevel", 20), "maxLevel");
+        maxPartySize = Util.toIntNonNull(section.get("maxPartySize"), "maxPartySize");
         partyBonus = Util.toDoubleNonNull(section.get("partyBonus", 0.20), "partyBonus");
         expLoss = Util.toDoubleNonNull(section.get("expLoss", 0.05), "expLoss");
         pvpExpLossMultiplier = Util.toDoubleNonNull(section.get("pvpExpLossMultiplier", 1.0), "pvpExpLossMultiplier");
@@ -131,6 +134,7 @@ public class Properties {
         resetOnDeath = section.getBoolean("resetOnDeath", false);
         pvpLevelRange = Util.toIntNonNull(section.get("pvpLevelRange", 50), "pvpLevelRange");
         calcExp();
+        calcPartyMultipliers();
     }
     
     private void loadClassConfig(ConfigurationSection section) {
@@ -194,7 +198,14 @@ public class Properties {
         levels[maxLevel - 1] = maxExp;
         levels[maxLevel] = (int) (A * Math.pow(maxLevel + 1, power + 1));
     }
-
+    
+    protected void calcPartyMultipliers() {
+        HeroParty.partyMults = new double[maxPartySize];
+        for (int i = 0; i < maxPartySize; i++) {
+            HeroParty.partyMults[i] = ((maxPartySize - 1.0) / (maxPartySize * Math.log(maxPartySize))) * Math.log(i + 1);
+        }
+    }
+    
     public static int getExperience(int level) {
         if (level >= levels.length)
             return levels[levels.length - 1];

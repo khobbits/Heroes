@@ -11,7 +11,6 @@ import com.herocraftonline.dev.heroes.util.Messaging;
 
 public class PartyInviteCommand extends BasicCommand {
 
-    private static final int MAX_PARTY_SIZE = 6;
     private final Heroes plugin;
 
     public PartyInviteCommand(Heroes plugin) {
@@ -58,12 +57,12 @@ public class PartyInviteCommand extends BasicCommand {
 
         int memberCount = party.getMembers().size();
 
-        if (memberCount >= MAX_PARTY_SIZE) {
+        if (memberCount >= Heroes.properties.maxPartySize) {
             Messaging.send(player, "Your party is full.");
             return false;
         }
 
-        if (memberCount + party.getInviteCount() >= MAX_PARTY_SIZE) {
+        if (memberCount + party.getInviteCount() >= Heroes.properties.maxPartySize) {
             party.removeOldestInvite();
         }
 
