@@ -228,8 +228,6 @@ public class ConfigManager {
                     Heroes.log(Level.WARNING, "Invalid material type (" + item + ") found in experience.yml.");
                 }
             }
-        } else {
-            Heroes.log(Level.WARNING, "No Exp values defined for this section");
         }
         return expMap;
     }
