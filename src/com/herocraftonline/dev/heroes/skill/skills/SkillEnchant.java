@@ -20,6 +20,7 @@ import com.herocraftonline.dev.heroes.skill.SkillConfigManager;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Setting;
+import com.herocraftonline.dev.heroes.util.Util;
 
 public class SkillEnchant extends PassiveSkill {
 
@@ -72,12 +73,14 @@ public class SkillEnchant extends PassiveSkill {
 
         @Override
         public void onInventoryEnchant(InventoryEnchantEvent event) {
-            if (event.isCancelled())
+            if (event.isCancelled()) {
                 return;
+            }
 
             Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
             if (!hero.hasEffect(getName())) {
                 Messaging.send(event.getPlayer(), "You don't have the skill to enchant an item!");
+                Util.syncInventory(event.getPlayer(), plugin);
                 event.setCancelled(true);
                 return;
             }
@@ -90,11 +93,13 @@ public class SkillEnchant extends PassiveSkill {
                 }
                 if (!enchants.contains(enchant.getName())) {
                     event.setCancelled(true);
+                    Util.syncInventory(event.getPlayer(), plugin);
                     return;
                 }
                 int level = SkillConfigManager.getUseSetting(hero, skill, enchant.getName(), 1, true);
                 if (hero.getLevel(hero.getEnchantingClass()) < level) {
                     event.setCancelled(true);
+                    Util.syncInventory(event.getPlayer(), plugin);
                     return;
                 }
             }
