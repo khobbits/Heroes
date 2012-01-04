@@ -19,7 +19,7 @@ public class SkillWolf extends PassiveSkill {
 
     public SkillWolf(Heroes plugin) {
         super(plugin, "Wolf");
-        setDescription("Summons and tames a wolf to your side");
+        setDescription("Ability to tame wolves!");
         setUsage("/skill wolf <release|summon>");
         setArgumentRange(0, 1);
         setIdentifiers("skill wolf");
