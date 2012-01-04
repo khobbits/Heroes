@@ -114,7 +114,7 @@ public class Properties {
 
     private void loadHatsConfig(ConfigurationSection section) {
         hatsLevel = Util.toIntNonNull(section.get("level", 1), "level");
-        allowHats = section.getBoolean("allowhatsplugin", false);
+        allowHats = section.getBoolean("allowHatsPlugin", false);
     }
 
     private void loadLevelConfig(ConfigurationSection section) {
