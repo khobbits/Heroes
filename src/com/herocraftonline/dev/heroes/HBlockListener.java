@@ -79,7 +79,7 @@ public class HBlockListener extends BlockListener {
         if (addedExp == 0) {
             return;
         } else if (wasBlockPlaced(block)) {
-            if (hero.isVerbose()) {
+            if (hero.isVerbose() && hero.hasExperienceType(et)) {
                 Messaging.send(player, "No experience gained - block placed too recently.");
             }
             placedBlocks.remove(block.getLocation());
