@@ -48,13 +48,13 @@ public class AdminProfCommand extends BasicCommand {
             return false;
         }
         
-        ClassChangeEvent event = new ClassChangeEvent(hero, hero.getHeroClass(), heroClass);
+        ClassChangeEvent event = new ClassChangeEvent(hero, hero.getSecondClass(), heroClass);
         plugin.getServer().getPluginManager().callEvent(event);
         if (event.isCancelled())
             return false;
         
         // Change the Players HeroClass and reset their Bindings.
-        hero.changeHeroClass(heroClass, false);
+        hero.changeHeroClass(heroClass, true);
 
         // Alert both the Admin and the Player of the change.
         Messaging.send(sender, "You have successfully changed $1 HeroClass to $2.", player.getName(), heroClass.getName());

@@ -7,6 +7,7 @@ Version dev
 * Only alert players of denied XP via block-break if they have the source of XP they are breaking the block of
 * Removed startup warning for empty XP mappings
 * Cancel damage from fire sources if the player has the fire resist mob effect
+* Fixed /hero admin prof changing a players primary class to a secondary one.
 
 ==== **General:** ====
 
