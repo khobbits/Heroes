@@ -1,7 +1,11 @@
 package com.herocraftonline.dev.heroes.spout;
 
+import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.classes.HeroClass;
+import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
+import com.herocraftonline.dev.heroes.hero.Hero;
+import com.herocraftonline.dev.heroes.util.Messaging;
 import net.minecraft.server.ContainerEnchantTable;
-
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -9,12 +13,6 @@ import org.getspout.spoutapi.event.inventory.InventoryCraftEvent;
 import org.getspout.spoutapi.event.inventory.InventoryEnchantEvent;
 import org.getspout.spoutapi.event.inventory.InventoryListener;
 import org.getspout.spoutapi.event.inventory.InventoryOpenEvent;
-
-import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.classes.HeroClass;
-import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
-import com.herocraftonline.dev.heroes.hero.Hero;
-import com.herocraftonline.dev.heroes.util.Messaging;
 
 public class SpoutInventoryListener extends InventoryListener {
 
@@ -26,20 +24,24 @@ public class SpoutInventoryListener extends InventoryListener {
 
     @Override
     public void onInventoryCraft(InventoryCraftEvent event) {
-        if (event.getResult() == null || event.isCancelled())
+        if (event.getResult() == null || event.isCancelled()) {
             return;
+        }
 
-        if (event.isShiftClick() && event.getPlayer().getInventory().firstEmpty() == -1)
+        if (event.isShiftClick() && event.getPlayer().getInventory().firstEmpty() == -1) {
             return;
+        }
 
-        if (!event.isShiftClick() && event.getCursor() != null && event.getCursor().getType().getMaxStackSize() == event.getCursor().getAmount())
+        if (!event.isShiftClick() && event.getCursor() != null && event.getCursor().getType().getMaxStackSize() == event.getCursor().getAmount()) {
             return;
+        }
 
         ItemStack result = event.getResult();
         int amountCrafted = result.getAmount();
 
-        if (event.getCursor() != null && event.getCursor().getType() != result.getType())
+        if (event.getCursor() != null && event.getCursor().getType() != result.getType()) {
             return;
+        }
 
         Player player = event.getPlayer();
         Hero hero = plugin.getHeroManager().getHero(player);
@@ -60,8 +62,9 @@ public class SpoutInventoryListener extends InventoryListener {
     @SuppressWarnings("deprecation")
     @Override
     public void onInventoryEnchant(InventoryEnchantEvent event) {
-        if (event.isCancelled() || Heroes.properties.enchantXPMultiplier == 0)
+        if (event.isCancelled() || Heroes.properties.enchantXPMultiplier == 0) {
             return;
+        }
 
 
         Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
@@ -78,14 +81,16 @@ public class SpoutInventoryListener extends InventoryListener {
 
     @Override
     public void onInventoryOpen(InventoryOpenEvent event) {
-        if (event.isCancelled() || !(((CraftPlayer) event.getPlayer()).getHandle().activeContainer instanceof ContainerEnchantTable))
+        if (event.isCancelled() || !(((CraftPlayer) event.getPlayer()).getHandle().activeContainer instanceof ContainerEnchantTable)) {
             return;
+        }
 
         Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
         HeroClass hc = hero.getEnchantingClass();
-        if (hc != null)
-            event.setCancelled(true);
-        else
+        if (hc != null) {
             hero.syncExperience(hc);
+        } else {
+            event.setCancelled(true);
+        }
     }
 }
