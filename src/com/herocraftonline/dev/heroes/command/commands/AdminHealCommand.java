@@ -1,15 +1,14 @@
 package com.herocraftonline.dev.heroes.command.commands;
 
-import java.util.List;
-
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.entity.Player;
-
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.command.BasicCommand;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.util.Messaging;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.entity.Player;
+
+import java.util.List;
 
 public class AdminHealCommand extends BasicCommand {
 
@@ -32,16 +31,16 @@ public class AdminHealCommand extends BasicCommand {
             if (players.isEmpty()) {
                 Messaging.send(sender, "No player named $1 was found!", args[0]);
                 return true;
-            } 
-            String names = "";
+            }
+            StringBuilder names = new StringBuilder();
             for (Player player : players) {
                 Hero hero = plugin.getHeroManager().getHero(player);
                 hero.setHealth(hero.getMaxHealth());
                 hero.syncHealth();
                 Messaging.send(player, "The gods have miraculously healed you!");
-                names += player.getDisplayName() + "  ";
+                names.append(player.getDisplayName()).append("  ");
             }
-            Messaging.send(sender, "You have restored: $1to full health.", names);
+            Messaging.send(sender, "You have restored: $1to full health.", names.toString());
             return true;
         } else if (sender instanceof ConsoleCommandSender) {
             Messaging.send(sender, "You must specify a player to heal.");

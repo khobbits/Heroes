@@ -1,15 +1,14 @@
 package com.herocraftonline.dev.heroes.command.commands;
 
-import java.util.Set;
-
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.command.BasicCommand;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.party.HeroParty;
 import com.herocraftonline.dev.heroes.util.Messaging;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import java.util.Set;
 
 public class PartyChatCommand extends BasicCommand {
     private final Heroes plugin;
@@ -25,8 +24,9 @@ public class PartyChatCommand extends BasicCommand {
 
     @Override
     public boolean execute(CommandSender sender, String identifier, String[] args) {
-        if (!(sender instanceof Player))
+        if (!(sender instanceof Player)) {
             return false;
+        }
 
         Player player = (Player) sender;
         Hero hero = plugin.getHeroManager().getHero(player);
@@ -43,23 +43,22 @@ public class PartyChatCommand extends BasicCommand {
             return false;
         }
 
-        String msg = "";
+        StringBuilder msg = new StringBuilder();
         for (String word : args) {
-            msg += word + " ";
+            msg.append(word).append(' ');
         }
-        msg = msg.trim();
+        String fullMsg = msg.toString().trim();
 
         if (player.equals(party.getLeader())) {
-            msg = "\u00a7a[Party] \u00a7e" + player.getDisplayName() + "\u00a7a:\u00a73 " + msg;
+            fullMsg = "\u00a7a[Party] \u00a7e" + player.getDisplayName() + "\u00a7a:\u00a73 " + fullMsg;
         } else {
-            msg = "\u00a7a[Party] \u00a77" + player.getDisplayName() + "\u00a7a:\u00a73 " + msg;
+            fullMsg = "\u00a7a[Party] \u00a77" + player.getDisplayName() + "\u00a7a:\u00a73 " + fullMsg;
         }
 
         for (Hero partyMember : partyMembers) {
-            partyMember.getPlayer().sendMessage(msg);
+            partyMember.getPlayer().sendMessage(fullMsg);
         }
 
         return true;
     }
-
 }

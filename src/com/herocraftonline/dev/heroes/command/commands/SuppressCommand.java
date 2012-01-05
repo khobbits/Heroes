@@ -1,15 +1,14 @@
 package com.herocraftonline.dev.heroes.command.commands;
 
-import java.util.Set;
-
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.command.BasicCommand;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.util.Messaging;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import java.util.Set;
 
 public class SuppressCommand extends BasicCommand {
     private final Heroes plugin;
@@ -25,8 +24,9 @@ public class SuppressCommand extends BasicCommand {
 
     @Override
     public boolean execute(CommandSender sender, String identifier, String[] args) {
-        if (!(sender instanceof Player))
+        if (!(sender instanceof Player)) {
             return false;
+        }
 
         Player player = (Player) sender;
         Hero hero = plugin.getHeroManager().getHero(player);
@@ -38,13 +38,12 @@ public class SuppressCommand extends BasicCommand {
                 return false;
             }
 
-            String list = "Suppressing ";
+            StringBuilder list = new StringBuilder("Suppressing ");
             for (String skill : suppressions) {
-                list += skill + ", ";
+                list.append(skill).append(", ");
             }
-            list = list.substring(0, list.length() - 2);
 
-            Messaging.send(player, list);
+            Messaging.send(player, list.substring(0, list.length() - 2));
         } else {
             Skill skill = plugin.getSkillManager().getSkill(args[0]);
             if (skill == null) {
