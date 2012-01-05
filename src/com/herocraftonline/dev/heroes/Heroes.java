@@ -25,6 +25,7 @@ import com.herocraftonline.dev.heroes.classes.HeroClassManager;
 import com.herocraftonline.dev.heroes.command.CommandHandler;
 import com.herocraftonline.dev.heroes.command.commands.AdminClassCommand;
 import com.herocraftonline.dev.heroes.command.commands.AdminExpCommand;
+import com.herocraftonline.dev.heroes.command.commands.AdminHealCommand;
 import com.herocraftonline.dev.heroes.command.commands.AdminHealthCommand;
 import com.herocraftonline.dev.heroes.command.commands.AdminLevelCommand;
 import com.herocraftonline.dev.heroes.command.commands.AdminProfCommand;
@@ -358,10 +359,13 @@ public class Heroes extends JavaPlugin {
         commandHandler.addCommand(new AdminClassCommand(this));
         commandHandler.addCommand(new AdminProfCommand(this));
         commandHandler.addCommand(new AdminHealthCommand(this));
+        commandHandler.addCommand(new AdminHealCommand(this));
         commandHandler.addCommand(new HealthCommand(this));
         commandHandler.addCommand(new LeaderboardCommand(this));
         commandHandler.addCommand(new HeroSaveCommand(this));
         commandHandler.addCommand(new ResetCommand(this));
+        
+        // Page 5
         commandHandler.addCommand(new DebugDumpCommand());
     }
 
