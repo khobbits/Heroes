@@ -1,22 +1,5 @@
 package com.herocraftonline.dev.heroes.classes;
 
-import java.io.File;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.logging.Level;
-
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.configuration.Configuration;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.permissions.Permission;
-import org.bukkit.permissions.PermissionDefault;
-
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClass.CircularParentException;
 import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
@@ -27,6 +10,17 @@ import com.herocraftonline.dev.heroes.skill.SkillConfigManager;
 import com.herocraftonline.dev.heroes.util.Properties;
 import com.herocraftonline.dev.heroes.util.RecipeGroup;
 import com.herocraftonline.dev.heroes.util.Util;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.configuration.Configuration;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionDefault;
+
+import java.io.File;
+import java.util.*;
+import java.util.logging.Level;
 
 /**
  * Manages all classes for the server
@@ -47,6 +41,7 @@ public class HeroClassManager {
 
     /**
      * Adds a HeroClass to the classmanager
+     *
      * @param c
      * @return true if the class was added
      */
@@ -56,13 +51,15 @@ public class HeroClassManager {
 
     /**
      * Attempts to get the class of the given name, this will return the HeroClass if found, or null
+     *
      * @param name
      * @return the class
      */
     public HeroClass getClass(String name) {
         for (HeroClass c : classes) {
-            if (name.equalsIgnoreCase(c.getName()))
+            if (name.equalsIgnoreCase(c.getName())) {
                 return c;
+            }
         }
         return null;
     }
@@ -83,6 +80,7 @@ public class HeroClassManager {
 
     /**
      * Loads all classes from the given directory
+     *
      * @param file
      */
     public void loadClasses(File file) {
@@ -119,12 +117,14 @@ public class HeroClassManager {
         }
 
         //Only register the permissions once
-        if (plugin.getServer().getPluginManager().getPermission("heroes.classes.*") == null)
+        if (plugin.getServer().getPluginManager().getPermission("heroes.classes.*") == null) {
             registerClassPermissions();
+        }
     }
 
     /**
      * Loads an individual HeroClass from the given file
+     *
      * @param file
      * @return the HeroClass loaded - or null if there was an error
      */
@@ -141,8 +141,9 @@ public class HeroClassManager {
         newClass.setPrimary(config.getBoolean("primary", true));
         newClass.setSecondary(config.getBoolean("secondary", false));
         newClass.setTier(config.getInt("tier", 1));
-        if (newClass.getTier() < 0)
+        if (newClass.getTier() < 0) {
             newClass.setTier(0);
+        }
         // Load class allowed Armor + Weapons
 
         loadArmor(newClass, config.getStringList("permitted-armor"));
@@ -160,19 +161,23 @@ public class HeroClassManager {
         newClass.setUserClass(userClass);
 
 
-        if (Heroes.useSpout())
-            if (config.isSet("recipes"))
+        if (Heroes.useSpout()) {
+            if (config.isSet("recipes")) {
                 for (String s : config.getStringList("recipes")) {
                     RecipeGroup rg = Heroes.properties.recipes.get(s.toLowerCase());
-                    if (rg == null)
+                    if (rg == null) {
                         Heroes.log(Level.SEVERE, "No recipe group named " + s + " defined in recipes.yml. Check " + className + " for errors or add the recipe group!");
-                    else
+                    } else {
                         newClass.addRecipe(rg);
+                    }
                 }
-            else
+            } else {
                 Heroes.log(Level.SEVERE, "Class " + className + " has no recipes set! They will not be able to craft items!");
-        else // Add the default recipe if spout is not being used, this is just to prevent issues & inconsistencies in the API
+            }
+        } else // Add the default recipe if spout is not being used, this is just to prevent issues & inconsistencies in the API
+        {
             newClass.addRecipe(Heroes.properties.recipes.get("default"));
+        }
 
         // Get the class expLoss
         newClass.setExpLoss(config.getDouble("expLoss", -1));
@@ -207,13 +212,15 @@ public class HeroClassManager {
             this.strongParents.put(newClass, strongParents);
         } else if (config.isConfigurationSection("parents")) {
             List<String> list = config.getStringList("parents.strong");
-            if (list != null)
+            if (list != null) {
                 strongParents.addAll(list);
+            }
 
             list = config.getStringList("parents.weak");
             Set<String> weakParents = new HashSet<String>();
-            if (list != null)
+            if (list != null) {
                 weakParents.addAll(list);
+            }
 
             this.weakParents.put(newClass, weakParents);
             this.strongParents.put(newClass, strongParents);
@@ -260,7 +267,7 @@ public class HeroClassManager {
                         int damage = section.getInt(materialName, 0);
                         newClass.setItemDamage(material, damage);
                     } else {
-                        Heroes.log(Level.WARNING, "Invalid material (" + material + ") defined for " + className);
+                        Heroes.log(Level.WARNING, "Invalid material (" + materialName + ") defined for " + className);
                     }
                 }
             }
@@ -303,9 +310,9 @@ public class HeroClassManager {
                     wLimits.append(" ").append(s);
                     matched = true;
                 } else if (s.contains(w.toUpperCase())) {
-                    if (s.contains("PICK") && !w.contains("PICK") && w.contains("AXE"))
+                    if (s.contains("PICK") && !w.contains("PICK") && w.contains("AXE")) {
                         continue;
-                    else {
+                    } else {
                         newClass.addAllowedWeapon(Material.matchMaterial(s));
                         wLimits.append(" ").append(s);
                         matched = true;
@@ -313,16 +320,19 @@ public class HeroClassManager {
                 }
             }
 
-            if (w.equals("*") || w.equals("ALL")) 
+            if (w.equals("*") || w.equals("ALL")) {
                 break;
-            if (!matched)
+            }
+            if (!matched) {
                 Heroes.log(Level.WARNING, "Invalid weapon type (" + w + ") defined for " + className);
+            }
         }
         plugin.debugLog(Level.INFO, "Allowed Weapons - " + wLimits.toString());
     }
 
     /**
      * Remove a HeroClass from the server
+     *
      * @param c
      * @return true if the class was found and remvoed
      */
@@ -332,6 +342,7 @@ public class HeroClassManager {
 
     /**
      * Sets the deault primary class to the given HeroClass
+     *
      * @param defaultClass
      */
     public void setDefaultClass(HeroClass defaultClass) {
@@ -340,7 +351,7 @@ public class HeroClassManager {
 
     /**
      * Checks the full class Heirarchy and links all classes together properly.
-     * 
+     *
      * @param config
      */
     private void checkClassHeirarchy() {
@@ -406,8 +417,9 @@ public class HeroClassManager {
             if (a.equals("*") || a.equals("ALL")) {
                 break;
             }
-            if (!matched)
+            if (!matched) {
                 Heroes.log(Level.WARNING, "Invalid armor type (" + a + ") defined for " + className);
+            }
         }
         plugin.debugLog(Level.INFO, "Allowed Armor - " + aLimits.toString());
     }
@@ -434,8 +446,9 @@ public class HeroClassManager {
     }
 
     private void loadPermissionSkills(HeroClass newClass, ConfigurationSection section) {
-        if (section == null)
+        if (section == null) {
             return;
+        }
         String className = newClass.getName();
         // Load in the Permission-Skills
         Set<String> permissionSkillNames = section.getKeys(false);
@@ -448,15 +461,17 @@ public class HeroClassManager {
                 }
                 try {
                     if (!plugin.getSkillManager().isLoaded(skill)) {
-                        if (!plugin.getSkillManager().loadOutsourcedSkill(skill))
+                        if (!plugin.getSkillManager().loadOutsourcedSkill(skill)) {
                             continue;
+                        }
                     }
 
                     newClass.addSkill(skill);
                     // Load the skill settings into the class skill config
                     ConfigurationSection skillSettings = section.getConfigurationSection(skill);
-                    if (skillSettings == null)
+                    if (skillSettings == null) {
                         skillSettings = section.createSection(skill);
+                    }
                     plugin.getSkillConfigs().addClassSkillSettings(className, plugin.getSkillManager().getSkill(skill).getName(), skillSettings);
 
                 } catch (IllegalArgumentException e) {
@@ -492,8 +507,9 @@ public class HeroClassManager {
 
                 // Copy the settings from the class configuration to the class skill configuration
                 ConfigurationSection skillSettings = section.getConfigurationSection(skillName);
-                if (skillSettings == null)
+                if (skillSettings == null) {
                     skillSettings = section.createSection(skillName);
+                }
                 plugin.getSkillConfigs().addClassSkillSettings(className, skill.getName(), skillSettings);
             }
 
@@ -513,8 +529,9 @@ public class HeroClassManager {
 
                     // Load the skill settings into the class skill config
                     ConfigurationSection skillSettings = section.getConfigurationSection(skill.getName());
-                    if (skillSettings == null)
+                    if (skillSettings == null) {
                         skillSettings = section.createSection(skill.getName());
+                    }
                     plugin.getSkillConfigs().addClassSkillSettings(newClass.getName(), skill.getName(), skillSettings);
                 }
             }
