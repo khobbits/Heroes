@@ -1,5 +1,9 @@
 package com.herocraftonline.dev.heroes.skill;
 
+import com.herocraftonline.dev.heroes.Heroes;
+import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
@@ -7,23 +11,11 @@ import java.lang.reflect.Constructor;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
-
-import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.ConfigurationSection;
-
-import com.herocraftonline.dev.heroes.Heroes;
 
 public class SkillManager {
 
@@ -61,12 +53,12 @@ public class SkillManager {
         }
 
         ClassLoader cl = plugin.getClass().getClassLoader();
-        classLoader = URLClassLoader.newInstance(urls.toArray(new URL[0]), cl);
+        classLoader = URLClassLoader.newInstance(urls.toArray(new URL[urls.size()]), cl);
     }
 
     /**
      * Adds a skill to the skill mapping
-     * 
+     *
      * @param skill
      */
     public void addSkill(Skill skill) {
@@ -79,13 +71,14 @@ public class SkillManager {
     /**
      * Returns a skill from it's name
      * If the skill is not in the skill mapping it will attempt to load it from file
-     * 
+     *
      * @param name
      * @return
      */
     public Skill getSkill(String name) {
-        if (name == null)
+        if (name == null) {
             return null;
+        }
         // Only attempt to load files that exist
         else if (!isLoaded(name) && skillFiles.containsKey(name.toLowerCase())) {
             loadSkill(name);
@@ -94,19 +87,21 @@ public class SkillManager {
     }
 
     public boolean loadOutsourcedSkill(String name) {
-        if (name == null || skills.get(name.toLowerCase()) != null)
+        if (name == null || skills.get(name.toLowerCase()) != null) {
             return true;
+        }
 
         OutsourcedSkill oSkill = new OutsourcedSkill(plugin, name);
         ConfigurationSection config = SkillConfigManager.outsourcedSkillConfig.getConfigurationSection(oSkill.getName());
         List<String> perms = new ArrayList<String>();
-        if (config != null)
+        if (config != null) {
             perms = config.getStringList("permissions");
+        }
         if (perms.isEmpty()) {
             Heroes.log(Level.SEVERE, "There are no permissions defined for " + oSkill.getName());
             return false;
         }
-        oSkill.setPermissions(perms.toArray(new String[0]));
+        oSkill.setPermissions(perms.toArray(new String[perms.size()]));
         oSkill.setUsage(config.getString("usage"));
         skills.put(name.toLowerCase(), oSkill);
         return true;
@@ -114,7 +109,7 @@ public class SkillManager {
 
     /**
      * Gets a skill from it's identifiers
-     * 
+     *
      * @param ident
      * @param executor
      * @return
@@ -122,17 +117,17 @@ public class SkillManager {
     public Skill getSkillFromIdent(String ident, CommandSender executor) {
         if (identifiers.get(ident.toLowerCase()) == null) {
             for (Skill skill : skills.values()) {
-                if (skill.isIdentifier(executor, ident))
+                if (skill.isIdentifier(executor, ident)) {
                     return skill;
+                }
             }
         }
         return identifiers.get(ident.toLowerCase());
     }
 
     /**
-     * 
      * Returns a collection of all skills loaded in the skill manager
-     * 
+     *
      * @return
      */
     public Collection<Skill> getSkills() {
@@ -141,7 +136,7 @@ public class SkillManager {
 
     /**
      * Checks if a skill has already been loaded
-     * 
+     *
      * @param name
      * @return
      */
@@ -151,7 +146,7 @@ public class SkillManager {
 
     /**
      * Returns a loaded skill from a skill jar
-     * 
+     *
      * @param file
      * @return
      */
@@ -178,8 +173,9 @@ public class SkillManager {
                 plugin.getSkillConfigs().loadSkillDefaults(skill);
                 skill.init();
                 return skill;
-            } else
+            } else {
                 throw new Exception();
+            }
         } catch (Exception e) {
             e.printStackTrace();
             Heroes.log(Level.INFO, "The skill " + file.getName() + " failed to load");
@@ -193,8 +189,9 @@ public class SkillManager {
     public void loadSkills() {
         for (Entry<String, File> entry : skillFiles.entrySet()) {
             // if the Skill is already loaded, skip it
-            if (isLoaded(entry.getKey())) 
+            if (isLoaded(entry.getKey())) {
                 continue;
+            }
 
             Skill skill = loadSkill(entry.getValue());
             if (skill != null) {
@@ -206,7 +203,7 @@ public class SkillManager {
 
     /**
      * Removes a skill from the skill mapping
-     * 
+     *
      * @param command
      */
     public void removeSkill(Skill command) {
@@ -218,19 +215,21 @@ public class SkillManager {
 
     /**
      * loads a Skill from file
-     * 
+     *
      * @param name
      * @return
      */
     private boolean loadSkill(String name) {
         // If the skill is already loaded, don't try to load it
-        if (isLoaded(name))
+        if (isLoaded(name)) {
             return true;
+        }
 
         // Lets try loading the skill file
         Skill skill = loadSkill(skillFiles.get(name.toLowerCase()));
-        if (skill == null)
+        if (skill == null) {
             return false;
+        }
 
         addSkill(skill);
         return true;
