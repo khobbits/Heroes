@@ -207,7 +207,7 @@ public class SkillManager {
      * @param command
      */
     public void removeSkill(Skill command) {
-        skills.remove(command);
+        skills.put(command.getName().toLowerCase().replace("skill", ""), command);
         for (String ident : command.getIdentifiers()) {
             identifiers.remove(ident.toLowerCase());
         }

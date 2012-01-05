@@ -1,19 +1,5 @@
 package com.herocraftonline.dev.heroes.hero;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.logging.Level;
-
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
-
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.HeroRegainManaEvent;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
@@ -26,10 +12,17 @@ import com.herocraftonline.dev.heroes.skill.OutsourcedSkill;
 import com.herocraftonline.dev.heroes.skill.PassiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.util.Messaging;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
+
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.logging.Level;
 
 /**
  * Player management
- * 
+ *
  * @author Herocraft's Plugin Team
  */
 public class HeroManager {
@@ -52,12 +45,12 @@ public class HeroManager {
         long regenInterval = Heroes.properties.manaRegenInterval * 1000L;
         Runnable manaTimer = new ManaUpdater(this, regenInterval, regenAmount);
         plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, manaTimer, 0, manaInterval);
-        
+
         delayedSkills = new HashMap<Hero, DelayedSkill>();
         completedSkills = new ArrayList<Hero>();
         Runnable delayedExecuter = new DelayedSkillExecuter(this);
         plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, delayedExecuter, 0, warmupInterval);
-        
+
     }
 
     public void addHero(Hero hero) {
@@ -71,7 +64,7 @@ public class HeroManager {
     /**
      * Gets a hero Object from the hero mapping, if the hero does not exist then it loads in the Hero object for the
      * player
-     * 
+     *
      * @param player
      * @return
      */
@@ -103,13 +96,15 @@ public class HeroManager {
         Player player = hero.getPlayer();
         HeroClass playerClass = hero.getHeroClass();
         HeroClass secondClass = hero.getSecondClass();
-        if(!CommandHandler.hasPermission(player, "heroes.classes." + playerClass.getName().toLowerCase()))
+        if (!CommandHandler.hasPermission(player, "heroes.classes." + playerClass.getName().toLowerCase())) {
             hero.setHeroClass(plugin.getClassManager().getDefaultClass(), false);
-        
-        if (secondClass != null && !CommandHandler.hasPermission(player, "heroes.classes." + secondClass.getName().toLowerCase()))
+        }
+
+        if (secondClass != null && !CommandHandler.hasPermission(player, "heroes.classes." + secondClass.getName().toLowerCase())) {
             hero.setHeroClass(null, true);
+        }
     }
-    
+
     public Collection<Hero> getHeroes() {
         return Collections.unmodifiableCollection(heroes.values());
     }
@@ -125,20 +120,21 @@ public class HeroManager {
     }
 
     public void removeHero(Hero hero) {
-        if (hero != null && hero.hasParty()) {
-            HeroParty party = hero.getParty();
-            party.removeMember(hero);
-            if (party.getMembers().size() == 0) {
-                this.plugin.getPartyManager().removeParty(party);
+        if (hero != null) {
+            if (hero.hasParty()) {
+                HeroParty party = hero.getParty();
+                party.removeMember(hero);
+                if (party.getMembers().size() == 0) {
+                    this.plugin.getPartyManager().removeParty(party);
+                }
             }
+            heroes.remove(hero.getPlayer().getName().toLowerCase());
         }
-
-        heroes.remove(hero.getPlayer().getName().toLowerCase());
     }
 
     /**
      * Save the given Players Data to a file.
-     * 
+     *
      * @param player
      */
     public void saveHero(Hero hero) {
@@ -158,11 +154,11 @@ public class HeroManager {
     public Map<Hero, DelayedSkill> getDelayedSkills() {
         return delayedSkills;
     }
-    
+
     public List<Hero> getCompletedSkills() {
         return completedSkills;
     }
-    
+
     public void addCompletedSkill(Hero hero) {
         completedSkills.add(hero);
     }
@@ -234,13 +230,13 @@ class DelayedSkillExecuter implements Runnable {
             hero.setDelayedSkill(null);
         }
         manager.getCompletedSkills().clear();
-        
+
         Iterator<Entry<Hero, DelayedSkill>> iter = manager.getDelayedSkills().entrySet().iterator();
-        while(iter.hasNext()) {
+        while (iter.hasNext()) {
             Entry<Hero, DelayedSkill> entry = iter.next();
-            if (entry.getKey().getDelayedSkill() == null)
+            if (entry.getKey().getDelayedSkill() == null) {
                 iter.remove();
-            else if (entry.getValue().isReady()) {
+            } else if (entry.getValue().isReady()) {
                 DelayedSkill dSkill = entry.getValue();
                 dSkill.getSkill().execute(dSkill.getPlayer(), dSkill.getIdentifier(), dSkill.getArgs());
             }
