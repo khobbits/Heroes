@@ -4,12 +4,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
+import net.minecraft.server.ContainerEnchantTable;
+
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
 import org.getspout.spoutapi.event.inventory.InventoryEnchantEvent;
 import org.getspout.spoutapi.event.inventory.InventoryListener;
+import org.getspout.spoutapi.event.inventory.InventoryOpenEvent;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.effects.EffectType;
@@ -102,6 +106,18 @@ public class SkillEnchant extends PassiveSkill {
                     Util.syncInventory(event.getPlayer(), plugin);
                     return;
                 }
+            }
+        }
+
+        @Override
+        public void onInventoryOpen(InventoryOpenEvent event) {
+            if (event.isCancelled() || !(((CraftPlayer) event.getPlayer()).getHandle().activeContainer instanceof ContainerEnchantTable))
+                return;
+
+            Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
+            if (!hero.hasEffect(getName())) {
+                event.setCancelled(true);
+                Messaging.send(event.getPlayer(), "You don't have the ability to enchant items!");
             }
         }
     }

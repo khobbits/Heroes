@@ -83,7 +83,7 @@ public class SpoutInventoryListener extends InventoryListener {
 
         Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
         HeroClass hc = hero.getEnchantingClass();
-        if (hc == null)
+        if (hc != null)
             event.setCancelled(true);
         else
             hero.syncExperience(hc);
