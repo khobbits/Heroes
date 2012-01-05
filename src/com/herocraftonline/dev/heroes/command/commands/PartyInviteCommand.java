@@ -24,8 +24,10 @@ public class PartyInviteCommand extends BasicCommand {
 
     @Override
     public boolean execute(CommandSender sender, String identifier, String[] args) {
-        if (!(sender instanceof Player))
+        if (!(sender instanceof Player)) {
+            Messaging.send(sender, "Only players can create parties");
             return false;
+        }
 
         Player player = (Player) sender;
         Player target = plugin.getServer().getPlayer(args[0]);
@@ -33,6 +35,11 @@ public class PartyInviteCommand extends BasicCommand {
 
         if (target == null) {
             Messaging.send(player, "Player not found.");
+            return false;
+        }
+
+        if (target.equals(player)) {
+            Messaging.send(player, "You cannot invite yourself.");
             return false;
         }
 
@@ -47,11 +54,6 @@ public class PartyInviteCommand extends BasicCommand {
 
         if (!party.getLeader().equals(hero)) {
             Messaging.send(player, "You are not leader of this party.");
-            return false;
-        }
-
-        if (target.equals(player)) {
-            Messaging.send(player, "You cannot invite yourself.");
             return false;
         }
 

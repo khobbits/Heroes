@@ -4,19 +4,12 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.entity.Creature;
 import org.bukkit.entity.Player;
-import org.getspout.spoutapi.SpoutManager;
-import org.getspout.spoutapi.gui.Container;
-import org.getspout.spoutapi.gui.Widget;
-import org.getspout.spoutapi.player.SpoutPlayer;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
 import com.herocraftonline.dev.heroes.hero.Hero;
-import com.herocraftonline.dev.heroes.spout.gui.EntityBar;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Properties;
 import com.herocraftonline.dev.heroes.util.Util;
@@ -137,46 +130,10 @@ public class HeroParty {
         this.leader = leader;
     }
 
-    public void update(Player player) {
-        SpoutPlayer sPlayer = SpoutManager.getPlayer(player);
-        if (!sPlayer.isSpoutCraftEnabled())
-            return;
-
-        Container container = plugin.getSpoutData().getPartyContainer(player.getName());
-        if (container == null)
-            return;
-
-        int index = 0;
-        Set<Hero> heroes = getMembers();
-        Hero hero = plugin.getHeroManager().getHero(player);
-        index = updateContainer(hero, container, index);
-        heroes.remove(hero);
-        for (Hero h : heroes) {
-            index = updateContainer(h, container, index);
-        }
-        Widget[] bars = container.getChildren();
-        while (index < bars.length)
-            container.removeChild(bars[index++]);
-
-        container.updateLayout();
-    }
-
-    public int updateContainer(Hero hero, Container container, int index) {
-        EntityBar bar;
-        if (index >= container.getChildren().length) {
-            container.addChild(bar = new EntityBar(plugin));
-        } else {
-            bar = (EntityBar) container.getChildren()[index];
-        }
-        bar.setEntity(hero.getPlayer().getName(), leader.equals(hero) ? ChatColor.GREEN + "@" : "");
-        bar.setTargets(plugin, hero.getSummons().isEmpty() ? null : hero.getSummons().toArray(new Creature[0]));
-        return index++;
-    }
-
     public void update() {
         if (Heroes.useSpout()) 
             for (Hero hero : members)
-                update(hero.getPlayer());   
+                plugin.getSpoutData().updatePartyDisplay(hero.getPlayer(), this);   
     }
 
     public void gainExp(double amount, ExperienceType type, Location location) {

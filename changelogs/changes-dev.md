@@ -2,6 +2,8 @@ Version dev
 
 ==== **Bug Fixes:** ====
 
+* Fix party commands erroring when Spout is not detected
+
 ==== **General:** ====
 
 * Added /hero admin heal <playername>

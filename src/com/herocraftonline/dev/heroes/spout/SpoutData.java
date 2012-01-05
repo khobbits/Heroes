@@ -2,13 +2,22 @@ package com.herocraftonline.dev.heroes.spout;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Creature;
+import org.bukkit.entity.Player;
+import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.gui.Container;
 import org.getspout.spoutapi.gui.ContainerType;
 import org.getspout.spoutapi.gui.GenericContainer;
+import org.getspout.spoutapi.gui.Widget;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.hero.Hero;
+import com.herocraftonline.dev.heroes.party.HeroParty;
+import com.herocraftonline.dev.heroes.spout.gui.EntityBar;
 
 public class SpoutData {
 
@@ -37,5 +46,41 @@ public class SpoutData {
     
     public Container getPartyContainer(String name) {
         return partyUIContainers.get(name);
+    }
+    
+    public void updatePartyDisplay(Player player, HeroParty party) {
+        SpoutPlayer sPlayer = SpoutManager.getPlayer(player);
+        if (!sPlayer.isSpoutCraftEnabled())
+            return;
+
+        Container container = plugin.getSpoutData().getPartyContainer(player.getName());
+        if (container == null)
+            return;
+
+        int index = 0;
+        Set<Hero> heroes = party.getMembers();
+        Hero hero = plugin.getHeroManager().getHero(player);
+        index = updateContainer(hero, container, index);
+        heroes.remove(hero);
+        for (Hero h : heroes) {
+            index = updateContainer(h, container, index);
+        }
+        Widget[] bars = container.getChildren();
+        while (index < bars.length)
+            container.removeChild(bars[index++]);
+
+        container.updateLayout();
+    }
+
+    public int updateContainer(Hero hero, Container container, int index) {
+        EntityBar bar;
+        if (index >= container.getChildren().length) {
+            container.addChild(bar = new EntityBar(plugin));
+        } else {
+            bar = (EntityBar) container.getChildren()[index];
+        }
+        bar.setEntity(hero.getPlayer().getName(), hero.getParty().getLeader().equals(hero) ? ChatColor.GREEN + "@" : "");
+        bar.setTargets(plugin, hero.getSummons().isEmpty() ? null : hero.getSummons().toArray(new Creature[0]));
+        return index++;
     }
 }
