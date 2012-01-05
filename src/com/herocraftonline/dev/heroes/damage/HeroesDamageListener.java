@@ -1,40 +1,7 @@
 package com.herocraftonline.dev.heroes.damage;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
-import net.minecraft.server.EntityLiving;
-import net.minecraft.server.MobEffectList;
-
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Material;
-import org.bukkit.craftbukkit.entity.CraftLivingEntity;
-import org.bukkit.entity.ComplexEntityPart;
-import org.bukkit.entity.ComplexLivingEntity;
-import org.bukkit.entity.CreatureType;
-import org.bukkit.entity.EnderDragon;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.event.entity.EntityListener;
-import org.bukkit.event.entity.EntityRegainHealthEvent;
-import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
-
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.api.HeroAttackDamageCause;
-import com.herocraftonline.dev.heroes.api.HeroDamageCause;
-import com.herocraftonline.dev.heroes.api.HeroSkillDamageCause;
-import com.herocraftonline.dev.heroes.api.SkillDamageEvent;
-import com.herocraftonline.dev.heroes.api.SkillUseInfo;
-import com.herocraftonline.dev.heroes.api.WeaponDamageEvent;
+import com.herocraftonline.dev.heroes.api.*;
 import com.herocraftonline.dev.heroes.damage.DamageManager.ProjectileType;
 import com.herocraftonline.dev.heroes.effects.Effect;
 import com.herocraftonline.dev.heroes.effects.EffectManager;
@@ -45,6 +12,25 @@ import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Util;
+import net.minecraft.server.EntityLiving;
+import net.minecraft.server.MobEffectList;
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.Material;
+import org.bukkit.craftbukkit.entity.CraftLivingEntity;
+import org.bukkit.entity.*;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.entity.EntityListener;
+import org.bukkit.event.entity.EntityRegainHealthEvent;
+import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class HeroesDamageListener extends EntityListener {
 
@@ -81,23 +67,26 @@ public class HeroesDamageListener extends EntityListener {
         }
 
         double newHeroHealth = hero.getHealth() + amount;
-        if (newHeroHealth > maxHealth)
+        if (newHeroHealth > maxHealth) {
             newHeroHealth = maxHealth;
+        }
         int newPlayerHealth = (int) (newHeroHealth / maxHealth * 20);
         hero.setHealth(newHeroHealth);
 
         //Sanity test
         int newAmount = newPlayerHealth - player.getHealth();
-        if (newAmount < 0)
+        if (newAmount < 0) {
             newAmount = 0;
+        }
         event.setAmount(newAmount);
         Heroes.debug.stopTask("HeroesDamageListener.onEntityRegainHealth");
     }
 
     private int onEntityDamageCore(EntityDamageEvent event, Entity attacker, int damage) {
         // In case bukkit is firing multiple damage events quickly
-        if (event.getDamage() == 0)
+        if (event.getDamage() == 0) {
             return 0;
+        }
 
         if (attacker instanceof Player) {
             Player attackingPlayer = (Player) attacker;
@@ -110,7 +99,7 @@ public class HeroesDamageListener extends EntityListener {
             damage = getPlayerDamage(attackingPlayer, damage);
         } else if (attacker instanceof LivingEntity) {
             CreatureType type = Util.getCreatureFromEntity(attacker);
-            if (type != null || type != CreatureType.WOLF) {
+            if (type != null && type != CreatureType.WOLF) {
                 Integer tmpDamage = damageManager.getEntityDamage(type);
                 if (tmpDamage != null) {
                     damage = tmpDamage;
@@ -139,7 +128,7 @@ public class HeroesDamageListener extends EntityListener {
         plugin.getServer().getPluginManager().callEvent(weaponDamageEvent);
         if (weaponDamageEvent.isCancelled()) {
             event.setCancelled(true);
-            return 0 ;
+            return 0;
         }
         damage = weaponDamageEvent.getDamage();
         if (event.getEntity() instanceof Player) {
@@ -172,7 +161,7 @@ public class HeroesDamageListener extends EntityListener {
             if (defender.isDead() || ((LivingEntity) defender).getHealth() <= 0) {
                 Heroes.debug.stopTask("HeroesDamageListener.onEntityDamage");
                 return;
-            } else if (defender instanceof Player) { 
+            } else if (defender instanceof Player) {
                 Player player = (Player) defender;
                 if (player.getGameMode() == GameMode.CREATIVE) {
                     Heroes.debug.stopTask("HeroesDamageListener.onEntityDamage");
@@ -187,46 +176,46 @@ public class HeroesDamageListener extends EntityListener {
         } else {
             DamageCause cause = event.getCause();
             switch (cause) {
-            case SUICIDE:
-                if (defender instanceof Player) {
-                    Player player = (Player) event.getEntity();
-                    plugin.getHeroManager().getHero(player).setHealth(0D);
-                    event.setDamage(1000); //OVERKILLLLL!!
-                    Heroes.debug.stopTask("HeroesDamageListener.onEntityDamage");
-                    return;
-                }
-                break;
-            case ENTITY_ATTACK: 
-            case ENTITY_EXPLOSION:
-            case PROJECTILE:
-                damage = onEntityDamageCore(event, attacker, damage);
-                break;
-            case FALL:
-                damage = onEntityFall(event.getDamage(), defender);
-                break;
-            case SUFFOCATION:
-                damage = onEntitySuffocate(event.getDamage(), defender);
-                break;
-            case DROWNING:
-                damage = onEntityDrown(event.getDamage(), defender, event);
-                break;
-            case STARVATION:
-                damage = onEntityStarve(event.getDamage(), defender);
-                break;
-            case FIRE:
-            case LAVA:
-            case FIRE_TICK:
-                damage = onEntityFlame(event.getDamage(), cause, defender, event);
-                break;
-            default:
-                break;
+                case SUICIDE:
+                    if (defender instanceof Player) {
+                        Player player = (Player) event.getEntity();
+                        plugin.getHeroManager().getHero(player).setHealth(0D);
+                        event.setDamage(1000); //OVERKILLLLL!!
+                        Heroes.debug.stopTask("HeroesDamageListener.onEntityDamage");
+                        return;
+                    }
+                    break;
+                case ENTITY_ATTACK:
+                case ENTITY_EXPLOSION:
+                case PROJECTILE:
+                    damage = onEntityDamageCore(event, attacker, damage);
+                    break;
+                case FALL:
+                    damage = onEntityFall(event.getDamage(), defender);
+                    break;
+                case SUFFOCATION:
+                    damage = onEntitySuffocate(event.getDamage(), defender);
+                    break;
+                case DROWNING:
+                    damage = onEntityDrown(event.getDamage(), defender, event);
+                    break;
+                case STARVATION:
+                    damage = onEntityStarve(event.getDamage(), defender);
+                    break;
+                case FIRE:
+                case LAVA:
+                case FIRE_TICK:
+                    damage = onEntityFlame(event.getDamage(), cause, defender, event);
+                    break;
+                default:
+                    break;
             }
 
             //Check if one of the Method calls cancelled the event due to resistances etc.
             if (event.isCancelled()) {
                 Heroes.debug.stopTask("HeroesDamageListener.onEntityDamage");
                 if (defender instanceof Player) {
-                    plugin.getHeroManager().getHero((Player) defender).setLastDamageCause(lastDamage); 
+                    plugin.getHeroManager().getHero((Player) defender).setLastDamageCause(lastDamage);
                 }
                 return;
             }
@@ -257,7 +246,7 @@ public class HeroesDamageListener extends EntityListener {
                 return;
             }
             for (Effect effect : hero.getEffects()) {
-                if ((effect.isType(EffectType.ROOT) || effect.isType(EffectType.INVIS)) && !effect.isType(EffectType.UNBREAKABLE))  {
+                if ((effect.isType(EffectType.ROOT) || effect.isType(EffectType.INVIS)) && !effect.isType(EffectType.UNBREAKABLE)) {
                     hero.removeEffect(effect);
                 }
             }
@@ -289,35 +278,38 @@ public class HeroesDamageListener extends EntityListener {
             }
 
             switch (event.getCause()) {
-            case FIRE:
-            case LAVA:
-            case BLOCK_EXPLOSION:
-            case CONTACT:
-            case ENTITY_EXPLOSION:
-            case ENTITY_ATTACK:
-            case PROJECTILE:
-                hero.setHealth(hero.getHealth() - (damage * calculateArmorReduction(player.getInventory())));
-                break;
-            default:
-                hero.setHealth(hero.getHealth() - damage);
+                case FIRE:
+                case LAVA:
+                case BLOCK_EXPLOSION:
+                case CONTACT:
+                case ENTITY_EXPLOSION:
+                case ENTITY_ATTACK:
+                case PROJECTILE:
+                    hero.setHealth(hero.getHealth() - (damage * calculateArmorReduction(player.getInventory())));
+                    break;
+                default:
+                    hero.setHealth(hero.getHealth() - damage);
             }
 
             event.setDamage(convertHeroesDamage(damage, player));
             //If the player would drop to 0 but they still have HP left, don't let them die.
-            if (hero.getHealth() != 0 && player.getHealth() == 1 && event.getDamage() == 1)
+            if (hero.getHealth() != 0 && player.getHealth() == 1 && event.getDamage() == 1) {
                 player.setHealth(2);
+            }
             // Make sure health syncs on the next tick
-            if (hero.getHealth() == 0)
+            if (hero.getHealth() == 0) {
                 event.setDamage(200);
-            else
+            } else {
                 Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
                     @Override
                     public void run() {
-                        if (hero.getPlayer().getHealth() == 0 || hero.getPlayer().isDead())
+                        if (hero.getPlayer().getHealth() == 0 || hero.getPlayer().isDead()) {
                             return;
+                        }
                         hero.syncHealth();
                     }
                 }, 1);
+            }
 
             //Update the party display
             HeroParty party = hero.getParty();
@@ -338,7 +330,7 @@ public class HeroesDamageListener extends EntityListener {
             if (currentHealth == null) {
                 currentHealth = (int) (lEntity.getHealth() / (double) lEntity.getMaxHealth()) * maxHealth;
             }
-            
+
             // Health-Syncing 
             currentHealth -= damage;
             // If the entity would die from damage, set the damage really high, this should kill any entity in MC outright
@@ -362,12 +354,13 @@ public class HeroesDamageListener extends EntityListener {
                         if (lEntity.getHealth() + 1 <= lEntity.getMaxHealth()) {
                             lEntity.setHealth(lEntity.getHealth() + 1);
                             damage = 1;
-                        } else 
+                        } else {
                             damage = 0;
+                        }
                     }
                 } else if (newHealth <= 0) {
                     lEntity.setHealth(lEntity.getHealth() + 1 - newHealth);
-                }                
+                }
 
                 //Only re-sync if the max health for this is different than the 
                 //if (maxHealth != lEntity.getMaxHealth() && damage > 0) {
@@ -400,9 +393,10 @@ public class HeroesDamageListener extends EntityListener {
         }
         return damage;
     }
+
     /**
      * Returns a percentage adjusted damage value for starvation
-     * 
+     *
      * @param percent
      * @param entity
      * @return
@@ -422,15 +416,16 @@ public class HeroesDamageListener extends EntityListener {
             hero.setLastDamageCause(new HeroDamageCause((int) (double) percent, DamageCause.STARVATION));
         } else if (entity instanceof LivingEntity) {
             Integer creatureHealth = damageManager.getEntityMaxHealth(Util.getCreatureFromEntity(entity));
-            if (creatureHealth != null)
+            if (creatureHealth != null) {
                 percent *= creatureHealth;
+            }
         }
         return percent < 1 ? 1 : (int) (double) percent;
     }
 
     /**
      * Returns a percentage adjusted damage value for suffocation
-     * 
+     *
      * @param percent
      * @param entity
      * @return
@@ -450,15 +445,16 @@ public class HeroesDamageListener extends EntityListener {
             hero.setLastDamageCause(new HeroDamageCause((int) (double) percent, DamageCause.SUFFOCATION));
         } else if (entity instanceof LivingEntity) {
             Integer creatureHealth = damageManager.getEntityMaxHealth(Util.getCreatureFromEntity(entity));
-            if (creatureHealth != null)
+            if (creatureHealth != null) {
                 percent *= creatureHealth;
+            }
         }
         return percent < 1 ? 1 : (int) (double) percent;
     }
 
     /**
      * Returns a percentage adjusted damage value for drowning
-     * 
+     *
      * @param percent
      * @param entity
      * @return
@@ -487,15 +483,16 @@ public class HeroesDamageListener extends EntityListener {
                 return 0;
             }
             Integer creatureHealth = damageManager.getEntityMaxHealth(Util.getCreatureFromEntity(entity));
-            if (creatureHealth != null)
+            if (creatureHealth != null) {
                 percent *= creatureHealth;
+            }
         }
         return percent < 1 ? 1 : (int) (double) percent;
     }
 
     /**
      * Adjusts damage for Fire damage events.
-     * 
+     *
      * @param damage
      * @param cause
      * @param entity
@@ -510,7 +507,7 @@ public class HeroesDamageListener extends EntityListener {
             }
             return (int) defaultDamage;
         }
-        
+
         if (entity instanceof LivingEntity) {
             EntityLiving el = ((CraftLivingEntity) entity).getHandle();
             if (el.hasEffect(MobEffectList.FIRE_RESISTANCE)) {
@@ -518,17 +515,19 @@ public class HeroesDamageListener extends EntityListener {
                 return 0;
             }
         }
-        
-        if (damage == 0)
+
+        if (damage == 0) {
             return 0;
+        }
         if (entity instanceof Player) {
             Hero hero = plugin.getHeroManager().getHero((Player) entity);
             if (hero.hasEffectType(EffectType.RESIST_FIRE)) {
                 event.setCancelled(true);
                 return 0;
             }
-            if (cause != DamageCause.FIRE_TICK)
+            if (cause != DamageCause.FIRE_TICK) {
                 damage *= hero.getMaxHealth();
+            }
 
             hero.setLastDamageCause(new HeroDamageCause((int) (double) damage, cause));
         } else if (entity instanceof LivingEntity) {
@@ -538,8 +537,9 @@ public class HeroesDamageListener extends EntityListener {
             }
             if (cause != DamageCause.FIRE_TICK) {
                 Integer creatureHealth = damageManager.getEntityMaxHealth(Util.getCreatureFromEntity(entity));
-                if (creatureHealth != null)
+                if (creatureHealth != null) {
                     damage *= creatureHealth;
+                }
             }
         }
         return damage < 1 ? 1 : (int) (double) damage;
@@ -547,31 +547,36 @@ public class HeroesDamageListener extends EntityListener {
 
     /**
      * Adjusts the damage being dealt during a fall
-     * 
+     *
      * @param damage
      * @param entity
      * @return
      */
     private int onEntityFall(int damage, Entity entity) {
         Double damagePercent = damageManager.getEnvironmentalDamage(DamageCause.FALL);
-        if (damagePercent == null)
+        if (damagePercent == null) {
             return damage;
+        }
 
-        if (damage == 0)
+        if (damage == 0) {
             return 0;
+        }
         if (entity instanceof Player) {
             Hero dHero = plugin.getHeroManager().getHero((Player) entity);
-            if (dHero.hasEffectType(EffectType.SAFEFALL))
+            if (dHero.hasEffectType(EffectType.SAFEFALL)) {
                 return 0;
+            }
 
             damage = (int) (damage * damagePercent * dHero.getMaxHealth());
         } else if (entity instanceof LivingEntity) {
-            if (plugin.getEffectManager().entityHasEffectType((LivingEntity) entity, EffectType.SAFEFALL)) 
+            if (plugin.getEffectManager().entityHasEffectType((LivingEntity) entity, EffectType.SAFEFALL)) {
                 return 0;
+            }
 
             Integer creatureHealth = damageManager.getEntityMaxHealth(Util.getCreatureFromEntity(entity));
-            if (creatureHealth != null)
+            if (creatureHealth != null) {
                 damage = (int) (damage * damagePercent * creatureHealth);
+            }
         }
         return damage < 1 ? 1 : damage;
     }
@@ -580,43 +585,44 @@ public class HeroesDamageListener extends EntityListener {
         double percent = 1;
         int armorPoints = 0;
         for (ItemStack armor : inventory.getArmorContents()) {
-            if (armor == null)
+            if (armor == null) {
                 continue;
+            }
             switch (armor.getType()) {
-            case LEATHER_HELMET:
-            case LEATHER_BOOTS:
-            case GOLD_BOOTS:
-            case CHAINMAIL_BOOTS:
-                armorPoints += 1;
-                continue;
-            case GOLD_HELMET:
-            case IRON_HELMET:
-            case CHAINMAIL_HELMET:
-            case LEATHER_LEGGINGS:
-            case IRON_BOOTS:
-                armorPoints += 2;
-                continue;
-            case DIAMOND_HELMET:
-            case LEATHER_CHESTPLATE:
-            case GOLD_LEGGINGS:
-            case DIAMOND_BOOTS:
-                armorPoints += 3;
-                continue;
-            case CHAINMAIL_LEGGINGS:
-                armorPoints += 4;
-                continue;
-            case GOLD_CHESTPLATE:
-            case CHAINMAIL_CHESTPLATE:
-            case IRON_LEGGINGS:
-                armorPoints += 5;
-                continue;
-            case IRON_CHESTPLATE:
-            case DIAMOND_LEGGINGS:
-                armorPoints += 6;
-                continue;
-            case DIAMOND_CHESTPLATE:
-                armorPoints += 8;
-                continue;
+                case LEATHER_HELMET:
+                case LEATHER_BOOTS:
+                case GOLD_BOOTS:
+                case CHAINMAIL_BOOTS:
+                    armorPoints += 1;
+                    continue;
+                case GOLD_HELMET:
+                case IRON_HELMET:
+                case CHAINMAIL_HELMET:
+                case LEATHER_LEGGINGS:
+                case IRON_BOOTS:
+                    armorPoints += 2;
+                    continue;
+                case DIAMOND_HELMET:
+                case LEATHER_CHESTPLATE:
+                case GOLD_LEGGINGS:
+                case DIAMOND_BOOTS:
+                    armorPoints += 3;
+                    continue;
+                case CHAINMAIL_LEGGINGS:
+                    armorPoints += 4;
+                    continue;
+                case GOLD_CHESTPLATE:
+                case CHAINMAIL_CHESTPLATE:
+                case IRON_LEGGINGS:
+                    armorPoints += 5;
+                    continue;
+                case IRON_CHESTPLATE:
+                case DIAMOND_LEGGINGS:
+                    armorPoints += 6;
+                    continue;
+                case DIAMOND_CHESTPLATE:
+                    armorPoints += 8;
+                    continue;
             }
         }
         percent = (25 - armorPoints) / 25D;
@@ -639,29 +645,31 @@ public class HeroesDamageListener extends EntityListener {
     private boolean resistanceCheck(Entity defender, Skill skill) {
         if (defender instanceof Player) {
             Hero hero = plugin.getHeroManager().getHero((Player) defender);
-            if (hero.hasEffectType(EffectType.RESIST_FIRE) && skill.isType(SkillType.FIRE))
+            if (hero.hasEffectType(EffectType.RESIST_FIRE) && skill.isType(SkillType.FIRE)) {
                 return true;
-            else if (hero.hasEffectType(EffectType.RESIST_DARK) && skill.isType(SkillType.DARK))
+            } else if (hero.hasEffectType(EffectType.RESIST_DARK) && skill.isType(SkillType.DARK)) {
                 return true;
-            else if (hero.hasEffectType(EffectType.RESIST_LIGHT) && skill.isType(SkillType.LIGHT))
+            } else if (hero.hasEffectType(EffectType.RESIST_LIGHT) && skill.isType(SkillType.LIGHT)) {
                 return true;
-            else if (hero.hasEffectType(EffectType.RESIST_LIGHTNING) && skill.isType(SkillType.LIGHTNING))
+            } else if (hero.hasEffectType(EffectType.RESIST_LIGHTNING) && skill.isType(SkillType.LIGHTNING)) {
                 return true;
-            else if (hero.hasEffectType(EffectType.RESIST_ICE) && skill.isType(SkillType.ICE))
+            } else if (hero.hasEffectType(EffectType.RESIST_ICE) && skill.isType(SkillType.ICE)) {
                 return true;
+            }
         } else if (defender instanceof LivingEntity) {
             EffectManager em = plugin.getEffectManager();
             LivingEntity c = (LivingEntity) defender;
-            if (em.entityHasEffectType(c, EffectType.RESIST_FIRE) && skill.isType(SkillType.FIRE))
+            if (em.entityHasEffectType(c, EffectType.RESIST_FIRE) && skill.isType(SkillType.FIRE)) {
                 return true;
-            else if (em.entityHasEffectType(c, EffectType.RESIST_DARK) && skill.isType(SkillType.DARK))
+            } else if (em.entityHasEffectType(c, EffectType.RESIST_DARK) && skill.isType(SkillType.DARK)) {
                 return true;
-            else if (em.entityHasEffectType(c, EffectType.LIGHT) && skill.isType(SkillType.LIGHT))
+            } else if (em.entityHasEffectType(c, EffectType.LIGHT) && skill.isType(SkillType.LIGHT)) {
                 return true;
-            else if (em.entityHasEffectType(c, EffectType.RESIST_LIGHTNING) && skill.isType(SkillType.LIGHTNING))
+            } else if (em.entityHasEffectType(c, EffectType.RESIST_LIGHTNING) && skill.isType(SkillType.LIGHTNING)) {
                 return true;
-            else if (em.entityHasEffectType(c, EffectType.RESIST_ICE) && skill.isType(SkillType.ICE))
+            } else if (em.entityHasEffectType(c, EffectType.RESIST_ICE) && skill.isType(SkillType.ICE)) {
                 return true;
+            }
         }
         return false;
     }
@@ -669,24 +677,25 @@ public class HeroesDamageListener extends EntityListener {
     private int convertHeroesDamage(double d, LivingEntity lEntity) {
         int maxHealth = getMaxHealth(lEntity);
         int damage = (int) ((lEntity.getMaxHealth() / (double) maxHealth) * d);
-        if (damage == 0)
+        if (damage == 0) {
             damage = 1;
+        }
         return damage;
     }
 
     public int getMaxHealth(LivingEntity lEntity) {
-        if (lEntity instanceof Player)
+        if (lEntity instanceof Player) {
             return (int) plugin.getHeroManager().getHero((Player) lEntity).getMaxHealth();
-        else {
+        } else {
             Integer maxHP = plugin.getDamageManager().getEntityMaxHealth(Util.getCreatureFromEntity(lEntity));
             return maxHP != null ? maxHP : lEntity.getMaxHealth();
         }
     }
 
     public int getHealth(LivingEntity lEntity) {
-        if (lEntity instanceof Player)
+        if (lEntity instanceof Player) {
             return (int) plugin.getHeroManager().getHero((Player) lEntity).getHealth();
-        else {
+        } else {
             Integer hp = healthMap.get(lEntity.getUniqueId());
             return hp != null ? hp : getMaxHealth(lEntity);
         }
