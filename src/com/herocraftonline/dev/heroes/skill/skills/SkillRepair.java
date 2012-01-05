@@ -16,7 +16,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class SkillRepair extends ActiveSkill {
-
     public SkillRepair(Heroes plugin) {
         super(plugin, "Repair");
         setDescription("repairs the tool or armor that you are holding");
@@ -49,147 +48,10 @@ public class SkillRepair extends ActiveSkill {
         return node;
     }
 
-    @Override
-    public SkillResult use(Hero hero, String[] args) {
-        Player player = hero.getPlayer();
-        ItemStack is = player.getItemInHand();
-        Material reagent = null;
-        int level;
-
-        switch (is.getType()) {
-            case WOOD_SWORD:
-            case WOOD_AXE:
-                level = SkillConfigManager.getUseSetting(hero, this, "wood-weapons", 1, true);
-                break;
-            case WOOD_HOE:
-            case WOOD_PICKAXE:
-            case WOOD_SPADE:
-                level = SkillConfigManager.getUseSetting(hero, this, "wood-tools", 1, true);
-                reagent = Material.WOOD;
-                break;
-            case STONE_SWORD:
-            case STONE_AXE:
-                level = SkillConfigManager.getUseSetting(hero, this, "stone-weapons", 1, true);
-                break;
-            case STONE_HOE:
-            case STONE_PICKAXE:
-            case STONE_SPADE:
-                level = SkillConfigManager.getUseSetting(hero, this, "stone-tools", 1, true);
-                reagent = Material.COBBLESTONE;
-                break;
-            case SHEARS:
-                level = SkillConfigManager.getUseSetting(hero, this, "shears", 1, true);
-                break;
-            case FLINT_AND_STEEL:
-                level = SkillConfigManager.getUseSetting(hero, this, "flint-steel", 1, true);
-                break;
-            case IRON_CHESTPLATE:
-            case IRON_LEGGINGS:
-            case IRON_BOOTS:
-            case IRON_HELMET:
-                level = SkillConfigManager.getUseSetting(hero, this, "iron-armor", 1, true);
-                break;
-            case IRON_SWORD:
-            case IRON_AXE:
-                level = SkillConfigManager.getUseSetting(hero, this, "iron-weapons", 1, true);
-                break;
-            case IRON_HOE:
-            case IRON_PICKAXE:
-            case IRON_SPADE:
-                level = SkillConfigManager.getUseSetting(hero, this, "iron-tools", 1, true);
-                reagent = Material.IRON_INGOT;
-                break;
-            case GOLD_CHESTPLATE:
-            case GOLD_LEGGINGS:
-            case GOLD_BOOTS:
-            case GOLD_HELMET:
-                level = SkillConfigManager.getUseSetting(hero, this, "gold-armor", 1, true);
-                break;
-            case GOLD_SWORD:
-            case GOLD_AXE:
-                level = SkillConfigManager.getUseSetting(hero, this, "gold-weapons", 1, true);
-                break;
-            case GOLD_HOE:
-            case GOLD_PICKAXE:
-            case GOLD_SPADE:
-                level = SkillConfigManager.getUseSetting(hero, this, "gold-tools", 1, true);
-                reagent = Material.GOLD_INGOT;
-                break;
-            case DIAMOND_CHESTPLATE:
-            case DIAMOND_LEGGINGS:
-            case DIAMOND_BOOTS:
-            case DIAMOND_HELMET:
-                level = SkillConfigManager.getUseSetting(hero, this, "diamond-armor", 1, true);
-                break;
-            case DIAMOND_SWORD:
-            case DIAMOND_AXE:
-                level = SkillConfigManager.getUseSetting(hero, this, "diamond-weapons", 1, true);
-                break;
-            case DIAMOND_HOE:
-            case DIAMOND_PICKAXE:
-            case DIAMOND_SPADE:
-                level = SkillConfigManager.getUseSetting(hero, this, "diamond-tools", 1, true);
-                reagent = Material.DIAMOND;
-                break;
-            case LEATHER_BOOTS:
-            case LEATHER_CHESTPLATE:
-            case LEATHER_HELMET:
-            case LEATHER_LEGGINGS:
-                level = SkillConfigManager.getUseSetting(hero, this, "leather-armor", 1, true);
-                reagent = Material.LEATHER;
-                break;
-            case FISHING_ROD:
-                level = SkillConfigManager.getUseSetting(hero, this, "fishing-rod", 1, true);
-                reagent = Material.STRING;
-                break;
-            default:
-                Messaging.send(player, "You are not holding a repairable tool.");
-                return SkillResult.FAIL;
-        }
-
-        if (hero.getSkillLevel(this) < level) {
-            Messaging.send(player, "You must be level $1 to repair $2", level, MaterialUtil.getFriendlyName(is.getType()));
-            return new SkillResult(ResultType.LOW_LEVEL, false);
-        }
-        ItemStack reagentStack = new ItemStack(reagent, getRepairCost(is));
-        if (!hasReagentCost(player, reagentStack)) {
-            return new SkillResult(ResultType.MISSING_REAGENT, true, reagentStack.getAmount(), MaterialUtil.getFriendlyName(reagentStack.getType()));
-        }
-
-        is.setDurability((short) 0);
-        player.getInventory().removeItem(reagentStack);
-        Util.syncInventory(player, plugin);
-        broadcastExecuteText(hero);
-        return SkillResult.NORMAL;
-    }
-
     private int getRepairCost(ItemStack is) {
         Material mat = is.getType();
         int amt;
         switch (mat) {
-            case WOOD_AXE:
-            case WOOD_PICKAXE:
-            case STONE_AXE:
-            case STONE_PICKAXE:
-            case IRON_AXE:
-            case IRON_PICKAXE:
-            case GOLD_AXE:
-            case GOLD_PICKAXE:
-            case DIAMOND_AXE:
-            case DIAMOND_PICKAXE:
-            case WOOD_SWORD:
-            case WOOD_HOE:
-            case STONE_SWORD:
-            case STONE_HOE:
-            case IRON_SWORD:
-            case IRON_HOE:
-            case GOLD_SWORD:
-            case GOLD_HOE:
-            case DIAMOND_SWORD:
-            case DIAMOND_HOE:
-            case SHEARS:
-            case FISHING_ROD:
-                return 1;
             case LEATHER_BOOTS:
             case IRON_BOOTS:
             case GOLD_BOOTS:
@@ -217,5 +79,160 @@ public class SkillRepair extends ActiveSkill {
             default:
                 return 1;
         }
+    }
+
+    private int getRequiredLevel(Hero hero, Material material) {
+        switch (material) {
+            case WOOD_SWORD:
+            case WOOD_AXE:
+                return SkillConfigManager.getUseSetting(hero, this, "wood-weapons", 1, true);
+            case WOOD_HOE:
+            case WOOD_PICKAXE:
+            case WOOD_SPADE:
+                return SkillConfigManager.getUseSetting(hero, this, "wood-tools", 1, true);
+            case STONE_SWORD:
+            case STONE_AXE:
+                return SkillConfigManager.getUseSetting(hero, this, "stone-weapons", 1, true);
+            case STONE_HOE:
+            case STONE_PICKAXE:
+            case STONE_SPADE:
+                return SkillConfigManager.getUseSetting(hero, this, "stone-tools", 1, true);
+            case SHEARS:
+                return SkillConfigManager.getUseSetting(hero, this, "shears", 1, true);
+            case FLINT_AND_STEEL:
+                return SkillConfigManager.getUseSetting(hero, this, "flint-steel", 1, true);
+            case IRON_CHESTPLATE:
+            case IRON_LEGGINGS:
+            case IRON_BOOTS:
+            case IRON_HELMET:
+                return SkillConfigManager.getUseSetting(hero, this, "iron-armor", 1, true);
+            case IRON_SWORD:
+            case IRON_AXE:
+                return SkillConfigManager.getUseSetting(hero, this, "iron-weapons", 1, true);
+            case IRON_HOE:
+            case IRON_PICKAXE:
+            case IRON_SPADE:
+                return SkillConfigManager.getUseSetting(hero, this, "iron-tools", 1, true);
+            case GOLD_CHESTPLATE:
+            case GOLD_LEGGINGS:
+            case GOLD_BOOTS:
+            case GOLD_HELMET:
+                return SkillConfigManager.getUseSetting(hero, this, "gold-armor", 1, true);
+            case GOLD_SWORD:
+            case GOLD_AXE:
+                return SkillConfigManager.getUseSetting(hero, this, "gold-weapons", 1, true);
+            case GOLD_HOE:
+            case GOLD_PICKAXE:
+            case GOLD_SPADE:
+                return SkillConfigManager.getUseSetting(hero, this, "gold-tools", 1, true);
+            case DIAMOND_CHESTPLATE:
+            case DIAMOND_LEGGINGS:
+            case DIAMOND_BOOTS:
+            case DIAMOND_HELMET:
+                return SkillConfigManager.getUseSetting(hero, this, "diamond-armor", 1, true);
+            case DIAMOND_SWORD:
+            case DIAMOND_AXE:
+                return SkillConfigManager.getUseSetting(hero, this, "diamond-weapons", 1, true);
+            case DIAMOND_HOE:
+            case DIAMOND_PICKAXE:
+            case DIAMOND_SPADE:
+                return SkillConfigManager.getUseSetting(hero, this, "diamond-tools", 1, true);
+            case LEATHER_BOOTS:
+            case LEATHER_CHESTPLATE:
+            case LEATHER_HELMET:
+            case LEATHER_LEGGINGS:
+                return SkillConfigManager.getUseSetting(hero, this, "leather-armor", 1, true);
+            case FISHING_ROD:
+                return SkillConfigManager.getUseSetting(hero, this, "fishing-rod", 1, true);
+            default:
+                return -1;
+        }
+    }
+
+    private Material getRequiredReagent(Material material) {
+        switch (material) {
+            case WOOD_SWORD:
+            case WOOD_AXE:
+            case WOOD_HOE:
+            case WOOD_PICKAXE:
+            case WOOD_SPADE:
+                return Material.WOOD;
+            case STONE_SWORD:
+            case STONE_AXE:
+            case STONE_HOE:
+            case STONE_PICKAXE:
+            case STONE_SPADE:
+                return Material.COBBLESTONE;
+            case SHEARS:
+            case FLINT_AND_STEEL:
+            case IRON_CHESTPLATE:
+            case IRON_LEGGINGS:
+            case IRON_BOOTS:
+            case IRON_HELMET:
+            case IRON_SWORD:
+            case IRON_AXE:
+            case IRON_HOE:
+            case IRON_PICKAXE:
+            case IRON_SPADE:
+                return Material.IRON_INGOT;
+            case GOLD_CHESTPLATE:
+            case GOLD_LEGGINGS:
+            case GOLD_BOOTS:
+            case GOLD_HELMET:
+            case GOLD_SWORD:
+            case GOLD_AXE:
+            case GOLD_HOE:
+            case GOLD_PICKAXE:
+            case GOLD_SPADE:
+                return Material.GOLD_INGOT;
+            case DIAMOND_CHESTPLATE:
+            case DIAMOND_LEGGINGS:
+            case DIAMOND_BOOTS:
+            case DIAMOND_HELMET:
+            case DIAMOND_SWORD:
+            case DIAMOND_AXE:
+            case DIAMOND_HOE:
+            case DIAMOND_PICKAXE:
+            case DIAMOND_SPADE:
+                return Material.DIAMOND;
+            case LEATHER_BOOTS:
+            case LEATHER_CHESTPLATE:
+            case LEATHER_HELMET:
+            case LEATHER_LEGGINGS:
+                return Material.LEATHER;
+            case FISHING_ROD:
+                return Material.STRING;
+            default:
+                return null;
+        }
+    }
+
+    @Override
+    public SkillResult use(Hero hero, String[] args) {
+        Player player = hero.getPlayer();
+        ItemStack is = player.getItemInHand();
+        Material isType = is.getType();
+        int level = getRequiredLevel(hero, isType);
+        Material reagent = getRequiredReagent(isType);
+
+        if (level == -1 || reagent == null) {
+            Messaging.send(player, "You are not holding a repairable tool.");
+            return SkillResult.FAIL;
+        }
+
+        if (hero.getSkillLevel(this) < level) {
+            Messaging.send(player, "You must be level $1 to repair $2", level, MaterialUtil.getFriendlyName(isType));
+            return new SkillResult(ResultType.LOW_LEVEL, false);
+        }
+        ItemStack reagentStack = new ItemStack(reagent, getRepairCost(is));
+        if (!hasReagentCost(player, reagentStack)) {
+            return new SkillResult(ResultType.MISSING_REAGENT, true, reagentStack.getAmount(), MaterialUtil.getFriendlyName(reagentStack.getType()));
+        }
+
+        is.setDurability((short) 0);
+        player.getInventory().removeItem(reagentStack);
+        Util.syncInventory(player, plugin);
+        broadcastExecuteText(hero);
+        return SkillResult.NORMAL;
     }
 }
