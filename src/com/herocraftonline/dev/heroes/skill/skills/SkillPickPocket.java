@@ -73,7 +73,7 @@ public class SkillPickPocket extends TargettedSkill {
                 broadcast(player.getLocation(), failMessage, player.getDisplayName(), tPlayer.getDisplayName());
             }
             Messaging.send(player, "You failed to steal anything from $1", tPlayer.getDisplayName());
-            return SkillResult.FAIL;
+            return SkillResult.NORMAL;
         }
 
         Inventory tInventory = tPlayer.getInventory();
@@ -83,7 +83,7 @@ public class SkillPickPocket extends TargettedSkill {
         Set<String> disallowed = new HashSet<String>(SkillConfigManager.getUseSetting(hero, this, "disallowed-items", new ArrayList<String>()));
         if (items[slot] == null || items[slot].getType() == Material.AIR || disallowed.contains(items[slot].getType().name())) {
             Messaging.send(player, "You failed to steal anything from $1", tPlayer.getDisplayName());
-            return SkillResult.FAIL;
+            return SkillResult.NORMAL;
         }
         // Lets make sure we don't have any setting limits.
         int stealAmount = items[slot].getAmount();
