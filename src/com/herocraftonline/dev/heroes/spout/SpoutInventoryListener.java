@@ -1,7 +1,5 @@
 package com.herocraftonline.dev.heroes.spout;
 
-import java.util.logging.Level;
-
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;

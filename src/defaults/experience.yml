@@ -31,6 +31,7 @@ killing:
     player: 31
     blaze: 25
     magma_cube: 12
+    enderman: 50
     ender_dragon: 500
     villager: 1
     snowman: 5

@@ -28,5 +28,4 @@ public class ConfigReloadCommand extends BasicCommand {
 
         return true;
     }
-
 }
