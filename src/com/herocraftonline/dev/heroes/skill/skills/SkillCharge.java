@@ -53,7 +53,6 @@ public class SkillCharge extends TargettedSkill {
         section.set("silence-duration", 0);
         section.set(Setting.DAMAGE.node(), 0);
         section.set(Setting.RADIUS.node(), 2);
-        section.set(Setting.USE_TEXT.node(), "%hero% used %skill%!");
         return section;
     }
 
@@ -80,7 +79,7 @@ public class SkillCharge extends TargettedSkill {
                 player.setFallDistance(8f);
             }
         }, 1L);
-        broadcastExecuteText(hero);
+        broadcastExecuteText(hero, target);
         return SkillResult.NORMAL;
     }
 
