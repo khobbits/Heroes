@@ -207,13 +207,29 @@ public class Properties {
         }
     }
     
-    public static int getExperience(int level) {
+    /**
+     * Gets the total amount of experience required to attain the given level
+     * @param level
+     * @return
+     */
+    public static int getTotalExp(int level) {
         if (level >= levels.length)
             return levels[levels.length - 1];
         else if (level < 1)
             return levels[0];
 
         return levels[level - 1];
+    }
+    
+    /**
+     * Gives the exp required to go from the previous level to the level given
+     * @param level
+     * @return
+     */
+    public static int getExp(int level) {
+        if (level <= 1)
+            return 0;
+        return getTotalExp(level) - getTotalExp(level - 1);
     }
 
     /**

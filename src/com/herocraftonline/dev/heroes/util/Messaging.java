@@ -63,7 +63,7 @@ public final class Messaging {
 
     public static String createExperienceBar(Hero hero, HeroClass heroClass) {
         int level = hero.getLevel(heroClass);
-        return createExperienceBar((int) hero.getExperience(heroClass), Properties.getExperience(level), Properties.getExperience(level + 1));
+        return createExperienceBar((int) hero.getExperience(heroClass), Properties.getTotalExp(level), Properties.getTotalExp(level + 1));
     }
 
     public static String getLivingEntityName(LivingEntity lEntity) {

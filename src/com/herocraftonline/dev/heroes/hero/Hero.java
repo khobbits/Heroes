@@ -241,7 +241,7 @@ public class Hero {
             HeroChangeLevelEvent hLEvent = new HeroChangeLevelEvent(this, hc, currentLevel, newLevel);
             plugin.getServer().getPluginManager().callEvent(hLEvent);
             if (newLevel >= hc.getMaxLevel()) {
-                setExperience(hc, Properties.getExperience(hc.getMaxLevel()));
+                setExperience(hc, Properties.getTotalExp(hc.getMaxLevel()));
                 Messaging.broadcast(plugin, "$1 has become a master $2!", player.getName(), hc.getName());
             }
             if (newLevel > currentLevel) {
@@ -319,7 +319,7 @@ public class Hero {
                 gainedExp = 0;
                 continue;
             } else if (currentLevel > newLevel && !prop.levelsViaExpLoss && source != ExperienceType.ADMIN && source != ExperienceType.ENCHANTING) {
-                gainedExp = Properties.getExperience(currentLevel) - (exp - 1);
+                gainedExp = Properties.getTotalExp(currentLevel) - (exp - 1);
             }
 
             // add the experience
@@ -346,7 +346,7 @@ public class Hero {
                     HeroChangeLevelEvent hLEvent = new HeroChangeLevelEvent(this, hc, currentLevel, newLevel);
                     plugin.getServer().getPluginManager().callEvent(hLEvent);
                     if (newLevel >= hc.getMaxLevel()) {
-                        setExperience(hc, Properties.getExperience(hc.getMaxLevel()));
+                        setExperience(hc, Properties.getTotalExp(hc.getMaxLevel()));
                         Messaging.broadcast(plugin, "$1 has become a master $2!", player.getName(), hc.getName());
                     }
                     if (newLevel > currentLevel) {
@@ -376,6 +376,36 @@ public class Hero {
         syncExperience();
     }
 
+
+    public double currentXPToNextLevel(HeroClass hc) {
+        return getExperience(hc) - Properties.getTotalExp(getLevel(hc));
+    }
+
+    private double calculateXPLoss(double multiplier, HeroClass hc) {
+
+        double expForNext = Properties.getExp(getLevel(hc) + 1);
+        double currentPercent = currentXPToNextLevel(hc) / expForNext;
+
+        if (currentPercent >= multiplier) {
+            return expForNext * multiplier;        
+        } else {
+            double amt = expForNext * currentPercent;
+            multiplier -= currentPercent;
+            
+            for (int i = 0; currentPercent >= multiplier && getLevel(hc) - i > 1; i++) {
+                currentPercent = 1;
+                if (currentPercent >= multiplier) {
+                    amt += Properties.getExp(getLevel(hc) - i) * multiplier;
+                } else {
+                    amt += Properties.getExp(getLevel(hc) - i);
+                }
+                
+                multiplier -= 1;
+            }
+            return amt;
+        }
+    }
+
     public void loseExpFromDeath(double multiplier) {
         if (player.getGameMode() == GameMode.CREATIVE || Heroes.properties.disabledWorlds.contains(player.getWorld().getName()) || multiplier <= 0)
             return;
@@ -387,14 +417,8 @@ public class Hero {
             if (hc == null)
                 continue;
 
-            double expLossPercent = prop.expLoss * multiplier;
-
-            if (hc.getExpLoss() != -1)
-                expLossPercent = hc.getExpLoss();
-
-            double nextXP = Properties.getExperience(getLevel(hc) + 1);
-            double currXP = Properties.getExperience(getLevel(hc));
-            double gainedXP = -(expLossPercent * (nextXP - currXP));
+            double currXP = Properties.getTotalExp(getLevel(hc));
+            double gainedXP = -calculateXPLoss(multiplier, hc);
 
             if (prop.resetOnDeath) {
                 gainedXP = getExperience(hc);
@@ -417,7 +441,7 @@ public class Hero {
                 gainedXP = 0;
                 continue;
             } else if (currentLevel > newLevel && !prop.levelsViaExpLoss) {
-                gainedXP = Properties.getExperience(currentLevel) - (exp - 1);
+                gainedXP = Properties.getTotalExp(currentLevel) - (exp - 1);
             }
 
             exp += gainedXP;
@@ -440,7 +464,7 @@ public class Hero {
                     HeroChangeLevelEvent hLEvent = new HeroChangeLevelEvent(this, hc, currentLevel, newLevel);
                     plugin.getServer().getPluginManager().callEvent(hLEvent);
                     if (newLevel >= hc.getMaxLevel()) {
-                        setExperience(hc, Properties.getExperience(hc.getMaxLevel()));
+                        setExperience(hc, Properties.getTotalExp(hc.getMaxLevel()));
                         Messaging.broadcast(plugin, "$1 has become a master $2!", player.getName(), hc.getName());
                     }
                     //SpoutUI.sendPlayerNotification(player, ChatColor.GOLD + "Level Lost!", ChatColor.DARK_RED + "Level - " + String.valueOf(newLevel), Material.DIAMOND_HELMET);
@@ -1105,13 +1129,13 @@ public class Hero {
         int level = 0;
         if (heroClass.hasExperiencetype(ExperienceType.ENCHANTING))
             level = getLevel(heroClass);
-        
+
         if (secondClass != null && secondClass.hasExperiencetype(ExperienceType.ENCHANTING) && getLevel(secondClass) > level)
             return secondClass;
-        
+
         return level != 0 ? heroClass : null;
     }
-    
+
     /**
      * Syncs the Hero's current Experience with the minecraft experience (should also sync the level bar)
      */
@@ -1128,9 +1152,9 @@ public class Hero {
      */
     public void syncExperience(HeroClass hc) {
         int level = getLevel(hc);
-        int currentLevelXP = Properties.getExperience(level);
+        int currentLevelXP = Properties.getTotalExp(level);
 
-        double maxLevelXP = Properties.getExperience(level + 1) - currentLevelXP;
+        double maxLevelXP = Properties.getTotalExp(level + 1) - currentLevelXP;
         double currentXP = getExperience() - currentLevelXP;
         float syncedPercent = (float) (currentXP / maxLevelXP);
 
@@ -1258,7 +1282,7 @@ public class Hero {
             if (level != -1 && level <= getLevel(secondClass))
                 return true;
         }
-        
+
         return false;
     }
 }

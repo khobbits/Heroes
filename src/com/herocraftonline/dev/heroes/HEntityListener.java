@@ -125,7 +125,7 @@ public class HEntityListener extends EntityListener {
                 attacker = ((CombustEffect) heroDefender.getEffect("Combust")).getApplier();
             }
 
-            double multiplier = 1.0;
+            double multiplier = Heroes.properties.expLoss;
             if (attacker != null)
                 multiplier = Heroes.properties.pvpExpLossMultiplier;
 

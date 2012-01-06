@@ -33,7 +33,7 @@ public class LevelInformationCommand extends BasicCommand {
         HeroClass hc = hero.getHeroClass();
         int exp = (int) hero.getExperience(hc);
         int level = Properties.getLevel(exp);
-        int current = Properties.getExperience(level);
+        int current = Properties.getTotalExp(level);
         HeroClass sClass = hero.getSecondClass();
         String secondClassName = sClass != null ? " | " + sClass.getName() : "";
         String secondLevelInfo = sClass != null ? (" | " + hero.getLevel(sClass) + ChatColor.GREEN + "/" + ChatColor.WHITE + sClass.getMaxLevel()) : "";
@@ -45,7 +45,7 @@ public class LevelInformationCommand extends BasicCommand {
                 + secondLevelInfo);
         sender.sendMessage(ChatColor.GREEN + "  Total Exp: " + ChatColor.WHITE + exp + secondExp);
         if (!hero.isMaster(hc)) {
-            int next = Properties.getExperience(level + 1);
+            int next = Properties.getTotalExp(level + 1);
             sender.sendMessage(ChatColor.DARK_GREEN + "  EXP.  " + Messaging.createExperienceBar(exp, current, next));
         } else {
             sender.sendMessage(ChatColor.YELLOW + "  MASTERED!");
