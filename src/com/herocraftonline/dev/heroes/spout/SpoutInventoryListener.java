@@ -1,5 +1,7 @@
 package com.herocraftonline.dev.heroes.spout;
 
+import java.util.logging.Level;
+
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
@@ -32,15 +34,14 @@ public class SpoutInventoryListener extends InventoryListener {
             return;
         }
 
-        if (!event.isShiftClick() && event.getCursor() != null && event.getCursor().getType().getMaxStackSize() == event.getCursor().getAmount()) {
-            return;
-        }
-
+        ItemStack cursor = event.getCursor();
         ItemStack result = event.getResult();
         int amountCrafted = result.getAmount();
 
-        if (event.getCursor() != null && event.getCursor().getType() != result.getType()) {
-            return;
+        if (!event.isShiftClick() && cursor != null) {
+            if (cursor.getType() != result.getType() || cursor.getType().getMaxStackSize() <= cursor.getAmount() + amountCrafted) {
+                return;
+            }
         }
 
         Player player = event.getPlayer();
