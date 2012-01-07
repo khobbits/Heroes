@@ -1,15 +1,12 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Player;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.SkillResult;
-import com.herocraftonline.dev.heroes.effects.EffectType;
-import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
+import com.herocraftonline.dev.heroes.effects.common.QuickenEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
-import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.SkillConfigManager;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Setting;
@@ -54,32 +51,8 @@ public class SkillOne extends ActiveSkill {
         if (multiplier > 20) {
             multiplier = 20;
         }
-        hero.addEffect(new OneEffect(this, duration, multiplier));
+        hero.addEffect(new QuickenEffect(this, getName(), duration, multiplier, applyText, expireText));
 
         return SkillResult.NORMAL;
-    }
-
-    public class OneEffect extends ExpirableEffect {
-
-        public OneEffect(Skill skill, long duration, int amplifier) {
-            super(skill, "One", duration);
-            this.types.add(EffectType.DISPELLABLE);
-            this.types.add(EffectType.BENEFICIAL);
-            addMobEffect(1, (int) (duration / 1000) * 20, amplifier, false);
-        }
-
-        @Override
-        public void apply(Hero hero) {
-            super.apply(hero);
-            Player player = hero.getPlayer();
-            broadcast(player.getLocation(), applyText, player.getDisplayName());
-        }
-
-        @Override
-        public void remove(Hero hero) {
-            super.remove(hero);
-            Player player = hero.getPlayer();
-            broadcast(player.getLocation(), expireText, player.getDisplayName());
-        }
     }
 }
