@@ -1,11 +1,6 @@
 package com.herocraftonline.dev.heroes.util;
 
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -190,14 +185,13 @@ public class Properties {
      * Generate experience for the level ArrayList<Integer>
      */
     protected void calcExp() {
-        levels = new int[maxLevel + 1];
+        levels = new int[maxLevel];
 
         double A = maxExp * Math.pow(maxLevel - 1, -(power + 1));
         for (int i = 0; i < maxLevel; i++) {
             levels[i] = (int) (A * Math.pow(i, power + 1));
         }
         levels[maxLevel - 1] = maxExp;
-        levels[maxLevel] = (int) (A * Math.pow(maxLevel + 1, power + 1));
     }
     
     protected void calcPartyMultipliers() {

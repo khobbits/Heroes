@@ -426,53 +426,50 @@ public class Hero {
                 continue;
             }
 
-            double currXP = Properties.getTotalExp(getLevel(hc));
-            double gainedXP = -calculateXPLoss(multiplier, hc);
+            int currentLvl = getLevel(hc);
+            double currentExp = getExperience(hc);
+            double currentLvlExp = Properties.getTotalExp(currentLvl);
+            double gainedExp = -calculateXPLoss(multiplier, hc);
 
             if (prop.resetOnDeath) {
-                gainedXP = getExperience(hc);
-            } else if (gainedXP + getExperience(hc) < currXP && !prop.levelsViaExpLoss) {
-                gainedXP = -(getExperience(hc) - currXP);
+                gainedExp = -currentExp;
+            } else if (gainedExp + currentExp < currentLvlExp && !prop.levelsViaExpLoss) {
+                gainedExp = -(currentExp - currentLvlExp);
             }
 
             //This is called once for each class
-            ExperienceChangeEvent expEvent = new ExperienceChangeEvent(this, hc, gainedXP, ExperienceType.DEATH);
+            ExperienceChangeEvent expEvent = new ExperienceChangeEvent(this, hc, gainedExp, ExperienceType.DEATH);
             plugin.getServer().getPluginManager().callEvent(expEvent);
             if (expEvent.isCancelled()) {
                 return;
             }
+            gainedExp = expEvent.getExpChange();
 
-            double exp = getExperience(hc);
-            gainedXP = expEvent.getExpChange();
-
-            int currentLevel = Properties.getLevel(exp);
-            int newLevel = Properties.getLevel(exp + gainedXP);
-
+            int newLevel = Properties.getLevel(currentExp + gainedExp);
             if (isMaster(hc) && !prop.masteryLoss) {
-                gainedXP = 0;
                 continue;
-            } else if (currentLevel > newLevel && !prop.levelsViaExpLoss) {
-                gainedXP = Properties.getTotalExp(currentLevel) - (exp - 1);
+            } else if (currentLvl > newLevel && !prop.levelsViaExpLoss) {
+                gainedExp = currentLvlExp - (currentExp - 1);
             }
 
-            exp += gainedXP;
+            double newExp = currentExp + gainedExp;
             // If we went negative lets reset our values so that we would hit 0
-            if (exp < 0) {
-                gainedXP = -(gainedXP + exp);
-                exp = 0;
+            if (newExp < 0) {
+                gainedExp = -currentExp;
+                newExp = 0;
             }
 
             // Reset our new level - in case xp adjustement settings actually don't cause us to change
-            newLevel = Properties.getLevel(exp);
-            setExperience(hc, exp);
+            newLevel = Properties.getLevel(newExp);
+            setExperience(hc, newExp);
             // notify the user
 
-            if (gainedXP != 0) {
-                if (verbose && gainedXP < 0) {
-                    Messaging.send(player, "$1: Lost $2 Exp", hc.getName(), decFormat.format(-gainedXP));
+            if (gainedExp != 0) {
+                if (verbose && gainedExp < 0) {
+                    Messaging.send(player, "$1: Lost $2 Exp", hc.getName(), decFormat.format(-gainedExp));
                 }
-                if (newLevel != currentLevel) {
-                    HeroChangeLevelEvent hLEvent = new HeroChangeLevelEvent(this, hc, currentLevel, newLevel);
+                if (newLevel != currentLvl) {
+                    HeroChangeLevelEvent hLEvent = new HeroChangeLevelEvent(this, hc, currentLvl, newLevel);
                     plugin.getServer().getPluginManager().callEvent(hLEvent);
                     if (newLevel >= hc.getMaxLevel()) {
                         setExperience(hc, Properties.getTotalExp(hc.getMaxLevel()));
