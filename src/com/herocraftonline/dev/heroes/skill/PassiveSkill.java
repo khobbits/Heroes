@@ -13,6 +13,7 @@ import com.herocraftonline.dev.heroes.api.HeroesEventListener;
 import com.herocraftonline.dev.heroes.effects.Effect;
 import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.hero.Hero;
+import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Setting;
 
 /**
@@ -59,6 +60,7 @@ public abstract class PassiveSkill extends Skill {
      */
     @Override
     public boolean execute(CommandSender sender, String identifier, String[] args) {
+        Messaging.send(sender, "$1 is a passive skill and cannot be used!", getName());
         return true;
     }
 

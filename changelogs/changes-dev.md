@@ -15,9 +15,11 @@ Version dev
 * Added /hero admin heal <playername>
 ** heals a player to full health
 ** Requires heroes.admin.heal permission node
-
+* Added a failure message to passive skills, if a hero tries to /skill <passiveskill>
 
 ==== **API:** ====
+
+* QuickenEffect is now a common effect rather than being limited to SkillOne.
 
 ==== **Skills:** ====
 
