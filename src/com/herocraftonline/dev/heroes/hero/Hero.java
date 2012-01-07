@@ -1,24 +1,5 @@
 package com.herocraftonline.dev.heroes.hero;
 
-import java.text.DecimalFormat;
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
-import org.bukkit.GameMode;
-import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.permissions.Permission;
-import org.bukkit.permissions.PermissionAttachment;
-
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.ExperienceChangeEvent;
 import com.herocraftonline.dev.heroes.api.HeroChangeLevelEvent;
@@ -37,6 +18,19 @@ import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Properties;
 import com.herocraftonline.dev.heroes.util.Setting;
 import com.herocraftonline.dev.heroes.util.Util;
+import org.bukkit.GameMode;
+import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionAttachment;
+
+import java.text.DecimalFormat;
+import java.util.*;
+import java.util.Map.Entry;
 
 public class Hero {
 
@@ -73,7 +67,7 @@ public class Hero {
 
     /**
      * Adds the Effect onto the hero, and calls it's apply method initiating it's first tic.
-     * 
+     *
      * @param effect
      */
     public void addEffect(Effect effect) {
@@ -91,7 +85,7 @@ public class Hero {
 
     /**
      * Adds the given permission to the hero
-     * 
+     *
      * @param permission
      */
     public void addPermission(String permission) {
@@ -100,7 +94,7 @@ public class Hero {
 
     /**
      * Adds the given permission to the hero
-     * 
+     *
      * @param permission
      */
     public void addPermission(Permission permission) {
@@ -116,16 +110,19 @@ public class Hero {
     }
 
     public boolean canGain(ExperienceType type) {
-        if (type == ExperienceType.ADMIN)
+        if (type == ExperienceType.ADMIN) {
             return true;
+        }
 
         boolean prim = false;
-        if (heroClass.hasExperiencetype(type))
+        if (heroClass.hasExperiencetype(type)) {
             prim = !isMaster(heroClass);
+        }
 
         boolean prof = false;
-        if (secondClass != null && secondClass.hasExperiencetype(type))
+        if (secondClass != null && secondClass.hasExperiencetype(type)) {
             prof = !isMaster(secondClass);
+        }
 
         return prim || prof;
     }
@@ -133,20 +130,21 @@ public class Hero {
     /**
      * Adds a skill binding to the given Material.
      * Ignores Air/Null values
-     * 
+     *
      * @param material
      * @param skillName
      */
     public void bind(Material material, String[] skillName) {
-        if (material == Material.AIR || material == null)
+        if (material == Material.AIR || material == null) {
             return;
+        }
 
         binds.put(material, skillName);
     }
 
     /**
      * Changes the hero's current class to the given class then clears all binds, effects and summons.
-     * 
+     *
      * @param heroClass
      */
     public void changeHeroClass(HeroClass heroClass, boolean secondary) {
@@ -182,7 +180,6 @@ public class Hero {
 
     /**
      * Clears all experience for all classes on the hero
-     * 
      */
     public void clearExperience() {
         for (Entry<String, Double> entry : experience.entrySet()) {
@@ -192,7 +189,6 @@ public class Hero {
 
     /**
      * Removes the summons from the game world - then removes them from the set
-     * 
      */
     public void clearSummons() {
         for (LivingEntity summon : summons) {
@@ -203,31 +199,38 @@ public class Hero {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         Hero other = (Hero) obj;
         if (player == null) {
-            if (other.player != null)
+            if (other.player != null) {
                 return false;
-        } else if (!player.getName().equals(other.player.getName()))
+            }
+        } else if (!player.getName().equals(other.player.getName())) {
             return false;
+        }
         return true;
     }
 
     /**
      * Alters the experience for the given class on the Hero
      * This is used for admin commands or direct alterations to the Hero's classes
+     *
      * @param expChange - amount of xp to change (positive or negative)
-     * @param hc - HeroClass to change the experience of
+     * @param hc        - HeroClass to change the experience of
      */
     public void addExp(double expChange, HeroClass hc) {
         double exp = getExperience(hc) + expChange;
-        if (exp < 0)
+        if (exp < 0) {
             exp = 0;
+        }
         int currentLevel = getLevel(hc);
         setExperience(hc, exp);
 
@@ -249,8 +252,9 @@ public class Hero {
                 Messaging.send(player, "You gained a level! (Lvl $1 $2)", String.valueOf(newLevel), hc.getName());
                 setHealth(getMaxHealth());
                 //Reset food stuff on level up
-                if (player.getFoodLevel() < 20)
+                if (player.getFoodLevel() < 20) {
                     player.setFoodLevel(20);
+                }
 
                 player.setSaturation(20);
                 player.setExhaustion(0);
@@ -267,32 +271,35 @@ public class Hero {
     public void gainExp(double expChange, ExperienceType source, boolean party) {
         if (party && this.getParty() != null) {
             this.getParty().gainExp(expChange, source, player.getLocation());
-        } else
+        } else {
             gainExp(expChange, source);
+        }
     }
 
     /**
      * Adds the specified experience to the hero before modifiers from the given source.
      * expChange value supports negatives for experience loss.
-     * 
-     * @param expChange
-     *            - amount of base exp to add
+     *
+     * @param expChange - amount of base exp to add
      * @param source
-     * @param boolean - distributeToParty
+     * @param boolean   - distributeToParty
      */
     public void gainExp(double expChange, ExperienceType source) {
-        if (player.getGameMode() == GameMode.CREATIVE || Heroes.properties.disabledWorlds.contains(player.getWorld().getName()))
+        if (player.getGameMode() == GameMode.CREATIVE || Heroes.properties.disabledWorlds.contains(player.getWorld().getName())) {
             return;
+        }
         Properties prop = Heroes.properties;
 
-        HeroClass[] classes = new HeroClass[] {heroClass, secondClass};
+        HeroClass[] classes = new HeroClass[]{heroClass, secondClass};
 
         for (HeroClass hc : classes) {
-            if (hc == null)
+            if (hc == null) {
                 continue;
+            }
 
-            if (source != ExperienceType.ADMIN && !hc.hasExperiencetype(source))
+            if (source != ExperienceType.ADMIN && !hc.hasExperiencetype(source)) {
                 continue;
+            }
 
             double gainedExp = expChange;
             double exp = getExperience(hc);
@@ -300,14 +307,16 @@ public class Hero {
             // adjust exp using the class modifier if it's positive
             if (gainedExp > 0 && source != ExperienceType.ADMIN) {
                 gainedExp *= hc.getExpModifier();
-            } else if (source != ExperienceType.ADMIN && source != ExperienceType.ENCHANTING  && isMaster(hc) && (!prop.masteryLoss || !prop.levelsViaExpLoss))
+            } else if (source != ExperienceType.ADMIN && source != ExperienceType.ENCHANTING && isMaster(hc) && (!prop.masteryLoss || !prop.levelsViaExpLoss)) {
                 return;
+            }
 
             //This is called once for each class
             ExperienceChangeEvent expEvent = new ExperienceChangeEvent(this, hc, gainedExp, source);
             plugin.getServer().getPluginManager().callEvent(expEvent);
-            if (expEvent.isCancelled())
+            if (expEvent.isCancelled()) {
                 return;
+            }
 
             // Lets get our modified xp change value
             gainedExp = expEvent.getExpChange();
@@ -354,8 +363,9 @@ public class Hero {
                         Messaging.send(player, "You gained a level! (Lvl $1 $2)", String.valueOf(newLevel), hc.getName());
                         setHealth(getMaxHealth());
                         //Reset food stuff on level up
-                        if (player.getFoodLevel() < 20)
+                        if (player.getFoodLevel() < 20) {
                             player.setFoodLevel(20);
+                        }
 
                         player.setSaturation(20);
                         player.setExhaustion(0);
@@ -381,25 +391,22 @@ public class Hero {
         return getExperience(hc) - Properties.getTotalExp(getLevel(hc));
     }
 
-    private double calculateXPLoss(double multiplier, HeroClass hc) {
+    protected double calculateXPLoss(double multiplier, HeroClass hc) {
 
         double expForNext = Properties.getExp(getLevel(hc) + 1);
         double currentPercent = currentXPToNextLevel(hc) / expForNext;
 
         if (currentPercent >= multiplier) {
-            return expForNext * multiplier;        
+            return expForNext * multiplier;
         } else {
             double amt = expForNext * currentPercent;
             multiplier -= currentPercent;
-            
-            for (int i = 0; currentPercent >= multiplier && getLevel(hc) - i > 1; i++) {
-                currentPercent = 1;
-                if (currentPercent >= multiplier) {
-                    amt += Properties.getExp(getLevel(hc) - i) * multiplier;
-                } else {
-                    amt += Properties.getExp(getLevel(hc) - i);
+
+            for (int i = 0; getLevel(hc) - i > 1; i++) {
+                if (1 >= multiplier) {
+                    return amt += Properties.getExp(getLevel(hc) - i) * multiplier;
                 }
-                
+                amt += Properties.getExp(getLevel(hc) - i);
                 multiplier -= 1;
             }
             return amt;
@@ -407,61 +414,62 @@ public class Hero {
     }
 
     public void loseExpFromDeath(double multiplier) {
-        if (player.getGameMode() == GameMode.CREATIVE || Heroes.properties.disabledWorlds.contains(player.getWorld().getName()) || multiplier <= 0)
+        if (player.getGameMode() == GameMode.CREATIVE || Heroes.properties.disabledWorlds.contains(player.getWorld().getName()) || multiplier <= 0) {
             return;
+        }
         Properties prop = Heroes.properties;
 
-        HeroClass[] classes = new HeroClass[] {heroClass, secondClass};
+        HeroClass[] classes = new HeroClass[]{heroClass, secondClass};
 
         for (HeroClass hc : classes) {
-            if (hc == null)
+            if (hc == null) {
                 continue;
-
-            double currXP = Properties.getTotalExp(getLevel(hc));
-            double gainedXP = -calculateXPLoss(multiplier, hc);
-
-            if (prop.resetOnDeath) {
-                gainedXP = getExperience(hc);
-            } else if (gainedXP + getExperience(hc) < currXP && !prop.levelsViaExpLoss)
-                gainedXP = -(getExperience(hc) - currXP);
-
-            //This is called once for each class
-            ExperienceChangeEvent expEvent = new ExperienceChangeEvent(this, hc, gainedXP, ExperienceType.DEATH);
-            plugin.getServer().getPluginManager().callEvent(expEvent);
-            if (expEvent.isCancelled())
-                return;
-
-            double exp = getExperience(hc);
-            gainedXP = expEvent.getExpChange();
-
-            int currentLevel = Properties.getLevel(exp);
-            int newLevel = Properties.getLevel(exp + gainedXP);
-
-            if (isMaster(hc) && !prop.masteryLoss) {
-                gainedXP = 0;
-                continue;
-            } else if (currentLevel > newLevel && !prop.levelsViaExpLoss) {
-                gainedXP = Properties.getTotalExp(currentLevel) - (exp - 1);
             }
 
-            exp += gainedXP;
+            int currentLvl = getLevel(hc);
+            double currentExp = getExperience(hc);
+            double currentLvlExp = Properties.getTotalExp(currentLvl);
+            double gainedExp = -calculateXPLoss(multiplier, hc);
+
+            if (prop.resetOnDeath) {
+                gainedExp = -currentExp;
+            } else if (gainedExp + currentExp < currentLvlExp && !prop.levelsViaExpLoss) {
+                gainedExp = -(currentExp - currentLvlExp);
+            }
+
+            //This is called once for each class
+            ExperienceChangeEvent expEvent = new ExperienceChangeEvent(this, hc, gainedExp, ExperienceType.DEATH);
+            plugin.getServer().getPluginManager().callEvent(expEvent);
+            if (expEvent.isCancelled()) {
+                return;
+            }
+            gainedExp = expEvent.getExpChange();
+
+            int newLevel = Properties.getLevel(currentExp + gainedExp);
+            if (isMaster(hc) && !prop.masteryLoss) {
+                continue;
+            } else if (currentLvl > newLevel && !prop.levelsViaExpLoss) {
+                gainedExp = currentLvlExp - (currentExp - 1);
+            }
+
+            double newExp = currentExp + gainedExp;
             // If we went negative lets reset our values so that we would hit 0
-            if (exp < 0) {
-                gainedXP = -(gainedXP + exp);
-                exp = 0;
+            if (newExp < 0) {
+                gainedExp = -currentExp;
+                newExp = 0;
             }
 
             // Reset our new level - in case xp adjustement settings actually don't cause us to change
-            newLevel = Properties.getLevel(exp);
-            setExperience(hc, exp);
+            newLevel = Properties.getLevel(newExp);
+            setExperience(hc, newExp);
             // notify the user
 
-            if (gainedXP != 0) {
-                if (verbose && gainedXP < 0) {
-                    Messaging.send(player, "$1: Lost $2 Exp", hc.getName(), decFormat.format(-gainedXP));
+            if (gainedExp != 0) {
+                if (verbose && gainedExp < 0) {
+                    Messaging.send(player, "$1: Lost $2 Exp", hc.getName(), decFormat.format(-gainedExp));
                 }
-                if (newLevel != currentLevel) {
-                    HeroChangeLevelEvent hLEvent = new HeroChangeLevelEvent(this, hc, currentLevel, newLevel);
+                if (newLevel != currentLvl) {
+                    HeroChangeLevelEvent hLEvent = new HeroChangeLevelEvent(this, hc, currentLvl, newLevel);
                     plugin.getServer().getPluginManager().callEvent(hLEvent);
                     if (newLevel >= hc.getMaxLevel()) {
                         setExperience(hc, Properties.getTotalExp(hc.getMaxLevel()));
@@ -484,7 +492,7 @@ public class Hero {
 
     /**
      * Gets the Map of all Bindings
-     * 
+     *
      * @return
      */
     public Map<Material, String[]> getBinds() {
@@ -497,7 +505,7 @@ public class Hero {
 
     /**
      * Gets the Map of all cooldowns
-     * 
+     *
      * @return
      */
     public Map<String, Long> getCooldowns() {
@@ -506,7 +514,7 @@ public class Hero {
 
     /**
      * Attempts to find the effect from the given name
-     * 
+     *
      * @param name
      * @return the Effect with the name - or null if not found
      */
@@ -516,7 +524,7 @@ public class Hero {
 
     /**
      * get a Clone of all effects active on the hero
-     * 
+     *
      * @return
      */
     public Set<Effect> getEffects() {
@@ -525,7 +533,7 @@ public class Hero {
 
     /**
      * Get the hero's experience in it's current class.
-     * 
+     *
      * @return double experience
      */
     public double getExperience() {
@@ -534,13 +542,14 @@ public class Hero {
 
     /**
      * Get the hero's experience in the given class
-     * 
+     *
      * @param heroClass
      * @return double experience
      */
     public double getExperience(HeroClass heroClass) {
-        if (heroClass == null)
+        if (heroClass == null) {
             return 0;
+        }
         Double exp = experience.get(heroClass.getName());
         return exp == null ? 0 : exp;
     }
@@ -550,7 +559,6 @@ public class Hero {
     }
 
     /**
-     * 
      * @return the hero's current health - double
      */
     public double getHealth() {
@@ -559,7 +567,7 @@ public class Hero {
 
     /**
      * Returns the hero's currently selected heroclass
-     * 
+     *
      * @return heroclass
      */
     public HeroClass getHeroClass() {
@@ -571,20 +579,21 @@ public class Hero {
     }
 
     /**
-     * 
      * @return the level of the character - returns the highest value of the secondclass or primary class
      */
     public int getLevel() {
         int primary = getLevel(heroClass);
         int second = 0;
-        if (secondClass != null)
+        if (secondClass != null) {
             second = getLevel(secondClass);
+        }
 
         return primary > second ? primary : second;
     }
 
     /**
      * Returns a hero's level based on the skill they are attempting to use
+     *
      * @param skill
      * @return
      */
@@ -595,14 +604,16 @@ public class Hero {
             int requiredLevel = SkillConfigManager.getSetting(heroClass, skill, Setting.LEVEL.node(), 1);
             level = getLevel(heroClass);
             // If this class doesn't meet the level requirement reset it to -1
-            if (level < requiredLevel)
+            if (level < requiredLevel) {
                 level = -1;
+            }
         }
         if (secondClass != null && secondClass.hasSkill(skill.getName())) {
             int requiredLevel = SkillConfigManager.getSetting(secondClass, skill, Setting.LEVEL.node(), 1);
             secondLevel = getLevel(secondClass);
-            if (secondLevel < requiredLevel)
+            if (secondLevel < requiredLevel) {
                 secondLevel = -1;
+            }
         }
         return secondLevel > level ? secondLevel : level;
     }
@@ -612,8 +623,9 @@ public class Hero {
     }
 
     public int getTieredLevel(boolean recache) {
-        if (tieredLevel != null && !recache)
+        if (tieredLevel != null && !recache) {
             return tieredLevel;
+        }
 
         if (secondClass == null) {
             tieredLevel = getTieredLevel(heroClass);
@@ -624,13 +636,16 @@ public class Hero {
         }
         return tieredLevel;
     }
+
     /**
      * Gets the tier adjusted level for this character - takes into account already gained levels on parent classes
+     *
      * @return
      */
     public int getTieredLevel(HeroClass heroclass) {
-        if (heroClass.hasNoParents())
+        if (heroClass.hasNoParents()) {
             return getLevel(heroClass);
+        }
 
         Set<HeroClass> classes = new HashSet<HeroClass>();
         for (HeroClass hClass : heroClass.getParents()) {
@@ -641,8 +656,9 @@ public class Hero {
         }
         int level = getLevel(heroClass);
         for (HeroClass hClass : classes) {
-            if (hClass.getTier() == 0)
+            if (hClass.getTier() == 0) {
                 continue;
+            }
             level += getLevel(hClass);
         }
         return level;
@@ -650,6 +666,7 @@ public class Hero {
 
     /**
      * recursive method to lookup all classes that are upstream of the parent class and mastered
+     *
      * @param heroClass
      * @param classes
      */
@@ -672,7 +689,7 @@ public class Hero {
 
     /**
      * All mana is in percentages.
-     * 
+     *
      * @return Hero's current amount of mana
      */
     public int getMana() {
@@ -681,7 +698,7 @@ public class Hero {
 
     /**
      * Maximum health is derived from the hero's class. It is the classes base max hp + hp per level.
-     * 
+     *
      * @return the hero's maximum health
      */
     public double getMaxHealth() {
@@ -697,7 +714,7 @@ public class Hero {
 
     /**
      * Gets the hero's current party - returns null if the hero has no party
-     * 
+     *
      * @return HeroParty
      */
     public HeroParty getParty() {
@@ -705,7 +722,6 @@ public class Hero {
     }
 
     /**
-     * 
      * @return player associated with this hero
      */
     public Player getPlayer() {
@@ -722,7 +738,7 @@ public class Hero {
 
     /**
      * gets Mapping of the persistence SkillSettings for the given skill
-     * 
+     *
      * @param skill
      * @return
      */
@@ -732,19 +748,19 @@ public class Hero {
 
     /**
      * gets Mapping of the persistence SkillSettings for the given skillName
-     * 
+     *
      * @param skill
      * @return
      */
     public Map<String, String> getSkillSettings(String skillName) {
-        if (!heroClass.hasSkill(skillName))
+        if (!heroClass.hasSkill(skillName)) {
             return null;
+        }
 
         return skillSettings.get(skillName.toLowerCase());
     }
 
     /**
-     * 
      * @return set of all summons the hero currently has
      */
     public Set<LivingEntity> getSummons() {
@@ -754,7 +770,7 @@ public class Hero {
     /**
      * Returns the currently suppressed skills
      * For use with verbosity
-     * 
+     *
      * @return
      */
     public Set<String> getSuppressedSkills() {
@@ -767,7 +783,7 @@ public class Hero {
 
     /**
      * Checks if the hero currently has the Effect with the given name.
-     * 
+     *
      * @param name
      * @return boolean
      */
@@ -777,8 +793,9 @@ public class Hero {
 
     public boolean hasEffectType(EffectType type) {
         for (Effect effect : effects.values()) {
-            if (effect.isType(type))
+            if (effect.isType(type)) {
                 return true;
+            }
         }
         return false;
     }
@@ -789,7 +806,6 @@ public class Hero {
     }
 
     /**
-     * 
      * @return if the player has a party
      */
     public boolean hasParty() {
@@ -798,20 +814,23 @@ public class Hero {
 
     /**
      * Checks if the hero can use the given skill
+     *
      * @param skill
      * @return
      */
     public boolean canUseSkill(Skill skill) {
-        if (canPrimaryUseSkill(skill))
+        if (canPrimaryUseSkill(skill)) {
             return true;
-        else if (canSecondUseSkill(skill))
+        } else if (canSecondUseSkill(skill)) {
             return true;
+        }
 
         ConfigurationSection section = skills.get(skill.getName().toLowerCase());
         if (section != null) {
             int level = section.getInt(Setting.LEVEL.node(), 1);
-            if (getLevel(heroClass) >= level || (secondClass != null && getLevel(secondClass) >= level))
+            if (getLevel(heroClass) >= level || (secondClass != null && getLevel(secondClass) >= level)) {
                 return true;
+            }
         }
 
         return false;
@@ -820,8 +839,9 @@ public class Hero {
     public boolean canPrimaryUseSkill(Skill skill) {
         if (heroClass.hasSkill(skill.getName())) {
             int level = SkillConfigManager.getSetting(heroClass, skill, Setting.LEVEL.node(), 1);
-            if (getLevel(heroClass) >= level)
+            if (getLevel(heroClass) >= level) {
                 return true;
+            }
         }
         return false;
     }
@@ -829,8 +849,9 @@ public class Hero {
     public boolean canSecondUseSkill(Skill skill) {
         if (secondClass != null && secondClass.hasSkill(skill.getName())) {
             int level = SkillConfigManager.getSetting(secondClass, skill, Setting.LEVEL.node(), 1);
-            if (getLevel(secondClass) >= level)
+            if (getLevel(secondClass) >= level) {
                 return true;
+            }
         }
         return false;
     }
@@ -838,6 +859,7 @@ public class Hero {
     /**
      * Checks if the hero can use the given skill
      * This does a level check to make sure the hero has a class with a high enough level to use the skill
+     *
      * @param name
      * @return
      */
@@ -847,7 +869,7 @@ public class Hero {
 
     /**
      * Checks if the hero has access to the given Skill
-     * 
+     *
      * @param skill
      * @return
      */
@@ -857,7 +879,7 @@ public class Hero {
 
     /**
      * Checks if the hero has access to the given Skill
-     * 
+     *
      * @param name
      * @return
      */
@@ -867,7 +889,7 @@ public class Hero {
 
     /**
      * Checks if the hero is a master of the given class
-     * 
+     *
      * @param heroClass
      * @return boolean
      */
@@ -877,7 +899,7 @@ public class Hero {
 
     /**
      * Checks if verbosity is currently disabled for the current skill
-     * 
+     *
      * @param skill
      * @return boolean
      */
@@ -887,7 +909,7 @@ public class Hero {
 
     /**
      * Checks if verbosity is fully enabled/disabled for the hero
-     * 
+     *
      * @return boolean
      */
     public boolean isVerbose() {
@@ -902,8 +924,7 @@ public class Hero {
     }
 
     /**
-     * @param delayedSkillTaskId
-     *            the delayedSkillTaskId to set
+     * @param delayedSkillTaskId the delayedSkillTaskId to set
      */
     public void setDelayedSkill(DelayedSkill wSkill) {
         this.delayedSkill = wSkill;
@@ -913,8 +934,9 @@ public class Hero {
      * Cancels the delayed skill task
      */
     public void cancelDelayedSkill() {
-        if (delayedSkill == null)
+        if (delayedSkill == null) {
             return;
+        }
         Skill skill = delayedSkill.getSkill();
         delayedSkill = null;
         skill.broadcast(player.getLocation(), "$1 has stopped using $2!", player.getDisplayName(), skill.getName());
@@ -935,7 +957,7 @@ public class Hero {
 
     /**
      * This method can NOT be called from an iteration over the effect set
-     * 
+     *
      * @param effect
      */
     public void removeEffect(Effect effect) {
@@ -950,7 +972,7 @@ public class Hero {
 
     /**
      * Removes the given permission from the hero
-     * 
+     *
      * @param permission
      */
     public void removePermission(String permission) {
@@ -960,7 +982,7 @@ public class Hero {
 
     /**
      * Removes the given permission from the hero
-     * 
+     *
      * @param permission
      */
     public void removePermission(Permission permission) {
@@ -969,7 +991,8 @@ public class Hero {
     }
 
     /**
-     * Remove a skill from the hero's skill 
+     * Remove a skill from the hero's skill
+     *
      * @param skill
      */
     public void removeSkill(String skill) {
@@ -978,7 +1001,7 @@ public class Hero {
 
     /**
      * Sets the cooldown for a specific skill
-     * 
+     *
      * @param name
      * @param cooldown
      */
@@ -989,7 +1012,7 @@ public class Hero {
     /**
      * Sets the hero's experience for the given class to the given value,
      * this method will circumvent the ExpChangeEvent
-     * 
+     *
      * @param heroClass
      * @param experience
      */
@@ -1000,7 +1023,7 @@ public class Hero {
     /**
      * Sets the heros health, This method circumvents the HeroRegainHealth event
      * if you use it to regain health on a hero please make sure to call the regain health event prior to setHealth.
-     * 
+     *
      * @param health
      */
     public void setHealth(Double health) {
@@ -1016,15 +1039,16 @@ public class Hero {
 
     /**
      * Changes the hero to the given class
-     * 
+     *
      * @param heroClass
      */
     public void setHeroClass(HeroClass heroClass, boolean secondary) {
         double currentMaxHP = getMaxHealth();
-        if (secondary) 
+        if (secondary) {
             this.secondClass = heroClass;
-        else
+        } else {
             this.heroClass = heroClass;
+        }
 
         double newMaxHP = getMaxHealth();
         health *= newMaxHP / currentMaxHP;
@@ -1040,7 +1064,7 @@ public class Hero {
     /**
      * Sets the hero's last damage cause the the given value
      * Generally this should never be called through API as it is updated internally through the heroesdamagelistener
-     * 
+     *
      * @param lastDamageCause
      */
     public void setLastDamageCause(HeroDamageCause lastDamageCause) {
@@ -1050,7 +1074,7 @@ public class Hero {
     /**
      * Sets the heros mana to the given value
      * This circumvents the HeroRegainMana event.
-     * 
+     *
      * @param mana
      */
     public void setMana(int mana) {
@@ -1064,7 +1088,7 @@ public class Hero {
 
     /**
      * Sets the players current party to the given value
-     * 
+     *
      * @param party
      */
     public void setParty(HeroParty party) {
@@ -1073,7 +1097,7 @@ public class Hero {
 
     /**
      * sets a single setting in the persistence skill-settings map
-     * 
+     *
      * @param skill
      * @param node
      * @param val
@@ -1084,7 +1108,7 @@ public class Hero {
 
     /**
      * sets a single setting in the persistence skill-settings map
-     * 
+     *
      * @param skill
      * @param node
      * @param val
@@ -1100,7 +1124,7 @@ public class Hero {
 
     /**
      * Adds or removes the given Skill from the set of suppressed skills
-     * 
+     *
      * @param skill
      * @param suppressed
      */
@@ -1118,7 +1142,7 @@ public class Hero {
 
     /**
      * Sets the heros verbosity
-     * 
+     *
      * @param verbose
      */
     public void setVerbose(boolean verbose) {
@@ -1127,11 +1151,13 @@ public class Hero {
 
     public HeroClass getEnchantingClass() {
         int level = 0;
-        if (heroClass.hasExperiencetype(ExperienceType.ENCHANTING))
+        if (heroClass.hasExperiencetype(ExperienceType.ENCHANTING)) {
             level = getLevel(heroClass);
+        }
 
-        if (secondClass != null && secondClass.hasExperiencetype(ExperienceType.ENCHANTING) && getLevel(secondClass) > level)
+        if (secondClass != null && secondClass.hasExperiencetype(ExperienceType.ENCHANTING) && getLevel(secondClass) > level) {
             return secondClass;
+        }
 
         return level != 0 ? heroClass : null;
     }
@@ -1140,14 +1166,16 @@ public class Hero {
      * Syncs the Hero's current Experience with the minecraft experience (should also sync the level bar)
      */
     public void syncExperience() {
-        if (!isMaster(heroClass) || secondClass == null)
+        if (!isMaster(heroClass) || secondClass == null) {
             syncExperience(heroClass);
-        else
+        } else {
             syncExperience(secondClass);
+        }
     }
 
     /**
      * Syncs the experience bar with the client from the given class
+     *
      * @param hc
      */
     public void syncExperience(HeroClass hc) {
@@ -1167,8 +1195,9 @@ public class Hero {
      * Syncs the Heros current health with the Minecraft HealthBar
      */
     public void syncHealth() {
-        if ((player.isDead() || player.getHealth() == 0) && health <= 0)
+        if ((player.isDead() || player.getHealth() == 0) && health <= 0) {
             return;
+        }
 
         int playerHealth = (int) (health / getMaxHealth() * 20);
         if (playerHealth == 0 && health > 0) {
@@ -1179,7 +1208,7 @@ public class Hero {
 
     /**
      * Unbinds the material from a skill.
-     * 
+     *
      * @param material
      */
     public void unbind(Material material) {
@@ -1187,13 +1216,15 @@ public class Hero {
     }
 
     public void checkInventory() {
-        if (player.getGameMode() == GameMode.CREATIVE || Heroes.properties.disabledWorlds.contains(player.getWorld().getName()))
+        if (player.getGameMode() == GameMode.CREATIVE || Heroes.properties.disabledWorlds.contains(player.getWorld().getName())) {
             return;
+        }
         int removedCount = checkArmorSlots();
 
         for (int i = 0; i < 9; i++) {
-            if (canEquipItem(i))
+            if (canEquipItem(i)) {
                 continue;
+            }
 
             removedCount++;
         }
@@ -1250,18 +1281,20 @@ public class Hero {
     }
 
     public boolean canEquipItem(int slot) {
-        if (Heroes.properties.disabledWorlds.contains(player.getWorld().getName()))
+        if (Heroes.properties.disabledWorlds.contains(player.getWorld().getName())) {
             return true;
+        }
 
         ItemStack itemStack = player.getInventory().getItem(slot);
-        if (itemStack == null)
+        if (itemStack == null) {
             return true;
+        }
         Material itemType = itemStack.getType();
-        if (!Util.isWeapon(itemType))
+        if (!Util.isWeapon(itemType)) {
             return true;
-        else if (heroClass.isAllowedWeapon(itemType) || (secondClass != null && secondClass.isAllowedWeapon(itemType)))
+        } else if (heroClass.isAllowedWeapon(itemType) || (secondClass != null && secondClass.isAllowedWeapon(itemType))) {
             return true;
-        else {
+        } else {
             Util.moveItem(this, slot, itemStack);
             return false;
         }
@@ -1269,18 +1302,21 @@ public class Hero {
 
     /**
      * Checks if the player is able to craft the object specified
+     *
      * @param o - should be an ItemStack, ItemData, or Material
      * @return true if the class can craft the item
      */
     public boolean canCraft(Object o) {
         int level = heroClass.getCraftLevel(o);
-        if (level != -1 && level <= getLevel(heroClass))
+        if (level != -1 && level <= getLevel(heroClass)) {
             return true;
+        }
 
         if (secondClass != null) {
             level = secondClass.getCraftLevel(o);
-            if (level != -1 && level <= getLevel(secondClass))
+            if (level != -1 && level <= getLevel(secondClass)) {
                 return true;
+            }
         }
 
         return false;
