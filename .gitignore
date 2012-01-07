@@ -6,6 +6,7 @@
 /.idea
 # netbeans
 /nbproject
+Heroes.iml
 
 # we use maven!
 /build.xml
