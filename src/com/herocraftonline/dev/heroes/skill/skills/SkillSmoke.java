@@ -25,6 +25,8 @@ public class SkillSmoke extends ActiveSkill {
         setIdentifiers("skill smoke");
         setNotes("Note: Taking damage removes the effect");
         setTypes(SkillType.ILLUSION, SkillType.BUFF, SkillType.COUNTER, SkillType.STEALTHY);
+        
+        
     }
 
     @Override

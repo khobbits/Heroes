@@ -11,6 +11,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityListener;
+import org.bukkit.event.entity.EntityTargetEvent;
 
 import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
 import com.herocraftonline.dev.heroes.effects.Effect;
@@ -152,5 +153,17 @@ public class HEntityListener extends EntityListener {
         }
 
         Heroes.debug.stopTask("HEntityListener.onEntityDeath");
+    }
+
+    @Override
+    public void onEntityTarget(EntityTargetEvent event) {
+        if (event.isCancelled() || !(event.getTarget() instanceof Player)) {
+            return;
+        }
+
+        Hero hero = plugin.getHeroManager().getHero((Player) event.getTarget());
+        if (hero.hasEffect("Invisible") || hero.hasEffect("Invuln")) {
+            event.setCancelled(true);
+        }
     }
 }
