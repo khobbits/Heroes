@@ -125,7 +125,7 @@ public final class Messaging {
     }
 
     public static String parameterizeMessage(String msg, Object... params) {
-        msg = ChatColor.RED + "Heroes: " + ChatColor.GRAY + msg;
+        msg = ChatColor.GRAY + msg;
         if (params != null) {
             for (int i = 0; i < params.length; i++) {
                 msg = msg.replace("$" + (i + 1), ChatColor.WHITE + params[i].toString() + ChatColor.GRAY);
