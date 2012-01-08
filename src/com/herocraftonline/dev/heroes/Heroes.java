@@ -391,6 +391,8 @@ public class Heroes extends JavaPlugin {
 
         pluginManager.registerEvent(Type.BLOCK_BREAK, blockListener, Priority.Monitor, this);
         pluginManager.registerEvent(Type.BLOCK_PLACE, blockListener, Priority.Monitor, this);
+        pluginManager.registerEvent(Type.BLOCK_PISTON_EXTEND, blockListener, Priority.Monitor, this);
+        pluginManager.registerEvent(Type.BLOCK_PISTON_RETRACT, blockListener, Priority.Monitor, this);
 
         pluginManager.registerEvent(Type.PLUGIN_ENABLE, pluginListener, Priority.Monitor, this);
         pluginManager.registerEvent(Type.PLUGIN_DISABLE, pluginListener, Priority.Monitor, this);

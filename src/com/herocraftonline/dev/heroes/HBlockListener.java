@@ -1,6 +1,8 @@
 package com.herocraftonline.dev.heroes;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.bukkit.Location;
@@ -9,6 +11,8 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockListener;
+import org.bukkit.event.block.BlockPistonExtendEvent;
+import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 
 import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
@@ -94,6 +98,42 @@ public class HBlockListener extends BlockListener {
     }
 
     @Override
+    public void onBlockPistonExtend(BlockPistonExtendEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
+
+        List<Location> movedBlocks = new ArrayList<Location>();
+        for (Block block : event.getBlocks()) {
+            if (placedBlocks.containsKey(block.getLocation())) {
+                movedBlocks.add(block.getLocation());
+            }
+        }
+
+        int x = event.getDirection().getModX();
+        int y = event.getDirection().getModY();
+        int z = event.getDirection().getModZ();
+        Long time = System.currentTimeMillis();
+        for (Location loc : movedBlocks) {
+            placedBlocks.remove(loc);
+            placedBlocks.put(loc.clone().add(x, y, z), time);
+        }
+    }
+
+    @Override
+    public void onBlockPistonRetract(BlockPistonRetractEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
+        
+        Location loc = event.getBlock().getLocation();
+        if (placedBlocks.containsKey(loc)) {
+            placedBlocks.remove(loc);
+            placedBlocks.put(event.getBlock().getRelative(event.getDirection()).getLocation(), System.currentTimeMillis());
+        }
+    }
+
+    @Override
     public void onBlockPlace(BlockPlaceEvent event) {
         if (event.isCancelled())
             return;
@@ -104,7 +144,7 @@ public class HBlockListener extends BlockListener {
         Properties prop = Heroes.properties;
         if (prop.disabledWorlds.contains(block.getWorld().getName()))
             return;
-        
+
         if (prop.buildingExp.containsKey(material)) {
             Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
             if (hero.hasExperienceType(ExperienceType.BUILDING) && !hero.hasParty()) {
@@ -113,15 +153,15 @@ public class HBlockListener extends BlockListener {
                 hero.getParty().gainExp(prop.buildingExp.get(material), ExperienceType.BUILDING, event.getBlock().getLocation());
             }
         }
-        
-        
-        
+
+
+
         if (prop.miningExp.containsKey(material) || prop.loggingExp.containsKey(material) || prop.farmingExp.containsKey(material)) {
             placedBlocks.put(block.getLocation().clone(), System.currentTimeMillis());
         }
     }
 
-    
+
     private boolean wasBlockPlaced(Block block) {
         Location loc = block.getLocation();
 
