@@ -194,8 +194,14 @@ public class HeroClassManager {
         }
         newClass.setMaxLevel(maxLevel);
 
-        int defaultCost = Heroes.properties.swapCost;
-        int cost = config.getInt("cost", defaultCost);
+        double defaultCost = 0;
+        if (newClass.isPrimary()) {
+            defaultCost = Heroes.properties.swapCost;
+        } else {
+            defaultCost = Heroes.properties.profSwapCost;
+        }
+        
+        double cost = config.getDouble("cost", defaultCost);
         if (cost < 0) {
             Heroes.log(Level.WARNING, "Class (" + className + ") cost is too low. Setting cost to 0.");
             cost = 0;

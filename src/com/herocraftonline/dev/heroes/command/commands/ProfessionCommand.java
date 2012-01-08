@@ -38,8 +38,9 @@ public class ProfessionCommand extends BasicInteractiveCommand {
 
     @Override
     public void onCommandCancelled(CommandSender executor) {
-        if (!(executor instanceof Player))
+        if (!(executor instanceof Player)) {
             return;
+        }
         pendingClassSelections.remove(executor);
         pendingClassCostStatus.remove(executor);
     }
@@ -53,8 +54,9 @@ public class ProfessionCommand extends BasicInteractiveCommand {
 
         @Override
         public boolean execute(CommandSender executor, String identifier, String[] args) {
-            if (!(executor instanceof Player))
+            if (!(executor instanceof Player)) {
                 return false;
+            }
 
             Properties props = Heroes.properties;
             Player player = (Player) executor;
@@ -88,7 +90,7 @@ public class ProfessionCommand extends BasicInteractiveCommand {
                     return false;
                 }
             }
-            
+
             if (!newClass.hasNoParents()) {
                 for (HeroClass parentClass : newClass.getStrongParents()) {
                     if (!hero.isMaster(parentClass)) {
@@ -115,7 +117,11 @@ public class ProfessionCommand extends BasicInteractiveCommand {
                 return false;
             }
 
-            int cost = newClass.getCost();
+            double cost = newClass.getCost();
+            if (hero.getExperience(newClass) > 0) {
+                cost = Heroes.properties.oldProfSwapCost;
+            }
+
             boolean chargePlayer = true;
             if (hero.isMaster(newClass) && !props.swapMasteryCost) {
                 chargePlayer = false;
@@ -150,8 +156,9 @@ public class ProfessionCommand extends BasicInteractiveCommand {
 
         @Override
         public boolean execute(CommandSender executor, String identifier, String[] args) {
-            if (!(executor instanceof Player))
+            if (!(executor instanceof Player)) {
                 return false;
+            }
 
             Player player = (Player) executor;
             Hero hero = plugin.getHeroManager().getHero(player);
@@ -161,17 +168,22 @@ public class ProfessionCommand extends BasicInteractiveCommand {
 
             ClassChangeEvent event = new ClassChangeEvent(hero, currentClass, newClass);
             plugin.getServer().getPluginManager().callEvent(event);
-            if (event.isCancelled())
+            if (event.isCancelled()) {
                 return false;
+            }
 
             if (prop.resetExpOnClassChange || prop.resetProfMasteryOnClassChange) {
-                if (currentClass != null)
+                if (currentClass != null) {
                     if (!hero.isMaster(currentClass) || (prop.resetProfMasteryOnClassChange)) {
                         hero.setExperience(currentClass, 0);
                     }
+                }
             }
 
-            int cost = newClass.getCost();
+            double cost = newClass.getCost();
+            if (hero.getExperience(newClass) > 0) {
+                cost = Heroes.properties.oldProfSwapCost;
+            }
 
             if (pendingClassCostStatus.get(player)) {
                 if (Heroes.econ.has(player.getName(), cost)) {

@@ -53,8 +53,9 @@ public class ChooseCommand extends BasicInteractiveCommand {
 
         @Override
         public boolean execute(CommandSender executor, String identifier, String[] args) {
-            if (!(executor instanceof Player))
+            if (!(executor instanceof Player)) {
                 return false;
+            }
             
             Properties props = Heroes.properties;
             Player player = (Player) executor;
@@ -113,9 +114,10 @@ public class ChooseCommand extends BasicInteractiveCommand {
                 return false;
             }
 
-            int cost = newClass.getCost();
-            if (hero.getExperience(newClass) > 0)
+            double cost = newClass.getCost();
+            if (hero.getExperience(newClass) > 0) {
                 cost = props.oldClassSwapCost;
+            }
             
             boolean chargePlayer = true;
             if (props.firstSwitchFree && currentClass.isDefault()) {
@@ -176,9 +178,10 @@ public class ChooseCommand extends BasicInteractiveCommand {
                 }
             }
 
-            int cost = newClass.getCost();
-            if (hero.getExperience(newClass) > 0)
+            double cost = newClass.getCost();
+            if (hero.getExperience(newClass) > 0) {
                 cost = prop.oldClassSwapCost;
+            }
 
             if (pendingClassCostStatus.get(player)) {
                 if (Heroes.econ.has(player.getName(), cost)) {

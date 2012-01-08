@@ -35,8 +35,10 @@ public class Properties {
     public static double partyMults[];
     
     // Classes //
-    public int swapCost;
-    public int oldClassSwapCost;
+    public double swapCost;
+    public double oldClassSwapCost;
+    public double profSwapCost;
+    public double oldProfSwapCost;
     public boolean firstSwitchFree;
     public boolean swapMasteryCost;
     public boolean prefixClassName;
@@ -146,8 +148,10 @@ public class Properties {
         lockAtHighestTier = section.getBoolean("lockAtHighestTier", false);
         swapMasteryCost = section.getBoolean("swapMasteryCost", false);
         firstSwitchFree = section.getBoolean("firstSwitchFree", true);
-        swapCost = Util.toIntNonNull(section.get("swapcost", 0), "swapcost");
-        oldClassSwapCost = Util.toIntNonNull(section.get("oldClassSwapCost", 0), "oldClassSwapCost");
+        swapCost = Util.toDoubleNonNull(section.get("swapcost", 0), "swapcost");
+        oldClassSwapCost = Util.toDoubleNonNull(section.get("oldClassSwapCost", 0), "oldClassSwapCost");
+        profSwapCost = Util.toDoubleNonNull(section.get("profSwapCost", 0.0), "profSwapCost");
+        oldProfSwapCost = Util.toDoubleNonNull(section.get("oldProfSwapCost", 0.0), "oldProfSwapCost");
     }
 
     private void loadManaConfig(ConfigurationSection section) {

@@ -16,6 +16,8 @@ leveling:
 classes:
     swapcost: 0 #cost to swap
     oldClassSwapCost: 0 #cost to swap back to a class you already have xp in
+    profSwapCost: 0 #cost to swap to a new profession
+    oldProfSwapCost: 0 #cost to swap back to an old profession
     swapMasteryCost: false #will allow for users to change back to their mastered class freely
     firstSwitchFree: true #toggles charging for the first class switch
     prefixClassName: false #basic name prefixing of heroclass, may not work correctly

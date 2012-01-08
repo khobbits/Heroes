@@ -39,7 +39,7 @@ public class HeroClass {
     private List<RecipeGroup> recipes = new ArrayList<RecipeGroup>();
 
     private int maxLevel;
-    private int cost;
+    private double cost;
     private double expModifier;
     private double expLoss;
     private double baseMaxHealth;
@@ -245,9 +245,9 @@ public class HeroClass {
     }
 
     /**
-     * @return the cost to enter switch into this class
+     * @return the cost to enter or switch into this class
      */
-    public int getCost() {
+    public double getCost() {
         return cost;
     }
 
@@ -398,7 +398,7 @@ public class HeroClass {
         this.baseMaxHealth = baseMaxHealth;
     }
 
-    protected void setCost(int cost) {
+    protected void setCost(double cost) {
         this.cost = cost;
     }
 

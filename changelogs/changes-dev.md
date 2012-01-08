@@ -9,6 +9,7 @@ Version dev
 * we now cancel damage from fire sources if the player has the fire resist mob effect
 * /hero admin prof no longer changes a players primary class to a secondary one.
 * XP loss multipliers will now adjust past level loss properly, rather than being just based on the current level of the hero
+* fix pistons being able to circumvent placed block logging
 
 ==== **General:** ====
 
@@ -16,6 +17,7 @@ Version dev
 ** heals a player to full health
 ** Requires heroes.admin.heal permission node
 * Added a failure message to passive skills, if a hero tries to /skill <passiveskill>
+* Secondary class costs are now seperate from primary - see new config.yml
 
 ==== **API:** ====
 
