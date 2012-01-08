@@ -118,7 +118,9 @@ public class ProfessionCommand extends BasicInteractiveCommand {
             }
 
             double cost = newClass.getCost();
-            if (hero.getExperience(newClass) > 0) {
+            if (currentClass == null && Heroes.properties.firstSwitchFree) {
+                cost = 0;
+            } else if (hero.getExperience(newClass) > 0) {
                 cost = Heroes.properties.oldProfSwapCost;
             }
 
@@ -181,7 +183,9 @@ public class ProfessionCommand extends BasicInteractiveCommand {
             }
 
             double cost = newClass.getCost();
-            if (hero.getExperience(newClass) > 0) {
+            if (currentClass == null && Heroes.properties.firstSwitchFree) {
+                cost = 0;
+            } else if (hero.getExperience(newClass) > 0) {
                 cost = Heroes.properties.oldProfSwapCost;
             }
 
