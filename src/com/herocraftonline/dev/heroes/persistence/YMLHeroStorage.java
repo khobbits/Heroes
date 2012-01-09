@@ -19,6 +19,7 @@ import org.bukkit.entity.Player;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.hero.Hero;
+import com.herocraftonline.dev.heroes.util.Properties;
 import com.herocraftonline.dev.heroes.util.Util;
 
 public class YMLHeroStorage extends HeroStorage {
@@ -222,7 +223,10 @@ public class YMLHeroStorage extends HeroStorage {
                 if (heroClass == null || hero.getExperience(heroClass) != 0) {
                     continue;
                 }
-
+                //Don't go above max exp
+                if (exp > Properties.maxExp) {
+                    exp = Properties.maxExp;
+                }
                 hero.setExperience(heroClass, exp);
             }
         }
