@@ -18,6 +18,7 @@ Version 1.4.2
 ** Requires heroes.admin.heal permission node
 * Added a failure message to passive skills, if a hero tries to /skill <passiveskill>
 * Secondary class costs are now seperate from primary - see new config.yml
+* All Heroes messages will no longer say Heroes: before them.  It should be implied what plugin all messages are coming from.
 
 ==== **API:** ====
 

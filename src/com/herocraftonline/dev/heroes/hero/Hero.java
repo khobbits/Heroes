@@ -339,9 +339,13 @@ public class Hero {
                 gainedExp = -(gainedExp + exp);
                 exp = 0;
             }
-
-            // Reset our new level - in case xp adjustement settings actually don't cause us to change
+            
             newLevel = Properties.getLevel(exp);
+            // Check if the exp value is above the maximum allowed
+            if (exp > Properties.getTotalExp(hc.getMaxLevel())) {
+                exp = Properties.getTotalExp(hc.getMaxLevel());
+            }
+            // Reset our new level - in case xp adjustement settings actually don't cause us to change
             setExperience(hc, exp);
 
             // notify the user
