@@ -103,6 +103,7 @@ public class SkillManager {
         }
         oSkill.setPermissions(perms.toArray(new String[perms.size()]));
         oSkill.setUsage(config.getString("usage"));
+        oSkill.setDescription(config.getString("usage"));
         skills.put(name.toLowerCase(), oSkill);
         return true;
     }
