@@ -756,7 +756,7 @@ public class Hero {
      * @return
      */
     public Map<String, String> getSkillSettings(String skillName) {
-        if (!heroClass.hasSkill(skillName)) {
+        if (!heroClass.hasSkill(skillName) && (secondClass == null || !secondClass.hasSkill(skillName))) {
             return null;
         }
 

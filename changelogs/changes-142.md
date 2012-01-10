@@ -10,6 +10,7 @@ Version 1.4.2
 * /hero admin prof no longer changes a players primary class to a secondary one.
 * XP loss multipliers will now adjust past level loss properly, rather than being just based on the current level of the hero
 * fix pistons being able to circumvent placed block logging
+* OutsourcedSkill (permission) usage text will now set the description
 
 ==== **General:** ====
 
@@ -32,5 +33,7 @@ Version 1.4.2
 ** fixed oddities when a player had Enchanting xp source, but not the skill
 ** SkillEnchant will also now block a player from opening the enchanting table if they don't have the skill
 ** Will now properly re-synch player inventory when an enchant is blocked
+* Port
+** Port now works properly when used on secondary classes
 * Wolf
 ** Fixed usage text still indicating it was a usable skill rather than a passive
