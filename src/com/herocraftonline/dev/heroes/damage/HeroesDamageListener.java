@@ -12,8 +12,10 @@ import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Util;
+
 import net.minecraft.server.EntityLiving;
 import net.minecraft.server.MobEffectList;
+
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -230,7 +232,7 @@ public class HeroesDamageListener extends EntityListener {
 
         if (defender instanceof Player) {
             Player player = (Player) defender;
-            if (player.getNoDamageTicks() > 10 || player.isDead() || player.getHealth() <= 0) {
+            if ((player.getNoDamageTicks() > 10 && damage > 0) || player.isDead() || player.getHealth() <= 0) {
                 event.setCancelled(true);
                 Heroes.debug.stopTask("HeroesDamageListener.onEntityDamage");
                 return;
@@ -318,7 +320,7 @@ public class HeroesDamageListener extends EntityListener {
             }
 
         } else if (defender instanceof LivingEntity) {
-            if (((CraftLivingEntity) defender).getNoDamageTicks() > 10 || defender.isDead() || ((LivingEntity) defender).getHealth() <= 0) {
+            if ((((CraftLivingEntity) defender).getNoDamageTicks() > 10 && damage > 0) || defender.isDead() || ((LivingEntity) defender).getHealth() <= 0) {
                 event.setCancelled(true);
                 Heroes.debug.stopTask("HeroesDamageListener.onEntityDamage");
                 return;
