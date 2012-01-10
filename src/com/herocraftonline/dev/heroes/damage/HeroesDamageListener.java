@@ -49,7 +49,7 @@ public class HeroesDamageListener extends EntityListener {
     @Override
     public void onEntityRegainHealth(EntityRegainHealthEvent event) {
         Heroes.debug.startTask("HeroesDamageListener.onEntityRegainHealth");
-        if (event.isCancelled() || !(event.getEntity() instanceof Player)) {
+        if (event.isCancelled() || !(event.getEntity() instanceof Player) || Heroes.properties.disabledWorlds.contains(event.getEntity().getWorld().getName())) {
             Heroes.debug.stopTask("HeroesDamageListener.onEntityRegainHealth");
             return;
         }
