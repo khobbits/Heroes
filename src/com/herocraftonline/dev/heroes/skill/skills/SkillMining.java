@@ -54,7 +54,12 @@ public class SkillMining extends PassiveSkill {
                 Heroes.debug.stopTask("HeroesSkillListener");
                 return;
             }
-
+            
+            Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
+            if (!hero.hasEffect("Mining")) {
+                Heroes.debug.stopTask("HeroesSkillListener");
+                return;
+            }
             Block block = event.getBlock();
             if (HBlockListener.placedBlocks.containsKey(block.getLocation())) {
                 Heroes.debug.stopTask("HeroesSkillListener");
@@ -86,12 +91,6 @@ public class SkillMining extends PassiveSkill {
                 default:
                     Heroes.debug.stopTask("HeroesSkillListener");
                     return;
-            }
-
-            Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
-            if (!hero.hasEffect("Mining") || dropMaterial == null) {
-                Heroes.debug.stopTask("HeroesSkillListener");
-                return;
             }
 
             double chance = Util.rand.nextDouble();
