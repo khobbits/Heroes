@@ -1,8 +1,8 @@
 creature-health:
-    Creeper: 10
-    Zombie: 10
+    Creeper: 14
+    Zombie: 20
 creature-damage:
-    Zombie: 4
+    Zombie: 2
 item-damage:
     Air: 2
 environmental-damage:
