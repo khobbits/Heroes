@@ -11,6 +11,7 @@ Version 1.4.2
 * XP loss multipliers will now adjust past level loss properly, rather than being just based on the current level of the hero
 * fix pistons being able to circumvent placed block logging
 * OutsourcedSkill (permission) usage text will now set the description
+* HP regen no longer syncs hero HP to MC HP on disabled worlds
 
 ==== **General:** ====
 
@@ -33,6 +34,8 @@ Version 1.4.2
 ** fixed oddities when a player had Enchanting xp source, but not the skill
 ** SkillEnchant will also now block a player from opening the enchanting table if they don't have the skill
 ** Will now properly re-synch player inventory when an enchant is blocked
+* Mining
+** the chance to generate Y-level based drops is fixed
 * Port
 ** Port now works properly when used on secondary classes
 * Wolf
