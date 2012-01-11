@@ -72,10 +72,21 @@ public class DamageManager {
     public Integer getItemDamage(Material item, HumanEntity entity) {
         if (entity != null && entity instanceof Player) {
             HeroClass heroClass = plugin.getHeroManager().getHero((Player) entity).getHeroClass();
+            HeroClass secondClass = plugin.getHeroManager().getHero((Player) entity).getSecondClass();
             Integer classDamage = heroClass.getItemDamage(item);
-            if (classDamage != null)
+            Integer secondDamage = null;
+            if (secondClass != null) {
+                secondDamage = secondClass.getItemDamage(item);
+            }
+            
+            if (classDamage != null && secondDamage != null) {
+                return classDamage > secondDamage ? classDamage : secondDamage;
+            } else if (classDamage != null) {
                 return classDamage;
-        }
+            } else if (secondDamage != null) {
+                return secondDamage;
+            }
+        }   
         return itemDamage.get(item);
     }
 
