@@ -50,7 +50,9 @@ public class ConfigManager {
         checkForConfig(recipesConfigFile);
         if (!classConfigFolder.exists()) {
             classConfigFolder.mkdirs();
-            checkForConfig(new File(classConfigFolder, "vagrant.yml"));
+            checkForConfig(new File(classConfigFolder, "citizen.yml"));
+            checkForConfig(new File(classConfigFolder, "rogue.yml"));
+            checkForConfig(new File(classConfigFolder, "cleric.yml"));
         }
         plugin.setSkillConfigs(new SkillConfigManager(plugin));
         plugin.getSkillConfigs().load();

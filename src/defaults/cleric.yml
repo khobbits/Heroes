@@ -1,0 +1,79 @@
+name: Cleric
+default: false
+parents:
+    strong: []
+    weak: []
+primary: true
+secondary: false
+description: A heavily armored healer
+permitted-armor:
+- LEATHER
+- IRON
+- DIAMOND
+permitted-weapon:
+- WOOD
+- STONE
+- IRON_PICKAXE
+permitted-skills:
+    Mark:
+        level: 5
+        mana: 5
+        reagent: BED
+        reagent-cost: 1
+    Recall:
+        level: 5
+        mana: 40
+        cooldown: 60000
+        health-cost: 10
+        delay: 5000
+    Port:
+        level: 1
+    Invuln: 
+        level: 30
+        duration: 10000
+        cooldown: 50000
+        mana: 20
+    Pray:
+        level: 1
+        max-distance: 15
+        health: 10
+        mana: 15
+        cooldown: 15000
+    Harmtouch:
+        level: 1
+        damage: 8
+        max-distance: 5
+        cooldown: 15000
+        mana: 15
+    Wisdom:
+        level: 10
+        health-cost: 5
+        regen-multiplier: 3.0
+        reagent: REDSTONE
+        reagent-cost: 8
+        radius: 1
+        duration: 5000
+    Slow:
+        level: 15
+        max-distance: 5
+        mana: 0
+        duration: 1000
+        cooldown: 500
+    Groupheal:
+        level: 20
+        heal-amount: 10
+        radius: 10
+        cooldown: 80000
+        mana: 35
+experience-sources:
+- KILLING
+- PVP
+- QUESTING
+- EXTERNAL
+expmodifier: 1.0
+base-max-health: 34.0
+max-health-per-level: 0.5
+expLoss: 0.007
+user-class: true
+tier: 1
+recipes: [ default ]

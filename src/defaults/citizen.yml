@@ -1,22 +1,25 @@
-name: Vagrant
+name: Citizen
 default: true
 user-class: true
 primary: true
 secondary: false
 description: The Default Starter Path
 permitted-armor:
-- '*'
 permitted-weapon:
-- '*'
+- FISHING_ROD
+- SHEARS
+- STONE
 permitted-skills:
   ALL: true
 experience-sources:
 - KILLING
 - CRAFTING
 - MINING
+- LOGGING
+- FARMING
+- QUESTING
+- EXTERNAL
 permission-skills:
-  Example:
-    level: 1
 base-max-health: 20
 max-health-per-level: 0.1
 expmodifier: 1.0
@@ -25,4 +28,5 @@ item-damage:
 projectile-damage:
   Arrow: 3
 expLoss: 0
+tier: 0
 recipes: [ default ]
