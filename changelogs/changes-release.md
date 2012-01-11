@@ -1,75 +1,42 @@
-Version 1.4.0
+Version 1.4.2
 
 ==== **Bug Fixes:** ====
 
-* Fixed multiple issues when mastering, or gaining exp on profession resulting in primary class having it's exp adjusted.
-* Farming/Logging exp sources now award exp properly when a class also has Mining.
-* Creature Health now adjusts properly and works with values above normal maximums
-* A player will only have a skill if they are the proper level in the class that gets the skill at that level.
-* Players that craft with shift-right-clicking will now gain xp for all items crafted
-* Heroes can no longer re-use a skill with a warmaup to immediately use the skill
+* party commands no longer error when Spout is not detected
+* allowhatsplugin option is case sensetive but was reading as lowercase
+* Only alert players of denied XP via block-break if they have the source of XP they are breaking the block of
+* Removed startup warning for empty XP mappings
+* we now cancel damage from fire sources if the player has the fire resist mob effect
+* /hero admin prof no longer changes a players primary class to a secondary one.
+* XP loss multipliers will now adjust past level loss properly, rather than being just based on the current level of the hero
+* fix pistons being able to circumvent placed block logging
+* OutsourcedSkill (permission) usage text will now set the description
+* HP regen no longer syncs hero HP to MC HP on disabled worlds
 
 ==== **General:** ====
 
-* Fishing is now an experience source
-* Now using Vault for Economy & Permission hooks. (It's required)
-* Adjusted XP methods so that the Level display operates properly in 1.0
-* MapPartyUI has been removed
-* The config.yml format has changed drastically. Some old options have been removed, or moved to make it easier.
-* Wolves & Enderdragons are currently ignored (wolves are still buggy in vanilla)
-* Classes now have item crafting restrictions
-** Restrict item groups based on level in recipes.yml
-** add the recipe groups a class should gain in the classfile under the 'recipes' key
-** supports denied-items to prevent users from crafting certain items, no matter what
-* Party xp sharing now operates differently
-** the partyBonus - value in the config.yml should now be between 0 and 1 - update accordingly!
-* New xp source Enchanting - only used for removing xp from enchanting right now
-** enchanting can/will de-level
-** Classes must have the xp source to enchant any item.
-** Only players with XP source enchanting may open enchanting tables
-** opening the enchanting display will now auto-swap your level bar to the best class for enchanting
-** REQUIRES SPOUTPLUGIN
-* Added Building XP Type
-** It triggers whenever a player places a block of the type defined (similar to breakage)
-** It does NOT log recently broken blocks, so you'll want to set this to a lower value than gathering blocks as it could be used to chain gain xp easily.
-* Party Size is now configurable
-** Party XP Bonuses are now based on max party size.
-** a Value of 1 for the XP bonus will result in 100% XP for a full party (if all members are nearby and can gain the xp type)
-** a Value of 0 will split the XP evenly among all party members in range, with no party bonus.
-** Values above 1 will result in the ability to gain more XP than soloing in a full group (and even less players depending on how high it is)
+* Added /hero admin heal <playername>
+** heals a player to full health
+** Requires heroes.admin.heal permission node
+* Added a failure message to passive skills, if a hero tries to /skill <passiveskill>
+* Secondary class costs are now seperate from primary - see new config.yml
+* All Heroes messages will no longer say Heroes: before them.  It should be implied what plugin all messages are coming from.
 
 ==== **API:** ====
 
-* removed hero.setExperience(double) and isMaster() - use isMaster(heroClass) and setExperience(heroClass, double)
-* party xp now needs to be handled through the party API, not the Hero.
-* The MapUI has been removed
-* All skills that damage a target must now use skill.entityDamage - bukkit no longer provides direct support for firing events via .damage anymore
-* Added Questing XP source for external plugins
-
+* QuickenEffect is now a common effect rather than being limited to SkillOne.
 
 ==== **Skills:** ====
 
-* Alchemy - (NEW!)
-** Restricts players from using the brewing stand until they gain the appropraite level
-** REQUIRES SPOUT
-* Backstab - (Re-Added!)
-* Charge 
-** now 'jumps' toward the targeted player and can be configured to deal damage, stun, slow, or root nearby enemies on langing, or all of the above.
-* PickPocket - (NEW!)
-** allows a player to steal an item from another 
-** Will not steal armor/items in the hotbar
+* Charge
+** usage text has been fixed
+* Enchant
+** fixed oddities when a player had Enchanting xp source, but not the skill
+** SkillEnchant will also now block a player from opening the enchanting table if they don't have the skill
+** Will now properly re-synch player inventory when an enchant is blocked
+* Mining
+** the chance to generate Y-level based drops is fixed
 * Port
-** Fixed a bug that caused it to think the cast location was the players current location (rather than saving it)
-* Enchant - (NEW!)
-** Restricts classes so they must be the level specified to enchant an item with the given enchantment
-** REQUIRES SPOUTPLUGIN!
-* FireArrow
-** Fixed not expiring properly
-* IceArrow - (Re-Added!)
-** Fixed not expiring properly
-* PoisonArrow - (Re-added!)
-** fixed not expiring properly
-* SuperJump - (NEW!) - Thanks Multitallented
-** powerful version of jump that gives safe-fall
-* Wolf 
-** Now a passive that forces anyone on the server to have the skill to tame
+** Port now works properly when used on secondary classes
+* Wolf
+** Fixed usage text still indicating it was a usable skill rather than a passive
