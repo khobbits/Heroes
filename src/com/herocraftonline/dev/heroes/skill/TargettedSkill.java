@@ -103,50 +103,27 @@ public abstract class TargettedSkill extends ActiveSkill {
      */
     @Override
     public SkillResult use(Hero hero, String[] args) {
-        Player player = hero.getPlayer();
         int maxDistance = SkillConfigManager.getUseSetting(hero, this, Setting.MAX_DISTANCE, 15, false);
-        LivingEntity target = null;
-        if (args.length > 0) {
-            target = plugin.getServer().getPlayer(args[0]);
-            if (target == null) {
-                return SkillResult.INVALID_TARGET;
-            }
-            if (target.getLocation().toVector().distance(player.getLocation().toVector()) > maxDistance) {
-                Messaging.send(player, "Target is too far away.");
-                return SkillResult.INVALID_TARGET_NO_MSG;
-            }
-            if (!inLineOfSight(player, (Player) target)) {
-                Messaging.send(player, "Sorry, target is not in your line of sight!");
-                return SkillResult.INVALID_TARGET_NO_MSG;
-            }
-            if (target.isDead() || target.getHealth() == 0)
-                return SkillResult.INVALID_TARGET;
-        }
+        LivingEntity target = getTarget(hero, maxDistance, args);
         if (target == null) {
-            target = getPlayerTarget(player, maxDistance);
-        } else {
-            if (args.length > 1) {
-                args = Arrays.copyOfRange(args, 1, args.length);
-            }
-        }
-        if (target == null) {
-            // don't self-target harmful skills
-            if (this.isType(SkillType.HARMFUL))
-                return SkillResult.INVALID_TARGET_NO_MSG;
-            target = player;
-        }
-
-        // Do a PvP check automatically for any harmful skill
-        if (this.isType(SkillType.HARMFUL)) {
-            if (player.equals(target) || hero.getSummons().contains(target) || !damageCheck(player, target)) {
-                Messaging.send(player, "Sorry, You can't damage that target!");
-                return SkillResult.INVALID_TARGET_NO_MSG;
-            }
+            return SkillResult.INVALID_TARGET_NO_MSG;
+        } else if (args.length > 1 && target != null) {
+            args = Arrays.copyOfRange(args, 1, args.length);
         }
 
         return use(hero, target, args);
     }
 
+    public SkillResult useDelayed(Hero hero, LivingEntity target, String[] args) {
+        Player player = hero.getPlayer();
+        int maxDistance = SkillConfigManager.getUseSetting(hero, this, Setting.MAX_DISTANCE, 15, false);
+        if (!player.getWorld().equals(target.getWorld()) || player.getLocation().distance(target.getLocation()) > maxDistance) {
+            Messaging.send(player, "Target is out of range!");
+            return SkillResult.FAIL;
+        }
+        return use(hero, target, args);
+    }
+    
     protected void broadcastExecuteText(Hero hero, LivingEntity target) {
         Player player = hero.getPlayer();
         broadcast(player.getLocation(), getUseText(), player.getDisplayName(), getName(), target == player ? "themself" : getEntityName(target));
@@ -188,6 +165,66 @@ public abstract class TargettedSkill extends ActiveSkill {
             }
         }
         return null;
+    }
+
+    private LivingEntity getTarget(Hero hero, int maxDistance, String[] args) {
+        Player player = hero.getPlayer();
+        LivingEntity target = null;
+        if (args.length > 0) {
+            target = plugin.getServer().getPlayer(args[0]);
+            if (target == null) {
+                Messaging.send(player, "Invalid target!");
+                return null;
+            }
+            if (target.getLocation().toVector().distance(player.getLocation().toVector()) > maxDistance) {
+                Messaging.send(player, "Target is too far away.");
+                return null;
+            }
+            if (!inLineOfSight(player, (Player) target)) {
+                Messaging.send(player, "Sorry, target is not in your line of sight!");
+                return null;
+            }
+            if (target.isDead() || target.getHealth() == 0)
+                Messaging.send(player, "You can't target the dead!");
+            return null;
+        }
+        if (target == null) {
+            target = getPlayerTarget(player, maxDistance);
+        }
+        if (target == null) {
+            // don't self-target harmful skills
+            if (this.isType(SkillType.HARMFUL)) {
+                return null;
+            }
+            target = player;
+        }
+
+        // Do a PvP check automatically for any harmful skill
+        if (this.isType(SkillType.HARMFUL)) {
+            if (player.equals(target) || hero.getSummons().contains(target) || !damageCheck(player, target)) {
+                Messaging.send(player, "Sorry, You can't damage that target!");
+                return target;
+            }
+        }
+        return target;
+    }
+
+    @Override
+    protected boolean addDelayedSkill(Hero hero, int delay, String identifier, String[] args) {
+        final Player player = hero.getPlayer();
+        int maxDistance = SkillConfigManager.getUseSetting(hero, this, Setting.MAX_DISTANCE, 15, false);
+        LivingEntity target = getTarget(hero, maxDistance, args);
+        if (target == null) {
+            return false;
+        } else if (args.length > 1 && target != null) {
+            args = Arrays.copyOfRange(args, 1, args.length);
+        }
+
+        DelayedSkill dSkill = new DelayedTargettedSkill(identifier, player, delay, this, target, args);
+        broadcast(player.getLocation(), "$1 begins to use $2 on $3!", player.getDisplayName(), getName(), Messaging.getLivingEntityName(target));
+        plugin.getHeroManager().getDelayedSkills().put(hero, dSkill);
+        hero.setDelayedSkill(dSkill);
+        return true;
     }
 
     /**

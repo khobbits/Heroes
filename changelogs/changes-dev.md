@@ -6,6 +6,8 @@ Version dev
 
 ==== **General:** ====
 
+* Targetted skills with delays should now store their target and attempt to re-cast when finished.
+
 ==== **API:** ====
 
 ==== **Skills:** ====

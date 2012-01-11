@@ -158,12 +158,17 @@ public abstract class ActiveSkill extends Skill {
         }
 
         int delay = SkillConfigManager.getUseSetting(hero, this, Setting.DELAY, 0, true);
+        DelayedSkill dSkill = null;
         if (delay > 0 && !hm.getDelayedSkills().containsKey(hero)) {
-            addDelayedSkill(hero, delay, identifier, args);
-            messageAndEvent(hero, SkillResult.START_DELAY);
-            return true;
+            if (addDelayedSkill(hero, delay, identifier, args)) {
+                messageAndEvent(hero, SkillResult.START_DELAY);
+                return true;
+            } else {
+                // Generic return if the adding of the delayed skill failed - the failure should send it's own message
+                return true;
+            }
         } else if (hm.getDelayedSkills().containsKey(hero)) {
-            DelayedSkill dSkill = hm.getDelayedSkills().get(hero);
+            dSkill = hm.getDelayedSkills().get(hero);
             if (!dSkill.getSkill().equals(this)) {
                 hm.getDelayedSkills().remove(hero);
                 hero.setDelayedSkill(null);
@@ -177,11 +182,18 @@ public abstract class ActiveSkill extends Skill {
             } else if (!dSkill.isReady()) {
                 Messaging.send(sender, "You have already begun to use that skill!");
                 return true;
-            } else
+            } else {
                 hm.addCompletedSkill(hero);
+            }
         }
-
-        SkillResult skillResult = use(hero, args);
+        
+        SkillResult skillResult;
+        if (dSkill instanceof DelayedTargettedSkill) {
+            skillResult = ((TargettedSkill) this).useDelayed(hero, ((DelayedTargettedSkill) dSkill).getTarget(), args);
+        } else {
+            skillResult = use(hero, args);
+        }
+        
         if (skillResult.type == ResultType.NORMAL){
             // Set cooldown
             if (cooldown > 0) {
@@ -237,12 +249,13 @@ public abstract class ActiveSkill extends Skill {
         return section;
     }
 
-    private void addDelayedSkill(Hero hero, int delay, final String identifier, final String[] args) {
+    protected boolean addDelayedSkill(Hero hero, int delay, final String identifier, final String[] args) {
         final Player player = hero.getPlayer();
         DelayedSkill dSkill = new DelayedSkill(identifier, player, delay, this, args);
         broadcast(player.getLocation(), "$1 begins to use $2!", player.getDisplayName(), getName());
         plugin.getHeroManager().getDelayedSkills().put(hero, dSkill);
         hero.setDelayedSkill(dSkill);
+        return true;
     }
 
     /**
