@@ -18,8 +18,8 @@ public class LevelInformationCommand extends BasicCommand {
         super("Level Information");
         this.plugin = plugin;
         setDescription("Displays hero information");
-        setUsage("/hero level");
-        setArgumentRange(0, 0);
+        setUsage("/hero level [toggle]");
+        setArgumentRange(0, 1);
         setIdentifiers("hero level", "level", "lvl");
     }
 
@@ -27,9 +27,19 @@ public class LevelInformationCommand extends BasicCommand {
     public boolean execute(CommandSender sender, String identifier, String[] args) {
         if (!(sender instanceof Player))
             return false;
-
+        
         Player player = (Player) sender;
         Hero hero = plugin.getHeroManager().getHero(player);
+        
+        if (args.length > 0 && args[0].equalsIgnoreCase("toggle")) {
+            hero.setSyncPrimary(!hero.isSyncPrimary());
+            Messaging.send(player, "Your experience bar is now synced with $1", hero.isSyncPrimary() ? hero.getHeroClass().getName() : hero.getSecondClass().getName());
+            return true;
+        } else if (args.length > 0) {
+            Messaging.send(player, getUsage());
+            return true;
+        }
+
         HeroClass hc = hero.getHeroClass();
         int exp = (int) hero.getExperience(hc);
         int level = Properties.getLevel(exp);

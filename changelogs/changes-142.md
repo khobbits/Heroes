@@ -21,6 +21,8 @@ Version 1.4.2
 * Added a failure message to passive skills, if a hero tries to /skill <passiveskill>
 * Secondary class costs are now seperate from primary - see new config.yml
 * All Heroes messages will no longer say Heroes: before them.  It should be implied what plugin all messages are coming from.
+* Added /hero level toggle
+** this sub-command will toggle a players experience bar between the primary and secondary classes
 
 ==== **API:** ====
 

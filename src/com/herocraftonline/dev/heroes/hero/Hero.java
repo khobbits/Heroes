@@ -52,6 +52,7 @@ public class Hero {
     private Set<String> suppressedSkills = new HashSet<String>();
     private Map<String, Map<String, String>> skillSettings = new HashMap<String, Map<String, String>>();
     private Map<String, ConfigurationSection> skills = new HashMap<String, ConfigurationSection>();
+    private boolean syncPrimary = true;
     private Integer tieredLevel;
     private double health;
     private PermissionAttachment transientPerms;
@@ -1169,7 +1170,7 @@ public class Hero {
      * Syncs the Hero's current Experience with the minecraft experience (should also sync the level bar)
      */
     public void syncExperience() {
-        if (!isMaster(heroClass) || secondClass == null) {
+        if (syncPrimary && (!isMaster(heroClass) || secondClass == null)) {
             syncExperience(heroClass);
         } else {
             syncExperience(secondClass);
@@ -1323,5 +1324,14 @@ public class Hero {
         }
 
         return false;
+    }
+
+    public boolean isSyncPrimary() {
+        return syncPrimary;
+    }
+
+    public void setSyncPrimary(boolean syncPrimary) {
+        this.syncPrimary = syncPrimary && secondClass != null;
+        syncExperience();
     }
 }
