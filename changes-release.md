@@ -40,7 +40,7 @@ Version 1.4.2
 ** Will now properly re-synch player inventory when an enchant is blocked
 * Mining
 ** the chance to generate Y-level based drops is fixed
-* Port
-** Port now works properly when used on secondary classes
+* Mark/Recall
+** Now work properly when used on secondary classes
 * Wolf
 ** Fixed usage text still indicating it was a usable skill rather than a passive
