@@ -40,7 +40,8 @@ permitted-skills:
     Track:
         level: 10
     EscapeArtist:
-      level: 25
+        level: 25
+        mana: 30
     Smoke:
         level: 15
         duration: 30000
@@ -58,6 +59,7 @@ permitted-skills:
         duration: 15000
         miss-chance: 0.5
         cooldown: 25000
+        mana: 10
 experience-sources:
 - KILLING
 - PVP

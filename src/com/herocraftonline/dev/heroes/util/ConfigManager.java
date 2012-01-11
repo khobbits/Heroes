@@ -53,6 +53,8 @@ public class ConfigManager {
             checkForConfig(new File(classConfigFolder, "citizen.yml"));
             checkForConfig(new File(classConfigFolder, "rogue.yml"));
             checkForConfig(new File(classConfigFolder, "cleric.yml"));
+            checkForConfig(new File(classConfigFolder, "mage.yml"));
+            checkForConfig(new File(classConfigFolder, "warrior.yml"));
         }
         plugin.setSkillConfigs(new SkillConfigManager(plugin));
         plugin.getSkillConfigs().load();

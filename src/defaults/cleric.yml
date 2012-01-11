@@ -56,9 +56,9 @@ permitted-skills:
     Slow:
         level: 15
         max-distance: 5
-        mana: 0
-        duration: 1000
-        cooldown: 500
+        mana: 10
+        duration: 4000
+        cooldown: 2000
     Groupheal:
         level: 20
         heal-amount: 10

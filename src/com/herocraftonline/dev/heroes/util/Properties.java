@@ -1,5 +1,10 @@
 package com.herocraftonline.dev.heroes.util;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 
 import org.bukkit.Location;
@@ -31,9 +36,9 @@ public class Properties {
     public boolean resetOnDeath;
     public int pvpLevelRange = 50;
     public boolean orbExp;
-    
+
     public static double partyMults[];
-    
+
     // Classes //
     public double swapCost;
     public double oldClassSwapCost;
@@ -48,7 +53,7 @@ public class Properties {
     public boolean resetProfOnPrimaryChange = false;
     public boolean lockPathTillMaster = false;
     public boolean lockAtHighestTier = false;
-    
+
     //Properties
     public boolean debug;
     public String storageType;
@@ -74,7 +79,7 @@ public class Properties {
 
     // Worlds
     public Set<String> disabledWorlds = new HashSet<String>();
-    
+
     public Map<CreatureType, Double> creatureKillingExp = new EnumMap<CreatureType, Double>(CreatureType.class);
     public Map<Material, Double> miningExp = new EnumMap<Material, Double>(Material.class);
     public Map<Material, Double> farmingExp = new EnumMap<Material, Double>(Material.class);
@@ -85,12 +90,14 @@ public class Properties {
     public Map<Player, Location> playerDeaths = new HashMap<Player, Location>();
     public Map<String, RecipeGroup> recipes = new HashMap<String, RecipeGroup>();
     public double fishingExp = 0;
-    
+    private Heroes plugin;
+
     public void load(Heroes plugin) {
+        this.plugin = plugin;
         FileConfiguration config = plugin.getConfig();
         config.options().copyDefaults(true);
         plugin.saveConfig();
-        
+
         // Load in the data
         loadLevelConfig(config.getConfigurationSection("leveling"));
         loadClassConfig(config.getConfigurationSection("classes"));
@@ -100,7 +107,7 @@ public class Properties {
         loadWorldConfig(config.getConfigurationSection("worlds"));
         loadHatsConfig(config.getConfigurationSection("hats"));
     }
-    
+
     private void loadBedConfig(ConfigurationSection section) {
         if (section == null)
             return;
@@ -132,13 +139,40 @@ public class Properties {
         resetOnDeath = section.getBoolean("resetOnDeath", false);
         pvpLevelRange = Util.toIntNonNull(section.get("pvpLevelRange", 50), "pvpLevelRange");
         calcExp();
+        if (section.getBoolean("dumpLevelExp", false)) {
+            dumpExpLevels();
+        }
         calcPartyMultipliers();
     }
-    
+
+    private void dumpExpLevels() {
+        File levelFile = new File(plugin.getDataFolder(), "levels.txt");
+        
+        if (levelFile.exists()) {
+            levelFile.delete();
+        }
+        BufferedWriter bos = null;
+        try {
+            levelFile.createNewFile();
+            bos = new BufferedWriter(new FileWriter(levelFile));
+            for (int i = 0; i < maxLevel; i++) {
+                bos.append(i+1 + " - " + getTotalExp(i) + "\n");
+            }
+            
+        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
+        } finally {
+            try {
+                bos.close();
+            } catch (IOException e) {
+            }
+        }
+    }
+
     private void loadClassConfig(ConfigurationSection section) {
         if (section == null)
             return;
-        
+
         prefixClassName = section.getBoolean("prefixClassName", false);
         resetExpOnClassChange = section.getBoolean("resetExpOnClassChange", true);
         resetMasteryOnClassChange = section.getBoolean("resetMasteryOnClassChange", false);
@@ -164,7 +198,7 @@ public class Properties {
             manaRegenPercent = 5;
         }
     }
-    
+
     private void loadProperties(ConfigurationSection section) {
         if (section == null)
             return;
@@ -184,7 +218,7 @@ public class Properties {
         List<String> worlds = section.getStringList("disabledWorlds");
         disabledWorlds.addAll(worlds);
     }
-    
+
     /**
      * Generate experience for the level ArrayList<Integer>
      */
@@ -197,14 +231,14 @@ public class Properties {
         }
         levels[maxLevel - 1] = maxExp;
     }
-    
+
     protected void calcPartyMultipliers() {
         partyMults = new double[maxPartySize];
         for (int i = 0; i < maxPartySize; i++) {
             partyMults[i] = ((maxPartySize - 1.0) / (maxPartySize * Math.log(maxPartySize))) * Math.log(i + 1);
         }
     }
-    
+
     /**
      * Gets the total amount of experience required to attain the given level
      * @param level
@@ -218,7 +252,7 @@ public class Properties {
 
         return levels[level - 1];
     }
-    
+
     /**
      * Gives the exp required to go from the previous level to the level given
      * @param level

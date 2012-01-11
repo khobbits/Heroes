@@ -1,0 +1,77 @@
+name: Mage
+default: false
+parents:
+    strong: []
+    weak: []
+primary: true
+secondary: false
+description: Ranged Disable with LeatherArmor and Icebolt
+permitted-armor:
+- LEATHER
+permitted-weapon:
+- WOOD
+- STONE_PICKAXE
+- STONE_AXE
+- STONE_SPADE
+- STONE_HOE
+- IRON_PICKAXE
+permitted-skills:
+    Mark:
+        level: 5
+        mana: 5
+        reagent: BED
+        reagent-cost: 1
+    Recall:
+        level: 5
+        mana: 40
+        cooldown: 60000
+        health-cost: 10
+        delay: 5000
+    Port:
+        level: 1
+    Icebolt:
+        level: 1
+        damage: 4
+        cooldown: 2000
+        slow-duration: 2000
+        mana: 0
+    Piggify:
+        level: 2
+        duration: 8000
+        max-distance: 15
+        cooldown: 30000
+        mana: 25
+    Fireball:
+        level: 20
+        mana: 15
+        cooldown: 25000
+        damage: 10
+        fire-ticks: 5
+    Wisdom:
+        level: 10
+        radius: 1
+        regen-multiplier: 2.0
+        duration: 300000
+        mana: 0
+        cooldown: 301000
+    Wolf:
+        level: 15
+    Blink:
+        level: 25
+        max-distance: 10
+        cooldown: 20000
+    Web:
+        level: 5
+        mana: 25
+        duration: 10000
+experience-sources:
+- KILLING
+- PVP
+- QUESTING
+expmodifier: 1.0
+base-max-health: 21.0
+max-health-per-level: 0.25
+expLoss: 0.007
+user-class: true
+tier: 1
+recipes: [ default ]

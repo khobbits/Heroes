@@ -13,6 +13,7 @@ leveling:
     spawnCampExpMult: .5 #if noSpawnCamp is true, all xp gained from killing is multiplied by this number. setting to 0 gives no xp.
     resetOnDeath: false #Hardcore mode to reset all levels/exp on death
     pvpLevelRange: 50 #Level that players must be within to PvP with each other
+    dumpLevelExp: false #Dumps a levels.txt file with the exp/level pairings 
 classes:
     swapcost: 0 #cost to swap
     oldClassSwapCost: 0 #cost to swap back to a class you already have xp in

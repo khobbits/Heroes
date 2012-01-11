@@ -1,0 +1,66 @@
+name: Warrior
+default: false
+parents:
+    strong: []
+    weak: []
+primary: true
+secondary: false
+description: Melee damage with axes and ironarmor
+permitted-armor:
+- LEATHER
+- IRON
+- CHAIN
+permitted-weapon:
+- WOOD
+- STONE
+- IRON_PICKAXE
+- IRON_SWORD
+- IRON_AXE
+- GOLD_AXE
+- DAIMOND_AXE
+permitted-skills:
+    Mark:
+        level: 5
+        mana: 5
+        reagent: BED
+        reagent-cost: 1
+    Recall:
+        level: 5
+        mana: 40
+        cooldown: 60000
+        health-cost: 10
+        delay: 5000
+    Root:
+        level: 5
+        max-distance: 25
+        duration: 6000
+        mana: 25
+        cooldown: 25000
+    Might:
+        level: 10
+        damage-bonus: 1.3
+        mana: 15
+    Charge:
+        level: 25
+        mana: 20
+        damage: 10
+        slow-duration: 6000
+        silence-duration: 4000
+        stun-duration: 2000
+        radius: 5
+    One:
+        level: 20
+        speed-multiplier: 1.5
+        mana: 30
+experience-sources:
+- KILLING
+- PVP
+- QUESTING
+- EXTERNAL
+expmodifier: 1.0
+base-max-health: 34.0
+max-health-per-level: 0.4
+expLoss: 0.007
+user-class: true
+tier: 1
+recipes: [ default ]
