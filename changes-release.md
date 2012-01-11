@@ -15,6 +15,8 @@ Version 1.4.2
 
 ==== **General:** ====
 
+* Assassin's Blade
+** re-added due to Poll!
 * Added /hero admin heal <playername>
 ** heals a player to full health
 ** Requires heroes.admin.heal permission node

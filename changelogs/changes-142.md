@@ -30,6 +30,8 @@ Version 1.4.2
 
 ==== **Skills:** ====
 
+* Assassin's Blade
+** re-added due to Poll!
 * Charge
 ** usage text has been fixed
 * Enchant
