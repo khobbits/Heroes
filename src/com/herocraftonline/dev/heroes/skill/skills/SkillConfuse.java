@@ -29,7 +29,7 @@ public class SkillConfuse extends TargettedSkill {
 
     public SkillConfuse(Heroes plugin) {
         super(plugin, "Confuse");
-        setDescription("Confuses your target");
+        setDescription("You confuse the target for $1 seconds.");
         setUsage("/skill confuse <target>");
         setArgumentRange(0, 1);
         setIdentifiers("skill confuse");
@@ -131,5 +131,11 @@ public class SkillConfuse extends TargettedSkill {
             super.tick(hero);
             adjustVelocity(hero.getPlayer());
         }
+    }
+
+    @Override
+    public String getDescription(Hero hero) {
+        int duration = SkillConfigManager.getUseSetting(hero, this, Setting.DURATION, 10000, false);
+        return getDescription().replace("$1", duration / 1000 + "");
     }
 }

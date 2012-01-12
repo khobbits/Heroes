@@ -20,7 +20,7 @@ public class SkillDispel extends TargettedSkill {
 
     public SkillDispel(Heroes plugin) {
         super(plugin, "Dispel");
-        setDescription("Removes all magical effects from your target");
+        setDescription("You remove up to $1 magical effects from your target.");
         setUsage("/skill dispel");
         setArgumentRange(0, 1);
         setIdentifiers("skill dispel");
@@ -118,6 +118,12 @@ public class SkillDispel extends TargettedSkill {
         }
         Messaging.send(player, "The target has nothing to dispel!");
         return SkillResult.INVALID_TARGET_NO_MSG;
+    }
+
+    @Override
+    public String getDescription(Hero hero) {
+        int removals = SkillConfigManager.getUseSetting(hero, this, "max-removals", 3, false);
+        return getDescription().replace("$1", removals + "");
     }
 
 }

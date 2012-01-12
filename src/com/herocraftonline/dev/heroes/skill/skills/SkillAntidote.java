@@ -46,4 +46,8 @@ public class SkillAntidote extends TargettedSkill {
         return SkillResult.INVALID_TARGET;
     }
 
+    @Override
+    public String getDescription(Hero hero) {
+        return getDescription();
+    }
 }

@@ -18,7 +18,7 @@ public class SkillPray extends TargettedSkill {
 
     public SkillPray(Heroes plugin) {
         super(plugin, "Pray");
-        setDescription("Heals the target");
+        setDescription("You restore $1 health to your target.");
         setUsage("/skill pray <target>");
         setArgumentRange(0, 1);
         setIdentifiers("skill pray");
@@ -28,7 +28,7 @@ public class SkillPray extends TargettedSkill {
     @Override
     public ConfigurationSection getDefaultConfig() {
         ConfigurationSection node = super.getDefaultConfig();
-        node.set("health", 10);
+        node.set(Setting.HEALTH.node(), 10);
         node.set(Setting.MAX_DISTANCE.node(), 25);
         return node;
     }
@@ -64,5 +64,11 @@ public class SkillPray extends TargettedSkill {
         targetHero.syncHealth();
         broadcastExecuteText(hero, target);
         return SkillResult.NORMAL;
+    }
+
+    @Override
+    public String getDescription(Hero hero) {
+        int health = SkillConfigManager.getUseSetting(hero, this, Setting.HEALTH.node(), 10, false);
+        return getDescription().replace("$1", health + "");
     }
 }

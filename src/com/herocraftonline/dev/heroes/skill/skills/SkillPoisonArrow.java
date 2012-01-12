@@ -30,7 +30,7 @@ public class SkillPoisonArrow extends ActiveSkill {
 
     public SkillPoisonArrow(Heroes plugin) {
         super(plugin, "PoisonArrow");
-        setDescription("You fire a poison arrow from your bow");
+        setDescription("Your next $1 arrows will poison their target dealing $2 damage over $3 seconds.");
         setUsage("/skill parrow");
         setArgumentRange(0, 0);
         setIdentifiers("skill parrow", "skill poisonarrow");
@@ -169,5 +169,15 @@ public class SkillPoisonArrow extends ActiveSkill {
             if (paBuff.hasNoApplications())
                 hero.removeEffect(paBuff);
         }
+    }
+
+    @Override
+    public String getDescription(Hero hero) {
+        int attacks = SkillConfigManager.getUseSetting(hero, this, "attacks", 1, false);
+        int duration = SkillConfigManager.getUseSetting(hero, this, "poison-duration", 10000, false);
+        int period = SkillConfigManager.getUseSetting(hero, this, Setting.PERIOD, 2000, false);
+        int damage = SkillConfigManager.getUseSetting(hero, this, "tick-damage", 1, false);
+        damage = damage * duration / period;
+        return getDescription().replace("$1", attacks + "").replace("$2", damage + "").replace("$3", duration / 1000 + "");
     }
 }

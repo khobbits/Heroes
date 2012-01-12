@@ -15,7 +15,7 @@ public class SkillTaunt extends ActiveSkill {
 
     public SkillTaunt(Heroes plugin) {
         super(plugin, "Taunt");
-        setDescription("Taunts enemies around you");
+        setDescription("You taunt nearby enemies.");
         setUsage("/skill taunt");
         setArgumentRange(0, 0);
         setIdentifiers("skill taunt");
@@ -32,6 +32,11 @@ public class SkillTaunt extends ActiveSkill {
         }
         broadcastExecuteText(hero);
         return SkillResult.NORMAL;
+    }
+
+    @Override
+    public String getDescription(Hero hero) {
+        return getDescription();
     }
 
 }

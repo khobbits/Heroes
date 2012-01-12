@@ -22,7 +22,7 @@ public class SkillPoison extends TargettedSkill {
 
     public SkillPoison(Heroes plugin) {
         super(plugin, "Poison");
-        setDescription("Poisons your target");
+        setDescription("You poison your target dealing $1 damage over $2 seconds.");
         setUsage("/skill poison <target>");
         setArgumentRange(0, 1);
         setIdentifiers("skill poison");
@@ -92,5 +92,13 @@ public class SkillPoison extends TargettedSkill {
             Player player = hero.getPlayer();
             broadcast(player.getLocation(), expireText, player.getDisplayName());
         }
+    }
+
+    @Override
+    public String getDescription(Hero hero) {
+        int duration = SkillConfigManager.getUseSetting(hero, this, Setting.DURATION, 10000, false);
+        double period = SkillConfigManager.getUseSetting(hero, this, Setting.PERIOD, 2000, false);
+        int damage = SkillConfigManager.getUseSetting(hero, this, "tick-damage", 1, false);
+        return getDescription().replace("$1", damage * duration / period + "").replace("$2", duration / 1000 + "");
     }
 }

@@ -64,4 +64,9 @@ public class SkillAlchemy extends PassiveSkill {
             }
         }
     }
+
+    @Override
+    public String getDescription(Hero hero) {
+        return getDescription();
+    }
 }

@@ -19,7 +19,7 @@ public class SkillPort extends ActiveSkill {
 
     public SkillPort(Heroes plugin) {
         super(plugin, "Port");
-        setDescription("Teleports you and your nearby party to the set location!");
+        setDescription("You teleport yourself and nearby party members to the set location!");
         setUsage("/skill port <location>");
         setArgumentRange(1, 1);
         setIdentifiers("skill port");
@@ -83,5 +83,10 @@ public class SkillPort extends ActiveSkill {
             return SkillResult.NORMAL;
         } else
             return SkillResult.FAIL;
+    }
+
+    @Override
+    public String getDescription(Hero hero) {
+        return getDescription();
     }
 }

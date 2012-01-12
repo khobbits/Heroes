@@ -20,7 +20,7 @@ public class SkillBandage extends TargettedSkill {
 
     public SkillBandage(Heroes plugin) {
         super(plugin, "Bandage");
-        setDescription("Bandages the target");
+        setDescription("Bandages your target, restoring $1 health.");
         setUsage("/skill bandage <target>");
         setArgumentRange(0, 1);
         setIdentifiers("skill bandage");
@@ -76,5 +76,11 @@ public class SkillBandage extends TargettedSkill {
 
         broadcastExecuteText(hero, target);
         return SkillResult.NORMAL;
+    }
+
+    @Override
+    public String getDescription(Hero hero) {
+        double amount = SkillConfigManager.getUseSetting(hero, this, Setting.HEALTH, 5, false);
+        return getDescription().replace("$1", amount + "");
     }
 }

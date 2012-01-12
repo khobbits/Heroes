@@ -23,7 +23,7 @@ public class SkillExcavate extends ActiveSkill {
     
     public SkillExcavate(Heroes plugin) {
         super(plugin, "Excavate");
-        setDescription("Provides a short buff that increases digging speed, and allows instant breaking of dirt");
+        setDescription("You gain a increased digging speed, and instant breaking of dirt for $1 seconds.");
         setUsage("/skill excavate");
         setArgumentRange(0, 0);
         setIdentifiers("skill excavate");
@@ -116,5 +116,13 @@ public class SkillExcavate extends ActiveSkill {
         default: 
             return false;
         }
+    }
+    @Override
+    public String getDescription(Hero hero) {
+        int duration = SkillConfigManager.getUseSetting(hero, this, "duration-per-level", 100, false);
+        int level = hero.getSkillLevel(this);
+        if (level < 1)
+            level = 1;
+        return getDescription().replace("$1", duration * level / 1000 + "");
     }
 }

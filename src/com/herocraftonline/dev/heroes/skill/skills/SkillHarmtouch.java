@@ -17,7 +17,7 @@ public class SkillHarmtouch extends TargettedSkill {
 
     public SkillHarmtouch(Heroes plugin) {
         super(plugin, "Harmtouch");
-        setDescription("Deals direct damage to the target");
+        setDescription("You deal $1 dark damage to the target.");
         setUsage("/skill harmtouch <target>");
         setArgumentRange(0, 1);
         setIdentifiers("skill harmtouch");
@@ -39,5 +39,11 @@ public class SkillHarmtouch extends TargettedSkill {
         damageEntity(target, player, damage, DamageCause.ENTITY_ATTACK);
         broadcastExecuteText(hero, target);
         return SkillResult.NORMAL;
+    }
+
+    @Override
+    public String getDescription(Hero hero) {
+        int damage = SkillConfigManager.getUseSetting(hero, this, Setting.DAMAGE, 10, false);
+        return getDescription().replace("$1", damage + "");
     }
 }

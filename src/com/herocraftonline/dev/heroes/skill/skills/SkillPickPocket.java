@@ -29,7 +29,7 @@ public class SkillPickPocket extends TargettedSkill {
 
     public SkillPickPocket(Heroes plugin) {
         super(plugin, "PickPocket");
-        setDescription("Gives you a chance to steal an item from the target's inventory");
+        setDescription("You attempt to steal an item from your target.");
         setUsage("/skill pickpocket");
         setArgumentRange(0, 0);
         setIdentifiers("skill pickpocket", "skill ppocket", "skill pickp");
@@ -115,6 +115,11 @@ public class SkillPickPocket extends TargettedSkill {
 
         return SkillResult.NORMAL;
         //and that's all folks!
+    }
+
+    @Override
+    public String getDescription(Hero hero) {
+        return getDescription();
     }
 
 

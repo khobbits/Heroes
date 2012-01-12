@@ -21,7 +21,7 @@ public class SkillShield extends PassiveSkill {
 
     public SkillShield(Heroes plugin) {
         super(plugin, "Shield");
-        setDescription("Your shield absorbs damage!");
+        setDescription("You are able to use doors as shields to absorbs damage!");
         setArgumentRange(0, 0);
         setEffectTypes(EffectType.BENEFICIAL, EffectType.PHYSICAL);
         setTypes(SkillType.PHYSICAL);
@@ -69,5 +69,10 @@ public class SkillShield extends PassiveSkill {
             }
             Heroes.debug.stopTask("HeroesSkillListener");
         }
+    }
+
+    @Override
+    public String getDescription(Hero hero) {
+        return getDescription();
     }
 }

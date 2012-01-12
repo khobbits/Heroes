@@ -13,7 +13,7 @@ public class SkillLayhands extends TargettedSkill {
 
     public SkillLayhands(Heroes plugin) {
         super(plugin, "Layhands");
-        setDescription("Restores the Health of the target to full");
+        setDescription("You restore your target to full health.");
         setUsage("/skill layhands <target>");
         setArgumentRange(0, 1);
         setIdentifiers("skill layhands");
@@ -33,5 +33,10 @@ public class SkillLayhands extends TargettedSkill {
 
         broadcastExecuteText(hero, target);
         return SkillResult.NORMAL;
+    }
+
+    @Override
+    public String getDescription(Hero hero) {
+        return getDescription();
     }
 }

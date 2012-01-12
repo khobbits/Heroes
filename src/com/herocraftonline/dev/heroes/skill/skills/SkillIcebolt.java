@@ -36,7 +36,7 @@ public class SkillIcebolt extends ActiveSkill {
     
     public SkillIcebolt(Heroes plugin) {
         super(plugin, "Icebolt");
-        setDescription("Fires a snowball that hurts the player and if they're on fire, puts them out");
+        setDescription("You launch a ball of ice that deals $1 damage to your target and slows them for $2 seconds.");
         setUsage("/skill icebolt");
         setArgumentRange(0, 0);
         setIdentifiers("skill icebolt");
@@ -132,5 +132,12 @@ public class SkillIcebolt extends ActiveSkill {
 
             Heroes.debug.stopTask("HeroesSkillListener");
         }
+    }
+
+    @Override
+    public String getDescription(Hero hero) {
+        int duration = SkillConfigManager.getUseSetting(hero, this, Setting.DURATION, 5000, false);
+        int damage = SkillConfigManager.getUseSetting(hero, this, Setting.DAMAGE, 4, false);
+        return getDescription().replace("$1", damage + "").replace("$2", duration / 1000 + "");
     }
 }

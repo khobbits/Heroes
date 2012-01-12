@@ -24,14 +24,15 @@ import com.herocraftonline.dev.heroes.util.Util;
 
 
 public class SkillFishing extends PassiveSkill {
-    
+
     public SkillFishing(Heroes plugin) {
         super(plugin, "Fishing");
-        setDescription("Double Drops for fishing!");
+        setDescription("You have a $1% chance of getting a bonus fish!");
         setEffectTypes(EffectType.BENEFICIAL);
         setTypes(SkillType.KNOWLEDGE, SkillType.EARTH, SkillType.BUFF);
         registerEvent(Type.PLAYER_FISH, new SkillPlayerListener(this), Priority.Monitor);
     }
+
 
     @Override
     public ConfigurationSection getDefaultConfig() {
@@ -43,13 +44,13 @@ public class SkillFishing extends PassiveSkill {
     }
 
     public class SkillPlayerListener extends PlayerListener {
-        
+
         private Skill skill;
 
         SkillPlayerListener(Skill skill) {
             this.skill = skill;
         }
-        
+
         @Override
         public void onPlayerFish(PlayerFishEvent event){
             Heroes.debug.startTask("HeroesSkillListener");
@@ -57,71 +58,80 @@ public class SkillFishing extends PassiveSkill {
                 Heroes.debug.stopTask("HeroesSkillListener");
                 return;
             }
-                CraftItem getCaught = (CraftItem) event.getCaught();
-                double chance = Util.rand.nextDouble();
-                Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
-                Player player = hero.getPlayer();
-                if (chance < SkillConfigManager.getUseSetting(hero, skill, Setting.CHANCE_LEVEL, .001, false) * hero.getSkillLevel(skill)){ //if the chance
-                    
-                        int leatherlvl = SkillConfigManager.getUseSetting(hero, skill, "leather-level", 5, true);
-                        if (hero.getLevel() >= leatherlvl && SkillConfigManager.getUseSetting(hero, skill, "enable-leather", false)){ //if fishing leather is enabled and have the level
-                            
-                            if (getCaught != null){ //If not null
-                                switch(Util.rand.nextInt(6)){
-                                    case 0: 
-                                        getCaught.setItemStack(new ItemStack(Material.LEATHER_BOOTS, 1));
-                                        Messaging.send(player, "You found leather boots!");
-                                        getCaught.getItemStack().setDurability((short) (Math.random() * 40));
-                                        break;
-                                    case 1: 
-                                        getCaught.setItemStack(new ItemStack(Material.LEATHER_LEGGINGS, 1));
-                                        Messaging.send(player, "You found leather leggings!");
-                                        getCaught.getItemStack().setDurability((short) (Math.random() * 46));
-                                        break;
-                                    case 2: 
-                                        getCaught.setItemStack(new ItemStack(Material.LEATHER_HELMET, 1));
-                                        Messaging.send(player, "You found a leather helmet!");
-                                        getCaught.getItemStack().setDurability((short) (Math.random() * 34));
-                                        break;
-                                    case 3: 
-                                        getCaught.setItemStack(new ItemStack(Material.LEATHER_CHESTPLATE, 1));
-                                        Messaging.send(player, "You found a leather chestplate!");
-                                        getCaught.getItemStack().setDurability((short) (Math.random() * 49));
-                                        break;
-                                    case 4: 
-                                        getCaught.setItemStack(new ItemStack(Material.GOLDEN_APPLE, 1));
-                                        Messaging.send(player, "You found a golden apple, woo!");
-                                        getCaught.getItemStack().setDurability((short) (Math.random() * 10));
-                                        break;
-                                    case 5: 
-                                        getCaught.setItemStack(new ItemStack(Material.APPLE, 1));
-                                        Messaging.send(player, "You found an apple!");
-                                        getCaught.getItemStack().setDurability((short) (Math.random() * 29));
-                                        break;
-                                    case 6: 
-                                        getCaught.setItemStack(new ItemStack(Material.RAW_FISH, 2));
-                                        Messaging.send(player, "You found 2 Fishes!");
-                                        break;
-                                    case 7: 
-                                        getCaught.setItemStack(new ItemStack(Material.RAW_FISH, 1));
-                                        Messaging.send(player, "You found 1 Fish!");
-                                        break;
-                                }
-                            }
-                        } else {
-                                switch(Util.rand.nextInt(2)){
-                                    case 0: 
-                                        getCaught.setItemStack(new ItemStack(Material.RAW_FISH, 2));
-                                        Messaging.send(player, "You found 2 Fishes!");
-                                        break;
-                                    case 1: 
-                                        getCaught.setItemStack(new ItemStack(Material.RAW_FISH, 1));
-                                        Messaging.send(player, "You found 1 Fish!");
-                                        break;
-                                }
-                            }   
-                        }           
-                Heroes.debug.stopTask("HeroesSkillListener");
-            }
+            CraftItem getCaught = (CraftItem) event.getCaught();
+            double chance = Util.rand.nextDouble();
+            Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
+            Player player = hero.getPlayer();
+            if (chance < SkillConfigManager.getUseSetting(hero, skill, Setting.CHANCE_LEVEL, .001, false) * hero.getSkillLevel(skill)){ //if the chance
+
+                int leatherlvl = SkillConfigManager.getUseSetting(hero, skill, "leather-level", 5, true);
+                if (hero.getLevel() >= leatherlvl && SkillConfigManager.getUseSetting(hero, skill, "enable-leather", false)){ //if fishing leather is enabled and have the level
+
+                    if (getCaught != null){ //If not null
+                        switch(Util.rand.nextInt(6)){
+                        case 0: 
+                            getCaught.setItemStack(new ItemStack(Material.LEATHER_BOOTS, 1));
+                            Messaging.send(player, "You found leather boots!");
+                            getCaught.getItemStack().setDurability((short) (Math.random() * 40));
+                            break;
+                        case 1: 
+                            getCaught.setItemStack(new ItemStack(Material.LEATHER_LEGGINGS, 1));
+                            Messaging.send(player, "You found leather leggings!");
+                            getCaught.getItemStack().setDurability((short) (Math.random() * 46));
+                            break;
+                        case 2: 
+                            getCaught.setItemStack(new ItemStack(Material.LEATHER_HELMET, 1));
+                            Messaging.send(player, "You found a leather helmet!");
+                            getCaught.getItemStack().setDurability((short) (Math.random() * 34));
+                            break;
+                        case 3: 
+                            getCaught.setItemStack(new ItemStack(Material.LEATHER_CHESTPLATE, 1));
+                            Messaging.send(player, "You found a leather chestplate!");
+                            getCaught.getItemStack().setDurability((short) (Math.random() * 49));
+                            break;
+                        case 4: 
+                            getCaught.setItemStack(new ItemStack(Material.GOLDEN_APPLE, 1));
+                            Messaging.send(player, "You found a golden apple, woo!");
+                            getCaught.getItemStack().setDurability((short) (Math.random() * 10));
+                            break;
+                        case 5: 
+                            getCaught.setItemStack(new ItemStack(Material.APPLE, 1));
+                            Messaging.send(player, "You found an apple!");
+                            getCaught.getItemStack().setDurability((short) (Math.random() * 29));
+                            break;
+                        case 6: 
+                            getCaught.setItemStack(new ItemStack(Material.RAW_FISH, 2));
+                            Messaging.send(player, "You found 2 Fishes!");
+                            break;
+                        case 7: 
+                            getCaught.setItemStack(new ItemStack(Material.RAW_FISH, 1));
+                            Messaging.send(player, "You found 1 Fish!");
+                            break;
+                        }
+                    }
+                } else {
+                    switch(Util.rand.nextInt(2)){
+                    case 0: 
+                        getCaught.setItemStack(new ItemStack(Material.RAW_FISH, 2));
+                        Messaging.send(player, "You found 2 Fishes!");
+                        break;
+                    case 1: 
+                        getCaught.setItemStack(new ItemStack(Material.RAW_FISH, 1));
+                        Messaging.send(player, "You found 1 Fish!");
+                        break;
+                    }
+                }   
+            }           
+            Heroes.debug.stopTask("HeroesSkillListener");
         }
     }
+
+    @Override
+    public String getDescription(Hero hero) {
+        double chance = SkillConfigManager.getUseSetting(hero, this, "chance-per-level", .001, false);
+        int level = hero.getSkillLevel(this);
+        if (level < 1)
+            level = 1;
+        return getDescription().replace("$1", (int) (chance * level * 100) + "");
+    }
+}

@@ -30,7 +30,7 @@ public class SkillCurse extends TargettedSkill {
 
     public SkillCurse(Heroes plugin) {
         super(plugin, "Curse");
-        setDescription("Curses your target causing their attacks to miss");
+        setDescription("You curse the target for $1 seconds, giving their attacks a $2% miss chance.");
         setUsage("/skill curse <target>");
         setArgumentRange(0, 1);
         setIdentifiers("skill curse");
@@ -164,5 +164,12 @@ public class SkillCurse extends TargettedSkill {
             }
             Heroes.debug.stopTask("HeroesSkillListener");
         }
+    }
+
+    @Override
+    public String getDescription(Hero hero) {
+        int duration = SkillConfigManager.getUseSetting(hero, this, Setting.DURATION, 10000, false);
+        double chance = SkillConfigManager.getUseSetting(hero, this, "miss-chance", .5, false);
+        return getDescription().replace("$1", duration / 1000 + "").replace("$2", chance * 100 + "");
     }
 }

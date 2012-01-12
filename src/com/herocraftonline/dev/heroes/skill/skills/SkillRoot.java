@@ -17,7 +17,7 @@ public class SkillRoot extends TargettedSkill {
 
     public SkillRoot(Heroes plugin) {
         super(plugin, "Root");
-        setDescription("Roots your target in place");
+        setDescription("You root your target in place for $1 seconds.");
         setUsage("/skill root <target>");
         setArgumentRange(0, 1);
         setIdentifiers("skill root");
@@ -43,5 +43,11 @@ public class SkillRoot extends TargettedSkill {
 
         broadcastExecuteText(hero, target);
         return SkillResult.NORMAL;
+    }
+
+    @Override
+    public String getDescription(Hero hero) {
+        int duration = SkillConfigManager.getUseSetting(hero, this, Setting.DURATION, 5000, false);
+        return getDescription().replace("$1", duration / 1000 + "");
     }
 }

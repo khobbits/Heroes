@@ -35,7 +35,7 @@ public class SkillCharge extends TargettedSkill {
 
     public SkillCharge(Heroes plugin) {
         super(plugin, "Charge");
-        setDescription("Charges towards your target");
+        setDescription("You charge toward your target!");
         setUsage("/skill charge");
         setArgumentRange(0, 1);
         setIdentifiers("skill charge");
@@ -147,5 +147,10 @@ public class SkillCharge extends TargettedSkill {
             }
             Heroes.debug.stopTask("HeroesSkillListener");
         }
+    }
+
+    @Override
+    public String getDescription(Hero hero) {
+        return getDescription();
     }
 }

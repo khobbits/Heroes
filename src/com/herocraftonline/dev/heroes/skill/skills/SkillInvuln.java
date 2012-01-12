@@ -17,7 +17,7 @@ public class SkillInvuln extends ActiveSkill {
 
     public SkillInvuln(Heroes plugin) {
         super(plugin, "Invuln");
-        setDescription("Grants total damage immunity");
+        setDescription("You become immune to all attacks, and may not attack for $1 seconds.");
         setUsage("/skill invuln");
         setArgumentRange(0, 0);
         setIdentifiers("skill invuln");
@@ -51,5 +51,11 @@ public class SkillInvuln extends ActiveSkill {
         }
         hero.addEffect(new InvulnerabilityEffect(this, duration));
         return SkillResult.NORMAL;
+    }
+
+    @Override
+    public String getDescription(Hero hero) {
+        int duration = SkillConfigManager.getUseSetting(hero, this, Setting.DURATION, 1, false);
+        return getDescription().replace("$1", duration / 1000 + "");
     }
 }

@@ -25,7 +25,7 @@ public class SkillBackstab extends PassiveSkill {
     
     public SkillBackstab(Heroes plugin) {
         super(plugin, "Backstab");
-        setDescription("You are more lethal when attacking from behind!");
+        setDescription("You have a $1% chance to deal $2% damage when attacking from behind!");
         setArgumentRange(0, 0);
         setTypes(SkillType.PHYSICAL, SkillType.BUFF);
         setEffectTypes(EffectType.BENEFICIAL, EffectType.PHYSICAL);
@@ -100,5 +100,12 @@ public class SkillBackstab extends PassiveSkill {
         Player player = hero.getPlayer();
         String targetName = target instanceof Player ? ((Player) target).getName() : target.getClass().getSimpleName().substring(5);
         broadcast(player.getLocation(), useText, player.getDisplayName(), target == player ? "himself" : targetName);
+    }
+
+    @Override
+    public String getDescription(Hero hero) {
+        double chance = SkillConfigManager.getUseSetting(hero, this, "attack-chance", .5, false);
+        double percent = SkillConfigManager.getUseSetting(hero, this, "attack-bonus", 1.5, false);
+        return getDescription().replace("$1", chance + "").replace("$2", percent + "");
     }
 }

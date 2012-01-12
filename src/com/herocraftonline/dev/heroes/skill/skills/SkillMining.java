@@ -24,7 +24,7 @@ public class SkillMining extends PassiveSkill {
 
     public SkillMining(Heroes plugin) {
         super(plugin, "Mining");
-        setDescription("You understand mining and ores!");
+        setDescription("You have a $1% chance to get extra ores when minin.!");
         setEffectTypes(EffectType.BENEFICIAL);
         setTypes(SkillType.KNOWLEDGE, SkillType.EARTH, SkillType.BUFF);
         
@@ -128,5 +128,14 @@ public class SkillMining extends PassiveSkill {
             else
                 return Material.COAL_ORE;
         }
+    }
+
+    @Override
+    public String getDescription(Hero hero) {
+        double chance = SkillConfigManager.getUseSetting(hero, this, Setting.CHANCE_LEVEL, .001, false);
+        int level = hero.getSkillLevel(this);
+        if (level < 1)
+            level = 1;
+        return getDescription().replace("$1", (int) (chance * level * 100) + "");
     }
 }

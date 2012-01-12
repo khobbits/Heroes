@@ -19,7 +19,7 @@ public class SkillWolf extends PassiveSkill {
 
     public SkillWolf(Heroes plugin) {
         super(plugin, "Wolf");
-        setDescription("Ability to tame wolves!");
+        setDescription("You have the ability to tame wolves.");
         setUsage("/skill wolf <release|summon>");
         setArgumentRange(0, 1);
         setIdentifiers("skill wolf");
@@ -55,5 +55,11 @@ public class SkillWolf extends PassiveSkill {
             }
             Heroes.debug.stopTask("HeroesSkillListener.Wolf");
         }
+    }
+
+
+    @Override
+    public String getDescription(Hero hero) {
+        return getDescription();
     }
 }

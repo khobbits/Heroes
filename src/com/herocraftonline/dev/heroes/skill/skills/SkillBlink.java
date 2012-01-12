@@ -21,7 +21,7 @@ public class SkillBlink extends ActiveSkill {
 
     public SkillBlink(Heroes plugin) {
         super(plugin, "Blink");
-        setDescription("Teleports you up to 6 blocks");
+        setDescription("Teleports you up to $1 blocks away.");
         setUsage("/skill blink");
         setArgumentRange(0, 0);
         setIdentifiers("skill blink");
@@ -72,5 +72,11 @@ public class SkillBlink extends ActiveSkill {
             Messaging.send(player, "No location to blink to.");
             return SkillResult.INVALID_TARGET_NO_MSG;
         }
+    }
+
+    @Override
+    public String getDescription(Hero hero) {
+        int distance = SkillConfigManager.getUseSetting(hero, this, Setting.MAX_DISTANCE, 6, false);
+        return getDescription().replace("$1", distance + "");
     }
 }

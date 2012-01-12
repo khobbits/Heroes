@@ -29,7 +29,7 @@ public class SkillMight extends ActiveSkill {
 
     public SkillMight(Heroes plugin) {
         super(plugin, "Might");
-        setDescription("You increase your party's damage with weapons!");
+        setDescription("You increase your party's damage with weapons by $1%!");
         setArgumentRange(0, 0);
         setUsage("/skill might");
         setIdentifiers("skill might");
@@ -156,5 +156,11 @@ public class SkillMight extends ActiveSkill {
             }
             Heroes.debug.stopTask("HeroesSkillListener");
         }
+    }
+
+    @Override
+    public String getDescription(Hero hero) {
+        double bonus = SkillConfigManager.getUseSetting(hero, this, "damage-bonus", 1.25, false);
+        return getDescription().replace("$1", (int) ((bonus - 1) * 100) + "");
     }
 }

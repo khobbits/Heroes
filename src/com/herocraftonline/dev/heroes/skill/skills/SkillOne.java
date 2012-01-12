@@ -18,7 +18,7 @@ public class SkillOne extends ActiveSkill {
 
     public SkillOne(Heroes plugin) {
         super(plugin, "One");
-        setDescription("Provides a short burst of speed");
+        setDescription("You gain a burst of speed for $1 seconds.");
         setUsage("/skill one");
         setArgumentRange(0, 0);
         setIdentifiers("skill one");
@@ -54,5 +54,11 @@ public class SkillOne extends ActiveSkill {
         hero.addEffect(new QuickenEffect(this, getName(), duration, multiplier, applyText, expireText));
 
         return SkillResult.NORMAL;
+    }
+
+    @Override
+    public String getDescription(Hero hero) {
+        int duration = SkillConfigManager.getUseSetting(hero, this, Setting.DURATION, 1, false);
+        return getDescription().replace("$1", duration / 1000 + "");
     }
 }

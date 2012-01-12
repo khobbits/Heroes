@@ -31,7 +31,7 @@ public class SkillEnchant extends PassiveSkill {
     public SkillEnchant(Heroes plugin) {
         super(plugin, "Enchant");
 
-        setDescription("You are able to enchant items!");
+        setDescription("You are able to enchant items.");
         setArgumentRange(0, 0);
         setTypes(SkillType.KNOWLEDGE, SkillType.ITEM);
         setEffectTypes(EffectType.BENEFICIAL);
@@ -120,5 +120,10 @@ public class SkillEnchant extends PassiveSkill {
                 Messaging.send(event.getPlayer(), "You don't have the ability to enchant items!");
             }
         }
+    }
+
+    @Override
+    public String getDescription(Hero hero) {
+        return getDescription();
     }
 }

@@ -24,7 +24,7 @@ public class SkillHerbalism extends PassiveSkill {
 
     public SkillHerbalism(Heroes plugin) {
         super(plugin, "Herbalism");
-        setDescription("You know about the things of the earth!");
+        setDescription("You have a $1% chance to harvest extra herbs, fruits, and vegetables.");
         setEffectTypes(EffectType.BENEFICIAL);
         setTypes(SkillType.KNOWLEDGE, SkillType.EARTH, SkillType.BUFF);
         
@@ -108,5 +108,14 @@ public class SkillHerbalism extends PassiveSkill {
             
             Heroes.debug.stopTask("HeroesSkillListener");
         }
+    }
+
+    @Override
+    public String getDescription(Hero hero) {
+        double chance = SkillConfigManager.getUseSetting(hero, this, Setting.CHANCE_LEVEL, .001, false);
+        int level = hero.getSkillLevel(this);
+        if (level < 1)
+            level = 1;
+        return getDescription().replace("$1", (int) (chance * level * 100) + "");
     }
 }

@@ -18,7 +18,7 @@ public class SkillGills extends ActiveSkill {
 
     public SkillGills(Heroes plugin) {
         super(plugin, "Gills");
-        setDescription("Negate drowning damage");
+        setDescription("You are able to breath water for $1 seconds.");
         setUsage("/skill gills");
         setArgumentRange(0, 0);
         setIdentifiers("skill gills");
@@ -46,5 +46,11 @@ public class SkillGills extends ActiveSkill {
         int duration = SkillConfigManager.getUseSetting(hero, this, Setting.DURATION, 30000, false);
         hero.addEffect(new WaterBreatheEffect(this, duration, applyText, expireText));
         return SkillResult.NORMAL;
+    }
+
+    @Override
+    public String getDescription(Hero hero) {
+        int duration = SkillConfigManager.getUseSetting(hero, this, Setting.DURATION, 1, false);
+        return getDescription().replace("$1", duration / 1000 + "");
     }
 }

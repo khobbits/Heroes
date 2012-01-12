@@ -30,7 +30,7 @@ public class SkillIceArrow extends ActiveSkill {
 
     public SkillIceArrow(Heroes plugin) {
         super(plugin, "IceArrow");
-        setDescription("You fire a icy arrow from your bow");
+        setDescription("Your next $1 arrows will freeze their target.");
         setUsage("/skill iarrow");
         setArgumentRange(0, 0);
         setIdentifiers("skill iarrow", "skill icearrow");
@@ -141,5 +141,11 @@ public class SkillIceArrow extends ActiveSkill {
                 hero.removeEffect(iaBuff);
             }
         }
+    }
+
+    @Override
+    public String getDescription(Hero hero) {
+        int attacks = SkillConfigManager.getUseSetting(hero, this, "attacks", 1, false);
+        return getDescription().replace("$1", attacks + "");
     }
 }

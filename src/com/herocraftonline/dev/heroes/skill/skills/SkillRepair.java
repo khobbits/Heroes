@@ -18,7 +18,7 @@ import org.bukkit.inventory.ItemStack;
 public class SkillRepair extends ActiveSkill {
     public SkillRepair(Heroes plugin) {
         super(plugin, "Repair");
-        setDescription("repairs the tool or armor that you are holding");
+        setDescription("You are able to repair tools or armor that you are holding.");
         setUsage("/skill repair");
         setArgumentRange(0, 0);
         setIdentifiers("skill repair");
@@ -234,5 +234,10 @@ public class SkillRepair extends ActiveSkill {
         Util.syncInventory(player, plugin);
         broadcastExecuteText(hero);
         return SkillResult.NORMAL;
+    }
+
+    @Override
+    public String getDescription(Hero hero) {
+        return getDescription();
     }
 }

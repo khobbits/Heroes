@@ -13,7 +13,7 @@ public class SkillEscapeArtist extends ActiveSkill {
 
     public SkillEscapeArtist(Heroes plugin) {
         super(plugin, "EscapeArtist");
-        setDescription("Dispels any effects that impede your movement");
+        setDescription("You break free of any effects that impede your movement.");
         setUsage("/skill escapeartist");
         setArgumentRange(0, 0);
         setIdentifiers("skill escapeartist", "skill eartist", "skill escape");
@@ -39,4 +39,8 @@ public class SkillEscapeArtist extends ActiveSkill {
         }
     }
 
+    @Override
+    public String getDescription(Hero hero) {
+        return getDescription();
+    }
 }

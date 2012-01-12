@@ -15,7 +15,7 @@ public class SkillSafefall extends ActiveSkill {
 
     public SkillSafefall(Heroes plugin) {
         super(plugin, "Safefall");
-        setDescription("Stops you from taking fall damage for a short amount of time");
+        setDescription("You float safely to the ground for $1 seconds.");
         setUsage("/skill safefall");
         setArgumentRange(0, 0);
         setIdentifiers("skill safefall");
@@ -37,5 +37,11 @@ public class SkillSafefall extends ActiveSkill {
         hero.addEffect(new SafeFallEffect(this, duration));
 
         return SkillResult.NORMAL;
+    }
+
+    @Override
+    public String getDescription(Hero hero) {
+        int duration = SkillConfigManager.getUseSetting(hero, this, Setting.DURATION, 20000, false);
+        return getDescription().replace("$1", duration / 1000 + "");
     }
 }

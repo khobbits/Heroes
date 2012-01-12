@@ -17,7 +17,7 @@ public class SkillSmite extends TargettedSkill {
 
     public SkillSmite(Heroes plugin) {
         super(plugin, "Smite");
-        setDescription("Uses smite on a player");
+        setDescription("You smite the target for $1 light damage.");
         setUsage("/skill smite");
         setArgumentRange(0, 0);
         setIdentifiers("skill smite");
@@ -40,6 +40,12 @@ public class SkillSmite extends TargettedSkill {
         damageEntity(target, player, damage, DamageCause.ENTITY_ATTACK);
         broadcastExecuteText(hero, target);
         return SkillResult.NORMAL;
+    }
+
+    @Override
+    public String getDescription(Hero hero) {
+        int damage = SkillConfigManager.getUseSetting(hero, this, Setting.DAMAGE, 10, false);
+        return getDescription().replace("$1", damage + "");
     }
 
 }

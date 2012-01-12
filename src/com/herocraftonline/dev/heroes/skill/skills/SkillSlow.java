@@ -20,7 +20,7 @@ public class SkillSlow extends TargettedSkill {
     
     public SkillSlow(Heroes plugin) {
         super(plugin, "Slow");
-        setDescription("Slows the target's movement speed & attack speed");
+        setDescription("You slow the target's movement & attack speed for $1 seconds.");
         setUsage("/skill slow");
         setArgumentRange(0, 1);
         setIdentifiers("skill slow");
@@ -57,5 +57,11 @@ public class SkillSlow extends TargettedSkill {
         SlowEffect effect = new SlowEffect(this, duration, multiplier, true, applyText, expireText, hero);
         plugin.getHeroManager().getHero((Player) target).addEffect(effect);
         return SkillResult.NORMAL;
+    }
+
+    @Override
+    public String getDescription(Hero hero) {
+        int duration = SkillConfigManager.getUseSetting(hero, this, Setting.DURATION, 15000, false);;
+        return getDescription().replace("$1", duration / 1000 + "");
     }
 }

@@ -69,6 +69,13 @@ public abstract class Skill extends BasicCommand {
         this.plugin = plugin;
     }
 
+    /**
+     * Gets hero-specific description of the skill.  For use with level-based skill data.
+     * @param hero
+     * @return
+     */
+    public abstract String getDescription(Hero hero);
+    
     public void addSpellTarget(Entity o, Hero hero) {
         plugin.getDamageManager().addSpellTarget(o, hero, this);
     }

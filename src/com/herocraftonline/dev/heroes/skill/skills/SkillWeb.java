@@ -35,7 +35,7 @@ public class SkillWeb extends TargettedSkill {
 
     public SkillWeb(Heroes plugin) {
         super(plugin, "Web");
-        setDescription("Catches your target in a web");
+        setDescription("You conjure a web around your target.");
         setUsage("/skill web <target>");
         setArgumentRange(0, 1);
         setIdentifiers("skill web");
@@ -159,5 +159,10 @@ public class SkillWeb extends TargettedSkill {
                 return BlockFace.SELF;
             }
         }
+    }
+
+    @Override
+    public String getDescription(Hero hero) {
+        return getDescription();
     }
 }

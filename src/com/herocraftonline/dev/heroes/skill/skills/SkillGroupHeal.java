@@ -19,7 +19,7 @@ public class SkillGroupHeal extends ActiveSkill {
 
     public SkillGroupHeal(Heroes plugin) {
         super(plugin, "GroupHeal");
-        setDescription("Heals all players around you");
+        setDescription("You restore $1 health to all nearby party members.");
         setUsage("/skill groupheal");
         setArgumentRange(0, 0);
         setIdentifiers("skill groupheal", "skill gheal");
@@ -71,5 +71,11 @@ public class SkillGroupHeal extends ActiveSkill {
 
         broadcastExecuteText(hero);
         return SkillResult.NORMAL;
+    }
+
+    @Override
+    public String getDescription(Hero hero) {
+        int heal = SkillConfigManager.getUseSetting(hero, this, "heal-amount", 2, false);
+        return getDescription().replace("$1", heal + "");
     }
 }

@@ -23,7 +23,7 @@ public class SkillBleed extends TargettedSkill {
 
     public SkillBleed(Heroes plugin) {
         super(plugin, "Bleed");
-        setDescription("Causes your target to bleed");
+        setDescription("You cause your target to bleed, dealing $1 damage over $1 seconds.");
         setUsage("/skill bleed <target>");
         setArgumentRange(0, 1);
         setTypes(SkillType.SILENCABLE, SkillType.DAMAGING, SkillType.HARMFUL);
@@ -100,5 +100,13 @@ public class SkillBleed extends TargettedSkill {
             Player player = hero.getPlayer();
             broadcast(player.getLocation(), expireText, player.getDisplayName());
         }
+    }
+
+    @Override
+    public String getDescription(Hero hero) {
+        int duration = SkillConfigManager.getUseSetting(hero, this, Setting.DURATION, 10000, false);
+        int period = SkillConfigManager.getUseSetting(hero, this, Setting.PERIOD, 2000, false);
+        int damage = SkillConfigManager.getUseSetting(hero, this, "tick-damage", 1, false);
+        return getDescription().replace("$1", damage * duration / period + "").replace("$2", duration / 1000 + "");
     }
 }

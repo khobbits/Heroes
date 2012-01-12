@@ -137,7 +137,7 @@ public class SkillListCommand extends BasicCommand {
                 } else {
                     color = ChatColor.GREEN;
                 }
-                sender.sendMessage("  " + color + " " + hc.getName().substring(0, 3 > hc.getName().length() ? hc.getName().length() : 3) + " " + level + " " + ChatColor.YELLOW + sli.skill.getName() + ": " + ChatColor.GOLD + sli.skill.getDescription());
+                sender.sendMessage("  " + color + " " + hc.getName().substring(0, 3 > hc.getName().length() ? hc.getName().length() : 3) + " " + level + " " + ChatColor.YELLOW + sli.skill.getName() + ": " + ChatColor.GOLD + sli.skill.getDescription(hero));
             }
             count++;
         }

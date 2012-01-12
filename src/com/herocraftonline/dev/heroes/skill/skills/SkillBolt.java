@@ -17,7 +17,7 @@ public class SkillBolt extends TargettedSkill {
 
     public SkillBolt(Heroes plugin) {
         super(plugin, "Bolt");
-        setDescription("Calls a bolt of lightning down on the target");
+        setDescription("Calls a bolt of lightning down on the target dealing $1 damage.");
         setUsage("/skill bolt <target>");
         setArgumentRange(0, 1);
         setIdentifiers("skill bolt");
@@ -43,5 +43,11 @@ public class SkillBolt extends TargettedSkill {
 
         broadcastExecuteText(hero, target);
         return SkillResult.NORMAL;
+    }
+
+    @Override
+    public String getDescription(Hero hero) {
+        int damage = SkillConfigManager.getUseSetting(hero, this, Setting.DAMAGE, 4, false);
+        return getDescription().replace("$1", damage + "");
     }
 }

@@ -32,7 +32,7 @@ public class SkillAssassinsBlade extends ActiveSkill {
 
     public SkillAssassinsBlade(Heroes plugin) {
         super(plugin, "AssassinsBlade");
-        setDescription("You dab your blade with deadly poison");
+        setDescription("You poison your blade which will deal an extra $1 damage every $2 seconds.");
         setUsage("/skill ablade");
         setArgumentRange(0, 0);
         setIdentifiers("skill ablade", "skill assassinsblade");
@@ -199,5 +199,13 @@ public class SkillAssassinsBlade extends ActiveSkill {
                 hero.removeEffect(abBuff);
             }
         }
+    }
+
+    @Override
+    public String getDescription(Hero hero) {
+        int damage = SkillConfigManager.getUseSetting(hero, this, Setting.DAMAGE, 2, false);
+        double seconds = SkillConfigManager.getUseSetting(hero, this, "poison-duration", 10000, false) / 1000.0;
+        String s = getDescription().replace("$1", damage + "").replace("$2", seconds + "");
+        return s;
     }
 }

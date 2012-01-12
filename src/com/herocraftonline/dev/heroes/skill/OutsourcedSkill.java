@@ -155,4 +155,9 @@ public class OutsourcedSkill extends Skill {
             }, 1);
         }
     }
+
+    @Override
+    public String getDescription(Hero hero) {
+        return getDescription();
+    }
 }

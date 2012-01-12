@@ -32,7 +32,7 @@ public class SkillPiggify extends TargettedSkill {
 
     public SkillPiggify(Heroes plugin) {
         super(plugin, "Piggify");
-        setDescription("Forces your target to ride a pig");
+        setDescription("You force your target to ride a pig for $1 seconds.");
         setUsage("/skill piggify <target>");
         setArgumentRange(0, 1);
         setIdentifiers("skill piggify");
@@ -121,5 +121,11 @@ public class SkillPiggify extends TargettedSkill {
 
             event.setCancelled(true);
         }
+    }
+
+    @Override
+    public String getDescription(Hero hero) {
+        int duration = SkillConfigManager.getUseSetting(hero, this, Setting.DURATION, 10000, false);
+        return getDescription().replace("$1", duration / 1000 + "");
     }
 }

@@ -19,7 +19,7 @@ public class SkillSmoke extends ActiveSkill {
 
     public SkillSmoke(Heroes plugin) {
         super(plugin, "Smoke");
-        setDescription("You completely disappear from view");
+        setDescription("You completely disappear from view.");
         setUsage("/skill smoke");
         setArgumentRange(0, 0);
         setIdentifiers("skill smoke");
@@ -55,5 +55,10 @@ public class SkillSmoke extends ActiveSkill {
         hero.addEffect(new InvisibleEffect(this, duration, applyText, expireText));
 
         return SkillResult.NORMAL;
+    }
+
+    @Override
+    public String getDescription(Hero hero) {
+        return getDescription();
     }
 }

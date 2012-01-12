@@ -23,7 +23,7 @@ public class SkillWoodcutting extends PassiveSkill {
 
     public SkillWoodcutting(Heroes plugin) {
         super(plugin, "Woodcutting");
-        setDescription("You know about the things of the earth!");
+        setDescription("You have a $1% chance to get extra materials when logging.");
         setEffectTypes(EffectType.BENEFICIAL);
         setTypes(SkillType.KNOWLEDGE, SkillType.EARTH, SkillType.BUFF);
         
@@ -83,5 +83,14 @@ public class SkillWoodcutting extends PassiveSkill {
             block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(block.getType(), extraDrops, (short) 0, block.getData()));
             Heroes.debug.stopTask("HeroesSkillListener");
         }
+    }
+
+    @Override
+    public String getDescription(Hero hero) {
+        double chance = SkillConfigManager.getUseSetting(hero, this, Setting.CHANCE_LEVEL, .001, false);
+        int level = hero.getSkillLevel(this);
+        if (level < 1)
+            level = 1;
+        return getDescription().replace("$1", chance * level * 100 + "");
     }
 }

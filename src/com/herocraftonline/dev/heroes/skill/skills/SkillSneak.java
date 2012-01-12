@@ -28,7 +28,7 @@ public class SkillSneak extends ActiveSkill {
 
     public SkillSneak(Heroes plugin) {
         super(plugin, "Sneak");
-        setDescription("You crouch into the shadows");
+        setDescription("You crouch into the shadows.");
         setUsage("/skill stealth");
         setArgumentRange(0, 0);
         setIdentifiers("skill sneak");
@@ -118,5 +118,10 @@ public class SkillSneak extends ActiveSkill {
                 event.setCancelled(true);
             }
         }
+    }
+
+    @Override
+    public String getDescription(Hero hero) {
+        return getDescription();
     }
 }

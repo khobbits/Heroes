@@ -17,7 +17,7 @@ public class SkillMark extends ActiveSkill {
 
     public SkillMark(Heroes plugin) {
         super(plugin, "Mark");
-        setDescription("Marks a location for use with recall");
+        setDescription("You mark a location for use with recall.");
         setUsage("/skill mark <info>");
         setArgumentRange(0, 1);
         setIdentifiers("skill mark");
@@ -85,5 +85,10 @@ public class SkillMark extends ActiveSkill {
         }
 
         return world;
+    }
+
+    @Override
+    public String getDescription(Hero hero) {
+        return getDescription();
     }
 }

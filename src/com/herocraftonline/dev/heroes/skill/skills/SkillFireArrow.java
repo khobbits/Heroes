@@ -28,7 +28,7 @@ public class SkillFireArrow extends ActiveSkill {
 
     public SkillFireArrow(Heroes plugin) {
         super(plugin, "FireArrow");
-        setDescription("Shoots a burning arrow");
+        setDescription("Your next $1 arrows will light the target on fire!");
         setUsage("/skill firearrow");
         setArgumentRange(0, 0);
         setIdentifiers("skill firearrow", "skill farrow");
@@ -124,5 +124,11 @@ public class SkillFireArrow extends ActiveSkill {
             if (faBuff.hasNoApplications())
                 hero.removeEffect(faBuff);
         }
+    }
+
+    @Override
+    public String getDescription(Hero hero) {
+        int attacks = SkillConfigManager.getUseSetting(hero, this, "attacks", 1, false);
+        return getDescription().replace("$1", attacks + "");
     }
 }

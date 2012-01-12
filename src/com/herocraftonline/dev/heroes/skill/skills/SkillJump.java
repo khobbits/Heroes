@@ -31,7 +31,7 @@ public class SkillJump extends ActiveSkill {
     
     public SkillJump(Heroes plugin) {
         super(plugin, "Jump");
-        setDescription("Launches you into the air");
+        setDescription("You jump into the air");
         setUsage("/skill jump");
         setArgumentRange(0, 0);
         setIdentifiers("skill jump");
@@ -68,5 +68,10 @@ public class SkillJump extends ActiveSkill {
         broadcastExecuteText(hero);
         
         return SkillResult.NORMAL;
+    }
+
+    @Override
+    public String getDescription(Hero hero) {
+        return getDescription();
     }
 }

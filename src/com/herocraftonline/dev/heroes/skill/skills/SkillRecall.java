@@ -18,7 +18,7 @@ public class SkillRecall extends ActiveSkill {
 
     public SkillRecall(Heroes plugin) {
         super(plugin, "Recall");
-        setDescription("Recalls you to your marked Location");
+        setDescription("You recall to your marked location.");
         setUsage("/skill recall");
         setArgumentRange(0, 0);
         setIdentifiers("skill recall");
@@ -77,5 +77,10 @@ public class SkillRecall extends ActiveSkill {
         }
 
         return world;
+    }
+
+    @Override
+    public String getDescription(Hero hero) {
+        return getDescription();
     }
 }

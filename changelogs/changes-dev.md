@@ -12,4 +12,8 @@ Version dev
 
 ==== **API:** ====
 
+* Skills now have a getDescription(hero) so they can return stat-displaying descriptions
+
 ==== **Skills:** ====
+
+* All skill descriptions updated with new information
