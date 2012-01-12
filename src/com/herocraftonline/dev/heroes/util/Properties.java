@@ -156,7 +156,7 @@ public class Properties {
             levelFile.createNewFile();
             bos = new BufferedWriter(new FileWriter(levelFile));
             for (int i = 0; i < maxLevel; i++) {
-                bos.append(i+1 + " - " + getTotalExp(i) + "\n");
+                bos.append(i + " - " + getTotalExp(i + 1) + "\n");
             }
             
         } catch (FileNotFoundException e) {
