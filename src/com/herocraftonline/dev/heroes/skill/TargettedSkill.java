@@ -104,6 +104,8 @@ public abstract class TargettedSkill extends ActiveSkill {
     @Override
     public SkillResult use(Hero hero, String[] args) {
         int maxDistance = SkillConfigManager.getUseSetting(hero, this, Setting.MAX_DISTANCE, 15, false);
+        double distBonus = SkillConfigManager.getUseSetting(hero, this, Setting.MAX_DISTANCE_INCREASE, 0.0, false) * hero.getSkillLevel(this);
+        maxDistance += (int) distBonus;
         LivingEntity target = getTarget(hero, maxDistance, args);
         if (target == null) {
             return SkillResult.INVALID_TARGET_NO_MSG;

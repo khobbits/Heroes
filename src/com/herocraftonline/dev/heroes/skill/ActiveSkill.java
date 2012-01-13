@@ -93,14 +93,17 @@ public abstract class ActiveSkill extends Skill {
             messageAndEvent(hero, new SkillResult(ResultType.LOW_LEVEL, true, level));
             return true;
         }
-
+        
         long time = System.currentTimeMillis();
         Long global = hero.getCooldown("Global");
         if (global != null && time < global) {
             messageAndEvent(hero, new SkillResult(ResultType.ON_GLOBAL_COOLDOWN, true, (global - time) / 1000));
             return true;
         }
+        int skillLevel = hero.getSkillLevel(this);
         int cooldown = SkillConfigManager.getUseSetting(hero, this, Setting.COOLDOWN, 0, true);
+        double coolReduce = SkillConfigManager.getUseSetting(hero, this, Setting.COOLDOWN_REDUCE, 0.0, false) * skillLevel;
+        cooldown -= (int) coolReduce;
         if (cooldown > 0) {
             Long expiry = hero.getCooldown(name);
             if (expiry != null && time < expiry) {
@@ -110,6 +113,8 @@ public abstract class ActiveSkill extends Skill {
             }
         }
         int manaCost = SkillConfigManager.getUseSetting(hero, this, Setting.MANA, 0, true);
+        double manaReduce = SkillConfigManager.getUseSetting(hero, this, Setting.MANA_REDUCE, 0.0, false) * skillLevel;
+        manaCost -= (int) manaReduce;
         String reagentName = SkillConfigManager.getUseSetting(hero, this, Setting.REAGENT, (String) null);
         ItemStack itemStack = null;
         if (reagentName != null && reagentName != "") {
@@ -121,7 +126,11 @@ public abstract class ActiveSkill extends Skill {
         }
 
         int healthCost = SkillConfigManager.getUseSetting(hero, this, Setting.HEALTH_COST, 0, true);
+        double healthReduce = SkillConfigManager.getUseSetting(hero, this, Setting.HEALTH_COST_REDUCE, 0.0, false) * skillLevel;
+        healthCost -= (int) healthReduce;
         int staminaCost = SkillConfigManager.getUseSetting(hero, this, Setting.STAMINA, 0, true);
+        double stamReduce = SkillConfigManager.getUseSetting(hero, this, Setting.STAMINA_REDUCE, 0.0, false) * skillLevel;
+        staminaCost -= (int) stamReduce;
 
         SkillUseEvent skillEvent = new SkillUseEvent(this, player, hero, manaCost, healthCost, staminaCost, itemStack, args);
         plugin.getServer().getPluginManager().callEvent(skillEvent);
