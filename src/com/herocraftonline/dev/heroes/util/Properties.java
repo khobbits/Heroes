@@ -63,6 +63,7 @@ public class Properties {
     public double foodHealPercent = .05;
     public int globalCooldown = 0;
     public double enchantXPMultiplier;
+    public boolean slowCasting = true;
 
     // Bed Stuffs
     public boolean bedHeal;
@@ -210,6 +211,7 @@ public class Properties {
         blockTrackingDuration = Util.toIntNonNull(section.get("block-tracking-duration", 10 * 60 * 1000), "block-tracking-duration");
         maxTrackedBlocks = Util.toIntNonNull(section.get("max-tracked-blocks", 1000), "max-tracked-blocks");
         enchantXPMultiplier = Util.toDoubleNonNull(section.get("enchant-exp-mult", 1), "enchant-exp-mult");
+        slowCasting = section.getBoolean("slow-while-casting", true);
     }
 
     private void loadWorldConfig(ConfigurationSection section) {

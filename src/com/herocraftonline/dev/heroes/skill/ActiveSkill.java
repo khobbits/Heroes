@@ -14,6 +14,7 @@ import com.herocraftonline.dev.heroes.api.SkillResult.ResultType;
 import com.herocraftonline.dev.heroes.api.SkillUseEvent;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
+import com.herocraftonline.dev.heroes.effects.common.SlowEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.hero.HeroManager;
 import com.herocraftonline.dev.heroes.util.Messaging;
@@ -162,6 +163,9 @@ public abstract class ActiveSkill extends Skill {
         if (delay > 0 && !hm.getDelayedSkills().containsKey(hero)) {
             if (addDelayedSkill(hero, delay, identifier, args)) {
                 messageAndEvent(hero, SkillResult.START_DELAY);
+                if (Heroes.properties.slowCasting) {
+                    hero.addEffect(new SlowEffect(this, "Casting", delay, 2, false, "", "", hero));
+                }
                 return true;
             } else {
                 // Generic return if the adding of the delayed skill failed - the failure should send it's own message
@@ -172,10 +176,14 @@ public abstract class ActiveSkill extends Skill {
             if (!dSkill.getSkill().equals(this)) {
                 hm.getDelayedSkills().remove(hero);
                 hero.setDelayedSkill(null);
+                hero.removeEffect(hero.getEffect("Casting"));
                 broadcast(player.getLocation(), "$1 has stopped using $2!", player.getDisplayName(), dSkill.getSkill().getName());
                 //If the new skill is also a delayed skill lets add it to the warmups and proceed
                 if (delay > 0) {
                     addDelayedSkill(hero, delay, identifier, args);
+                    if (Heroes.properties.slowCasting) {
+                        hero.addEffect(new SlowEffect(this, "Casting", delay, 2, false, "", "", hero));
+                    }
                     messageAndEvent(hero, SkillResult.START_DELAY);
                     return true;
                 }
@@ -183,6 +191,7 @@ public abstract class ActiveSkill extends Skill {
                 Messaging.send(sender, "You have already begun to use that skill!");
                 return true;
             } else {
+                hero.removeEffect(hero.getEffect("Casting"));
                 hm.addCompletedSkill(hero);
             }
         }

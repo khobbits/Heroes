@@ -17,3 +17,4 @@ Version dev
 ==== **Skills:** ====
 
 * All skill descriptions updated with new information
+* Skills with warmups now have the option to slow their user

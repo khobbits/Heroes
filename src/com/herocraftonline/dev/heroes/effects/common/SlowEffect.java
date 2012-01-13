@@ -15,8 +15,8 @@ public class SlowEffect extends ExpirableEffect {
     private final String expireText;
     private final Hero applier;
     
-    public SlowEffect(Skill skill, long duration, int amplifier, boolean swing, String applyText, String expireText, Hero applier) {
-        super(skill, "Slow", duration);
+    public SlowEffect(Skill skill, String name, long duration, int amplifier, boolean swing, String applyText, String expireText, Hero applier) {
+        super(skill, name, duration);
         this.types.add(EffectType.DISPELLABLE);
         this.types.add(EffectType.HARMFUL);
         this.types.add(EffectType.SLOW);
@@ -28,7 +28,10 @@ public class SlowEffect extends ExpirableEffect {
             addMobEffect(4, (int) (duration / 1000) * 20, amplifier, false);
         }
     }
-    
+    public SlowEffect(Skill skill, long duration, int amplifier, boolean swing, String applyText, String expireText, Hero applier) {
+        this(skill, "Slow", duration, amplifier, swing, expireText, expireText, applier);
+    }
+
     @Override
     public void apply(Hero hero) {
         super.apply(hero);
@@ -42,13 +45,13 @@ public class SlowEffect extends ExpirableEffect {
         Player player = hero.getPlayer();
         broadcast(player.getLocation(), expireText, player.getDisplayName());
     }
-    
+
     @Override
     public void apply(LivingEntity lEntity) {
         super.apply(lEntity);
         broadcast(lEntity.getLocation(), applyText, Messaging.getLivingEntityName(lEntity), applier.getPlayer().getDisplayName());
     }
-    
+
     @Override
     public void remove(LivingEntity lEntity) {
         super.remove(lEntity);
