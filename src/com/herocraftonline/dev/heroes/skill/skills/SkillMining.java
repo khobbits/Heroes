@@ -24,7 +24,7 @@ public class SkillMining extends PassiveSkill {
 
     public SkillMining(Heroes plugin) {
         super(plugin, "Mining");
-        setDescription("You have a $1% chance to get extra ores when minin.!");
+        setDescription("You have a $1% chance to get extra ores when mining!");
         setEffectTypes(EffectType.BENEFICIAL);
         setTypes(SkillType.KNOWLEDGE, SkillType.EARTH, SkillType.BUFF);
         
