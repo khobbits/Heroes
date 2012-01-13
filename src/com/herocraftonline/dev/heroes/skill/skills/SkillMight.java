@@ -21,6 +21,7 @@ import com.herocraftonline.dev.heroes.skill.SkillConfigManager;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Setting;
+import com.herocraftonline.dev.heroes.util.Util;
 
 public class SkillMight extends ActiveSkill {
 
@@ -161,6 +162,6 @@ public class SkillMight extends ActiveSkill {
     @Override
     public String getDescription(Hero hero) {
         double bonus = SkillConfigManager.getUseSetting(hero, this, "damage-bonus", 1.25, false);
-        return getDescription().replace("$1", (int) ((bonus - 1) * 100) + "");
+        return getDescription().replace("$1", Util.stringDouble((bonus - 1) * 100));
     }
 }

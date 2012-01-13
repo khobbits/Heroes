@@ -18,6 +18,7 @@ import com.herocraftonline.dev.heroes.skill.SkillConfigManager;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Setting;
+import com.herocraftonline.dev.heroes.util.Util;
 
 public class SkillWisdom extends ActiveSkill {
 
@@ -144,6 +145,6 @@ public class SkillWisdom extends ActiveSkill {
     @Override
     public String getDescription(Hero hero) {
         double mult = SkillConfigManager.getUseSetting(hero, this, "regen-multiplier", 1.2, false);
-        return getDescription().replace("$1", (int) ((mult - 1) * 100) + "");
+        return getDescription().replace("$1", Util.stringDouble((mult - 1) * 100));
     }
 }

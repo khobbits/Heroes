@@ -461,6 +461,10 @@ public final class Util {
             return null;
     }
 
+    public static String stringDouble(double d) {
+        return String.valueOf(formatDouble(d));
+    }
+
     public static double formatDouble(double d) {
         int val = (int) (d * 1000);
         return val / 1000d;

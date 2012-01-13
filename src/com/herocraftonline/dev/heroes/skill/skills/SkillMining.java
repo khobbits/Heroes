@@ -136,6 +136,6 @@ public class SkillMining extends PassiveSkill {
         int level = hero.getSkillLevel(this);
         if (level < 1)
             level = 1;
-        return getDescription().replace("$1", (int) (chance * level * 100) + "");
+        return getDescription().replace("$1", Util.stringDouble(chance * level * 100));
     }
 }

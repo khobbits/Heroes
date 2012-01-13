@@ -107,6 +107,7 @@ public class SkillBleed extends TargettedSkill {
         int duration = SkillConfigManager.getUseSetting(hero, this, Setting.DURATION, 10000, false);
         int period = SkillConfigManager.getUseSetting(hero, this, Setting.PERIOD, 2000, false);
         int damage = SkillConfigManager.getUseSetting(hero, this, "tick-damage", 1, false);
-        return getDescription().replace("$1", damage * duration / period + "").replace("$2", duration / 1000 + "");
+        damage = damage * duration / period;
+        return getDescription().replace("$1", damage + "").replace("$2", duration / 1000 + "");
     }
 }
