@@ -3,6 +3,7 @@ Version dev
 ==== **Bug Fixes:** ====
 
 * damage will be taken from the greater of either the secondclass, or the primary class as intended.
+* moved all enchantment table checks to skill enchant so it doesn't interfere if a server removed the skill
 
 ==== **General:** ====
 
@@ -18,3 +19,5 @@ Version dev
 
 * All skill descriptions updated with new information
 * Skills with warmups now have the option to slow their user
+* Enchant
+** xp lost is now based on the total levels of all enchants being added.

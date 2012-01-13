@@ -16,6 +16,8 @@ import org.getspout.spoutapi.event.inventory.InventoryListener;
 import org.getspout.spoutapi.event.inventory.InventoryOpenEvent;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.classes.HeroClass;
+import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
 import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.PassiveSkill;
@@ -89,6 +91,7 @@ public class SkillEnchant extends PassiveSkill {
                 return;
             }
 
+            double xpCost = 0;
             List<String> enchants = SkillConfigManager.getUseSettingKeys(hero, skill);
             Map<Enchantment, Integer> newEnchants = event.getResult().getEnchantments();
             for (Enchantment enchant : newEnchants.keySet()) {
@@ -106,7 +109,12 @@ public class SkillEnchant extends PassiveSkill {
                     Util.syncInventory(event.getPlayer(), plugin);
                     return;
                 }
+                xpCost += event.getResult().getEnchantmentLevel(enchant);
             }
+
+            xpCost *= Heroes.properties.enchantXPMultiplier;
+            event.setLevelAfter(event.getLevelBefore());
+            hero.gainExp(-xpCost, ExperienceType.ENCHANTING);
         }
 
         @Override
@@ -118,6 +126,13 @@ public class SkillEnchant extends PassiveSkill {
             if (!hero.hasEffect(getName())) {
                 event.setCancelled(true);
                 Messaging.send(event.getPlayer(), "You don't have the ability to enchant items!");
+            }
+
+            HeroClass hc = hero.getEnchantingClass();
+            if (hc != null) {
+                hero.syncExperience(hc);
+            } else {
+                event.setCancelled(true);
             }
         }
     }
