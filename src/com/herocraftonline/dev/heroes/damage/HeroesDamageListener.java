@@ -178,39 +178,46 @@ public class HeroesDamageListener extends EntityListener {
         } else {
             DamageCause cause = event.getCause();
             switch (cause) {
-                case SUICIDE:
-                    if (defender instanceof Player) {
-                        Player player = (Player) event.getEntity();
-                        plugin.getHeroManager().getHero(player).setHealth(0D);
+            case SUICIDE:
+                if (defender instanceof Player) {
+                    Player player = (Player) event.getEntity();
+                    plugin.getHeroManager().getHero(player).setHealth(0D);
+                    if (player.getLastDamageCause() != null && player.getLastDamageCause() instanceof EntityDamageByEntityEvent) {
+                        Entity tempDamager = ((EntityDamageByEntityEvent) player.getLastDamageCause()).getDamager();
+                        player.setLastDamageCause(new EntityDamageByEntityEvent(tempDamager, player, DamageCause.ENTITY_ATTACK, 1000));
+                        player.damage(1000, tempDamager);
+                        event.setDamage(0);
+                    } else {
                         event.setDamage(1000); //OVERKILLLLL!!
-                        Heroes.debug.stopTask("HeroesDamageListener.onEntityDamage");
-                        return;
                     }
-                    break;
-                case ENTITY_ATTACK:
-                case ENTITY_EXPLOSION:
-                case PROJECTILE:
-                    damage = onEntityDamageCore(event, attacker, damage);
-                    break;
-                case FALL:
-                    damage = onEntityFall(event.getDamage(), defender);
-                    break;
-                case SUFFOCATION:
-                    damage = onEntitySuffocate(event.getDamage(), defender);
-                    break;
-                case DROWNING:
-                    damage = onEntityDrown(event.getDamage(), defender, event);
-                    break;
-                case STARVATION:
-                    damage = onEntityStarve(event.getDamage(), defender);
-                    break;
-                case FIRE:
-                case LAVA:
-                case FIRE_TICK:
-                    damage = onEntityFlame(event.getDamage(), cause, defender, event);
-                    break;
-                default:
-                    break;
+                    Heroes.debug.stopTask("HeroesDamageListener.onEntityDamage");
+                    return;
+                }
+                break;
+            case ENTITY_ATTACK:
+            case ENTITY_EXPLOSION:
+            case PROJECTILE:
+                damage = onEntityDamageCore(event, attacker, damage);
+                break;
+            case FALL:
+                damage = onEntityFall(event.getDamage(), defender);
+                break;
+            case SUFFOCATION:
+                damage = onEntitySuffocate(event.getDamage(), defender);
+                break;
+            case DROWNING:
+                damage = onEntityDrown(event.getDamage(), defender, event);
+                break;
+            case STARVATION:
+                damage = onEntityStarve(event.getDamage(), defender);
+                break;
+            case FIRE:
+            case LAVA:
+            case FIRE_TICK:
+                damage = onEntityFlame(event.getDamage(), cause, defender, event);
+                break;
+            default:
+                break;
             }
 
             //Check if one of the Method calls cancelled the event due to resistances etc.
@@ -280,17 +287,17 @@ public class HeroesDamageListener extends EntityListener {
             }
 
             switch (event.getCause()) {
-                case FIRE:
-                case LAVA:
-                case BLOCK_EXPLOSION:
-                case CONTACT:
-                case ENTITY_EXPLOSION:
-                case ENTITY_ATTACK:
-                case PROJECTILE:
-                    hero.setHealth(hero.getHealth() - (damage * calculateArmorReduction(player.getInventory())));
-                    break;
-                default:
-                    hero.setHealth(hero.getHealth() - damage);
+            case FIRE:
+            case LAVA:
+            case BLOCK_EXPLOSION:
+            case CONTACT:
+            case ENTITY_EXPLOSION:
+            case ENTITY_ATTACK:
+            case PROJECTILE:
+                hero.setHealth(hero.getHealth() - (damage * calculateArmorReduction(player.getInventory())));
+                break;
+            default:
+                hero.setHealth(hero.getHealth() - damage);
             }
 
             event.setDamage(convertHeroesDamage(damage, player));
@@ -591,40 +598,40 @@ public class HeroesDamageListener extends EntityListener {
                 continue;
             }
             switch (armor.getType()) {
-                case LEATHER_HELMET:
-                case LEATHER_BOOTS:
-                case GOLD_BOOTS:
-                case CHAINMAIL_BOOTS:
-                    armorPoints += 1;
-                    continue;
-                case GOLD_HELMET:
-                case IRON_HELMET:
-                case CHAINMAIL_HELMET:
-                case LEATHER_LEGGINGS:
-                case IRON_BOOTS:
-                    armorPoints += 2;
-                    continue;
-                case DIAMOND_HELMET:
-                case LEATHER_CHESTPLATE:
-                case GOLD_LEGGINGS:
-                case DIAMOND_BOOTS:
-                    armorPoints += 3;
-                    continue;
-                case CHAINMAIL_LEGGINGS:
-                    armorPoints += 4;
-                    continue;
-                case GOLD_CHESTPLATE:
-                case CHAINMAIL_CHESTPLATE:
-                case IRON_LEGGINGS:
-                    armorPoints += 5;
-                    continue;
-                case IRON_CHESTPLATE:
-                case DIAMOND_LEGGINGS:
-                    armorPoints += 6;
-                    continue;
-                case DIAMOND_CHESTPLATE:
-                    armorPoints += 8;
-                    continue;
+            case LEATHER_HELMET:
+            case LEATHER_BOOTS:
+            case GOLD_BOOTS:
+            case CHAINMAIL_BOOTS:
+                armorPoints += 1;
+                continue;
+            case GOLD_HELMET:
+            case IRON_HELMET:
+            case CHAINMAIL_HELMET:
+            case LEATHER_LEGGINGS:
+            case IRON_BOOTS:
+                armorPoints += 2;
+                continue;
+            case DIAMOND_HELMET:
+            case LEATHER_CHESTPLATE:
+            case GOLD_LEGGINGS:
+            case DIAMOND_BOOTS:
+                armorPoints += 3;
+                continue;
+            case CHAINMAIL_LEGGINGS:
+                armorPoints += 4;
+                continue;
+            case GOLD_CHESTPLATE:
+            case CHAINMAIL_CHESTPLATE:
+            case IRON_LEGGINGS:
+                armorPoints += 5;
+                continue;
+            case IRON_CHESTPLATE:
+            case DIAMOND_LEGGINGS:
+                armorPoints += 6;
+                continue;
+            case DIAMOND_CHESTPLATE:
+                armorPoints += 8;
+                continue;
             }
         }
         percent = (25 - armorPoints) / 25D;
@@ -728,5 +735,5 @@ public class HeroesDamageListener extends EntityListener {
             lEntity.setHealth(newHP);
         }
     }
-    */
+     */
 }
