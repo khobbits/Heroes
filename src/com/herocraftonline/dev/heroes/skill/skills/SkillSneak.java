@@ -43,7 +43,7 @@ public class SkillSneak extends ActiveSkill {
         ConfigurationSection node = super.getDefaultConfig();
         node.set(Setting.DURATION.node(), 600000); // 10 minutes in milliseconds
         node.set("damage-cancels", true);
-        node.set("atacking-cancels", true);
+        node.set("attacking-cancels", true);
         node.set("refresh-interval", 5000); // in milliseconds
         return node;
     }
