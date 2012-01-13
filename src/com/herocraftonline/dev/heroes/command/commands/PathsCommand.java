@@ -79,9 +79,9 @@ public class PathsCommand extends BasicCommand {
             
             String description = heroClass.getDescription();
             if (description == null || description.isEmpty()) {
-                sender.sendMessage(prefix + "§a" + heroClass.getName());
+                sender.sendMessage(prefix + " | §a" + heroClass.getName());
             } else {
-                sender.sendMessage(prefix + "§a" + heroClass.getName() + " - " + heroClass.getDescription());
+                sender.sendMessage(prefix +  " | §a" + heroClass.getName() + " - " + heroClass.getDescription());
             }
         }
 
