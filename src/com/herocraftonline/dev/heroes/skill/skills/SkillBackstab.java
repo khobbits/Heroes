@@ -106,6 +106,6 @@ public class SkillBackstab extends PassiveSkill {
     public String getDescription(Hero hero) {
         double chance = SkillConfigManager.getUseSetting(hero, this, "attack-chance", .5, false);
         double percent = SkillConfigManager.getUseSetting(hero, this, "attack-bonus", 1.5, false);
-        return getDescription().replace("$1", chance + "").replace("$2", percent + "");
+        return getDescription().replace("$1", chance * 100 + "").replace("$2", percent * 100 + "");
     }
 }
