@@ -42,12 +42,12 @@ public class AdminLevelCommand extends BasicCommand {
                 hc = hero.getSecondClass();
             }
         }
-        
+
         if (hc == null) {
             Messaging.send(sender, "$1 is not a valid HeroClass!", args[1]);
             return false;
         }
-        
+
         try {
             int levelChange = Integer.parseInt(args[2]);
             if (levelChange < 1)

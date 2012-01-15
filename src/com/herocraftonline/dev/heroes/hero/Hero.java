@@ -262,6 +262,10 @@ public class Hero {
                 syncHealth();
                 getTieredLevel(true);
             } else {
+                if (getHealth() > getMaxHealth()) {
+                    setHealth(getMaxHealth());
+                    syncHealth();
+                }
                 //SpoutUI.sendPlayerNotification(player, ChatColor.GOLD + "Level Lost!", ChatColor.DARK_RED + "Level - " + String.valueOf(newLevel), Material.DIAMOND_HELMET);
                 Messaging.send(player, "You lost a level! (Lvl $1 $2)", String.valueOf(newLevel), hc.getName());
             }
