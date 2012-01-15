@@ -54,7 +54,7 @@ public class AdminLevelCommand extends BasicCommand {
                 throw new NumberFormatException();
 
             int experience = Properties.levels[levelChange - 1];
-            hero.addExp(experience - hero.getExperience(), hc);
+            hero.addExp(experience - hero.getExperience(hc), hc);
             plugin.getHeroManager().saveHero(hero);
             Messaging.send(sender, "Level changed.");
             return true;
