@@ -17,7 +17,7 @@ permitted-weapon:
 - IRON_SWORD
 - IRON_AXE
 - GOLD_AXE
-- DAIMOND_AXE
+- DIAMOND_AXE
 permitted-skills:
     Mark:
         level: 5
