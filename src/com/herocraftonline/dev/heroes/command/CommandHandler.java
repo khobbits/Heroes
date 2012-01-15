@@ -9,6 +9,7 @@
 package com.herocraftonline.dev.heroes.command;
 
 import com.herocraftonline.dev.heroes.Heroes;
+import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import org.bukkit.command.CommandSender;
@@ -73,7 +74,12 @@ public class CommandHandler {
 
     private void displayCommandHelp(Command cmd, CommandSender sender) {
         sender.sendMessage("§cCommand:§e " + cmd.getName());
-        sender.sendMessage("§cDescription:§e " + cmd.getDescription());
+        if (sender instanceof Player && cmd instanceof Skill) {
+            Hero hero = plugin.getHeroManager().getHero((Player) sender);
+            sender.sendMessage("§cDescription:§e " + ((Skill) cmd).getDescription(hero));
+        } else {
+            sender.sendMessage("§cDescription:§e " + cmd.getDescription());
+        }
         sender.sendMessage("§cUsage:§e " + cmd.getUsage());
         if (cmd.getNotes() != null) {
             for (String note : cmd.getNotes()) {
