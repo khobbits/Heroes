@@ -440,7 +440,7 @@ public class HeroClassManager {
         } else {
             for (String experience : experienceNames) {
                 try {
-                    boolean added = experienceSources.add(ExperienceType.valueOf(experience));
+                    boolean added = experienceSources.add(ExperienceType.valueOf(experience.toUpperCase()));
                     if (!added) {
                         Heroes.log(Level.WARNING, "Duplicate experience source (" + experience + ") defined for " + className + ".");
                     }
