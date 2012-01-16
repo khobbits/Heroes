@@ -205,7 +205,7 @@ public abstract class TargettedSkill extends ActiveSkill {
         if (this.isType(SkillType.HARMFUL)) {
             if (player.equals(target) || hero.getSummons().contains(target) || !damageCheck(player, target)) {
                 Messaging.send(player, "Sorry, You can't damage that target!");
-                return target;
+                return null;
             }
         }
         return target;
