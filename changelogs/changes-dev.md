@@ -4,6 +4,8 @@ Version dev
 
 * damage will be taken from the greater of either the secondclass, or the primary class as intended.
 * moved all enchantment table checks to skill enchant so it doesn't interfere if a server removed the skill
+* /hero admin level will now set secondary class xp properly
+* if a player is de-leveled they will now have their hp reset below their new maximum if it is too high
 
 ==== **General:** ====
 

@@ -274,6 +274,7 @@ public class HeroClass {
         return experienceSources.contains(type);
     }
     /**
+     * Gets the Experience Loss Multiplier specific to this HeroClass
      * @return the expLoss
      */
     public double getExpLoss() {

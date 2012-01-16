@@ -433,11 +433,16 @@ public class Hero {
             if (hc == null) {
                 continue;
             }
-
+            
+            double mult = multiplier;
+            if (hc.getExpLoss() != -1) {
+                mult = hc.getExpLoss();
+            }
+            
             int currentLvl = getLevel(hc);
             double currentExp = getExperience(hc);
             double currentLvlExp = Properties.getTotalExp(currentLvl);
-            double gainedExp = -calculateXPLoss(multiplier, hc);
+            double gainedExp = -calculateXPLoss(mult, hc);
 
             if (prop.resetOnDeath) {
                 gainedExp = -currentExp;
