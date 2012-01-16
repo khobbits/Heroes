@@ -19,6 +19,7 @@ import org.bukkit.entity.Player;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClassManager;
+import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.SkillConfigManager;
 
 public class ConfigManager {
@@ -90,12 +91,21 @@ public class ConfigManager {
             final Player[] players = plugin.getServer().getOnlinePlayers();
             for (Player player : players) {
                 plugin.getHeroManager().saveHero(player);
+                Hero hero = plugin.getHeroManager().getHero(player);
+                hero.clearEffects();
             }
-            load();
+            plugin.getSkillConfigs().reload();
+            damageConfig = null;
+            expConfig = null;
+            recipeConfig = null;
+            plugin.setClassManager(null);
             loadManagers();
+            for (Player player : players) {
+                plugin.getHeroManager().getHero(player);
+            }
         } catch (Exception e) {
             e.printStackTrace();
-            Heroes.log(Level.SEVERE, "Critical error encountered while loading. Disabling...");
+            Heroes.log(Level.SEVERE, "Critical error encountered while reloading. Disabling...");
             plugin.getServer().getPluginManager().disablePlugin(plugin);
             return false;
         }

@@ -41,16 +41,22 @@ public class SkillConfigManager {
         plugin.getConfigManager().checkForConfig(outsourcedSkillConfigFile);
     }
 
+    public void reload() {
+        standardSkillConfig = null;
+        outsourcedSkillConfig = null;
+        load();
+    }
+
     public void load() {
         // Setup the standard skill configuration
         standardSkillConfig = YamlConfiguration.loadConfiguration(skillConfigFile);
         standardSkillConfig.setDefaults(defaultSkillConfig);
         standardSkillConfig.options().copyDefaults(true);
-        
+
         // Setup the outsourced skill configuration
         outsourcedSkillConfig = YamlConfiguration.loadConfiguration(outsourcedSkillConfigFile);
         outsourcedSkillConfig.setDefaults(standardSkillConfig);
-        
+
         //MERGE!
         for (String key : standardSkillConfig.getKeys(true)) {
             if (standardSkillConfig.isConfigurationSection(key))
@@ -92,7 +98,7 @@ public class SkillConfigManager {
         for (String key : section.getKeys(true)) {
             if (section.isConfigurationSection(key))
                 continue;
-            
+
             classSection.set(key, section.get(key));
         }
     }
