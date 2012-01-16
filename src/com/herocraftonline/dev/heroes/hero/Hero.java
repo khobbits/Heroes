@@ -421,7 +421,7 @@ public class Hero {
         }
     }
 
-    public void loseExpFromDeath(double multiplier) {
+    public void loseExpFromDeath(double multiplier, boolean pvp) {
         if (player.getGameMode() == GameMode.CREATIVE || Heroes.properties.disabledWorlds.contains(player.getWorld().getName()) || multiplier <= 0) {
             return;
         }
@@ -433,12 +433,14 @@ public class Hero {
             if (hc == null) {
                 continue;
             }
-            
+
             double mult = multiplier;
-            if (hc.getExpLoss() != -1) {
+            if (pvp && hc.getPvpExpLoss() != -1) {
+                mult = hc.getPvpExpLoss();
+            } else if (!pvp && hc.getExpLoss() != -1) {
                 mult = hc.getExpLoss();
             }
-            
+
             int currentLvl = getLevel(hc);
             double currentExp = getExperience(hc);
             double currentLvlExp = Properties.getTotalExp(currentLvl);

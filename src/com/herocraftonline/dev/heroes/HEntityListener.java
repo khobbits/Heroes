@@ -130,7 +130,7 @@ public class HEntityListener extends EntityListener {
             if (attacker != null)
                 multiplier = Heroes.properties.pvpExpLossMultiplier;
 
-            heroDefender.loseExpFromDeath(multiplier);
+            heroDefender.loseExpFromDeath(multiplier, attacker != null);
 
             // Remove any nonpersistent effects
             for (Effect effect : heroDefender.getEffects()) {

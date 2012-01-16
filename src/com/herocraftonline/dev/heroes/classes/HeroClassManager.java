@@ -180,7 +180,8 @@ public class HeroClassManager {
         }
 
         // Get the class expLoss
-        newClass.setExpLoss(config.getDouble("expLoss", -1));
+        newClass.setExpLoss(config.getDouble("expLoss", -1.0));
+        newClass.setPvpExpLoss(config.getDouble("pvpExpLoss", -1.0));
 
         // Get the maximum level or use the default if it's not specified
         int defaultMaxLevel = Properties.maxLevel;
@@ -200,7 +201,7 @@ public class HeroClassManager {
         } else {
             defaultCost = Heroes.properties.profSwapCost;
         }
-        
+
         double cost = config.getDouble("cost", defaultCost);
         if (cost < 0) {
             Heroes.log(Level.WARNING, "Class (" + className + ") cost is too low. Setting cost to 0.");

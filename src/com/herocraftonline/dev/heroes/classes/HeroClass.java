@@ -42,6 +42,7 @@ public class HeroClass {
     private double cost;
     private double expModifier;
     private double expLoss;
+    private double pvpExpLoss;
     private double baseMaxHealth;
     private double maxHealthPerLevel;
     private boolean userClass = true;
@@ -413,6 +414,14 @@ public class HeroClass {
 
     protected void setExpLoss(double expLoss) {
         this.expLoss = expLoss;
+    }
+
+    public double getPvpExpLoss() {
+        return pvpExpLoss;
+    }
+
+    public void setPvpExpLoss(double pvpExpLoss) {
+        this.pvpExpLoss = pvpExpLoss;
     }
 
     protected void setExpModifier(double modifier) {
