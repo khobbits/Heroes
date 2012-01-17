@@ -85,7 +85,7 @@ public class Heroes extends JavaPlugin {
     public static final DebugTimer debug = new DebugTimer();
 
     // Simple hook to Minecraft's logger so we can output to the console.
-    private static final Logger log = Logger.getLogger("Minecraft");
+    private static Logger log;
     private static DebugLog debugLog;
 
     // Setup the Player and Plugin listener for Heroes.
@@ -191,12 +191,13 @@ public class Heroes extends JavaPlugin {
             hero.clearSummons();
         }
         Heroes.econ = null; // When it Enables again it performs the checks anyways.
-        log.info(getDescription().getName() + " version " + getDescription().getVersion() + " is disabled!");
+        log.info(" version " + getDescription().getVersion() + " is disabled!");
         debugLog.close();
     }
 
     @Override
     public void onEnable() {
+        log = getLogger();
         debug.reset();
         // Perform the Permissions check.
         if (!setupPermissions()) {
@@ -414,7 +415,7 @@ public class Heroes extends JavaPlugin {
      * @param msg
      */
     public static void log(Level level, String msg) {
-        log.log(level, "[Heroes] " + msg);
+        log.log(level, msg);
         debugLog.log(level, "[Heroes] " + msg);
     }
 
