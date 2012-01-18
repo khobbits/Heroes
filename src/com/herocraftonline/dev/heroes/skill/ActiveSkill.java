@@ -254,7 +254,7 @@ public abstract class ActiveSkill extends Skill {
             }
 
             // Only charge the item cost if it's non-null
-            if (itemStack != null) {
+            if (itemStack != null && itemStack.getAmount() > 0) {
                 player.getInventory().removeItem(itemStack);
                 player.updateInventory();
             }

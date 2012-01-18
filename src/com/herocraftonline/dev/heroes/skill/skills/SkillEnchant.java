@@ -66,7 +66,12 @@ public class SkillEnchant extends PassiveSkill {
         section.set("SILK_TOUCH", 200);
         section.set("DURABILITY", 1);
         section.set("LOOT_BONUS_BLOCKS", 1);
+        section.set("ARROW_DAMAGE", 200);
+        section.set("ARROW_KNOCKBACK", 1);
+        section.set("ARROW_FIRE", 1);
+        section.set("ARROW_INFINITE", 1);
         section.set(Setting.APPLY_TEXT.node(), "");
+        
         return section;
     }
 
