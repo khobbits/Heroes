@@ -14,4 +14,6 @@ Version 1.4.3
 
 ==== **Skills:** ====
 
-* All non-phsyical skills now issue Magic damage instead of 
+* All non-physical skills now issue Magic damage instead of ENTITY_ATTACK
+* All reagent nodes have switched format to support damage values
+** ID:DAMAGE - is the new format, be sure to update all your reagents!

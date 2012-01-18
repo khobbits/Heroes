@@ -481,4 +481,19 @@ public final class Util {
         float f7 = MathHelper.sin(-rotationPitch * 0.01745329F);
         return Vec3D.create(f3 * f5, f7, f1 * f5);
     }
+
+    public static ItemStack itemFromString(String[] vals, int amount) {
+        ItemStack stack = null;
+        try {
+            int id = Integer.parseInt(vals[0]);
+            byte sub = 0;
+            if (vals.length > 1) {
+                sub = (byte) Integer.parseInt(vals[1]);
+            }
+            stack = new ItemStack(id, amount, sub);
+        } catch (NumberFormatException e) {
+        }
+        return stack;
+        
+    }
 }

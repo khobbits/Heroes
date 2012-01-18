@@ -1,7 +1,8 @@
 package com.herocraftonline.dev.heroes.skill;
 
+import java.util.logging.Level;
+
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -93,7 +94,7 @@ public abstract class ActiveSkill extends Skill {
             messageAndEvent(hero, new SkillResult(ResultType.LOW_LEVEL, true, level));
             return true;
         }
-        
+
         long time = System.currentTimeMillis();
         Long global = hero.getCooldown("Global");
         if (global != null && time < global) {
@@ -115,15 +116,24 @@ public abstract class ActiveSkill extends Skill {
         int manaCost = SkillConfigManager.getUseSetting(hero, this, Setting.MANA, 0, true);
         double manaReduce = SkillConfigManager.getUseSetting(hero, this, Setting.MANA_REDUCE, 0.0, false) * skillLevel;
         manaCost -= (int) manaReduce;
+
+        // Reagent stuff
+        int reagentCost = SkillConfigManager.getUseSetting(hero, this, Setting.REAGENT_COST, 0, true);
         String reagentName = SkillConfigManager.getUseSetting(hero, this, Setting.REAGENT, (String) null);
         ItemStack itemStack = null;
-        if (reagentName != null && reagentName != "") {
-            if (Material.matchMaterial(reagentName) != null) {
-                int reagentCost = SkillConfigManager.getUseSetting(hero, this, Setting.REAGENT_COST, 0, true);
-                if (reagentCost > 0)
-                    itemStack = new ItemStack(Material.matchMaterial(reagentName), reagentCost);
+        if (reagentCost > 0 && reagentName != null && reagentName != "") {
+            String[] vals = reagentName.split(":");
+            try {
+                int id = Integer.parseInt(vals[0]);
+                byte sub = 0;
+                if (vals.length > 1) {
+                    sub = (byte) Integer.parseInt(vals[1]);
+                }
+                itemStack = new ItemStack(id, reagentCost, sub);
+            } catch (NumberFormatException e) {
+                Heroes.log(Level.SEVERE, "Invalid skill reagent defined in " + getName() + ". Please switch to new format ID:DAMAGE");
             }
-        }
+        }   
 
         int healthCost = SkillConfigManager.getUseSetting(hero, this, Setting.HEALTH_COST, 0, true);
         double healthReduce = SkillConfigManager.getUseSetting(hero, this, Setting.HEALTH_COST_REDUCE, 0.0, false) * skillLevel;
@@ -204,14 +214,14 @@ public abstract class ActiveSkill extends Skill {
                 hm.addCompletedSkill(hero);
             }
         }
-        
+
         SkillResult skillResult;
         if (dSkill instanceof DelayedTargettedSkill) {
             skillResult = ((TargettedSkill) this).useDelayed(hero, ((DelayedTargettedSkill) dSkill).getTarget(), args);
         } else {
             skillResult = use(hero, args);
         }
-        
+
         if (skillResult.type == ResultType.NORMAL){
             // Set cooldown
             if (cooldown > 0) {
