@@ -62,15 +62,11 @@ public class SkillCharge extends TargettedSkill {
 
         Location playerLoc = player.getLocation();
         Location targetLoc = target.getLocation();
-
-        double xDir = targetLoc.getX() - playerLoc.getX();
-        double zDir = targetLoc.getZ() - playerLoc.getZ();
-        double magnitude = Math.sqrt(xDir * xDir + zDir * zDir);
-        double multiplier = targetLoc.distance(playerLoc) / 8;
-        xDir = xDir / magnitude * multiplier;
-        zDir = zDir / magnitude * multiplier;
-
-        player.setVelocity(new Vector(xDir, 1, zDir));
+        
+        double xDir = (targetLoc.getX() - playerLoc.getX()) / 12;
+        double zDir = (targetLoc.getZ() - playerLoc.getZ()) / 12;
+        Vector v = new Vector(xDir, .3, zDir);
+        player.setVelocity(v);
 
         chargingPlayers.add(player);
         plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
@@ -78,7 +74,7 @@ public class SkillCharge extends TargettedSkill {
             public void run() {
                 player.setFallDistance(8f);
             }
-        }, 1L);
+        });
         broadcastExecuteText(hero, target);
         return SkillResult.NORMAL;
     }
