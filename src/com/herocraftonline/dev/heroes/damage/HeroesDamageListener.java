@@ -260,6 +260,9 @@ public class HeroesDamageListener extends EntityListener {
                 }
             }
 
+            if (attacker instanceof Projectile) {
+                attacker = ((Projectile) attacker).getShooter();
+            }
 
             // Party damage & PvPable test
             if (attacker instanceof Player) {
