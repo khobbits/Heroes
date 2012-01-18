@@ -1,14 +1,16 @@
 package com.herocraftonline.dev.heroes.command.commands;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.command.BasicCommand;
 import com.herocraftonline.dev.heroes.command.CommandHandler;
+import com.herocraftonline.dev.heroes.hero.Hero;
 
 public class PathsCommand extends BasicCommand {
 
@@ -33,16 +35,29 @@ public class PathsCommand extends BasicCommand {
             } catch (NumberFormatException ignored) {}
         }
 
-        Set<HeroClass> primaryClasses = new HashSet<HeroClass>();
-        for (HeroClass heroClass : plugin.getClassManager().getClasses()) {
-            if (heroClass.hasNoParents()) {
-                primaryClasses.add(heroClass);
-            }
-        }
-        HeroClass[] paths = primaryClasses.toArray(new HeroClass[primaryClasses.size()]);
 
-        int numPages = paths.length / PATHS_PER_PAGE;
-        if (paths.length % PATHS_PER_PAGE != 0) {
+        List<HeroClass> paths = new ArrayList<HeroClass>();
+        if (sender instanceof Player) {
+            Hero hero = plugin.getHeroManager().getHero((Player) sender);
+            HeroClass hc = hero.getHeroClass();
+            HeroClass sc = hero.getSecondClass();
+            for (HeroClass heroClass : plugin.getClassManager().getClasses()) {
+                if (heroClass.equals(hc) || heroClass.equals(sc)) {
+                    continue;
+                } else if (heroClass.getAllParents().isEmpty() || heroClass.isDefault()) {
+                    paths.add(heroClass);
+                } else if (hero.isMaster(hc) && hc.getSpecializations().contains(heroClass)) {
+                    paths.add(heroClass);
+                } else if (sc != null && hero.isMaster(sc) && sc.getSpecializations().contains(heroClass)) {
+                    paths.add(heroClass);
+                }
+            }
+        } else {
+            paths.addAll(plugin.getClassManager().getClasses());
+        }
+
+        int numPages = paths.size() / PATHS_PER_PAGE;
+        if (paths.size() % PATHS_PER_PAGE != 0) {
             numPages++;
         }
 
@@ -52,16 +67,16 @@ public class PathsCommand extends BasicCommand {
         sender.sendMessage("§c-----[ " + "§fHeroes Paths <" + (page + 1) + "/" + numPages + ">§c ]-----");
         int start = page * PATHS_PER_PAGE;
         int end = start + PATHS_PER_PAGE;
-        if (end > paths.length) {
-            end = paths.length;
+        if (end > paths.size()) {
+            end = paths.size();
         }
         for (int c = start; c < end; c++) {
-            HeroClass heroClass = paths[c];
+            HeroClass heroClass = paths.get(c);
 
             if (!heroClass.isDefault() && !CommandHandler.hasPermission(sender, "heroes.classes." + heroClass.getName().toLowerCase())) {
                 continue;
             }
-            
+
             String prefix = "";
             if (heroClass.isPrimary()) {
                 prefix += "Pri";
@@ -76,7 +91,7 @@ public class PathsCommand extends BasicCommand {
                 prefix += "Prof";
             } else if (heroClass.isPrimary())
                 prefix = "  §9" + prefix;
-            
+
             String description = heroClass.getDescription();
             if (description == null || description.isEmpty()) {
                 sender.sendMessage(prefix + " | §a" + heroClass.getName());
