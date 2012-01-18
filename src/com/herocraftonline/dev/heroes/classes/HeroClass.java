@@ -10,11 +10,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.logging.Level;
 
+import me.desht.scrollingmenusign.SMSException;
+import me.desht.scrollingmenusign.SMSMenu;
+import me.desht.scrollingmenusign.views.SMSMapView;
+
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.damage.DamageManager.ProjectileType;
+import com.herocraftonline.dev.heroes.skill.Skill;
+import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.util.RecipeGroup;
 
 /**
@@ -37,7 +45,6 @@ public class HeroClass {
     private Map<ProjectileType, Integer> projectileDamage = new EnumMap<ProjectileType, Integer>(ProjectileType.class);
     private Set<String> skills = new LinkedHashSet<String>();
     private List<RecipeGroup> recipes = new ArrayList<RecipeGroup>();
-
     private int maxLevel;
     private double cost;
     private double expModifier;
@@ -47,6 +54,8 @@ public class HeroClass {
     private double maxHealthPerLevel;
     private boolean userClass = true;
     private final Heroes plugin;
+    private SMSMenu menu;
+    private SMSMapView view;
 
     /**
      * Constructs a new HeroClass with the given name
@@ -62,6 +71,51 @@ public class HeroClass {
         maxHealthPerLevel = 0;
         maxLevel = 1;
         cost = 0;
+    }
+
+    public void setupMenu() {
+        if (Heroes.smsHandler == null) {
+            return;
+        }
+        try {
+            menu = Heroes.smsHandler.getMenu(name + " skills");
+        } catch (SMSException e) {
+            menu = Heroes.smsHandler.createMenu(name + " skills", name + "Skills", name);
+        }
+        if (menu == null) {
+            menu = Heroes.smsHandler.createMenu(name + " skills", name + "Skills", name);
+        }
+        menu.getItems().clear();
+        menu.setAutosave(true);
+        menu.setAutosort(true);
+        for (String sn : skills) {
+            Skill skill = plugin.getSkillManager().getSkill(sn);
+            if (skill instanceof ActiveSkill) {
+                menu.addItem(skill.getName(), "/" + skill.getIdentifiers()[0], "");
+            }
+        }
+        try {
+            this.view = (SMSMapView) SMSMapView.getView(name);
+            if (view == null) {
+                short id = Bukkit.getServer().createMap(Bukkit.getWorlds().get(0)).getId();
+                SMSMapView.addMapToMenu(menu, id);
+            }
+            this.view.setAutosave(true);
+        } catch (SMSException e) {
+            Heroes.log(Level.WARNING, "Error hooking " + name + " with proper Scroll");
+        }
+    }
+
+    public SMSMenu getMenu() {
+        return menu;
+    }
+
+    public void setMenu(SMSMenu menu) {
+        this.menu = menu;
+    }
+
+    public SMSMapView getView() {
+        return view;
     }
 
     protected void addAllowedArmor(Material armor) {
@@ -489,7 +543,7 @@ public class HeroClass {
     @SuppressWarnings("serial")
     public class CircularParentException extends Exception {
     }
-    
+
     /**
      * Adds a recipegroup to the list of recipe groups
      * @param rg

@@ -50,6 +50,7 @@ import com.herocraftonline.dev.heroes.command.commands.PartyWhoCommand;
 import com.herocraftonline.dev.heroes.command.commands.PathsCommand;
 import com.herocraftonline.dev.heroes.command.commands.ProfessionCommand;
 import com.herocraftonline.dev.heroes.command.commands.ResetCommand;
+import com.herocraftonline.dev.heroes.command.commands.ScrollCommand;
 import com.herocraftonline.dev.heroes.command.commands.SkillListCommand;
 import com.herocraftonline.dev.heroes.command.commands.SpecsCommand;
 import com.herocraftonline.dev.heroes.command.commands.SuppressCommand;
@@ -200,15 +201,18 @@ public class Heroes extends JavaPlugin {
         log = getLogger();
         debug.reset();
         // Perform the Permissions check.
-        if (!setupPermissions()) {
+        if (getServer().getPluginManager().getPlugin("Vault") == null || !setupPermissions()) {
             log.warning("Heroes requires Vault! Please install it to use Heroes!");
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
+        // Check for Econ
         setupEconomy();
         // Check for Spout
         setupSpout();
+        // Check for SMS
         setupSMS();
+        
         properties.load(this);
         configManager = new ConfigManager(this);
 
@@ -352,11 +356,15 @@ public class Heroes extends JavaPlugin {
         commandHandler.addCommand(new PartyChatCommand(this));
         commandHandler.addCommand(new ConfigReloadCommand(this));
         commandHandler.addCommand(new HelpCommand(this));
+        if (smsHandler != null) {
+            commandHandler.addCommand(new ScrollCommand(this));
+        }
         commandHandler.addCommand(new AdminExpCommand(this));
-        commandHandler.addCommand(new AdminLevelCommand(this));
+        
 
 
         // Page 4
+        commandHandler.addCommand(new AdminLevelCommand(this));
         commandHandler.addCommand(new AdminClassCommand(this));
         commandHandler.addCommand(new AdminProfCommand(this));
         commandHandler.addCommand(new AdminHealthCommand(this));
@@ -364,9 +372,10 @@ public class Heroes extends JavaPlugin {
         commandHandler.addCommand(new HealthCommand(this));
         commandHandler.addCommand(new LeaderboardCommand(this));
         commandHandler.addCommand(new HeroSaveCommand(this));
-        commandHandler.addCommand(new ResetCommand(this));
+        
         
         // Page 5
+        commandHandler.addCommand(new ResetCommand(this));
         commandHandler.addCommand(new DebugDumpCommand());
     }
 

@@ -15,7 +15,7 @@ public class ManaCommand extends BasicCommand {
         super("Mana");
         this.plugin = plugin;
         setDescription("Displays your current mana");
-        setUsage("/level");
+        setUsage("/mana");
         setArgumentRange(0, 0);
         setIdentifiers("mana");
     }

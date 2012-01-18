@@ -160,7 +160,6 @@ public class HeroClassManager {
         newClass.setMaxHealthPerLevel(maxHealthPerLevel);
         newClass.setUserClass(userClass);
 
-
         if (Heroes.useSpout()) {
             if (config.isSet("recipes")) {
                 for (String s : config.getStringList("recipes")) {
@@ -238,7 +237,7 @@ public class HeroClassManager {
             Heroes.log(Level.INFO, "Default class found: " + className);
             defaultClass = newClass;
         }
-
+        newClass.setupMenu();
         return newClass;
     }
 
