@@ -32,7 +32,7 @@ public class SkillBandage extends TargettedSkill {
         ConfigurationSection section = super.getDefaultConfig();
         section.set(Setting.HEALTH.node(), 5);
         section.set(Setting.MAX_DISTANCE.node(), 5);
-        section.set(Setting.REAGENT.node(), "PAPER");
+        section.set(Setting.REAGENT.node(), 339);
         section.set(Setting.REAGENT_COST.node(), 1);
         return section;
     }
