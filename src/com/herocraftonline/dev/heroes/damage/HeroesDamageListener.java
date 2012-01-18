@@ -287,11 +287,13 @@ public class HeroesDamageListener extends EntityListener {
             }
 
             switch (event.getCause()) {
+            case FIRE:
+            case LAVA:
             case BLOCK_EXPLOSION:
             case CONTACT:
             case ENTITY_EXPLOSION:
             case ENTITY_ATTACK:
-            case PROJECTILE:    
+            case PROJECTILE:
                 hero.setHealth(hero.getHealth() - (damage * calculateArmorReduction(player.getInventory())));
                 break;
             default:
