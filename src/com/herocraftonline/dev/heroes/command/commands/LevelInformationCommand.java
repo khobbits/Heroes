@@ -31,7 +31,7 @@ public class LevelInformationCommand extends BasicCommand {
         Player player = (Player) sender;
         Hero hero = plugin.getHeroManager().getHero(player);
         
-        if (args.length > 0 && args[0].equalsIgnoreCase("toggle")) {
+        if (args.length > 0 && args[0].equalsIgnoreCase("toggle") && !hero.isEnchanting()) {
             hero.setSyncPrimary(!hero.isSyncPrimary());
             Messaging.send(player, "Your experience bar is now synced with $1", hero.isSyncPrimary() ? hero.getHeroClass().getName() : hero.getSecondClass().getName());
             return true;

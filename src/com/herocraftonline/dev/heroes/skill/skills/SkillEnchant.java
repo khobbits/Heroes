@@ -11,6 +11,7 @@ import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
+import org.getspout.spoutapi.event.inventory.InventoryCloseEvent;
 import org.getspout.spoutapi.event.inventory.InventoryEnchantEvent;
 import org.getspout.spoutapi.event.inventory.InventoryListener;
 import org.getspout.spoutapi.event.inventory.InventoryOpenEvent;
@@ -131,8 +132,20 @@ public class SkillEnchant extends PassiveSkill {
             HeroClass hc = hero.getEnchantingClass();
             if (hc != null) {
                 hero.syncExperience(hc);
+                hero.setEnchanting(true);
             } else {
                 event.setCancelled(true);
+            }
+        }
+
+        @Override
+        public void onInventoryClose(InventoryCloseEvent event) {
+            if (event.isCancelled()) {
+                return;
+            }
+            Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
+            if (hero.hasEffect(getName()) && hero.isEnchanting()) {
+                hero.setEnchanting(false);
             }
         }
     }

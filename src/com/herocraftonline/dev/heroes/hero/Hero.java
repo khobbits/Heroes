@@ -57,6 +57,7 @@ public class Hero {
     private double health;
     private PermissionAttachment transientPerms;
     private DelayedSkill delayedSkill = null;
+    private boolean enchanting = false;
 
     public Hero(Heroes plugin, Player player, HeroClass heroClass, HeroClass secondClass) {
         this.plugin = plugin;
@@ -1339,6 +1340,14 @@ public class Hero {
 
     public boolean isSyncPrimary() {
         return syncPrimary;
+    }
+
+    public boolean isEnchanting() {
+        return enchanting;
+    }
+
+    public void setEnchanting(boolean enchanting) {
+        this.enchanting = enchanting;
     }
 
     public void setSyncPrimary(boolean syncPrimary) {
