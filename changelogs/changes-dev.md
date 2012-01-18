@@ -12,3 +12,5 @@ Version 1.4.3
 
 
 ==== **Skills:** ====
+
+* All non-phsyical skills now issue Magic damage instead of 

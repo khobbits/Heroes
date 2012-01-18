@@ -39,7 +39,7 @@ public class SkillBolt extends TargettedSkill {
         int damage = SkillConfigManager.getUseSetting(hero, this, Setting.DAMAGE, 4, false);
         
         plugin.getDamageManager().addSpellTarget(target, hero, this);
-        damageEntity(target, player, damage, DamageCause.ENTITY_ATTACK);
+        damageEntity(target, player, damage, DamageCause.MAGIC);
 
         broadcastExecuteText(hero, target);
         return SkillResult.NORMAL;

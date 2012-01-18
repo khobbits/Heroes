@@ -36,7 +36,7 @@ public class SkillHarmtouch extends TargettedSkill {
         Player player = hero.getPlayer();
         int damage = SkillConfigManager.getUseSetting(hero, this, Setting.DAMAGE, 10, false);
         addSpellTarget(target, hero);
-        damageEntity(target, player, damage, DamageCause.ENTITY_ATTACK);
+        damageEntity(target, player, damage, DamageCause.MAGIC);
         broadcastExecuteText(hero, target);
         return SkillResult.NORMAL;
     }
