@@ -5,11 +5,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import me.desht.scrollingmenusign.SMSHandler;
-import me.desht.scrollingmenusign.ScrollingMenuSign;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -286,6 +284,7 @@ public class Heroes extends JavaPlugin {
      * Setup scrolling menu sign integration
      */
     private void setupSMS() {
+        /*
         if (smsHandler == null) {
             Plugin p = Bukkit.getServer().getPluginManager().getPlugin("ScrollingMenuSign");
             if (p != null && p instanceof ScrollingMenuSign) {
@@ -293,7 +292,7 @@ public class Heroes extends JavaPlugin {
                 smsHandler = sms.getHandler();
                 Heroes.log(Level.INFO, "ScrollingMenuSign integration is enabled");
             }
-        }
+        }*/
     }
 
     /**

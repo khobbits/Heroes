@@ -96,14 +96,16 @@ public class HeroClass {
         }
         try {
             this.view = (SMSMapView) SMSMapView.getView(name);
-            if (view == null) {
-                short id = Bukkit.getServer().createMap(Bukkit.getWorlds().get(0)).getId();
-                SMSMapView.addMapToMenu(menu, id);
-            }
-            this.view.setAutosave(true);
         } catch (SMSException e) {
-            Heroes.log(Level.WARNING, "Error hooking " + name + " with proper Scroll");
+            short id = Bukkit.getServer().createMap(Bukkit.getWorlds().get(0)).getId();
+            try {
+                this.view = SMSMapView.addMapToMenu(menu, id);
+            } catch (SMSException e1) {
+                Heroes.log(Level.WARNING, "Error hooking " + name + " with a proper scroll!");
+                return;
+            }
         }
+        this.view.setAutosave(true);
     }
 
     public SMSMenu getMenu() {

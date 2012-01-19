@@ -140,6 +140,8 @@ public class HeroManager {
     public void saveHero(Hero hero) {
         if (heroStorage.saveHero(hero)) {
             Heroes.log(Level.INFO, "Saved hero: " + hero.getPlayer().getName());
+        } else {
+            Heroes.log(Level.SEVERE, "There was an issue saving " + hero.getPlayer().getName());
         }
     }
 
