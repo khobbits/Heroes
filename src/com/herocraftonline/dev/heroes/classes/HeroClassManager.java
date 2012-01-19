@@ -237,7 +237,7 @@ public class HeroClassManager {
             Heroes.log(Level.INFO, "Default class found: " + className);
             defaultClass = newClass;
         }
-        newClass.setupMenu();
+        // newClass.setupMenu(); // For SMS implementations
         return newClass;
     }
 

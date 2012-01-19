@@ -206,13 +206,15 @@ public class HPlayerListener extends PlayerListener {
             if (sPlayer.isSpoutCraftEnabled())
                 plugin.getSpoutData().createPartyContainer(sPlayer);
         }
-        
+        /*
+         * TODO: Properly find a way to implement ScrollingMenuSigns
         if (Heroes.smsHandler != null) {
             hero.getHeroClass().getView().allowedToUse(player);
             if (hero.getSecondClass() != null) {
                 hero.getSecondClass().getView().allowedToUse(player);
             }
         }
+        */
     }
 
     @Override

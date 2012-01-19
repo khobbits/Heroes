@@ -10,19 +10,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.logging.Level;
 
-import me.desht.scrollingmenusign.SMSException;
 import me.desht.scrollingmenusign.SMSMenu;
 import me.desht.scrollingmenusign.views.SMSMapView;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.damage.DamageManager.ProjectileType;
-import com.herocraftonline.dev.heroes.skill.Skill;
-import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.util.RecipeGroup;
 
 /**
@@ -72,7 +67,8 @@ public class HeroClass {
         maxLevel = 1;
         cost = 0;
     }
-
+/*
+ * For ScrollingMenuSigns implementation
     public void setupMenu() {
         if (Heroes.smsHandler == null) {
             return;
@@ -107,7 +103,7 @@ public class HeroClass {
         }
         this.view.setAutosave(true);
     }
-
+*/
     public SMSMenu getMenu() {
         return menu;
     }

@@ -110,7 +110,6 @@ public class Heroes extends JavaPlugin {
     public static final Properties properties = new Properties();
     public static Economy econ;
     public static Permission perms;
-    public static SMSHandler smsHandler;
 
     // Variable for Spout.
     public static Plugin spout = null;
@@ -355,9 +354,6 @@ public class Heroes extends JavaPlugin {
         commandHandler.addCommand(new PartyChatCommand(this));
         commandHandler.addCommand(new ConfigReloadCommand(this));
         commandHandler.addCommand(new HelpCommand(this));
-        if (smsHandler != null) {
-            commandHandler.addCommand(new ScrollCommand(this));
-        }
         commandHandler.addCommand(new AdminExpCommand(this));
         
 
