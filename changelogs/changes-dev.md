@@ -8,6 +8,8 @@ Version 1.4.3
 
 ==== **General:** ====
 
+* Debug timing will be removed as we continue to update to the new 1.1 event handling
+** Bukkit now has internal event timings available
 
 ==== **API:** ====
 

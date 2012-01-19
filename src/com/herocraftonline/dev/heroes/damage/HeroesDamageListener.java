@@ -21,10 +21,12 @@ import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.entity.CraftLivingEntity;
 import org.bukkit.entity.*;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.event.entity.EntityListener;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 import org.bukkit.inventory.ItemStack;
@@ -34,7 +36,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class HeroesDamageListener extends EntityListener {
+public class HeroesDamageListener implements Listener {
 
     private Heroes plugin;
     private DamageManager damageManager;
@@ -46,7 +48,7 @@ public class HeroesDamageListener extends EntityListener {
         this.damageManager = damageManager;
     }
 
-    @Override
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntityRegainHealth(EntityRegainHealthEvent event) {
         Heroes.debug.startTask("HeroesDamageListener.onEntityRegainHealth");
         if (event.isCancelled() || !(event.getEntity() instanceof Player) || Heroes.properties.disabledWorlds.contains(event.getEntity().getWorld().getName())) {
@@ -140,7 +142,7 @@ public class HeroesDamageListener extends EntityListener {
         return damage;
     }
 
-    @Override
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntityDamage(EntityDamageEvent event) {
         Heroes.debug.startTask("HeroesDamageListener.onEntityDamage");
         // Reasons to immediately ignore damage event

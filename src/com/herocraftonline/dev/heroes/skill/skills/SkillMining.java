@@ -1,12 +1,13 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.event.Event.Priority;
-import org.bukkit.event.Event.Type;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockListener;
 import org.bukkit.inventory.ItemStack;
 
 import com.herocraftonline.dev.heroes.HBlockListener;
@@ -27,8 +28,7 @@ public class SkillMining extends PassiveSkill {
         setDescription("You have a $1% chance to get extra ores when mining!");
         setEffectTypes(EffectType.BENEFICIAL);
         setTypes(SkillType.KNOWLEDGE, SkillType.EARTH, SkillType.BUFF);
-        
-        registerEvent(Type.BLOCK_BREAK, new SkillBlockListener(this), Priority.Monitor);
+        Bukkit.getServer().getPluginManager().registerEvents(new SkillBlockListener(this), plugin);
     }
 
     @Override
@@ -39,7 +39,7 @@ public class SkillMining extends PassiveSkill {
         return node;
     }
 
-    public class SkillBlockListener extends BlockListener {
+    public class SkillBlockListener implements Listener {
 
         private Skill skill;
         
@@ -47,22 +47,18 @@ public class SkillMining extends PassiveSkill {
             this.skill = skill;
         }
         
-        @Override
+        @EventHandler(priority = EventPriority.MONITOR)
         public void onBlockBreak(BlockBreakEvent event) {
-            Heroes.debug.startTask("HeroesSkillListener");
             if (event.isCancelled()) {
-                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
             }
             
             Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
             if (!hero.hasEffect("Mining")) {
-                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
             }
             Block block = event.getBlock();
             if (HBlockListener.placedBlocks.containsKey(block.getLocation())) {
-                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
             }
 
@@ -89,7 +85,6 @@ public class SkillMining extends PassiveSkill {
                     isStone = true;
                     break;
                 default:
-                    Heroes.debug.stopTask("HeroesSkillListener");
                     return;
             }
 
@@ -97,15 +92,12 @@ public class SkillMining extends PassiveSkill {
             
             if (isStone && chance <= SkillConfigManager.getUseSetting(hero, skill, "chance-from-stone", .0005, false) * hero.getSkillLevel(skill)) {
                 block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(getMatFromHeight(block), 1));
-                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
             } else if (isStone) {
-                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
             }
             
             if (chance >= SkillConfigManager.getUseSetting(hero, skill, Setting.CHANCE_LEVEL, .001, false) * hero.getSkillLevel(skill)) {
-                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
             }
             if (dropMaterial == Material.INK_SACK) {
@@ -113,7 +105,6 @@ public class SkillMining extends PassiveSkill {
             } else {
                 block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(dropMaterial, 1));
             }
-            Heroes.debug.stopTask("HeroesSkillListener");
         }
 
         private Material getMatFromHeight(Block block) {

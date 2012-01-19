@@ -1,12 +1,13 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
-import org.bukkit.event.Event.Priority;
-import org.bukkit.event.Event.Type;
-import org.bukkit.event.entity.EntityListener;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityTameEvent;
 
 import com.herocraftonline.dev.heroes.Heroes;
@@ -24,12 +25,11 @@ public class SkillWolf extends PassiveSkill {
         setArgumentRange(0, 1);
         setIdentifiers("skill wolf");
         setTypes(SkillType.SUMMON, SkillType.KNOWLEDGE);
-
-        registerEvent(Type.ENTITY_TAME, new SkillEntityListener(this), Priority.Highest);
+        Bukkit.getServer().getPluginManager().registerEvents(new SkillEntityListener(this), plugin);
     }
 
 
-    public class SkillEntityListener extends EntityListener {
+    public class SkillEntityListener implements Listener {
 
         private final SkillWolf skill;
 
@@ -37,13 +37,11 @@ public class SkillWolf extends PassiveSkill {
             this.skill = skill;
         }
 
-        @Override
+        @EventHandler(priority = EventPriority.HIGHEST)
         public void onEntityTame(EntityTameEvent event) {
-            Heroes.debug.startTask("HeroesSkillListener.Wolf");
             AnimalTamer owner = event.getOwner();
             Entity animal = event.getEntity();
             if (event.isCancelled() || !(animal instanceof Wolf) || !(owner instanceof Player)) {
-                Heroes.debug.stopTask("HeroesSkillListener.Wolf");
                 return;
             }
 
@@ -53,7 +51,6 @@ public class SkillWolf extends PassiveSkill {
                 Messaging.send(player, "You can't tame wolves!");
                 event.setCancelled(true);
             }
-            Heroes.debug.stopTask("HeroesSkillListener.Wolf");
         }
     }
 

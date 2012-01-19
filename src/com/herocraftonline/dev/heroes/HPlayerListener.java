@@ -8,6 +8,9 @@ import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Result;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerBedLeaveEvent;
@@ -16,7 +19,6 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
@@ -36,15 +38,16 @@ import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Properties;
 import com.herocraftonline.dev.heroes.util.Util;
 
-public class HPlayerListener extends PlayerListener {
+public class HPlayerListener implements Listener {
 
     public final Heroes plugin;
 
     public HPlayerListener(Heroes instance) {
         plugin = instance;
+        Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
-    @Override
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerFish(PlayerFishEvent event) {
         if (event.isCancelled())
             return;
@@ -63,7 +66,7 @@ public class HPlayerListener extends PlayerListener {
         }
     }
 
-    @Override
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onItemHeldChange(PlayerItemHeldEvent event) {
         Player player = event.getPlayer();
         Hero hero = plugin.getHeroManager().getHero(player);
@@ -73,11 +76,12 @@ public class HPlayerListener extends PlayerListener {
         hero.checkInventory();
     }
 
-    @Override
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerBedEnter(PlayerBedEnterEvent event) {
         Properties props = Heroes.properties;
-        if (event.isCancelled() || !props.bedHeal || props.disabledWorlds.contains(event.getPlayer().getWorld().getName()))
+        if (event.isCancelled() || !props.bedHeal || props.disabledWorlds.contains(event.getPlayer().getWorld().getName())) {
             return;
+        }
 
         Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
         long period = props.healInterval * 1000;
@@ -86,10 +90,11 @@ public class HPlayerListener extends PlayerListener {
         hero.addEffect(bhEffect);
     }
 
-    @Override
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerBedLeave(PlayerBedLeaveEvent event) {
-        if (!Heroes.properties.bedHeal)
+        if (!Heroes.properties.bedHeal) {
             return;
+        }
 
         // This player is no longer in bed so remove them from the bedHealer set
         Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
@@ -98,10 +103,11 @@ public class HPlayerListener extends PlayerListener {
         }
     }
 
-    @Override
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
-        if (event.isCancelled())
+        if (event.isCancelled()) {
             return;
+        }
         
         Player player = event.getPlayer();
         Hero hero = plugin.getHeroManager().getHero(player);
@@ -113,10 +119,11 @@ public class HPlayerListener extends PlayerListener {
         }
     }
 
-    @Override
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerInteract(PlayerInteractEvent event) {
-        if (event.useItemInHand() == Result.DENY)
+        if (event.useItemInHand() == Result.DENY) {
             return;
+        }
         
         Player player = event.getPlayer();
 
@@ -180,7 +187,7 @@ public class HPlayerListener extends PlayerListener {
         }
     }
 
-    @Override
+    @EventHandler()
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         HeroManager hm = plugin.getHeroManager();
@@ -217,7 +224,7 @@ public class HPlayerListener extends PlayerListener {
         */
     }
 
-    @Override
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerPickupItem(PlayerPickupItemEvent event) {
         if (event.isCancelled() || Heroes.properties.disabledWorlds.contains(event.getPlayer().getWorld().getName()))
             return;
@@ -236,7 +243,7 @@ public class HPlayerListener extends PlayerListener {
         });
     }
 
-    @Override
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
         //Spout cleanup stuff
@@ -258,7 +265,7 @@ public class HPlayerListener extends PlayerListener {
 
     }
 
-    @Override
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerRespawn(PlayerRespawnEvent event) {
         Player player = event.getPlayer();
         final Hero hero = plugin.getHeroManager().getHero(player);
@@ -279,7 +286,7 @@ public class HPlayerListener extends PlayerListener {
         }, 20L);
     }
 
-    @Override
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerTeleport(PlayerTeleportEvent event) {
         if (event.isCancelled() || event.getFrom().getWorld() == event.getTo().getWorld())
             return;

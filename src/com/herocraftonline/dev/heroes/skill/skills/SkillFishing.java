@@ -1,14 +1,15 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.craftbukkit.entity.CraftItem;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event.Priority;
-import org.bukkit.event.Event.Type;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerFishEvent.State;
-import org.bukkit.event.player.PlayerListener;
 import org.bukkit.inventory.ItemStack;
 
 import com.herocraftonline.dev.heroes.Heroes;
@@ -30,7 +31,7 @@ public class SkillFishing extends PassiveSkill {
         setDescription("You have a $1% chance of getting a bonus fish!");
         setEffectTypes(EffectType.BENEFICIAL);
         setTypes(SkillType.KNOWLEDGE, SkillType.EARTH, SkillType.BUFF);
-        registerEvent(Type.PLAYER_FISH, new SkillPlayerListener(this), Priority.Monitor);
+        Bukkit.getServer().getPluginManager().registerEvents(new SkillPlayerListener(this), plugin);
     }
 
 
@@ -43,7 +44,7 @@ public class SkillFishing extends PassiveSkill {
         return node;
     }
 
-    public class SkillPlayerListener extends PlayerListener {
+    public class SkillPlayerListener implements Listener {
 
         private Skill skill;
 
@@ -51,11 +52,9 @@ public class SkillFishing extends PassiveSkill {
             this.skill = skill;
         }
 
-        @Override
+        @EventHandler(priority = EventPriority.MONITOR)
         public void onPlayerFish(PlayerFishEvent event){
-            Heroes.debug.startTask("HeroesSkillListener");
             if (event.isCancelled() || event.getState() != State.CAUGHT_FISH || !(event.getCaught() instanceof CraftItem)) {
-                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
             }
             CraftItem getCaught = (CraftItem) event.getCaught();
@@ -122,7 +121,6 @@ public class SkillFishing extends PassiveSkill {
                     }
                 }   
             }           
-            Heroes.debug.stopTask("HeroesSkillListener");
         }
     }
 

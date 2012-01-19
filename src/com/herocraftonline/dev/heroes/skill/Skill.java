@@ -189,6 +189,7 @@ public abstract class Skill extends BasicCommand {
      * @param priority
      *            the priority given to the event handler
      */
+    @Deprecated
     protected void registerEvent(Type type, Listener listener, Priority priority) {
         plugin.getServer().getPluginManager().registerEvent(type, listener, priority, plugin);
     }

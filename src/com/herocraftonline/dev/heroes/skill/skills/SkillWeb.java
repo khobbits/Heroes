@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -12,10 +13,10 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event.Priority;
-import org.bukkit.event.Event.Type;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockListener;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.SkillResult;
@@ -40,8 +41,7 @@ public class SkillWeb extends TargettedSkill {
         setArgumentRange(0, 1);
         setIdentifiers("skill web");
         setTypes(SkillType.EARTH, SkillType.SILENCABLE, SkillType.HARMFUL);
-
-        registerEvent(Type.BLOCK_BREAK, new WebBlockListener(), Priority.Highest);
+        Bukkit.getServer().getPluginManager().registerEvents(new SkillBlockListener(), plugin);
     }
 
     @Override
@@ -75,13 +75,11 @@ public class SkillWeb extends TargettedSkill {
         return SkillResult.NORMAL;
     }
 
-    public class WebBlockListener extends BlockListener {
+    public class SkillBlockListener implements Listener {
 
-        @Override
+        @EventHandler(priority = EventPriority.HIGHEST)
         public void onBlockBreak(BlockBreakEvent event) {
-            Heroes.debug.startTask("HeroesSkillListener");
             if (event.isCancelled()) {
-                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
             }
 
@@ -89,7 +87,6 @@ public class SkillWeb extends TargettedSkill {
             if (changedBlocks.contains(event.getBlock().getLocation())) {
                 event.setCancelled(true);
             }
-            Heroes.debug.stopTask("HeroesSkillListener");
         }
     }
 

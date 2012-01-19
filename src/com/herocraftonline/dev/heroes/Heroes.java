@@ -76,6 +76,7 @@ import com.herocraftonline.dev.heroes.util.Util;
  * 
  * @author Herocraft's Plugin Team
  */
+@SuppressWarnings("unused")
 public class Heroes extends JavaPlugin {
 
     // Using this instead of getDataFolder(), getDataFolder() uses the File
@@ -88,12 +89,11 @@ public class Heroes extends JavaPlugin {
     private static DebugLog debugLog;
 
     // Setup the Player and Plugin listener for Heroes.
-    private final HPlayerListener playerListener = new HPlayerListener(this);
-    private final HPluginListener pluginListener = new HPluginListener(this);
-    private final HEntityListener entityListener = new HEntityListener(this);
-    private final HBlockListener blockListener = new HBlockListener(this);
-    private final HPartyListener partyListener = new HPartyListener(this);
-    private final HEventListener hEventListener = new HEventListener(this);
+    private HPlayerListener playerListener;
+    private HPluginListener pluginListener;
+    private HEntityListener entityListener;
+    private HBlockListener blockListener;
+    private HEventListener hEventListener;
     private SpoutInventoryListener siListener = null;
 
     // Various data managers
@@ -209,7 +209,7 @@ public class Heroes extends JavaPlugin {
         setupSpout();
         // Check for SMS
         setupSMS();
-        
+
         properties.load(this);
         configManager = new ConfigManager(this);
 
@@ -231,8 +231,6 @@ public class Heroes extends JavaPlugin {
 
         // Load in the rest of the values into their managers
         configManager.loadManagers();
-
-        blockListener.init();
 
         // Call our function to register the events Heroes needs.
         registerEvents();
@@ -355,7 +353,7 @@ public class Heroes extends JavaPlugin {
         commandHandler.addCommand(new ConfigReloadCommand(this));
         commandHandler.addCommand(new HelpCommand(this));
         commandHandler.addCommand(new AdminExpCommand(this));
-        
+
 
 
         // Page 4
@@ -367,8 +365,8 @@ public class Heroes extends JavaPlugin {
         commandHandler.addCommand(new HealthCommand(this));
         commandHandler.addCommand(new LeaderboardCommand(this));
         commandHandler.addCommand(new HeroSaveCommand(this));
-        
-        
+
+
         // Page 5
         commandHandler.addCommand(new ResetCommand(this));
         commandHandler.addCommand(new DebugDumpCommand());
@@ -379,36 +377,14 @@ public class Heroes extends JavaPlugin {
      */
     private void registerEvents() {
         PluginManager pluginManager = getServer().getPluginManager();
-        pluginManager.registerEvent(Type.PLAYER_QUIT, playerListener, Priority.Monitor, this);
-        pluginManager.registerEvent(Type.PLAYER_JOIN, playerListener, Priority.Normal, this);
-        pluginManager.registerEvent(Type.PLAYER_INTERACT, playerListener, Priority.Lowest, this);
-        pluginManager.registerEvent(Type.PLAYER_INTERACT_ENTITY, playerListener, Priority.Lowest, this);
-        pluginManager.registerEvent(Type.PLAYER_ITEM_HELD, playerListener, Priority.Monitor, this);
-        pluginManager.registerEvent(Type.PLAYER_PICKUP_ITEM, playerListener, Priority.Monitor, this);
-        pluginManager.registerEvent(Type.PLAYER_TELEPORT, playerListener, Priority.Monitor, this);
-        pluginManager.registerEvent(Type.PLAYER_RESPAWN, playerListener, Priority.Monitor, this);
-        pluginManager.registerEvent(Type.PLAYER_BED_ENTER, playerListener, Priority.Monitor, this);
-        pluginManager.registerEvent(Type.PLAYER_BED_LEAVE, playerListener, Priority.Monitor, this);
-        pluginManager.registerEvent(Type.PLAYER_FISH, playerListener, Priority.Monitor, this);
-
-        pluginManager.registerEvent(Type.ENTITY_DEATH, entityListener, Priority.Highest, this);
-        pluginManager.registerEvent(Type.ENTITY_TARGET, entityListener, Priority.Normal, this);
-
-        pluginManager.registerEvent(Type.BLOCK_BREAK, blockListener, Priority.Monitor, this);
-        pluginManager.registerEvent(Type.BLOCK_PLACE, blockListener, Priority.Monitor, this);
-        pluginManager.registerEvent(Type.BLOCK_PISTON_EXTEND, blockListener, Priority.Monitor, this);
-        pluginManager.registerEvent(Type.BLOCK_PISTON_RETRACT, blockListener, Priority.Monitor, this);
-
-        pluginManager.registerEvent(Type.PLUGIN_ENABLE, pluginListener, Priority.Monitor, this);
-        pluginManager.registerEvent(Type.PLUGIN_DISABLE, pluginListener, Priority.Monitor, this);
+        playerListener = new HPlayerListener(this);
+        pluginListener = new HPluginListener(this);
+        entityListener = new HEntityListener(this);
+        blockListener = new HBlockListener(this);
+        hEventListener = new HEventListener(this);
 
         pluginManager.registerEvent(Type.CUSTOM_EVENT, hEventListener, Priority.Monitor, this);
         pluginManager.registerEvent(Type.CUSTOM_EVENT, new HSkillListener(), Priority.Highest, this);
-
-        // Map Party UI
-        pluginManager.registerEvent(Type.ENTITY_REGAIN_HEALTH, partyListener, Priority.Monitor, this);
-
-        damageManager.registerEvents();
     }
 
     /**
@@ -449,7 +425,7 @@ public class Heroes extends JavaPlugin {
     public void setSpoutData(SpoutData sd) {
         this.spoutData = sd;
     }
-    
+
     public static boolean useSpout() {
         return spout != null;
     }

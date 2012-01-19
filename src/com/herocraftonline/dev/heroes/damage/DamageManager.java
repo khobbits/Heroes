@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
@@ -16,10 +17,7 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
-import org.bukkit.event.Event.Priority;
-import org.bukkit.event.Event.Type;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.plugin.PluginManager;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.SkillUseInfo;
@@ -42,6 +40,7 @@ public class DamageManager {
     public DamageManager(Heroes plugin) {
         this.plugin = plugin;
         listener = new HeroesDamageListener(plugin, this);
+        Bukkit.getServer().getPluginManager().registerEvents(listener, plugin);
     }
 
     public void addSpellTarget(Entity o, Hero hero, Skill skill) {
@@ -181,15 +180,6 @@ public class DamageManager {
                 }
             }
         }
-    }
-
-    /**
-     * Register the events for the damage system
-     */
-    public void registerEvents() {
-        PluginManager pluginManager = plugin.getServer().getPluginManager();
-        pluginManager.registerEvent(Type.ENTITY_DAMAGE, listener, Priority.Highest, plugin);
-        pluginManager.registerEvent(Type.ENTITY_REGAIN_HEALTH, listener, Priority.Highest, plugin);
     }
 
     public SkillUseInfo removeSpellTarget(Entity o) {

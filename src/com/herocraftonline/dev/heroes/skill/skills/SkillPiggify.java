@@ -3,6 +3,7 @@ package com.herocraftonline.dev.heroes.skill.skills;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Creature;
@@ -10,10 +11,10 @@ import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event.Priority;
-import org.bukkit.event.Event.Type;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityListener;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.SkillResult;
@@ -37,8 +38,7 @@ public class SkillPiggify extends TargettedSkill {
         setArgumentRange(0, 1);
         setIdentifiers("skill piggify");
         setTypes(SkillType.DEBUFF, SkillType.SILENCABLE, SkillType.HARMFUL);
-
-        registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(), Priority.Low);
+        Bukkit.getServer().getPluginManager().registerEvents(new SkillEntityListener(), plugin);
     }
 
     @Override
@@ -109,16 +109,13 @@ public class SkillPiggify extends TargettedSkill {
         }
     }
 
-    public class SkillEntityListener extends EntityListener {
+    public class SkillEntityListener implements Listener {
         
-        @Override
+        @EventHandler(priority = EventPriority.LOWEST)
         public void onEntityDamage(EntityDamageEvent event) {
-            Heroes.debug.startTask("HeroesSkillListener");
             if (event.isCancelled() || !creatures.contains(event.getEntity())) {
-                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
             }
-
             event.setCancelled(true);
         }
     }

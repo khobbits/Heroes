@@ -1,14 +1,15 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event.Priority;
-import org.bukkit.event.Event.Type;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityListener;
 import org.bukkit.inventory.ItemStack;
 
 import com.herocraftonline.dev.heroes.Heroes;
@@ -37,8 +38,7 @@ public class SkillAssassinsBlade extends ActiveSkill {
         setArgumentRange(0, 0);
         setIdentifiers("skill ablade", "skill assassinsblade");
         setTypes(SkillType.BUFF);
-
-        registerEvent(Type.ENTITY_DAMAGE, new SkillDamageListener(this), Priority.Monitor);
+        Bukkit.getServer().getPluginManager().registerEvents(new SkillDamageListener(this), plugin);
     }
 
     @Override
@@ -138,7 +138,7 @@ public class SkillAssassinsBlade extends ActiveSkill {
         }
     }
 
-    public class SkillDamageListener extends EntityListener {
+    public class SkillDamageListener implements Listener {
 
         private final Skill skill;
 
@@ -146,23 +146,19 @@ public class SkillAssassinsBlade extends ActiveSkill {
             this.skill = skill;
         }
 
-        @Override
+        @EventHandler(priority = EventPriority.MONITOR)
         public void onEntityDamage(EntityDamageEvent event) {
-            Heroes.debug.startTask("HeroesSkillListener");
             if (event.isCancelled() || !(event instanceof EntityDamageByEntityEvent)) {
-                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
             }
             
             // If our target isn't a creature or player lets exit
             if (!(event.getEntity() instanceof LivingEntity) && !(event.getEntity() instanceof Player)) {
-                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
             }
 
             EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
             if (!(subEvent.getDamager() instanceof Player)) {
-                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
             }
 
@@ -170,7 +166,6 @@ public class SkillAssassinsBlade extends ActiveSkill {
             ItemStack item = player.getItemInHand();
             Hero hero = plugin.getHeroManager().getHero(player);
             if (!SkillConfigManager.getUseSetting(hero, skill, "weapons", Util.swords).contains(item.getType().name())) {
-                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
             }
 
@@ -189,7 +184,6 @@ public class SkillAssassinsBlade extends ActiveSkill {
                     checkBuff(hero);
                 }
             }
-            Heroes.debug.stopTask("HeroesSkillListener");
         }
 
         private void checkBuff(Hero hero) {

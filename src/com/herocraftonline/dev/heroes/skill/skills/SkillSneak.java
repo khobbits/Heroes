@@ -1,14 +1,14 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
-import org.bukkit.event.Event.Priority;
-import org.bukkit.event.Event.Type;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityListener;
-import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 
 import com.herocraftonline.dev.heroes.Heroes;
@@ -33,9 +33,7 @@ public class SkillSneak extends ActiveSkill {
         setArgumentRange(0, 0);
         setIdentifiers("skill sneak");
         setTypes(SkillType.BUFF, SkillType.PHYSICAL, SkillType.STEALTHY);
-
-        registerEvent(Type.PLAYER_TOGGLE_SNEAK, new SneakListener(), Priority.Highest);
-        registerEvent(Type.ENTITY_DAMAGE, new SneakDamageListener(), Priority.Monitor);
+        Bukkit.getServer().getPluginManager().registerEvents(new SkillEventListener(), plugin);
     }
 
     @Override
@@ -53,9 +51,6 @@ public class SkillSneak extends ActiveSkill {
         super.init();
         damageCancels = SkillConfigManager.getRaw(this, "damage-cancels", true);
         attackCancels = SkillConfigManager.getRaw(this, "attacking-cancels", true);
-        if (damageCancels || attackCancels) {
-            registerEvent(Type.ENTITY_DAMAGE, new SneakDamageListener(), Priority.Monitor);
-        }
     }
 
     @Override
@@ -72,13 +67,11 @@ public class SkillSneak extends ActiveSkill {
         return SkillResult.NORMAL;
     }
 
-    public class SneakDamageListener extends EntityListener {
+    public class SkillEventListener implements Listener {
 
-        @Override
+        @EventHandler(priority = EventPriority.MONITOR)
         public void onEntityDamage(EntityDamageEvent event) {
-            Heroes.debug.startTask("HeroesSkillListener");
             if (event.isCancelled() || !damageCancels || event.getDamage() == 0) {
-                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
             }
             Player player = null;
@@ -95,7 +88,6 @@ public class SkillSneak extends ActiveSkill {
                 }
             }
             if (player == null) {
-                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
             }
 
@@ -104,13 +96,9 @@ public class SkillSneak extends ActiveSkill {
                 player.setSneaking(false);
                 hero.removeEffect(hero.getEffect("Sneak"));
             }
-            Heroes.debug.stopTask("HeroesSkillListener");
         }
-    }
-
-    public class SneakListener extends PlayerListener {
-
-        @Override
+        
+        @EventHandler(priority = EventPriority.HIGHEST)
         public void onPlayerToggleSneak(PlayerToggleSneakEvent event) {
             Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
             if (hero.hasEffect("Sneak")) {

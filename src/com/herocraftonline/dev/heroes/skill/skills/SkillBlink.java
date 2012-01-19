@@ -1,13 +1,14 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event.Priority;
-import org.bukkit.event.Event.Type;
-import org.bukkit.event.player.PlayerListener;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.util.BlockIterator;
@@ -32,8 +33,8 @@ public class SkillBlink extends ActiveSkill {
         setArgumentRange(0, 0);
         setIdentifiers("skill blink");
         setTypes(SkillType.SILENCABLE, SkillType.TELEPORT);
-
-        registerEvent(Type.PLAYER_TELEPORT, new SkillPlayerListener(this), Priority.Lowest);
+        
+        Bukkit.getServer().getPluginManager().registerEvents(new SkillPlayerListener(this), plugin);
     }
 
     @Override
@@ -89,7 +90,7 @@ public class SkillBlink extends ActiveSkill {
         return getDescription().replace("$1", distance + "");
     }
     
-    public class SkillPlayerListener extends PlayerListener {
+    public class SkillPlayerListener implements Listener {
 
         private final Skill skill;
         
@@ -97,7 +98,7 @@ public class SkillBlink extends ActiveSkill {
             this.skill = skill;
         }
         
-        @Override
+        @EventHandler(priority = EventPriority.LOWEST)
         public void onPlayerTeleport(PlayerTeleportEvent event) {
             if (event.isCancelled()) {
                 return;

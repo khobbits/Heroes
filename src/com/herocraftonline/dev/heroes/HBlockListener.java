@@ -5,12 +5,15 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -20,7 +23,7 @@ import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Properties;
 
-public class HBlockListener extends BlockListener {
+public class HBlockListener implements Listener {
 
     private final Heroes plugin;
     private int blockTrackingDuration = 0;
@@ -28,6 +31,8 @@ public class HBlockListener extends BlockListener {
 
     public HBlockListener(Heroes plugin) {
         this.plugin = plugin;
+        init();
+        Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
     public void init() {
@@ -44,15 +49,17 @@ public class HBlockListener extends BlockListener {
         };
     }
 
-    @Override
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onBlockBreak(BlockBreakEvent event) {
-        if (event.isCancelled())
+        if (event.isCancelled()) {
             return;
+        }
         Properties prop = Heroes.properties;
         Player player = event.getPlayer();
 
-        if (prop.disabledWorlds.contains(player.getWorld().getName()))
+        if (prop.disabledWorlds.contains(player.getWorld().getName())) {
             return;
+        }
 
         Block block = event.getBlock();
 
@@ -97,7 +104,7 @@ public class HBlockListener extends BlockListener {
         }
     }
 
-    @Override
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onBlockPistonExtend(BlockPistonExtendEvent event) {
         if (event.isCancelled()) {
             return;
@@ -120,7 +127,7 @@ public class HBlockListener extends BlockListener {
         }
     }
 
-    @Override
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onBlockPistonRetract(BlockPistonRetractEvent event) {
         if (event.isCancelled()) {
             return;
@@ -133,17 +140,19 @@ public class HBlockListener extends BlockListener {
         }
     }
 
-    @Override
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onBlockPlace(BlockPlaceEvent event) {
-        if (event.isCancelled())
+        if (event.isCancelled()) {
             return;
+        }
 
         Block block = event.getBlock();
         Material material = block.getType();
 
         Properties prop = Heroes.properties;
-        if (prop.disabledWorlds.contains(block.getWorld().getName()))
+        if (prop.disabledWorlds.contains(block.getWorld().getName())) {
             return;
+        }
 
         if (prop.buildingExp.containsKey(material)) {
             Hero hero = plugin.getHeroManager().getHero(event.getPlayer());

@@ -1,16 +1,16 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
-import org.bukkit.event.Event.Priority;
-import org.bukkit.event.Event.Type;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityListener;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.SkillResult;
@@ -33,8 +33,7 @@ public class SkillFireArrow extends ActiveSkill {
         setArgumentRange(0, 0);
         setIdentifiers("skill firearrow", "skill farrow");
         setTypes(SkillType.FIRE, SkillType.BUFF);
-
-        registerEvent(Type.ENTITY_DAMAGE, new SkillEntityListener(this), Priority.Normal);
+        Bukkit.getServer().getPluginManager().registerEvents(new SkillEntityListener(this), plugin);
     }
 
     @Override
@@ -65,7 +64,7 @@ public class SkillFireArrow extends ActiveSkill {
         }
     }
 
-    public class SkillEntityListener extends EntityListener {
+    public class SkillEntityListener implements Listener {
 
         private final Skill skill;
 
@@ -73,31 +72,26 @@ public class SkillFireArrow extends ActiveSkill {
             this.skill = skill;
         }
 
-        @Override
+        @EventHandler()
         public void onEntityDamage(EntityDamageEvent event) {
-            Heroes.debug.startTask("HeroesSkillListener");
             if (event.isCancelled() || !(event instanceof EntityDamageByEntityEvent) || !(event.getEntity() instanceof LivingEntity)) {
-                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
             }
 
             Entity projectile = ((EntityDamageByEntityEvent) event).getDamager();
             if (!(projectile instanceof Arrow) || !(((Projectile) projectile).getShooter() instanceof Player)) {
-                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
             }
 
             Player player = (Player) ((Projectile) projectile).getShooter();
             Hero hero = plugin.getHeroManager().getHero(player);
             if (!hero.hasEffect("FireArrowBuff")) {
-                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
             }
             
             LivingEntity entity = (LivingEntity) event.getEntity();
             addSpellTarget(entity, hero);
             if (!damageCheck((Player) player, entity)) {
-                Heroes.debug.stopTask("HeroesSkillListener");
                 event.setCancelled(true);
                 return;
             }
@@ -115,7 +109,6 @@ public class SkillFireArrow extends ActiveSkill {
                 plugin.getEffectManager().addEntityEffect(entity, new CombustEffect(skill, player));
             
 
-            Heroes.debug.stopTask("HeroesSkillListener");
         }
 
         private void checkBuff(Hero hero) {

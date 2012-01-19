@@ -1,14 +1,15 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event.Priority;
-import org.bukkit.event.Event.Type;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityListener;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.SkillResult;
@@ -35,8 +36,7 @@ public class SkillIceArrow extends ActiveSkill {
         setArgumentRange(0, 0);
         setIdentifiers("skill iarrow", "skill icearrow");
         setTypes(SkillType.BUFF, SkillType.ICE, SkillType.SILENCABLE);
-
-        registerEvent(Type.ENTITY_DAMAGE, new SkillDamageListener(this), Priority.Monitor);
+        Bukkit.getServer().getPluginManager().registerEvents(new SkillDamageListener(this), plugin);
     }
 
     @Override
@@ -85,7 +85,7 @@ public class SkillIceArrow extends ActiveSkill {
         }
     }
 
-    public class SkillDamageListener extends EntityListener {
+    public class SkillDamageListener implements Listener {
 
         private final Skill skill;
 
@@ -93,23 +93,19 @@ public class SkillIceArrow extends ActiveSkill {
             this.skill = skill;
         }
 
-        @Override
+        @EventHandler(priority = EventPriority.MONITOR)
         public void onEntityDamage(EntityDamageEvent event) {
-            Heroes.debug.startTask("HeroesSkillListener");
             if (event.isCancelled() || !(event instanceof EntityDamageByEntityEvent) || !(event.getEntity() instanceof LivingEntity)) {
-                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
             }
 
             EntityDamageByEntityEvent subEvent = (EntityDamageByEntityEvent) event;
             if (!(subEvent.getDamager() instanceof Arrow)) {
-                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
             }
 
             Arrow arrow = (Arrow) subEvent.getDamager();
             if (!(arrow.getShooter() instanceof Player)) {
-                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
             }
 
@@ -131,7 +127,6 @@ public class SkillIceArrow extends ActiveSkill {
                 }
                 checkBuff(hero);
             }
-            Heroes.debug.stopTask("HeroesSkillListener");
         }
 
         private void checkBuff(Hero hero) {

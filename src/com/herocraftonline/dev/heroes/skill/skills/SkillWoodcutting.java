@@ -1,11 +1,12 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
+import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.event.Event.Priority;
-import org.bukkit.event.Event.Type;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockListener;
 import org.bukkit.inventory.ItemStack;
 
 import com.herocraftonline.dev.heroes.HBlockListener;
@@ -26,8 +27,7 @@ public class SkillWoodcutting extends PassiveSkill {
         setDescription("You have a $1% chance to get extra materials when logging.");
         setEffectTypes(EffectType.BENEFICIAL);
         setTypes(SkillType.KNOWLEDGE, SkillType.EARTH, SkillType.BUFF);
-        
-        registerEvent(Type.BLOCK_BREAK, new SkillBlockListener(this), Priority.Monitor);
+        Bukkit.getServer().getPluginManager().registerEvents(new SkillBlockListener(this), plugin);
     }
 
     @Override
@@ -37,7 +37,7 @@ public class SkillWoodcutting extends PassiveSkill {
         return node;
     }
 
-    public class SkillBlockListener extends BlockListener {
+    public class SkillBlockListener implements Listener {
 
         private Skill skill;
         
@@ -45,17 +45,14 @@ public class SkillWoodcutting extends PassiveSkill {
             this.skill = skill;
         }
         
-        @Override
+        @EventHandler(priority = EventPriority.MONITOR)
         public void onBlockBreak(BlockBreakEvent event) {
-            Heroes.debug.startTask("HeroesSkillListener");
             if (event.isCancelled()) {
-                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
             }
 
             Block block = event.getBlock();
             if (HBlockListener.placedBlocks.containsKey(block.getLocation())) {
-                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
             }
 
@@ -64,13 +61,11 @@ public class SkillWoodcutting extends PassiveSkill {
                 case LOG:
                     break;
                 default:
-                    Heroes.debug.stopTask("HeroesSkillListener");
                     return;
             }
 
             Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
             if (!hero.hasEffect("Woodcutting") || Util.rand.nextDouble() > SkillConfigManager.getUseSetting(hero, skill, Setting.CHANCE_LEVEL, .001, false) * hero.getSkillLevel(skill)) {
-                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
             }
 
@@ -81,7 +76,6 @@ public class SkillWoodcutting extends PassiveSkill {
             }
 
             block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(block.getType(), extraDrops, (short) 0, block.getData()));
-            Heroes.debug.stopTask("HeroesSkillListener");
         }
     }
 

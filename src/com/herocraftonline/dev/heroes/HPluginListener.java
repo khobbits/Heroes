@@ -1,22 +1,27 @@
 package com.herocraftonline.dev.heroes;
 
+import org.bukkit.Bukkit;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.event.server.PluginEnableEvent;
-import org.bukkit.event.server.ServerListener;
+
 import org.bukkit.plugin.Plugin;
 
 /**
  * Checks for plugins whenever one is enabled
  */
-public class HPluginListener extends ServerListener {
+public class HPluginListener implements Listener {
 
     private Heroes plugin;
 
     public HPluginListener(Heroes instance) {
         this.plugin = instance;
+        Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
-    @Override
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPluginDisable(PluginDisableEvent event) {
         Plugin plugin = event.getPlugin();
         String name = plugin.getDescription().getName();
@@ -27,12 +32,12 @@ public class HPluginListener extends ServerListener {
             Heroes.spout = null;
         }
 
-        if (name.equals("iConomy") || name.equals("BOSEconomy") || name.equals("Essentials")) {
+        if (name.equals("Vault")) {
             Heroes.econ = null;
         }
     }
 
-    @Override
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPluginEnable(PluginEnableEvent event) {
         Plugin plugin = event.getPlugin();
         String name = plugin.getDescription().getName();
@@ -43,7 +48,7 @@ public class HPluginListener extends ServerListener {
         }
 
         // Check for Econ
-        if (name.equals("iConomy") || name.equals("BOSEconomy") || name.equals("Essentials")) {
+        if (name.equals("Vault")) {
             if (Heroes.econ == null) {
                 this.plugin.setupEconomy();
             }

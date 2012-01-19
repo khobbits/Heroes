@@ -1,5 +1,6 @@
 package com.herocraftonline.dev.heroes;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -7,10 +8,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Skeleton;
 import org.bukkit.entity.Tameable;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntityListener;
+import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 
 import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
@@ -20,15 +24,17 @@ import com.herocraftonline.dev.heroes.effects.common.CombustEffect;
 import com.herocraftonline.dev.heroes.effects.common.SummonEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.hero.HeroManager;
+import com.herocraftonline.dev.heroes.party.HeroParty;
 import com.herocraftonline.dev.heroes.util.Properties;
 import com.herocraftonline.dev.heroes.util.Util;
 
-public class HEntityListener extends EntityListener {
+public class HEntityListener implements Listener {
 
     private final Heroes plugin;
 
     public HEntityListener(Heroes plugin) {
         this.plugin = plugin;
+        Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
     private Player getAttacker(EntityDamageEvent event) {
@@ -100,7 +106,7 @@ public class HEntityListener extends EntityListener {
         }
     }
 
-    @Override
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntityDeath(EntityDeathEvent event) {
         Heroes.debug.startTask("HEntityListener.onEntityDeath");
         Entity defender = event.getEntity();
@@ -155,7 +161,7 @@ public class HEntityListener extends EntityListener {
         Heroes.debug.stopTask("HEntityListener.onEntityDeath");
     }
 
-    @Override
+    @EventHandler()
     public void onEntityTarget(EntityTargetEvent event) {
         if (event.isCancelled() || !(event.getTarget() instanceof Player)) {
             return;
@@ -164,6 +170,22 @@ public class HEntityListener extends EntityListener {
         Hero hero = plugin.getHeroManager().getHero((Player) event.getTarget());
         if (hero.hasEffect("Invisible") || hero.hasEffect("Invuln")) {
             event.setCancelled(true);
+        }
+    }
+    
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onEntityRegainHealth(EntityRegainHealthEvent event) {
+        if (!(event.getEntity() instanceof Player))
+            return;
+
+        Player player = (Player) event.getEntity();
+        Hero hero = this.plugin.getHeroManager().getHero(player);
+
+        if (!hero.hasParty())
+            return;
+        HeroParty party = hero.getParty();
+        if (event.getAmount() > 0) {
+            party.update();
         }
     }
 }

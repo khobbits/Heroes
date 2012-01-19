@@ -1,13 +1,14 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event.Priority;
-import org.bukkit.event.Event.Type;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockListener;
 import org.bukkit.inventory.ItemStack;
 
 import com.herocraftonline.dev.heroes.Heroes;
@@ -23,7 +24,6 @@ import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillSuperheat extends ActiveSkill {
 
-    private BlockListener playerListener = new SkillPlayerListener();
     private String applyText;
     private String expireText;
 
@@ -34,8 +34,7 @@ public class SkillSuperheat extends ActiveSkill {
         setArgumentRange(0, 0);
         setIdentifiers("skill superheat");
         setTypes(SkillType.FIRE, SkillType.EARTH, SkillType.BUFF, SkillType.SILENCABLE);
-
-        registerEvent(Type.BLOCK_BREAK, playerListener, Priority.Highest);
+        Bukkit.getServer().getPluginManager().registerEvents(new SkillPlayerListener(), plugin);
     }
 
     @Override
@@ -64,14 +63,11 @@ public class SkillSuperheat extends ActiveSkill {
         return SkillResult.NORMAL;
     }
 
-    public class SkillPlayerListener extends BlockListener {
+    public class SkillPlayerListener implements Listener {
 
-        @Override
-        public void onBlockBreak(BlockBreakEvent event) {
-            Heroes.debug.startTask("HeroesSkillListener");
-            
+        @EventHandler(priority = EventPriority.HIGHEST)
+        public void onBlockBreak(BlockBreakEvent event) {            
             if (event.isCancelled()) {
-                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
             }
             
@@ -101,7 +97,6 @@ public class SkillSuperheat extends ActiveSkill {
                         break;
                 }
             }
-            Heroes.debug.stopTask("HeroesSkillListener");
         }
     }
 

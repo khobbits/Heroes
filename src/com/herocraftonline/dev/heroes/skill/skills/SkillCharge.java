@@ -3,16 +3,17 @@ package com.herocraftonline.dev.heroes.skill.skills;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event.Priority;
-import org.bukkit.event.Event.Type;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.event.entity.EntityListener;
 import org.bukkit.util.Vector;
 
 import com.herocraftonline.dev.heroes.Heroes;
@@ -40,8 +41,7 @@ public class SkillCharge extends TargettedSkill {
         setArgumentRange(0, 1);
         setIdentifiers("skill charge");
         setTypes(SkillType.PHYSICAL, SkillType.MOVEMENT, SkillType.HARMFUL);
-
-        registerEvent(Type.ENTITY_DAMAGE, new ChargeEntityListener(this), Priority.Lowest);
+        Bukkit.getServer().getPluginManager().registerEvents(new ChargeEntityListener(this), plugin);
     }
 
     @Override
@@ -79,14 +79,14 @@ public class SkillCharge extends TargettedSkill {
         return SkillResult.NORMAL;
     }
 
-    public class ChargeEntityListener extends EntityListener {
+    public class ChargeEntityListener implements Listener {
         private final Skill skill;
 
         public ChargeEntityListener(Skill skill) {
             this.skill = skill;
         }
 
-        @Override
+        @EventHandler(priority = EventPriority.LOWEST)
         public void onEntityDamage(EntityDamageEvent event) {
             Heroes.debug.startTask("HeroesSkillListener");
             if (!event.getCause().equals(DamageCause.FALL) || !(event.getEntity() instanceof Player) || !chargingPlayers.contains(event.getEntity())) {

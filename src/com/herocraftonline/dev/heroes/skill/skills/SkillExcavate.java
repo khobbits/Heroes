@@ -1,10 +1,13 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockDamageEvent;
-import org.bukkit.event.block.BlockListener;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.SkillResult;
@@ -28,6 +31,7 @@ public class SkillExcavate extends ActiveSkill {
         setArgumentRange(0, 0);
         setIdentifiers("skill excavate");
         setTypes(SkillType.BUFF, SkillType.EARTH, SkillType.SILENCABLE);
+        Bukkit.getServer().getPluginManager().registerEvents(new SkillBlockListener(), plugin);
     }
     @Override
     public ConfigurationSection getDefaultConfig() {
@@ -84,12 +88,13 @@ public class SkillExcavate extends ActiveSkill {
         }
     }
     
-    public class SkillBlockListener extends BlockListener {
+    public class SkillBlockListener implements Listener {
         
-        @Override
+        @EventHandler(priority = EventPriority.HIGHEST)
         public void onBlockDamage(BlockDamageEvent event) {
-            if (event.isCancelled() || !isExcavatable(event.getBlock().getType()))
+            if (event.isCancelled() || !isExcavatable(event.getBlock().getType())) {
                 return;
+            }
             
             Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
             if (!hero.hasEffect("Excavate"))

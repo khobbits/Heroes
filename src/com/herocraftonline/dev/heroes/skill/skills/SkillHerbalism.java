@@ -1,12 +1,13 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.event.Event.Priority;
-import org.bukkit.event.Event.Type;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockListener;
 import org.bukkit.inventory.ItemStack;
 
 import com.herocraftonline.dev.heroes.HBlockListener;
@@ -27,8 +28,7 @@ public class SkillHerbalism extends PassiveSkill {
         setDescription("You have a $1% chance to harvest extra herbs, fruits, and vegetables.");
         setEffectTypes(EffectType.BENEFICIAL);
         setTypes(SkillType.KNOWLEDGE, SkillType.EARTH, SkillType.BUFF);
-        
-        registerEvent(Type.BLOCK_BREAK, new SkillBlockListener(this), Priority.Monitor);
+        Bukkit.getServer().getPluginManager().registerEvents(new SkillBlockListener(this), plugin);
     }
 
     @Override
@@ -38,24 +38,22 @@ public class SkillHerbalism extends PassiveSkill {
         return node;
     }
 
-    public class SkillBlockListener extends BlockListener {
+    public class SkillBlockListener implements Listener {
 
         private Skill skill;
         
         SkillBlockListener(Skill skill) {
             this.skill = skill;
         }
-        @Override
+        
+        @EventHandler(priority = EventPriority.MONITOR)
         public void onBlockBreak(BlockBreakEvent event) {
-            Heroes.debug.startTask("HeroesSkillListener");
             if (event.isCancelled()) {
-                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
             }
 
             Block block = event.getBlock();
             if (HBlockListener.placedBlocks.containsKey(block.getLocation())) {
-                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
             }
 
@@ -86,13 +84,11 @@ public class SkillHerbalism extends PassiveSkill {
                 case DEAD_BUSH:
                     break;
                 default:
-                    Heroes.debug.stopTask("HeroesSkillListener");
                     return;
             }
 
             Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
             if (!hero.hasEffect("Herbalism") || Util.rand.nextDouble() >= SkillConfigManager.getUseSetting(hero, skill, Setting.CHANCE_LEVEL, .001, false) * hero.getSkillLevel(skill)) {
-                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
             }
 
@@ -101,12 +97,11 @@ public class SkillHerbalism extends PassiveSkill {
             } else {
                 extraDrops = 1;
             }
-            if (mat != null)
+            if (mat != null) {
                 block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(mat, extraDrops));
-            else
+            } else {
                 block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(block.getType(), extraDrops, (short) 0, block.getData()));
-            
-            Heroes.debug.stopTask("HeroesSkillListener");
+            }
         }
     }
 
