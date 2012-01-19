@@ -5,12 +5,18 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event.Priority;
+import org.bukkit.event.Event.Type;
+import org.bukkit.event.player.PlayerListener;
+import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.util.BlockIterator;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.SkillResult;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
+import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.SkillConfigManager;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Messaging;
@@ -26,12 +32,15 @@ public class SkillBlink extends ActiveSkill {
         setArgumentRange(0, 0);
         setIdentifiers("skill blink");
         setTypes(SkillType.SILENCABLE, SkillType.TELEPORT);
+
+        registerEvent(Type.PLAYER_TELEPORT, new SkillPlayerListener(this), Priority.Lowest);
     }
 
     @Override
     public ConfigurationSection getDefaultConfig() {
         ConfigurationSection node = super.getDefaultConfig();
         node.set(Setting.MAX_DISTANCE.node(), 6);
+        node.set("restrict-ender-perls", true);
         return node;
     }
 
@@ -78,5 +87,26 @@ public class SkillBlink extends ActiveSkill {
     public String getDescription(Hero hero) {
         int distance = SkillConfigManager.getUseSetting(hero, this, Setting.MAX_DISTANCE, 6, false);
         return getDescription().replace("$1", distance + "");
+    }
+    
+    public class SkillPlayerListener extends PlayerListener {
+
+        private final Skill skill;
+        
+        public SkillPlayerListener(Skill skill) {
+            this.skill = skill;
+        }
+        
+        @Override
+        public void onPlayerTeleport(PlayerTeleportEvent event) {
+            if (event.isCancelled()) {
+                return;
+            }
+            Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
+            if (!hero.hasEffect(getName()) && event.getCause() == TeleportCause.ENDER_PEARL && hero.canUseSkill(skill) && SkillConfigManager.getUseSetting(hero, skill, "restrict-ender-pearl", true)) {
+                event.setCancelled(true);
+            }
+        }
+        
     }
 }
