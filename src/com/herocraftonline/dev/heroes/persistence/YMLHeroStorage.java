@@ -239,7 +239,7 @@ public class YMLHeroStorage extends HeroStorage {
     private void loadSkillSettings(Hero hero, ConfigurationSection section) {
         if (section == null || section.getKeys(false) == null)
             return;
-        
+
         for (String skill : section.getKeys(false)) {
             if (section.isConfigurationSection(skill)) {
                 for (String node : section.getConfigurationSection(skill).getKeys(false)) {
