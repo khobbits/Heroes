@@ -93,8 +93,6 @@ public class YMLHeroStorage extends HeroStorage {
         playerConfig.set("itemrecovery", null);
         playerConfig.set("health", hero.getHealth());
 
-
-
         saveSkillSettings(hero, playerConfig.createSection("skill-settings"));
         saveCooldowns(hero, playerConfig.createSection("cooldowns"));
         saveExperience(hero, playerConfig.createSection("experience"));
@@ -276,7 +274,7 @@ public class YMLHeroStorage extends HeroStorage {
             String skillName = entry.getKey();
             long cooldown = entry.getValue();
             if (cooldown > time) {
-                section.set(skillName, cooldown);
+                section.set(skillName, (double) cooldown);
             }
         }
     }
@@ -291,7 +289,7 @@ public class YMLHeroStorage extends HeroStorage {
         }
     }
 
-    //TODO: this needs to be re-written to jut be a dump
+    //TODO: this needs to be re-written to just be a dump
     private void saveSkillSettings(Hero hero, ConfigurationSection config) {
         for (Entry<String, Map<String, String>> entry : hero.getSkillSettings().entrySet()) {
             for (Entry<String, String> node : entry.getValue().entrySet()) {
