@@ -125,7 +125,7 @@ public class ProfessionCommand extends BasicInteractiveCommand {
             }
 
             boolean chargePlayer = true;
-            if (hero.isMaster(newClass) && !props.swapMasteryCost) {
+            if (hero.isMaster(newClass) && props.swapMasterFree) {
                 chargePlayer = false;
             } else if (!props.iConomy || Heroes.econ == null || cost <= 0) {
                 chargePlayer = false;

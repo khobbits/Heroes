@@ -45,7 +45,7 @@ public class Properties {
     public double profSwapCost;
     public double oldProfSwapCost;
     public boolean firstSwitchFree;
-    public boolean swapMasteryCost;
+    public boolean swapMasterFree;
     public boolean prefixClassName;
     public boolean resetExpOnClassChange = true;
     public boolean resetMasteryOnClassChange = false;
@@ -113,37 +113,42 @@ public class Properties {
     }
 
     private void loadBedConfig(ConfigurationSection section) {
-        if (section == null)
+        if (section == null) {
             return;
-        bedHeal = section.getBoolean("bedHeal", true);
-        healInterval = Util.toIntNonNull(section.get("healInterval", 30), "healInterval");
-        healPercent = Util.toIntNonNull(section.get("healPercent", 5), "healPercent");
+        }
+        bedHeal = section.getBoolean("enabled", true);
+        healInterval = Util.toIntNonNull(section.get("interval", 30), "interval");
+        healPercent = Util.toIntNonNull(section.get("percent", 5), "oercent");
     }
 
     private void loadHatsConfig(ConfigurationSection section) {
+        if (section == null) {
+            return;
+        }
         hatsLevel = Util.toIntNonNull(section.get("level", 1), "level");
-        allowHats = section.getBoolean("allowHatsPlugin", false);
+        allowHats = section.getBoolean("enabled", false);
     }
 
     private void loadLevelConfig(ConfigurationSection section) {
-        if (section == null)
+        if (section == null) {
             return;
-        power = Util.toDoubleNonNull(section.get("power", 1.00), "power");
-        maxExp = Util.toIntNonNull(section.get("maxExperience", 100000), "maxExperience");
-        maxLevel = Util.toIntNonNull(section.get("maxLevel", 20), "maxLevel");
-        maxPartySize = Util.toIntNonNull(section.get("maxPartySize"), "maxPartySize");
-        partyBonus = Util.toDoubleNonNull(section.get("partyBonus", 0.20), "partyBonus");
-        expLoss = Util.toDoubleNonNull(section.get("expLoss", 0.05), "expLoss");
-        pvpExpLossMultiplier = Util.toDoubleNonNull(section.get("pvpExpLossMultiplier", 1.0), "pvpExpLossMultiplier");
-        levelsViaExpLoss = section.getBoolean("levelsViaExpLoss", false);
+        }
+        power = Util.toDoubleNonNull(section.get("exp-curve", 1.00), "exp-curve");
+        maxExp = Util.toIntNonNull(section.get("max-exp", 100000), "max-exp");
+        maxLevel = Util.toIntNonNull(section.get("max-level", 20), "max-level");
+        maxPartySize = Util.toIntNonNull(section.get("max-party-size"), "max-party-size");
+        partyBonus = Util.toDoubleNonNull(section.get("party-exp-bonus", 0.20), "party-exp-bonus");
+        expLoss = Util.toDoubleNonNull(section.get("exp-loss", 0.05), "expLoss");
+        pvpExpLossMultiplier = Util.toDoubleNonNull(section.get("pvp-exp-loss", 1.0), "pvp-exp-loss");
+        levelsViaExpLoss = section.getBoolean("level-loss", false);
         masteryLoss = section.getBoolean("mastery-loss", false);
-        noSpawnCamp = section.getBoolean("noSpawnCamp", false);
-        spawnCampRadius = Util.toIntNonNull(section.get("spawnCampRadius", 7), "spawnCampRadius");
-        spawnCampExpMult = Util.toDoubleNonNull(section.get("spawnCampExpMult", .5), "spawnCampExpMult");
-        resetOnDeath = section.getBoolean("resetOnDeath", false);
-        pvpLevelRange = Util.toIntNonNull(section.get("pvpLevelRange", 50), "pvpLevelRange");
+        noSpawnCamp = section.getBoolean("spawner-checks", false);
+        spawnCampRadius = Util.toIntNonNull(section.get("spawner-radius", 7), "spawner-radius");
+        spawnCampExpMult = Util.toDoubleNonNull(section.get("spawner-exp-mult", .5), "spawner-exp-mult");
+        resetOnDeath = section.getBoolean("reset-on-death", false);
+        pvpLevelRange = Util.toIntNonNull(section.get("pvp-range", 50), "pvp-range");
         calcExp();
-        if (section.getBoolean("dumpLevelExp", false)) {
+        if (section.getBoolean("dump-exp-file", false)) {
             dumpExpLevels();
         }
         calcPartyMultipliers();
@@ -174,29 +179,31 @@ public class Properties {
     }
 
     private void loadClassConfig(ConfigurationSection section) {
-        if (section == null)
+        if (section == null) {
             return;
+        }
 
-        prefixClassName = section.getBoolean("prefixClassName", false);
-        resetExpOnClassChange = section.getBoolean("resetExpOnClassChange", true);
-        resetMasteryOnClassChange = section.getBoolean("resetMasteryOnClassChange", false);
-        resetProfMasteryOnClassChange = section.getBoolean("resetProfMasteryOnClassChange", false);
-        resetProfOnPrimaryChange = section.getBoolean("resetProfOnPrimaryChange", false);
-        lockPathTillMaster = section.getBoolean("lockPathTillMaster", false);
-        lockAtHighestTier = section.getBoolean("lockAtHighestTier", false);
-        swapMasteryCost = section.getBoolean("swapMasteryCost", false);
-        firstSwitchFree = section.getBoolean("firstSwitchFree", true);
-        swapCost = Util.toDoubleNonNull(section.get("swapcost", 0), "swapcost");
-        oldClassSwapCost = Util.toDoubleNonNull(section.get("oldClassSwapCost", 0), "oldClassSwapCost");
-        profSwapCost = Util.toDoubleNonNull(section.get("profSwapCost", 0.0), "profSwapCost");
-        oldProfSwapCost = Util.toDoubleNonNull(section.get("oldProfSwapCost", 0.0), "oldProfSwapCost");
+        prefixClassName = section.getBoolean("use-prefix", false);
+        resetExpOnClassChange = section.getBoolean("reset-exp-on-change", true);
+        resetMasteryOnClassChange = section.getBoolean("reset-master-on-change", false);
+        resetProfMasteryOnClassChange = section.getBoolean("reset-prof-master-on-change", false);
+        resetProfOnPrimaryChange = section.getBoolean("reset-prof-on-pri-change", false);
+        lockPathTillMaster = section.getBoolean("lock-till-master", false);
+        lockAtHighestTier = section.getBoolean("lock-at-max-level", false);
+        swapMasterFree = section.getBoolean("master-swap-free", true);
+        firstSwitchFree = section.getBoolean("first-swap-free", true);
+        swapCost = Util.toDoubleNonNull(section.get("swap-cost", 0), "swap-cost");
+        oldClassSwapCost = Util.toDoubleNonNull(section.get("old-swap-cost", 0), "old-swap-cost");
+        profSwapCost = Util.toDoubleNonNull(section.get("prof-swap-cost", 0.0), "prof-swap-cost");
+        oldProfSwapCost = Util.toDoubleNonNull(section.get("old-prof-swap-cost", 0.0), "old-prof-swap-cost");
     }
 
     private void loadManaConfig(ConfigurationSection section) {
-        if (section == null)
+        if (section == null) {
             return;
-        manaRegenInterval = Util.toIntNonNull(section.get("regenInterval", 5), "regenInterval");
-        manaRegenPercent = Util.toIntNonNull(section.get("regenPercent", 5), "regenPercent");
+        }
+        manaRegenInterval = Util.toIntNonNull(section.get("interval", 5), "interval");
+        manaRegenPercent = Util.toIntNonNull(section.get("percent", 5), "percent");
         // Out of bounds check
         if (manaRegenPercent > 100 || manaRegenPercent < 0) {
             manaRegenPercent = 5;
@@ -204,13 +211,14 @@ public class Properties {
     }
 
     private void loadProperties(ConfigurationSection section) {
-        if (section == null)
+        if (section == null) {
             return;
+        }
         storageType = section.getString("storage-type");
-        iConomy = section.getBoolean("iConomy", false);
+        iConomy = section.getBoolean("economy", false);
         debug = section.getBoolean("debug", false);
-        foodHealPercent = Util.toDoubleNonNull(section.get("foodHealPercent", .05), "foodHealPercent");
-        globalCooldown = Util.toIntNonNull(section.get("globalCooldown", 1), "globalCooldown");
+        foodHealPercent = Util.toDoubleNonNull(section.get("food-heal-percent", .05), "food-heal-percent");
+        globalCooldown = Util.toIntNonNull(section.get("global-cooldown", 1), "global-cooldown");
         blockTrackingDuration = Util.toIntNonNull(section.get("block-tracking-duration", 10 * 60 * 1000), "block-tracking-duration");
         maxTrackedBlocks = Util.toIntNonNull(section.get("max-tracked-blocks", 1000), "max-tracked-blocks");
         enchantXPMultiplier = Util.toDoubleNonNull(section.get("enchant-exp-mult", 1), "enchant-exp-mult");
@@ -218,9 +226,10 @@ public class Properties {
     }
 
     private void loadWorldConfig(ConfigurationSection section) {
-        if (section == null)
+        if (section == null) {
             return;
-        List<String> worlds = section.getStringList("disabledWorlds");
+        }
+        List<String> worlds = section.getStringList("disabled");
         disabledWorlds.addAll(worlds);
     }
 

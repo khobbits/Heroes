@@ -122,7 +122,7 @@ public class ChooseCommand extends BasicInteractiveCommand {
             boolean chargePlayer = true;
             if (props.firstSwitchFree && currentClass.isDefault()) {
                 chargePlayer = false;
-            } else if (hero.isMaster(newClass) && !props.swapMasteryCost) {
+            } else if (hero.isMaster(newClass) && props.swapMasterFree) {
                 chargePlayer = false;
             } else if (!props.iConomy || Heroes.econ == null || cost <= 0) {
                 chargePlayer = false;
