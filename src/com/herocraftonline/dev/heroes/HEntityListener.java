@@ -108,12 +108,10 @@ public class HEntityListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntityDeath(EntityDeathEvent event) {
-        Heroes.debug.startTask("HEntityListener.onEntityDeath");
         Entity defender = event.getEntity();
         Properties prop = Heroes.properties;
         //If this is a disabled world ignore it
         if (prop.disabledWorlds.contains(defender.getWorld().getName())) {
-            Heroes.debug.stopTask("HEntityListener.onEntityDeath");
             return;
         }
 
@@ -133,9 +131,10 @@ public class HEntityListener implements Listener {
             }
 
             double multiplier = Heroes.properties.expLoss;
-            if (attacker != null)
+            if (attacker != null) {
                 multiplier = Heroes.properties.pvpExpLossMultiplier;
-
+            }
+            
             heroDefender.loseExpFromDeath(multiplier, attacker != null);
 
             // Remove any nonpersistent effects
@@ -157,8 +156,6 @@ public class HEntityListener implements Listener {
             Hero hero = heroManager.getHero(attacker);
             awardKillExp(hero, defender);
         }
-
-        Heroes.debug.stopTask("HEntityListener.onEntityDeath");
     }
 
     @EventHandler()
