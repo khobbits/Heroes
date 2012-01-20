@@ -37,7 +37,9 @@ public class HeroClass {
     private boolean secondary = false;
     private int tier = 1;
     private Map<Material, Integer> itemDamage = new EnumMap<Material, Integer>(Material.class);
+    private Map<Material, Double> itemDamageLevel = new EnumMap<Material, Double>(Material.class);
     private Map<ProjectileType, Integer> projectileDamage = new EnumMap<ProjectileType, Integer>(ProjectileType.class);
+    private Map<ProjectileType, Double> projDamageLevel = new EnumMap<ProjectileType, Double>(ProjectileType.class);
     private Set<String> skills = new LinkedHashSet<String>();
     private List<RecipeGroup> recipes = new ArrayList<RecipeGroup>();
     private int maxLevel;
@@ -350,6 +352,15 @@ public class HeroClass {
     }
 
     /**
+     * 
+     * @param mat
+     * @return Double damage for the given material per level
+     */
+    public double getItemDamageLevel(Material mat) {
+        return itemDamageLevel.containsKey(mat) ? itemDamageLevel.get(mat) : 0.0;
+    }
+    
+    /**
      * @return double - amount of Health gained per level
      */
     public double getMaxHealthPerLevel() {
@@ -388,6 +399,10 @@ public class HeroClass {
      */
     public Integer getProjectileDamage(ProjectileType type) {
         return projectileDamage.get(type);
+    }
+    
+    public double getProjDamageLevel(ProjectileType type) {
+        return projDamageLevel.containsKey(type) ? projDamageLevel.get(type) : 0.0;
     }
 
     /**
@@ -483,6 +498,10 @@ public class HeroClass {
     protected void setItemDamage(Material material, int damage) {
         itemDamage.put(material, damage);
     }
+    
+    protected void setItemDamageLevel(Material material, double damage) {
+        itemDamageLevel.put(material, damage);
+    }
 
     protected void setMaxHealthPerLevel(double maxHealthPerLevel) {
         this.maxHealthPerLevel = maxHealthPerLevel;
@@ -494,6 +513,10 @@ public class HeroClass {
 
     protected void setProjectileDamage(ProjectileType type, int damage) {
         projectileDamage.put(type, damage);
+    }
+    
+    protected void setProjDamageLevel(ProjectileType type, double damage) {
+        projDamageLevel.put(type, damage);
     }
 
     protected void setSpecializations(Set<HeroClass> specializations) {

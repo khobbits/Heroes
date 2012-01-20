@@ -265,7 +265,7 @@ public class HeroClassManager {
         if (section != null) {
             Set<String> itemDamages = section.getKeys(false);
             if (itemDamages == null || itemDamages.isEmpty()) {
-                plugin.debugLog(Level.WARNING, className + " has no item damage section");
+                plugin.debugLog(Level.WARNING, className + " has no item-damage section");
             } else {
                 for (String materialName : itemDamages) {
                     Material material = Material.matchMaterial(materialName);
@@ -273,7 +273,26 @@ public class HeroClassManager {
                         int damage = section.getInt(materialName, 0);
                         newClass.setItemDamage(material, damage);
                     } else {
-                        Heroes.log(Level.WARNING, "Invalid material (" + materialName + ") defined for " + className);
+                        Heroes.log(Level.WARNING, "Invalid item-damage (" + materialName + ") defined for " + className);
+                    }
+                }
+            }
+        }
+
+        // Load in item/weapon damages per-level for the class
+        section = config.getConfigurationSection("item-damage-level") ;
+        if (section != null) {
+            Set<String> itemDamages = section.getKeys(false);
+            if (itemDamages == null || itemDamages.isEmpty()) {
+                plugin.debugLog(Level.WARNING, className + " has no item-damage-level section");
+            } else {
+                for (String materialName : itemDamages) {
+                    Material material = Material.matchMaterial(materialName);
+                    if (material != null) {
+                        double damage = section.getDouble(materialName, 0.0);
+                        newClass.setItemDamageLevel(material, damage);
+                    } else {
+                        Heroes.log(Level.WARNING, "Invalid item-damage-level (" + materialName + ") defined for " + className);
                     }
                 }
             }
@@ -293,7 +312,27 @@ public class HeroClassManager {
                         int damage = section.getInt(projectileName, 0);
                         newClass.setProjectileDamage(type, damage);
                     } catch (IllegalArgumentException e) {
-                        Heroes.log(Level.WARNING, "Invalid projectile type (" + projectileName + ") defined for " + className);
+                        Heroes.log(Level.WARNING, "Invalid projectile-damage type (" + projectileName + ") defined for " + className);
+                    }
+                }
+            }
+        }
+        
+        // Load in Projectile Damages per-level for the class
+        section = config.getConfigurationSection("projectile-damage-level");
+        if (section != null) {
+            Set<String> projectileDamages = section.getKeys(false);
+            if (projectileDamages == null || projectileDamages.isEmpty()) {
+                plugin.debugLog(Level.WARNING, className + " has no projectile damage section");
+            } else {
+                for (String projectileName : projectileDamages) {
+                    try {
+                        ProjectileType type = ProjectileType.matchProjectile(projectileName);
+
+                        double damage = section.getDouble(projectileName, 0);
+                        newClass.setProjDamageLevel(type, damage);
+                    } catch (IllegalArgumentException e) {
+                        Heroes.log(Level.WARNING, "Invalid projectile-damage-level type (" + projectileName + ") defined for " + className);
                     }
                 }
             }

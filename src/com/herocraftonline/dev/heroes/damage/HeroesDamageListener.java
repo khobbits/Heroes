@@ -61,9 +61,7 @@ public class HeroesDamageListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntityRegainHealth(EntityRegainHealthEvent event) {
-        Heroes.debug.startTask("HeroesDamageListener.onEntityRegainHealth");
         if (event.isCancelled() || !(event.getEntity() instanceof Player) || Heroes.properties.disabledWorlds.contains(event.getEntity().getWorld().getName())) {
-            Heroes.debug.stopTask("HeroesDamageListener.onEntityRegainHealth");
             return;
         }
 
@@ -103,7 +101,6 @@ public class HeroesDamageListener implements Listener {
             newAmount = 0;
         }
         event.setAmount(newAmount);
-        Heroes.debug.stopTask("HeroesDamageListener.onEntityRegainHealth");
     }
 
     private int onEntityDamageCore(EntityDamageEvent event, Entity attacker, int damage) {
@@ -164,10 +161,8 @@ public class HeroesDamageListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntityDamage(EntityDamageEvent event) {
-        Heroes.debug.startTask("HeroesDamageListener.onEntityDamage");
         // Reasons to immediately ignore damage event
         if (event.isCancelled() || Heroes.properties.disabledWorlds.contains(event.getEntity().getWorld().getName())) {
-            Heroes.debug.stopTask("HeroesDamageListener.onEntityDamage");
             return;
         }
 
@@ -183,12 +178,10 @@ public class HeroesDamageListener implements Listener {
 
         if (defender instanceof LivingEntity) {
             if (defender.isDead() || ((LivingEntity) defender).getHealth() <= 0) {
-                Heroes.debug.stopTask("HeroesDamageListener.onEntityDamage");
                 return;
             } else if (defender instanceof Player) {
                 Player player = (Player) defender;
                 if (player.getGameMode() == GameMode.CREATIVE) {
-                    Heroes.debug.stopTask("HeroesDamageListener.onEntityDamage");
                     return;
                 }
                 lastDamage = plugin.getHeroManager().getHero((Player) defender).getLastDamageCause();
@@ -212,7 +205,6 @@ public class HeroesDamageListener implements Listener {
                     } else {
                         event.setDamage(1000); //OVERKILLLLL!!
                     }
-                    Heroes.debug.stopTask("HeroesDamageListener.onEntityDamage");
                     return;
                 }
                 break;
@@ -244,7 +236,6 @@ public class HeroesDamageListener implements Listener {
 
             //Check if one of the Method calls cancelled the event due to resistances etc.
             if (event.isCancelled()) {
-                Heroes.debug.stopTask("HeroesDamageListener.onEntityDamage");
                 if (defender instanceof Player) {
                     plugin.getHeroManager().getHero((Player) defender).setLastDamageCause(lastDamage);
                 }
@@ -255,7 +246,6 @@ public class HeroesDamageListener implements Listener {
         //TODO: figure out how to fix ender-dragons
         if (defender instanceof EnderDragon || defender instanceof ComplexLivingEntity || defender instanceof ComplexEntityPart) {
             event.setDamage(damage);
-            Heroes.debug.stopTask("HeroesDamageListener.onEntityDamage");
             return;
         }
 
@@ -263,7 +253,6 @@ public class HeroesDamageListener implements Listener {
             Player player = (Player) defender;
             if ((player.getNoDamageTicks() > 10 && damage > 0) || player.isDead() || player.getHealth() <= 0) {
                 event.setCancelled(true);
-                Heroes.debug.stopTask("HeroesDamageListener.onEntityDamage");
                 return;
             }
             final Hero hero = plugin.getHeroManager().getHero(player);
@@ -273,7 +262,6 @@ public class HeroesDamageListener implements Listener {
             //Loop through the player's effects and check to see if we need to remove them
             if (hero.hasEffectType(EffectType.INVULNERABILITY)) {
                 event.setCancelled(true);
-                Heroes.debug.stopTask("HeroesDamageListener.onEntityDamage");
                 return;
             }
             for (Effect effect : hero.getEffects()) {
@@ -293,14 +281,12 @@ public class HeroesDamageListener implements Listener {
                 if (Math.abs(aLevel - hero.getTieredLevel(false)) > Heroes.properties.pvpLevelRange) {
                     Messaging.send((Player) attacker, "That player is outside of your level range!");
                     event.setCancelled(true);
-                    Heroes.debug.stopTask("HeroesDamageListener.onEntityDamage");
                     return;
                 }
                 HeroParty party = hero.getParty();
                 if (party != null && party.isNoPvp()) {
                     if (party.isPartyMember((Player) attacker)) {
                         event.setCancelled(true);
-                        Heroes.debug.stopTask("HeroesDamageListener.onEntityDamage");
                         return;
                     }
                 }
@@ -354,7 +340,6 @@ public class HeroesDamageListener implements Listener {
         } else if (defender instanceof LivingEntity) {
             if ((((CraftLivingEntity) defender).getNoDamageTicks() > 10 && damage > 0) || defender.isDead() || ((LivingEntity) defender).getHealth() <= 0) {
                 event.setCancelled(true);
-                Heroes.debug.stopTask("HeroesDamageListener.onEntityDamage");
                 return;
             }
             // Do Damage calculations based on maximum health and current health
@@ -403,7 +388,6 @@ public class HeroesDamageListener implements Listener {
             }
             event.setDamage(damage);
         }
-        Heroes.debug.stopTask("HeroesDamageListener.onEntityDamage");
     }
 
     private int onSpellDamage(EntityDamageEvent event, int damage, Entity defender) {

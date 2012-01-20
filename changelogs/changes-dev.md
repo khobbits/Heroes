@@ -11,6 +11,7 @@ Version 1.4.3
 * Debug timing will be removed as we continue to update to the new 1.1 event handling
 ** Bukkit now has internal event timings available
 * How much potions restore per-tier is now configurable in damages.yml - see updated configuration
+* Classes now support item-damage-level and projectile-damage-level settings
 
 ==== **API:** ====
 

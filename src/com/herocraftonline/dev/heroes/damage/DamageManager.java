@@ -70,14 +70,21 @@ public class DamageManager {
 
     public Integer getItemDamage(Material item, HumanEntity entity) {
         if (entity != null && entity instanceof Player) {
+            Hero hero = plugin.getHeroManager().getHero((Player) entity);
             HeroClass heroClass = plugin.getHeroManager().getHero((Player) entity).getHeroClass();
             HeroClass secondClass = plugin.getHeroManager().getHero((Player) entity).getSecondClass();
             Integer classDamage = heroClass.getItemDamage(item);
+            if (classDamage != null) {
+                classDamage += (int) (heroClass.getItemDamageLevel(item) * hero.getLevel(heroClass));
+            }
             Integer secondDamage = null;
             if (secondClass != null) {
                 secondDamage = secondClass.getItemDamage(item);
+                if (secondDamage != null) {
+                    secondDamage += (int) (secondClass.getItemDamageLevel(item) * hero.getLevel(secondClass));
+                }
             }
-            
+
             if (classDamage != null && secondDamage != null) {
                 return classDamage > secondDamage ? classDamage : secondDamage;
             } else if (classDamage != null) {
@@ -101,7 +108,7 @@ public class DamageManager {
 
     public void load(Configuration config) {
         Set<String> keys;
-        
+
         Heroes.properties.potHealthPerTier = config.getDouble("potions.health-per-tier", .1);
 
         creatureHealth = new EnumMap<CreatureType, Integer>(CreatureType.class);
@@ -185,7 +192,7 @@ public class DamageManager {
     }
 
     public SkillUseInfo removeSpellTarget(Entity o) {
-       return spellTargs.remove(o.getEntityId());
+        return spellTargs.remove(o.getEntityId());
     }
 
     public enum ProjectileType {
