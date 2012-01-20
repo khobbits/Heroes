@@ -1,7 +1,41 @@
 package com.herocraftonline.dev.heroes.damage;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
+import net.minecraft.server.EntityLiving;
+import net.minecraft.server.MobEffectList;
+
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.Material;
+import org.bukkit.craftbukkit.entity.CraftLivingEntity;
+import org.bukkit.entity.ComplexEntityPart;
+import org.bukkit.entity.ComplexLivingEntity;
+import org.bukkit.entity.CreatureType;
+import org.bukkit.entity.EnderDragon;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.entity.EntityRegainHealthEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
+
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.api.*;
+import com.herocraftonline.dev.heroes.api.HeroAttackDamageCause;
+import com.herocraftonline.dev.heroes.api.HeroDamageCause;
+import com.herocraftonline.dev.heroes.api.HeroSkillDamageCause;
+import com.herocraftonline.dev.heroes.api.SkillDamageEvent;
+import com.herocraftonline.dev.heroes.api.SkillUseInfo;
+import com.herocraftonline.dev.heroes.api.WeaponDamageEvent;
 import com.herocraftonline.dev.heroes.damage.DamageManager.ProjectileType;
 import com.herocraftonline.dev.heroes.effects.Effect;
 import com.herocraftonline.dev.heroes.effects.EffectManager;
@@ -12,29 +46,6 @@ import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Util;
-
-import net.minecraft.server.EntityLiving;
-import net.minecraft.server.MobEffectList;
-
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Material;
-import org.bukkit.craftbukkit.entity.CraftLivingEntity;
-import org.bukkit.entity.*;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.event.entity.EntityRegainHealthEvent;
-import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 
 public class HeroesDamageListener implements Listener {
 

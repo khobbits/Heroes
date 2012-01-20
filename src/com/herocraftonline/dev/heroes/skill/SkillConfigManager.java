@@ -118,7 +118,12 @@ public class SkillConfigManager {
                 //Skip section as they would overwrite data here
                 continue;
             }
-            newSection.set(key, dSection.get(key));
+            Object o = dSection.get(key);
+            if (o instanceof List) {
+                newSection.set(key, new ArrayList<Object>((List<?>) o));
+            } else {
+                newSection.set(key, o);
+            }
         }
     }
 
