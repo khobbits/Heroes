@@ -24,3 +24,5 @@ Version 1.4.3
 ** ID:DAMAGE - is the new format, be sure to update all your reagents!
 * Blink
 ** added option to restrict ender-pearl use to only classes that have the skill
+* Charge
+** velocities are now working as intended

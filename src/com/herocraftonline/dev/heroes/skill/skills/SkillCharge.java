@@ -2,6 +2,7 @@ package com.herocraftonline.dev.heroes.skill.skills;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -62,10 +63,10 @@ public class SkillCharge extends TargettedSkill {
 
         Location playerLoc = player.getLocation();
         Location targetLoc = target.getLocation();
-        
-        double xDir = (targetLoc.getX() - playerLoc.getX()) / 12;
-        double zDir = (targetLoc.getZ() - playerLoc.getZ()) / 12;
-        Vector v = new Vector(xDir, .3, zDir);
+
+        double xDir = (targetLoc.getX() - playerLoc.getX());
+        double zDir = (targetLoc.getZ() - playerLoc.getZ());
+        Vector v = new Vector(xDir / 3, .5, zDir / 3);
         player.setVelocity(v);
 
         chargingPlayers.add(player);
@@ -88,16 +89,14 @@ public class SkillCharge extends TargettedSkill {
 
         @EventHandler(priority = EventPriority.LOWEST)
         public void onEntityDamage(EntityDamageEvent event) {
-            Heroes.debug.startTask("HeroesSkillListener");
             if (!event.getCause().equals(DamageCause.FALL) || !(event.getEntity() instanceof Player) || !chargingPlayers.contains(event.getEntity())) {
-                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
             }
 
             Player player = (Player) event.getEntity();
             Hero hero = plugin.getHeroManager().getHero(player);
             chargingPlayers.remove(player);
-
+            Heroes.log(Level.INFO, "Player landed!");
             event.setDamage(0);
             event.setCancelled(true);
 
@@ -138,10 +137,10 @@ public class SkillCharge extends TargettedSkill {
                         plugin.getEffectManager().addEntityEffect(le, new RootEffect(skill, rootDuration));
                 }
 
-                if (damage > 0)
+                if (damage > 0) {
                     skill.damageEntity(le, player, damage, DamageCause.ENTITY_ATTACK);
+                }
             }
-            Heroes.debug.stopTask("HeroesSkillListener");
         }
     }
 
