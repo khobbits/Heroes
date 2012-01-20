@@ -13,3 +13,5 @@ environmental-damage:
     SUFFOCATION: .05
     DROWNING: .1
     STARVATION: .05
+potions:
+    health-per-tier: .1

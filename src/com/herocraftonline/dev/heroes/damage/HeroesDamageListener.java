@@ -62,12 +62,21 @@ public class HeroesDamageListener implements Listener {
         double maxHealth = hero.getMaxHealth();
 
         // Satiated players regenerate % of total HP rather than 1 HP
-        if (event.getRegainReason() == RegainReason.SATIATED) {
-            double healPercent = Heroes.properties.foodHealPercent;
+        double healPercent;
+        switch (event.getRegainReason()) {
+        case SATIATED:
+            healPercent = Heroes.properties.foodHealPercent;
             amount = maxHealth * healPercent;
-        } else if (event.getRegainReason() == RegainReason.CUSTOM) {
-            double healPercent = amount / 20.0;
+            break;
+        case MAGIC:
+            healPercent = amount / 6.0;
+            amount = healPercent * Heroes.properties.potHealthPerTier * hero.getMaxHealth();
+        case CUSTOM:
+            healPercent = amount / 20.0;
             amount = hero.getMaxHealth() * healPercent;
+            break;
+        default:
+            break;
         }
 
         double newHeroHealth = hero.getHealth() + amount;

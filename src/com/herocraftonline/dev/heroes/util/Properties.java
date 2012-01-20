@@ -64,7 +64,7 @@ public class Properties {
     public int globalCooldown = 0;
     public double enchantXPMultiplier;
     public boolean slowCasting = true;
-
+    
     // Bed Stuffs
     public boolean bedHeal;
     public int healInterval;
@@ -92,7 +92,10 @@ public class Properties {
     public Map<String, RecipeGroup> recipes = new HashMap<String, RecipeGroup>();
     public double fishingExp = 0;
     private Heroes plugin;
-
+    
+    // Potion related
+    public double potHealthPerTier;
+    
     public void load(Heroes plugin) {
         this.plugin = plugin;
         FileConfiguration config = plugin.getConfig();

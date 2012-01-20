@@ -101,6 +101,8 @@ public class DamageManager {
 
     public void load(Configuration config) {
         Set<String> keys;
+        
+        Heroes.properties.potHealthPerTier = config.getDouble("potions.health-per-tier", .1);
 
         creatureHealth = new EnumMap<CreatureType, Integer>(CreatureType.class);
         ConfigurationSection section = config.getConfigurationSection("creature-health");
