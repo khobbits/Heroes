@@ -1,14 +1,15 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event.Priority;
-import org.bukkit.event.Event.Type;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.api.HeroesEventListener;
 import com.herocraftonline.dev.heroes.api.WeaponDamageEvent;
 import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.hero.Hero;
@@ -25,8 +26,7 @@ public class SkillShield extends PassiveSkill {
         setArgumentRange(0, 0);
         setEffectTypes(EffectType.BENEFICIAL, EffectType.PHYSICAL);
         setTypes(SkillType.PHYSICAL);
-
-        registerEvent(Type.CUSTOM_EVENT, new CustomListener(this), Priority.Highest);
+        Bukkit.getServer().getPluginManager().registerEvents(new CustomListener(this), plugin);
     }
 
     @Override
@@ -38,7 +38,7 @@ public class SkillShield extends PassiveSkill {
         return node;
     }
 
-    public class CustomListener extends HeroesEventListener {
+    public class CustomListener implements Listener {
 
         private final Skill skill;
         
@@ -46,7 +46,7 @@ public class SkillShield extends PassiveSkill {
             this.skill = skill;
         }
 
-        @Override
+        @EventHandler(priority = EventPriority.HIGHEST)
         public void onWeaponDamage(WeaponDamageEvent event) {
             Heroes.debug.startTask("HeroesSkillListener");
             if (event.getCause() != DamageCause.ENTITY_ATTACK || event.getDamage() == 0 || !(event.getEntity() instanceof Player)) {

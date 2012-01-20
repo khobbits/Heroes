@@ -1,14 +1,14 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event.Priority;
-import org.bukkit.event.Event.Type;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.api.HeroesEventListener;
 import com.herocraftonline.dev.heroes.api.WeaponDamageEvent;
 import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.hero.Hero;
@@ -29,8 +29,7 @@ public class SkillBackstab extends PassiveSkill {
         setArgumentRange(0, 0);
         setTypes(SkillType.PHYSICAL, SkillType.BUFF);
         setEffectTypes(EffectType.BENEFICIAL, EffectType.PHYSICAL);
-        
-        registerEvent(Type.CUSTOM_EVENT, new SkillHeroesListener(this), Priority.Normal);
+        Bukkit.getServer().getPluginManager().registerEvents(new SkillHeroesListener(this), plugin);
     }
 
     @Override
@@ -51,7 +50,7 @@ public class SkillBackstab extends PassiveSkill {
         useText = SkillConfigManager.getRaw(this, Setting.USE_TEXT, "%hero% backstabbed %target%!").replace("%hero%", "$1").replace("%target%", "$2");
     }
 
-    public class SkillHeroesListener extends HeroesEventListener {
+    public class SkillHeroesListener implements Listener {
 
         private final Skill skill;
         
@@ -59,11 +58,9 @@ public class SkillBackstab extends PassiveSkill {
             this.skill = skill;
         }
         
-        @Override
+        @EventHandler()
         public void onWeaponDamage(WeaponDamageEvent event) {
-            Heroes.debug.startTask("HeroesSkillListener");
             if (!(event.getDamager() instanceof Player)) {
-                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
             }
             
@@ -74,12 +71,10 @@ public class SkillBackstab extends PassiveSkill {
                 ItemStack item = player.getItemInHand();
                 
                 if (!SkillConfigManager.getUseSetting(hero, skill, "weapons", Util.swords).contains(item.getType().name())) {
-                    Heroes.debug.stopTask("HeroesSkillListener");
                     return;
                 }
                 
                 if (event.getEntity().getLocation().getDirection().dot(player.getLocation().getDirection()) <= 0) {
-                    Heroes.debug.stopTask("HeroesSkillListener");
                     return;
                 }
 
@@ -92,7 +87,6 @@ public class SkillBackstab extends PassiveSkill {
                 Entity target = event.getEntity();
                 broadcastExecuteText(hero, target);
             }
-            Heroes.debug.stopTask("HeroesSkillListener");
         }
     }
     

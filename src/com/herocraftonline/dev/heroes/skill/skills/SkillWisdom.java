@@ -1,13 +1,13 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event.Priority;
-import org.bukkit.event.Event.Type;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.HeroRegainManaEvent;
-import com.herocraftonline.dev.heroes.api.HeroesEventListener;
 import com.herocraftonline.dev.heroes.api.SkillResult;
 import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
@@ -32,8 +32,7 @@ public class SkillWisdom extends ActiveSkill {
         setUsage("/skill wisdom");
         setIdentifiers("skill wisdom");
         setTypes(SkillType.BUFF, SkillType.MANA, SkillType.SILENCABLE);
-
-        registerEvent(Type.CUSTOM_EVENT, new SkillHeroListener(this), Priority.Normal);
+        Bukkit.getServer().getPluginManager().registerEvents(new SkillHeroListener(this), plugin);
     }
 
     @Override
@@ -89,7 +88,7 @@ public class SkillWisdom extends ActiveSkill {
         return SkillResult.NORMAL;
     }
 
-    public class SkillHeroListener extends HeroesEventListener {
+    public class SkillHeroListener implements Listener {
 
         private final Skill skill;
         
@@ -97,18 +96,15 @@ public class SkillWisdom extends ActiveSkill {
             this.skill = skill;
         }
         
-        @Override
+        @EventHandler()
         public void onHeroRegainMana(HeroRegainManaEvent event) {
-            Heroes.debug.startTask("HeroesSkillListener");
             if (event.isCancelled()) {
-                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
             }
 
             if (event.getHero().hasEffect("Wisdom")) {
                 event.setAmount((int) (event.getAmount() * SkillConfigManager.getUseSetting(event.getHero(), skill, "regen-multiplier", 1.2, false)));
             }
-            Heroes.debug.stopTask("HeroesSkillListener");
         }
     }
 

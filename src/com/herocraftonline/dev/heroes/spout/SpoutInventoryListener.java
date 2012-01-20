@@ -1,24 +1,28 @@
 package com.herocraftonline.dev.heroes.spout;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.getspout.spoutapi.event.inventory.InventoryCraftEvent;
-import org.getspout.spoutapi.event.inventory.InventoryListener;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.util.Messaging;
 
-public class SpoutInventoryListener extends InventoryListener {
+public class SpoutInventoryListener implements Listener {
 
     private Heroes plugin;
 
     public SpoutInventoryListener(Heroes heroes) {
         plugin = heroes;
+        Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
-    @Override
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onInventoryCraft(InventoryCraftEvent event) {
         if (event.getResult() == null || event.isCancelled()) {
             return;

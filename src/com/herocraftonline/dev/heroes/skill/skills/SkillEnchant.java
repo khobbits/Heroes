@@ -6,14 +6,15 @@ import java.util.logging.Level;
 
 import net.minecraft.server.ContainerEnchantTable;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.event.Event.Priority;
-import org.bukkit.event.Event.Type;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.getspout.spoutapi.event.inventory.InventoryCloseEvent;
 import org.getspout.spoutapi.event.inventory.InventoryEnchantEvent;
-import org.getspout.spoutapi.event.inventory.InventoryListener;
 import org.getspout.spoutapi.event.inventory.InventoryOpenEvent;
 
 import com.herocraftonline.dev.heroes.Heroes;
@@ -40,7 +41,7 @@ public class SkillEnchant extends PassiveSkill {
         setEffectTypes(EffectType.BENEFICIAL);
 
         if (Heroes.useSpout()) {
-            registerEvent(Type.CUSTOM_EVENT, new SkillEnchantListener(this), Priority.Lowest);
+            Bukkit.getServer().getPluginManager().registerEvents(new SkillSpoutListener(this), plugin);
         } else {
             Heroes.log(Level.WARNING, "SkillEnchant requires Spout! Remove from your skills directory if you will not use!");
         }
@@ -75,15 +76,15 @@ public class SkillEnchant extends PassiveSkill {
         return section;
     }
 
-    public class SkillEnchantListener extends InventoryListener {
+    public class SkillSpoutListener implements Listener {
 
         private final Skill skill;
 
-        public SkillEnchantListener(Skill skill) {
+        public SkillSpoutListener(Skill skill) {
             this.skill = skill;
         }
 
-        @Override
+        @EventHandler(priority = EventPriority.LOWEST)
         public void onInventoryEnchant(InventoryEnchantEvent event) {
             if (event.isCancelled()) {
                 return;
@@ -123,7 +124,7 @@ public class SkillEnchant extends PassiveSkill {
             hero.gainExp(-xpCost, ExperienceType.ENCHANTING);
         }
 
-        @Override
+        @EventHandler(priority = EventPriority.LOWEST)
         public void onInventoryOpen(InventoryOpenEvent event) {
             if (event.isCancelled() || !(((CraftPlayer) event.getPlayer()).getHandle().activeContainer instanceof ContainerEnchantTable))
                 return;
@@ -143,7 +144,7 @@ public class SkillEnchant extends PassiveSkill {
             }
         }
 
-        @Override
+        @EventHandler(priority = EventPriority.LOWEST)
         public void onInventoryClose(InventoryCloseEvent event) {
             if (event.isCancelled()) {
                 return;

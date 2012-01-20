@@ -1,15 +1,16 @@
 package com.herocraftonline.dev.heroes.skill;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event.Priority;
-import org.bukkit.event.Event.Type;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.ClassChangeEvent;
 import com.herocraftonline.dev.heroes.api.HeroChangeLevelEvent;
-import com.herocraftonline.dev.heroes.api.HeroesEventListener;
 import com.herocraftonline.dev.heroes.effects.Effect;
 import com.herocraftonline.dev.heroes.effects.EffectType;
 import com.herocraftonline.dev.heroes.hero.Hero;
@@ -51,8 +52,7 @@ public abstract class PassiveSkill extends Skill {
     public PassiveSkill(Heroes plugin, String name) {
         super(plugin, name);
         setUsage("Passive Skill");
-
-        registerEvent(Type.CUSTOM_EVENT, new SkillCustomEventListener(), Priority.Monitor);
+        Bukkit.getServer().getPluginManager().registerEvents(new SkillListener(), plugin);
     }
 
     /**
@@ -145,14 +145,14 @@ public abstract class PassiveSkill extends Skill {
     /**
      * Monitors level and class change events and tries to apply or remove the skill's effect when appropriate.
      */
-    public class SkillCustomEventListener extends HeroesEventListener {
+    public class SkillListener implements Listener {
 
-        @Override
+        @EventHandler(priority = EventPriority.MONITOR)
         public void onClassChange(ClassChangeEvent event) {
             tryApplying(event.getHero());
         }
 
-        @Override
+        @EventHandler(priority = EventPriority.MONITOR)
         public void onHeroChangeLevel(HeroChangeLevelEvent event) {
             tryApplying(event.getHero());
         }

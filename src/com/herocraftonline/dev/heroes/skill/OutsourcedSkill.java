@@ -4,16 +4,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event.Priority;
-import org.bukkit.event.Event.Type;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.permissions.Permission;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.ClassChangeEvent;
 import com.herocraftonline.dev.heroes.api.HeroChangeLevelEvent;
-import com.herocraftonline.dev.heroes.api.HeroesEventListener;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.util.Setting;
@@ -41,7 +42,7 @@ public class OutsourcedSkill extends Skill {
 
     public OutsourcedSkill(Heroes plugin, String name) {
         super(plugin, name);
-        registerEvent(Type.CUSTOM_EVENT, new SkillHeroListener(), Priority.Monitor);
+        Bukkit.getServer().getPluginManager().registerEvents(new SkillHeroListener(), plugin);
     }
 
     public void setPermissions(String[] permissions) {
@@ -126,9 +127,9 @@ public class OutsourcedSkill extends Skill {
     /**
      * Monitors level and class change events and tries to give or remove the skill's permissions when appropriate.
      */
-    public class SkillHeroListener extends HeroesEventListener {
+    public class SkillHeroListener implements Listener {
 
-        @Override
+        @EventHandler(priority = EventPriority.MONITOR)
         public void onClassChange(final ClassChangeEvent event) {
             if (event.isCancelled())
                 return;
@@ -143,7 +144,7 @@ public class OutsourcedSkill extends Skill {
             }, 1);
         }
 
-        @Override
+        @EventHandler(priority = EventPriority.MONITOR)
         public void onHeroChangeLevel(final HeroChangeLevelEvent event) {
             plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 

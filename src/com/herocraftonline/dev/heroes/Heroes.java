@@ -11,8 +11,6 @@ import net.milkbowl.vault.permission.Permission;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event.Priority;
-import org.bukkit.event.Event.Type;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -315,7 +313,6 @@ public class Heroes extends JavaPlugin {
         if (spout != null) {
             siListener = new SpoutInventoryListener(this);
             spoutData = new SpoutData(this);
-            getServer().getPluginManager().registerEvent(Type.CUSTOM_EVENT, siListener, Priority.Highest, this);
         }
     }
 
@@ -382,9 +379,6 @@ public class Heroes extends JavaPlugin {
         entityListener = new HEntityListener(this);
         blockListener = new HBlockListener(this);
         hEventListener = new HEventListener(this);
-
-        pluginManager.registerEvent(Type.CUSTOM_EVENT, hEventListener, Priority.Monitor, this);
-        pluginManager.registerEvent(Type.CUSTOM_EVENT, new HSkillListener(), Priority.Highest, this);
     }
 
     /**

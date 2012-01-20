@@ -5,11 +5,12 @@ import java.util.logging.Level;
 import net.minecraft.server.ContainerBrewingStand;
 import net.minecraft.server.EntityPlayer;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
-import org.bukkit.event.Event.Priority;
-import org.bukkit.event.Event.Type;
-import org.getspout.spoutapi.event.inventory.InventoryListener;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.getspout.spoutapi.event.inventory.InventoryOpenEvent;
 
 import com.herocraftonline.dev.heroes.Heroes;
@@ -30,7 +31,7 @@ public class SkillAlchemy extends PassiveSkill {
         setEffectTypes(EffectType.BENEFICIAL);
         
         if (Heroes.useSpout()) {
-            registerEvent(Type.CUSTOM_EVENT, new SkillAlchemyListener(this), Priority.Lowest);
+            Bukkit.getServer().getPluginManager().registerEvents(new SkillSpoutListener(this), plugin);
         }else {
             Heroes.log(Level.WARNING, "SkillAlchemy requires Spout! Remove from your skills directory if you will not use!");
         }
@@ -43,13 +44,14 @@ public class SkillAlchemy extends PassiveSkill {
         return section;
     }
     
-    public class SkillAlchemyListener extends InventoryListener {
+    public class SkillSpoutListener implements Listener {
         
         private final Skill skill;
-        public SkillAlchemyListener(Skill skill) {
+        public SkillSpoutListener(Skill skill) {
             this.skill = skill;
         }
-        @Override
+        
+        @EventHandler(priority = EventPriority.LOW)
         public void onInventoryOpen(InventoryOpenEvent event) {
             if (event.isCancelled())
                 return;

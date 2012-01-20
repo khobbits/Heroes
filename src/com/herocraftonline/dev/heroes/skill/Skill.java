@@ -14,9 +14,6 @@ import org.bukkit.craftbukkit.entity.CraftLivingEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event.Priority;
-import org.bukkit.event.Event.Type;
-import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
@@ -177,21 +174,6 @@ public abstract class Skill extends BasicCommand {
 
     public boolean isType(SkillType type) {
         return types.contains(type);
-    }
-
-    /**
-     * Helper method to make registering an event a little easier.
-     * 
-     * @param type
-     *            the type of event
-     * @param listener
-     *            the listener used to handle the event
-     * @param priority
-     *            the priority given to the event handler
-     */
-    @Deprecated
-    protected void registerEvent(Type type, Listener listener, Priority priority) {
-        plugin.getServer().getPluginManager().registerEvent(type, listener, priority, plugin);
     }
 
     protected void setTypes(SkillType... types) {

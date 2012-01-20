@@ -1,14 +1,15 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
-import org.bukkit.event.Event.Priority;
-import org.bukkit.event.Event.Type;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.api.HeroesEventListener;
 import com.herocraftonline.dev.heroes.api.SkillResult;
 import com.herocraftonline.dev.heroes.api.WeaponDamageEvent;
 import com.herocraftonline.dev.heroes.effects.EffectType;
@@ -35,8 +36,7 @@ public class SkillCurse extends TargettedSkill {
         setArgumentRange(0, 1);
         setIdentifiers("skill curse");
         setTypes(SkillType.DARK, SkillType.SILENCABLE, SkillType.HARMFUL, SkillType.DEBUFF);
-
-        registerEvent(Type.CUSTOM_EVENT, new SkillEventListener(), Priority.Highest);
+        Bukkit.getServer().getPluginManager().registerEvents(new SkillEventListener(), plugin);
     }
 
     @Override
@@ -115,13 +115,11 @@ public class SkillCurse extends TargettedSkill {
         }
     }
 
-    public class SkillEventListener extends HeroesEventListener {
+    public class SkillEventListener implements Listener {
 
-        @Override
+        @EventHandler(priority = EventPriority.HIGHEST)
         public void onWeaponDamage(WeaponDamageEvent event) {
-            Heroes.debug.startTask("HeroesSkillListener");
             if (event.isCancelled() || event.getDamage() == 0) {
-                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
             }
 
@@ -135,7 +133,6 @@ public class SkillCurse extends TargettedSkill {
             } else if (event.getDamager() instanceof Projectile) {
                 LivingEntity shooter = ((Projectile) event.getDamager()).getShooter();
                 if (shooter == null) {
-                    Heroes.debug.stopTask("HeroesSkillListener");
                     return;
                 }
                 if (shooter instanceof Player) {
@@ -162,7 +159,6 @@ public class SkillCurse extends TargettedSkill {
                     }
                 }
             }
-            Heroes.debug.stopTask("HeroesSkillListener");
         }
     }
 

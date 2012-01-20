@@ -1,15 +1,15 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
-import org.bukkit.event.Event.Priority;
-import org.bukkit.event.Event.Type;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
 import com.herocraftonline.dev.heroes.Heroes;
-import com.herocraftonline.dev.heroes.api.HeroesEventListener;
 import com.herocraftonline.dev.heroes.api.SkillResult;
 import com.herocraftonline.dev.heroes.api.WeaponDamageEvent;
 import com.herocraftonline.dev.heroes.effects.EffectType;
@@ -35,8 +35,7 @@ public class SkillMight extends ActiveSkill {
         setUsage("/skill might");
         setIdentifiers("skill might");
         setTypes(SkillType.BUFF, SkillType.SILENCABLE);
-
-        registerEvent(Type.CUSTOM_EVENT, new SkillHeroListener(), Priority.Normal);
+        Bukkit.getServer().getPluginManager().registerEvents(new SkillHeroListener(), plugin);
     }
 
     @Override
@@ -126,13 +125,11 @@ public class SkillMight extends ActiveSkill {
         }
     }
 
-    public class SkillHeroListener extends HeroesEventListener {
+    public class SkillHeroListener implements Listener {
 
-        @Override
+        @EventHandler()
         public void onWeaponDamage(WeaponDamageEvent event) {
-            Heroes.debug.startTask("HeroesSkillListener");
             if (event.getCause() != DamageCause.ENTITY_ATTACK) {
-                Heroes.debug.stopTask("HeroesSkillListener");
                 return;
             }
 
@@ -155,7 +152,6 @@ public class SkillMight extends ActiveSkill {
                     }
                 }
             }
-            Heroes.debug.stopTask("HeroesSkillListener");
         }
     }
 
