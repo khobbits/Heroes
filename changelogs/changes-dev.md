@@ -13,6 +13,7 @@ Version 1.4.3
 
 ==== **API:** ====
 
+* new BlindEffect - it blinds the hero!
 
 ==== **Skills:** ====
 
