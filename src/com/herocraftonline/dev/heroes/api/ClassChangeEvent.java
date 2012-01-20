@@ -1,6 +1,7 @@
 package com.herocraftonline.dev.heroes.api;
 
 import org.bukkit.event.Cancellable;
+import org.bukkit.event.HandlerList;
 
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.hero.Hero;
@@ -11,7 +12,8 @@ import com.herocraftonline.dev.heroes.hero.Hero;
  * If this event is initiated because of an admin command the cancelled state will be ignored.
  */
 public class ClassChangeEvent extends HeroEvent implements Cancellable {
-
+    
+    private static final HandlerList handlers = new HandlerList();
     protected boolean cancelled = false;
     protected final Hero hero;
     protected final HeroClass from;
@@ -58,4 +60,12 @@ public class ClassChangeEvent extends HeroEvent implements Cancellable {
         this.cancelled = cancelled;
     }
 
+    @Override
+    public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
 }

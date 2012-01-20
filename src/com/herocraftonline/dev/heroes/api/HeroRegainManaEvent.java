@@ -1,6 +1,7 @@
 package com.herocraftonline.dev.heroes.api;
 
 import org.bukkit.event.Cancellable;
+import org.bukkit.event.HandlerList;
 
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
@@ -10,7 +11,7 @@ import com.herocraftonline.dev.heroes.skill.Skill;
  */
 @SuppressWarnings("serial")
 public class HeroRegainManaEvent extends HeroEvent implements Cancellable {
-
+    private static final HandlerList handlers = new HandlerList();
     private int amount;
     private final Hero hero;
     private final Skill skill;
@@ -63,5 +64,14 @@ public class HeroRegainManaEvent extends HeroEvent implements Cancellable {
     @Override
     public void setCancelled(boolean val) {
         this.cancelled = val;
+    }
+    
+    @Override
+    public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
     }
 }

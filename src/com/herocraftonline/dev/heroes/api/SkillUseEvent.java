@@ -2,6 +2,7 @@ package com.herocraftonline.dev.heroes.api;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
+import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
 
 import com.herocraftonline.dev.heroes.hero.Hero;
@@ -12,7 +13,7 @@ import com.herocraftonline.dev.heroes.skill.Skill;
  */
 @SuppressWarnings("serial")
 public class SkillUseEvent extends HeroEvent implements Cancellable {
-
+    private static final HandlerList handlers = new HandlerList();
     private final Player player;
     private final Skill skill;
     private final Hero hero;
@@ -139,4 +140,12 @@ public class SkillUseEvent extends HeroEvent implements Cancellable {
         this.reagentCost = reagentCost;
     }
 
+    @Override
+    public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
 }

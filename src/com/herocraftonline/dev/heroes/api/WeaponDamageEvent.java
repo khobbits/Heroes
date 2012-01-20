@@ -2,6 +2,7 @@ package com.herocraftonline.dev.heroes.api;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Cancellable;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
@@ -12,7 +13,7 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
  */
 @SuppressWarnings("serial")
 public class WeaponDamageEvent extends HeroEvent implements Cancellable {
-
+    private static final HandlerList handlers = new HandlerList();
     private int damage;
     private final Entity damager;
     private final Entity entity;
@@ -70,5 +71,14 @@ public class WeaponDamageEvent extends HeroEvent implements Cancellable {
      */
     public void setDamage(int damage) {
         this.damage = damage;
+    }
+    
+    @Override
+    public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
     }
 }

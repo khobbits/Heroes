@@ -1,5 +1,7 @@
 package com.herocraftonline.dev.heroes.api;
 
+import org.bukkit.event.HandlerList;
+
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.party.HeroParty;
 
@@ -8,7 +10,7 @@ import com.herocraftonline.dev.heroes.party.HeroParty;
  */
 @SuppressWarnings("serial")
 public class HeroLeavePartyEvent extends HeroEvent {
-
+    private static final HandlerList handlers = new HandlerList();
     private final Hero hero;
     private final HeroParty party;
 
@@ -32,4 +34,12 @@ public class HeroLeavePartyEvent extends HeroEvent {
         return party;
     }
 
+    @Override
+    public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
 }

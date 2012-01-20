@@ -1,27 +1,27 @@
 leveling:
-    power: 1.0 #set this to adjust the EXP curve (higher numbers equal longer ending levels)
-    maxExperience: 100000 #be cautious on changing this after it has been set)
-    maxLevel: 50 #max level to master/change from PARENT to Child)
-    expLoss: 0.10 #exp loss on death, is taken from current LEVEL not ALL exp.
-    pvpExpLossMultiplier: 1.0 #exp loss multiplier used during pvp
-    maxPartySize: 6 #maximum party size
-    partyBonus: 1.0 #multiplier of how much bonus xp should be awarded overall to parties
-    levelsViaExpLoss: false #allow level loss when players lose xp
-    masteryLoss: false #allow mastery loss when players lose xp
-    noSpawnCamp: false #allow xp gain when near a spawner if false
-    spawnCampRadius: 7 #how close to the spawner the creature needs to be to deny xp
-    spawnCampExpMult: .5 #if noSpawnCamp is true, all xp gained from killing is multiplied by this number. setting to 0 gives no xp.
-    resetOnDeath: false #Hardcore mode to reset all levels/exp on death
-    pvpLevelRange: 50 #Level that players must be within to PvP with each other
-    dumpLevelExp: false #Dumps a levels.txt file with the exp/level pairings 
+    exp-curve: 1.0 #set this to adjust the EXP curve (higher numbers equal longer ending levels)
+    max-exp: 100000 #be cautious on changing this after it has been set)
+    max-level: 50 #max level to master/change from PARENT to Child)
+    exp-loss: 0.10 #exp loss on death, is taken from current LEVEL not ALL exp.
+    pvp-exp-loss: 1.0 #exp loss multiplier used during pvp
+    max-party-size: 6 #maximum party size
+    party-exp-bonus: 1.0 #multiplier of how much bonus xp should be awarded overall to parties
+    level-loss: false #allow level loss when players lose xp
+    mastery-loss: false #allow mastery loss when players lose xp
+    no-spawn-exp: false #allow xp gain when near a spawner if false
+    spawn-radius: 7 #how close to the spawner the creature needs to be to deny xp
+    spawn-exp-mult: .5 #if noSpawnCamp is true, all xp gained from killing is multiplied by this number. setting to 0 gives no xp.
+    reset-on-death: false #Hardcore mode to reset all levels/exp on death
+    pvp-range: 50 #Level that players must be within to PvP with each other
+    dump-exp-file: false #Dumps a levels.txt file with the exp/level pairings 
 classes:
-    swapcost: 0 #cost to swap
-    oldClassSwapCost: 0 #cost to swap back to a class you already have xp in
-    profSwapCost: 0 #cost to swap to a new profession
-    oldProfSwapCost: 0 #cost to swap back to an old profession
-    swapMasteryCost: false #will allow for users to change back to their mastered class freely
-    firstSwitchFree: true #toggles charging for the first class switch
-    prefixClassName: false #basic name prefixing of heroclass, may not work correctly
+    swap-cost: 0 #cost to swap
+    old-swap-cost: 0 #cost to swap back to a class you already have xp in
+    prof-swap-cost: 0 #cost to swap to a new profession
+    old-prof-swap-cost: 0 #cost to swap back to an old profession
+    master-swap-free: false #will allow for users to change back to their mastered class freely
+    first-swap-free: true #toggles charging for the first class switch
+    use-prefix: false #basic name prefixing of heroclass, may not work correctly
     resetExpOnClassChange: true #will reset the exp if the player switches without mastering
     resetMasteryOnClassChange: false #will reset all xp including masteries if the player switches classes
     resetProfMasteryOnClassChange: false #will reset all xp including masteries if the player switches professions

@@ -1,5 +1,7 @@
 package com.herocraftonline.dev.heroes.api;
 
+import org.bukkit.event.HandlerList;
+
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.hero.Hero;
 
@@ -10,7 +12,7 @@ import com.herocraftonline.dev.heroes.hero.Hero;
  */
 @SuppressWarnings("serial")
 public class HeroChangeLevelEvent extends HeroEvent {
-
+    private static final HandlerList handlers = new HandlerList();
     private final int from;
     private final int to;
     private final Hero hero;
@@ -54,4 +56,12 @@ public class HeroChangeLevelEvent extends HeroEvent {
         return heroClass;
     }
 
+    @Override
+    public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
 }

@@ -2,6 +2,7 @@ package com.herocraftonline.dev.heroes.api;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Cancellable;
+import org.bukkit.event.HandlerList;
 
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
@@ -11,7 +12,7 @@ import com.herocraftonline.dev.heroes.skill.Skill;
  */
 @SuppressWarnings("serial")
 public class SkillDamageEvent extends HeroEvent implements Cancellable {
-
+    private static final HandlerList handlers = new HandlerList();
     private int damage;
     private final Hero damager;
     private final Entity entity;
@@ -68,4 +69,12 @@ public class SkillDamageEvent extends HeroEvent implements Cancellable {
         this.damage = damage;
     }
 
+    @Override
+    public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
 }
