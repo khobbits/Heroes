@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Set;
 
+import net.minecraft.server.DamageSource;
 import net.minecraft.server.EntityLiving;
 
 import org.bukkit.EntityEffect;
@@ -14,6 +15,7 @@ import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.craftbukkit.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -217,7 +219,15 @@ public abstract class Skill extends BasicCommand {
             if (newHealth < 0) {
                 newHealth = 0;
             }
-            target.setHealth(newHealth);
+            EntityLiving el = ((CraftLivingEntity) target).getHandle();
+            el.setHealth(newHealth);
+            if (newHealth == 0) {
+                if (attacker instanceof Player) {
+                    el.die(DamageSource.playerAttack(((CraftPlayer) attacker).getHandle()));
+                } else {
+                    el.die(DamageSource.mobAttack(((CraftLivingEntity) attacker).getHandle()));
+                }
+            }
         } else {
             target.damage(damage, attacker);
         }

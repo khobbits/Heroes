@@ -42,62 +42,59 @@ public class SkillMining extends PassiveSkill {
     public class SkillBlockListener implements Listener {
 
         private Skill skill;
-        
+
         SkillBlockListener(Skill skill) {
             this.skill = skill;
         }
-        
+
         @EventHandler(priority = EventPriority.MONITOR)
         public void onBlockBreak(BlockBreakEvent event) {
-            if (event.isCancelled()) {
+            if (event.isCancelled() || HBlockListener.placedBlocks.containsKey(event.getBlock().getLocation())) {
                 return;
             }
-            
+
             Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
             if (!hero.hasEffect("Mining")) {
                 return;
             }
             Block block = event.getBlock();
-            if (HBlockListener.placedBlocks.containsKey(block.getLocation())) {
-                return;
-            }
 
             Material dropMaterial = null;
             boolean isStone = false;
             switch (block.getType()) {
-                case IRON_ORE:
-                case GOLD_ORE:
-                    dropMaterial = block.getType();
-                    break;
-                case DIAMOND_ORE:
-                    dropMaterial = Material.DIAMOND;
-                    break;
-                case COAL_ORE:
-                    dropMaterial = Material.COAL;
-                    break;
-                case REDSTONE_ORE:
-                    dropMaterial = Material.REDSTONE;
-                    break;
-                case LAPIS_BLOCK:
-                    dropMaterial = Material.INK_SACK;
-                    break;
-                case STONE:
-                    isStone = true;
-                    break;
-                default:
-                    return;
+            case IRON_ORE:
+            case GOLD_ORE:
+                dropMaterial = block.getType();
+                break;
+            case DIAMOND_ORE:
+                dropMaterial = Material.DIAMOND;
+                break;
+            case COAL_ORE:
+                dropMaterial = Material.COAL;
+                break;
+            case REDSTONE_ORE:
+                dropMaterial = Material.REDSTONE;
+                break;
+            case LAPIS_BLOCK:
+                dropMaterial = Material.INK_SACK;
+                break;
+            case STONE:
+                isStone = true;
+                break;
+            default:
+                return;
             }
 
             double chance = Util.rand.nextDouble();
-            
+
             if (isStone && chance <= SkillConfigManager.getUseSetting(hero, skill, "chance-from-stone", .0005, false) * hero.getSkillLevel(skill)) {
                 block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(getMatFromHeight(block), 1));
                 return;
             } else if (isStone) {
                 return;
             }
-            
-            if (chance >= SkillConfigManager.getUseSetting(hero, skill, Setting.CHANCE_LEVEL, .001, false) * hero.getSkillLevel(skill)) {
+
+            if (chance > SkillConfigManager.getUseSetting(hero, skill, Setting.CHANCE_LEVEL, .001, false) * hero.getSkillLevel(skill)) {
                 return;
             }
             if (dropMaterial == Material.INK_SACK) {
@@ -110,14 +107,15 @@ public class SkillMining extends PassiveSkill {
         private Material getMatFromHeight(Block block) {
             int y = block.getY();
 
-            if (y < 20)
+            if (y < 20) {
                 return Material.DIAMOND;
-            else if (y < 40)
+            } else if (y < 40) {
                 return Material.GOLD_ORE;
-            else if (y < 60)
+            } else if (y < 60) {
                 return Material.IRON_ORE;
-            else
+            } else {
                 return Material.COAL_ORE;
+            }
         }
     }
 

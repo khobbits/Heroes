@@ -157,7 +157,7 @@ public abstract class TargettedSkill extends ActiveSkill {
         List<Block> lineOfSight = player.getLineOfSight(Util.transparentIds, maxDistance);
         List<Entity> nearbyEntities = player.getNearbyEntities(maxDistance, maxDistance, maxDistance);
         for (Entity entity : nearbyEntities) {
-            if (entity instanceof LivingEntity) {
+            if (entity instanceof LivingEntity && !entity.isDead() && !(((LivingEntity) entity).getHealth() == 0)) {
                 Location eLoc = entity.getLocation();
                 for (Block block : lineOfSight) {
                     Location bLoc = block.getLocation();
@@ -186,9 +186,10 @@ public abstract class TargettedSkill extends ActiveSkill {
                 Messaging.send(player, "Sorry, target is not in your line of sight!");
                 return null;
             }
-            if (target.isDead() || target.getHealth() == 0)
+            if (target.isDead() || target.getHealth() == 0) {
                 Messaging.send(player, "You can't target the dead!");
-            return null;
+                return null;
+            }
         }
         if (target == null) {
             target = getPlayerTarget(player, maxDistance);
