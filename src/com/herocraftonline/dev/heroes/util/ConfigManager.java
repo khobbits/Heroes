@@ -101,7 +101,8 @@ public class ConfigManager {
             plugin.setClassManager(null);
             loadManagers();
             for (Player player : players) {
-                plugin.getHeroManager().getHero(player);
+                Hero hero = plugin.getHeroManager().getHero(player);
+                plugin.getHeroManager().performSkillChecks(hero);
             }
         } catch (Exception e) {
             e.printStackTrace();

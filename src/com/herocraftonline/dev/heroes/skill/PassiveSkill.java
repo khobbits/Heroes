@@ -101,9 +101,10 @@ public abstract class PassiveSkill extends Skill {
      * @param hero
      *            the Hero to try applying the effect to
      */
-    public void tryApplying(Hero hero) {
-        if (!hero.hasAccessToSkill(this))
-            return;
+    public boolean tryApplying(Hero hero) {
+        if (!hero.hasAccessToSkill(this)) {
+            return false;
+        }
 
         if (hero.canUseSkill(this)) {
             if (!hero.hasEffect(getName())) {
@@ -112,6 +113,7 @@ public abstract class PassiveSkill extends Skill {
         } else {
             unapply(hero);
         }
+        return hero.hasEffect(getName());
     }
 
     /**
