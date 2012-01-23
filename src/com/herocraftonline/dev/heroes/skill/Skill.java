@@ -72,7 +72,7 @@ public abstract class Skill extends BasicCommand {
      * @return
      */
     public abstract String getDescription(Hero hero);
-    
+
     public void addSpellTarget(Entity o, Hero hero) {
         plugin.getDamageManager().addSpellTarget(o, hero, this);
     }
@@ -179,22 +179,31 @@ public abstract class Skill extends BasicCommand {
     protected void setTypes(SkillType... types) {
         this.types.addAll(Arrays.asList(types));
     }
-    
+
     public boolean damageEntity(LivingEntity target, LivingEntity attacker, int damage, DamageCause cause) {
         //Do it ourselves cause bukkit is stubborn
         ((CraftLivingEntity) target).setNoDamageTicks(0);
-        EntityDamageByEntityEvent edbe = new EntityDamageByEntityEvent(attacker, target, cause, damage);
-        plugin.getServer().getPluginManager().callEvent(edbe);
-        if (edbe.isCancelled())
-            return false;
         
-        //Reset the ticks again just in case n.m.s is stubborn too
-        ((CraftLivingEntity) target).setNoDamageTicks(0);
-        // Issue the damage
-        target.damage(edbe.getDamage(), attacker);
+        if (cause != DamageCause.ENTITY_ATTACK) {
+            EntityDamageByEntityEvent edbe = new EntityDamageByEntityEvent(attacker, target, cause, damage);
+            plugin.getServer().getPluginManager().callEvent(edbe);
+            if (edbe.isCancelled()) {
+                return false;
+            }
+
+            target.setLastDamageCause(edbe);
+            int oldHealth = target.getHealth();
+            int newHealth = oldHealth - edbe.getDamage();
+            if (newHealth < 0) {
+                newHealth = 0;
+            }
+            target.setHealth(newHealth);
+        } else {
+            target.damage(damage, attacker);
+        }
         return true;
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         if (obj == null)
@@ -203,11 +212,11 @@ public abstract class Skill extends BasicCommand {
             return true;
         else if (!(obj instanceof Skill))
             return false;
-        
+
         Skill s = (Skill) obj;
         return s.getName().equals(getName());
     }
-    
+
     @Override
     public int hashCode() {
         return getName().hashCode();

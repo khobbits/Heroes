@@ -1,5 +1,7 @@
 package com.herocraftonline.dev.heroes;
 
+import java.util.logging.Level;
+
 import net.minecraft.server.EntityPlayer;
 
 import org.bukkit.Bukkit;
@@ -121,6 +123,7 @@ public class HPlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerInteract(PlayerInteractEvent event) {
+        Heroes.log(Level.INFO, event.getClickedBlock() != null ? event.getClickedBlock().toString() : "null" + " was clicked. ");
         if (event.useItemInHand() == Result.DENY) {
             return;
         }
