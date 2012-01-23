@@ -5,6 +5,9 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Set;
 
+import net.minecraft.server.EntityLiving;
+
+import org.bukkit.EntityEffect;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.Configuration;
@@ -180,10 +183,26 @@ public abstract class Skill extends BasicCommand {
         this.types.addAll(Arrays.asList(types));
     }
 
+    public void knockBack(LivingEntity target, LivingEntity attacker, int damage) {
+        EntityLiving el = ((CraftLivingEntity )target).getHandle();
+        EntityLiving aEL = ((CraftLivingEntity) attacker).getHandle();
+        el.velocityChanged = true;
+        double d0 = aEL.locX - el.locX;
+        double d1;
+
+        for (d1 = aEL.locZ - el.locZ; d0 * d0 + d1 * d1 < 1.0E-4D; d1 = (Math.random() - Math.random()) * 0.01D) {
+            d0 = (Math.random() - Math.random()) * 0.01D;
+        }
+
+        el.au = (float) (Math.atan2(d1, d0) * 180.0D / 3.1415927410125732D) - el.yaw;
+        el.a(aEL, damage, d0, d1);
+        target.playEffect(EntityEffect.HURT);
+    }
+
     public boolean damageEntity(LivingEntity target, LivingEntity attacker, int damage, DamageCause cause) {
         //Do it ourselves cause bukkit is stubborn
         ((CraftLivingEntity) target).setNoDamageTicks(0);
-        
+
         if (cause != DamageCause.ENTITY_ATTACK) {
             EntityDamageByEntityEvent edbe = new EntityDamageByEntityEvent(attacker, target, cause, damage);
             plugin.getServer().getPluginManager().callEvent(edbe);
@@ -191,6 +210,7 @@ public abstract class Skill extends BasicCommand {
                 return false;
             }
 
+            knockBack(target, attacker, edbe.getDamage());
             target.setLastDamageCause(edbe);
             int oldHealth = target.getHealth();
             int newHealth = oldHealth - edbe.getDamage();
