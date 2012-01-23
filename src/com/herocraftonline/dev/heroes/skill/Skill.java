@@ -202,6 +202,9 @@ public abstract class Skill extends BasicCommand {
     }
 
     public boolean damageEntity(LivingEntity target, LivingEntity attacker, int damage, DamageCause cause) {
+        if (target.isDead() || target.getHealth() <= 0) {
+            return false;
+        }
         //Do it ourselves cause bukkit is stubborn
         ((CraftLivingEntity) target).setNoDamageTicks(0);
 
