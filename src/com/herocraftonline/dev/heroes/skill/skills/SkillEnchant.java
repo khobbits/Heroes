@@ -126,13 +126,15 @@ public class SkillEnchant extends PassiveSkill {
 
         @EventHandler(priority = EventPriority.LOWEST)
         public void onInventoryOpen(InventoryOpenEvent event) {
-            if (event.isCancelled() || !(((CraftPlayer) event.getPlayer()).getHandle().activeContainer instanceof ContainerEnchantTable))
+            if (event.isCancelled() || !(((CraftPlayer) event.getPlayer()).getHandle().activeContainer instanceof ContainerEnchantTable)) {
                 return;
+            }
 
             Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
             if (!hero.hasEffect(getName())) {
                 event.setCancelled(true);
                 Messaging.send(event.getPlayer(), "You don't have the ability to enchant items!");
+                return;
             }
 
             HeroClass hc = hero.getEnchantingClass();
