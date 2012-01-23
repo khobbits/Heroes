@@ -32,3 +32,5 @@ Version 1.4.3
 ** added option to restrict ender-pearl use to only classes that have the skill
 * Charge
 ** velocities are now working as intended
+* FireArrow
+** Now launches flaming arrows as intended

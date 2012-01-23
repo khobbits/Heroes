@@ -11,6 +11,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityShootBowEvent;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.SkillResult;
@@ -73,6 +74,17 @@ public class SkillFireArrow extends ActiveSkill {
         }
 
         @EventHandler()
+        public void onEntityShoot(EntityShootBowEvent event) {
+            if (event.isCancelled() || !(event.getEntity() instanceof Player)) {
+                return;
+            }
+            Hero hero = plugin.getHeroManager().getHero((Player) event.getEntity());
+            if (hero.hasEffect("FireArrowBuff")) {
+                event.getProjectile().setFireTicks(100);
+            }
+        }
+
+        @EventHandler()
         public void onEntityDamage(EntityDamageEvent event) {
             if (event.isCancelled() || !(event instanceof EntityDamageByEntityEvent) || !(event.getEntity() instanceof LivingEntity)) {
                 return;
@@ -88,7 +100,7 @@ public class SkillFireArrow extends ActiveSkill {
             if (!hero.hasEffect("FireArrowBuff")) {
                 return;
             }
-            
+
             LivingEntity entity = (LivingEntity) event.getEntity();
             addSpellTarget(entity, hero);
             if (!damageCheck((Player) player, entity)) {
@@ -107,7 +119,7 @@ public class SkillFireArrow extends ActiveSkill {
                 targetHero.addEffect(new CombustEffect(skill, player));
             } else
                 plugin.getEffectManager().addEntityEffect(entity, new CombustEffect(skill, player));
-            
+
 
         }
 
