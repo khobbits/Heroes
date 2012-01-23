@@ -240,7 +240,17 @@ class DelayedSkillExecuter implements Runnable {
                 iter.remove();
             } else if (entry.getValue().isReady()) {
                 DelayedSkill dSkill = entry.getValue();
-                dSkill.getSkill().execute(dSkill.getPlayer(), dSkill.getIdentifier(), dSkill.getArgs());
+                try {
+                    dSkill.getSkill().execute(dSkill.getPlayer(), dSkill.getIdentifier(), dSkill.getArgs());
+                } catch (Exception e) {
+                    // Cleanup the player from the still casting stuff
+                    Hero hero = entry.getKey();
+                    hero.removeEffect(hero.getEffect("Casting"));
+                    hero.setDelayedSkill(null);
+                    manager.addCompletedSkill(hero);
+                    Heroes.log(Level.SEVERE, "There was an error executing: " + dSkill.getSkill().getName() + " for " + hero.getPlayer().getName());
+                    System.out.println(e);
+                }
             }
         }
         Heroes.debug.stopTask("WarmupExecuter.run");
