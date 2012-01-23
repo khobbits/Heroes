@@ -4,17 +4,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
+import net.minecraft.server.ContainerEnchantTable;
+
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.getspout.spoutapi.event.inventory.InventoryCloseEvent;
 import org.getspout.spoutapi.event.inventory.InventoryEnchantEvent;
+import org.getspout.spoutapi.event.inventory.InventoryOpenEvent;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
@@ -71,7 +72,7 @@ public class SkillEnchant extends PassiveSkill {
         section.set("ARROW_FIRE", 1);
         section.set("ARROW_INFINITE", 1);
         section.set(Setting.APPLY_TEXT.node(), "");
-
+        
         return section;
     }
 
@@ -124,10 +125,9 @@ public class SkillEnchant extends PassiveSkill {
         }
 
         @EventHandler(priority = EventPriority.LOWEST)
-        public void onPlayerInteract(PlayerInteractEvent event) {
-            if (event.isCancelled() || event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getClickedBlock().getType() != Material.ENCHANTMENT_TABLE) {
+        public void onInventoryOpen(InventoryOpenEvent event) {
+            if (event.isCancelled() || !(((CraftPlayer) event.getPlayer()).getHandle().activeContainer instanceof ContainerEnchantTable))
                 return;
-            }
 
             Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
             if (!hero.hasEffect(getName())) {
