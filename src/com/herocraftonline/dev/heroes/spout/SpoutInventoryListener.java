@@ -24,7 +24,7 @@ public class SpoutInventoryListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onInventoryCraft(InventoryCraftEvent event) {
-        if (event.getResult() == null || event.isCancelled()) {
+        if (event.getResult() == null || event.isCancelled() || Heroes.properties.disabledWorlds.contains(event.getPlayer().getWorld().getName())) {
             return;
         }
 
