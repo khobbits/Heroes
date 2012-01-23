@@ -157,7 +157,7 @@ public class ConfigManager {
             List<String> items = recipeConfig.getStringList(key + ".items");
             if (items != null && !items.isEmpty()) {
                 for (String i : items) {
-                    String[] vals = i.split(",");
+                    String[] vals = i.split(":");
                     if (vals[0].equalsIgnoreCase("*") || vals[0].equalsIgnoreCase("all")) {
                         rg.setAllRecipes(true);
                         break;

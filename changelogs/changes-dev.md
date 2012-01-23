@@ -13,6 +13,8 @@ Version 1.4.3
 ** Bukkit now has internal event timings available
 * How much potions restore per-tier is now configurable in damages.yml - see updated configuration
 * Classes now support item-damage-level and projectile-damage-level settings
+* recipe IDs are now in the format "ID:DAMAGE" instead of "ID,DAMAGE"
+** please update to the new format if you're using any recipe blocks with special item data
 
 ==== **API:** ====
 
