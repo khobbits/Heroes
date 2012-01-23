@@ -289,8 +289,9 @@ public class HPlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerTeleport(PlayerTeleportEvent event) {
-        if (event.isCancelled() || event.getFrom().getWorld() == event.getTo().getWorld())
+        if (event.isCancelled() || event.getFrom().getWorld().equals(event.getTo().getWorld())) {
             return;
+        }
 
         final Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
         plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {

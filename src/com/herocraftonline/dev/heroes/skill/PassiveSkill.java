@@ -101,19 +101,18 @@ public abstract class PassiveSkill extends Skill {
      * @param hero
      *            the Hero to try applying the effect to
      */
-    public boolean tryApplying(Hero hero) {
+    public void tryApplying(Hero hero) {
         if (!hero.hasAccessToSkill(this)) {
-            return false;
+            return;
         }
 
-        if (hero.canUseSkill(this)) {
+        if (hero.canUseSkill(this) && !Heroes.properties.disabledWorlds.contains(hero.getPlayer().getWorld().getName())) {
             if (!hero.hasEffect(getName())) {
                 apply(hero);
             }
         } else {
             unapply(hero);
         }
-        return hero.hasEffect(getName());
     }
 
     /**
