@@ -8,6 +8,7 @@ import java.util.Set;
 import net.minecraft.server.DamageSource;
 import net.minecraft.server.EntityLiving;
 
+import org.bukkit.Bukkit;
 import org.bukkit.EntityEffect;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
@@ -185,7 +186,7 @@ public abstract class Skill extends BasicCommand {
         this.types.addAll(Arrays.asList(types));
     }
 
-    public void knockBack(LivingEntity target, LivingEntity attacker, int damage) {
+    public static void knockBack(LivingEntity target, LivingEntity attacker, int damage) {
         EntityLiving el = ((CraftLivingEntity )target).getHandle();
         EntityLiving aEL = ((CraftLivingEntity) attacker).getHandle();
         el.velocityChanged = true;
@@ -201,7 +202,7 @@ public abstract class Skill extends BasicCommand {
         target.playEffect(EntityEffect.HURT);
     }
 
-    public boolean damageEntity(LivingEntity target, LivingEntity attacker, int damage, DamageCause cause) {
+    public static boolean damageEntity(LivingEntity target, LivingEntity attacker, int damage, DamageCause cause) {
         if (target.isDead() || target.getHealth() <= 0) {
             return false;
         }
@@ -210,7 +211,7 @@ public abstract class Skill extends BasicCommand {
 
         if (cause != DamageCause.ENTITY_ATTACK) {
             EntityDamageByEntityEvent edbe = new EntityDamageByEntityEvent(attacker, target, cause, damage);
-            plugin.getServer().getPluginManager().callEvent(edbe);
+            Bukkit.getServer().getPluginManager().callEvent(edbe);
             if (edbe.isCancelled()) {
                 return false;
             }

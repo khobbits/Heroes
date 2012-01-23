@@ -42,7 +42,7 @@ public class PeriodicDamageEffect extends PeriodicExpirableEffect {
     public void tick(LivingEntity lEntity) {
         super.tick(lEntity);
         skill.addSpellTarget(lEntity, applyHero);
-        skill.damageEntity(lEntity, applier, tickDamage, skill.isType(SkillType.PHYSICAL) ? DamageCause.ENTITY_ATTACK : DamageCause.MAGIC);
+        Skill.damageEntity(lEntity, applier, tickDamage, skill.isType(SkillType.PHYSICAL) ? DamageCause.ENTITY_ATTACK : DamageCause.MAGIC);
     }
 
     @Override
@@ -55,7 +55,7 @@ public class PeriodicDamageEffect extends PeriodicExpirableEffect {
             return;
 
         skill.addSpellTarget(player, applyHero);
-        skill.damageEntity(player, applier, tickDamage, skill.isType(SkillType.PHYSICAL) ? DamageCause.ENTITY_ATTACK : DamageCause.MAGIC);
+        Skill.damageEntity(player, applier, tickDamage, skill.isType(SkillType.PHYSICAL) ? DamageCause.ENTITY_ATTACK : DamageCause.MAGIC);
     }
 
 }
