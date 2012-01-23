@@ -104,7 +104,7 @@ public class SkillBlink extends ActiveSkill {
                 return;
             }
             Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
-            if (!hero.hasEffect(getName()) && event.getCause() == TeleportCause.ENDER_PEARL && hero.canUseSkill(skill) && SkillConfigManager.getUseSetting(hero, skill, "restrict-ender-pearl", true)) {
+            if (!hero.hasEffect(getName()) && event.getCause() == TeleportCause.ENDER_PEARL && SkillConfigManager.getUseSetting(hero, skill, "restrict-ender-pearl", true)) {
                 event.setCancelled(true);
             }
         }
