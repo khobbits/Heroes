@@ -109,6 +109,7 @@ public class SkillAssassinsBlade extends ActiveSkill {
         public AssassinsPoison(Skill skill, long period, long duration, int tickDamage, Player applier) {
             super(skill, "AssassinsPoison", period, duration, tickDamage, applier);
             this.types.add(EffectType.POISON);
+            addMobEffect(19, (int) (duration / 1000) * 20, 0, true);
         }
 
         @Override
