@@ -3,7 +3,6 @@ package com.herocraftonline.dev.heroes.skill.skills;
 import java.util.logging.Level;
 
 import net.minecraft.server.ContainerBrewingStand;
-import net.minecraft.server.EntityPlayer;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
@@ -53,14 +52,11 @@ public class SkillAlchemy extends PassiveSkill {
         
         @EventHandler(priority = EventPriority.LOW)
         public void onInventoryOpen(InventoryOpenEvent event) {
-            if (event.isCancelled())
+            if (event.isCancelled() || !(((CraftPlayer) event.getPlayer()).getHandle().activeContainer instanceof ContainerBrewingStand)) {
                 return;
+            }
             
             Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
-            EntityPlayer eP = ((CraftPlayer) event.getPlayer()).getHandle();
-            if (!(eP.activeContainer instanceof ContainerBrewingStand))
-                return;
-            
             if (!hero.canUseSkill(skill)) {
                 event.setCancelled(true);
             }
