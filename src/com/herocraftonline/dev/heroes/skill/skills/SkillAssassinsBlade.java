@@ -148,7 +148,7 @@ public class SkillAssassinsBlade extends ActiveSkill {
 
         @EventHandler(priority = EventPriority.MONITOR)
         public void onEntityDamage(EntityDamageEvent event) {
-            if (event.isCancelled() || !(event instanceof EntityDamageByEntityEvent)) {
+            if (event.isCancelled() || !(event instanceof EntityDamageByEntityEvent) || event.getDamage() == 0) {
                 return;
             }
             

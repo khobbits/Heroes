@@ -22,6 +22,8 @@ Version 1.4.3
 * All non-physical skills now issue Magic damage instead of ENTITY_ATTACK
 * All reagent nodes have switched format to support damage values
 ** ID:DAMAGE - is the new format, be sure to update all your reagents!
+* Assassin's Blade
+** no longer triggers from damage checks
 * Blink
 ** added option to restrict ender-pearl use to only classes that have the skill
 * Charge
