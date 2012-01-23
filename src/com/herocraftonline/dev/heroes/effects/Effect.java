@@ -77,15 +77,17 @@ public class Effect {
     }
 
     public void remove(LivingEntity lEntity) {
+        /*
         if (!mobEffects.isEmpty()) {
             EntityLiving eLiving = ((CraftLivingEntity) lEntity).getHandle();
             for (MobEffect mobEffect : mobEffects.keySet()) {
                 eLiving.addEffect(new MobEffect(mobEffect.getEffectId(), 0, 0));
             }
-        }
+        } */
     }
 
     public void remove(Hero hero) {
+        /*
         if (!mobEffects.isEmpty()) {
             EntityPlayer ePlayer = ((CraftPlayer) hero.getPlayer()).getHandle();
             for (Entry<MobEffect, Boolean> entry : mobEffects.entrySet()) {
@@ -97,6 +99,7 @@ public class Effect {
                 }
             }
         }
+        */
     }
     public void broadcast(Location source, String message, Object... args) {
         skill.broadcast(source, message, args);
