@@ -72,8 +72,9 @@ public abstract class ActiveSkill extends Skill {
     @SuppressWarnings("deprecation")
     @Override
     public boolean execute(CommandSender sender, String identifier, String[] args) {
-        if (!(sender instanceof Player))
+        if (!(sender instanceof Player)) {
             return false;
+        }
 
         String name = this.getName();
         Player player = (Player) sender;

@@ -1205,7 +1205,7 @@ public class Hero {
         int currentLevelXP = Properties.getTotalExp(level);
 
         double maxLevelXP = Properties.getTotalExp(level + 1) - currentLevelXP;
-        double currentXP = getExperience() - currentLevelXP;
+        double currentXP = getExperience(hc) - currentLevelXP;
         float syncedPercent = (float) (currentXP / maxLevelXP);
 
         player.setTotalExperience(Util.getMCExperience(level));
