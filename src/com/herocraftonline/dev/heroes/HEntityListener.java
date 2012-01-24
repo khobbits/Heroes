@@ -124,12 +124,12 @@ public class HEntityListener implements Listener {
             Player player = (Player) defender;
             Hero heroDefender = heroManager.getHero(player);
             Util.deaths.put(player.getName(), event.getEntity().getLocation());
-
+            heroDefender.cancelDelayedSkill();
             // check to see if this death was caused by FireTick
             if (attacker == null && heroDefender.hasEffect("Combust")) {
                 attacker = ((CombustEffect) heroDefender.getEffect("Combust")).getApplier();
             }
-
+            
             double multiplier = Heroes.properties.expLoss;
             if (attacker != null) {
                 multiplier = Heroes.properties.pvpExpLossMultiplier;
