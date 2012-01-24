@@ -377,6 +377,7 @@ public class Hero {
                         //SpoutUI.sendPlayerNotification(player, ChatColor.GOLD + "Level Up!", ChatColor.DARK_RED + "Level - " + String.valueOf(newLevel), Material.DIAMOND_HELMET);
                         Messaging.send(player, "You gained a level! (Lvl $1 $2)", String.valueOf(newLevel), hc.getName());
                         setHealth(getMaxHealth());
+                        setMana(100);
                         //Reset food stuff on level up
                         if (player.getFoodLevel() < 20) {
                             player.setFoodLevel(20);
