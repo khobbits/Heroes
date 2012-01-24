@@ -11,9 +11,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import me.desht.scrollingmenusign.SMSMenu;
-import me.desht.scrollingmenusign.views.SMSMapView;
-
 import org.bukkit.Material;
 
 import com.herocraftonline.dev.heroes.Heroes;
@@ -51,8 +48,6 @@ public class HeroClass {
     private double maxHealthPerLevel;
     private boolean userClass = true;
     private final Heroes plugin;
-    private SMSMenu menu;
-    private SMSMapView view;
 
     /**
      * Constructs a new HeroClass with the given name
@@ -68,54 +63,6 @@ public class HeroClass {
         maxHealthPerLevel = 0;
         maxLevel = 1;
         cost = 0;
-    }
-/*
- * For ScrollingMenuSigns implementation
-    public void setupMenu() {
-        if (Heroes.smsHandler == null) {
-            return;
-        }
-        try {
-            menu = Heroes.smsHandler.getMenu(name + " skills");
-        } catch (SMSException e) {
-            menu = Heroes.smsHandler.createMenu(name + " skills", name + "Skills", name);
-        }
-        if (menu == null) {
-            menu = Heroes.smsHandler.createMenu(name + " skills", name + "Skills", name);
-        }
-        menu.getItems().clear();
-        menu.setAutosave(true);
-        menu.setAutosort(true);
-        for (String sn : skills) {
-            Skill skill = plugin.getSkillManager().getSkill(sn);
-            if (skill instanceof ActiveSkill) {
-                menu.addItem(skill.getName(), "/" + skill.getIdentifiers()[0], "");
-            }
-        }
-        try {
-            this.view = (SMSMapView) SMSMapView.getView(name);
-        } catch (SMSException e) {
-            short id = Bukkit.getServer().createMap(Bukkit.getWorlds().get(0)).getId();
-            try {
-                this.view = SMSMapView.addMapToMenu(menu, id);
-            } catch (SMSException e1) {
-                Heroes.log(Level.WARNING, "Error hooking " + name + " with a proper scroll!");
-                return;
-            }
-        }
-        this.view.setAutosave(true);
-    }
-*/
-    public SMSMenu getMenu() {
-        return menu;
-    }
-
-    public void setMenu(SMSMenu menu) {
-        this.menu = menu;
-    }
-
-    public SMSMapView getView() {
-        return view;
     }
 
     protected void addAllowedArmor(Material armor) {

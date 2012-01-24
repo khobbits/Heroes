@@ -8,6 +8,7 @@ import org.bukkit.inventory.ItemStack;
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.command.BasicCommand;
 import com.herocraftonline.dev.heroes.hero.Hero;
+import com.herocraftonline.dev.heroes.menus.MenuHandler;
 import com.herocraftonline.dev.heroes.util.Messaging;
 
 public class ScrollCommand extends BasicCommand {
@@ -37,8 +38,7 @@ public class ScrollCommand extends BasicCommand {
         }
         Hero hero = plugin.getHeroManager().getHero(player);
         ItemStack map = player.getInventory().getItem(slot);
-        map.setDurability(hero.getHeroClass().getView().getMapView().getId());
-        hero.getHeroClass().getView().setDirty(true);
+        map.setDurability(MenuHandler.views.get(hero.getHeroClass()).getMapView().getId());
         return true;
     }
 

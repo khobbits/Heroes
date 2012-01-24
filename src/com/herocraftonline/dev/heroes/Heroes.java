@@ -8,6 +8,7 @@ import me.desht.scrollingmenusign.SMSHandler;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -57,6 +58,7 @@ import com.herocraftonline.dev.heroes.damage.DamageManager;
 import com.herocraftonline.dev.heroes.effects.EffectManager;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.hero.HeroManager;
+import com.herocraftonline.dev.heroes.menus.MenuHandler;
 import com.herocraftonline.dev.heroes.party.PartyManager;
 import com.herocraftonline.dev.heroes.skill.OutsourcedSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
@@ -111,6 +113,7 @@ public class Heroes extends JavaPlugin {
 
     // Variable for Spout.
     public static Plugin spout = null;
+    public static boolean useSMS = false;
 
     /**
      * Print messages to the Debug Log, if the servers in Debug Mode then we also wan't to print the messages to the
@@ -279,15 +282,10 @@ public class Heroes extends JavaPlugin {
      * Setup scrolling menu sign integration
      */
     private void setupSMS() {
-        /*
-        if (smsHandler == null) {
-            Plugin p = Bukkit.getServer().getPluginManager().getPlugin("ScrollingMenuSign");
-            if (p != null && p instanceof ScrollingMenuSign) {
-                ScrollingMenuSign sms = (ScrollingMenuSign) p;
-                smsHandler = sms.getHandler();
-                Heroes.log(Level.INFO, "ScrollingMenuSign integration is enabled");
-            }
-        }*/
+        Plugin p = Bukkit.getServer().getPluginManager().getPlugin("ScrollingMenuSign");
+        if (p != null) {
+            MenuHandler.setup(p);
+        }
     }
 
     /**
@@ -349,6 +347,9 @@ public class Heroes extends JavaPlugin {
         commandHandler.addCommand(new PartyChatCommand(this));
         commandHandler.addCommand(new ConfigReloadCommand(this));
         commandHandler.addCommand(new HelpCommand(this));
+        if (useSMS) {
+            commandHandler.addCommand(new ScrollCommand(this));
+        }
         commandHandler.addCommand(new AdminExpCommand(this));
 
 

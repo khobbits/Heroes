@@ -4,6 +4,7 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClass.CircularParentException;
 import com.herocraftonline.dev.heroes.classes.HeroClass.ExperienceType;
 import com.herocraftonline.dev.heroes.damage.DamageManager.ProjectileType;
+import com.herocraftonline.dev.heroes.menus.MenuHandler;
 import com.herocraftonline.dev.heroes.skill.OutsourcedSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.SkillConfigManager;
@@ -234,7 +235,9 @@ public class HeroClassManager {
             Heroes.log(Level.INFO, "Default class found: " + className);
             defaultClass = newClass;
         }
-        // newClass.setupMenu(); // For SMS implementations
+        if (Heroes.useSMS) {
+            MenuHandler.setupMenu(newClass, plugin);
+        }
         return newClass;
     }
 
