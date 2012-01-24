@@ -16,6 +16,7 @@ Version 1.4.3
 * Classes now support item-damage-level and projectile-damage-level settings
 * recipe IDs are now in the format "ID:DAMAGE" instead of "ID,DAMAGE"
 ** please update to the new format if you're using any recipe blocks with special item data
+* 'parent' can no longer be used to specify a single strong parent.  Please use the new 'parents: strong:'
 
 ==== **API:** ====
 

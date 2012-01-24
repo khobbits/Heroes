@@ -211,12 +211,9 @@ public class HeroClassManager {
         //Setup temporary class name storage for heirarchies
 
 
-        String oldStyleParentName = config.getString("parent");
+        
         Set<String> strongParents = new HashSet<String>();
-        if (oldStyleParentName != null) {
-            strongParents.add(oldStyleParentName);
-            this.strongParents.put(newClass, strongParents);
-        } else if (config.isConfigurationSection("parents")) {
+        if (config.isConfigurationSection("parents")) {
             List<String> list = config.getStringList("parents.strong");
             if (list != null) {
                 strongParents.addAll(list);
