@@ -35,3 +35,5 @@ Version 1.4.3
 ** velocities are now working as intended
 * FireArrow
 ** Now launches flaming arrows as intended
+* Light (NEW!)
+** Similar to lightwalk from MagicSpells - changes blocks you walk on to glowstone periodically
