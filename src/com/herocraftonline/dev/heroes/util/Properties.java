@@ -57,7 +57,7 @@ public class Properties {
     //Properties
     public boolean debug;
     public String storageType;
-    public boolean iConomy;
+    public boolean economy;
     public int blockTrackingDuration;
     public int maxTrackedBlocks;
     public double foodHealPercent = .05;
@@ -215,7 +215,7 @@ public class Properties {
             return;
         }
         storageType = section.getString("storage-type");
-        iConomy = section.getBoolean("economy", false);
+        economy = section.getBoolean("economy", false);
         debug = section.getBoolean("debug", false);
         foodHealPercent = Util.toDoubleNonNull(section.get("food-heal-percent", .05), "food-heal-percent");
         globalCooldown = Util.toIntNonNull(section.get("global-cooldown", 1), "global-cooldown");

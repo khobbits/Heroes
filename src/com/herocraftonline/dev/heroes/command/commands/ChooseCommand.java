@@ -20,8 +20,8 @@ import com.herocraftonline.dev.heroes.util.Properties;
 public class ChooseCommand extends BasicInteractiveCommand {
 
     private final Heroes plugin;
-    private Map<Player, HeroClass> pendingClassSelections = new HashMap<Player, HeroClass>();
-    private Map<Player, Boolean> pendingClassCostStatus = new HashMap<Player, Boolean>();
+    private Map<String, HeroClass> pendingClassSelections = new HashMap<String, HeroClass>();
+    private Map<String, Double> pendingClassCostStatus = new HashMap<String, Double>();
 
     public ChooseCommand(Heroes plugin) {
         super("Choose Class");
@@ -38,8 +38,9 @@ public class ChooseCommand extends BasicInteractiveCommand {
 
     @Override
     public void onCommandCancelled(CommandSender executor) {
-        if (!(executor instanceof Player))
+        if (!(executor instanceof Player)) {
             return;
+        }
         pendingClassSelections.remove(executor);
         pendingClassCostStatus.remove(executor);
     }
@@ -56,7 +57,7 @@ public class ChooseCommand extends BasicInteractiveCommand {
             if (!(executor instanceof Player)) {
                 return false;
             }
-            
+
             Properties props = Heroes.properties;
             Player player = (Player) executor;
             Hero hero = plugin.getHeroManager().getHero(player);
@@ -72,22 +73,22 @@ public class ChooseCommand extends BasicInteractiveCommand {
                 Messaging.send(player, "You are already set as this Class.");
                 return false;
             }
-            
+
             if (!hero.getHeroClass().isDefault() && hero.isMaster(currentClass) && currentClass.getParents().isEmpty() && props.lockAtHighestTier) {
                 Messaging.send(player, "You have mastered your class and can not choose a new one!");
                 return false;
             }
-            
+
             if (!newClass.isPrimary()) {
                 Messaging.send(player, "That is not a primary Class!");
                 return false;
             }
-            
+
             if (!hero.isMaster(currentClass) && props.lockPathTillMaster) {
                 Messaging.send(player, "You must master this class before swapping to another.");
                 return false;
             }
-            
+
             if (!newClass.hasNoParents()) {
                 for (HeroClass parentClass : newClass.getStrongParents()) {
                     if (!hero.isMaster(parentClass)) {
@@ -118,24 +119,25 @@ public class ChooseCommand extends BasicInteractiveCommand {
             if (hero.getExperience(newClass) > 0) {
                 cost = props.oldClassSwapCost;
             }
-            
-            boolean chargePlayer = true;
-            if (props.firstSwitchFree && currentClass.isDefault()) {
-                chargePlayer = false;
-            } else if (hero.isMaster(newClass) && props.swapMasterFree) {
-                chargePlayer = false;
-            } else if (!props.iConomy || Heroes.econ == null || cost <= 0) {
-                chargePlayer = false;
-            }
 
-            pendingClassCostStatus.put(player, chargePlayer);
+            if (props.firstSwitchFree && currentClass.isDefault()) {
+                cost = 0;
+            } else if (hero.isMaster(newClass) && props.swapMasterFree) {
+                cost = 0;
+            } else if (!props.economy || Heroes.econ == null || cost <= 0) {
+                cost = 0;
+            } else if (props.economy && cost > 0 && !Heroes.econ.has(player.getName(), cost)) {
+                Messaging.send(player, "It will cost $1 to switch classes, you only have $2", Heroes.econ.format(cost), Heroes.econ.format(Heroes.econ.getBalance(player.getName())));
+                return false;
+            }
+            pendingClassCostStatus.put(player.getName(), cost);
 
             Messaging.send(executor, "You have chosen...");
             Messaging.send(executor, "$1: $2", newClass.getName(), newClass.getDescription().toLowerCase());
             String skills = newClass.getSkillNames().toString();
             skills = skills.substring(1, skills.length() - 1);
             Messaging.send(executor, "$1: $2", "Skills", skills);
-            if (chargePlayer) {
+            if (cost > 0) {
                 Messaging.send(executor, "$1: $2", "Fee", Heroes.econ.format(cost));
             }
             if (props.resetProfOnPrimaryChange) {
@@ -143,7 +145,7 @@ public class ChooseCommand extends BasicInteractiveCommand {
             }
             Messaging.send(executor, "Please §8/hero confirm §7 or §8/hero cancel §7this selection.");
 
-            pendingClassSelections.put(player, newClass);
+            pendingClassSelections.put(player.getName(), newClass);
             return true;
         }
 
@@ -158,38 +160,37 @@ public class ChooseCommand extends BasicInteractiveCommand {
 
         @Override
         public boolean execute(CommandSender executor, String identifier, String[] args) {
-            if (!(executor instanceof Player))
+            if (!(executor instanceof Player)) {
                 return false;
+            }
 
             Player player = (Player) executor;
             Hero hero = plugin.getHeroManager().getHero(player);
             HeroClass currentClass = hero.getHeroClass();
-            HeroClass newClass = pendingClassSelections.get(player);
+            HeroClass newClass = pendingClassSelections.remove(player.getName());
             Properties prop = Heroes.properties;
 
-            ClassChangeEvent event = new ClassChangeEvent(hero, currentClass, newClass);
-            plugin.getServer().getPluginManager().callEvent(event);
-            if (event.isCancelled())
-                return false;
+            double cost = pendingClassCostStatus.remove(player.getName());
 
-            if (prop.resetExpOnClassChange || prop.resetMasteryOnClassChange) {
-                if (!hero.isMaster(currentClass) || (prop.resetMasteryOnClassChange)) {
-                    hero.setExperience(currentClass, 0);
-                }
-            }
-
-            double cost = newClass.getCost();
-            if (hero.getExperience(newClass) > 0) {
-                cost = prop.oldClassSwapCost;
-            }
-
-            if (pendingClassCostStatus.get(player)) {
+            if ( cost > 0) {
                 if (Heroes.econ.has(player.getName(), cost)) {
                     Heroes.econ.withdrawPlayer(player.getName(), cost);
                     Messaging.send(hero.getPlayer(), "The Gods are pleased with your offering of $1.", Heroes.econ.format(cost));
                 } else {
                     Messaging.send(hero.getPlayer(), "You're unable to meet the offering of $1 to become $2.", Heroes.econ.format(cost), newClass.getName());
                     return false;
+                }
+            }
+
+            ClassChangeEvent event = new ClassChangeEvent(hero, currentClass, newClass);
+            plugin.getServer().getPluginManager().callEvent(event);
+            if (event.isCancelled()) {
+                return false;
+            }
+
+            if (prop.resetExpOnClassChange || prop.resetMasteryOnClassChange) {
+                if (!hero.isMaster(currentClass) || (prop.resetMasteryOnClassChange)) {
+                    hero.setExperience(currentClass, 0);
                 }
             }
 

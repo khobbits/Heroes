@@ -20,8 +20,8 @@ import com.herocraftonline.dev.heroes.util.Properties;
 public class ProfessionCommand extends BasicInteractiveCommand {
 
     private final Heroes plugin;
-    private Map<Player, HeroClass> pendingClassSelections = new HashMap<Player, HeroClass>();
-    private Map<Player, Boolean> pendingClassCostStatus = new HashMap<Player, Boolean>();
+    private Map<String, HeroClass> pendingClassSelections = new HashMap<String, HeroClass>();
+    private Map<String, Double> pendingClassCostStatus = new HashMap<String, Double>();
 
     public ProfessionCommand(Heroes plugin) {
         super("Choose Profession Class");
@@ -124,26 +124,28 @@ public class ProfessionCommand extends BasicInteractiveCommand {
                 cost = Heroes.properties.oldProfSwapCost;
             }
 
-            boolean chargePlayer = true;
             if (hero.isMaster(newClass) && props.swapMasterFree) {
-                chargePlayer = false;
-            } else if (!props.iConomy || Heroes.econ == null || cost <= 0) {
-                chargePlayer = false;
+                cost = 0;
+            } else if (!props.economy || Heroes.econ == null || cost <= 0) {
+                cost = 0;
+            } else if (props.economy && cost > 0 && !Heroes.econ.has(player.getName(), cost)) {
+                Messaging.send(player, "It will cost $1 to swith professions, you only have $2", Heroes.econ.format(cost), Heroes.econ.format(Heroes.econ.getBalance(player.getName())));
+                return false;
             }
 
-            pendingClassCostStatus.put(player, chargePlayer);
+            pendingClassCostStatus.put(player.getName(), cost);
 
             Messaging.send(executor, "You have chosen...");
             Messaging.send(executor, "$1: $2", newClass.getName(), newClass.getDescription().toLowerCase());
             String skills = newClass.getSkillNames().toString();
             skills = skills.substring(1, skills.length() - 1);
             Messaging.send(executor, "$1: $2", "Skills", skills);
-            if (chargePlayer) {
+            if (cost > 0) {
                 Messaging.send(executor, "$1: $2", "Fee", Heroes.econ.format(cost));
             }
             Messaging.send(executor, "Please §8/hero confirm §7 or §8/hero cancel §7this selection.");
 
-            pendingClassSelections.put(player, newClass);
+            pendingClassSelections.put(player.getName(), newClass);
             return true;
         }
 
@@ -165,7 +167,7 @@ public class ProfessionCommand extends BasicInteractiveCommand {
             Player player = (Player) executor;
             Hero hero = plugin.getHeroManager().getHero(player);
             HeroClass currentClass = hero.getSecondClass();
-            HeroClass newClass = pendingClassSelections.get(player);
+            HeroClass newClass = pendingClassSelections.remove(player.getName());
             Properties prop = Heroes.properties;
 
             ClassChangeEvent event = new ClassChangeEvent(hero, currentClass, newClass);
@@ -182,14 +184,9 @@ public class ProfessionCommand extends BasicInteractiveCommand {
                 }
             }
 
-            double cost = newClass.getCost();
-            if (currentClass == null && Heroes.properties.firstSwitchFree) {
-                cost = 0;
-            } else if (hero.getExperience(newClass) > 0) {
-                cost = Heroes.properties.oldProfSwapCost;
-            }
+            double cost = pendingClassCostStatus.remove(player.getName());
 
-            if (pendingClassCostStatus.get(player)) {
+            if (cost > 0) {
                 if (Heroes.econ.has(player.getName(), cost)) {
                     Heroes.econ.withdrawPlayer(player.getName(), cost);
                     Messaging.send(hero.getPlayer(), "The Gods are pleased with your offering of $1.", Heroes.econ.format(cost));

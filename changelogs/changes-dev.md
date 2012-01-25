@@ -7,6 +7,7 @@ Version 1.4.3
 * Projectiles no longer ignore no-pvp and level-range settings
 * Skills can no longer target dead entities
 * Secondary xp Bar now updates properly
+* /hero choose & /hero prof - will no longer break when players do not have enough $
 
 ==== **General:** ====
 
