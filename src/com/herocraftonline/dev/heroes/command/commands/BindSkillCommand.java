@@ -22,6 +22,7 @@ public class BindSkillCommand extends BasicCommand {
         setUsage("/bind §9<skill> §8[args]");
         setArgumentRange(0, 1000);
         setIdentifiers("bind");
+        setPermission("heroes.bind");
     }
 
     @Override

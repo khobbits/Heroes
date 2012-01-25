@@ -165,7 +165,7 @@ public class HPlayerListener implements Listener {
         }
 
         boolean isStealthy = false;
-        if (player.getItemInHand() != null) {
+        if (player.getItemInHand() != null && player.hasPermission("heroes.bind")) {
             Material material = player.getItemInHand().getType();
             if (hero.hasBind(material)) {
                 if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {

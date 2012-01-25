@@ -17,6 +17,11 @@ Version 1.4.3
 * recipe IDs are now in the format "ID:DAMAGE" instead of "ID,DAMAGE"
 ** please update to the new format if you're using any recipe blocks with special item data
 * 'parent' can no longer be used to specify a single strong parent.  Please use the new 'parents: strong:'
+* Support for SMS
+** Each class will get their own scrolling sign use /hero scroll to convert a map into a scroll!
+** allows players to use skills from the scroll instead of binding all of their skills
+* Added heroes.bind permission to restrict binding/use of binds
+** This can force players to use the SMS scroll for all skill usage (or the direct command)
 
 ==== **API:** ====
 
