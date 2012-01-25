@@ -212,7 +212,7 @@ public class HeroClassManager {
         //Setup temporary class name storage for heirarchies
 
 
-        
+
         Set<String> strongParents = new HashSet<String>();
         if (config.isConfigurationSection("parents")) {
             List<String> list = config.getStringList("parents.strong");
@@ -269,8 +269,8 @@ public class HeroClassManager {
             } else {
                 for (String materialName : itemDamages) {
                     Material material = Material.matchMaterial(materialName);
-                    if (material != null) {
-                        int damage = section.getInt(materialName, 0);
+                    if (material != null && section.get(materialName) instanceof Number) {
+                        int damage = section.getInt(materialName);
                         newClass.setItemDamage(material, damage);
                     } else {
                         Heroes.log(Level.WARNING, "Invalid item-damage (" + materialName + ") defined for " + className);
@@ -288,8 +288,8 @@ public class HeroClassManager {
             } else {
                 for (String materialName : itemDamages) {
                     Material material = Material.matchMaterial(materialName);
-                    if (material != null) {
-                        double damage = section.getDouble(materialName, 0.0);
+                    if (material != null && section.get(materialName) instanceof Number) {
+                        double damage = section.getDouble(materialName);
                         newClass.setItemDamageLevel(material, damage);
                     } else {
                         Heroes.log(Level.WARNING, "Invalid item-damage-level (" + materialName + ") defined for " + className);
@@ -306,18 +306,17 @@ public class HeroClassManager {
                 plugin.debugLog(Level.WARNING, className + " has no projectile damage section");
             } else {
                 for (String projectileName : projectileDamages) {
-                    try {
-                        ProjectileType type = ProjectileType.matchProjectile(projectileName);
-
-                        int damage = section.getInt(projectileName, 0);
+                    ProjectileType type = ProjectileType.matchProjectile(projectileName);
+                    if (type != null && section.get(projectileName) instanceof Number) {
+                        int damage = section.getInt(projectileName);
                         newClass.setProjectileDamage(type, damage);
-                    } catch (IllegalArgumentException e) {
-                        Heroes.log(Level.WARNING, "Invalid projectile-damage type (" + projectileName + ") defined for " + className);
+                    } else{
+                        Heroes.log(Level.WARNING, "Invalid projectile-damage type or value for (" + projectileName + ") defined in " + className);
                     }
                 }
             }
         }
-        
+
         // Load in Projectile Damages per-level for the class
         section = config.getConfigurationSection("projectile-damage-level");
         if (section != null) {
@@ -326,13 +325,12 @@ public class HeroClassManager {
                 plugin.debugLog(Level.WARNING, className + " has no projectile damage section");
             } else {
                 for (String projectileName : projectileDamages) {
-                    try {
-                        ProjectileType type = ProjectileType.matchProjectile(projectileName);
-
-                        double damage = section.getDouble(projectileName, 0);
+                    ProjectileType type = ProjectileType.matchProjectile(projectileName);
+                    if (type != null && section.get(projectileName) instanceof Number) {
+                        double damage = section.getDouble(projectileName);
                         newClass.setProjDamageLevel(type, damage);
-                    } catch (IllegalArgumentException e) {
-                        Heroes.log(Level.WARNING, "Invalid projectile-damage-level type (" + projectileName + ") defined for " + className);
+                    } else {
+                        Heroes.log(Level.WARNING, "Invalid projectile-damage-level type or value for (" + projectileName + ") defined in " + className);
                     }
                 }
             }
