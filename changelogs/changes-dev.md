@@ -47,5 +47,7 @@ Version 1.4.3
 ** Will strip the active enchant window display if a player can't enchant an item instead of messing with the item or denying use of the table completely
 * FireArrow
 ** Now launches flaming arrows as intended
+* Icebolt
+* UseText fixed
 * Light (NEW!)
 ** Similar to lightwalk from MagicSpells - changes blocks you walk on to glowstone periodically

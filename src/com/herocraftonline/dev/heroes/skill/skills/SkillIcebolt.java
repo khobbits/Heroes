@@ -57,6 +57,7 @@ public class SkillIcebolt extends ActiveSkill {
     }
     @Override
     public void init() {
+        super.init();
         applyText = SkillConfigManager.getRaw(this, Setting.APPLY_TEXT, "%target% has been slowed by %hero%!").replace("%target%", "$1").replace("%hero%", "$2");
         expireText = SkillConfigManager.getRaw(this, Setting.EXPIRE_TEXT, "%target% is no longer slowed!").replace("%target%", "$1");
     }
