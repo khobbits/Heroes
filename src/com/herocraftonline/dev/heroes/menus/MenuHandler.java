@@ -57,6 +57,10 @@ public class MenuHandler {
         for (String sn : hc.getSkillNames()) {
             Skill skill = plugin.getSkillManager().getSkill(sn);
             if (skill instanceof ActiveSkill) {
+                if (skill.getIdentifiers().length == 0) {
+                    Heroes.log(Level.SEVERE, "Skill " + sn + " has no valid identifiers and can not be used on the menu!  Please contact the author to fix the skill.");
+                    continue;
+                }
                 menu.addItem(skill.getName(), "/" + skill.getIdentifiers()[0], "");
             }
         }

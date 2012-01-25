@@ -22,6 +22,7 @@ public class SkillDisenchant extends ActiveSkill {
         setDescription("You are able to disenchant items, returning them to normal.");
         setArgumentRange(0, 0);
         setTypes(SkillType.KNOWLEDGE, SkillType.ITEM);
+        setIdentifiers("skill disenchant", "skill disench");
     }
 
     @SuppressWarnings("deprecation")
