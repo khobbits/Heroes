@@ -1189,10 +1189,10 @@ public class Hero {
      * Syncs the Hero's current Experience with the minecraft experience (should also sync the level bar)
      */
     public void syncExperience() {
-        if ((syncPrimary && !isMaster(heroClass)) || secondClass == null) {
-            syncExperience(heroClass);
-        } else {
+        if (secondClass != null && !syncPrimary) {
             syncExperience(secondClass);
+        } else {
+            syncExperience(heroClass);        
         }
     }
 
