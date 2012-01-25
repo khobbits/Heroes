@@ -3,11 +3,11 @@ package com.herocraftonline.dev.heroes.skill.skills;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -23,23 +23,18 @@ import com.herocraftonline.dev.heroes.skill.PassiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.SkillConfigManager;
 import com.herocraftonline.dev.heroes.skill.SkillType;
+import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillEnchant extends PassiveSkill {
 
     public SkillEnchant(Heroes plugin) {
         super(plugin, "Enchant");
-
         setDescription("You are able to enchant items.");
         setArgumentRange(0, 0);
         setTypes(SkillType.KNOWLEDGE, SkillType.ITEM);
         setEffectTypes(EffectType.BENEFICIAL);
-
-        if (Heroes.useSpout()) {
-            Bukkit.getServer().getPluginManager().registerEvents(new SkillEnchantListener(this), plugin);
-        } else {
-            Heroes.log(Level.WARNING, "SkillEnchant requires Spout! Remove from your skills directory if you will not use!");
-        }
+        Bukkit.getServer().getPluginManager().registerEvents(new SkillEnchantListener(this), plugin);
     }
 
     @Override
@@ -99,34 +94,41 @@ public class SkillEnchant extends PassiveSkill {
                 event.setCancelled(true);
                 return;
             }
-            double mult = SkillConfigManager.getUseSetting(hero, skill, "enchant-level-mult", 2.0, false);
+            int level = hero.getLevel(hc);
+            // this causes us to ignore the surrounding bookcases and just tell the client to generate numbers
             for (int i = 0; i < event.getExpLevelCostsOffered().length; i++) {
-                event.getExpLevelCostsOffered()[i] = (int) (event.getExpLevelCostsOffered()[i] * mult);
+                event.getExpLevelCostsOffered()[i] = level;
             }
         }
 
         @EventHandler(priority = EventPriority.LOWEST)
         public void onEnchantItem(EnchantItemEvent event) {
-            Hero hero = plugin.getHeroManager().getHero(event.getEnchanter());
+            Player player = event.getEnchanter();
+            Hero hero = plugin.getHeroManager().getHero(player);
             if (event.isCancelled()) {
                 hero.setEnchanting(false);
                 return;
             }
+            
             int level = hero.getLevel(hero.getEnchantingClass());
             event.setExpLevelCost(0);
             Map<Enchantment, Integer> enchants = event.getEnchantsToAdd();
             Iterator<Entry<Enchantment, Integer>> iter = enchants.entrySet().iterator();
             int xpCost = 0;
+            double mult = SkillConfigManager.getUseSetting(hero, skill, "enchant-level-mult", 2.0, false);
             while (iter.hasNext()) {
                 Entry<Enchantment, Integer> entry = iter.next();
                 int reqLevel = SkillConfigManager.getUseSetting(hero, skill, entry.getKey().getName(), 1, true);
                 if (level < reqLevel) {
                     iter.remove();
                 } else {
-                    xpCost += entry.getValue();
+                    int val = (int) (entry.getValue() * mult);
+                    entry.setValue(val);
+                    xpCost += val;
                 }
             }
             if (xpCost == 0) {
+                Messaging.send(player, "Enchanting failed!");
                 event.setCancelled(true);
             } else {
                 xpCost *= Heroes.properties.enchantXPMultiplier;
