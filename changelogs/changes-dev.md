@@ -34,6 +34,9 @@ Version 1.4.3
 ** added option to restrict ender-pearl use to only classes that have the skill
 * Charge
 ** velocities are now working as intended
+* Enchant
+** no longer requires SpoutPlugin to work
+** Will strip the active enchant window display if a player can't enchant an item instead of messing with the item or denying use of the table completely
 * FireArrow
 ** Now launches flaming arrows as intended
 * Light (NEW!)

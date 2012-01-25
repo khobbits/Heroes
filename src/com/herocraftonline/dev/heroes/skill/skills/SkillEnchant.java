@@ -1,21 +1,18 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
-import java.util.List;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Level;
-
-import net.minecraft.server.ContainerEnchantTable;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.getspout.spoutapi.event.inventory.InventoryCloseEvent;
-import org.getspout.spoutapi.event.inventory.InventoryEnchantEvent;
-import org.getspout.spoutapi.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.enchantment.EnchantItemEvent;
+import org.bukkit.event.enchantment.PrepareItemEnchantEvent;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
@@ -26,9 +23,7 @@ import com.herocraftonline.dev.heroes.skill.PassiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.SkillConfigManager;
 import com.herocraftonline.dev.heroes.skill.SkillType;
-import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Setting;
-import com.herocraftonline.dev.heroes.util.Util;
 
 public class SkillEnchant extends PassiveSkill {
 
@@ -41,7 +36,7 @@ public class SkillEnchant extends PassiveSkill {
         setEffectTypes(EffectType.BENEFICIAL);
 
         if (Heroes.useSpout()) {
-            Bukkit.getServer().getPluginManager().registerEvents(new SkillSpoutListener(this), plugin);
+            Bukkit.getServer().getPluginManager().registerEvents(new SkillEnchantListener(this), plugin);
         } else {
             Heroes.log(Level.WARNING, "SkillEnchant requires Spout! Remove from your skills directory if you will not use!");
         }
@@ -72,89 +67,72 @@ public class SkillEnchant extends PassiveSkill {
         section.set("ARROW_FIRE", 1);
         section.set("ARROW_INFINITE", 1);
         section.set(Setting.APPLY_TEXT.node(), "");
-        
+        section.set("enchant-level-mult", 2.0);
         return section;
     }
 
-    public class SkillSpoutListener implements Listener {
+    public class SkillEnchantListener implements Listener {
 
         private final Skill skill;
 
-        public SkillSpoutListener(Skill skill) {
+        public SkillEnchantListener(Skill skill) {
             this.skill = skill;
         }
 
         @EventHandler(priority = EventPriority.LOWEST)
-        public void onInventoryEnchant(InventoryEnchantEvent event) {
+        public void onPrepareItemEnchant(PrepareItemEnchantEvent event) {
             if (event.isCancelled()) {
                 return;
             }
-
-            Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
+            Hero hero = plugin.getHeroManager().getHero(event.getEnchanter());
             if (!hero.hasEffect(getName())) {
-                Messaging.send(event.getPlayer(), "You don't have the skill to enchant an item!");
-                Util.syncInventory(event.getPlayer(), plugin);
+                // Don't offer enchants to players that don't meet the requirements
                 event.setCancelled(true);
                 return;
             }
-
-            double xpCost = 0;
-            List<String> enchants = SkillConfigManager.getUseSettingKeys(hero, skill);
-            Map<Enchantment, Integer> newEnchants = event.getResult().getEnchantments();
-            for (Enchantment enchant : newEnchants.keySet()) {
-                if (event.getBefore().containsEnchantment(enchant)) {
-                    continue;
-                }
-                if (!enchants.contains(enchant.getName())) {
-                    event.setCancelled(true);
-                    Util.syncInventory(event.getPlayer(), plugin);
-                    return;
-                }
-                int level = SkillConfigManager.getUseSetting(hero, skill, enchant.getName(), 1, true);
-                if (hero.getLevel(hero.getEnchantingClass()) < level) {
-                    event.setCancelled(true);
-                    Util.syncInventory(event.getPlayer(), plugin);
-                    return;
-                }
-                xpCost += event.getResult().getEnchantmentLevel(enchant);
-            }
-
-            xpCost *= Heroes.properties.enchantXPMultiplier;
-            event.setLevelAfter(event.getLevelBefore());
-            hero.gainExp(-xpCost, ExperienceType.ENCHANTING);
-        }
-
-        @EventHandler(priority = EventPriority.LOWEST)
-        public void onInventoryOpen(InventoryOpenEvent event) {
-            if (event.isCancelled() || !(((CraftPlayer) event.getPlayer()).getHandle().activeContainer instanceof ContainerEnchantTable)) {
-                return;
-            }
-
-            Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
-            if (!hero.hasEffect(getName())) {
-                event.setCancelled(true);
-                Messaging.send(event.getPlayer(), "You don't have the ability to enchant items!");
-                return;
-            }
-
             HeroClass hc = hero.getEnchantingClass();
             if (hc != null) {
                 hero.syncExperience(hc);
                 hero.setEnchanting(true);
             } else {
+                // if for some reason we don't have an enchanting class also cancel the event
                 event.setCancelled(true);
+                return;
+            }
+            double mult = SkillConfigManager.getUseSetting(hero, skill, "enchant-level-mult", 2.0, false);
+            for (int i = 0; i < event.getExpLevelCostsOffered().length; i++) {
+                event.getExpLevelCostsOffered()[i] = (int) (event.getExpLevelCostsOffered()[i] * mult);
             }
         }
 
         @EventHandler(priority = EventPriority.LOWEST)
-        public void onInventoryClose(InventoryCloseEvent event) {
+        public void onEnchantItem(EnchantItemEvent event) {
+            Hero hero = plugin.getHeroManager().getHero(event.getEnchanter());
             if (event.isCancelled()) {
+                hero.setEnchanting(false);
                 return;
             }
-            Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
-            if (hero.hasEffect(getName()) && hero.isEnchanting()) {
-                hero.setEnchanting(false);
+            int level = hero.getLevel(hero.getEnchantingClass());
+            event.setExpLevelCost(0);
+            Map<Enchantment, Integer> enchants = event.getEnchantsToAdd();
+            Iterator<Entry<Enchantment, Integer>> iter = enchants.entrySet().iterator();
+            int xpCost = 0;
+            while (iter.hasNext()) {
+                Entry<Enchantment, Integer> entry = iter.next();
+                int reqLevel = SkillConfigManager.getUseSetting(hero, skill, entry.getKey().getName(), 1, true);
+                if (level < reqLevel) {
+                    iter.remove();
+                } else {
+                    xpCost += entry.getValue();
+                }
             }
+            if (xpCost == 0) {
+                event.setCancelled(true);
+            } else {
+                xpCost *= Heroes.properties.enchantXPMultiplier;
+                hero.gainExp(-xpCost, ExperienceType.ENCHANTING);
+            }
+            hero.setEnchanting(false);
         }
     }
 
