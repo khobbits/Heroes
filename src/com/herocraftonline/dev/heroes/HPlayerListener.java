@@ -14,6 +14,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerBedLeaveEvent;
+import org.bukkit.event.player.PlayerExpChangeEvent;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -47,12 +48,25 @@ public class HPlayerListener implements Listener {
         Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
+    @EventHandler (priority = EventPriority.MONITOR)
+    public void onPlayerExpChange(PlayerExpChangeEvent event) {
+        int amount = event.getAmount();
+        if (amount == 0) {
+            return;
+        }
+        Hero hero = plugin.getHeroManager().getHero(event.getPlayer());
+        if (amount < 0) {
+            hero.gainExp(event.getAmount(), ExperienceType.EXTERNAL);
+        }
+        event.setAmount(0);
+    }
+
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerFish(PlayerFishEvent event) {
         if (event.isCancelled()) {
             return;
         }
-        
+
         switch (event.getState()) {
         case CAUGHT_FISH :
             Player player = event.getPlayer();
@@ -109,10 +123,10 @@ public class HPlayerListener implements Listener {
         if (event.isCancelled()) {
             return;
         }
-        
+
         Player player = event.getPlayer();
         Hero hero = plugin.getHeroManager().getHero(player);
-        
+
         if (!hero.canEquipItem(player.getInventory().getHeldItemSlot())) {
             event.setCancelled(true);
             Util.syncInventory(player, plugin);
@@ -125,7 +139,7 @@ public class HPlayerListener implements Listener {
         if (event.useItemInHand() == Result.DENY) {
             return;
         }
-        
+
         Player player = event.getPlayer();
 
         Hero hero = plugin.getHeroManager().getHero(player);
@@ -142,7 +156,7 @@ public class HPlayerListener implements Listener {
             event.setCancelled(true);
             return;
         }
-        
+
         Block clickedBlock = event.getClickedBlock();
         if (clickedBlock != null) {
             switch (clickedBlock.getType()) {
@@ -207,7 +221,7 @@ public class HPlayerListener implements Listener {
                 hero.checkInventory();
             }
         }, 5);
-        
+
         //Spout stuff
         if (Heroes.useSpout()) {
             SpoutPlayer sPlayer = SpoutManager.getPlayer(player);
@@ -222,7 +236,7 @@ public class HPlayerListener implements Listener {
                 hero.getSecondClass().getView().allowedToUse(player);
             }
         }
-        */
+         */
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
