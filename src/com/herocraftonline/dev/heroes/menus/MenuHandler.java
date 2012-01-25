@@ -44,10 +44,10 @@ public class MenuHandler {
         try {
             menu = smsHandler.getMenu(name + " menu");
         } catch (SMSException e) {
-            menu = smsHandler.createMenu(name + " menu", name + "Skills", name);
+            menu = smsHandler.createMenu(name + " menu", name + " Skills", name);
         }
         if (menu == null) {
-            menu = smsHandler.createMenu(name + " menu", name + "Skills", name);
+            menu = smsHandler.createMenu(name + " menu", name + " Skills", name);
         }
         menu.getItems().clear();
         menu.setAutosave(true);
