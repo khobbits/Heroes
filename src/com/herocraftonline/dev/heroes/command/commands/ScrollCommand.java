@@ -22,6 +22,7 @@ public class ScrollCommand extends BasicCommand {
         setUsage("/scroll");
         setArgumentRange(0, 0);
         setIdentifiers("hero scroll");
+        setPermission("heroes.scroll");
     }
 
     @Override
