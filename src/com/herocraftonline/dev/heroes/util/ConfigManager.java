@@ -165,9 +165,10 @@ public class ConfigManager {
                     try {
                         Material mat = Material.getMaterial(Integer.valueOf(vals[0]));
                         short subType = 0;
-                        if (vals.length > 1)
+                        if (vals.length > 1) {
                             subType = Short.valueOf(vals[1]);
-
+                        }
+                        
                         rg.put(new ItemData(mat, subType), true);
                     } catch (NumberFormatException e) {
                         Heroes.log(Level.SEVERE, "Invalid item ID in recipe group" + key);
@@ -178,13 +179,14 @@ public class ConfigManager {
             List<String> deniedItems = recipeConfig.getStringList(key + ".denied-items");
             if (deniedItems != null && !deniedItems.isEmpty()) {
                 for (String i : deniedItems) {
-                    String[] vals = i.split(",");
+                    String[] vals = i.split(":");
                     try {
                         Material mat = Material.getMaterial(Integer.valueOf(vals[0]));
                         short subType = 0;
-                        if (vals.length > 1)
+                        if (vals.length > 1) {
                             subType = Short.valueOf(vals[1]);
-
+                        }
+                        
                         rg.put(new ItemData(mat, subType), false);
                     } catch (NumberFormatException e) {
                         Heroes.log(Level.SEVERE, "Invalid item ID in recipe group" + key);
