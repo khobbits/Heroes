@@ -3,12 +3,12 @@ creature-health:
     Cow: 10
     Creeper: 20
     Ghast: 10
-    Giant: 40
+    Giant: 100
     Pig: 10
     PigZombie: 20
     Sheep: 8
     Skeleton: 20
-    Slime: 16
+    # Slime: 16 - not enabled due to variable size
     Spider: 20
     Squid: 10
     Zombie: 20
@@ -19,10 +19,19 @@ creature-health:
     Villager: 20
     Blaze: 20
     MushroomCow: 10
-    LavaSlime: 16
+    # LavaSlime: 16 - not enabled cause they have variable size
     SnowMan: 4
 creature-damage:
-    Zombie: 2
+    Creeper: 49
+    Giant: 17
+    Zombie: 4
+    PigZombie: 5
+    Wolf: 2
+    Enderman: 7
+    Skeleton: 4
+    Spider: 2
+    CaveSpider: 2
+    SnowMan: 0
 item-damage:
     Air: 2
 environmental-damage:

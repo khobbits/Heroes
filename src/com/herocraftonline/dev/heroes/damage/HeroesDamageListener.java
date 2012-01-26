@@ -349,8 +349,9 @@ public class HeroesDamageListener implements Listener {
             if (currentHealth == null) {
                 currentHealth = (int) (lEntity.getHealth() / (double) lEntity.getMaxHealth()) * maxHealth;
             }
-
-            // Health-Syncing 
+            
+            // Health-Syncing - need to calc armor due to zombies having armor in 1.1
+            damage *= calculateArmorReduction(lEntity);
             currentHealth -= damage;
             // If the entity would die from damage, set the damage really high, this should kill any entity in MC outright
             if (currentHealth <= 0) {
@@ -599,8 +600,22 @@ public class HeroesDamageListener implements Listener {
         return damage < 1 ? 1 : damage;
     }
 
+    private double calculateArmorReduction(LivingEntity lEntity) {
+        if (lEntity instanceof Player) {
+            return calculateArmorReduction(((Player) lEntity).getInventory());
+        }
+        int armor = 0;
+        switch (Util.getCreatureFromEntity(lEntity)) {
+        case PIG_ZOMBIE:
+        case ZOMBIE:
+            armor = 2;
+            break;
+        }
+
+        return (25D - armor) / 25D;
+    }
+
     private double calculateArmorReduction(PlayerInventory inventory) {
-        double percent = 1;
         int armorPoints = 0;
         for (ItemStack armor : inventory.getArmorContents()) {
             if (armor == null) {
@@ -643,8 +658,7 @@ public class HeroesDamageListener implements Listener {
                 continue;
             }
         }
-        percent = (25 - armorPoints) / 25D;
-        return percent;
+        return (25 - armorPoints) / 25D;
     }
 
     private int getPlayerDamage(Player attacker, int damage) {

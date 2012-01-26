@@ -8,6 +8,7 @@ Version 1.4.3
 * Skills can no longer target dead entities
 * Secondary xp Bar now updates properly
 * /hero choose & /hero prof - will no longer break when players do not have enough $
+* Zombie & Zombie Pigman damage calculations now properly include their default 2 armor value
 
 ==== **General:** ====
 
