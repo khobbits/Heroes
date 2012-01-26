@@ -89,7 +89,6 @@ public class SkillEnchant extends PassiveSkill {
             HeroClass hc = hero.getEnchantingClass();
             if (hc != null) {
                 hero.syncExperience(hc);
-                hero.setEnchanting(true);
             } else {
                 // if for some reason we don't have an enchanting class also cancel the event
                 event.setCancelled(true);
@@ -108,11 +107,11 @@ public class SkillEnchant extends PassiveSkill {
             Player player = event.getEnchanter();
             Hero hero = plugin.getHeroManager().getHero(player);
             if (event.isCancelled()) {
-                hero.setEnchanting(false);
                 return;
             }
-            
-            int level = hero.getLevel(hero.getEnchantingClass());
+            HeroClass enchanter = hero.getEnchantingClass();
+            hero.setSyncPrimary(enchanter.equals(hero.getHeroClass()));
+            int level = hero.getLevel(enchanter);
             event.setExpLevelCost(0);
             Map<Enchantment, Integer> enchants = event.getEnchantsToAdd();
             Iterator<Entry<Enchantment, Integer>> iter = enchants.entrySet().iterator();
@@ -125,6 +124,9 @@ public class SkillEnchant extends PassiveSkill {
                     iter.remove();
                 } else {
                     int val = (int) (entry.getValue() * mult);
+                    if (val > entry.getKey().getMaxLevel()) {
+                        val = entry.getKey().getMaxLevel();
+                    }
                     entry.setValue(val);
                     xpCost += val;
                 }
@@ -136,7 +138,6 @@ public class SkillEnchant extends PassiveSkill {
                 xpCost *= Heroes.properties.enchantXPMultiplier;
                 hero.gainExp(-xpCost, ExperienceType.ENCHANTING);
             }
-            hero.setEnchanting(false);
         }
     }
 

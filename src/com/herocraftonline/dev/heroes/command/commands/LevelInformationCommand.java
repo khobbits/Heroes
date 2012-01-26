@@ -27,11 +27,11 @@ public class LevelInformationCommand extends BasicCommand {
     public boolean execute(CommandSender sender, String identifier, String[] args) {
         if (!(sender instanceof Player))
             return false;
-        
+
         Player player = (Player) sender;
         Hero hero = plugin.getHeroManager().getHero(player);
-        
-        if (args.length > 0 && args[0].equalsIgnoreCase("toggle") && !hero.isEnchanting()) {
+
+        if (args.length > 0 && args[0].equalsIgnoreCase("toggle")) {
             hero.setSyncPrimary(!hero.isSyncPrimary());
             Messaging.send(player, "Your experience bar is now synced with $1", hero.isSyncPrimary() ? hero.getHeroClass().getName() : hero.getSecondClass().getName());
             return true;
@@ -48,7 +48,7 @@ public class LevelInformationCommand extends BasicCommand {
         String secondClassName = sClass != null ? " | " + sClass.getName() : "";
         String secondLevelInfo = sClass != null ? (" | " + hero.getLevel(sClass) + ChatColor.GREEN + "/" + ChatColor.WHITE + sClass.getMaxLevel()) : "";
         String secondExp = sClass != null ? " | " + (int) hero.getExperience(sClass) : "";
-        
+
         sender.sendMessage(ChatColor.RED + "-----[ " + ChatColor.WHITE + "Your Level Information" + ChatColor.RED + " ]-----");
         sender.sendMessage(ChatColor.GREEN + "  Class: " + ChatColor.WHITE + hc.getName() + secondClassName);
         sender.sendMessage(ChatColor.GREEN + "  Level: " + ChatColor.WHITE + level + ChatColor.GREEN + "/" + ChatColor.WHITE + hc.getMaxLevel()
