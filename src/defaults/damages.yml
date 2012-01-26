@@ -1,6 +1,26 @@
 creature-health:
-    Creeper: 14
+    Chicken: 4
+    Cow: 10
+    Creeper: 20
+    Ghast: 10
+    Giant: 40
+    Pig: 10
+    PigZombie: 20
+    Sheep: 8
+    Skeleton: 20
+    Slime: 16
+    Spider: 20
+    Squid: 10
     Zombie: 20
+    Wolf: 8
+    CaveSpider: 20
+    Enderman: 40
+    Silverfish: 8
+    Villager: 20
+    Blaze: 20
+    MushroomCow: 10
+    LavaSlime: 16
+    SnowMan: 4
 creature-damage:
     Zombie: 2
 item-damage:
