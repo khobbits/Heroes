@@ -1,6 +1,7 @@
 package com.herocraftonline.dev.heroes.hero;
 
 import java.text.DecimalFormat;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -8,10 +9,12 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -44,29 +47,31 @@ public class Hero {
 
     private final Heroes plugin;
     private Player player;
-    private HeroClass heroClass;
-    private HeroClass secondClass;
-    private int mana = 0;
+    private final String name;
+    private volatile HeroClass heroClass;
+    private volatile HeroClass secondClass;
+    private volatile int mana = 0;
     private HeroParty party = null;
-    private boolean verbose = true;
+    private volatile boolean verbose = true;
     private HeroDamageCause lastDamageCause = null;
     private Map<String, Effect> effects = new HashMap<String, Effect>();
-    private Map<String, Double> experience = new HashMap<String, Double>();
-    private Map<String, Long> cooldowns = new HashMap<String, Long>();
+    private Map<String, Double> experience = new ConcurrentHashMap<String, Double>();
+    private Map<String, Long> cooldowns = new ConcurrentHashMap<String, Long>();
     private Set<LivingEntity> summons = new HashSet<LivingEntity>();
     private Map<Material, String[]> binds = new EnumMap<Material, String[]>(Material.class);
-    private Set<String> suppressedSkills = new HashSet<String>();
-    private Map<String, Map<String, String>> skillSettings = new HashMap<String, Map<String, String>>();
+    private Map<String, Boolean> suppressedSkills = new ConcurrentHashMap<String, Boolean>();
+    private Map<String, ConfigurationSection> persistedSkillSettings = new ConcurrentHashMap<String, ConfigurationSection>();
     private Map<String, ConfigurationSection> skills = new HashMap<String, ConfigurationSection>();
     private boolean syncPrimary = true;
     private Integer tieredLevel;
-    private double health;
+    private volatile double health;
     private PermissionAttachment transientPerms;
     private DelayedSkill delayedSkill = null;
 
     public Hero(Heroes plugin, Player player, HeroClass heroClass, HeroClass secondClass) {
         this.plugin = plugin;
         this.player = player;
+        this.name = player.getName();
         this.heroClass = heroClass;
         this.secondClass = secondClass;
         transientPerms = player.addAttachment(plugin);
@@ -508,6 +513,10 @@ public class Hero {
         syncExperience();
     }
 
+    public String getName() {
+        return name;
+    }
+
     public String[] getBind(Material mat) {
         return binds.get(mat);
     }
@@ -754,8 +763,8 @@ public class Hero {
         return new HashMap<String, ConfigurationSection>(skills);
     }
 
-    public Map<String, Map<String, String>> getSkillSettings() {
-        return Collections.unmodifiableMap(skillSettings);
+    public Map<String, ConfigurationSection> getSkillSettings() {
+        return Collections.unmodifiableMap(persistedSkillSettings);
     }
 
     /**
@@ -764,7 +773,7 @@ public class Hero {
      * @param skill
      * @return
      */
-    public Map<String, String> getSkillSettings(Skill skill) {
+    public ConfigurationSection getSkillSettings(Skill skill) {
         return skill == null ? null : getSkillSettings(skill.getName());
     }
 
@@ -774,12 +783,12 @@ public class Hero {
      * @param skill
      * @return
      */
-    public Map<String, String> getSkillSettings(String skillName) {
+    public ConfigurationSection getSkillSettings(String skillName) {
         if (!heroClass.hasSkill(skillName) && (secondClass == null || !secondClass.hasSkill(skillName))) {
             return null;
         }
 
-        return skillSettings.get(skillName.toLowerCase());
+        return persistedSkillSettings.get(skillName.toLowerCase());
     }
 
     /**
@@ -796,7 +805,7 @@ public class Hero {
      * @return
      */
     public Set<String> getSuppressedSkills() {
-        return Collections.unmodifiableSet(suppressedSkills);
+        return suppressedSkills.keySet();
     }
 
     public boolean hasBind(Material mat) {
@@ -926,7 +935,7 @@ public class Hero {
      * @return boolean
      */
     public boolean isSuppressing(Skill skill) {
-        return suppressedSkills.contains(skill.getName());
+        return suppressedSkills.containsKey(skill.getName());
     }
 
     /**
@@ -934,7 +943,7 @@ public class Hero {
      *
      * @return boolean
      */
-    public boolean isVerbose() {
+    public synchronized boolean isVerbose() {
         return verbose;
     }
 
@@ -1136,12 +1145,12 @@ public class Hero {
      * @param val
      */
     public void setSkillSetting(String skillName, String node, Object val) {
-        Map<String, String> settings = skillSettings.get(skillName.toLowerCase());
-        if (settings == null) {
-            settings = new HashMap<String, String>();
-            skillSettings.put(skillName.toLowerCase(), settings);
+        ConfigurationSection section = persistedSkillSettings.get(skillName.toLowerCase());
+        if (section == null) {
+            section = new MemoryConfiguration();
+            persistedSkillSettings.put(skillName.toLowerCase(), section);
         }
-        settings.put(node, val.toString());
+        section.set(node, val.toString());
     }
 
     /**
@@ -1152,14 +1161,16 @@ public class Hero {
      */
     public void setSuppressed(Skill skill, boolean suppressed) {
         if (suppressed) {
-            suppressedSkills.add(skill.getName());
+            suppressedSkills.put(skill.getName(), true);
         } else {
             suppressedSkills.remove(skill.getName());
         }
     }
 
-    public void setSuppressedSkills(Set<String> suppressedSkills) {
-        this.suppressedSkills = suppressedSkills;
+    public void setSuppressedSkills(Collection<String> suppressedSkills) {
+        for (String s : suppressedSkills) {
+            this.suppressedSkills.put(s, true);
+        }
     }
 
     /**

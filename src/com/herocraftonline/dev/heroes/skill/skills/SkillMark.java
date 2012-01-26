@@ -1,9 +1,9 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
-import java.util.Map;
-
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 import com.herocraftonline.dev.heroes.Heroes;
@@ -27,7 +27,7 @@ public class SkillMark extends ActiveSkill {
     @Override
     public SkillResult use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
-        Map<String, String> skillSetting = hero.getSkillSettings("Recall");
+        ConfigurationSection skillSetting = hero.getSkillSettings("Recall");
 
         if (args.length > 0) {
             // Display the info about the current mark
@@ -54,31 +54,31 @@ public class SkillMark extends ActiveSkill {
         }
     }
 
-    private double[] getStoredData(Map<String, String> skillSetting) {
+    public static double[] getStoredData(ConfigurationSection skillSetting) {
         double[] xyzyp = new double[5];
 
-        xyzyp[0] = Double.valueOf(skillSetting.get("x"));
-        xyzyp[1] = Double.valueOf(skillSetting.get("y"));
-        xyzyp[2] = Double.valueOf(skillSetting.get("z"));
-        xyzyp[3] = Double.valueOf(skillSetting.get("yaw"));
-        xyzyp[4] = Double.valueOf(skillSetting.get("pitch"));
+        xyzyp[0] = skillSetting.getDouble("x");
+        xyzyp[1] = skillSetting.getDouble("y");
+        xyzyp[2] = skillSetting.getDouble("z");
+        xyzyp[3] = skillSetting.getDouble("yaw");
+        xyzyp[4] = skillSetting.getDouble("pitch");
 
         return xyzyp;
     }
 
-    private World validateLocation(Map<String, String> skillSetting, Player player) {
+    public static World validateLocation(ConfigurationSection skillSetting, Player player) {
         if (skillSetting == null) {
             Messaging.send(player, "You do not have a recall location marked.");
             return null;
         }
 
         // Make sure the world setting isn't null - this lets us know the player has a location saved
-        if (skillSetting.get("world") == null || skillSetting.get("world").equals("")) {
+        if (skillSetting.get("world") == null || skillSetting.getString("world").equals("")) {
             Messaging.send(player, "You do not have a recall location marked.");
             return null;
         }
         // Get the world and make sure it's still available to return to
-        World world = plugin.getServer().getWorld(skillSetting.get("world"));
+        World world = Bukkit.getServer().getWorld(skillSetting.getString("world"));
         if (world == null) {
             Messaging.send(player, "You have an invalid recall location marked!");
             return null;

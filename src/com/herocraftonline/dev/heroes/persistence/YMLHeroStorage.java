@@ -3,7 +3,6 @@ package com.herocraftonline.dev.heroes.persistence;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -24,7 +23,7 @@ import com.herocraftonline.dev.heroes.util.Util;
 
 public class YMLHeroStorage extends HeroStorage {
 
-    private File playerFolder;
+    private final File playerFolder;
 
     public YMLHeroStorage(Heroes plugin) {
         super(plugin);
@@ -66,7 +65,7 @@ public class YMLHeroStorage extends HeroStorage {
             playerHero.setMana(playerConfig.getInt("mana", 0));
             playerHero.setHealth(playerConfig.getDouble("health", playerClass.getBaseMaxHealth()));
             playerHero.setVerbose(playerConfig.getBoolean("verbose", true));
-            playerHero.setSuppressedSkills(new HashSet<String>(playerConfig.getStringList("suppressed")));
+            playerHero.setSuppressedSkills(playerConfig.getStringList("suppressed"));
 
             Heroes.log(Level.INFO, "Loaded hero: " + player.getName() + " with EID: " + player.getEntityId());
             return playerHero;
@@ -79,7 +78,7 @@ public class YMLHeroStorage extends HeroStorage {
 
     @Override
     public boolean saveHero(Hero hero) {
-        String name = hero.getPlayer().getName();
+        String name = hero.getName();
         File playerFile = new File(playerFolder + File.separator + name.substring(0, 1).toLowerCase(), name + ".yml");
         FileConfiguration playerConfig = new YamlConfiguration();
 
@@ -90,7 +89,6 @@ public class YMLHeroStorage extends HeroStorage {
         playerConfig.set("verbose", hero.isVerbose());
         playerConfig.set("suppressed", new ArrayList<String>(hero.getSuppressedSkills()));
         playerConfig.set("mana", hero.getMana());
-        playerConfig.set("itemrecovery", null);
         playerConfig.set("health", hero.getHealth());
 
         saveSkillSettings(hero, playerConfig.createSection("skill-settings"));
@@ -232,7 +230,6 @@ public class YMLHeroStorage extends HeroStorage {
 
     /**
      * Loads hero-specific Skill settings
-     * TODO: Rewrite-me
      * @param hero
      * @param section
      */
@@ -241,17 +238,23 @@ public class YMLHeroStorage extends HeroStorage {
             return;
 
         for (String skill : section.getKeys(false)) {
-            if (section.isConfigurationSection(skill)) {
-                for (String node : section.getConfigurationSection(skill).getKeys(false)) {
-                    hero.setSkillSetting(skill, node, section.getConfigurationSection(skill).getString(node));
+            if (!section.isConfigurationSection(skill)) {
+                continue;
+            }
+            ConfigurationSection subSection = section.getConfigurationSection(skill);
+            for (String key : subSection.getKeys(true)) {
+                if (subSection.isConfigurationSection(key)) {
+                    continue;
                 }
+                hero.setSkillSetting(skill, key, subSection.get(key));
             }
         }
     }
 
     private void saveBinds(Hero hero, ConfigurationSection section) {
-        if (section == null)
+        if (section == null) {
             return;
+        }
 
         Map<Material, String[]> binds = hero.getBinds();
         for (Material material : binds.keySet()) {
@@ -265,8 +268,9 @@ public class YMLHeroStorage extends HeroStorage {
     }
 
     private void saveCooldowns(Hero hero, ConfigurationSection section) {
-        if (section == null)
+        if (section == null) {
             return;
+        }
 
         long time = System.currentTimeMillis();
         Map<String, Long> cooldowns = hero.getCooldowns();
@@ -280,8 +284,9 @@ public class YMLHeroStorage extends HeroStorage {
     }
 
     private void saveExperience(Hero hero, ConfigurationSection section) {
-        if (hero == null || hero.getClass() == null || section == null)
+        if (hero == null || hero.getClass() == null || section == null) {
             return;
+        }
 
         Map<String, Double> expMap = hero.getExperienceMap();
         for (Map.Entry<String, Double> entry : expMap.entrySet()) {
@@ -289,11 +294,13 @@ public class YMLHeroStorage extends HeroStorage {
         }
     }
 
-    //TODO: this needs to be re-written to just be a dump
     private void saveSkillSettings(Hero hero, ConfigurationSection config) {
-        for (Entry<String, Map<String, String>> entry : hero.getSkillSettings().entrySet()) {
-            for (Entry<String, String> node : entry.getValue().entrySet()) {
-                config.set(entry.getKey() + "." + node.getKey(), node.getValue());
+        for (Entry<String, ConfigurationSection> entry : hero.getSkillSettings().entrySet()) {
+            for (String key : entry.getValue().getKeys(true)) {
+                if (entry.getValue().isConfigurationSection(key)) {
+                    continue;
+                }
+                config.set(entry.getKey() + "." + key, entry.getValue().get(key));
             }
         }
     }
