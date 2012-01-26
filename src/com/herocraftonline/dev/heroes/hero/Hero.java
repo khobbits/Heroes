@@ -435,7 +435,7 @@ public class Hero {
 
             // Save the hero file when the Hero changes levels to prevent rollback issues
             if (newLevel != currentLevel) {
-                plugin.getHeroManager().saveHero(this);
+                plugin.getHeroManager().saveHero(this, false);
             }
         }
         syncExperience();
@@ -544,7 +544,7 @@ public class Hero {
 
 
         }
-        plugin.getHeroManager().saveHero(this);
+        plugin.getHeroManager().saveHero(this, false);
         syncExperience();
     }
 

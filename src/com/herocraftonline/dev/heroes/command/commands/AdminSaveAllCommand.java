@@ -30,7 +30,7 @@ public class AdminSaveAllCommand extends BasicCommand {
         }
 
         for (Hero hero : plugin.getHeroManager().getHeroes()) {
-            plugin.getHeroManager().saveHero(hero);
+            plugin.getHeroManager().saveHero(hero, true);
         }
         Messaging.send(sender, "You have saved all loaded Heroes.");
         return true;

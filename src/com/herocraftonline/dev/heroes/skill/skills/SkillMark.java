@@ -49,7 +49,7 @@ public class SkillMark extends ActiveSkill {
             Object[] obj = new Object[] { loc.getWorld().getName(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ() };
             Messaging.send(player, "You have marked a new location on $1 at: $2, $3, $4", obj);
 
-            plugin.getHeroManager().saveHero(hero);
+            plugin.getHeroManager().saveHero(hero, false);
             return SkillResult.NORMAL;
         }
     }

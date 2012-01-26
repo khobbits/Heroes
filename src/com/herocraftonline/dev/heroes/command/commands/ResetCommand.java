@@ -97,7 +97,7 @@ public class ResetCommand extends BasicInteractiveCommand {
             }
 
             Messaging.send(player, "Welcome to the path of the $1!", defaultClass.getName());
-            plugin.getHeroManager().saveHero(hero);
+            plugin.getHeroManager().saveHero(hero, false);
             return true;
         }
     }

@@ -77,7 +77,16 @@ public class YMLHeroStorage extends HeroStorage {
     }
 
     @Override
-    public boolean saveHero(Hero hero) {
+    public void saveHero(Hero hero, boolean now) {
+        doSave(hero);
+    }
+
+    /**
+     * Thread-safe save method for saving a hero
+     * @param hero
+     * @return
+     */
+    public boolean doSave(Hero hero) {
         String name = hero.getName();
         File playerFile = new File(playerFolder + File.separator + name.substring(0, 1).toLowerCase(), name + ".yml");
         FileConfiguration playerConfig = new YamlConfiguration();

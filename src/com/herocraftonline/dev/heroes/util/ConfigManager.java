@@ -90,7 +90,7 @@ public class ConfigManager {
         try {
             final Player[] players = plugin.getServer().getOnlinePlayers();
             for (Player player : players) {
-                plugin.getHeroManager().saveHero(player);
+                plugin.getHeroManager().saveHero(player, true);
                 Hero hero = plugin.getHeroManager().getHero(player);
                 hero.clearEffects();
             }

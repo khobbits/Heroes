@@ -228,15 +228,6 @@ public class HPlayerListener implements Listener {
             if (sPlayer.isSpoutCraftEnabled())
                 plugin.getSpoutData().createPartyContainer(sPlayer);
         }
-        /*
-         * TODO: Properly find a way to implement ScrollingMenuSigns
-        if (Heroes.smsHandler != null) {
-            hero.getHeroClass().getView().allowedToUse(player);
-            if (hero.getSecondClass() != null) {
-                hero.getSecondClass().getView().allowedToUse(player);
-            }
-        }
-         */
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -270,7 +261,7 @@ public class HPlayerListener implements Listener {
         Hero hero = heroManager.getHero(player);
         hero.cancelDelayedSkill();
         hero.clearEffects();
-        heroManager.saveHero(hero);
+        heroManager.saveHero(hero, false);
         heroManager.removeHero(hero);
         for (Command command : plugin.getCommandHandler().getCommands()) {
             if (command.isInteractive()) {

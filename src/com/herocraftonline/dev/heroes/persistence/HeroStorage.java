@@ -23,5 +23,5 @@ public abstract class HeroStorage {
 
     public abstract Hero loadHero(Player player);
 
-    public abstract boolean saveHero(Hero hero);
+    public abstract void saveHero(Hero hero, boolean now);
 }

@@ -199,7 +199,7 @@ public class ChooseCommand extends BasicInteractiveCommand {
             if (prop.resetProfOnPrimaryChange && hero.getSecondClass() != null) {
                 hero.setExperience(hero.getSecondClass(), 0);
             }
-            plugin.getHeroManager().saveHero(hero);
+            plugin.getHeroManager().saveHero(hero, false);
             return true;
         }
     }

@@ -185,7 +185,7 @@ public class Heroes extends JavaPlugin {
         heroManager.stopTimers();
         final Player[] players = getServer().getOnlinePlayers();
         for (Player player : players) {
-            heroManager.saveHero(player);
+            heroManager.saveHero(player, true);
             Hero hero = heroManager.getHero(player);
             hero.clearSummons();
         }

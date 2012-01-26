@@ -199,7 +199,7 @@ public class ProfessionCommand extends BasicInteractiveCommand {
             hero.changeHeroClass(newClass, true);
             Messaging.send(player, "Welcome to the path of the $1!", newClass.getName());
 
-            plugin.getHeroManager().saveHero(hero);
+            plugin.getHeroManager().saveHero(hero, false);
             return true;
         }
     }

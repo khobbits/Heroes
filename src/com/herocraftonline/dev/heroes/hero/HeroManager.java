@@ -76,7 +76,7 @@ public class HeroManager {
             if (hero.getPlayer().getEntityId() != player.getEntityId()) {
                 heroes.remove(key);
                 hero.clearEffects();
-                saveHero(hero);
+                saveHero(hero, true);
             } else {
                 Heroes.debug.stopTask("HeroManager.getHero");
                 return hero;
@@ -128,7 +128,7 @@ public class HeroManager {
                     this.plugin.getPartyManager().removeParty(party);
                 }
             }
-            heroes.remove(hero.getPlayer().getName().toLowerCase());
+            heroes.remove(hero.getName().toLowerCase());
         }
     }
 
@@ -137,16 +137,14 @@ public class HeroManager {
      *
      * @param player
      */
-    public void saveHero(Hero hero) {
-        if (heroStorage.saveHero(hero)) {
-            Heroes.log(Level.INFO, "Saved hero: " + hero.getPlayer().getName());
-        } else {
-            Heroes.log(Level.SEVERE, "There was an issue saving " + hero.getPlayer().getName());
-        }
+    public void saveHero(Hero hero, boolean now) {
+        heroStorage.saveHero(hero, now);
+        Heroes.log(Level.INFO, "Saved hero: " + hero.getPlayer().getName());
+
     }
 
-    public void saveHero(Player player) {
-        saveHero(getHero(player));
+    public void saveHero(Player player, boolean now) {
+        saveHero(getHero(player), now);
     }
 
     public void stopTimers() {
