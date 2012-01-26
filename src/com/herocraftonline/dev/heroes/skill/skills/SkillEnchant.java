@@ -63,7 +63,6 @@ public class SkillEnchant extends PassiveSkill {
         section.set("ARROW_FIRE", 1);
         section.set("ARROW_INFINITE", 1);
         section.set(Setting.APPLY_TEXT.node(), "");
-        section.set("enchant-level-mult", 1.0);
         return section;
     }
 
@@ -112,25 +111,22 @@ public class SkillEnchant extends PassiveSkill {
             HeroClass enchanter = hero.getEnchantingClass();
             hero.setSyncPrimary(enchanter.equals(hero.getHeroClass()));
             int level = hero.getLevel(enchanter);
-            event.setExpLevelCost(0);
+            
             Map<Enchantment, Integer> enchants = event.getEnchantsToAdd();
             Iterator<Entry<Enchantment, Integer>> iter = enchants.entrySet().iterator();
             int xpCost = 0;
-            double mult = SkillConfigManager.getUseSetting(hero, skill, "enchant-level-mult", 1.0, false);
             while (iter.hasNext()) {
                 Entry<Enchantment, Integer> entry = iter.next();
                 int reqLevel = SkillConfigManager.getUseSetting(hero, skill, entry.getKey().getName(), 1, true);
                 if (level < reqLevel) {
                     iter.remove();
                 } else {
-                    int val = (int) (entry.getValue() * mult);
-                    if (val > entry.getKey().getMaxLevel()) {
-                        val = entry.getKey().getMaxLevel();
-                    }
-                    entry.setValue(val);
-                    xpCost += val;
+                    int val = entry.getValue();
+                    int maxVal = entry.getKey().getMaxLevel();
+                    xpCost +=  event.getExpLevelCost() * ((double) val / maxVal);
                 }
             }
+            event.setExpLevelCost(0);
             if (xpCost == 0) {
                 Messaging.send(player, "Enchanting failed!");
                 event.setCancelled(true);
