@@ -10,6 +10,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -48,11 +51,11 @@ public class Hero {
     private final Heroes plugin;
     private Player player;
     private final String name;
-    private volatile HeroClass heroClass;
-    private volatile HeroClass secondClass;
-    private volatile int mana = 0;
+    private HeroClass heroClass;
+    private HeroClass secondClass;
+    private AtomicInteger mana = new AtomicInteger(0);
     private HeroParty party = null;
-    private volatile boolean verbose = true;
+    private AtomicBoolean verbose = new AtomicBoolean(true);
     private HeroDamageCause lastDamageCause = null;
     private Map<String, Effect> effects = new HashMap<String, Effect>();
     private Map<String, Double> experience = new ConcurrentHashMap<String, Double>();
@@ -64,9 +67,10 @@ public class Hero {
     private Map<String, ConfigurationSection> skills = new HashMap<String, ConfigurationSection>();
     private boolean syncPrimary = true;
     private Integer tieredLevel;
-    private volatile double health;
+    private double health;
     private PermissionAttachment transientPerms;
     private DelayedSkill delayedSkill = null;
+    private ReentrantReadWriteLock rwl = new ReentrantReadWriteLock();
 
     public Hero(Heroes plugin, Player player, HeroClass heroClass, HeroClass secondClass) {
         this.plugin = plugin;
@@ -117,16 +121,32 @@ public class Hero {
         skills.put(skill.toLowerCase(), section);
     }
 
+    /**
+     * Returns if the hero has a class with the given experience type
+     * 
+     * Thread-safe
+     */
     public boolean hasExperienceType(ExperienceType type) {
-        return heroClass.hasExperiencetype(type) || (secondClass != null && secondClass.hasExperiencetype(type));
+        rwl.readLock().lock();
+        boolean val = heroClass.hasExperiencetype(type) || (secondClass != null && secondClass.hasExperiencetype(type));
+        rwl.readLock().unlock();
+        return val;
     }
 
+    /**
+     * Returns if the hero can gain the experience type specified
+     * Thread-safe
+     * 
+     * @param type
+     * @return
+     */
     public boolean canGain(ExperienceType type) {
         if (type == ExperienceType.ADMIN) {
             return true;
         }
 
         boolean prim = false;
+        rwl.readLock().lock();
         if (heroClass.hasExperiencetype(type)) {
             prim = !isMaster(heroClass);
         }
@@ -135,14 +155,16 @@ public class Hero {
         if (secondClass != null && secondClass.hasExperiencetype(type)) {
             prof = !isMaster(secondClass);
         }
-
+        rwl.readLock().unlock();
         return prim || prof;
     }
 
     /**
      * Adds a skill binding to the given Material.
      * Ignores Air/Null values
-     *
+     * 
+     * Thread-Safe
+     * 
      * @param material
      * @param skillName
      */
@@ -156,7 +178,7 @@ public class Hero {
 
     /**
      * Changes the hero's current class to the given class then clears all binds, effects and summons.
-     *
+     * 
      * @param heroClass
      */
     public void changeHeroClass(HeroClass heroClass, boolean secondary) {
@@ -173,10 +195,18 @@ public class Hero {
         getTieredLevel(true);
     }
 
+    /**
+     * Clears all of a player's bindings
+     * Thread-Safe
+     */
     public void clearBinds() {
         binds.clear();
     }
 
+    /**
+     * Clears all of a player's cooldowns
+     * Thread-safe
+     */
     public void clearCooldowns() {
         cooldowns.clear();
     }
@@ -192,6 +222,8 @@ public class Hero {
 
     /**
      * Clears all experience for all classes on the hero
+     * 
+     * Thread-Safe
      */
     public void clearExperience() {
         for (Entry<String, Double> entry : experience.entrySet()) {
@@ -306,7 +338,7 @@ public class Hero {
         }
         Properties prop = Heroes.properties;
 
-        HeroClass[] classes = new HeroClass[]{heroClass, secondClass};
+        HeroClass[] classes = new HeroClass[]{getHeroClass(), getSecondClass()};
 
         for (HeroClass hc : classes) {
             if (hc == null) {
@@ -365,9 +397,9 @@ public class Hero {
 
             // notify the user
             if (gainedExp != 0) {
-                if (verbose && gainedExp > 0) {
+                if (isVerbose() && gainedExp > 0) {
                     Messaging.send(player, "$1: Gained $2 Exp", hc.getName(), decFormat.format(gainedExp));
-                } else if (verbose && gainedExp < 0) {
+                } else if (isVerbose() && gainedExp < 0) {
                     Messaging.send(player, "$1: Lost $2 Exp", hc.getName(), decFormat.format(-gainedExp));
                 }
                 if (newLevel != currentLevel) {
@@ -439,7 +471,7 @@ public class Hero {
         }
         Properties prop = Heroes.properties;
 
-        HeroClass[] classes = new HeroClass[]{heroClass, secondClass};
+        HeroClass[] classes = new HeroClass[]{getHeroClass(), getSecondClass()};
 
         for (HeroClass hc : classes) {
             if (hc == null) {
@@ -492,7 +524,7 @@ public class Hero {
             // notify the user
 
             if (gainedExp != 0) {
-                if (verbose && gainedExp < 0) {
+                if (isVerbose() && gainedExp < 0) {
                     Messaging.send(player, "$1: Lost $2 Exp", hc.getName(), decFormat.format(-gainedExp));
                 }
                 if (newLevel != currentLvl) {
@@ -564,16 +596,17 @@ public class Hero {
 
     /**
      * Get the hero's experience in it's current class.
-     *
+     * Thread-safe
      * @return double experience
      */
+    @Deprecated
     public double getExperience() {
-        return getExperience(heroClass);
+        return getExperience(getHeroClass());
     }
 
     /**
      * Get the hero's experience in the given class
-     *
+     * Thread-safe
      * @param heroClass
      * @return double experience
      */
@@ -593,7 +626,10 @@ public class Hero {
      * @return the hero's current health - double
      */
     public double getHealth() {
-        return health;
+        rwl.readLock().lock();
+        double val = health;
+        rwl.readLock().unlock();
+        return val;
     }
 
     /**
@@ -602,7 +638,10 @@ public class Hero {
      * @return heroclass
      */
     public HeroClass getHeroClass() {
-        return heroClass;
+        rwl.readLock().lock();
+        HeroClass hc = heroClass;
+        rwl.readLock().unlock();
+        return hc;
     }
 
     public HeroDamageCause getLastDamageCause() {
@@ -610,15 +649,19 @@ public class Hero {
     }
 
     /**
+     * Returns the hero's current highest level
+     * Thread-safe
      * @return the level of the character - returns the highest value of the secondclass or primary class
      */
     public int getLevel() {
+        rwl.readLock().lock();
         int primary = getLevel(heroClass);
         int second = 0;
         if (secondClass != null) {
             second = getLevel(secondClass);
         }
-
+        rwl.readLock().unlock();
+        
         return primary > second ? primary : second;
     }
 
@@ -631,6 +674,7 @@ public class Hero {
     public int getSkillLevel(Skill skill) {
         int level = -1;
         int secondLevel = -1;
+        HeroClass heroClass = getHeroClass();
         if (heroClass.hasSkill(skill.getName())) {
             int requiredLevel = SkillConfigManager.getSetting(heroClass, skill, Setting.LEVEL.node(), 1);
             level = getLevel(heroClass);
@@ -639,6 +683,7 @@ public class Hero {
                 level = -1;
             }
         }
+        HeroClass secondClass = getSecondClass();
         if (secondClass != null && secondClass.hasSkill(skill.getName())) {
             int requiredLevel = SkillConfigManager.getSetting(secondClass, skill, Setting.LEVEL.node(), 1);
             secondLevel = getLevel(secondClass);
@@ -658,6 +703,8 @@ public class Hero {
             return tieredLevel;
         }
 
+        HeroClass heroClass = getHeroClass();
+        HeroClass secondClass = getSecondClass();
         if (secondClass == null) {
             tieredLevel = getTieredLevel(heroClass);
         } else {
@@ -673,7 +720,7 @@ public class Hero {
      *
      * @return
      */
-    public int getTieredLevel(HeroClass heroclass) {
+    public int getTieredLevel(HeroClass heroClass) {
         if (heroClass.hasNoParents()) {
             return getLevel(heroClass);
         }
@@ -715,7 +762,10 @@ public class Hero {
      * @return the secondClass
      */
     public HeroClass getSecondClass() {
-        return secondClass;
+        rwl.readLock().lock();
+        HeroClass sc = secondClass;
+        rwl.readLock().unlock();
+        return sc;
     }
 
     /**
@@ -724,7 +774,7 @@ public class Hero {
      * @return Hero's current amount of mana
      */
     public int getMana() {
-        return mana;
+        return mana.get();
     }
 
     /**
@@ -733,9 +783,12 @@ public class Hero {
      * @return the hero's maximum health
      */
     public double getMaxHealth() {
+        HeroClass heroClass = getHeroClass();
         int level = Properties.getLevel(getExperience(heroClass));
         double primaryHp = heroClass.getBaseMaxHealth() + (level - 1) * heroClass.getMaxHealthPerLevel();
         double secondHp = 0;
+        
+        HeroClass secondClass = getSecondClass();
         if (secondClass != null) {
             level = Properties.getLevel(getExperience(secondClass));
             secondHp = secondClass.getBaseMaxHealth() + (level - 1) * secondClass.getMaxHealthPerLevel();
@@ -784,7 +837,8 @@ public class Hero {
      * @return
      */
     public ConfigurationSection getSkillSettings(String skillName) {
-        if (!heroClass.hasSkill(skillName) && (secondClass == null || !secondClass.hasSkill(skillName))) {
+        HeroClass secondClass = getSecondClass();
+        if (!getHeroClass().hasSkill(skillName) && (secondClass == null || !secondClass.hasSkill(skillName))) {
             return null;
         }
 
@@ -855,11 +909,11 @@ public class Hero {
         } else if (canSecondUseSkill(skill)) {
             return true;
         }
-
+        HeroClass secondClass = getSecondClass();
         ConfigurationSection section = skills.get(skill.getName().toLowerCase());
         if (section != null) {
             int level = section.getInt(Setting.LEVEL.node(), 1);
-            if (getLevel(heroClass) >= level || (secondClass != null && getLevel(secondClass) >= level)) {
+            if (getLevel(getHeroClass()) >= level || (secondClass != null && getLevel(secondClass) >= level)) {
                 return true;
             }
         }
@@ -868,6 +922,7 @@ public class Hero {
     }
 
     public boolean canPrimaryUseSkill(Skill skill) {
+        HeroClass heroClass = getHeroClass();
         if (heroClass.hasSkill(skill.getName())) {
             int level = SkillConfigManager.getSetting(heroClass, skill, Setting.LEVEL.node(), 1);
             if (getLevel(heroClass) >= level) {
@@ -878,6 +933,7 @@ public class Hero {
     }
 
     public boolean canSecondUseSkill(Skill skill) {
+        HeroClass secondClass = getSecondClass();
         if (secondClass != null && secondClass.hasSkill(skill.getName())) {
             int level = SkillConfigManager.getSetting(secondClass, skill, Setting.LEVEL.node(), 1);
             if (getLevel(secondClass) >= level) {
@@ -915,7 +971,8 @@ public class Hero {
      * @return
      */
     public boolean hasAccessToSkill(String name) {
-        return heroClass.hasSkill(name) || (secondClass != null && secondClass.hasSkill(name)) || skills.containsKey(name.toLowerCase());
+        HeroClass secondClass = getSecondClass();
+        return getHeroClass().hasSkill(name) || (secondClass != null && secondClass.hasSkill(name)) || skills.containsKey(name.toLowerCase());
     }
 
     /**
@@ -943,8 +1000,8 @@ public class Hero {
      *
      * @return boolean
      */
-    public synchronized boolean isVerbose() {
-        return verbose;
+    public boolean isVerbose() {
+        return verbose.get();
     }
 
     /**
@@ -1059,6 +1116,7 @@ public class Hero {
      */
     public void setHealth(Double health) {
         double maxHealth = getMaxHealth();
+        rwl.writeLock().lock();
         if (health > maxHealth) {
             this.health = maxHealth;
         } else if (health < 0) {
@@ -1066,6 +1124,7 @@ public class Hero {
         } else {
             this.health = health;
         }
+        rwl.writeLock().unlock();
     }
 
     /**
@@ -1075,18 +1134,22 @@ public class Hero {
      */
     public void setHeroClass(HeroClass heroClass, boolean secondary) {
         double currentMaxHP = getMaxHealth();
+
+        rwl.writeLock().lock();
         if (secondary) {
             this.secondClass = heroClass;
         } else {
             this.heroClass = heroClass;
         }
+        rwl.writeLock().unlock();
 
         double newMaxHP = getMaxHealth();
+        double health = getHealth();
         health *= newMaxHP / currentMaxHP;
         if (health > newMaxHP) {
             health = newMaxHP;
         }
-
+        setHealth(health);
         getTieredLevel(true);
         // Check the Players inventory now that they have changed class.
         this.checkInventory();
@@ -1114,7 +1177,7 @@ public class Hero {
         } else if (mana < 0) {
             mana = 0;
         }
-        this.mana = mana;
+        this.mana.getAndSet(mana);
     }
 
     /**
@@ -1179,10 +1242,12 @@ public class Hero {
      * @param verbose
      */
     public void setVerbose(boolean verbose) {
-        this.verbose = verbose;
+        this.verbose.getAndSet(verbose);
     }
 
     public HeroClass getEnchantingClass() {
+        HeroClass heroClass = getHeroClass();
+        HeroClass secondClass = getSecondClass();
         int level = 0;
         if (heroClass.hasExperiencetype(ExperienceType.ENCHANTING)) {
             level = getLevel(heroClass);
@@ -1199,10 +1264,11 @@ public class Hero {
      * Syncs the Hero's current Experience with the minecraft experience (should also sync the level bar)
      */
     public void syncExperience() {
+        HeroClass secondClass = getSecondClass();
         if (secondClass != null && !syncPrimary) {
             syncExperience(secondClass);
         } else {
-            syncExperience(heroClass);        
+            syncExperience(getHeroClass());        
         }
     }
 
@@ -1228,6 +1294,7 @@ public class Hero {
      * Syncs the Heros current health with the Minecraft HealthBar
      */
     public void syncHealth() {
+        double health = getHealth();
         if ((player.isDead() || player.getHealth() == 0) && health <= 0) {
             return;
         }
@@ -1273,7 +1340,9 @@ public class Hero {
         PlayerInventory inv = player.getInventory();
         Material item;
         int removedCount = 0;
-
+        
+        HeroClass heroClass = getHeroClass();
+        HeroClass secondClass = getSecondClass();
         if (inv.getHelmet() != null && inv.getHelmet().getTypeId() != 0) {
             item = inv.getHelmet().getType();
             if (!Util.isArmor(item) && Heroes.properties.allowHats && (Heroes.properties.hatsLevel <= getLevel(heroClass) || (secondClass != null && Heroes.properties.hatsLevel <= getLevel(secondClass)))) {
@@ -1322,10 +1391,11 @@ public class Hero {
         if (itemStack == null) {
             return true;
         }
+        HeroClass secondClass = getSecondClass();
         Material itemType = itemStack.getType();
         if (!Util.isWeapon(itemType)) {
             return true;
-        } else if (heroClass.isAllowedWeapon(itemType) || (secondClass != null && secondClass.isAllowedWeapon(itemType))) {
+        } else if (getHeroClass().isAllowedWeapon(itemType) || (secondClass != null && secondClass.isAllowedWeapon(itemType))) {
             return true;
         } else {
             Util.moveItem(this, slot, itemStack);
@@ -1340,11 +1410,13 @@ public class Hero {
      * @return true if the class can craft the item
      */
     public boolean canCraft(Object o) {
+        HeroClass heroClass = getHeroClass();
         int level = heroClass.getCraftLevel(o);
         if (level != -1 && level <= getLevel(heroClass)) {
             return true;
         }
 
+        HeroClass secondClass = getSecondClass();
         if (secondClass != null) {
             level = secondClass.getCraftLevel(o);
             if (level != -1 && level <= getLevel(secondClass)) {
@@ -1360,7 +1432,7 @@ public class Hero {
     }
 
     public void setSyncPrimary(boolean syncPrimary) {
-        this.syncPrimary = syncPrimary || secondClass == null;
+        this.syncPrimary = syncPrimary || getSecondClass() == null;
         syncExperience();
     }
 }
