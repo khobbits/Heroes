@@ -25,6 +25,7 @@ import com.herocraftonline.dev.heroes.skill.SkillConfigManager;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Setting;
+import com.herocraftonline.dev.heroes.util.Util;
 
 public class SkillEnchant extends PassiveSkill {
 
@@ -62,7 +63,7 @@ public class SkillEnchant extends PassiveSkill {
         section.set("ARROW_FIRE", 1);
         section.set("ARROW_INFINITE", 1);
         section.set(Setting.APPLY_TEXT.node(), "");
-        section.set("enchant-level-mult", 2.0);
+        section.set("enchant-level-mult", 1.0);
         return section;
     }
 
@@ -95,9 +96,10 @@ public class SkillEnchant extends PassiveSkill {
                 return;
             }
             int level = hero.getLevel(hc);
+            int minLevel = level / 2;
             // this causes us to ignore the surrounding bookcases and just tell the client to generate numbers
             for (int i = 0; i < event.getExpLevelCostsOffered().length; i++) {
-                event.getExpLevelCostsOffered()[i] = level;
+                event.getExpLevelCostsOffered()[i] = Util.rand.nextInt(level - minLevel) + minLevel + 1;
             }
         }
 
@@ -115,7 +117,7 @@ public class SkillEnchant extends PassiveSkill {
             Map<Enchantment, Integer> enchants = event.getEnchantsToAdd();
             Iterator<Entry<Enchantment, Integer>> iter = enchants.entrySet().iterator();
             int xpCost = 0;
-            double mult = SkillConfigManager.getUseSetting(hero, skill, "enchant-level-mult", 2.0, false);
+            double mult = SkillConfigManager.getUseSetting(hero, skill, "enchant-level-mult", 1.0, false);
             while (iter.hasNext()) {
                 Entry<Enchantment, Integer> entry = iter.next();
                 int reqLevel = SkillConfigManager.getUseSetting(hero, skill, entry.getKey().getName(), 1, true);
