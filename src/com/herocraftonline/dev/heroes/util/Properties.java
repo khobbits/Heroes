@@ -5,14 +5,17 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.*;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.CreatureType;
-import org.bukkit.entity.Player;
 
 import com.herocraftonline.dev.heroes.Heroes;
 
@@ -64,7 +67,7 @@ public class Properties {
     public int globalCooldown = 0;
     public double enchantXPMultiplier;
     public boolean slowCasting = true;
-    
+
     // Bed Stuffs
     public boolean bedHeal;
     public int healInterval;
@@ -88,14 +91,14 @@ public class Properties {
     public Map<Material, Double> craftingExp = new EnumMap<Material, Double>(Material.class);
     public Map<Material, Double> buildingExp = new EnumMap<Material, Double>(Material.class);
     public Map<String, String> skillInfo = new HashMap<String, String>();
-    public Map<Player, Location> playerDeaths = new HashMap<Player, Location>();
     public Map<String, RecipeGroup> recipes = new HashMap<String, RecipeGroup>();
     public double fishingExp = 0;
     private Heroes plugin;
-    
+
+
     // Potion related
     public double potHealthPerTier;
-    
+
     public void load(Heroes plugin) {
         this.plugin = plugin;
         FileConfiguration config = plugin.getConfig();
@@ -156,7 +159,7 @@ public class Properties {
 
     private void dumpExpLevels() {
         File levelFile = new File(plugin.getDataFolder(), "levels.txt");
-        
+
         if (levelFile.exists()) {
             levelFile.delete();
         }
@@ -167,7 +170,7 @@ public class Properties {
             for (int i = 0; i < maxLevel; i++) {
                 bos.append(i + " - " + getTotalExp(i + 1) + "\n");
             }
-            
+
         } catch (FileNotFoundException e) {
         } catch (IOException e) {
         } finally {

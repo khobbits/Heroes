@@ -33,7 +33,7 @@ import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillCharge extends TargettedSkill {
 
-    private Set<Player> chargingPlayers = new HashSet<Player>();
+    private Set<String> chargingPlayers = new HashSet<String>();
 
     public SkillCharge(Heroes plugin) {
         super(plugin, "Charge");
@@ -69,7 +69,7 @@ public class SkillCharge extends TargettedSkill {
         Vector v = new Vector(xDir / 3, .5, zDir / 3);
         player.setVelocity(v);
 
-        chargingPlayers.add(player);
+        chargingPlayers.add(hero.getName());
         plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
             @Override
             public void run() {
@@ -95,7 +95,7 @@ public class SkillCharge extends TargettedSkill {
 
             Player player = (Player) event.getEntity();
             Hero hero = plugin.getHeroManager().getHero(player);
-            chargingPlayers.remove(player);
+            chargingPlayers.remove(hero.getName());
             Heroes.log(Level.INFO, "Player landed!");
             event.setDamage(0);
             event.setCancelled(true);

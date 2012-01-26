@@ -17,7 +17,7 @@ import com.herocraftonline.dev.heroes.util.Messaging;
 public class ResetCommand extends BasicInteractiveCommand {
 
     Heroes plugin;
-    private Set<Player> pendingResets = new HashSet<Player>();
+    private Set<String> pendingResets = new HashSet<String>();
 
     public ResetCommand(Heroes plugin) {
         super("Reset Class");
@@ -35,8 +35,9 @@ public class ResetCommand extends BasicInteractiveCommand {
 
     @Override
     public void onCommandCancelled(CommandSender executor) {
-        if (!(executor instanceof Player))
+        if (!(executor instanceof Player)) {
             return;
+        }
         pendingResets.remove(executor);
     }
 
@@ -58,7 +59,7 @@ public class ResetCommand extends BasicInteractiveCommand {
             Messaging.send(executor, "This will reset all earned XP, both classes and reset your class to: " + defaultClass.getName());
             Messaging.send(executor, "Please §8/hero confirm §7 or §8/hero cancel §7this selection.");
 
-            pendingResets.add(player);
+            pendingResets.add(player.getName());
             return true;
         }
 
@@ -76,7 +77,7 @@ public class ResetCommand extends BasicInteractiveCommand {
             if (!(executor instanceof Player))
                 return false;
             Player player = (Player) executor;
-
+            pendingResets.remove(player.getName());
             Hero hero = plugin.getHeroManager().getHero(player);
             HeroClass defaultClass = plugin.getClassManager().getDefaultClass();
 

@@ -77,7 +77,7 @@ public class HEntityListener implements Listener {
 
         if (defender instanceof Player) {
             // Don't award XP for Players killing themselves
-            prop.playerDeaths.put((Player) defender, defender.getLocation());
+            Util.deaths.put(((Player) defender).getName(), defender.getLocation());
             addedExp = prop.playerKillingExp;
             experienceType = ExperienceType.PVP;
         } else if (defender instanceof LivingEntity && !(defender instanceof Player)) {
