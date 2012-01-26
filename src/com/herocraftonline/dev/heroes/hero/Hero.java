@@ -124,12 +124,16 @@ public class Hero {
     /**
      * Returns if the hero has a class with the given experience type
      * 
-     * Thread-safe
+     * Not Thread-Safe
      */
     public boolean hasExperienceType(ExperienceType type) {
-        rwl.readLock().lock();
-        boolean val = heroClass.hasExperiencetype(type) || (secondClass != null && secondClass.hasExperiencetype(type));
-        rwl.readLock().unlock();
+        boolean val = false;
+        try {
+            rwl.readLock().lock();
+            val = heroClass.hasExperiencetype(type) || (secondClass != null && secondClass.hasExperiencetype(type));
+        } finally {
+            rwl.readLock().unlock();
+        }
         return val;
     }
 
@@ -661,7 +665,7 @@ public class Hero {
             second = getLevel(secondClass);
         }
         rwl.readLock().unlock();
-        
+
         return primary > second ? primary : second;
     }
 
@@ -787,7 +791,7 @@ public class Hero {
         int level = Properties.getLevel(getExperience(heroClass));
         double primaryHp = heroClass.getBaseMaxHealth() + (level - 1) * heroClass.getMaxHealthPerLevel();
         double secondHp = 0;
-        
+
         HeroClass secondClass = getSecondClass();
         if (secondClass != null) {
             level = Properties.getLevel(getExperience(secondClass));
@@ -1340,7 +1344,7 @@ public class Hero {
         PlayerInventory inv = player.getInventory();
         Material item;
         int removedCount = 0;
-        
+
         HeroClass heroClass = getHeroClass();
         HeroClass secondClass = getSecondClass();
         if (inv.getHelmet() != null && inv.getHelmet().getTypeId() != 0) {
