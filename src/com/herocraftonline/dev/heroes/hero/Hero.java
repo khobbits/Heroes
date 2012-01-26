@@ -3,7 +3,6 @@ package com.herocraftonline.dev.heroes.hero;
 import java.text.DecimalFormat;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -61,7 +60,7 @@ public class Hero {
     private Map<String, Double> experience = new ConcurrentHashMap<String, Double>();
     private Map<String, Long> cooldowns = new ConcurrentHashMap<String, Long>();
     private Set<LivingEntity> summons = new HashSet<LivingEntity>();
-    private Map<Material, String[]> binds = new EnumMap<Material, String[]>(Material.class);
+    private Map<Material, String[]> binds = new ConcurrentHashMap<Material, String[]>();
     private Map<String, Boolean> suppressedSkills = new ConcurrentHashMap<String, Boolean>();
     private Map<String, ConfigurationSection> persistedSkillSettings = new ConcurrentHashMap<String, ConfigurationSection>();
     private Map<String, ConfigurationSection> skills = new HashMap<String, ConfigurationSection>();
@@ -261,7 +260,7 @@ public class Hero {
             if (other.player != null) {
                 return false;
             }
-        } else if (!player.getName().equals(other.player.getName())) {
+        } else if (!name.equals(other.name)) {
             return false;
         }
         return true;
@@ -549,30 +548,49 @@ public class Hero {
         syncExperience();
     }
 
+    /**
+     * Rerturns the player's name associated with the class
+     * Thread-safe
+     * @return
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Returns the binding for the given material
+     * Thread-safe
+     * 
+     * @param mat
+     * @return
+     */
     public String[] getBind(Material mat) {
         return binds.get(mat);
     }
 
     /**
-     * Gets the Map of all Bindings
-     *
+     * Gets an unmodifiable Map of all Bindings for the hero
+     * Thread-Safe
      * @return
      */
     public Map<Material, String[]> getBinds() {
         return Collections.unmodifiableMap(binds);
     }
 
+    /**
+     * Get a specific cooldown timing
+     * Thread-safe
+     * 
+     * @param name
+     * @return
+     */
     public Long getCooldown(String name) {
         return cooldowns.get(name.toLowerCase());
     }
 
     /**
-     * Gets the Map of all cooldowns
-     *
+     * Gets an unmodifiable Map of all cooldowns for the hero
+     * Thread-Safe
      * @return
      */
     public Map<String, Long> getCooldowns() {
@@ -600,6 +618,7 @@ public class Hero {
 
     /**
      * Get the hero's experience in it's current class.
+     * 
      * Thread-safe
      * @return double experience
      */
@@ -610,6 +629,7 @@ public class Hero {
 
     /**
      * Get the hero's experience in the given class
+     * 
      * Thread-safe
      * @param heroClass
      * @return double experience
@@ -622,12 +642,20 @@ public class Hero {
         return exp == null ? 0 : exp;
     }
 
+    /**
+     * Returns an unmodifiable snapshot of the hero's experience
+     * 
+     * Thread-Safe
+     * @return map of all class-experience values
+     */
     public Map<String, Double> getExperienceMap() {
         return Collections.unmodifiableMap(experience);
     }
 
     /**
      * @return the hero's current health - double
+     * 
+     * Thread-Safe
      */
     public double getHealth() {
         rwl.readLock().lock();
@@ -698,6 +726,12 @@ public class Hero {
         return secondLevel > level ? secondLevel : level;
     }
 
+    /**
+     * Thread-safe
+     * 
+     * @param heroClass
+     * @return
+     */
     public int getLevel(HeroClass heroClass) {
         return Properties.getLevel(getExperience(heroClass));
     }
@@ -802,7 +836,7 @@ public class Hero {
 
     /**
      * Gets the hero's current party - returns null if the hero has no party
-     *
+     * Thread-Unsafe
      * @return HeroParty
      */
     public HeroParty getParty() {
@@ -810,6 +844,7 @@ public class Hero {
     }
 
     /**
+     * Thread-Unsafe
      * @return player associated with this hero
      */
     public Player getPlayer() {
@@ -826,7 +861,9 @@ public class Hero {
 
     /**
      * gets Mapping of the persistence SkillSettings for the given skill
-     *
+     * 
+     * The method is Thread-Safe, but the object returned is most likely Thread-Unsafe
+     * 
      * @param skill
      * @return
      */
@@ -891,10 +928,11 @@ public class Hero {
 
     @Override
     public int hashCode() {
-        return player == null ? 0 : player.getName().hashCode();
+        return player == null ? 0 : name.hashCode();
     }
 
     /**
+     * Thread-Unsafe
      * @return if the player has a party
      */
     public boolean hasParty() {
@@ -903,7 +941,7 @@ public class Hero {
 
     /**
      * Checks if the hero can use the given skill
-     *
+     * Thread-Unsafe
      * @param skill
      * @return
      */
@@ -925,6 +963,12 @@ public class Hero {
         return false;
     }
 
+    /**
+     * Checks if the hero's primary class has access to the given skill
+     * Thread-Unsafe
+     * @param skill
+     * @return
+     */
     public boolean canPrimaryUseSkill(Skill skill) {
         HeroClass heroClass = getHeroClass();
         if (heroClass.hasSkill(skill.getName())) {
@@ -936,6 +980,12 @@ public class Hero {
         return false;
     }
 
+    /**
+     * Checks if the hero's secondary class has access to the given skill
+     * Thread-Unsafe
+     * @param skill
+     * @return
+     */
     public boolean canSecondUseSkill(Skill skill) {
         HeroClass secondClass = getSecondClass();
         if (secondClass != null && secondClass.hasSkill(skill.getName())) {
@@ -982,6 +1032,8 @@ public class Hero {
     /**
      * Checks if the hero is a master of the given class
      *
+     * Thread-safe
+     * 
      * @param heroClass
      * @return boolean
      */
