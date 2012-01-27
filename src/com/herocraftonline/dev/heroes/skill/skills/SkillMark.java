@@ -18,7 +18,7 @@ public class SkillMark extends ActiveSkill {
     public SkillMark(Heroes plugin) {
         super(plugin, "Mark");
         setDescription("You mark a location for use with recall.");
-        setUsage("/skill mark <info>");
+        setUsage("/skill mark <info|reset>");
         setArgumentRange(0, 1);
         setIdentifiers("skill mark");
         setTypes(SkillType.TELEPORT);
@@ -27,14 +27,18 @@ public class SkillMark extends ActiveSkill {
     @Override
     public SkillResult use(Hero hero, String[] args) {
         Player player = hero.getPlayer();
-        ConfigurationSection skillSetting = hero.getSkillSettings("Recall");
+        ConfigurationSection skillSettings = hero.getSkillSettings("Recall");
 
-        if (args.length > 0) {
+        if (args.length > 0 && args[0].equalsIgnoreCase("reset")) {
+            clearStoredData(skillSettings);
+            Messaging.send(player, "Your recall location has been cleared.");
+            return SkillResult.SKIP_POST_USAGE;
+        } else if (args.length > 0 ) {
             // Display the info about the current mark
-            World world = validateLocation(skillSetting, player);
+            World world = validateLocation(skillSettings, player);
             if (world == null)
                 return SkillResult.FAIL;
-            double[] xyzyp = getStoredData(skillSetting);
+            double[] xyzyp = getStoredData(skillSettings);
             Messaging.send(player, "Your recall is currently marked on $1 at: $2, $3, $4", world.getName(), (int) xyzyp[0], (int) xyzyp[1], (int) xyzyp[2]);
             return SkillResult.SKIP_POST_USAGE;
         } else {
@@ -54,14 +58,23 @@ public class SkillMark extends ActiveSkill {
         }
     }
 
-    public static double[] getStoredData(ConfigurationSection skillSetting) {
+    public static void clearStoredData(ConfigurationSection skillSettings) {
+        skillSettings.set("world", null);
+        skillSettings.set("x", null);
+        skillSettings.set("y", null);
+        skillSettings.set("z", null);
+        skillSettings.set("yaw", null);
+        skillSettings.set("pitch", null);
+    }
+
+    public static double[] getStoredData(ConfigurationSection skillSettings) {
         double[] xyzyp = new double[5];
 
-        xyzyp[0] = skillSetting.getDouble("x");
-        xyzyp[1] = skillSetting.getDouble("y");
-        xyzyp[2] = skillSetting.getDouble("z");
-        xyzyp[3] = skillSetting.getDouble("yaw");
-        xyzyp[4] = skillSetting.getDouble("pitch");
+        xyzyp[0] = skillSettings.getDouble("x");
+        xyzyp[1] = skillSettings.getDouble("y");
+        xyzyp[2] = skillSettings.getDouble("z");
+        xyzyp[3] = skillSettings.getDouble("yaw");
+        xyzyp[4] = skillSettings.getDouble("pitch");
 
         return xyzyp;
     }
