@@ -97,7 +97,7 @@ public abstract class ActiveSkill extends Skill {
         }
 
         long time = System.currentTimeMillis();
-        Long global = hero.getCooldown("Global");
+        Long global = hero.getCooldown("global");
         if (global != null && time < global) {
             messageAndEvent(hero, new SkillResult(ResultType.ON_GLOBAL_COOLDOWN, true, (global - time) / 1000));
             return true;
@@ -224,13 +224,14 @@ public abstract class ActiveSkill extends Skill {
         }
 
         if (skillResult.type == ResultType.NORMAL){
+            time = System.currentTimeMillis();
             // Set cooldown
             if (cooldown > 0) {
                 hero.setCooldown(name, time + cooldown);
             }
 
             if (Heroes.properties.globalCooldown > 0) {
-                hero.setCooldown("Global", Heroes.properties.globalCooldown + time);
+                hero.setCooldown("global", Heroes.properties.globalCooldown + time);
             }
 
             // Award XP for skill usage

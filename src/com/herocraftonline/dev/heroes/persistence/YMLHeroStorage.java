@@ -202,7 +202,7 @@ public class YMLHeroStorage extends HeroStorage {
         if (storedCooldowns != null) {
             long time = System.currentTimeMillis();
             for (String skillName : storedCooldowns) {
-                long cooldown = ((Double) section.get(skillName)).longValue();
+                long cooldown = ((Number) section.get(skillName)).longValue();
                 if (heroClass.hasSkill(skillName) && cooldown > time) {
                     hero.setCooldown(skillName, cooldown);
                 }
