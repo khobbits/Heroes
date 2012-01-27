@@ -19,7 +19,6 @@ import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.util.Properties;
-import com.herocraftonline.dev.heroes.util.Util;
 
 public class YMLHeroStorage extends HeroStorage {
 
@@ -33,19 +32,10 @@ public class YMLHeroStorage extends HeroStorage {
 
     @Override
     public Hero loadHero(Player player) {
-        File playerFile = new File(playerFolder, player.getName() + ".yml"); // Setup our Players Data File.
         File pFolder = new File(playerFolder + File.separator + player.getName().toLowerCase().substring(0, 1));
         pFolder.mkdirs();
-        File newPlayerFile = new File(pFolder, player.getName() + ".yml");
+        File playerFile = new File(pFolder, player.getName() + ".yml");
 
-        if (newPlayerFile.exists())
-            playerFile = newPlayerFile;
-        else if (playerFile.exists()) {
-            Util.moveFile(playerFile, newPlayerFile);
-            playerFile = newPlayerFile;
-        } else {
-            playerFile = newPlayerFile;
-        }
         // Check if it already exists, if so we load the data.
         if (playerFile.exists()) {
             Configuration playerConfig = YamlConfiguration.loadConfiguration(playerFile); // Setup the Configuration
