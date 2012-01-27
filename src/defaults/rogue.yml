@@ -37,8 +37,6 @@ permitted-skills:
         cooldown: 60000
         health-cost: 10
         delay: 5000
-    Track:
-        level: 10
     EscapeArtist:
         level: 25
         mana: 30
