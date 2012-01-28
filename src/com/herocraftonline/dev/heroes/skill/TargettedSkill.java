@@ -1,8 +1,10 @@
 package com.herocraftonline.dev.heroes.skill;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -152,17 +154,20 @@ public abstract class TargettedSkill extends ActiveSkill {
      * @return the player's target or null if no target is found
      */
     public static LivingEntity getPlayerTarget(Player player, int maxDistance) {
-        if (player.getLocation().getBlockY() > player.getLocation().getWorld().getMaxHeight() )
+        if (player.getLocation().getBlockY() > player.getLocation().getWorld().getMaxHeight()) {
             return null;
+        }
         List<Block> lineOfSight = player.getLineOfSight(Util.transparentIds, maxDistance);
+        Set<Location> locs = new HashSet<Location>();
+        for (Block block : lineOfSight) {
+            locs.add(block.getLocation());
+        }
+        lineOfSight = null;
         List<Entity> nearbyEntities = player.getNearbyEntities(maxDistance, maxDistance, maxDistance);
         for (Entity entity : nearbyEntities) {
             if (entity instanceof LivingEntity && !entity.isDead() && !(((LivingEntity) entity).getHealth() == 0)) {
-                Location eLoc = entity.getLocation();
-                for (Block block : lineOfSight) {
-                    Location bLoc = block.getLocation();
-                    if (eLoc.getBlockX() == bLoc.getBlockX() && eLoc.getBlockZ() == bLoc.getBlockZ() && Math.abs(eLoc.getBlockY() - bLoc.getBlockY()) < 2)
-                        return (LivingEntity) entity;
+                if (locs.contains(entity.getLocation().getBlock().getLocation())) {
+                    return (LivingEntity) entity;
                 }
             }
         }
