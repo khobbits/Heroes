@@ -1269,7 +1269,7 @@ public class Hero {
             section = new MemoryConfiguration();
             persistedSkillSettings.put(skillName.toLowerCase(), section);
         }
-        section.set(node, val.toString());
+        section.set(node, val);
     }
 
     /**
