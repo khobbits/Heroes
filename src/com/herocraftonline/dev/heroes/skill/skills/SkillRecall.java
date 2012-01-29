@@ -39,7 +39,13 @@ public class SkillRecall extends ActiveSkill {
             return SkillResult.FAIL;
         }
 
-        double[] xyzyp = SkillMark.getStoredData(skillSettings);
+        double[] xyzyp = null;
+        try {
+            xyzyp = SkillMark.getStoredData(skillSettings);
+        } catch (IllegalArgumentException e) {
+            Messaging.send(player, "Your recall location is improperly set!");
+            return SkillResult.SKIP_POST_USAGE;
+        }
         broadcastExecuteText(hero);
         player.teleport(new Location(world, xyzyp[0], xyzyp[1], xyzyp[2], (float) xyzyp[3], (float) xyzyp[4]));
         return SkillResult.NORMAL;

@@ -12,6 +12,7 @@ import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.SkillType;
 import com.herocraftonline.dev.heroes.util.Messaging;
+import com.herocraftonline.dev.heroes.util.Util;
 
 public class SkillMark extends ActiveSkill {
 
@@ -36,9 +37,16 @@ public class SkillMark extends ActiveSkill {
         } else if (args.length > 0 ) {
             // Display the info about the current mark
             World world = validateLocation(skillSettings, player);
-            if (world == null)
+            if (world == null) {
                 return SkillResult.FAIL;
-            double[] xyzyp = getStoredData(skillSettings);
+            }
+            double[] xyzyp = null;
+            try {
+                xyzyp = getStoredData(skillSettings);
+            } catch (IllegalArgumentException e) {
+                Messaging.send(player, "Your recall location is improperly set!");
+                return SkillResult.SKIP_POST_USAGE;
+            }
             Messaging.send(player, "Your recall is currently marked on $1 at: $2, $3, $4", world.getName(), (int) xyzyp[0], (int) xyzyp[1], (int) xyzyp[2]);
             return SkillResult.SKIP_POST_USAGE;
         } else {
@@ -67,15 +75,35 @@ public class SkillMark extends ActiveSkill {
         skillSettings.set("pitch", null);
     }
 
-    public static double[] getStoredData(ConfigurationSection skillSettings) {
+    public static double[] getStoredData(ConfigurationSection skillSettings) throws IllegalArgumentException {
         double[] xyzyp = new double[5];
-
-        xyzyp[0] = skillSettings.getDouble("x");
-        xyzyp[1] = skillSettings.getDouble("y");
-        xyzyp[2] = skillSettings.getDouble("z");
-        xyzyp[3] = skillSettings.getDouble("yaw");
-        xyzyp[4] = skillSettings.getDouble("pitch");
-
+        Double temp = null;
+        temp = Util.toDouble(skillSettings.get("x"));
+        if (temp == null) {
+            throw new IllegalArgumentException("Bad recall data.");
+        }
+        xyzyp[0] = temp;
+        temp = Util.toDouble(skillSettings.get("y"));
+        if (temp == null) {
+            throw new IllegalArgumentException("Bad recall data.");
+        }
+        xyzyp[1] = temp;
+        temp = Util.toDouble(skillSettings.get("z"));
+        if (temp == null) {
+            throw new IllegalArgumentException("Bad recall data.");
+        }
+        xyzyp[2] = temp;
+        temp = Util.toDouble(skillSettings.get("yaw"));
+        if (temp == null) {
+            throw new IllegalArgumentException("Bad recall data.");
+        }
+        xyzyp[3] = temp;
+        temp = Util.toDouble(skillSettings.get("pitch"));
+        if (temp == null) {
+            throw new IllegalArgumentException("Bad recall data.");
+        }
+        xyzyp[4] = temp;
+        
         return xyzyp;
     }
 
