@@ -410,21 +410,29 @@ public final class Util {
     }
 
     public static Integer toInt(Object val) {
-        if (!(val instanceof Number))
+        if (val instanceof String) {
+            try {
+                return Integer.valueOf((String) val);
+            } catch (NumberFormatException e) {
+                return null;
+            }
+        } else if (!(val instanceof Number)) {
             return null;
+        }
 
-        if (val instanceof Integer)
+        if (val instanceof Integer) {
             return (Integer) val;
-        else if (val instanceof Double)
+        } else if (val instanceof Double) {
             return ((Double) val).intValue();
-        else if (val instanceof Float)
+        } else if (val instanceof Float) {
             return ((Float) val).intValue();
-        else if (val instanceof Long)
+        } else if (val instanceof Long) {
             return ((Long) val).intValue();
-        else if (val instanceof BigDecimal)
+        } else if (val instanceof BigDecimal) {
             return ((BigDecimal) val).intValue();
-        else
+        } else {
             return null;
+        }
     }
 
     public static int toIntNonNull(Object val, String name) {
@@ -444,21 +452,29 @@ public final class Util {
     }
 
     public static Double toDouble(Object val) {
-        if (!(val instanceof Number))
+        if (val instanceof String) {
+            try {
+                return Double.valueOf((String) val);
+            } catch (NumberFormatException e) {
+                return null;
+            }
+        } else if (!(val instanceof Number)) {
             return null;
+        }
 
-        if (val instanceof Integer)
+        if (val instanceof Integer) {
             return ((Integer) val).doubleValue();
-        else if (val instanceof Double)
+        } else if (val instanceof Double) {
             return ((Double) val);
-        else if (val instanceof Float)
+        } else if (val instanceof Float) {
             return ((Float) val).doubleValue();
-        else if (val instanceof Long)
+        } else if (val instanceof Long) {
             return ((Long) val).doubleValue();
-        else if (val instanceof BigDecimal)
+        } else if (val instanceof BigDecimal) {
             return ((BigDecimal) val).doubleValue();
-        else
+        } else {
             return null;
+        }
     }
 
     public static String stringDouble(double d) {
