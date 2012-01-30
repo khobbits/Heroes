@@ -10,3 +10,6 @@ Version dev
 
 
 ==== **Skills:** ====
+
+* Enchant
+** allows reagent requirement for enchanting - amount is still static

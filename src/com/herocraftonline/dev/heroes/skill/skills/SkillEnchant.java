@@ -13,6 +13,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.enchantment.PrepareItemEnchantEvent;
+import org.bukkit.inventory.ItemStack;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.classes.HeroClass;
@@ -123,8 +124,14 @@ public class SkillEnchant extends PassiveSkill {
                 } else {
                     int val = entry.getValue();
                     int maxVal = entry.getKey().getMaxLevel();
-                    xpCost +=  event.getExpLevelCost() * ((double) val / maxVal);
+                    xpCost +=  Math.max(event.getExpLevelCost() * ((double) val / maxVal), 1);
                 }
+            }
+            
+            ItemStack reagent = getReagentCost(hero);
+            if (!hasReagentCost(player, reagent)) {
+                Messaging.send(player, "You need $1 $2 to enchant an item!", reagent.getAmount(), reagent.getType().name().toLowerCase().replace("_", " "));
+                event.setCancelled(true);
             }
             event.setExpLevelCost(0);
             if (xpCost == 0) {
@@ -132,6 +139,10 @@ public class SkillEnchant extends PassiveSkill {
                 event.setCancelled(true);
             } else {
                 xpCost *= Heroes.properties.enchantXPMultiplier;
+                if (hero.getExperience(enchanter) < xpCost) {
+                    Messaging.send(player, "You don't have enough experience to enchant that item!");
+                    event.setCancelled(true);
+                }
                 hero.gainExp(-xpCost, ExperienceType.ENCHANTING);
             }
         }

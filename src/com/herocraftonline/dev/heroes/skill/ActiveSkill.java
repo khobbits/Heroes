@@ -1,7 +1,5 @@
 package com.herocraftonline.dev.heroes.skill;
 
-import java.util.logging.Level;
-
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
@@ -119,22 +117,7 @@ public abstract class ActiveSkill extends Skill {
         manaCost -= (int) manaReduce;
 
         // Reagent stuff
-        int reagentCost = SkillConfigManager.getUseSetting(hero, this, Setting.REAGENT_COST, 0, true);
-        String reagentName = SkillConfigManager.getUseSetting(hero, this, Setting.REAGENT, (String) null);
-        ItemStack itemStack = null;
-        if (reagentCost > 0 && reagentName != null && reagentName != "") {
-            String[] vals = reagentName.split(":");
-            try {
-                int id = Integer.parseInt(vals[0]);
-                byte sub = 0;
-                if (vals.length > 1) {
-                    sub = (byte) Integer.parseInt(vals[1]);
-                }
-                itemStack = new ItemStack(id, reagentCost, sub);
-            } catch (NumberFormatException e) {
-                Heroes.log(Level.SEVERE, "Invalid skill reagent defined in " + getName() + ". Please switch to new format ID:DAMAGE");
-            }
-        }   
+        ItemStack itemStack = getReagentCost(hero);
 
         int healthCost = SkillConfigManager.getUseSetting(hero, this, Setting.HEALTH_COST, 0, true);
         double healthReduce = SkillConfigManager.getUseSetting(hero, this, Setting.HEALTH_COST_REDUCE, 0.0, false) * skillLevel;
@@ -173,7 +156,7 @@ public abstract class ActiveSkill extends Skill {
 
         itemStack = skillEvent.getReagentCost();
         if (itemStack != null && itemStack.getAmount() != 0 && !hasReagentCost(player, itemStack)) {
-            reagentName = itemStack.getType().name().toLowerCase().replace("_", " ");
+            String reagentName = itemStack.getType().name().toLowerCase().replace("_", " ");
             messageAndEvent(hero, new SkillResult(ResultType.MISSING_REAGENT, true, String.valueOf(itemStack.getAmount()), reagentName));
             return true;
         }
@@ -341,23 +324,6 @@ public abstract class ActiveSkill extends Skill {
         Player player = hero.getPlayer();
         broadcast(player.getLocation(), getUseText(), player.getDisplayName(), getName());
     }
-
-    /**
-     * Checks if the player has enough of the specified reagent in their inventory
-     * 
-     * @param player
-     * @param itemStack
-     * @return
-     */
-    protected boolean hasReagentCost(Player player, ItemStack itemStack) {
-        int amount = 0;
-        for (ItemStack stack : player.getInventory().all(itemStack.getType()).values()) {
-            amount += stack.getAmount();
-            if (amount >= itemStack.getAmount())
-                return true;
-        }
-        return false;
-    } 
 
     /**
      * Uses the {@link SkillResult} arguments to display a message to the skill-user or ignore the message altogether

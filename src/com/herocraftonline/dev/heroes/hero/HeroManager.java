@@ -128,6 +128,9 @@ public class HeroManager {
                     this.plugin.getPartyManager().removeParty(party);
                 }
             }
+            // If we are removing the hero object we should remove it from everywhere to make sure it's not staying in memory.
+            completedSkills.remove(hero);
+            delayedSkills.remove(hero);
             heroes.remove(hero.getName().toLowerCase());
         }
     }

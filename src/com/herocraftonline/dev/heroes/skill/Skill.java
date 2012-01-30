@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Set;
+import java.util.logging.Level;
 
 import net.minecraft.server.DamageSource;
 import net.minecraft.server.EntityLiving;
@@ -22,11 +23,13 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.inventory.ItemStack;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.command.BasicCommand;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.util.Messaging;
+import com.herocraftonline.dev.heroes.util.Setting;
 
 /**
  * The root class of the skill heirarchy. This class implements the basic functionality of every Heroes skill including
@@ -236,6 +239,47 @@ public abstract class Skill extends BasicCommand {
             target.damage(damage, attacker);
         }
         return true;
+    }
+
+    /**
+     * Checks if the player has enough of the specified reagent in their inventory
+     * 
+     * @param player
+     * @param itemStack
+     * @return
+     */
+    protected boolean hasReagentCost(Player player, ItemStack itemStack) {
+        if (itemStack == null || itemStack.getAmount() == 0) {
+            return true;
+        }
+        int amount = 0;
+        for (ItemStack stack : player.getInventory().all(itemStack.getType()).values()) {
+            amount += stack.getAmount();
+            if (amount >= itemStack.getAmount())
+                return true;
+        }
+        return false;
+    } 
+
+    protected ItemStack getReagentCost(Hero hero) {
+        // Reagent stuff
+        int reagentCost = SkillConfigManager.getUseSetting(hero, this, Setting.REAGENT_COST, 0, true);
+        String reagentName = SkillConfigManager.getUseSetting(hero, this, Setting.REAGENT, (String) null);
+        ItemStack itemStack = null;
+        if (reagentCost > 0 && reagentName != null && reagentName != "") {
+            String[] vals = reagentName.split(":");
+            try {
+                int id = Integer.parseInt(vals[0]);
+                byte sub = 0;
+                if (vals.length > 1) {
+                    sub = (byte) Integer.parseInt(vals[1]);
+                }
+                itemStack = new ItemStack(id, reagentCost, sub);
+            } catch (NumberFormatException e) {
+                Heroes.log(Level.SEVERE, "Invalid skill reagent defined in " + getName() + ". Please switch to new format ID:DAMAGE");
+            }
+        }  
+        return itemStack;
     }
 
     @Override

@@ -61,8 +61,9 @@ public class SkillPickPocket extends TargettedSkill {
     @Override
     public SkillResult use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
-        if (!(target instanceof Player))
+        if (!(target instanceof Player)) {
             return SkillResult.INVALID_TARGET;
+        }
 
         Player tPlayer = (Player) target;        
 
