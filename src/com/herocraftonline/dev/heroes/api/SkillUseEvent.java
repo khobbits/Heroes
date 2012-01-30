@@ -2,6 +2,7 @@ package com.herocraftonline.dev.heroes.api;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
+import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
 
@@ -12,7 +13,7 @@ import com.herocraftonline.dev.heroes.skill.Skill;
  * Called when a hero uses a skill. This event is cancellable.
  */
 @SuppressWarnings("serial")
-public class SkillUseEvent extends HeroEvent implements Cancellable {
+public class SkillUseEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
     private final Player player;
     private final Skill skill;
@@ -25,7 +26,7 @@ public class SkillUseEvent extends HeroEvent implements Cancellable {
     private boolean cancelled = false;
 
     public SkillUseEvent(Skill skill, Player player, Hero hero, int manaCost, int healthCost, int staminaCost, ItemStack reagentCost, String[] args) {
-        super("SkillUseEvent", HeroEventType.SKILL_USE);
+        super("SkillUseEvent");
         this.player = player;
         this.skill = skill;
         this.hero = hero;

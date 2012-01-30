@@ -1,5 +1,6 @@
 package com.herocraftonline.dev.heroes.api;
 
+import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 import com.herocraftonline.dev.heroes.hero.Hero;
@@ -9,13 +10,13 @@ import com.herocraftonline.dev.heroes.party.HeroParty;
  * This event is called when a hero leaves a party.
  */
 @SuppressWarnings("serial")
-public class HeroLeavePartyEvent extends HeroEvent {
+public class HeroLeavePartyEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
     private final Hero hero;
     private final HeroParty party;
 
     public HeroLeavePartyEvent(Hero hero, HeroParty heroParty) {
-        super("HeroLeavePartyEvent", HeroEventType.HERO_LEAVE_PARTY);
+        super("HeroLeavePartyEvent");
         this.hero = hero;
         this.party = heroParty;
     }

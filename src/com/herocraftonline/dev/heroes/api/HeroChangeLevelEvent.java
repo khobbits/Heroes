@@ -1,5 +1,6 @@
 package com.herocraftonline.dev.heroes.api;
 
+import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 import com.herocraftonline.dev.heroes.classes.HeroClass;
@@ -11,7 +12,7 @@ import com.herocraftonline.dev.heroes.hero.Hero;
  * Data during this event is unable to be changed.
  */
 @SuppressWarnings("serial")
-public class HeroChangeLevelEvent extends HeroEvent {
+public class HeroChangeLevelEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
     private final int from;
     private final int to;
@@ -19,7 +20,7 @@ public class HeroChangeLevelEvent extends HeroEvent {
     private final HeroClass heroClass;
 
     public HeroChangeLevelEvent(Hero hero, HeroClass heroClass, int from, int to) {
-        super("HeroLevelEvent", HeroEventType.HERO_LEVEL_CHANGE);
+        super("HeroLevelEvent");
         this.heroClass = heroClass;
         this.from = from;
         this.to = to;

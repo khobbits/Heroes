@@ -2,6 +2,7 @@ package com.herocraftonline.dev.heroes.api;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Cancellable;
+import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 import com.herocraftonline.dev.heroes.hero.Hero;
@@ -11,7 +12,7 @@ import com.herocraftonline.dev.heroes.skill.Skill;
  * This event is called when a skill would deal damage.  It is cancellable.
  */
 @SuppressWarnings("serial")
-public class SkillDamageEvent extends HeroEvent implements Cancellable {
+public class SkillDamageEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
     private int damage;
     private final Hero damager;
@@ -20,7 +21,7 @@ public class SkillDamageEvent extends HeroEvent implements Cancellable {
     private boolean cancelled = false;
 
     public SkillDamageEvent(int damage, Entity entity, SkillUseInfo skillInfo) {
-        super("HeroesSkillDamageEvent", HeroEventType.SKILL_DAMAGE);
+        super("HeroesSkillDamageEvent");
         this.damage = damage;
         this.damager = skillInfo.getHero();
         this.skill = skillInfo.getSkill();

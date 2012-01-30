@@ -1,5 +1,6 @@
 package com.herocraftonline.dev.heroes.api;
 
+import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 import com.herocraftonline.dev.heroes.hero.Hero;
@@ -10,14 +11,14 @@ import com.herocraftonline.dev.heroes.skill.Skill;
  * Called when a hero completes a skill - either successfully or unsuccessfully.
  * @author sleak
  */
-public class SkillCompleteEvent extends HeroEvent {
+public class SkillCompleteEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
     private final Hero hero;
     private final Skill skill;
     private final SkillResult result;
     
     public SkillCompleteEvent(Hero hero, Skill skill, SkillResult result) {
-        super("SkillCompleteEvent", HeroEventType.SKILL_COMPLETE);
+        super("SkillCompleteEvent");
         this.hero = hero;
         this.skill = skill;
         this.result = result;

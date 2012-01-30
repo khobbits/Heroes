@@ -1,6 +1,7 @@
 package com.herocraftonline.dev.heroes.api;
 
 import org.bukkit.event.Cancellable;
+import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 import com.herocraftonline.dev.heroes.hero.Hero;
@@ -10,7 +11,7 @@ import com.herocraftonline.dev.heroes.skill.Skill;
  * Called when a hero regains health, primarily from a skill.  This event is able to be cancelled.
  */
 @SuppressWarnings("serial")
-public class HeroRegainHealthEvent extends HeroEvent implements Cancellable {
+public class HeroRegainHealthEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
     private int amount;
     private final Hero hero;
@@ -18,7 +19,7 @@ public class HeroRegainHealthEvent extends HeroEvent implements Cancellable {
     private boolean cancelled = false;
 
     public HeroRegainHealthEvent(Hero hero, int amount, Skill skill) {
-        super("HeroRegainHealthEvent", HeroEventType.HERO_REGAIN_HEALTH);
+        super("HeroRegainHealthEvent");
         this.amount = amount;
         this.hero = hero;
         this.skill = skill;

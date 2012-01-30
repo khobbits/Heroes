@@ -1,6 +1,7 @@
 package com.herocraftonline.dev.heroes.api;
 
 import org.bukkit.event.Cancellable;
+import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 import com.herocraftonline.dev.heroes.hero.Hero;
@@ -10,7 +11,7 @@ import com.herocraftonline.dev.heroes.skill.Skill;
  * This event is called when a hero would regain mana, this event is cancellable
  */
 @SuppressWarnings("serial")
-public class HeroRegainManaEvent extends HeroEvent implements Cancellable {
+public class HeroRegainManaEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
     private int amount;
     private final Hero hero;
@@ -18,7 +19,7 @@ public class HeroRegainManaEvent extends HeroEvent implements Cancellable {
     private boolean cancelled = false;
 
     public HeroRegainManaEvent(Hero hero, int amount, Skill skill) {
-        super("HeroRegainManaEvent", HeroEventType.HERO_REGAIN_MANA);
+        super("HeroRegainManaEvent");
         this.hero = hero;
         this.amount = amount;
         this.skill = skill;

@@ -1,6 +1,7 @@
 package com.herocraftonline.dev.heroes.api;
 
 import org.bukkit.event.Cancellable;
+import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 import com.herocraftonline.dev.heroes.classes.HeroClass;
@@ -11,7 +12,7 @@ import com.herocraftonline.dev.heroes.hero.Hero;
  * This is a cancellable event that fires whenever a hero changes from one class to another.
  * If this event is initiated because of an admin command the cancelled state will be ignored.
  */
-public class ClassChangeEvent extends HeroEvent implements Cancellable {
+public class ClassChangeEvent extends Event implements Cancellable {
     
     private static final HandlerList handlers = new HandlerList();
     protected boolean cancelled = false;
@@ -20,7 +21,7 @@ public class ClassChangeEvent extends HeroEvent implements Cancellable {
     protected HeroClass to;
 
     public ClassChangeEvent(Hero hero, HeroClass from, HeroClass to) {
-        super("ClassChangeEvent", HeroEventType.HERO_CLASS_CHANGE);
+        super("ClassChangeEvent");
         this.hero = hero;
         this.from = from;
         this.to = to;
