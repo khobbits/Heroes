@@ -201,6 +201,15 @@ public abstract class TargettedSkill extends ActiveSkill {
         }
         if (target == null) {
             target = getPlayerTarget(player, maxDistance);
+            if ( this.isType(SkillType.HEAL) && target instanceof Player && hero.hasParty()) {
+                if (hero.getParty().isPartyMember((Hero) target)) {
+                    return null;
+                } else {
+                    return target;
+                }
+            } else if (this.isType(SkillType.HEAL) && target instanceof Player) {
+                return null;
+            }
         }
         if (target == null) {
             // don't self-target harmful skills

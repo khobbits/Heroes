@@ -36,8 +36,9 @@ public class SkillPray extends TargettedSkill {
     @Override
     public SkillResult use(Hero hero, LivingEntity target, String[] args) {
         Player player = hero.getPlayer();
-        if (!(target instanceof Player))
+        if (!(target instanceof Player)) {
             return SkillResult.INVALID_TARGET;
+        }
 
         Hero targetHero = plugin.getHeroManager().getHero((Player) target);
         int hpPlus = SkillConfigManager.getUseSetting(hero, this, Setting.HEALTH, 10, false);
