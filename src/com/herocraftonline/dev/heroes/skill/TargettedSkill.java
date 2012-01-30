@@ -9,6 +9,7 @@ import java.util.Set;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -160,7 +161,9 @@ public abstract class TargettedSkill extends ActiveSkill {
         List<Block> lineOfSight = player.getLineOfSight(Util.transparentIds, maxDistance);
         Set<Location> locs = new HashSet<Location>();
         for (Block block : lineOfSight) {
+            locs.add(block.getRelative(BlockFace.UP).getLocation());
             locs.add(block.getLocation());
+            locs.add(block.getRelative(BlockFace.DOWN).getLocation());
         }
         lineOfSight = null;
         List<Entity> nearbyEntities = player.getNearbyEntities(maxDistance, maxDistance, maxDistance);
