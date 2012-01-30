@@ -23,9 +23,11 @@ public class SlowEffect extends ExpirableEffect {
         this.applyText = applyText;
         this.expireText = expireText;
         this.applier = applier;
-        addMobEffect(2, (int) (duration / 1000) * 20, amplifier, false);
+        int tickDuration = (int) (duration / 1000) * 20;
+        addMobEffect(2, tickDuration, amplifier, false);
+        addMobEffect(8, tickDuration, -amplifier, false);
         if (swing) {
-            addMobEffect(4, (int) (duration / 1000) * 20, amplifier, false);
+            addMobEffect(4, tickDuration, amplifier, false);
         }
     }
     public SlowEffect(Skill skill, long duration, int amplifier, boolean swing, String applyText, String expireText, Hero applier) {

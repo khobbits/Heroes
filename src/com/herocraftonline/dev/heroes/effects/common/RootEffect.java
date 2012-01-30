@@ -1,52 +1,40 @@
 package com.herocraftonline.dev.heroes.effects.common;
 
-import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 import com.herocraftonline.dev.heroes.effects.EffectType;
-import com.herocraftonline.dev.heroes.effects.PeriodicExpirableEffect;
+import com.herocraftonline.dev.heroes.effects.ExpirableEffect;
 import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.util.Messaging;
 
-public class RootEffect extends PeriodicExpirableEffect {
+public class RootEffect extends ExpirableEffect {
 
-    private static final long period = 100;
     private final String applyText = "$1 was rooted!";
     private final String expireText = "Root faded from $1!";
 
-    private double x, y, z;
-
     public RootEffect(Skill skill, long duration) {
-        super(skill, "Root", period, duration);
+        super(skill, "Root", duration);
         this.types.add(EffectType.DISPELLABLE);
         this.types.add(EffectType.ROOT);
         this.types.add(EffectType.HARMFUL);
+        int tickDuration = (int) duration / 1000 * 20;
+        this.addMobEffect(2, tickDuration, 5, false);
+        this.addMobEffect(8, tickDuration, -5, false);
     }
 
     @Override
     public void apply(LivingEntity lEntity) {
         super.apply(lEntity);
-        Location location = lEntity.getLocation();
-        x = location.getX();
-        y = location.getY();
-        z = location.getZ();
-
-        broadcast(location, applyText, Messaging.getLivingEntityName(lEntity));
+        broadcast(lEntity.getLocation(), applyText, Messaging.getLivingEntityName(lEntity));
     }
 
     @Override
     public void apply(Hero hero) {
         super.apply(hero);
-
-        Location location = hero.getPlayer().getLocation();
-        x = location.getX();
-        y = location.getY();
-        z = location.getZ();
-
         Player player = hero.getPlayer();
-        broadcast(location, applyText, player.getDisplayName());
+        broadcast(player.getLocation(), applyText, player.getDisplayName());
     }
 
     @Override
@@ -60,36 +48,5 @@ public class RootEffect extends PeriodicExpirableEffect {
         super.remove(hero);
         Player player = hero.getPlayer();
         broadcast(player.getLocation(), expireText, player.getDisplayName());
-    }
-
-    @Override
-    public void tick(LivingEntity lEntity) {
-        super.tick(lEntity);
-        
-        Location location = lEntity.getLocation();
-        if (location.getX() != x || location.getY() != y || location.getZ() != z) {
-            location.setX(x);
-            location.setY(y);
-            location.setZ(z);
-            location.setYaw(lEntity.getLocation().getYaw());
-            location.setPitch(lEntity.getLocation().getPitch());
-            lEntity.teleport(location);
-        }
-    }
-    
-    @Override
-    public void tick(Hero hero) {
-        super.tick(hero);
-
-        Player player = hero.getPlayer();
-        Location location = player.getLocation();
-        if (location.getX() != x || location.getY() != y || location.getZ() != z) {
-            location.setX(x);
-            location.setY(y);
-            location.setZ(z);
-            location.setYaw(player.getLocation().getYaw());
-            location.setPitch(player.getLocation().getPitch());
-            player.teleport(location);
-        }
     }
 }
