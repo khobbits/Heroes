@@ -10,6 +10,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityShootBowEvent;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.SkillResult;
@@ -31,7 +32,7 @@ public class SkillIceArrow extends ActiveSkill {
 
     public SkillIceArrow(Heroes plugin) {
         super(plugin, "IceArrow");
-        setDescription("Your next $1 arrows will freeze their target.");
+        setDescription("Your arrows will freeze their target, but drain $1 mana per shot.");
         setUsage("/skill iarrow");
         setArgumentRange(0, 0);
         setIdentifiers("skill iarrow", "skill icearrow");
@@ -42,10 +43,9 @@ public class SkillIceArrow extends ActiveSkill {
     @Override
     public ConfigurationSection getDefaultConfig() {
         ConfigurationSection node = super.getDefaultConfig();
-        node.set("slow-duration", 5000); // 5 seconds
+        node.set(Setting.DURATION.node(), 5000); // 5 seconds
         node.set("speed-multiplier", 2);
-        node.set(Setting.DURATION.node(), 60000); // milliseconds
-        node.set("attacks", 1); // How many attacks the buff lasts for.
+        node.set("mana-per-shot", 1); // How much mana for each attack
         node.set(Setting.USE_TEXT.node(), "%hero% imbues their arrows with ice!");
         node.set(Setting.APPLY_TEXT.node(), "%target% is slowed by ice!");
         node.set(Setting.EXPIRE_TEXT.node(), "%hero%'s arrows are no longer imbued with ice!");
@@ -62,19 +62,21 @@ public class SkillIceArrow extends ActiveSkill {
 
     @Override
     public SkillResult use(Hero hero, String[] args) {
-        long duration = SkillConfigManager.getUseSetting(hero, this, Setting.DURATION, 60000, false);
-        int numAttacks = SkillConfigManager.getUseSetting(hero, this, "attacks", 1, false);
-        hero.addEffect(new IceArrowBuff(this, duration, numAttacks));
+        if (hero.hasEffect("IceArrowBuff")) {
+            hero.removeEffect(hero.getEffect("IceArrowBuff"));
+            return SkillResult.SKIP_POST_USAGE;
+        }
+        hero.addEffect(new IceArrowBuff(this));
         broadcastExecuteText(hero);
         return SkillResult.NORMAL;
     }
 
     public class IceArrowBuff extends ImbueEffect {
 
-        public IceArrowBuff(Skill skill, long duration, int numAttacks) {
-            super(skill, "SlowArrowBuff", duration, numAttacks);
+        public IceArrowBuff(Skill skill) {
+            super(skill, "IceArrowBuff");
             this.types.add(EffectType.ICE);
-            setDescription("ice");
+            setDescription("ice arrow");
         }
 
         @Override
@@ -112,8 +114,8 @@ public class SkillIceArrow extends ActiveSkill {
             Player player = (Player) arrow.getShooter();
             Hero hero = plugin.getHeroManager().getHero(player);
 
-            if (hero.hasEffect("SlowArrowBuff")) {
-                long duration = SkillConfigManager.getUseSetting(hero, skill, "slow-duration", 10000, false);
+            if (hero.hasEffect("IceArrowBuff")) {
+                long duration = SkillConfigManager.getUseSetting(hero, skill, "duration", 5000, false);
                 int amplifier = SkillConfigManager.getUseSetting(hero, skill, "speed-multiplier", 2, false);
                 SlowEffect iceSlowEffect = new SlowEffect(skill, duration, amplifier, false, applyText, "$1 is no longer slowed.", hero);
                 LivingEntity target = (LivingEntity) event.getEntity();
@@ -125,22 +127,29 @@ public class SkillIceArrow extends ActiveSkill {
                     plugin.getEffectManager().addEntityEffect(target, iceSlowEffect);
                     broadcast(target.getLocation(), applyText, Messaging.getLivingEntityName(target), player.getDisplayName());
                 }
-                checkBuff(hero);
             }
         }
 
-        private void checkBuff(Hero hero) {
-            IceArrowBuff iaBuff = (IceArrowBuff) hero.getEffect("SlowArrowBuff");
-            iaBuff.useApplication();
-            if (iaBuff.hasNoApplications()) {
-                hero.removeEffect(iaBuff);
+        @EventHandler(priority = EventPriority.MONITOR)
+        public void onEntityShootBow(EntityShootBowEvent event) {
+            if (event.isCancelled() || !(event.getEntity() instanceof Player) || !(event.getProjectile() instanceof Arrow)) {
+                return;
+            }
+            Hero hero = plugin.getHeroManager().getHero((Player) event.getEntity());
+            if (hero.hasEffect("IceArrowBuff")) {
+                int mana = SkillConfigManager.getUseSetting(hero, skill, "mana-per-shot", 1, true);
+                if (hero.getMana() < mana) {
+                    hero.removeEffect(hero.getEffect("IceArrowBuff"));
+                } else {
+                    hero.setMana(hero.getMana() - 1);
+                }
             }
         }
     }
 
     @Override
     public String getDescription(Hero hero) {
-        int attacks = SkillConfigManager.getUseSetting(hero, this, "attacks", 1, false);
-        return getDescription().replace("$1", attacks + "");
+        int mana = SkillConfigManager.getUseSetting(hero, this, "mana-per-shot", 1, false);
+        return getDescription().replace("$3", mana + "");
     }
 }

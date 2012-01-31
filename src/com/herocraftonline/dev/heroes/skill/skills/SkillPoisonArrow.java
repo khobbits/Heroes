@@ -10,6 +10,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityShootBowEvent;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.SkillResult;
@@ -31,7 +32,7 @@ public class SkillPoisonArrow extends ActiveSkill {
 
     public SkillPoisonArrow(Heroes plugin) {
         super(plugin, "PoisonArrow");
-        setDescription("Your next $1 arrows will poison their target dealing $2 damage over $3 seconds.");
+        setDescription("Your arrows will poison their target dealing $1 damage over $2 seconds, each arrow will drain $3 mana.");
         setUsage("/skill parrow");
         setArgumentRange(0, 0);
         setIdentifiers("skill parrow", "skill poisonarrow");
@@ -42,11 +43,11 @@ public class SkillPoisonArrow extends ActiveSkill {
     @Override
     public ConfigurationSection getDefaultConfig() {
         ConfigurationSection node = super.getDefaultConfig();
-        node.set("poison-duration", 10000); // 10 seconds in
-        node.set(Setting.DURATION.node(), 60000); // milliseconds
+        node.set(Setting.DURATION.node(), 10000); // milliseconds
         node.set(Setting.PERIOD.node(), 2000); // 2 seconds in milliseconds
+        node.set("mana-per-shot", 1); // How much mana for each attack
         node.set("tick-damage", 2);
-        node.set("attacks", 1); // How many attacks the buff lasts for.
+        node.set(Setting.USE_TEXT.node(), "%hero% imbues their arrows with poison!");
         node.set(Setting.APPLY_TEXT.node(), "%target% is poisoned!");
         node.set(Setting.EXPIRE_TEXT.node(), "%target% has recovered from the poison!");
         return node;
@@ -55,15 +56,18 @@ public class SkillPoisonArrow extends ActiveSkill {
     @Override
     public void init() {
         super.init();
+        setUseText("%hero% imbues their arrows with poison!".replace("%hero%", "$1"));
         applyText = SkillConfigManager.getRaw(this, Setting.APPLY_TEXT, "%target% is poisoned!").replace("%target%", "$1");
         expireText = SkillConfigManager.getRaw(this, Setting.EXPIRE_TEXT, "%target% has recovered from the poison!").replace("%target%", "$1");
     }
 
     @Override
     public SkillResult use(Hero hero, String[] args) {
-        long duration = SkillConfigManager.getUseSetting(hero, this, Setting.DURATION, 600000, false);
-        int numAttacks = SkillConfigManager.getUseSetting(hero, this, "attacks", 1, false);
-        hero.addEffect(new PoisonArrowBuff(this, duration, numAttacks));
+        if (hero.hasEffect("PoisonArrowBuff")) {
+            hero.removeEffect(hero.getEffect("PoisonArrowBuff"));
+            return SkillResult.SKIP_POST_USAGE;
+        }
+        hero.addEffect(new PoisonArrowBuff(this));
         broadcastExecuteText(hero);
         return SkillResult.NORMAL;
     }
@@ -105,8 +109,8 @@ public class SkillPoisonArrow extends ActiveSkill {
 
     public class PoisonArrowBuff extends ImbueEffect {
 
-        public PoisonArrowBuff(Skill skill, long duration, int numAttacks) {
-            super(skill, "PoisonArrowBuff", duration, numAttacks);
+        public PoisonArrowBuff(Skill skill) {
+            super(skill, "PoisonArrowBuff");
             this.types.add(EffectType.POISON);
             setDescription("poison");
         }
@@ -150,29 +154,36 @@ public class SkillPoisonArrow extends ActiveSkill {
                 if (target instanceof Player) {
                     Hero hTarget = plugin.getHeroManager().getHero((Player) target);
                     hTarget.addEffect(apEffect);
-                    checkBuff(hero);
                 } else {
                     plugin.getEffectManager().addEntityEffect(target, apEffect);
-                    checkBuff(hero);
                 }
             }
         }
-
-        private void checkBuff(Hero hero) {
-            PoisonArrowBuff paBuff = (PoisonArrowBuff) hero.getEffect("PoisonArrowBuff");
-            paBuff.useApplication();
-            if (paBuff.hasNoApplications())
-                hero.removeEffect(paBuff);
+        
+        @EventHandler(priority = EventPriority.MONITOR)
+        public void onEntityShootBow(EntityShootBowEvent event) {
+            if (event.isCancelled() || !(event.getEntity() instanceof Player) || !(event.getProjectile() instanceof Arrow)) {
+                return;
+            }
+            Hero hero = plugin.getHeroManager().getHero((Player) event.getEntity());
+            if (hero.hasEffect("PoisonArrowBuff")) {
+                int mana = SkillConfigManager.getUseSetting(hero, skill, "mana-per-shot", 1, true);
+                if (hero.getMana() < mana) {
+                    hero.removeEffect(hero.getEffect("PoisonArrowBuff"));
+                } else {
+                    hero.setMana(hero.getMana() - 1);
+                }
+            }
         }
     }
 
     @Override
     public String getDescription(Hero hero) {
-        int attacks = SkillConfigManager.getUseSetting(hero, this, "attacks", 1, false);
-        int duration = SkillConfigManager.getUseSetting(hero, this, "poison-duration", 10000, false);
+        int duration = SkillConfigManager.getUseSetting(hero, this, Setting.DURATION, 10000, false);
         int period = SkillConfigManager.getUseSetting(hero, this, Setting.PERIOD, 2000, false);
         int damage = SkillConfigManager.getUseSetting(hero, this, "tick-damage", 1, false);
+        int mana = SkillConfigManager.getUseSetting(hero, this, "mana-per-shot", 1, true);
         damage = damage * duration / period;
-        return getDescription().replace("$1", attacks + "").replace("$2", damage + "").replace("$3", duration / 1000 + "");
+        return getDescription().replace("$1", damage + "").replace("$2", duration / 1000 + "").replace("$3", mana + "");
     }
 }

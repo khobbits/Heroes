@@ -8,6 +8,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -23,13 +24,12 @@ import com.herocraftonline.dev.heroes.skill.ActiveSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.SkillConfigManager;
 import com.herocraftonline.dev.heroes.skill.SkillType;
-import com.herocraftonline.dev.heroes.util.Setting;
 
 public class SkillFireArrow extends ActiveSkill {
 
     public SkillFireArrow(Heroes plugin) {
         super(plugin, "FireArrow");
-        setDescription("Your next $1 arrows will light the target on fire!");
+        setDescription("Your arrows will light the target on fire, but they will drain $1 mana per shot!");
         setUsage("/skill firearrow");
         setArgumentRange(0, 0);
         setIdentifiers("skill firearrow", "skill farrow");
@@ -40,26 +40,26 @@ public class SkillFireArrow extends ActiveSkill {
     @Override
     public ConfigurationSection getDefaultConfig() {
         ConfigurationSection node = super.getDefaultConfig();
-        node.set(Setting.DURATION.node(), 60000); // milliseconds
-        node.set("attacks", 1); // How many attacks the buff lasts for.
-        node.set(Setting.DAMAGE.node(), 4);
+        node.set("mana-per-shot", 1); // mana per shot
         node.set("fire-ticks", 100);
         return node;
     }
 
     @Override
     public SkillResult use(Hero hero, String[] args) {
-        long duration = SkillConfigManager.getUseSetting(hero, this, Setting.DURATION, 600000, false);
-        int numAttacks = SkillConfigManager.getUseSetting(hero, this, "attacks", 1, false);
-        hero.addEffect(new FireArrowBuff(this, duration, numAttacks));
+        if (hero.hasEffect("FireArrowBuff")) {
+            hero.removeEffect(hero.getEffect("FireArrowBuff"));
+            return SkillResult.SKIP_POST_USAGE;
+        }
+        hero.addEffect(new FireArrowBuff(this));
         broadcastExecuteText(hero);
         return SkillResult.NORMAL;
     }
 
     public class FireArrowBuff extends ImbueEffect {
 
-        public FireArrowBuff(Skill skill, long duration, int numAttacks) {
-            super(skill, "FireArrowBuff", duration, numAttacks);
+        public FireArrowBuff(Skill skill) {
+            super(skill, "FireArrowBuff");
             this.types.add(EffectType.FIRE);
             setDescription("fire");
         }
@@ -112,28 +112,35 @@ public class SkillFireArrow extends ActiveSkill {
             int fireTicks = SkillConfigManager.getUseSetting(hero, skill, "fire-ticks", 100, false);
             //Light the target on fire
             entity.setFireTicks(fireTicks);
-            checkBuff(hero);
             //Add our combust effect so we can track fire-tick damage
             if (entity instanceof Player) {
                 Hero targetHero = plugin.getHeroManager().getHero((Player) entity);
                 targetHero.addEffect(new CombustEffect(skill, player));
-            } else
+            } else {
                 plugin.getEffectManager().addEntityEffect(entity, new CombustEffect(skill, player));
-
-
+            }
         }
 
-        private void checkBuff(Hero hero) {
-            FireArrowBuff faBuff = (FireArrowBuff) hero.getEffect("FireArrowBuff");
-            faBuff.useApplication();
-            if (faBuff.hasNoApplications())
-                hero.removeEffect(faBuff);
+        @EventHandler(priority = EventPriority.MONITOR)
+        public void onEntityShootBow(EntityShootBowEvent event) {
+            if (event.isCancelled() || !(event.getEntity() instanceof Player) || !(event.getProjectile() instanceof Arrow)) {
+                return;
+            }
+            Hero hero = plugin.getHeroManager().getHero((Player) event.getEntity());
+            if (hero.hasEffect("FireArrowBuff")) {
+                int mana = SkillConfigManager.getUseSetting(hero, skill, "mana-per-shot", 1, true);
+                if (hero.getMana() < mana) {
+                    hero.removeEffect(hero.getEffect("FireArrowBuff"));
+                } else {
+                    hero.setMana(hero.getMana() - 1);
+                }
+            }
         }
     }
 
     @Override
     public String getDescription(Hero hero) {
-        int attacks = SkillConfigManager.getUseSetting(hero, this, "attacks", 1, false);
-        return getDescription().replace("$1", attacks + "");
+        int mana = SkillConfigManager.getUseSetting(hero, this, "mana-per-shot", 1, false);
+        return getDescription().replace("$1", mana + "");
     }
 }

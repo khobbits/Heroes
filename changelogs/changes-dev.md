@@ -11,8 +11,13 @@ Version dev
 
 ==== **API:** ====
 
+* ImbueEffect has been re-written to be handled like FormEffects
+** it no longer has applications etc.
 
 ==== **Skills:** ====
 
 * Enchant
 ** allows reagent requirement for enchanting - amount is still static
+* FireArrow, IceArrow & PoisonArrow
+** re-written to use mana-per-shot regardless of hitting the target or not
+** will drain the users mana as they stay active.  Using the skill will toggle it on/off.
