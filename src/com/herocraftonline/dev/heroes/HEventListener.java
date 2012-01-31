@@ -79,7 +79,7 @@ public class HEventListener implements Listener {
         }
 
         Hero hero = event.getHero();
-        if (hero.hasEffect("Root") && event.getSkill().isType(SkillType.MOVEMENT)) {
+        if (hero.hasEffect("Root") && event.getSkill().isType(SkillType.MOVEMENT) && !event.getSkill().isType(SkillType.COUNTER)) {
             Messaging.send(hero.getPlayer(), "You can't use that skill while rooted!");
             event.setCancelled(true);
         }
