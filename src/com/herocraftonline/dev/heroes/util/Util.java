@@ -24,6 +24,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.MagmaCube;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowman;
 import org.bukkit.inventory.ItemStack;
@@ -198,6 +199,8 @@ public final class Util {
         try {
             if (entity instanceof Snowman) {
                 return CreatureType.SNOWMAN;
+            } else if (entity instanceof MagmaCube) {
+                return CreatureType.MAGMA_CUBE;
             }
             Class<?>[] interfaces = entity.getClass().getInterfaces();
             for (Class<?> c : interfaces) {
