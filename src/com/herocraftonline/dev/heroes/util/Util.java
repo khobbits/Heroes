@@ -25,6 +25,7 @@ import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Snowman;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
@@ -195,6 +196,9 @@ public final class Util {
         if (entity == null)
             return type;
         try {
+            if (entity instanceof Snowman) {
+                return CreatureType.SNOWMAN;
+            }
             Class<?>[] interfaces = entity.getClass().getInterfaces();
             for (Class<?> c : interfaces) {
                 if (LivingEntity.class.isAssignableFrom(c)) {

@@ -605,7 +605,11 @@ public class HeroesDamageListener implements Listener {
             return calculateArmorReduction(((Player) lEntity).getInventory());
         }
         int armor = 0;
-        switch (Util.getCreatureFromEntity(lEntity)) {
+        CreatureType cType = Util.getCreatureFromEntity(lEntity);
+        if (cType == null) {
+            return 1.0;
+        }
+        switch (cType) {
         case PIG_ZOMBIE:
         case ZOMBIE:
             armor = 2;
