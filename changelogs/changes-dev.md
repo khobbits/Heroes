@@ -21,3 +21,6 @@ Version dev
 * FireArrow, IceArrow & PoisonArrow
 ** re-written to use mana-per-shot regardless of hitting the target or not
 ** will drain the users mana as they stay active.  Using the skill will toggle it on/off.
+* Repair
+** unchant-chance - now has a chance to disenchant an item being repaired.
+** unchant-chance-reduce - will reduce the unchant-chance by it's amount per-level

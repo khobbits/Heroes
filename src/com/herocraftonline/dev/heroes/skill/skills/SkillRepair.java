@@ -1,5 +1,7 @@
 package com.herocraftonline.dev.heroes.skill.skills;
 
+import java.util.ArrayList;
+
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.SkillResult;
 import com.herocraftonline.dev.heroes.api.SkillResult.ResultType;
@@ -12,6 +14,7 @@ import com.herocraftonline.dev.heroes.util.Messaging;
 import com.herocraftonline.dev.heroes.util.Util;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -45,6 +48,8 @@ public class SkillRepair extends ActiveSkill {
         node.set("fishing-rod", 1);
         node.set("shears", 1);
         node.set("flint-steel", 1);
+        node.set("unchant-chance", .5);
+        node.set("unchant-chance-reduce", .005);
         return node;
     }
 
@@ -233,7 +238,16 @@ public class SkillRepair extends ActiveSkill {
         if (!hasReagentCost(player, reagentStack)) {
             return new SkillResult(ResultType.MISSING_REAGENT, true, reagentStack.getAmount(), MaterialUtil.getFriendlyName(reagentStack.getType()));
         }
-
+        if(!is.getEnchantments().isEmpty()) {
+            double unchant = SkillConfigManager.getUseSetting(hero, this, "unchant-chance", .5, true);
+            unchant -= SkillConfigManager.getUseSetting(hero, this, "unchant-chance-reduce", .005, false) * hero.getSkillLevel(this);
+            if (Util.rand.nextDouble() <= unchant) {
+                for (Enchantment enchant : new ArrayList<Enchantment>(is.getEnchantments().keySet())) {
+                    is.removeEnchantment(enchant);
+                }
+                Messaging.send(player, "Your item has lost it's power!");
+            }
+        }
         is.setDurability((short) 0);
         player.getInventory().removeItem(reagentStack);
         Util.syncInventory(player, plugin);
