@@ -64,11 +64,12 @@ public class HEventListener implements Listener {
             party.update();
         }
     }
-    
+
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onSkillUse(SkillUseEvent event) {
-        if (event.isCancelled())
+        if (event.isCancelled()) {
             return;
+        }
 
         String worldName = event.getPlayer().getWorld().getName();
         if (Heroes.properties.disabledWorlds.contains(worldName)) {
@@ -78,6 +79,11 @@ public class HEventListener implements Listener {
         }
 
         Hero hero = event.getHero();
+        if (hero.hasEffect("Root") && event.getSkill().isType(SkillType.MOVEMENT)) {
+            Messaging.send(hero.getPlayer(), "You can't use that skill while rooted!");
+            event.setCancelled(true);
+        }
+
         if (hero.hasEffectType(EffectType.SILENCE) && event.getSkill().isType(SkillType.SILENCABLE)) {
             Messaging.send(hero.getPlayer(), "You can't use that skill while silenced!");
             event.setCancelled(true);
