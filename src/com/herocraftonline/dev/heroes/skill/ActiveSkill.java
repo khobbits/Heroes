@@ -190,6 +190,7 @@ public abstract class ActiveSkill extends Skill {
                     messageAndEvent(hero, SkillResult.START_DELAY);
                     return true;
                 }
+                dSkill = null;
             } else if (!dSkill.isReady()) {
                 Messaging.send(sender, "You have already begun to use that skill!");
                 return true;
