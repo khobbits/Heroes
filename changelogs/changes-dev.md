@@ -24,3 +24,5 @@ Version dev
 * Repair
 ** unchant-chance - now has a chance to disenchant an item being repaired.
 ** unchant-chance-reduce - will reduce the unchant-chance by it's amount per-level
+* Summon Chicken/Cow/Pig/Sheep
+** 
