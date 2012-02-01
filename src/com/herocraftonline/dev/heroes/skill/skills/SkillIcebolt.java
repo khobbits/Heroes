@@ -7,7 +7,6 @@ import net.minecraft.server.MathHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.craftbukkit.entity.CraftLivingEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -123,11 +122,10 @@ public class SkillIcebolt extends ActiveSkill {
                 } else {
                     plugin.getEffectManager().addEntityEffect(target, iceSlowEffect);
                 }
-                
-                //Reset no damage ticks cause it's a spell
-                ((CraftLivingEntity) target).setNoDamageTicks(0);
+
                 addSpellTarget(event.getEntity(), hero);
-                event.setDamage(damage);
+                damageEntity(target, hero.getPlayer(), damage, EntityDamageEvent.DamageCause.MAGIC);
+                event.setCancelled(true);
             }
         }
     }
