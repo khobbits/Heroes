@@ -143,7 +143,6 @@ public class HeroManager {
     public void saveHero(Hero hero, boolean now) {
         heroStorage.saveHero(hero, now);
         Heroes.log(Level.INFO, "Saved hero: " + hero.getPlayer().getName());
-
     }
 
     public void saveHero(Player player, boolean now) {

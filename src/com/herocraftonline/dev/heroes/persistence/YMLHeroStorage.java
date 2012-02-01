@@ -3,11 +3,14 @@ package com.herocraftonline.dev.heroes.persistence;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
@@ -23,11 +26,31 @@ import com.herocraftonline.dev.heroes.util.Properties;
 public class YMLHeroStorage extends HeroStorage {
 
     private final File playerFolder;
+    private Map<Hero, Boolean> toSave = new ConcurrentHashMap<Hero, Boolean>();
+    private final int SAVE_INTERVAL = 6000;
 
     public YMLHeroStorage(Heroes plugin) {
         super(plugin);
         playerFolder = new File(plugin.getDataFolder(), "players"); // Setup our Player Data Folder
         playerFolder.mkdirs(); // Create the folder if it doesn't exist.
+        
+        Bukkit.getServer().getScheduler().scheduleAsyncRepeatingTask(plugin, new HeroSaveThread(), SAVE_INTERVAL, SAVE_INTERVAL);
+    }
+
+    protected class HeroSaveThread implements Runnable {
+
+        @Override
+        public void run() {
+            if (toSave.isEmpty()) {
+                return;
+            }
+            Iterator<Entry<Hero, Boolean>> iter = toSave.entrySet().iterator();
+            while (iter.hasNext()) {
+                Hero hero = iter.next().getKey();
+                doSave(hero);
+                iter.remove();
+            }
+        }
     }
 
     @Override
@@ -68,7 +91,12 @@ public class YMLHeroStorage extends HeroStorage {
 
     @Override
     public void saveHero(Hero hero, boolean now) {
-        doSave(hero);
+        if (now) {
+            toSave.remove(hero);
+            doSave(hero);
+        } else {
+            toSave.put(hero, true);
+        }
     }
 
     /**
