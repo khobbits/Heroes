@@ -33,7 +33,7 @@ public class YMLHeroStorage extends HeroStorage {
         super(plugin);
         playerFolder = new File(plugin.getDataFolder(), "players"); // Setup our Player Data Folder
         playerFolder.mkdirs(); // Create the folder if it doesn't exist.
-        
+
         Bukkit.getServer().getScheduler().scheduleAsyncRepeatingTask(plugin, new HeroSaveThread(), SAVE_INTERVAL, SAVE_INTERVAL);
     }
 
@@ -47,7 +47,12 @@ public class YMLHeroStorage extends HeroStorage {
             Iterator<Entry<Hero, Boolean>> iter = toSave.entrySet().iterator();
             while (iter.hasNext()) {
                 Hero hero = iter.next().getKey();
-                doSave(hero);
+                try {
+                    doSave(hero);
+                } catch (Exception e) {
+                    Heroes.log(Level.SEVERE, "There was a problem saving the Hero: " + hero.getName());
+                    continue;
+                }
                 iter.remove();
             }
         }
