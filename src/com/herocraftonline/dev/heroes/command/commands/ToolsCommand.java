@@ -3,6 +3,8 @@ package com.herocraftonline.dev.heroes.command.commands;
 import java.util.EnumSet;
 import java.util.Set;
 
+import com.herocraftonline.dev.heroes.damage.DamageManager;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -58,7 +60,8 @@ public class ToolsCommand extends BasicCommand {
                     if (categorizedTools[i] == null) {
                         categorizedTools[i] = "";
                     }
-                    categorizedTools[i] += MaterialUtil.getFriendlyName(tool).split(" ")[0] + ", ";
+                    int damage = plugin.getDamageManager().getItemDamage(mat, player);
+                    categorizedTools[i] += MaterialUtil.getFriendlyName(tool).split(" ")[0] + "§8 " + damage + "§f, ";
                     break;
                 }
             }
