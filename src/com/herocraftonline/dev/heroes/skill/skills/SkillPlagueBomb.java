@@ -88,9 +88,7 @@ public class SkillPlagueBomb extends ActiveSkill {
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
             @Override
             public void run() {
-                if (!sheep.isDead()) {
-                    explodeSheep(sheep);
-                }
+                explodeSheep(sheep);
             }
         }, fuse / 1000 * 20);
 
@@ -108,15 +106,17 @@ public class SkillPlagueBomb extends ActiveSkill {
                 damage = SkillConfigManager.getUseSetting(hero, this, Setting.DAMAGE, 10, false);
             }
 
-            sheep.getWorld().createExplosion(sheep.getLocation(), 0.0F, false);
-            sheep.damage(20000);
+            if (!sheep.isDead()) {
+                sheep.getWorld().createExplosion(sheep.getLocation(), 0.0F, false);
+                sheep.damage(20000);
 
-            List<Entity> nearby = sheep.getNearbyEntities(5, 5, 5);
-            for (Entity entity : nearby) {
-                if (entity instanceof LivingEntity) {
-                    LivingEntity livingEntity = (LivingEntity) entity;
-                    livingEntity.setNoDamageTicks(0);
-                    damageEntity(livingEntity, player, damage, EntityDamageEvent.DamageCause.MAGIC);
+                List<Entity> nearby = sheep.getNearbyEntities(5, 5, 5);
+                for (Entity entity : nearby) {
+                    if (entity instanceof LivingEntity) {
+                        LivingEntity livingEntity = (LivingEntity) entity;
+                        livingEntity.setNoDamageTicks(0);
+                        damageEntity(livingEntity, player, damage, EntityDamageEvent.DamageCause.MAGIC);
+                    }
                 }
             }
 
