@@ -44,7 +44,7 @@ public class PathsCommand extends BasicCommand {
             for (HeroClass heroClass : plugin.getClassManager().getClasses()) {
                 if (heroClass.equals(hc) || heroClass.equals(sc)) {
                     continue;
-                } else if (heroClass.getAllParents().isEmpty() || heroClass.isDefault()) {
+                } else if ((!heroClass.getSpecializations().isEmpty() && heroClass.hasNoParents()) || heroClass.isDefault()) {
                     paths.add(heroClass);
                 } else if (hero.isMaster(hc) && hc.getSpecializations().contains(heroClass)) {
                     paths.add(heroClass);
