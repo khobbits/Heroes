@@ -207,6 +207,9 @@ public abstract class Skill extends BasicCommand {
         target.playEffect(EntityEffect.HURT);
     }
 
+    public boolean damageEntity(LivingEntity target, LivingEntity attacker, int damage) {
+        return damageEntity(target, attacker, damage, isType(SkillType.PHYSICAL) ? DamageCause.ENTITY_ATTACK : DamageCause.MAGIC);
+    }
     public static boolean damageEntity(LivingEntity target, LivingEntity attacker, int damage, DamageCause cause) {
         if (target.isDead() || target.getHealth() <= 0) {
             return false;
