@@ -122,7 +122,6 @@ public class HBlockListener implements Listener {
         int z = event.getDirection().getModZ();
         Long time = System.currentTimeMillis();
         for (Location loc : movedBlocks) {
-            placedBlocks.remove(loc);
             placedBlocks.put(loc.clone().add(x, y, z), time);
         }
     }
