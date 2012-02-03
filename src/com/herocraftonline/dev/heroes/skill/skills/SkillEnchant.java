@@ -64,6 +64,7 @@ public class SkillEnchant extends PassiveSkill {
         section.set("ARROW_FIRE", 1);
         section.set("ARROW_INFINITE", 1);
         section.set(Setting.APPLY_TEXT.node(), "");
+        section.set(Setting.UNAPPLY_TEXT.node(), "");
         return section;
     }
 
@@ -81,7 +82,7 @@ public class SkillEnchant extends PassiveSkill {
                 return;
             }
             Hero hero = plugin.getHeroManager().getHero(event.getEnchanter());
-            if (!hero.hasEffect(getName())) {
+            if (!hero.hasEffect(getName()) || !hero.hasExperienceType(ExperienceType.ENCHANTING)) {
                 // Don't offer enchants to players that don't meet the requirements
                 event.setCancelled(true);
                 return;
