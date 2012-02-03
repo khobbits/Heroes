@@ -2,6 +2,8 @@ Version dev
 
 ==== **Bug Fixes:** ====
 
+* Secondary classes with higher projectile damages now works intended
+* Projectile damage per level is now evaluated properly rather than being ignored
 
 ==== **General:** ====
 

@@ -71,8 +71,8 @@ public class DamageManager {
     public Integer getItemDamage(Material item, HumanEntity entity) {
         if (entity != null && entity instanceof Player) {
             Hero hero = plugin.getHeroManager().getHero((Player) entity);
-            HeroClass heroClass = plugin.getHeroManager().getHero((Player) entity).getHeroClass();
-            HeroClass secondClass = plugin.getHeroManager().getHero((Player) entity).getSecondClass();
+            HeroClass heroClass = hero.getHeroClass();
+            HeroClass secondClass = hero.getSecondClass();
             Integer classDamage = heroClass.getItemDamage(item);
             if (classDamage != null) {
                 classDamage += (int) (heroClass.getItemDamageLevel(item) * hero.getLevel(heroClass));
@@ -98,10 +98,28 @@ public class DamageManager {
 
     public Integer getProjectileDamage(ProjectileType type, HumanEntity entity) {
         if (entity != null && entity instanceof Player) {
-            HeroClass heroClass = plugin.getHeroManager().getHero((Player) entity).getHeroClass();
+            Hero hero = plugin.getHeroManager().getHero((Player) entity);
+            HeroClass heroClass = hero.getHeroClass();
+            HeroClass secondClass = hero.getSecondClass();
             Integer classDamage = heroClass.getProjectileDamage(type);
-            if (classDamage != null)
+            if (classDamage != null) {
+                classDamage += (int) (heroClass.getProjDamageLevel(type) * hero.getLevel(heroClass));
+            }
+            Integer secondDamage = null;
+            if (secondClass != null) {
+                secondDamage = secondClass.getProjectileDamage(type);
+                if (secondDamage != null) {
+                    secondDamage += (int) (secondClass.getProjDamageLevel(type) * hero.getLevel(secondClass));
+                }
+            }
+
+            if (classDamage != null && secondDamage != null) {
+                return classDamage > secondDamage ? classDamage : secondDamage;
+            } else if (classDamage != null) {
                 return classDamage;
+            } else if (secondDamage != null) {
+                return secondDamage;
+            }
         }
         return projectileDamage.get(type);
     }
