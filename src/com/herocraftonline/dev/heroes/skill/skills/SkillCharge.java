@@ -75,7 +75,7 @@ public class SkillCharge extends TargettedSkill {
             public void run() {
                 player.setFallDistance(8f);
             }
-        });
+        }, 2);
         broadcastExecuteText(hero, target);
         return SkillResult.NORMAL;
     }
@@ -108,12 +108,14 @@ public class SkillCharge extends TargettedSkill {
             int damage = SkillConfigManager.getUseSetting(hero, skill, Setting.DAMAGE.node(), 0, false);
 
             for (Entity e : player.getNearbyEntities(radius, radius, radius)) {
-                if (!(e instanceof LivingEntity))
+                if (!(e instanceof LivingEntity)) {
                     continue;
+                }
                 LivingEntity le = (LivingEntity) e;
 
-                if (!damageCheck(player, le))
+                if (!damageCheck(player, le)) {
                     continue;
+                }
 
                 if (e instanceof Player) {
                     Player p = (Player) e;
