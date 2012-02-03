@@ -110,11 +110,11 @@ public class SpecsCommand extends BasicCommand {
             if (description == null || description.isEmpty()) {
                 sender.sendMessage("  §a" + heroClass.getName());
             } else {
-                sender.sendMessage("  §a" + heroClass.getName() + " - " + heroClass.getDescription());
+                sender.sendMessage("  §a" + heroClass.getName() + " - §f" + heroClass.getDescription());
             }
         }
 
-        sender.sendMessage("§cTo choose a specialization, type §f/hero choose <spec> or /hero prof <spec>");
+        sender.sendMessage("§cTo choose a specialization, type §f/hero choose <spec> §cor §f/hero prof <spec>");
         return true;
     }
 
