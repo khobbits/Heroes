@@ -4,6 +4,7 @@ Version dev
 
 * Secondary classes with higher projectile damages now works intended
 * Projectile damage per level is now evaluated properly rather than being ignored
+* Zombies will now take damage properly from sources that should not be reduced
 
 ==== **General:** ====
 

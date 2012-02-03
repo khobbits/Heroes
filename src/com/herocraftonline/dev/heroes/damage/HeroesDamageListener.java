@@ -349,9 +349,20 @@ public class HeroesDamageListener implements Listener {
             if (currentHealth == null) {
                 currentHealth = (int) (lEntity.getHealth() / (double) lEntity.getMaxHealth()) * maxHealth;
             }
-            
+
             // Health-Syncing - need to calc armor due to zombies having armor in 1.1
-            damage *= calculateArmorReduction(lEntity);
+            switch (event.getCause()) {
+            case FIRE:
+            case LAVA:
+            case BLOCK_EXPLOSION:
+            case CONTACT:
+            case ENTITY_EXPLOSION:
+            case ENTITY_ATTACK:
+            case PROJECTILE:
+                damage *= calculateArmorReduction(lEntity);
+            default:
+                break;
+            }
             currentHealth -= damage;
             // If the entity would die from damage, set the damage really high, this should kill any entity in MC outright
             if (currentHealth <= 0) {
