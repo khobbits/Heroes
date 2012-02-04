@@ -261,7 +261,7 @@ public class HPlayerListener implements Listener {
         Hero hero = heroManager.getHero(player);
         hero.cancelDelayedSkill();
         hero.clearEffects();
-        heroManager.saveHero(hero, false);
+        heroManager.saveHero(hero, true);
         heroManager.removeHero(hero);
         for (Command command : plugin.getCommandHandler().getCommands()) {
             if (command.isInteractive()) {

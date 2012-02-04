@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import me.desht.scrollingmenusign.SMSHandler;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 
@@ -34,7 +33,6 @@ import com.herocraftonline.dev.heroes.command.commands.CooldownCommand;
 import com.herocraftonline.dev.heroes.command.commands.DebugDumpCommand;
 import com.herocraftonline.dev.heroes.command.commands.HealthCommand;
 import com.herocraftonline.dev.heroes.command.commands.HelpCommand;
-import com.herocraftonline.dev.heroes.command.commands.HeroSaveCommand;
 import com.herocraftonline.dev.heroes.command.commands.LeaderboardCommand;
 import com.herocraftonline.dev.heroes.command.commands.LevelInformationCommand;
 import com.herocraftonline.dev.heroes.command.commands.ManaCommand;
@@ -362,11 +360,9 @@ public class Heroes extends JavaPlugin {
         commandHandler.addCommand(new AdminHealCommand(this));
         commandHandler.addCommand(new HealthCommand(this));
         commandHandler.addCommand(new LeaderboardCommand(this));
-        commandHandler.addCommand(new HeroSaveCommand(this));
-
+        commandHandler.addCommand(new ResetCommand(this));
 
         // Page 5
-        commandHandler.addCommand(new ResetCommand(this));
         commandHandler.addCommand(new DebugDumpCommand());
     }
 
