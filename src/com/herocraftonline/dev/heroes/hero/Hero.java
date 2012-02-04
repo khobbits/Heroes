@@ -1491,4 +1491,8 @@ public class Hero {
         this.syncPrimary = syncPrimary || getSecondClass() == null;
         syncExperience();
     }
+
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
 }

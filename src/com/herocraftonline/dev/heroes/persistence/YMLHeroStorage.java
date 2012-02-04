@@ -61,7 +61,9 @@ public class YMLHeroStorage extends HeroStorage {
     @Override
     public Hero loadHero(Player player) {
         if (toSave.containsKey(player.getName())) {
-            return toSave.get(player.getName());
+            Hero hero = toSave.get(player.getName());
+            hero.setPlayer(player);
+            return hero;
         }
         File pFolder = new File(playerFolder + File.separator + player.getName().toLowerCase().substring(0, 1));
         pFolder.mkdirs();
