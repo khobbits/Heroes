@@ -129,8 +129,10 @@ public class SkillCharge extends TargettedSkill {
                         tHero.addEffect(new RootEffect(skill, rootDuration));
                     if (silenceDuration > 0)
                         tHero.addEffect(new SilenceEffect(skill, silenceDuration));
-                    if (damage > 0)
+                    if (damage > 0) {
+                        addSpellTarget(le, hero);
                         Skill.damageEntity(le, player, damage, DamageCause.ENTITY_ATTACK);
+                    }
                 } else if (e instanceof LivingEntity) {
                     if (slowDuration > 0)
                         plugin.getEffectManager().addEntityEffect(le, new SlowEffect(skill, slowDuration, 2, true, Messaging.getLivingEntityName(le) + " has been slowed by " + player.getDisplayName(),
