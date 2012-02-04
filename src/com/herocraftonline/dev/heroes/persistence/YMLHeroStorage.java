@@ -26,7 +26,7 @@ import com.herocraftonline.dev.heroes.util.Properties;
 public class YMLHeroStorage extends HeroStorage {
 
     private final File playerFolder;
-    private Map<Hero, Boolean> toSave = new ConcurrentHashMap<Hero, Boolean>();
+    private Map<String, Hero> toSave = new ConcurrentHashMap<String, Hero>();
     private final int SAVE_INTERVAL = 6000;
 
     public YMLHeroStorage(Heroes plugin) {
@@ -44,9 +44,9 @@ public class YMLHeroStorage extends HeroStorage {
             if (toSave.isEmpty()) {
                 return;
             }
-            Iterator<Entry<Hero, Boolean>> iter = toSave.entrySet().iterator();
+            Iterator<Entry<String, Hero>> iter = toSave.entrySet().iterator();
             while (iter.hasNext()) {
-                Hero hero = iter.next().getKey();
+                Hero hero = iter.next().getValue();
                 try {
                     doSave(hero);
                 } catch (Exception e) {
@@ -60,6 +60,9 @@ public class YMLHeroStorage extends HeroStorage {
 
     @Override
     public Hero loadHero(Player player) {
+        if (toSave.containsKey(player.getName())) {
+            return toSave.get(player.getName());
+        }
         File pFolder = new File(playerFolder + File.separator + player.getName().toLowerCase().substring(0, 1));
         pFolder.mkdirs();
         File playerFile = new File(pFolder, player.getName() + ".yml");
@@ -97,10 +100,10 @@ public class YMLHeroStorage extends HeroStorage {
     @Override
     public void saveHero(Hero hero, boolean now) {
         if (now) {
-            toSave.remove(hero);
+            toSave.remove(hero.getName());
             doSave(hero);
         } else {
-            toSave.put(hero, true);
+            toSave.put(hero.getName(), hero);
         }
     }
 
