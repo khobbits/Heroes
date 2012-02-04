@@ -30,7 +30,7 @@ public class WhoCommand extends BasicCommand {
         HeroClass searchedClass = plugin.getClassManager().getClass(args[0]);
         if (searchedPlayer != null) {
             Hero hero = plugin.getHeroManager().getHero(searchedPlayer);
-            int level = Properties.getLevel(hero.getExperience());
+            int level = Properties.getLevel(hero.getExperience(hero.getHeroClass()));
             HeroClass sClass = hero.getSecondClass();
             String secondClassName = sClass != null ? " | " + sClass.getName() : "";
             String secondLevelInfo = sClass != null ? (" | " + hero.getLevel(sClass)) : "";

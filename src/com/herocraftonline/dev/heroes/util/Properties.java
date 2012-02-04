@@ -67,6 +67,7 @@ public class Properties {
     public int globalCooldown = 0;
     public double enchantXPMultiplier;
     public boolean slowCasting = true;
+    public static int combatTime;
 
     // Bed Stuffs
     public boolean bedHeal;
@@ -226,6 +227,7 @@ public class Properties {
         maxTrackedBlocks = Util.toIntNonNull(section.get("max-tracked-blocks", 1000), "max-tracked-blocks");
         enchantXPMultiplier = Util.toDoubleNonNull(section.get("enchant-exp-mult", 1), "enchant-exp-mult");
         slowCasting = section.getBoolean("slow-while-casting", true);
+        combatTime = (int) Util.toDoubleNonNull(section.get("combat-time", 10000), "combat-time");
     }
 
     private void loadWorldConfig(ConfigurationSection section) {

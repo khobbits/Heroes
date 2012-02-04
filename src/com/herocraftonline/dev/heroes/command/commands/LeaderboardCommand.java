@@ -33,13 +33,13 @@ public class LeaderboardCommand extends BasicCommand {
         Map<Hero, Double> leaderboard = new TreeMap<Hero, Double>(new Comparator<Hero>() {
             @Override
             public int compare(Hero h1, Hero h2) {
-                return (int) (h1.getExperience() - h2.getExperience());
+                return (int) (h1.getExperience(h1.getHeroClass()) - h2.getExperience(h2.getHeroClass()));
             }
         });
 
         for (Hero hero : heroes) {
             if (hero != null) {
-                leaderboard.put(hero, hero.getExperience());
+                leaderboard.put(hero, hero.getExperience(hero.getHeroClass()));
             }
         }
 
