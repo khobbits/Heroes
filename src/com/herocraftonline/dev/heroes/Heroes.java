@@ -62,6 +62,7 @@ import com.herocraftonline.dev.heroes.skill.OutsourcedSkill;
 import com.herocraftonline.dev.heroes.skill.Skill;
 import com.herocraftonline.dev.heroes.skill.SkillConfigManager;
 import com.herocraftonline.dev.heroes.skill.SkillManager;
+import com.herocraftonline.dev.heroes.spout.ManaListener;
 import com.herocraftonline.dev.heroes.spout.SpoutData;
 import com.herocraftonline.dev.heroes.spout.SpoutInventoryListener;
 import com.herocraftonline.dev.heroes.util.ConfigManager;
@@ -93,6 +94,7 @@ public class Heroes extends JavaPlugin {
     private HBlockListener blockListener;
     private HEventListener hEventListener;
     private SpoutInventoryListener siListener = null;
+    private ManaListener mListener;
 
     // Various data managers
     private ConfigManager configManager;
@@ -376,6 +378,8 @@ public class Heroes extends JavaPlugin {
         entityListener = new HEntityListener(this);
         blockListener = new HBlockListener(this);
         hEventListener = new HEventListener(this);
+        mListener = new ManaListener(this);
+        
     }
 
     /**
