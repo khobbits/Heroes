@@ -38,6 +38,7 @@ public class SkillRepair extends ActiveSkill {
         node.set("diamond-weapons", 1);
         node.set("leather-armor", 1);
         node.set("iron-armor", 1);
+        node.set("chain-armor", 1);
         node.set("gold-armor", 1);
         node.set("diamond-armor", 1);
         node.set("wood-tools", 1);
@@ -62,24 +63,28 @@ public class SkillRepair extends ActiveSkill {
             return amt < 1 ? 1 : amt;
         case LEATHER_BOOTS:
         case IRON_BOOTS:
+        case CHAINMAIL_BOOTS:
         case GOLD_BOOTS:
         case DIAMOND_BOOTS:
             amt = (int) ((is.getDurability() / (double) mat.getMaxDurability()) * 3.0);
             return amt < 1 ? 1 : amt;
         case LEATHER_HELMET:
         case IRON_HELMET:
+        case CHAINMAIL_HELMET:
         case GOLD_HELMET:
         case DIAMOND_HELMET:
             amt = (int) ((is.getDurability() / (double) mat.getMaxDurability()) * 4.0);
             return amt < 1 ? 1 : amt;
         case LEATHER_CHESTPLATE:
         case IRON_CHESTPLATE:
+        case CHAINMAIL_CHESTPLATE:
         case GOLD_CHESTPLATE:
         case DIAMOND_CHESTPLATE:
             amt = (int) ((is.getDurability() / (double) mat.getMaxDurability()) * 7.0);
             return amt < 1 ? 1 : amt;
         case LEATHER_LEGGINGS:
         case IRON_LEGGINGS:
+        case CHAINMAIL_LEGGINGS:
         case GOLD_LEGGINGS:
         case DIAMOND_LEGGINGS:
             amt = (int) ((is.getDurability() / (double) mat.getMaxDurability()) * 6.0);
@@ -122,6 +127,11 @@ public class SkillRepair extends ActiveSkill {
         case IRON_PICKAXE:
         case IRON_SPADE:
             return SkillConfigManager.getUseSetting(hero, this, "iron-tools", 1, true);
+        case CHAINMAIL_HELMET:
+        case CHAINMAIL_CHESTPLATE:
+        case CHAINMAIL_BOOTS:
+        case CHAINMAIL_LEGGINGS:
+            return SkillConfigManager.getUseSetting(hero, this, "chain-armor", 1, true);
         case GOLD_CHESTPLATE:
         case GOLD_LEGGINGS:
         case GOLD_BOOTS:
@@ -212,6 +222,11 @@ public class SkillRepair extends ActiveSkill {
         case FISHING_ROD:
         case BOW:
             return Material.STRING;
+        case CHAINMAIL_HELMET:
+        case CHAINMAIL_CHESTPLATE:
+        case CHAINMAIL_BOOTS:
+        case CHAINMAIL_LEGGINGS:
+            return Material.IRON_FENCE;
         default:
             return null;
         }
