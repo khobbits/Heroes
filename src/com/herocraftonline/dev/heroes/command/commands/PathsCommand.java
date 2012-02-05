@@ -100,7 +100,7 @@ public class PathsCommand extends BasicCommand {
             }
         }
 
-        sender.sendMessage("§cTo choose a path, type §f/hero choose <path>");
+        sender.sendMessage("§cTo choose a path, type §f/hero choose <path> §cor §f/hero prof <prof>");
         return true;
     }
 
