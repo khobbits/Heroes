@@ -5,6 +5,6 @@
 	<classpathentry kind="lib" path="libs/ScrollingMenuSign.jar"/>
 	<classpathentry kind="lib" path="libs/spoutplugin.jar"/>
 	<classpathentry kind="lib" path="libs/craftbukkit-1.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Cameron/Downloads/Vault.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Vault"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
