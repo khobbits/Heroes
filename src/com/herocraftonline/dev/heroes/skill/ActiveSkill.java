@@ -225,7 +225,7 @@ public abstract class ActiveSkill extends Skill {
 
             // Deduct mana
             hero.setMana(hero.getMana() - manaCost);
-            if (hero.isVerbose() && manaCost > 0) {
+            if (hero.isVerbose() && manaCost > 0 && !hero.hasSpoutcraft()) {
                 Messaging.send(hero.getPlayer(), ChatColor.BLUE + "MANA " + Messaging.createManaBar(hero.getMana()));
             }
 

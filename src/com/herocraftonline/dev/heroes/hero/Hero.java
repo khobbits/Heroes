@@ -23,6 +23,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionAttachment;
+import org.getspout.spoutapi.SpoutManager;
 
 import com.herocraftonline.dev.heroes.Heroes;
 import com.herocraftonline.dev.heroes.api.ExperienceChangeEvent;
@@ -1494,5 +1495,17 @@ public class Hero {
 
     public void setPlayer(Player player) {
         this.player = player;
+    }
+    
+    /**
+     * Checks if the player is running a spoutcraft client, only works if spout is on the server
+     * 
+     * @return true if is using spoutcraft
+     */
+    public boolean hasSpoutcraft() {
+        if (Heroes.useSpout()) {
+            return SpoutManager.getPlayer(player).isSpoutCraftEnabled();
+        }
+        return false;
     }
 }

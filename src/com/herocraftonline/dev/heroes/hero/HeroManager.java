@@ -207,7 +207,7 @@ class ManaUpdater implements Runnable {
             }
 
             hero.setMana(mana + hrmEvent.getAmount());
-            if (hero.isVerbose()) {
+            if (hero.isVerbose() && !hero.hasSpoutcraft()) {
                 Messaging.send(hero.getPlayer(), ChatColor.BLUE + "MANA " + Messaging.createManaBar(hero.getMana()));
             }
         }

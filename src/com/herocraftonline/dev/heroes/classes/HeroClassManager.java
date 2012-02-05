@@ -162,6 +162,7 @@ public class HeroClassManager {
         newClass.setUserClass(userClass);
 
         if (Heroes.useSpout()) {
+            newClass.setManaColor(config.getInt("mana-bar-color", 0x00CCFF));
             if (config.isSet("recipes")) {
                 for (String s : config.getStringList("recipes")) {
                     RecipeGroup rg = Heroes.properties.recipes.get(s.toLowerCase());

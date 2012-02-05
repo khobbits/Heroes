@@ -48,6 +48,7 @@ public class HeroClass {
     private double maxHealthPerLevel;
     private boolean userClass = true;
     private final Heroes plugin;
+    private int manaColor;
 
     /**
      * Constructs a new HeroClass with the given name
@@ -518,5 +519,16 @@ public class HeroClass {
      */
     void addRecipe(RecipeGroup rg) {
         recipes.add(rg);
+    }
+    
+    /**
+     * Gets the color this users mana bar will appear as if they are using spoutcraft
+     */
+    public int getManaColor() {
+        return manaColor;
+    }
+    
+    void setManaColor(int color) {
+        manaColor = color;
     }
 }
