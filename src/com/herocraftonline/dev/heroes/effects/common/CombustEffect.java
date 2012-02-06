@@ -15,7 +15,7 @@ public class CombustEffect extends PeriodicExpirableEffect {
     private int lastFireTickCount = -1;
     
     public CombustEffect(Skill skill, Player applier) {
-        super(skill, "Combust", 9, 0);
+        super(skill, "Combust", 10, 0);
         types.add(EffectType.FIRE);
         this.setPersistent(true);
         this.applier = applier;
