@@ -30,3 +30,5 @@ Version dev
 ** unchant-chance-reduce - will reduce the unchant-chance by it's amount per-level
 * Summon Chicken/Cow/Pig/Sheep
 ** thanks Multitallented!
+** improved them so Mushroom cows spawn in Mushroom biomes
+** improved sheep to spawn randomly colored sheeps
