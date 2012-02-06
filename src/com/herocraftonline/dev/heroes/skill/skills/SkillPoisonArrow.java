@@ -171,7 +171,7 @@ public class SkillPoisonArrow extends ActiveSkill {
                 if (hero.getMana() < mana) {
                     hero.removeEffect(hero.getEffect("PoisonArrowBuff"));
                 } else {
-                    hero.setMana(hero.getMana() - 1);
+                    hero.setMana(hero.getMana() - mana);
                 }
             }
         }

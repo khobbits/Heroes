@@ -132,7 +132,7 @@ public class SkillFireArrow extends ActiveSkill {
                 if (hero.getMana() < mana) {
                     hero.removeEffect(hero.getEffect("FireArrowBuff"));
                 } else {
-                    hero.setMana(hero.getMana() - 1);
+                    hero.setMana(hero.getMana() - mana);
                 }
             }
         }

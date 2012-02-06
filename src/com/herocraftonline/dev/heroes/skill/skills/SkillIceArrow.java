@@ -141,7 +141,7 @@ public class SkillIceArrow extends ActiveSkill {
                 if (hero.getMana() < mana) {
                     hero.removeEffect(hero.getEffect("IceArrowBuff"));
                 } else {
-                    hero.setMana(hero.getMana() - 1);
+                    hero.setMana(hero.getMana() - mana);
                 }
             }
         }
