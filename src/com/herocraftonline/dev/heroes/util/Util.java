@@ -7,14 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 import net.minecraft.server.MathHelper;
 import net.minecraft.server.Vec3D;
@@ -211,6 +204,27 @@ public final class Util {
             }
         } catch (IllegalArgumentException e) {}
         return type;
+    }
+    
+    public static int getDefaultDamage(Material item) {
+        switch (item) {
+            case WOOD_SWORD: return 4;
+            case WOOD_AXE: return 3;
+            case WOOD_PICKAXE: return 2;
+            case STONE_SWORD: return 5;
+            case STONE_AXE: return 4;
+            case STONE_PICKAXE: return 3;
+            case STONE_SPADE: return 2;
+            case IRON_SWORD: return 6;
+            case IRON_AXE: return 5;
+            case IRON_PICKAXE: return 4;
+            case IRON_SPADE: return 3;
+            case DIAMOND_SWORD: return 7;
+            case DIAMOND_AXE: return 6;
+            case DIAMOND_PICKAXE: return 5;
+            case DIAMOND_SPADE: return 4;
+            default: return 1;
+        }
     }
 
     /**
