@@ -166,10 +166,17 @@ public class ConfigManager {
                         Material mat = Material.getMaterial(Integer.valueOf(vals[0]));
                         short subType = 0;
                         if (vals.length > 1) {
-                            subType = Short.valueOf(vals[1]);
+                            if (vals[1].equals("*")) {
+                                for (short j = 0; j < getMaxDataVal(mat); j++) {
+                                    rg.put(new ItemData(mat, j), true); 
+                                }
+                            } else {
+                                subType = Short.valueOf(vals[1]);
+                                rg.put(new ItemData(mat, subType), true);
+                            }
+                        } else {
+                            rg.put(new ItemData(mat, subType), true);
                         }
-                        
-                        rg.put(new ItemData(mat, subType), true);
                     } catch (NumberFormatException e) {
                         Heroes.log(Level.SEVERE, "Invalid item ID in recipe group" + key);
                         continue;
@@ -182,12 +189,18 @@ public class ConfigManager {
                     String[] vals = i.split(":");
                     try {
                         Material mat = Material.getMaterial(Integer.valueOf(vals[0]));
-                        short subType = 0;
                         if (vals.length > 1) {
-                            subType = Short.valueOf(vals[1]);
+                            if (vals[1].equals("*")) {
+                                for (short j = 0; j < getMaxDataVal(mat); j++) {
+                                    rg.put(new ItemData(mat, j), false); 
+                                }
+                            } else {
+                                short subType = Short.valueOf(vals[1]);
+                                rg.put(new ItemData(mat, subType), false);
+                            }
+                        } else {
+                            rg.put(new ItemData(mat, (short) 0), false);
                         }
-                        
-                        rg.put(new ItemData(mat, subType), false);
                     } catch (NumberFormatException e) {
                         Heroes.log(Level.SEVERE, "Invalid item ID in recipe group" + key);
                         continue;
@@ -247,5 +260,23 @@ public class ConfigManager {
             }
         }
         return expMap;
+    }
+
+    private short getMaxDataVal(Material mat) {
+        switch (mat) {
+        case LOG:
+        case LEAVES:
+        case SAPLING:
+        case LONG_GRASS:
+            return 3;
+        case STEP:
+        case DOUBLE_STEP:
+            return 6;
+        case INK_SACK:
+        case WOOL:
+            return 16;
+        default:
+            return 1;
+        }
     }
 }
