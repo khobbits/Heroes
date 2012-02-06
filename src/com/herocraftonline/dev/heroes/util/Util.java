@@ -205,25 +205,35 @@ public final class Util {
         } catch (IllegalArgumentException e) {}
         return type;
     }
-    
+
     public static int getDefaultDamage(Material item) {
         switch (item) {
-            case WOOD_SWORD: return 4;
-            case WOOD_AXE: return 3;
-            case WOOD_PICKAXE: return 2;
-            case STONE_SWORD: return 5;
-            case STONE_AXE: return 4;
-            case STONE_PICKAXE: return 3;
-            case STONE_SPADE: return 2;
-            case IRON_SWORD: return 6;
-            case IRON_AXE: return 5;
-            case IRON_PICKAXE: return 4;
-            case IRON_SPADE: return 3;
-            case DIAMOND_SWORD: return 7;
-            case DIAMOND_AXE: return 6;
-            case DIAMOND_PICKAXE: return 5;
-            case DIAMOND_SPADE: return 4;
-            default: return 1;
+        case WOOD_PICKAXE: 
+        case GOLD_PICKAXE:
+        case STONE_SPADE:
+            return 2;
+        case WOOD_AXE:
+        case GOLD_AXE:
+        case STONE_PICKAXE: 
+        case IRON_SPADE:
+            return 3;
+        case WOOD_SWORD: 
+        case GOLD_SWORD:
+        case STONE_AXE: 
+        case DIAMOND_SPADE:
+        case IRON_PICKAXE: 
+            return 4;
+        case DIAMOND_PICKAXE:
+        case IRON_AXE:
+        case STONE_SWORD: 
+            return 5;
+        case IRON_SWORD: 
+        case DIAMOND_AXE:
+            return 6;
+        case DIAMOND_SWORD: 
+            return 7;
+        default: 
+            return 1;
         }
     }
 
@@ -531,6 +541,6 @@ public final class Util {
         } catch (NumberFormatException e) {
         }
         return stack;
-        
+
     }
 }
