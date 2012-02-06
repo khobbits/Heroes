@@ -12,9 +12,10 @@ public class CombustEffect extends PeriodicExpirableEffect {
 
     private final Player applier;
     private boolean expired = false;
+    private int lastFireTickCount = -1;
     
     public CombustEffect(Skill skill, Player applier) {
-        super(skill, "Combust", 50, 0);
+        super(skill, "Combust", 9, 0);
         types.add(EffectType.FIRE);
         this.setPersistent(true);
         this.applier = applier;
@@ -23,11 +24,13 @@ public class CombustEffect extends PeriodicExpirableEffect {
     @Override
     public void apply(LivingEntity lEntity) {
         super.apply(lEntity);
+        lastFireTickCount = lEntity.getFireTicks();
     }
     
     @Override
     public void apply(Hero hero) {
         super.apply(hero);
+        lastFireTickCount = hero.getPlayer().getFireTicks();
     }
 
     public Player getApplier() {
@@ -55,13 +58,26 @@ public class CombustEffect extends PeriodicExpirableEffect {
         if (lEntity.getFireTicks() == 0) {
             this.expired = true;
         }
+        
+        int fireTicks = lEntity.getFireTicks();
+        if (lastFireTickCount - fireTicks >= 10) {
+            lEntity.setNoDamageTicks(0);
+        }
+        lastFireTickCount = fireTicks;
     }
 
     @Override
     public void tick(Hero hero) {
         super.tick(hero);
-        if (hero.getPlayer().getFireTicks() == 0) {
+        Player player = hero.getPlayer();
+        if (player.getFireTicks() == 0) {
             this.expired = true;
         }
+
+        int fireTicks = player.getFireTicks();
+        if (lastFireTickCount - fireTicks >= 10) {
+            player.setNoDamageTicks(0);
+        }
+        lastFireTickCount = fireTicks;
     }
 }
