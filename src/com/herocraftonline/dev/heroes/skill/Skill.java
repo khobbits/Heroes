@@ -243,6 +243,7 @@ public abstract class Skill extends BasicCommand {
         } else {
             target.damage(damage, attacker);
         }
+        ((CraftLivingEntity) target).setNoDamageTicks(0);
         return true;
     }
 
