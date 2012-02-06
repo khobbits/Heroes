@@ -8,15 +8,19 @@ import com.herocraftonline.dev.heroes.hero.Hero;
 import com.herocraftonline.dev.heroes.skill.Skill;
 
 public class SafeFallEffect extends ExpirableEffect {
-    
+
     private String applyText = "$1 has braced for landing!";
     private String expireText = "$1 has lost safefall!";
-    
-    public SafeFallEffect(Skill skill, long duration) {
-        super(skill, "Safefall", duration);
+
+    public SafeFallEffect(Skill skill, String name, long duration) {
+        super(skill, name, duration);
         this.types.add(EffectType.DISPELLABLE);
         this.types.add(EffectType.BENEFICIAL);
         this.types.add(EffectType.SAFEFALL);
+    }
+
+    public SafeFallEffect(Skill skill, long duration) {
+        this(skill, "Safefall", duration);
     }
 
     @Override
