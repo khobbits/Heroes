@@ -254,7 +254,7 @@ public class HeroClassManager {
                 Bukkit.getServer().getPluginManager().addPermission(p);
             }
         }
-        Permission wildcardClassPermission = new Permission("heroes.classes.*", "Grants access to all classes.", classPermissions);
+        Permission wildcardClassPermission = new Permission("heroes.classes.*", "Grants access to all classes.", PermissionDefault.OP, classPermissions);
         plugin.getServer().getPluginManager().addPermission(wildcardClassPermission);
     }
 
