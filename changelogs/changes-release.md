@@ -7,6 +7,7 @@ Version 1.4.5
 * Zombies will now take damage properly from sources that should not be reduced
 * /hero tools will no longer error when no damage is set for an allowed tool
 * Players no longer gain all user-class permissions by default, they must now be granted permission
+* Effects which apply potion/mob effects should remove properly on time now
 
 ==== **General:** ====
 

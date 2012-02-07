@@ -3,6 +3,7 @@ package com.herocraftonline.dev.heroes.effects;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -11,6 +12,8 @@ import net.minecraft.server.EntityLiving;
 import net.minecraft.server.EntityPlayer;
 import net.minecraft.server.MobEffect;
 import net.minecraft.server.Packet41MobEffect;
+import net.minecraft.server.Packet42RemoveMobEffect;
+
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
@@ -75,30 +78,28 @@ public class Effect {
     }
 
     public void remove(LivingEntity lEntity) {
-        /*
         if (!mobEffects.isEmpty()) {
             EntityLiving eLiving = ((CraftLivingEntity) lEntity).getHandle();
             for (MobEffect mobEffect : mobEffects.keySet()) {
-                eLiving.addEffect(new MobEffect(mobEffect.getEffectId(), 0, 0));
+                eLiving.getEffects().remove(mobEffect);
             }
-        } */
+        }
     }
 
     public void remove(Hero hero) {
-        /*
         if (!mobEffects.isEmpty()) {
             EntityPlayer ePlayer = ((CraftPlayer) hero.getPlayer()).getHandle();
-            for (Entry<MobEffect, Boolean> entry : mobEffects.entrySet()) {
-                //Always tell the client to remove the effect
-                ePlayer.netServerHandler.sendPacket(new Packet42RemoveMobEffect(ePlayer.id, entry.getKey()));
-                //If it's not a faked effect lets make sure to remove it
+            Iterator<Entry<MobEffect, Boolean>> iter = mobEffects.entrySet().iterator();
+            while (iter.hasNext()) {
+                Entry<MobEffect, Boolean> entry = iter.next();
                 if (!entry.getValue()) {
                     ePlayer.getEffects().remove(entry.getKey());
                 }
+                ePlayer.netServerHandler.sendPacket(new Packet42RemoveMobEffect(ePlayer.id, entry.getKey()));
             }
         }
-        */
     }
+
     public void broadcast(Location source, String message, Object... args) {
         skill.broadcast(source, message, args);
     }
