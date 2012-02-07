@@ -246,7 +246,7 @@ public class HeroClassManager {
         Map<String, Boolean> classPermissions = new HashMap<String, Boolean>();
         for (HeroClass heroClass : classes) {
             if (heroClass.isUserClass()) {
-                Permission p = new Permission("heroes.classes." + heroClass.getName().toLowerCase(), PermissionDefault.TRUE);
+                Permission p = new Permission("heroes.classes." + heroClass.getName().toLowerCase(), PermissionDefault.OP);
                 Bukkit.getServer().getPluginManager().addPermission(p);
                 classPermissions.put("heroes.classes." + heroClass.getName().toLowerCase(), true);
             } else {
