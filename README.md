@@ -1,55 +1,39 @@
-Version 1.4.4
+Version 1.4.5
 
 ==== **Bug Fixes:** ====
 
-* players with an enchanting container open are no longer able to toggle their xp bar
-* /hero paths will now properly only list paths that are availabl to the hero
-* Projectiles no longer ignore no-pvp and level-range settings
-* Skills can no longer target dead entities
-* Secondary xp Bar now updates properly
-* /hero choose & /hero prof - will no longer break when players do not have enough $
-* Zombie & Zombie Pigman damage calculations now properly include their default 2 armor value
+* Secondary classes with higher projectile damages now works intended
+* Projectile damage per level is now evaluated properly rather than being ignored
+* Zombies will now take damage properly from sources that should not be reduced
+* /hero tools will no longer error when no damage is set for an allowed tool
+* Players no longer gain all user-class permissions by default, they must now be granted permission
 
 ==== **General:** ====
 
-* Debug timing has been removed for all event processing
-** Bukkit now has internal event timings available
-* How much potions restore per-tier is now configurable in damages.yml - see updated configuration
-* Classes now support item-damage-level and projectile-damage-level settings
-* recipe IDs are now in the format "ID:DAMAGE" instead of "ID,DAMAGE"
-** please update to the new format if you're using any recipe blocks with special item data
-* 'parent' can no longer be used to specify a single strong parent.  Please use the new 'parents: strong:'
-* Support for SMS
-** Each class will get their own scrolling sign use /hero scroll to convert a map into a scroll!
-** allows players to use skills from the scroll instead of binding all of their skills
-** requires heroes.scroll permission
-* Added heroes.bind permission to restrict binding/use of binds
-** This can force players to use the SMS scroll for all skill usage (or the direct command)
+* targetting should now be less restrictive, allowing the player to target closer to a mobs head, instead of feet
+* root effects now simply apply a very strong slow rather than teleporting the player.
+* slows now reduce jump height so players can not exploit spamming jump to ignore slows
+* Recipe configuration allows ID:* for all subtypes - no longer necessary to type out all subids of an item
+* user-class option has been replaced with 'wildcard-permission'
+** Permissions for classes with wildcard-permission are no longer given by default
+** This means all players will need to have heroes.classes.* for sure
 
 ==== **API:** ====
 
-* new BlindEffect - it blinds the hero!
+* ImbueEffect has been re-written to be handled like FormEffects
+** it no longer has applications etc.
 
 ==== **Skills:** ====
 
-* All non-physical skills now issue Magic damage instead of ENTITY_ATTACK
-* All reagent nodes have switched format to support damage values
-** ID:DAMAGE - is the new format, be sure to update all your reagents!
-* Passive skills now disable properly on DisabledWorlds
-* Assassin's Blade
-** no longer triggers from damage checks
-* Blink
-** added option to restrict ender-pearl use to only classes that have the skill
-* Charge
-** velocities are now working as intended
-* Disenchant (NEW!)
-** Strips enchants off an already enchanted item
 * Enchant
-** no longer requires SpoutPlugin to work
-** Will strip the active enchant window display if a player can't enchant an item instead of messing with the item or denying use of the table completely
-* FireArrow
-** Now launches flaming arrows as intended
-* Icebolt
-* UseText fixed
-* Light (NEW!)
-** Similar to lightwalk from MagicSpells - changes blocks you walk on to glowstone periodically
+** allows reagent requirement for enchanting - amount is still static
+* FireArrow, IceArrow & PoisonArrow
+** re-written to use mana-per-shot regardless of hitting the target or not
+** will drain the users mana as they stay active.  Using the skill will toggle it on/off.
+* Repair
+** unchant-chance - now has a chance to disenchant an item being repaired.
+** unchant-chance-reduce - will reduce the unchant-chance by it's amount per-level
+* Summon Chicken/Cow/Pig/Sheep
+** thanks Multitallented!
+** improved them so Mushroom cows spawn in Mushroom biomes
+** improved sheep to spawn randomly colored sheeps

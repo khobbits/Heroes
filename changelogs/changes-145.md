@@ -1,4 +1,4 @@
-Version dev
+Version 1.4.5
 
 ==== **Bug Fixes:** ====
 
