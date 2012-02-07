@@ -16,6 +16,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -74,7 +75,9 @@ public class SkillPotion extends PassiveSkill {
 
         @EventHandler(priority = EventPriority.LOW)
         public void onPlayerInteract(PlayerInteractEvent event) {
-            if (event.useItemInHand() == Event.Result.DENY) {
+            if (event.useItemInHand() == Event.Result.DENY ||
+                    !event.hasItem() ||
+                    !(event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_AIR)) {
                 return;
             }
 
