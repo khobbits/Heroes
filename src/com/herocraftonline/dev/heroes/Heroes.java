@@ -378,8 +378,10 @@ public class Heroes extends JavaPlugin {
         entityListener = new HEntityListener(this);
         blockListener = new HBlockListener(this);
         hEventListener = new HEventListener(this);
-        mListener = new ManaListener(this);
-        
+        if (useSpout()) {
+            mListener = new ManaListener(this);
+        }
+
     }
 
     /**

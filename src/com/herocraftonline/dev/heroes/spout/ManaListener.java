@@ -14,9 +14,7 @@ public class ManaListener implements Listener {
 
     public ManaListener(Heroes instance) {
         plugin = instance;
-        if (Heroes.useSpout()) {
-            Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
-        }
+        Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
     }
     
     @EventHandler(priority = EventPriority.MONITOR)
