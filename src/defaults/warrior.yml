@@ -61,6 +61,6 @@ expmodifier: 1.0
 base-max-health: 34.0
 max-health-per-level: 0.4
 expLoss: 0.007
-user-class: true
+wildcard-permission: true
 tier: 1
 recipes: [ default ]

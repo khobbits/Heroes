@@ -6,6 +6,7 @@ Version dev
 * Projectile damage per level is now evaluated properly rather than being ignored
 * Zombies will now take damage properly from sources that should not be reduced
 * /hero tools will no longer error when no damage is set for an allowed tool
+* Players no longer gain all user-class permissions by default, they must now be granted permission
 
 ==== **General:** ====
 
@@ -13,6 +14,9 @@ Version dev
 * root effects now simply apply a very strong slow rather than teleporting the player.
 * slows now reduce jump height so players can not exploit spamming jump to ignore slows
 * Recipe configuration allows ID:* for all subtypes - no longer necessary to type out all subids of an item
+* user-class option has been replaced with 'wildcard-permission'
+** Permissions for classes with wildcard-permission are no longer given by default
+** This means all players will need to have heroes.classes.* for sure
 
 ==== **API:** ====
 

@@ -1,6 +1,6 @@
 name: Citizen
 default: true
-user-class: true
+wildcard-permission: true
 primary: true
 secondary: false
 description: The Default Starter Path

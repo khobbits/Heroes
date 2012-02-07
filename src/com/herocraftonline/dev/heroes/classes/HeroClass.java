@@ -46,7 +46,7 @@ public class HeroClass {
     private double pvpExpLoss;
     private double baseMaxHealth;
     private double maxHealthPerLevel;
-    private boolean userClass = true;
+    private boolean wildcard = true;
     private final Heroes plugin;
     private int manaColor;
 
@@ -479,12 +479,12 @@ public class HeroClass {
     /**
      * @return true if this class is a user-class and was added to the heroes.classes.* permission
      */
-    public boolean isUserClass() {
-        return userClass;
+    public boolean isWildcardClass() {
+        return wildcard;
     }
 
-    protected void setUserClass(boolean userClass) {
-        this.userClass = userClass;
+    protected void setWildcardClass(boolean wildcard) {
+        this.wildcard = wildcard;
     }
 
     /**

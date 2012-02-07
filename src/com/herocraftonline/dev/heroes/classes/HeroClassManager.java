@@ -154,12 +154,10 @@ public class HeroClassManager {
         loadPermissionSkills(newClass, config.getConfigurationSection("permission-skills"));
         loadExperienceTypes(newClass, config.getStringList("experience-sources"));
 
-        Double baseMaxHealth = config.getDouble("base-max-health", 20);
-        Double maxHealthPerLevel = config.getDouble("max-health-per-level", 0);
-        boolean userClass = config.getBoolean("user-class", true);
-        newClass.setBaseMaxHealth(baseMaxHealth);
-        newClass.setMaxHealthPerLevel(maxHealthPerLevel);
-        newClass.setUserClass(userClass);
+        newClass.setWildcardClass(config.getBoolean("wildcard-permission", true));
+        newClass.setBaseMaxHealth(config.getDouble("base-max-health", 20));
+        newClass.setMaxHealthPerLevel(config.getDouble("max-health-per-level", 0.0));
+        
 
         if (Heroes.useSpout()) {
             newClass.setManaColor(config.getInt("mana-bar-color", 0x00CCFF));
@@ -245,7 +243,7 @@ public class HeroClassManager {
     private void registerClassPermissions() {
         Map<String, Boolean> classPermissions = new HashMap<String, Boolean>();
         for (HeroClass heroClass : classes) {
-            if (heroClass.isUserClass()) {
+            if (heroClass.isWildcardClass()) {
                 Permission p = new Permission("heroes.classes." + heroClass.getName().toLowerCase(), PermissionDefault.OP);
                 Bukkit.getServer().getPluginManager().addPermission(p);
                 classPermissions.put("heroes.classes." + heroClass.getName().toLowerCase(), true);
