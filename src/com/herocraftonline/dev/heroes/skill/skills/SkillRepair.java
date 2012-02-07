@@ -21,7 +21,7 @@ import org.bukkit.inventory.ItemStack;
 public class SkillRepair extends ActiveSkill {
     public SkillRepair(Heroes plugin) {
         super(plugin, "Repair");
-        setDescription("You are able to repair tools or armor that you are holding.");
+        setDescription("You are able to repair tools and armor. There is a $1% chance the item will be disenchanted.");
         setUsage("/skill repair");
         setArgumentRange(0, 0);
         setIdentifiers("skill repair");
@@ -272,6 +272,8 @@ public class SkillRepair extends ActiveSkill {
 
     @Override
     public String getDescription(Hero hero) {
-        return getDescription();
+        double unchant = SkillConfigManager.getUseSetting(hero, this, "unchant-chance", .5, true);
+        unchant -= SkillConfigManager.getUseSetting(hero, this, "unchant-chance-reduce", .005, false) * hero.getSkillLevel(this);
+        return getDescription().replace("$1", Util.stringDouble(unchant * 100.0));
     }
 }
